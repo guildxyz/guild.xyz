@@ -1,5 +1,6 @@
 import { useFieldArray } from "react-hook-form"
 import { Requirement, RoleFormType } from "types"
+import { uuidv7 } from "uuidv7"
 
 const useHandleRequirementState = (methods) => {
   const requirements = methods.watch("requirements")
@@ -25,7 +26,7 @@ const useHandleRequirementState = (methods) => {
   }
 
   const append = (req: Requirement) => {
-    const reqToAdd = { id: Date.now(), ...req }
+    const reqToAdd = { id: uuidv7(), ...req }
     if (freeEntry) {
       remove(0)
     }

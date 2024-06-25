@@ -20,7 +20,7 @@ import { REQUIREMENT_PROVIDED_VALUES } from "requirements/requirements"
 type Props = {
   isOpen: boolean
   onClose: () => void
-  onSelect: (reqId: number) => void
+  onSelect: (reqId: number | string) => void
 }
 
 const BaseValueModal = ({ isOpen, onClose, onSelect }: Props) => {
@@ -41,7 +41,7 @@ const BaseValueModal = ({ isOpen, onClose, onSelect }: Props) => {
     </VStack>
   )
 
-  const handleSelect = (reqId: number) => {
+  const handleSelect = (reqId: number | string) => {
     onSelect(reqId)
   }
 

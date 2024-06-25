@@ -26,7 +26,7 @@ const useCreateRequirement = (
 
   return useSubmit<
     Omit<Requirement, "id" | "roleId" | "name" | "symbol">,
-    Requirement & { deletedRequirements?: number[] }
+    Requirement & { deletedRequirements?: (number | string)[] }
   >(createRequirement, {
     onSuccess: (response) => {
       if (

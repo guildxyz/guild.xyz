@@ -89,7 +89,9 @@ const useMutateAdditionsToRoles = () => {
           return {
             ...role,
             requirements: [
-              ...role.requirements.filter((req) => !reqIdsToDelete.includes(req.id)),
+              ...role.requirements.filter(
+                (req) => !reqIdsToDelete.includes(req.id as number)
+              ),
               // TODO: we can remove the Requirement[] cast once we start using the Guild schema from our types package in the useGuild hook
               ...(createdRequirementsOnRole as Requirement[]),
             ],

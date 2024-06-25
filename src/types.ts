@@ -492,7 +492,7 @@ type Trait = {
 }
 
 type Requirement = {
-  id: number
+  id: number | string // temp id is a uuid string
   type: RequirementType
   address?: `0x${string}`
   chain?: Chain
