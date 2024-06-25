@@ -9,13 +9,12 @@ import {
   MagnifyingGlass,
   PushPin,
   Sparkle,
-  Users,
 } from "@phosphor-icons/react"
 import Robot from "/public/landing/robot.svg"
 import { Input } from "@/components/ui/Input"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
-import { Badge } from "@/components/ui/Badge"
 import { Header } from "@/components/Header"
+import { GuildCard } from "@/components/GuildCard"
+import useSWR from "swr"
 
 export function PageBoundary({ children }: PropsWithChildren) {
   return (
@@ -24,7 +23,11 @@ export function PageBoundary({ children }: PropsWithChildren) {
 }
 
 const Page = () => {
-  console.log("explorer")
+  const { data: guildData } = useSWR(
+    "https://api.guild.xyz/v2/guilds?limit=20",
+    async (url) => (await fetch(url)).json()
+  )
+
   return (
     <div className="min-h-screen">
       <div className="relative">
@@ -86,25 +89,10 @@ const Page = () => {
             </div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {Array.from({ length: 32 }, (_, i) => (
-              <div
-                className="bg-card text-card-foreground rounded-lg px-6 py-7 grid grid-cols-[auto,1fr] gap-y-1 gap-x-4 items-center grid-rows-2"
-                key={i}
-              >
-                <Avatar className="row-span-2 size-12">
-                  <AvatarImage src="" alt="guild emblem" />
-                  <AvatarFallback>G</AvatarFallback>
-                </Avatar>
-                <h3 className="font-bold text-lg">Guild</h3>
-                <div className="flex gap-2">
-                  <Badge className="space-x-2">
-                    <Users />
-                    <span>230K</span>
-                  </Badge>
-                  <Badge>15 roles</Badge>
-                </div>
-              </div>
-            ))}
+            {guildData &&
+              guildData.map((data) => (
+                <GuildCard key={data.name} guildData={data} />
+              ))}
           </div>
         </main>
       </PageBoundary>
