@@ -28,9 +28,9 @@ const Page = () => {
     <div className="min-h-screen">
       <div className="relative">
         <header className="h-16 outline">header</header>
-        <div className="py-16">
+        <div className="pt-9 pb-14">
           <PageBoundary>
-            <h1 className="font-display text-5xl font-bold">Guildhall</h1>
+            <h1 className="font-display text-4xl font-bold">Guildhall</h1>
             <div className="absolute inset-0 -z-10 -bottom-28 bg-[hsl(240deg_2.65%_22.16%)]" />
           </PageBoundary>
         </div>
@@ -59,7 +59,7 @@ const Page = () => {
               <span className="text-md font-semibold">Sign in</span>
             </Button>
           </div>
-          <div className="flex gap-4 flex-col mb-6">
+          <div className="flex gap-4 flex-col mb-5">
             <h2 className="text-lg font-bold">Explore verified guilds</h2>
             <div className="relative flex flex-col gap-3 sm:flex-row sm:gap-0">
               <MagnifyingGlass className="absolute left-4 top-4 text-muted-foreground" />
@@ -82,7 +82,7 @@ const Page = () => {
               </ToggleGroup>
             </div>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {Array.from({ length: 32 }, (_, i) => (
               <div
                 className="bg-card text-card-foreground rounded-lg px-6 py-7 grid grid-cols-[auto,1fr] gap-y-1 gap-x-4 items-center grid-rows-2"
@@ -94,11 +94,11 @@ const Page = () => {
                 </Avatar>
                 <h3 className="font-bold text-lg">Guild</h3>
                 <div className="flex gap-2">
-                  <Badge variant={"secondary"} className="space-x-2">
+                  <Badge className="space-x-2">
                     <Users />
                     <span>230K</span>
                   </Badge>
-                  <Badge variant={"secondary"}>15 roles</Badge>
+                  <Badge>15 roles</Badge>
                 </div>
               </div>
             ))}

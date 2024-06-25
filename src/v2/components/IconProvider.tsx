@@ -8,7 +8,7 @@ export function IconProvider({ children }: PropsWithChildren) {
     <IconContext.Provider
       value={{
         color: "currentColor",
-        size: 18,
+        size: "1.2em",
         weight: "bold",
         mirrored: false,
       }}
