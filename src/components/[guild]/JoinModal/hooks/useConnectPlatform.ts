@@ -1,3 +1,4 @@
+import { env } from "env"
 import useUser from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { platformMergeAlertAtom } from "components/_app/Web3ConnectionManager/components/PlatformMergeErrorAlert"
@@ -53,7 +54,7 @@ function getOAuthURL(
   scope?: AuthLevel,
   force?: boolean
 ) {
-  const url = new URL(`../v2/oauth/${platformName}`, process.env.NEXT_PUBLIC_API)
+  const url = new URL(`../v2/oauth/${platformName}`, env.NEXT_PUBLIC_API)
   url.searchParams.set("path", window.location.pathname)
   url.searchParams.set("token", authToken)
   if (scope) {

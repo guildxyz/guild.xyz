@@ -1,3 +1,4 @@
+import { env } from "env"
 import { NextApiHandler } from "next"
 import fetcher from "utils/fetcher"
 
@@ -6,7 +7,7 @@ const fetchArtists = (searchQuery: string) =>
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
-      "X-Sound-Client-Key": process.env.SOUND_API_KEY,
+      "X-Sound-Client-Key": env.SOUND_API_KEY,
     },
     body: {
       query: `{

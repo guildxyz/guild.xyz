@@ -1,3 +1,4 @@
+import { env } from "env"
 import { HStack, Text, useDisclosure } from "@chakra-ui/react"
 import { ImageData } from "@nouns/assets"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
@@ -78,7 +79,7 @@ const NftRequirement = (props: RequirementProps) => {
     metadataWithTraits?.name || metadata?.name
   )
   const nftImage = guildPinImageCID
-    ? `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${guildPinImageCID}`
+    ? `${env.NEXT_PUBLIC_IPFS_GATEWAY}${guildPinImageCID}`
     : metadataWithTraits?.image || metadata?.image
 
   const shouldRenderImage =

@@ -12,10 +12,12 @@ import {
 import Button from "./Button"
 
 interface RadioButtonOptionProps {
-  label?: string
-  icon?: React.ElementType
   value: string
-  disabled?: string
+  label?: string | JSX.Element
+  icon?: React.ElementType
+  colorScheme?: string
+  tooltipLabel?: string
+  isDisabled?: boolean
 }
 
 type RadioButtonGroupProps = {
@@ -56,11 +58,11 @@ const RadioButtonGroup = ({
         const radioProps = getRadioProps({ value: option.value })
         return (
           <RadioButton
-            key={option.label}
+            key={option.value}
+            colorScheme={chakraStyles?.colorScheme}
             {...option}
             {...radioProps}
-            {...(!!option.disabled && { onChange: () => {} })}
-            colorScheme={chakraStyles?.colorScheme}
+            {...(!!option.isDisabled && { onChange: () => {} })}
             borderRadius={buttonBorderRadius}
           />
         )
@@ -75,7 +77,7 @@ type RadioButtonProps = {
 } & RadioButtonOptionProps &
   UseRadioProps
 
-export const RadioButton = (props: RadioButtonProps & { disabled?: string }) => {
+export const RadioButton = (props: RadioButtonProps & { isDisabled?: boolean }) => {
   const { getInputProps, getCheckboxProps } = useRadio(props)
 
   const input = getInputProps()
@@ -85,13 +87,14 @@ export const RadioButton = (props: RadioButtonProps & { disabled?: string }) => 
     label,
     icon,
     isChecked,
+    tooltipLabel,
     colorScheme = "indigo",
     borderRadius,
-    disabled,
+    isDisabled,
   } = props
 
   return (
-    <Tooltip label={disabled} hasArrow>
+    <Tooltip label={tooltipLabel} hasArrow>
       <Button
         leftIcon={icon && <Icon as={icon} boxSize={5} />}
         as="label"
@@ -101,7 +104,7 @@ export const RadioButton = (props: RadioButtonProps & { disabled?: string }) => 
         borderRadius={borderRadius}
         w="full"
         colorScheme={isChecked ? colorScheme : "gray"}
-        isDisabled={!!disabled}
+        isDisabled={!!isDisabled}
       >
         <input {...input} />
         {label}

@@ -1,4 +1,4 @@
-import { Schemas } from "@guildxyz/types"
+import { FarcasterProfile, Schemas } from "@guildxyz/types"
 import { FeatureFlag } from "components/[guild]/EditGuild/components/FeatureFlags"
 import { ContractCallFunction } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
 import { RequirementType } from "requirements"
@@ -94,6 +94,7 @@ type PlatformName =
   | "FORM"
   | "GATHER_TOWN"
   | "ERC20"
+  | "FARCASTER"
 
 type PlatformUserData = {
   acessToken?: string
@@ -142,6 +143,8 @@ type User = {
     pending: boolean
     createdAt: Date
   }
+
+  farcasterProfiles: FarcasterProfile[]
 }
 
 type BaseUser = {

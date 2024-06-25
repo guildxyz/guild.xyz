@@ -35,7 +35,7 @@ Open source interface for Guild.xyz -- a tool for platformless membership manage
 
 1. `npm i`
 2. `npm run dev`
-3. If you don't have the `WAAS_WEB_URL` and `WAAS_VIEM_URL` variables defined in `.env.local`, you need to run `node mockWaas.js` after `npm i`. The Google login functionality won't be available in this case
+3. If you don't have the secret environment variables, copy the `.env.examples` as `.env.local`. After that you need to run `node mockWaas.js` after `npm i`. The Google login functionality won't be available in this case
 
 Open [http://localhost:3000](http://localhost:3000) in your browser to see the result.
 

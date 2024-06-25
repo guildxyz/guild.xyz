@@ -17,7 +17,7 @@ type Props = {
   field: Schemas["Field"] | CreateForm["fields"][number]
 }
 
-const SingleChoice = forwardRef<Props & RadioGroupProps, "div">(
+const SingleChoice = forwardRef<Props & Omit<RadioGroupProps, "children">, "div">(
   ({ field, value, onChange, ...props }, _ref) => {
     // We probably won't run into this case, but needed to add this line to get valid intellisense
     if (field.type !== "SINGLE_CHOICE") return null

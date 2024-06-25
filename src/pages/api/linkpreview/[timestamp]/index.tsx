@@ -1,3 +1,4 @@
+import { env } from "env"
 import loadGoogleFont from "fonts/loadGoogleFont"
 import { ImageResponse } from "next/og"
 import { GuildBase } from "types"
@@ -17,7 +18,7 @@ const handler = async (req, _) => {
 
   try {
     const [guilds, interFontData, dystopianFontData] = await Promise.all([
-      fetch(`${process.env.NEXT_PUBLIC_API.replace("v1", "v2")}/guilds`)
+      fetch(`${env.NEXT_PUBLIC_API.replace("v1", "v2")}/guilds`)
         .then((res) => res.json())
         .catch((_) => []),
       interFont,

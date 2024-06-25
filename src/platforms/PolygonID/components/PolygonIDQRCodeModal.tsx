@@ -1,3 +1,4 @@
+import { env } from "env"
 import {
   Box,
   Center,
@@ -38,7 +39,7 @@ const PolygonIDQRCodeModal = ({ role, isOpen, onClose }: Props) => {
 
   const { data, error, mutate } = useSWRImmutable(
     hasClaimed
-      ? `${process.env.NEXT_PUBLIC_POLYGONID_API}/v1/users/${userId}/polygon-id/claim/${guildId}:${role.id}/qrcode`
+      ? `${env.NEXT_PUBLIC_POLYGONID_API}/v1/users/${userId}/polygon-id/claim/${guildId}:${role.id}/qrcode`
       : null
   )
 

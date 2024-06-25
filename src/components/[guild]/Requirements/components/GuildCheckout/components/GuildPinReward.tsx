@@ -1,3 +1,4 @@
+import { env } from "env"
 import { Img, Text } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { RewardDisplay } from "components/[guild]/RoleCard/components/Reward"
@@ -19,7 +20,7 @@ const GuildPinReward = (): JSX.Element => {
         <Img
           w="full"
           zIndex={1}
-          src={`${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${pinImage}`}
+          src={`${env.NEXT_PUBLIC_IPFS_GATEWAY}${pinImage}`}
           alt="Guild Pin image"
           borderRadius="full"
           boxSize="6"

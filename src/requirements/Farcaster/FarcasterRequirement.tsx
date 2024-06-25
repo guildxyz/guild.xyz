@@ -1,4 +1,5 @@
 import { Icon, Link, Skeleton, Text } from "@chakra-ui/react"
+import RequirementConnectButton from "components/[guild]/Requirements/components/ConnectRequirementPlatformButton"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
@@ -12,7 +13,11 @@ import { useFarcasterChannel } from "./hooks/useFarcasterChannels"
 import { useFarcasterUser } from "./hooks/useFarcasterUsers"
 
 const FarcasterProfile = (props: RequirementProps) => (
-  <Requirement image={REQUIREMENTS.FARCASTER.icon.toString()} {...props}>
+  <Requirement
+    image={REQUIREMENTS.FARCASTER.icon.toString()}
+    footer={<RequirementConnectButton />}
+    {...props}
+  >
     Have a Farcaster profile
   </Requirement>
 )
@@ -28,6 +33,7 @@ const FarcasterFollowUser = (props: RequirementProps) => {
 
   return (
     <Requirement
+      footer={<RequirementConnectButton />}
       image={farcasterUser?.pfp_url || "/requirementLogos/farcaster.png"}
       {...props}
     >
@@ -51,7 +57,11 @@ const FarcasterTotalFollowers = (props: RequirementProps) => {
   const { data } = useRequirementContext()
 
   return (
-    <Requirement image={REQUIREMENTS.FARCASTER.icon.toString()} {...props}>
+    <Requirement
+      footer={<RequirementConnectButton />}
+      image={REQUIREMENTS.FARCASTER.icon.toString()}
+      {...props}
+    >
       {`Have at least ${data?.min ?? "-"} followers on Farcaster`}
     </Requirement>
   )
@@ -67,7 +77,11 @@ const FarcasterLikeRecast = (props: RequirementProps) => {
   } = useFarcasterCast(data?.hash)
 
   return (
-    <Requirement image={REQUIREMENTS.FARCASTER.icon.toString()} {...props}>
+    <Requirement
+      footer={<RequirementConnectButton />}
+      image={REQUIREMENTS.FARCASTER.icon.toString()}
+      {...props}
+    >
       {type === "FARCASTER_LIKE" ? "Like" : "Recast"}
       <>
         {" this cast: "}
@@ -89,7 +103,11 @@ const FarcasterFollowChannel = (props: RequirementProps) => {
   const { data: farcasterChannel } = useFarcasterChannel(data?.id)
 
   return (
-    <Requirement image={REQUIREMENTS.FARCASTER.icon.toString()} {...props}>
+    <Requirement
+      footer={<RequirementConnectButton />}
+      image={REQUIREMENTS.FARCASTER.icon.toString()}
+      {...props}
+    >
       {"Follow the "}
       <Skeleton isLoaded={!!farcasterChannel}>
         <Link
@@ -116,7 +134,11 @@ const FarcasterIncludeText = (props: RequirementProps) => {
   const { type, data } = useRequirementContext()
 
   return (
-    <Requirement image={REQUIREMENTS.FARCASTER.icon.toString()} {...props}>
+    <Requirement
+      footer={<RequirementConnectButton />}
+      image={REQUIREMENTS.FARCASTER.icon.toString()}
+      {...props}
+    >
       <Text as="span">{"Have "}</Text>
       <DataBlockWithCopy text={data?.id} />
       <Text as="span">
