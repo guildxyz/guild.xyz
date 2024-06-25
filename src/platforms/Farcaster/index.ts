@@ -3,7 +3,7 @@ import { PlatformAsRewardRestrictions, RewardData } from "platforms/types"
 
 export default {
   icon: FarcasterIcon,
-  imageUrl: "/platforms/poap.png",
+  imageUrl: "/requirementLogos/farcaster.png",
   name: "Farcaster",
   colorScheme: "FARCASTER",
   gatedEntity: "farcaster",
