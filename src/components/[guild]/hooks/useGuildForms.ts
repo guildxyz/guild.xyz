@@ -4,7 +4,7 @@ import useGuild from "./useGuild"
 
 const useGuildForms = () => {
   const { id } = useGuild()
-  return useSWRWithOptionalAuth<(Schemas["Form"] & { submissionCount: number })[]>(
+  return useSWRWithOptionalAuth<Schemas["Form"][]>(
     id ? `/v2/guilds/${id}/forms` : null,
     undefined,
     false,

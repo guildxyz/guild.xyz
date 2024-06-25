@@ -23,7 +23,7 @@ const useEditForm = ({
       ...signedValidation,
     })
 
-  return useSubmitWithSign<Schemas["Form"] & { submissionCount: number }>(editForm, {
+  return useSubmitWithSign<Schemas["Form"]>(editForm, {
     onSuccess: (response) => {
       onSuccess?.()
 
