@@ -44,7 +44,7 @@ const APPROVAL_POLL_INITIAL_DELAY_MS = 15_000
 const APPROVAL_POLL_INTERVAL_MS = 5000
 // Poll ends, and a new QR is generated this much before the actual deadline
 const POLL_EARLY_END_SEC = 120
-// Enable the manual QR regenation button, when less than this muc seconds is left
+// Enable the manual QR regeneration button, when less than this much seconds is left
 const ENABLE_REGENERATE_BUTTON_AT_SEC = 10 * 60
 
 const FarcasterProfile = () => {
