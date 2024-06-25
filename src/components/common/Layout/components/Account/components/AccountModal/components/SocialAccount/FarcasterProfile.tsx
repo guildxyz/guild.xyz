@@ -179,7 +179,8 @@ const ConnectFarcasterButton = ({
               "Connect Farcaster"
             ) : (
               <>
-                <Icon boxSize={6} as={DeviceMobileCamera} /> Scan With your phone
+                <Icon boxSize={6} as={DeviceMobileCamera} />
+                <Text>Scan With your phone</Text>
               </>
             )}
           </ModalHeader>
