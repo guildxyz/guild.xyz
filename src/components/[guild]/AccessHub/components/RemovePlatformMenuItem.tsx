@@ -13,17 +13,13 @@ type Props = {
 
 const RemovePlatformMenuItem = ({ platformGuildId }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-
+  const color = useColorModeValue("red.600", "red.300")
   const { guildPlatforms } = useGuild()
-  const guildPlatform = guildPlatforms.find(
+  const guildPlatform = guildPlatforms?.find(
     (gp) => gp.platformGuildId === platformGuildId
   )
-
-  const { isPlatform } = rewards[PlatformType[guildPlatform?.platformId]] ?? {}
-
   const { onSubmit, isLoading } = useRemoveGuildPlatform(guildPlatform?.id)
-
-  const color = useColorModeValue("red.600", "red.300")
+  const platformType = guildPlatform ? rewards[PlatformType[guildPlatform.platformId]] ?? {} : {}
 
   return (
     <>
@@ -40,7 +36,7 @@ const RemovePlatformMenuItem = ({ platformGuildId }: Props): JSX.Element => {
         description={
           <>
             Are you sure you want to remove this reward?
-            {isPlatform && <AlreadyGrantedAccessesWillRemainInfo />}
+            {platformType?.isPlatform && <AlreadyGrantedAccessesWillRemainInfo />}
           </>
         }
         confirmationText="Remove"

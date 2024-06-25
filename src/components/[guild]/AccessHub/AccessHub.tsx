@@ -32,6 +32,8 @@ export const useAccessedGuildPlatforms = (groupId?: number) => {
   const { isAdmin } = useGuildPermission()
   const { roleIds } = useMembership()
 
+  if (roles === undefined || guildPlatforms === undefined) return
+
   const relevantRoles = groupId
     ? roles.filter((role) => role.groupId === groupId)
     : roles.filter((role) => !role.groupId)
@@ -39,7 +41,7 @@ export const useAccessedGuildPlatforms = (groupId?: number) => {
   const relevantGuildPlatformIds = relevantRoles.flatMap((role) =>
     role.rolePlatforms.map((rp) => rp.guildPlatformId)
   )
-  const relevantGuildPlatforms = guildPlatforms.filter(
+  const relevantGuildPlatforms = guildPlatforms?.filter(
     (gp) =>
       relevantGuildPlatformIds.includes(gp.id) &&
       gp.platformId !== PlatformType.POINTS &&
@@ -88,7 +90,7 @@ const AccessHub = (): JSX.Element => {
 
   const shouldShowGuildPin =
     !group &&
-    featureFlags.includes("GUILD_CREDENTIAL") &&
+    featureFlags?.includes("GUILD_CREDENTIAL") &&
     ((isMember && guildPin?.isActive) || isAdmin)
 
   const hasVisiblePages = !!groups?.length && roles?.some((role) => !!role.groupId)

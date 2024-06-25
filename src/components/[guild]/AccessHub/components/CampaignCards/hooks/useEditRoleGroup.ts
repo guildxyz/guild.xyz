@@ -28,12 +28,13 @@ const useEditRoleGroup = (groupId: number, onSuccess: () => void) => {
         title: "Successfully edited page",
       })
       mutateGuild(
-        (curr) => ({
-          ...curr,
-          groups: curr.groups.map((group) =>
-            group.id !== groupId ? group : response
-          ),
-        }),
+        (curr) =>
+          curr && {
+            ...curr,
+            groups: curr.groups.map((group) =>
+              group.id !== groupId ? group : response
+            ),
+          },
         { revalidate: false }
       )
       onSuccess()
