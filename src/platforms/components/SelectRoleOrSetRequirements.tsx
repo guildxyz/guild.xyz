@@ -9,7 +9,8 @@ import useRoleGroup from "components/[guild]/hooks/useRoleGroup"
 import SetRequirements from "components/create-guild/Requirements"
 import rewards, { PlatformAsRewardRestrictions } from "platforms/rewards"
 import { useFormContext, useWatch } from "react-hook-form"
-import { PlatformName } from "types"
+import { PlatformName, Visibility } from "types"
+import getRandomInt from "utils/getRandomInt"
 
 type Props = {
   selectedPlatform: PlatformName
@@ -51,25 +52,20 @@ const SelectRoleOrSetRequirements = ({ isRoleSelectorDisabled }: Props) => {
     ? availableRoles.filter((role) => role.groupId === group.id)
     : availableRoles.filter((role) => !role.groupId)
 
-  const { register, unregister, setValue } = useFormContext()
+  const { unregister, setValue } = useFormContext()
   const { selection, activeTab, setActiveTab } = useAddRewardContext()
 
   const erc20Type: "REQUIREMENT_AMOUNT" | "STATIC" | null =
     selection === "ERC20" ? data?.dynamicAmount.operation.input.type : null
 
   const handleChange = (value: RoleTypeToAddTo) => {
-    /**
-     * This custom ERC20 condition might not be needed cause we've disabled the
-     * switcher since then, but maybe it will be in the future so leaving it now
-     */
-    if (erc20Type !== "REQUIREMENT_AMOUNT") {
-      if (value === RoleTypeToAddTo.EXISTING_ROLE) {
-        unregister("requirements")
-      } else {
-        register("requirements", { value: [{ type: "FREE" }] })
-        unregister("roleIds")
-      }
+    if (value === RoleTypeToAddTo.NEW_ROLE) {
+      unregister("roleIds")
+      setValue("name", data?.roleName || `New ${rewards[selection].name} role`)
+      setValue("imageUrl", data?.imageUrl || `/guildLogos/${getRandomInt(286)}.svg`)
+      setValue("roleVisibility", Visibility.PUBLIC)
     }
+
     setActiveTab(value)
   }
 

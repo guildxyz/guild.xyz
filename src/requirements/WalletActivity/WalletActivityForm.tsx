@@ -42,16 +42,18 @@ export const COVALENT_CHAINS = new Set<Chain>([
   "OASIS_SAPPHIRE",
   "BLAST_MAINNET",
   "ZETACHAIN",
+  "TAIKO",
+  "FANTOM",
 ])
 
 const walletActivityRequirementTypes: SelectOption[] = [
   {
-    label: "Wallet age",
+    label: "First transaction",
     value: "COVALENT_FIRST_TX",
     WalletActivityRequirement: CovalentFirstTx,
   },
   {
-    label: "Wallet age (relative)",
+    label: "First transaction (relative)",
     value: "COVALENT_FIRST_TX_RELATIVE",
     WalletActivityRequirement: CovalentFirstTxRelative,
   },
@@ -66,12 +68,12 @@ const walletActivityRequirementTypes: SelectOption[] = [
     WalletActivityRequirement: CovalentContractDeployRelative,
   },
   {
-    label: "Transaction count",
+    label: "Transactions",
     value: "COVALENT_TX_COUNT",
     WalletActivityRequirement: CovalentTxCount,
   },
   {
-    label: "Transaction count (relative)",
+    label: "Transactions (relative)",
     value: "COVALENT_TX_COUNT_RELATIVE",
     WalletActivityRequirement: CovalentTxCountRelative,
   },
@@ -122,6 +124,8 @@ const WalletActivityForm = ({
     "OASIS_SAPPHIRE",
     "BLAST_MAINNET",
     "ZETACHAIN",
+    "TAIKO",
+    "FANTOM",
   ]
 
   for (const covalentChain of COVALENT_CHAINS.values()) {

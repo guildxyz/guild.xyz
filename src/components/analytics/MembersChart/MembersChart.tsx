@@ -200,8 +200,7 @@ const MembersChart = () => {
                 textAnchor: "start",
               })}
             />
-            {/* temporarily removed until we get accurate member counts from BE */}
-            {/* {data?.total && shownLines?.includes("total") && (
+            {data?.total && shownLines?.includes("total") && (
               <LineSeries
                 stroke="currentColor"
                 dataKey="total"
@@ -209,7 +208,7 @@ const MembersChart = () => {
                 curve={curveMonotoneX}
                 {...accessors}
               />
-            )} */}
+            )}
             {shownRoles?.map(({ roleId, memberCounts }) => (
               <LineSeries
                 key={roleId}

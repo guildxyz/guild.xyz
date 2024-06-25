@@ -88,7 +88,16 @@ const MintGuildPin = (): JSX.Element => {
         </Button>
       </Tooltip>
 
-      <Modal isOpen={isOpen} onClose={onClose} colorScheme="dark">
+      <Modal
+        isOpen={isOpen}
+        onClose={() => {
+          onClose()
+          captureEvent("$set", {
+            closedGuildPinModal: true,
+          })
+        }}
+        colorScheme="dark"
+      >
         <ModalOverlay />
         <ModalContent>
           <ModalHeader pb={4}>Mint Guild Pin</ModalHeader>

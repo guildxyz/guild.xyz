@@ -10,9 +10,10 @@ import { PlatformName, RoleFormType, RolePlatform } from "types"
 
 type Props = {
   platformType: PlatformName
-  rolePlatform?: RoleFormType["rolePlatforms"][number]
+  rolePlatform?: NonNullable<RoleFormType["rolePlatforms"]>[number]
   defaultValues?: RolePlatformAvailabilityForm
   onDone: (data: RolePlatformAvailabilityForm) => void
+  isLoading?: boolean
 }
 
 const AvailabilitySetup = ({
@@ -20,15 +21,16 @@ const AvailabilitySetup = ({
   rolePlatform,
   defaultValues,
   onDone,
+  isLoading,
 }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const showAvailabilityTags = shouldShowAvailabilityTags(rolePlatform)
 
   // If claim is already started by date, and thats the only limitation, show the full button
   const notCompact =
-    !rolePlatform.capacity &&
-    !rolePlatform.endTime &&
-    rolePlatform.startTime &&
+    !rolePlatform?.capacity &&
+    !rolePlatform?.endTime &&
+    rolePlatform?.startTime &&
     new Date(rolePlatform.startTime).getTime() < Date.now()
 
   return (
@@ -42,8 +44,9 @@ const AvailabilitySetup = ({
         isOpen={isOpen}
         onClose={onClose}
         platformType={platformType}
-        onDone={(data) => {
-          onDone(data)
+        isLoading={isLoading}
+        onDone={async (data) => {
+          await onDone(data)
           onClose()
         }}
       />

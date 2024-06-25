@@ -1,7 +1,10 @@
 import { env } from "env"
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { usePostHogContext } from "components/_app/PostHogProvider"
+import {
+  isUserRejectedError,
+  usePostHogContext,
+} from "components/_app/PostHogProvider"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import { useToastWithTweetButton } from "hooks/useToast"
@@ -211,6 +214,13 @@ const useMintGuildPin = () => {
         const prettyError = error.correlationId
           ? error
           : processViemContractError(error)
+
+        if (isUserRejectedError(prettyError)) {
+          captureEvent("$set", {
+            cancelledGuildPinMinting: true,
+          })
+        }
+
         showErrorToast(prettyError)
 
         captureEvent("Mint Guild Pin error (GuildCheckout)", {

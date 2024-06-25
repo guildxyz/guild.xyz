@@ -1,5 +1,5 @@
-import { env } from "env"
 import { ContractCallSupportedChain } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
+import { env } from "env"
 import { NextApiHandler } from "next"
 import { OneOf } from "types"
 import fetcher from "utils/fetcher"
@@ -33,6 +33,16 @@ export const alchemyApiUrl: Record<ContractCallSupportedChain, string> = {
   ZKSYNC_ERA: "",
   LINEA: "",
   CYBER: "",
+  ARBITRUM: `https://arb-mainnet.g.alchemy.com/nft/v3/${env.ARBITRUM_ALCHEMY_KEY}/getOwnersForContract`,
+  SCROLL: "",
+  TAIKO: "",
+  BLAST_MAINNET: "",
+  X1: "",
+  CORE_DAO: "",
+  METIS: "",
+  NEON_EVM: "",
+  POLYGON_ZKEVM: "",
+  ZETACHAIN: "",
   SEPOLIA: `https://eth-sepolia.g.alchemy.com/nft/v3/${env.SEPOLIA_ALCHEMY_KEY}/getOwnersForContract`,
 }
 

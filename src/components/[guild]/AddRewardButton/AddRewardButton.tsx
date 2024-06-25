@@ -9,6 +9,7 @@ import rewards, { modalSizeForPlatform } from "platforms/rewards"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { Requirement, RoleFormType, Visibility } from "types"
 import { AddRewardProvider, useAddRewardContext } from "../AddRewardContext"
+import { ClientStateRequirementHandlerProvider } from "../RequirementHandlerContext"
 import SelectRewardPanel from "../RolePlatforms/components/AddRoleRewardModal/SelectRewardPanel"
 import { useIsTabsStuck } from "../Tabs"
 import { useThemeContext } from "../ThemeContext"
@@ -80,6 +81,12 @@ const AddRewardButton = (): JSX.Element => {
     }
   }
 
+  const closeAndClear = () => {
+    methods.reset(defaultValues)
+    onAddRewardModalClose()
+    setIsAddRewardPanelDirty(false)
+  }
+
   return (
     <>
       <Button
@@ -112,38 +119,44 @@ const AddRewardButton = (): JSX.Element => {
         >
           <ModalOverlay />
 
-          {step === "HOME" && <SelectRewardPanel />}
+          <ClientStateRequirementHandlerProvider methods={methods}>
+            {step === "HOME" && <SelectRewardPanel />}
 
-          {isRewardSetupStep && (
-            <AddRewardPanel
-              onAdd={(createdRolePlatform) => {
-                const {
-                  roleName = null,
-                  requirements = null,
-                  ...rest
-                } = createdRolePlatform
-                methods.setValue("rolePlatforms.0", {
-                  ...rest,
-                  visibility,
-                })
-                if (roleName) methods.setValue("roleName", roleName)
-                if (requirements?.length > 0) {
-                  methods.setValue("requirements", requirements)
-                }
-                setStep("SELECT_ROLE")
-              }}
-              skipSettings
-            />
-          )}
+            {isRewardSetupStep && (
+              <AddRewardPanel
+                onAdd={(createdRolePlatform) => {
+                  const {
+                    roleName = null,
+                    requirements = null,
+                    ...rest
+                  } = createdRolePlatform
+                  methods.setValue("rolePlatforms.0", {
+                    ...rest,
+                    visibility,
+                  })
+                  if (roleName) methods.setValue("roleName", roleName)
+                  if (requirements?.length > 0) {
+                    methods.setValue("requirements", requirements)
+                  }
+                  setStep("SELECT_ROLE")
+                }}
+                onCancel={() => {
+                  methods.reset(defaultValues)
+                  setStep("HOME")
+                }}
+                skipSettings
+              />
+            )}
 
-          {step === "SELECT_ROLE" && <SelectRolePanel />}
+            {step === "SELECT_ROLE" && <SelectRolePanel onSuccess={closeAndClear} />}
+          </ClientStateRequirementHandlerProvider>
         </Modal>
       </FormProvider>
       <DiscardAlert
         isOpen={isDiscardAlertOpen}
         onClose={onDiscardAlertClose}
         onDiscard={() => {
-          onAddRewardModalClose()
+          closeAndClear()
           onDiscardAlertClose()
           setIsAddRewardPanelDirty(false)
         }}

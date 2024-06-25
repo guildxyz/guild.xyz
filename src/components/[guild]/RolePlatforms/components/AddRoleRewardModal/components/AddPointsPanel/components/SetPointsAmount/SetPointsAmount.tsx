@@ -9,12 +9,12 @@ import StaticPointsAmountForm from "./components/StaticPointsAmountForm"
 const SetPointsAmount = ({
   imageUrl,
   name,
-  baseFieldPath,
+  baseFieldPath = "",
   defaultDynamicAmount = false,
 }) => {
   const [type, setType] = useState(defaultDynamicAmount ? "dynamic" : "static")
 
-  const { setValue, unregister } = useFormContext()
+  const { setValue } = useFormContext()
   const { targetRoleId } = useAddRewardContext()
 
   const handleTypeChange = (newType: "dynamic" | "static") => {
@@ -39,9 +39,7 @@ const SetPointsAmount = ({
         },
       }
       setValue(dynamicAmountFieldPath, defaultDynamic, { shouldDirty: true })
-      setValue(`${baseFieldPath}.platformRoleData.score`, {
-        platformRoleData: { score: "0" },
-      })
+      setValue(`${baseFieldPath}.platformRoleData`, { score: 0 })
     }
     if (newType === "static") {
       setValue(dynamicAmountFieldPath, null)

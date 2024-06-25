@@ -24,7 +24,7 @@ export type AddPointsFormType = {
   }
 }
 
-const AddPointsPanel = ({ onAdd }: AddRewardPanelProps) => {
+const AddPointsPanel = ({ onAdd, onCancel }: AddRewardPanelProps) => {
   const { id, guildPlatforms } = useGuild()
 
   const { targetRoleId } = useAddRewardContext()
@@ -103,7 +103,7 @@ const AddPointsPanel = ({ onAdd }: AddRewardPanelProps) => {
 
   return (
     <FormProvider {...methods}>
-      <DefaultAddRewardPanelWrapper>
+      <DefaultAddRewardPanelWrapper onCancel={onCancel}>
         <Text colorScheme="gray" fontWeight="semibold" mb="8">
           Gamify your guild with a score system, so users can collect points / XP /
           your custom branded score, and compete on a leaderboard. You’ll also be
