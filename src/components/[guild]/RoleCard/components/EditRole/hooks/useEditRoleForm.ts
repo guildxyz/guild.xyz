@@ -1,5 +1,4 @@
 import useGuild from "components/[guild]/hooks/useGuild"
-import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { Logic, Visibility } from "types"
 
@@ -45,16 +44,6 @@ const useEditRoleForm = (roleId: number) => {
     mode: "all",
     defaultValues,
   })
-
-  useEffect(() => {
-    const role = roles?.find((r) => r.id === roleId)
-    if (!role) return
-
-    methods.reset({
-      ...role,
-      anyOfNum: role.anyOfNum ?? 1,
-    })
-  }, [roles, roleId, methods])
 
   return { ...methods, defaultValues }
 }
