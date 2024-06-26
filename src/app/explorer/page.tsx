@@ -16,6 +16,8 @@ import { Header } from "@/components/Header"
 import { GuildCard } from "@/components/GuildCard"
 import useSWR from "swr"
 import { GuildBase } from "types"
+import Image from "next/image"
+import bannerImage from "/public/banner.png"
 
 export function PageBoundary({ children }: PropsWithChildren) {
   return (
@@ -29,6 +31,10 @@ const Page = () => {
     async (url: string) => (await fetch(url)).json()
   )
 
+  //bg: `linear-gradient(to top right, ${bgColor} ${bgLinearPercentage}, transparent), url('/banner.png ')`,
+  // <Image src={bannerImage} alt='banner' className="absolute inset-0 opacity-20 h-full object-cover" />
+  // <div className="absolute inset-0 bg-[url('/banner.png')]" />
+  // <Image priority src={bannerImage} alt='banner' className="w-full opacity-10 object-cover bg-repeat" />
   return (
     <div className="min-h-screen">
       <div className="relative">
@@ -38,8 +44,12 @@ const Page = () => {
             <h1 className="font-display text-4xl font-bold tracking-tight sm:text-5xl">
               Guildhall
             </h1>
-            <div className="absolute inset-0 -bottom-28 -z-10 bg-[hsl(240deg_2.65%_22.16%)]" />
           </PageBoundary>
+          <div className="absolute inset-0 -bottom-28 -z-10 overflow-hidden">
+            <div className="absolute inset-0 bg-[hsl(240deg_2.65%_22.16%)]" />
+            <div className="absolute inset-0 bg-[url('/banner.png')] bg-repeat-x object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-tr from-[hsl(240deg_2.65%_22.16%)] from-50% to-transparent" />
+          </div>
         </div>
       </div>
       <PageBoundary>
@@ -67,7 +77,9 @@ const Page = () => {
             </Button>
           </div>
           <div className="mb-5 flex flex-col gap-4">
-            <h2 className="text-lg font-bold">Explore verified guilds</h2>
+            <h2 className="text-lg font-bold tracking-tight">
+              Explore verified guilds
+            </h2>
             <div className="relative flex flex-col gap-3 sm:flex-row sm:gap-0">
               <MagnifyingGlass className="absolute left-4 top-4 text-muted-foreground" />
               <Input

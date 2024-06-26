@@ -3,6 +3,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/Avatar"
 import { Badge } from "./ui/Badge"
 import { GuildBase } from "types"
 import pluralize from "utils/pluralize"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "./ui/tooltip"
 
 type Props = {
   guildData: GuildBase
@@ -19,13 +25,22 @@ export const GuildCard: React.FC<Props> = ({ guildData }) => (
         {guildData.name}
       </h3>
       {guildData.tags.includes("VERIFIED") && (
-        <div className="relative">
-          <div
-            className="absolute inset-1 rounded-full bg-white"
-            aria-hidden="true"
-          />
-          <CircleWavyCheck weight="fill" className="relative fill-blue-500" />
-        </div>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger>
+              <div className="relative">
+                <div
+                  className="absolute inset-1 rounded-full bg-white"
+                  aria-hidden="true"
+                />
+                <CircleWavyCheck weight="fill" className="relative fill-blue-500" />
+              </div>
+            </TooltipTrigger>
+            <TooltipContent>
+              This guild is verified by <code>Guild.xyz</code>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       )}
     </div>
     <div className="flex gap-2">
