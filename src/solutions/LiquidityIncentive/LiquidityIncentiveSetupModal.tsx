@@ -57,15 +57,33 @@ const LiquidityIncentiveSetupModal = ({
     count: steps.length,
   })
 
+  const defaultValues = {
+    conversion: 1,
+    pool: {
+      data: {
+        lpVault: "",
+      },
+    },
+    name: null,
+    imageUrl: null,
+  }
+
   const methods = useForm<LiquidityIncentiveForm>({
     mode: "all",
-    defaultValues: { conversion: 1 },
+    // @ts-ignore
+    defaultValues,
   })
 
   const handleClose = () => {
     onClose()
-    methods.reset()
+
+    // @ts-ignore
+    methods.reset(defaultValues)
     setActiveStep(0)
+  }
+
+  const submit = (data) => {
+    console.log(data)
   }
 
   return (
@@ -139,7 +157,10 @@ const LiquidityIncentiveSetupModal = ({
                         animateOpacity
                         style={{ padding: "2px", margin: "-2px" }}
                       >
-                        <step.content onContinue={goToNext} onSubmit={() => {}} />
+                        <step.content
+                          onContinue={goToNext}
+                          onSubmit={methods.handleSubmit(submit)}
+                        />
                       </Collapse>
                     </Box>
 

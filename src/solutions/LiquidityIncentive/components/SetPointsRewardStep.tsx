@@ -32,8 +32,7 @@ const SetPointsReward = ({ onSubmit }: { onSubmit: () => void }) => {
 
   const setupName = useWatch({ name: "name" })
 
-  const isConversionDisabled =
-    pointsPlatformId === undefined && setupName === undefined
+  const isConversionDisabled = pointsPlatformId === undefined && setupName === null
   const isSubmitDisabled = isConversionDisabled || !conversion
 
   return (
