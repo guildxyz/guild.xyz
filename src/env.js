@@ -35,7 +35,6 @@ export const env = createEnv({
     PINATA_ADMIN_SECRET: z.string(),
 
     // Third-party
-    COINBASE_PAY_API_KEY: z.string(),
     NOOX_KEY: z.string(),
     OPENSEA_API_KEY: z.string(),
     SOUND_API_KEY: z.string(),
@@ -125,7 +124,6 @@ export const env = createEnv({
     PINATA_ADMIN_KEY: process.env.PINATA_ADMIN_KEY,
     PINATA_ADMIN_SECRET: process.env.PINATA_ADMIN_SECRET,
 
-    COINBASE_PAY_API_KEY: process.env.COINBASE_PAY_API_KEY,
     NOOX_KEY: process.env.NOOX_KEY,
     OPENSEA_API_KEY: process.env.OPENSEA_API_KEY,
     SOUND_API_KEY: process.env.SOUND_API_KEY,

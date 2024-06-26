@@ -39,7 +39,10 @@ const Collector = ({ address, balance }: Props): JSX.Element => {
 
 const CollectorBalance = ({ balance }) => {
   const ranges = useNftRanges()
-  const rangeIcon = ranges?.find((r) => r.min <= balance && r.max >= balance)?.icon
+
+  const rangeIcon =
+    ranges?.at(-1)?.max >= 10 &&
+    ranges?.find((r) => r.min <= balance && r.max >= balance)?.icon
 
   return (
     <Text

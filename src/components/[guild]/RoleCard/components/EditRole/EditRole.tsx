@@ -13,9 +13,7 @@ import {
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { ApiRequirementHandlerProvider } from "components/[guild]/RequirementHandlerContext"
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import DiscardAlert from "components/common/DiscardAlert"
-import OnboardingMarker from "components/common/OnboardingMarker"
 import Section from "components/common/Section"
 import Description from "components/create-guild/Description"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
@@ -33,10 +31,11 @@ import RoleGroupSelect from "./components/RoleGroupSelect"
 import useEditRoleForm from "./hooks/useEditRoleForm"
 import useSubmitEditRole from "./hooks/useSubmitEditRole"
 
-const EditRole = ({ roleId }: { roleId: number }): JSX.Element => {
+type Props = { roleId: number }
+
+const EditRole = ({ roleId }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const btnRef = useRef()
-  const { captureEvent } = usePostHogContext()
 
   const methods = useEditRoleForm(roleId)
   const { control, reset, formState, defaultValues } = methods
@@ -71,22 +70,14 @@ const EditRole = ({ roleId }: { roleId: number }): JSX.Element => {
 
   return (
     <>
-      <OnboardingMarker
-        step={3}
-        onClick={() => {
-          captureEvent("guild creation flow > pulse marker: Edit role clicked")
-          onOpen()
-        }}
-      >
-        <IconButton
-          ref={btnRef}
-          icon={<Icon as={PencilSimple} />}
-          size="sm"
-          rounded="full"
-          aria-label="Edit role"
-          onClick={onOpen}
-        />
-      </OnboardingMarker>
+      <IconButton
+        ref={btnRef}
+        icon={<Icon as={PencilSimple} />}
+        size="sm"
+        rounded="full"
+        aria-label="Edit role"
+        onClick={onOpen}
+      />
 
       <Drawer
         isOpen={isOpen}
@@ -141,14 +132,10 @@ const EditRole = ({ roleId }: { roleId: number }): JSX.Element => {
   )
 }
 
-const EditRoleWrapper = ({ roleId }) => {
+const EditRoleWrapper = ({ roleId }: Props) => {
   const { isDetailed } = useGuild()
   if (!isDetailed)
-    return (
-      <OnboardingMarker step={3}>
-        <IconButton size="sm" rounded="full" aria-label="Edit role" isLoading />
-      </OnboardingMarker>
-    )
+    return <IconButton size="sm" rounded="full" aria-label="Edit role" isLoading />
 
   return <EditRole roleId={roleId} />
 }
