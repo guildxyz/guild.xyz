@@ -30,7 +30,7 @@ const SelectExistingPlatform = ({ onClose, onSelect }: Props) => {
     name: "rolePlatforms",
   })
 
-  const roleVisibility = useWatch({ name: ".visibility" })
+  const roleVisibility = useWatch<RoleFormType, "visibility">({ name: "visibility" })
 
   const filteredPlatforms = guildPlatforms
     ? guildPlatforms.filter(
