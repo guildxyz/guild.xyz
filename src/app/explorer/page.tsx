@@ -16,8 +16,6 @@ import { Header } from "@/components/Header"
 import { GuildCard } from "@/components/GuildCard"
 import useSWR from "swr"
 import { GuildBase } from "types"
-import Image from "next/image"
-import bannerImage from "/public/banner.png"
 
 export function PageBoundary({ children }: PropsWithChildren) {
   return (
@@ -30,11 +28,6 @@ const Page = () => {
     "https://api.guild.xyz/v2/guilds?limit=20",
     async (url: string) => (await fetch(url)).json()
   )
-
-  //bg: `linear-gradient(to top right, ${bgColor} ${bgLinearPercentage}, transparent), url('/banner.png ')`,
-  // <Image src={bannerImage} alt='banner' className="absolute inset-0 opacity-20 h-full object-cover" />
-  // <div className="absolute inset-0 bg-[url('/banner.png')]" />
-  // <Image priority src={bannerImage} alt='banner' className="w-full opacity-10 object-cover bg-repeat" />
   return (
     <div className="min-h-screen">
       <div className="relative">
@@ -47,7 +40,7 @@ const Page = () => {
           </PageBoundary>
           <div className="absolute inset-0 -bottom-28 -z-10 overflow-hidden">
             <div className="absolute inset-0 bg-[hsl(240deg_2.65%_22.16%)]" />
-            <div className="absolute inset-0 bg-[url('/banner.png')] bg-repeat-x object-cover" />
+            <div className="absolute inset-0 bg-[url('/banner.png')] bg-[auto_115%] bg-[right_top_10px] bg-no-repeat opacity-10" />
             <div className="absolute inset-0 bg-gradient-to-tr from-[hsl(240deg_2.65%_22.16%)] from-50% to-transparent" />
           </div>
         </div>
