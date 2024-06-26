@@ -25,7 +25,7 @@ const useHandleRequirementState = (methods) => {
   }
 
   const append = (req: Requirement) => {
-    const reqToAdd = { ...req, id: Date.now() }
+    const reqToAdd = { id: Date.now(), ...req }
     if (freeEntry) {
       remove(0)
     }

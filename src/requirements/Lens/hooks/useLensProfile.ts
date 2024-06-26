@@ -45,7 +45,7 @@ const useLensProfile = (id: string) => {
           value: data.id,
           img:
             data.metadata?.picture?.optimized?.uri ??
-            (REQUIREMENTS.LENS_ACTION.icon as string),
+            (REQUIREMENTS.LENS.icon as string),
         }
       : undefined,
   }

@@ -8,6 +8,7 @@ import useToast from "hooks/useToast"
 import { FormProvider, useController, useForm, useWatch } from "react-hook-form"
 import { traitsSupportedChains } from "requirements/Nft/NftForm"
 import ChainPicker from "requirements/common/ChainPicker"
+import { Visibility } from "types"
 import { GUILD_PIN_CONTRACTS } from "utils/guildCheckout/constants"
 import { Chain } from "wagmiConfig/chains"
 import { useMintGuildPinContext } from "../../MintGuildPinContext"
@@ -75,7 +76,7 @@ const ActivateGuildPinForm = (): JSX.Element => {
                   },
                 ],
                 rolePlatforms: [],
-                visibility: "PUBLIC",
+                visibility: Visibility.PUBLIC,
               })
             }
           : showSuccessToastAndCloseModal,

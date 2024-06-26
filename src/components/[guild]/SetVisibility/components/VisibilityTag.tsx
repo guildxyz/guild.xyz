@@ -1,5 +1,5 @@
-import { Visibility } from "@guildxyz/types"
 import Button from "components/common/Button"
+import { Visibility } from "types"
 import { VISIBILITY_DATA } from "../visibilityData"
 
 const VisibilityTag = ({ visibility }: { visibility: Visibility }) => {

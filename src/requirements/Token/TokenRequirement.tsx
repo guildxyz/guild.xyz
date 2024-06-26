@@ -9,24 +9,20 @@ import Requirement, {
 import RequirementChainIndicator from "components/[guild]/Requirements/components/RequirementChainIndicator"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import useTokenData from "hooks/useTokenData"
-import { Chain, CHAIN_CONFIG } from "wagmiConfig/chains"
+import { CHAIN_CONFIG } from "wagmiConfig/chains"
 
 type Props = RequirementProps
 
 const TokenRequirement = ({ ...rest }: Props) => {
   const requirement = useRequirementContext()
 
-  // TODO: we could remove the cast once we'll have schemas for "ERC..." requirements
-  const requirementChain = requirement.chain as Chain
-  const requirementAddress = requirement.address as `0x${string}`
-
-  const { data, isValidating } = useTokenData(requirementChain, requirementAddress)
+  const { data, isValidating } = useTokenData(requirement.chain, requirement.address)
 
   return (
     <Requirement
       image={
         requirement.type === "COIN"
-          ? CHAIN_CONFIG[requirementChain]?.nativeCurrency?.iconUrl
+          ? CHAIN_CONFIG[requirement.chain]?.nativeCurrency?.iconUrl
           : data?.logoURI ?? (
               <Text as="span" fontWeight="bold" fontSize="xx-small">
                 ERC20
@@ -57,7 +53,7 @@ const TokenRequirement = ({ ...rest }: Props) => {
           : "any amount of"
       } ${
         requirement.type === "COIN"
-          ? CHAIN_CONFIG[requirementChain].nativeCurrency.symbol
+          ? CHAIN_CONFIG[requirement.chain].nativeCurrency.symbol
           : data?.symbol ?? requirement.symbol
       }`}
     </Requirement>

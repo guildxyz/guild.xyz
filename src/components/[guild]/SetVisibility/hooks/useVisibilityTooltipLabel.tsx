@@ -1,7 +1,7 @@
-import { Visibility } from "@guildxyz/types"
 import RoleTag from "components/[guild]/RoleTag"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { ReactNode } from "react"
+import { Visibility } from "types"
 import { VISIBILITY_DATA } from "../visibilityData"
 
 const useVisibilityTooltipLabel = (
@@ -10,12 +10,12 @@ const useVisibilityTooltipLabel = (
 ): ReactNode => {
   const { roles } = useGuild()
   const role =
-    visibilityRoleId && visibility === "PRIVATE"
+    visibilityRoleId && visibility === Visibility.PRIVATE
       ? roles?.find(({ id }) => id === visibilityRoleId)
       : undefined
 
   const tooltipDescription =
-    visibility !== "PRIVATE" ? (
+    visibility !== Visibility.PRIVATE ? (
       VISIBILITY_DATA[visibility]?.description ?? VISIBILITY_DATA.PUBLIC.description
     ) : !visibilityRoleId ? (
       "Only visible to role holders"

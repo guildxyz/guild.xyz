@@ -12,6 +12,7 @@ import Visibility from "components/[guild]/Visibility"
 import dynamic from "next/dynamic"
 import React, { ComponentType, PropsWithChildren } from "react"
 import { useFormContext } from "react-hook-form"
+import { Visibility as VisibilityType } from "types"
 import { useRequirementContext } from "./RequirementContext"
 import { RequirementImage, RequirementImageCircle } from "./RequirementImage"
 import ResetRequirementButton from "./ResetRequirementButton"
@@ -76,8 +77,8 @@ const Requirement = ({
             : requirement?.data?.customName || children}
           {!setValue ? (
             <Visibility
-              visibilityRoleId={requirement?.visibilityRoleId || null}
-              entityVisibility={requirement?.visibility ?? "PUBLIC"}
+              visibilityRoleId={requirement?.visibilityRoleId}
+              entityVisibility={requirement?.visibility ?? VisibilityType.PUBLIC}
               ml="1"
             />
           ) : null}

@@ -7,7 +7,7 @@ import useTokenData from "hooks/useTokenData"
 import { Check, Question, Warning } from "phosphor-react"
 import { NULL_ADDRESS, TOKEN_BUYER_CONTRACTS } from "utils/guildCheckout/constants"
 import { useChainId } from "wagmi"
-import { Chain, CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
+import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
 import { useRequirementContext } from "../../../RequirementContext"
 import usePrice from "../../hooks/usePrice"
 import { useGuildCheckoutContext } from "../GuildCheckoutContext"
@@ -17,16 +17,14 @@ const PurchaseAllowanceButton = (): JSX.Element => {
   const { urlName } = useGuild()
 
   const requirement = useRequirementContext()
-  // TODO: remove typecast once we implement schemas for ERC20 requirements
-  const requirementChain = requirement.chain as Chain
-  const requirementChainId = Chains[requirementChain]
+  const requirementChainId = Chains[requirement.chain]
   const { pickedCurrency } = useGuildCheckoutContext()
 
   const chainId = useChainId()
 
   const {
     data: { symbol, name },
-  } = useTokenData(requirementChain, pickedCurrency)
+  } = useTokenData(requirement.chain, pickedCurrency)
   const nativeCurrency = CHAIN_CONFIG[Chains[chainId]]?.nativeCurrency
   const isNativeCurrencyPicked = pickedCurrency === NULL_ADDRESS
 

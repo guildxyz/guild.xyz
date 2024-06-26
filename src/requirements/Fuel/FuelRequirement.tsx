@@ -12,11 +12,6 @@ const NULL_FUEL_ADDRESS =
 
 const FuelRequirement = (props: RequirementProps) => {
   const { type, address, data } = useRequirementContext()
-
-  // TODO: remove these once we implement the Fuel requirement schema
-  const requirementAddress = address as `0x${string}`
-  const requirementDataSymbol = data.symbol
-
   const tagBg = useColorModeValue("white", "blackAlpha.300")
 
   return (
@@ -52,11 +47,11 @@ const FuelRequirement = (props: RequirementProps) => {
                 } `}
                 {address === NULL_FUEL_ADDRESS ? (
                   "ETH"
-                ) : requirementDataSymbol ? (
-                  <Text as="span">{requirementDataSymbol}</Text>
+                ) : data?.symbol ? (
+                  <Text as="span">{data.symbol}</Text>
                 ) : (
-                  <DataBlockWithCopy text={requirementAddress}>
-                    {shortenHex(requirementAddress)}
+                  <DataBlockWithCopy text={address}>
+                    {shortenHex(address)}
                   </DataBlockWithCopy>
                 )}
               </>

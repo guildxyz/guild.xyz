@@ -19,7 +19,6 @@ import useSWRImmutable from "swr/immutable"
 import { Trait } from "types"
 import { GUILD_PIN_CONTRACTS } from "utils/guildCheckout/constants"
 import shortenHex from "utils/shortenHex"
-import { Chain } from "wagmiConfig/chains"
 import useNftMetadata, {
   NOUNS_BACKGROUNDS,
   useNftMetadataWithTraits,
@@ -43,13 +42,9 @@ const getNounsRequirementType = (trait: Trait) =>
 const NftRequirement = (props: RequirementProps) => {
   const requirement = useRequirementContext()
 
-  // TODO: we could remove the cast once we'll have schemas for "ERC..." requirements
-  const requirementChain = requirement.chain as Chain
-  const requirementAddress = requirement.address as `0x${string}`
-
   // This is a really basic solution, and it'll only handle the "Joined Guild" NFTs. We should probably think about a better solution in the future.
   const isGuildPin =
-    GUILD_PIN_CONTRACTS[requirementChain] === requirementAddress.toLowerCase()
+    GUILD_PIN_CONTRACTS[requirement.chain] === requirement.address.toLowerCase()
 
   const guildIdAttribute =
     isGuildPin &&
@@ -64,10 +59,10 @@ const NftRequirement = (props: RequirementProps) => {
   const { name: guildPinGuildName } = useGuild(guildIdAttribute ?? "")
 
   const { metadata: metadataWithTraits, isLoading: isMetadataWithTraitsLoading } =
-    useNftMetadata(requirementChain, requirementAddress, requirement.data?.id)
+    useNftMetadata(requirement.chain, requirement.address, requirement.data?.id)
   const { metadata, isLoading } = useNftMetadataWithTraits(
-    requirementChain,
-    requirementAddress
+    requirement.chain,
+    requirement.address
   )
 
   const nftDataLoading = isLoading || isMetadataWithTraitsLoading
@@ -88,7 +83,7 @@ const NftRequirement = (props: RequirementProps) => {
     : metadataWithTraits?.image || metadata?.image
 
   const shouldRenderImage =
-    ["ETHEREUM", "POLYGON"].includes(requirementChain) &&
+    ["ETHEREUM", "POLYGON"].includes(requirement.chain) &&
     (nftName || (requirement.name && requirement.name !== "-")) &&
     (nftDataLoading || nftImage)
 
@@ -134,7 +129,7 @@ const NftRequirement = (props: RequirementProps) => {
       {nftName ||
         (!requirement.name || requirement.name === "-"
           ? metadata?.slug ?? (
-              <DataBlock>{shortenHex(requirementAddress, 3)}</DataBlock>
+              <DataBlock>{shortenHex(requirement.address, 3)}</DataBlock>
             )
           : requirement.name !== "-" && requirement.name)}
 

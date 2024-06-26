@@ -3,7 +3,7 @@ import useTokenData from "hooks/useTokenData"
 import useVault from "requirements/Payment/hooks/useVault"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { formatUnits } from "viem"
-import { Chain, CHAIN_CONFIG } from "wagmiConfig/chains"
+import { CHAIN_CONFIG } from "wagmiConfig/chains"
 import { useRequirementContext } from "../../RequirementContext"
 import usePayFee from "../hooks/usePayFee"
 import FeesTable from "./FeesTable"
@@ -14,17 +14,13 @@ const BuyTotal = (): JSX.Element => {
   const requirement = useRequirementContext()
   const { pickedCurrency } = useGuildCheckoutContext()
 
-  // TODO: we could remove the cast once we'll have schemas for "ERC..." requirements
-  const requirementChain = requirement.chain as Chain
-  const requirementAddress = requirement.address as `0x${string}`
-
   const { token, fee, isLoading, error } = useVault(
-    requirementAddress,
+    requirement.address,
     requirement.data.id,
-    requirementChain
+    requirement.chain
   )
 
-  const { data: tokenData } = useTokenData(requirementChain, token)
+  const { data: tokenData } = useTokenData(requirement.chain, token)
 
   const isNativeCurrency = pickedCurrency === NULL_ADDRESS
 
@@ -35,7 +31,7 @@ const BuyTotal = (): JSX.Element => {
       ? parseFloat(
           formatUnits(
             estimatedGas,
-            CHAIN_CONFIG[requirementChain].nativeCurrency.decimals
+            CHAIN_CONFIG[requirement.chain].nativeCurrency.decimals
           )
         )
       : null
@@ -43,7 +39,7 @@ const BuyTotal = (): JSX.Element => {
   const priceInSellToken = fee
     ? isNativeCurrency
       ? Number(
-          formatUnits(fee, CHAIN_CONFIG[requirementChain].nativeCurrency.decimals)
+          formatUnits(fee, CHAIN_CONFIG[requirement.chain].nativeCurrency.decimals)
         )
       : tokenData?.decimals
       ? Number(formatUnits(fee, tokenData.decimals)) +
@@ -101,7 +97,7 @@ const BuyTotal = (): JSX.Element => {
             {!estimatedGasInFloat
               ? "Couldn't estimate"
               : `${Number(estimatedGasInFloat.toFixed(8))} ${
-                  CHAIN_CONFIG[requirementChain].nativeCurrency.symbol
+                  CHAIN_CONFIG[requirement.chain].nativeCurrency.symbol
                 }`}
           </Skeleton>
         </Td>

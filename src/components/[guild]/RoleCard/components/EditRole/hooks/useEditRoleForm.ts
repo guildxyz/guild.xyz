@@ -1,8 +1,7 @@
-import { Visibility } from "@guildxyz/types"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useEffect } from "react"
 import { useForm } from "react-hook-form"
-import { Logic } from "types"
+import { Logic, Visibility } from "types"
 
 export type RoleEditFormData = {
   id: number
@@ -37,7 +36,7 @@ const useEditRoleForm = (roleId: number) => {
     imageUrl,
     logic,
     anyOfNum: anyOfNum ?? 1,
-    visibility: visibility ?? "PUBLIC",
+    visibility,
     visibilityRoleId,
     groupId,
   }

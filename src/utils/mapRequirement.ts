@@ -1,10 +1,8 @@
-import { Requirement, RequirementCreateResponseOutput } from "types"
+import { Requirement } from "types"
 
-const mapRequirement = (
-  requirement?: Requirement | RequirementCreateResponseOutput
-) => {
+const mapRequirement = (requirement?: Requirement) => {
   // Using structuredClone so we don't modify the original requirement unintentionally
-  const newRequirement = structuredClone(requirement)
+  const newRequirement: Requirement = structuredClone(requirement)
 
   if (requirement.type === "COIN")
     newRequirement.address = "0x0000000000000000000000000000000000000000"

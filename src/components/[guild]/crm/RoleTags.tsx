@@ -18,7 +18,7 @@ import {
 import Button from "components/common/Button"
 import { Funnel } from "phosphor-react"
 import { memo } from "react"
-import { Role } from "types"
+import { Role, Visibility } from "types"
 import pluralize from "utils/pluralize"
 import ClickableTagPopover from "../activity/ActivityLogAction/components/ClickableTagPopover"
 import ViewRole from "../activity/ActivityLogAction/components/ClickableTagPopover/components/ViewRole"
@@ -178,7 +178,7 @@ export const CrmRoleTag = memo(
         ref={ref}
         name={role.name}
         imageUrl={role.imageUrl}
-        isHidden={role.visibility === "HIDDEN"}
+        isHidden={role.visibility === Visibility.HIDDEN}
         amount={typeof amount === "number" ? Number(amount.toFixed(2)) : undefined}
         {...rest}
       />

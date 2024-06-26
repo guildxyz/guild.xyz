@@ -23,14 +23,13 @@ function HiddenAllowlistText({ isEmail }: { isEmail: boolean }) {
 }
 
 const AllowlistRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
-  const requirement = useRequirementContext<"ALLOWLIST" | "ALLOWLIST_EMAIL">()
-  // TODO: we should add addressCount to the schema, and remove the cast later on
-  const castedRequirement = requirement as unknown as Extract<
+  const requirement = useRequirementContext() as Extract<
     Schemas["Requirement"],
     { type: "ALLOWLIST" | "ALLOWLIST_EMAIL" }
   > & {
     data: {
       // These are not included in the schemas, as these are appended on-the-fly by the BE, when sending the response
+      fileId?: string
       addressCount?: number
     }
   }
@@ -43,12 +42,12 @@ const AllowlistRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
     hideAllowlist,
     addressCount,
     fileId,
-  } = castedRequirement.data
+  } = requirement.data
 
   const willSearchAddresses = search !== debouncedSearch
   const { data: req, isValidating: isSearchingAddresses } = useRequirement(
-    castedRequirement?.roleId,
-    castedRequirement?.id,
+    requirement?.roleId,
+    requirement?.id,
     debouncedSearch
   )
 
@@ -61,12 +60,12 @@ const AllowlistRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const isEmail = castedRequirement.type === "ALLOWLIST_EMAIL"
+  const isEmail = requirement.type === "ALLOWLIST_EMAIL"
 
-  const { reqAccesses } = useRoleMembership(castedRequirement.roleId)
+  const { reqAccesses } = useRoleMembership(requirement.roleId)
 
   const hasAccess = reqAccesses?.find(
-    ({ requirementId }) => requirementId === castedRequirement.id
+    ({ requirementId }) => requirementId === requirement.id
   )?.access
 
   const shouldShowSearchHints =

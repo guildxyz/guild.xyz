@@ -17,6 +17,7 @@ const SetHiddenRoleRequirements = (): JSX.Element => {
   const { fields, append, update } = useFieldArray({
     name: "requirements",
     control,
+    keyName: "formFieldId",
   })
 
   // Watching the nested fields too, so we can properly update the list
@@ -51,7 +52,7 @@ const SetHiddenRoleRequirements = (): JSX.Element => {
             const type: RequirementType = getValues(`requirements.${i}.type`)
 
             return (
-              <CardMotionWrapper key={field.id}>
+              <CardMotionWrapper key={field.formFieldId}>
                 <RequirementEditableCard
                   type={type}
                   field={field}

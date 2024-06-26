@@ -1,9 +1,8 @@
-import { Visibility } from "@guildxyz/types"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
-import { RolePlatform } from "types"
+import { RolePlatform, Visibility } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
 import useLocalMutateRolePlatform from "./useLocalMutateRolePlatform"
 

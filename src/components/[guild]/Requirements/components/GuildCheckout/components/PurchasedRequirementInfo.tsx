@@ -8,7 +8,6 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import useTokenData from "hooks/useTokenData"
-import { Chain } from "wagmiConfig/chains"
 import { useRequirementContext } from "../../RequirementContext"
 
 type Props = {
@@ -21,13 +20,9 @@ const PurchasedRequirementInfo = ({ rightElement, footer }: Props): JSX.Element 
 
   const requirement = useRequirementContext()
 
-  // TODO: we could remove the cast once we'll have schemas for "ERC..." requirements
-  const requirementChain = requirement.chain as Chain
-  const requirementAddress = requirement.address as `0x${string}`
-
   const {
     data: { symbol, logoURI },
-  } = useTokenData(requirementChain, requirementAddress)
+  } = useTokenData(requirement?.chain, requirement?.address)
 
   return (
     <SimpleGrid

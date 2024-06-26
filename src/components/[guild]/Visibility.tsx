@@ -1,5 +1,5 @@
 import { Tag, TagLabel, TagLeftIcon, TagProps, Tooltip } from "@chakra-ui/react"
-import { Visibility as VisibilityType } from "@guildxyz/types"
+import { Visibility as VisibilityType } from "types"
 import useVisibilityTooltipLabel from "./SetVisibility/hooks/useVisibilityTooltipLabel"
 import { VISIBILITY_DATA } from "./SetVisibility/visibilityData"
 
@@ -19,7 +19,7 @@ const Visibility = ({
 
   const label = useVisibilityTooltipLabel(entityVisibility, visibilityRoleId)
 
-  if (entityVisibility === "PUBLIC") return null
+  if (entityVisibility === VisibilityType.PUBLIC) return null
 
   return (
     <Tooltip label={label}>

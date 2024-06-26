@@ -1,5 +1,4 @@
 import { ModalOverlay, useDisclosure } from "@chakra-ui/react"
-import { Schemas, Visibility } from "@guildxyz/types"
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
@@ -8,7 +7,7 @@ import { atom, useAtomValue } from "jotai"
 import { Plus } from "phosphor-react"
 import rewards, { modalSizeForPlatform } from "platforms/rewards"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
-import { RoleFormType } from "types"
+import { Requirement, RoleFormType, Visibility } from "types"
 import { AddRewardProvider, useAddRewardContext } from "../AddRewardContext"
 import { ClientStateRequirementHandlerProvider } from "../RequirementHandlerContext"
 import SelectRewardPanel from "../RolePlatforms/components/AddRoleRewardModal/SelectRewardPanel"
@@ -21,7 +20,7 @@ export type AddRewardForm = {
   // TODO: we could simplify the form - we don't need a rolePlatforms array here, we only need one rolePlatform
   rolePlatforms: RoleFormType["rolePlatforms"][number][]
   // TODO: use proper types, e.g. name & symbol shouldn't be required on this type
-  requirements?: Schemas["RequirementCreationPayload"][]
+  requirements?: Omit<Requirement, "id" | "roleId" | "name" | "symbol">[]
   roleIds?: number[]
   visibility: Visibility
   roleName?: string // Name for role, if new role is created with reward
@@ -31,7 +30,7 @@ export const defaultValues: AddRewardForm = {
   rolePlatforms: [],
   requirements: [{ type: "FREE" }],
   roleIds: [],
-  visibility: "PUBLIC",
+  visibility: Visibility.PUBLIC,
 }
 
 export const canCloseAddRewardModalAtom = atom(true)

@@ -6,7 +6,13 @@ import { DISPLAY_CARD_INTERACTIVITY_STYLES } from "components/common/DisplayCard
 import rewards, { PlatformAsRewardRestrictions } from "platforms/rewards"
 import { useState } from "react"
 import { useWatch } from "react-hook-form"
-import { PlatformType, Requirement, RoleFormType, RolePlatform } from "types"
+import {
+  PlatformType,
+  Requirement,
+  RoleFormType,
+  RolePlatform,
+  Visibility,
+} from "types"
 import EditRolePlatformModal from "../../EditRolePlatformModal"
 import PlatformCard from "../../PlatformCard"
 
@@ -30,7 +36,7 @@ const SelectExistingPlatform = ({ onClose, onSelect }: Props) => {
     name: "rolePlatforms",
   })
 
-  const roleVisibility = useWatch<RoleFormType, "visibility">({ name: "visibility" })
+  const roleVisibility: Visibility = useWatch({ name: ".visibility" })
 
   const filteredPlatforms = guildPlatforms
     ? guildPlatforms.filter(

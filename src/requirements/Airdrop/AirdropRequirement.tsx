@@ -1,4 +1,5 @@
 import { Icon, Text, useDisclosure } from "@chakra-ui/react"
+import { Schemas } from "@guildxyz/types"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
@@ -9,7 +10,10 @@ import { ArrowSquareIn } from "phosphor-react"
 import REQUIREMENTS from "requirements"
 
 const AirdropRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
-  const requirement = useRequirementContext<"GUILD_SNAPSHOT">()
+  const requirement = useRequirementContext() as Extract<
+    Schemas["Requirement"],
+    { type: "GUILD_SNAPSHOT" }
+  >
 
   const { isHidden } = requirement?.data
 

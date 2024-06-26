@@ -1,9 +1,8 @@
-import { Schemas } from "@guildxyz/types"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useRequirements from "components/[guild]/hooks/useRequirements"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
-import { RequirementCreateResponseOutput } from "types"
+import { Requirement } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
 import preprocessRequirement from "utils/preprocessRequirement"
 
@@ -16,9 +15,7 @@ const useCreateRequirement = (
   const showErrorToast = useShowErrorToast()
 
   const fetcherWithSign = useFetcherWithSign()
-  const createRequirement = async (
-    body?: Schemas["RequirementCreationPayload"]
-  ): Promise<RequirementCreateResponseOutput> =>
+  const createRequirement = async (body: Requirement): Promise<Requirement> =>
     fetcherWithSign([
       `/v2/guilds/${guildId}/roles/${roleId}/requirements`,
       {
@@ -28,16 +25,16 @@ const useCreateRequirement = (
     ])
 
   return useSubmit<
-    Schemas["RequirementCreationPayload"],
-    RequirementCreateResponseOutput
+    Omit<Requirement, "id" | "roleId" | "name" | "symbol">,
+    Requirement & { deletedRequirements?: number[] }
   >(createRequirement, {
     onSuccess: (response) => {
       if (
         (response.type === "ALLOWLIST" || response.type === "ALLOWLIST_EMAIL") &&
         response.data?.fileId
       ) {
-        // TODO: add the "status" prop to the schema
-        ;(response.data as any).status = "IN-PROGRESS"
+        response.data ??= {}
+        response.data.status = "IN-PROGRESS"
       }
 
       mutateRequirements(

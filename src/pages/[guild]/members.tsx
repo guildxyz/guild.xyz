@@ -30,6 +30,7 @@ import Head from "next/head"
 import { useRouter } from "next/router"
 import ErrorPage from "pages/_error"
 import { useEffect, useMemo, useRef, useState } from "react"
+import { Visibility } from "types"
 
 const columnHelper = createColumnHelper<Member>()
 const getRowId = (row: Member) => `user_${row.userId}`
@@ -159,7 +160,7 @@ const MembersPage = (): JSX.Element => {
     getRowId,
   })
 
-  const hasHiddenRoles = roles?.some((role) => role.visibility === "HIDDEN")
+  const hasHiddenRoles = roles?.some((role) => role.visibility === Visibility.HIDDEN)
   useEffect(() => {
     const hiddenRolesColumn = table
       .getAllLeafColumns()

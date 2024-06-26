@@ -14,7 +14,7 @@ import { useFarcasterUser } from "./hooks/useFarcasterUsers"
 
 const FarcasterProfile = (props: RequirementProps) => (
   <Requirement
-    image={REQUIREMENTS.FARCASTER_PROFILE.icon.toString()}
+    image={REQUIREMENTS.FARCASTER.icon.toString()}
     footer={<RequirementConnectButton />}
     {...props}
   >
@@ -59,7 +59,7 @@ const FarcasterTotalFollowers = (props: RequirementProps) => {
   return (
     <Requirement
       footer={<RequirementConnectButton />}
-      image={REQUIREMENTS.FARCASTER_TOTAL_FOLLOWERS.icon.toString()}
+      image={REQUIREMENTS.FARCASTER.icon.toString()}
       {...props}
     >
       {`Have at least ${data?.min ?? "-"} followers on Farcaster`}
@@ -79,7 +79,7 @@ const FarcasterLikeRecast = (props: RequirementProps) => {
   return (
     <Requirement
       footer={<RequirementConnectButton />}
-      image={REQUIREMENTS.FARCASTER_LIKE.icon.toString()}
+      image={REQUIREMENTS.FARCASTER.icon.toString()}
       {...props}
     >
       {type === "FARCASTER_LIKE" ? "Like" : "Recast"}
@@ -105,7 +105,7 @@ const FarcasterFollowChannel = (props: RequirementProps) => {
   return (
     <Requirement
       footer={<RequirementConnectButton />}
-      image={REQUIREMENTS.FARCASTER_FOLLOW_CHANNEL.icon.toString()}
+      image={REQUIREMENTS.FARCASTER.icon.toString()}
       {...props}
     >
       {"Follow the "}
@@ -136,13 +136,13 @@ const FarcasterIncludeText = (props: RequirementProps) => {
   return (
     <Requirement
       footer={<RequirementConnectButton />}
-      image={REQUIREMENTS.FARCASTER_BIO.icon.toString()}
+      image={REQUIREMENTS.FARCASTER.icon.toString()}
       {...props}
     >
       <Text as="span">{"Have "}</Text>
       <DataBlockWithCopy text={data?.id} />
       <Text as="span">
-        {` in your ${REQUIREMENTS.FARCASTER_BIO.name} ${PROFILE_TARGETS[type]}`}
+        {` in your ${REQUIREMENTS.FARCASTER.name} ${PROFILE_TARGETS[type]}`}
       </Text>
     </Requirement>
   )

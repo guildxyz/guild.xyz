@@ -6,6 +6,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import { useScrollBatchedRendering } from "hooks/useScrollBatchedRendering"
 import dynamic from "next/dynamic"
 import { useMemo, useState } from "react"
+import { Visibility } from "types"
 import useGuildPermission from "./hooks/useGuildPermission"
 import useRoleGroup from "./hooks/useRoleGroup"
 
@@ -43,8 +44,12 @@ const Roles = () => {
     )
   }, [roles])
 
-  const publicRoles = sortedRoles.filter((role) => role.visibility !== "HIDDEN")
-  const hiddenRoles = sortedRoles.filter((role) => role.visibility === "HIDDEN")
+  const publicRoles = sortedRoles.filter(
+    (role) => role.visibility !== Visibility.HIDDEN
+  )
+  const hiddenRoles = sortedRoles.filter(
+    (role) => role.visibility === Visibility.HIDDEN
+  )
 
   const [renderedRolesCount, setRenderedRolesCount] = useState(BATCH_SIZE)
   const rolesEl = useScrollBatchedRendering({

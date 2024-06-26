@@ -8,10 +8,10 @@ import RequirementImageEditor from "components/[guild]/Requirements/components/R
 import RequirementNameEditor from "components/[guild]/Requirements/components/RequirementNameEditor"
 import SetVisibility from "components/[guild]/SetVisibility"
 import useVisibilityModalProps from "components/[guild]/SetVisibility/hooks/useVisibilityModalProps"
-import { ComponentProps, PropsWithChildren, useRef } from "react"
+import { PropsWithChildren, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import REQUIREMENTS from "requirements"
-import { Requirement, Requirement as RequirementType } from "types"
+import { Requirement as RequirementType } from "types"
 import mapRequirement from "utils/mapRequirement"
 import useEditRequirement from "../hooks/useEditRequirement"
 import BalancyFooter from "./BalancyFooter"
@@ -118,7 +118,7 @@ const ExistingRequirementEditModal = ({
   onClose,
   finalFocusRef,
 }: Omit<RequirementEditModalProps, "footer">) => {
-  const methods = useForm<Requirement>({ mode: "all", defaultValues: requirement })
+  const methods = useForm({ mode: "all", defaultValues: requirement })
 
   const { onSubmit: onEditRequirementSubmit, isLoading: isEditRequirementLoading } =
     useEditRequirement(requirement.roleId, {
@@ -201,9 +201,7 @@ const RequirementNameEditorWithSave = ({ children }: PropsWithChildren<unknown>)
       onSuccess: () => setVisibilityModalProps.onClose(),
     })
 
-  const onEditVisibilitySubmit: ComponentProps<typeof SetVisibility>["onSave"] = (
-    visibilityData
-  ) => {
+  const onEditVisibilitySubmit = (visibilityData) => {
     const editedData = {
       ...requirement,
       ...visibilityData,

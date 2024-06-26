@@ -13,11 +13,11 @@ const PaymentFeeCurrency = (): JSX.Element => {
   const lightShade = useColorModeValue("white", "gray.700")
   const borderWidth = useColorModeValue(1, 0)
 
-  const requirement = useRequirementContext<"PAYMENT">()
+  const requirement = useRequirementContext()
   const { pickedCurrency, setPickedCurrency } = useGuildCheckoutContext()
 
   const { token, fee, error, isLoading } = useVault(
-    requirement?.address as `0x${string}`,
+    requirement?.address,
     requirement?.data?.id,
     requirement?.chain
   )

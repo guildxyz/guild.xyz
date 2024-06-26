@@ -17,7 +17,7 @@ import useMembership, {
 import dynamic from "next/dynamic"
 import rewards from "platforms/rewards"
 import { memo, useEffect, useRef } from "react"
-import { PlatformType, Role } from "types"
+import { PlatformType, Role, Visibility as VisibilityType } from "types"
 import RoleRequirements from "../Requirements"
 import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
@@ -70,7 +70,8 @@ const RoleCard = memo(({ role }: Props) => {
 
   const isMobile = useBreakpointValue({ base: true, md: false }, { fallback: "md" })
 
-  const collapsedHeight = isMobile && role.visibility === "PUBLIC" ? "90px" : "94px"
+  const collapsedHeight =
+    isMobile && role.visibility === VisibilityType.PUBLIC ? "90px" : "94px"
 
   return (
     <Card
@@ -87,7 +88,7 @@ const RoleCard = memo(({ role }: Props) => {
       onClick={() => {
         if (window.location.hash === `#role-${role.id}`) window.location.hash = "!"
       }}
-      {...(role.visibility === "HIDDEN"
+      {...(role.visibility === VisibilityType.HIDDEN
         ? {
             borderWidth: 2,
             borderStyle: "dashed",

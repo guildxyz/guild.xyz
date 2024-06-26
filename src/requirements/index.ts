@@ -1,4 +1,3 @@
-import { Schemas } from "@guildxyz/types"
 import { RequirementProps } from "components/[guild]/Requirements/components/Requirement"
 import { Icon } from "phosphor-react"
 import { ComponentType } from "react"
@@ -17,7 +16,8 @@ export type ProvidedValueDisplayProps = {
   requirement: Partial<Requirement>
 }
 
-export type RequirementType = Schemas["Requirement"]["type"]
+const requirementTypes = REQUIREMENTS_DATA.flatMap((obj) => obj.types)
+export type RequirementType = (typeof requirementTypes)[number] | "HIDDEN"
 
 export type RequirementFormProps = {
   baseFieldPath: string

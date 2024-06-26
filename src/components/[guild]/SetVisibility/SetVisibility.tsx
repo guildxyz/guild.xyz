@@ -13,11 +13,11 @@ import {
   Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { Visibility } from "@guildxyz/types"
 import Button from "components/common/Button"
 import RadioSelect from "components/common/RadioSelect"
 import { useRef } from "react"
 import { FormProvider, useController, useForm, useWatch } from "react-hook-form"
+import { Visibility } from "types"
 import useVisibilityTooltipLabel from "./hooks/useVisibilityTooltipLabel"
 import { VISIBILITY_DATA } from "./visibilityData"
 
@@ -35,7 +35,7 @@ const SetVisibility = ({
   onSave,
   isLoading,
   defaultValues = {
-    visibility: "PUBLIC",
+    visibility: Visibility.PUBLIC,
     visibilityRoleId: undefined,
   },
   ...buttonProps

@@ -3,16 +3,11 @@ import RequirementChainIndicator from "components/[guild]/Requirements/component
 import useTokenData from "hooks/useTokenData"
 import { ProvidedValueDisplayProps } from "requirements"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
-import { Chain } from "wagmiConfig/chains"
 
 const TokenProvidedValue = ({ requirement }: ProvidedValueDisplayProps) => {
-  // TODO: we could remove the cast once we'll have schemas for "ERC..." requirements
-  const requirementChain = requirement.chain as Chain
-  const requirementAddress = requirement.address as `0x${string}`
-
   const {
     data: { symbol },
-  } = useTokenData(requirementChain, requirementAddress ?? NULL_ADDRESS)
+  } = useTokenData(requirement?.chain, requirement?.address ?? NULL_ADDRESS)
 
   const tagBg = useColorModeValue("blackAlpha.100", "blackAlpha.300")
 
