@@ -67,7 +67,7 @@ const SnapshotSelector = () => {
         isHidden: false,
         guildPlatformId: selectedPointsId,
       },
-    } as any)
+    })
   }, [snapshot, selectedPointsId, setValue])
 
   const getPointPlatform = (guildPlatformId: number) =>
