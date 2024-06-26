@@ -62,6 +62,8 @@ const UniswapForm = ({
   )
 
   const lpVaultAddress = useParseVaultAddress(baseFieldPath)
+  console.log(lpVaultAddress)
+
   const tokenId = useParsePoolTokenId(baseFieldPath, onChainFromParam)
 
   const setTokensAndFee = ([t0, t1, fee]) => {
