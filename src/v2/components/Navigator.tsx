@@ -40,7 +40,7 @@ export function Navigator() {
             <GuildCastle />
             <span className="font-display text-base font-bold">Guild</span>
           </NavigationMenuTrigger>
-          <NavigationMenuContent className="flex flex-col rounded-lg">
+          <NavigationMenuContent className="flex flex-col rounded-lg text-foreground">
             <div className="flex gap-12 px-3 py-4">
               <ul className="flex flex-col gap-1">
                 <li className="my-1 px-4 text-sm font-bold text-card-foreground">
