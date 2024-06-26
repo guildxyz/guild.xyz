@@ -13,13 +13,14 @@ import { useMemo } from "react"
 import { useFormContext } from "react-hook-form"
 import Star from "static/icons/star.svg"
 import { GuildPlatform } from "types"
-import { AddPointsFormType } from "../AddPointsPanel"
+import parseFromObject from "utils/parseFromObject"
 
 type Props = {
   existingPointsRewards: GuildPlatform[]
   selectedExistingId: number
   isLoading?: boolean
   showCreateNew?: boolean
+  fieldPath?: string
 } & FormControlProps
 
 const ExistingPointsTypeSelect = ({
@@ -27,13 +28,14 @@ const ExistingPointsTypeSelect = ({
   selectedExistingId,
   isLoading,
   showCreateNew,
+  fieldPath = "data.guildPlatformId",
   ...rest
 }: Props) => {
   const {
     control,
     setValue,
     formState: { errors },
-  } = useFormContext<AddPointsFormType>()
+  } = useFormContext()
 
   const options = useMemo(() => {
     const result = existingPointsRewards?.map((gp) => ({
@@ -60,7 +62,7 @@ const ExistingPointsTypeSelect = ({
   )?.img
 
   return (
-    <FormControl isInvalid={!!errors?.data?.guildPlatformId} {...rest}>
+    <FormControl isInvalid={!!parseFromObject(errors, fieldPath)} {...rest}>
       <FormLabel>Points type</FormLabel>
       <InputGroup>
         {selectedPointsImage && (
@@ -73,18 +75,20 @@ const ExistingPointsTypeSelect = ({
           </InputLeftElement>
         )}
         <ControlledSelect
-          name={`data.guildPlatformId`}
+          name={fieldPath}
           control={control as any}
           options={options}
           beforeOnChange={(newValue) => {
-            setValue("data.guildPlatformId", newValue?.id, {
+            setValue(fieldPath, newValue?.id, {
               shouldDirty: false,
             })
           }}
           isLoading={isLoading}
         />
       </InputGroup>
-      <FormErrorMessage>{errors?.data?.guildPlatformId?.message}</FormErrorMessage>
+      <FormErrorMessage>
+        {parseFromObject(errors, fieldPath)?.message}
+      </FormErrorMessage>
     </FormControl>
   )
 }

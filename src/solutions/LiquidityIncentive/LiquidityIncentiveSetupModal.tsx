@@ -19,11 +19,26 @@ import {
   Text,
   useSteps,
 } from "@chakra-ui/react"
+import { Chain } from "@guildxyz/types"
 import { Modal } from "components/common/Modal"
 import { ArrowLeft } from "phosphor-react"
 import { FormProvider, useForm } from "react-hook-form"
 import SelectLiquidityPoolStep from "./components/SelectLiquidityPoolStep"
 import SetPointsReward from "./components/SetPointsRewardStep"
+
+type LiquidityIncentiveForm = {
+  conversion: number
+  pointsId?: number // if points reward is selected
+  imageUrl?: string // if points reward is created
+  name?: string // if points reawrd is created
+  pool: {
+    data: {
+      lpVault: `0x${string}` // pool address
+    }
+    chain: Chain
+  }
+  amount: number
+}
 
 const LiquidityIncentiveSetupModal = ({
   isOpen,
@@ -42,13 +57,22 @@ const LiquidityIncentiveSetupModal = ({
     count: steps.length,
   })
 
-  const methods = useForm({ mode: "all" })
+  const methods = useForm<LiquidityIncentiveForm>({
+    mode: "all",
+    defaultValues: { conversion: 1 },
+  })
+
+  const handleClose = () => {
+    onClose()
+    methods.reset()
+    setActiveStep(0)
+  }
 
   return (
     <>
       <Modal
         isOpen={isOpen}
-        onClose={onClose}
+        onClose={handleClose}
         size="xl"
         scrollBehavior="inside"
         colorScheme="dark"
@@ -115,7 +139,7 @@ const LiquidityIncentiveSetupModal = ({
                         animateOpacity
                         style={{ padding: "2px", margin: "-2px" }}
                       >
-                        <step.content onContinue={goToNext} />
+                        <step.content onContinue={goToNext} onSubmit={() => {}} />
                       </Collapse>
                     </Box>
 

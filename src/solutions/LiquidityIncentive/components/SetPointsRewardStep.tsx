@@ -1,4 +1,6 @@
 import {
+  Box,
+  Divider,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -13,14 +15,26 @@ import {
   Text,
   Tooltip,
 } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import { Question } from "phosphor-react"
-import { Controller, useFormContext } from "react-hook-form"
+import { Controller, useFormContext, useWatch } from "react-hook-form"
+import LiquidityConversion from "./LiquidityConversion"
+import SelectPointType from "./SelectPointType"
 
-const SetPointsReward = () => {
+const SetPointsReward = ({ onSubmit }: { onSubmit: () => void }) => {
   const {
     control,
     formState: { errors },
   } = useFormContext()
+
+  const conversion = useWatch({ name: `conversion` })
+  const pointsPlatformId = useWatch({ name: "pointsId" })
+
+  const setupName = useWatch({ name: "name" })
+
+  const isConversionDisabled =
+    pointsPlatformId === undefined && setupName === undefined
+  const isSubmitDisabled = isConversionDisabled || !conversion
 
   return (
     <Stack gap={5}>
@@ -69,9 +83,25 @@ const SetPointsReward = () => {
             </NumberInput>
           )}
         />
-
         <FormErrorMessage>{errors?.amount?.message as string}</FormErrorMessage>
       </FormControl>
+
+      <Divider />
+      <SelectPointType />
+
+      <Box opacity={isConversionDisabled ? 0.5 : 1}>
+        <LiquidityConversion />
+      </Box>
+
+      <Button
+        colorScheme={"indigo"}
+        onClick={onSubmit}
+        mb={5}
+        mt={3}
+        isDisabled={isSubmitDisabled}
+      >
+        Save
+      </Button>
     </Stack>
   )
 }
