@@ -208,6 +208,11 @@ const AddRequirementForm = forwardRef(
     const methods = useForm<Schemas["RequirementCreationPayload"]>({ mode: "all" })
 
     const roleId: number = useWatch({ name: "id" })
+    // We need to pass this value later in the code to override `selectedType` with it (e.g. if selectedType is "LENS" we should overwrite it with the actual type, for example with "LENS_TOTAL_FOLLOWERS")
+    const formType = useWatch<Schemas["RequirementCreationPayload"]>({
+      control: methods.control,
+      name: "type",
+    })
 
     const [isPresent, safeToRemove] = usePresence()
     useEffect(() => {
@@ -231,9 +236,11 @@ const AddRequirementForm = forwardRef(
     const onSubmit = methods.handleSubmit((data) => {
       if (!selectedType) return
 
+      const { type, ...requirementData } = data
+
       const requirement = schemas.RequirementCreationPayloadSchema.parse({
-        ...data,
-        type: selectedType,
+        type: type ?? selectedType,
+        ...requirementData,
       })
 
       if (!roleId) {
@@ -265,16 +272,14 @@ const AddRequirementForm = forwardRef(
               providerTypesOnly={providerTypesOnly}
             />
 
-            {!!REQUIREMENT_PROVIDED_VALUES[selectedType] && (
+            {!!REQUIREMENT_PROVIDED_VALUES[formType ?? selectedType] && (
               <>
                 {" "}
                 <Divider mt={5} mb={3} />
                 <ProvidedValueDisplay
-                  requirement={
-                    {
-                      type: selectedType,
-                    } as Partial<Requirement>
-                  }
+                  requirement={{
+                    type: formType ?? selectedType,
+                  }}
                 />
               </>
             )}
