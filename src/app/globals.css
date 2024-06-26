@@ -51,18 +51,23 @@
     --secondary: 215 27.9% 16.9%;
     --secondary-foreground: 210 20% 98%;
 
-    --muted: 240 5.26% 21.08%;
-    --muted-foreground: 240 5.26% 41.08%;
+    --muted: 240 3% 13%;
+    --muted-foreground: 240 5.26% 56.08%;
 
-    --accent: 238.73 83.53% 66.67%;
+    --accent: 240 2% 35%;
     --accent-foreground: 0 0% 92%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 20% 98%;
 
-    --border: 0 0% 100% / 16%;
-    --input: 0 0% 100% / 16%;
-    --ring: 216 12.2% 83.9%;
+    --border: 240 2% 27%;
+    --input: 240 2% 27%;
+    --ring: 240 0% 45%;
+  }
+
+  .dark video,
+  .dark img {
+    filter: brightness(0.85) contrast(1.15);
   }
 }
 
@@ -71,6 +76,6 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground font-sans min-h-screen;
+    @apply min-h-screen bg-background font-sans text-foreground;
   }
 }

@@ -32,25 +32,23 @@ const Page = () => {
     <div className="min-h-screen">
       <div className="relative">
         <Header />
-        <div className="pb-14 pt-9">
-          <PageBoundary>
-            <h1 className="font-display text-4xl font-bold tracking-tight sm:text-5xl">
-              Guildhall
-            </h1>
-          </PageBoundary>
-          <div className="absolute inset-0 -bottom-28 -z-10 overflow-hidden">
-            <div className="absolute inset-0 bg-[hsl(240deg_2.65%_22.16%)]" />
-            <div className="absolute inset-0 bg-[url('/banner.png')] bg-[auto_115%] bg-[right_top_10px] bg-no-repeat opacity-10" />
-            <div className="absolute inset-0 bg-gradient-to-tr from-[hsl(240deg_2.65%_22.16%)] from-50% to-transparent" />
-          </div>
+        <PageBoundary>
+          <h1 className="pb-14 pt-9 font-display text-4xl font-bold tracking-tight sm:text-5xl">
+            Guildhall
+          </h1>
+        </PageBoundary>
+        <div className="absolute inset-0 -bottom-28 -z-10 overflow-hidden">
+          <div className="absolute inset-0 bg-[hsl(240deg_2.65%_22.16%)]" />
+          <div className="absolute inset-0 bg-[url('/banner.png')] bg-[auto_115%] bg-[right_top_10px] bg-no-repeat opacity-10" />
+          <div className="absolute inset-0 bg-gradient-to-tr from-[hsl(240deg_2.65%_22.16%)] from-50% to-transparent" />
         </div>
       </div>
       <PageBoundary>
         <main>
           <div className="my-4 flex items-start justify-between">
-            <ToggleGroup type="single" className="space-x-2">
+            <ToggleGroup type="single" className="space-x-2" size="lg">
               <ToggleGroupItem value="your-guilds">Your guilds</ToggleGroupItem>
-              <ToggleGroupItem value="explore-guilds">
+              <ToggleGroupItem value="explore-guilds" size="lg">
                 Explore guilds
               </ToggleGroupItem>
             </ToggleGroup>
@@ -66,7 +64,7 @@ const Page = () => {
             </div>
             <Button className="space-x-2" size="lg">
               <SignIn />
-              <span className="text-md font-semibold">Sign in</span>
+              <span className="text-md">Sign in</span>
             </Button>
           </div>
           <div className="mb-5 flex flex-col gap-4">
@@ -74,14 +72,17 @@ const Page = () => {
               Explore verified guilds
             </h2>
             <div className="relative flex flex-col gap-3 sm:flex-row sm:gap-0">
-              <MagnifyingGlass className="absolute left-4 top-4 text-muted-foreground" />
               <Input
-                className="text-md h-12 grow rounded-lg border pl-12 pr-6 sm:rounded-r-none"
+                className="text-md relative h-12 grow rounded-lg border pl-12 pr-6 sm:rounded-r-none"
                 placeholder="Search verified guilds"
               />
+              <div className="absolute left-4 flex h-12 items-center justify-center">
+                <MagnifyingGlass className="text-muted-foreground" />
+              </div>
               <ToggleGroup
                 type="single"
                 className="self-start sm:h-12 sm:rounded-r-lg sm:border sm:border-l-0 sm:bg-card sm:px-4"
+                defaultValue="featured"
               >
                 <ToggleGroupItem value="featured" className="space-x-2" size="sm">
                   <PushPin />

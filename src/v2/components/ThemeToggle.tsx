@@ -26,13 +26,28 @@ export function ThemeToggle() {
       }}
       aria-label="Toggle between themes"
     >
-      <ToggleGroupItem value="light" aria-label="Toggle light mode" size="sm">
+      <ToggleGroupItem
+        value="light"
+        aria-label="Toggle light mode"
+        size="sm"
+        variant="primary"
+      >
         <Sun />
       </ToggleGroupItem>
-      <ToggleGroupItem value="dark" aria-label="Toggle dark mode" size="sm">
+      <ToggleGroupItem
+        value="dark"
+        aria-label="Toggle dark mode"
+        size="sm"
+        variant="primary"
+      >
         <Moon />
       </ToggleGroupItem>
-      <ToggleGroupItem value="system" aria-label="Toggle system default" size="sm">
+      <ToggleGroupItem
+        value="system"
+        aria-label="Toggle system default"
+        size="sm"
+        variant="primary"
+      >
         <Desktop />
       </ToggleGroupItem>
     </ToggleGroup>

@@ -5,6 +5,7 @@ const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
   fallback: ["sans-serif"],
+  weight: "variable",
 })
 
 const dystopian = localFont({

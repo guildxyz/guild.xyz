@@ -36,14 +36,14 @@ export function Navigator() {
     <NavigationMenu>
       <NavigationMenuList>
         <NavigationMenuItem>
-          <NavigationMenuTrigger className="space-x-2">
+          <NavigationMenuTrigger className="space-x-2 bg-transparent">
             <GuildCastle />
-            <span className="font-display font-bold text-base">Guild</span>
+            <span className="font-display text-base font-bold">Guild</span>
           </NavigationMenuTrigger>
           <NavigationMenuContent className="flex flex-col rounded-lg">
             <div className="flex gap-12 px-3 py-4">
               <ul className="flex flex-col gap-1">
-                <li className="text-card-foreground text-sm font-bold px-4 my-1">
+                <li className="my-1 px-4 text-sm font-bold text-card-foreground">
                   Navigation
                 </li>
                 <ListItem href="/explorer">
@@ -84,7 +84,7 @@ export function Navigator() {
                 </ListItem>
               </ul>
               <ul className="flex flex-col gap-1">
-                <li className="text-card-foreground text-sm font-bold px-4 my-1">
+                <li className="my-1 px-4 text-sm font-bold text-card-foreground">
                   Other
                 </li>
                 <ListItem
@@ -137,7 +137,7 @@ export function Navigator() {
                 </ListItem>
               </ul>
             </div>
-            <div className="px-7 py-4 bg-muted text-muted-foreground flex justify-between items-center">
+            <div className="flex items-center justify-between bg-background px-7 py-4 text-foreground">
               <span>Theme:</span>
               <ThemeToggle />
             </div>
@@ -153,16 +153,11 @@ const ListItem = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof Link>
 >(({ className, children, ...props }, ref) => (
   <li>
-    <Link
-      passHref
-      legacyBehavior
-      ref={ref}
-      {...props}
-    >
+    <Link passHref legacyBehavior ref={ref} {...props}>
       <NavigationMenuLink
         className={cn(
           buttonVariants({ variant: "ghost" }),
-          "flex gap-2 items-center whitespace-nowrap justify-start",
+          "flex items-center justify-start gap-2 whitespace-nowrap",
           className
         )}
       >

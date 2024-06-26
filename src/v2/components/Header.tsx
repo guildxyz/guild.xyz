@@ -5,11 +5,11 @@ import { Navigator } from "./Navigator"
 import { Button } from "./ui/Button"
 
 export const Header = () => (
-  <header className="h-16 flex items-center justify-between p-2">
+  <header className="flex h-16 items-center justify-between p-2">
     <Navigator />
-    <Button variant="secondary" className="space-x-2">
+    <Button variant="outline" className="space-x-2" size="lg">
       <SignIn className="size-4" />
-      <span className="text-base font-medium">Sign in</span>
+      <span>Sign in</span>
     </Button>
   </header>
 )
