@@ -43,16 +43,13 @@ const Page = () => {
           <div className="absolute inset-0 bg-gradient-to-tr from-[hsl(240deg_2.65%_22.16%)] from-50% to-transparent" />
         </div>
       </div>
-      <PageBoundary>
-        <main>
+      <main>
+        <div className="sticky top-0 z-20 my-2 py-2" ref={navToggleRef}>
           <div
-            className="sticky top-0 z-10 my-2 flex items-start justify-between py-2"
-            ref={navToggleRef}
-          >
-            <div
-              className="hidden data-[is-stuck='true']:absolute data-[is-stuck='true']:inset-y-0 data-[is-stuck='true']:block data-[is-stuck='true']:w-screen data-[is-stuck='true']:bg-background"
-              data-is-stuck={navIsStuck}
-            />
+            className="absolute inset-0 -translate-y-full bg-background opacity-0 transition-all data-[is-stuck='true']:transform-none data-[is-stuck='true']:opacity-100"
+            data-is-stuck={navIsStuck}
+          />
+          <PageBoundary className="relative flex items-start justify-between">
             <ToggleGroup type="single" className="space-x-2" size="lg">
               <ToggleGroupItem value="your-guilds">Your guilds</ToggleGroupItem>
               <ToggleGroupItem value="explore-guilds" size="lg">
@@ -65,7 +62,9 @@ const Page = () => {
                 <span>Create guild</span>
               </Button>
             )}
-          </div>
+          </PageBoundary>
+        </div>
+        <PageBoundary>
           <div className="my-2 mb-12 flex flex-col items-stretch justify-between gap-8 rounded-lg bg-card p-6 font-medium sm:flex-row sm:items-center">
             <div className="flex items-center gap-4">
               <Robot className="size-8 min-w-8" />
@@ -80,19 +79,18 @@ const Page = () => {
           <h2 className="text-lg font-bold tracking-tight">
             Explore verified guilds
           </h2>
+        </PageBoundary>
+        <div className="sticky top-12 z-10" ref={searchRef}>
           <div
-            className="sticky top-12 z-10 flex flex-col gap-3 py-4 sm:flex-row sm:gap-0"
-            ref={searchRef}
-          >
-            <div
-              className="hidden data-[is-stuck='true']:absolute data-[is-stuck='true']:inset-0 data-[is-stuck='true']:block data-[is-stuck='true']:bg-background"
-              data-is-stuck={searchIsStuck}
-            />
+            className="absolute inset-0 -translate-y-full bg-background opacity-0 transition-all data-[is-stuck='true']:transform-none data-[is-stuck='true']:opacity-100"
+            data-is-stuck={searchIsStuck}
+          />
+          <PageBoundary className="relative flex flex-col gap-3 py-4 sm:flex-row sm:gap-0">
             <Input
               className="text-md relative h-12 grow rounded-lg border pl-12 pr-6 sm:rounded-r-none"
               placeholder="Search verified guilds"
             />
-            <div className="absolute left-4 flex h-12 items-center justify-center">
+            <div className="absolute left-14 flex h-12 items-center justify-center">
               <MagnifyingGlass className="text-card-foreground" />
             </div>
             <ToggleGroup
@@ -109,15 +107,17 @@ const Page = () => {
                 <span>newest</span>
               </ToggleGroupItem>
             </ToggleGroup>
-          </div>
+          </PageBoundary>
+        </div>
+        <PageBoundary>
           <div className="mt-1 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {guildData &&
               guildData.map((data) => (
                 <GuildCard key={data.name} guildData={data} />
               ))}
           </div>
-        </main>
-      </PageBoundary>
+        </PageBoundary>
+      </main>
     </div>
   )
 }
