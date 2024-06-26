@@ -15,35 +15,36 @@ import { Input } from "@/components/ui/Input"
 import { Header } from "@/components/Header"
 import { GuildCard } from "@/components/GuildCard"
 import useSWR from "swr"
+import { GuildBase } from "types"
 
 export function PageBoundary({ children }: PropsWithChildren) {
   return (
-    <div className="mx-auto max-w-screen-lg md:px-10 sm:px-8 px-4">{children}</div>
+    <div className="mx-auto max-w-screen-lg px-4 sm:px-8 md:px-10">{children}</div>
   )
 }
 
 const Page = () => {
-  const { data: guildData } = useSWR(
+  const { data: guildData } = useSWR<GuildBase[]>(
     "https://api.guild.xyz/v2/guilds?limit=20",
-    async (url) => (await fetch(url)).json()
+    async (url: string) => (await fetch(url)).json()
   )
 
   return (
     <div className="min-h-screen">
       <div className="relative">
         <Header />
-        <div className="pt-9 pb-14">
+        <div className="pb-14 pt-9">
           <PageBoundary>
-            <h1 className="font-display text-4xl sm:text-5xl font-bold">
+            <h1 className="font-display text-4xl font-bold tracking-tight sm:text-5xl">
               Guildhall
             </h1>
-            <div className="absolute inset-0 -z-10 -bottom-28 bg-[hsl(240deg_2.65%_22.16%)]" />
+            <div className="absolute inset-0 -bottom-28 -z-10 bg-[hsl(240deg_2.65%_22.16%)]" />
           </PageBoundary>
         </div>
       </div>
       <PageBoundary>
         <main>
-          <div className="flex items-start justify-between my-4">
+          <div className="my-4 flex items-start justify-between">
             <ToggleGroup type="single" className="space-x-2">
               <ToggleGroupItem value="your-guilds">Your guilds</ToggleGroupItem>
               <ToggleGroupItem value="explore-guilds">
@@ -55,8 +56,8 @@ const Page = () => {
               <span>Create guild</span>
             </Button>
           </div>
-          <div className="font-medium p-6 my-2 bg-card rounded-lg flex justify-between items-stretch sm:items-center mb-12 flex-col sm:flex-row gap-8">
-            <div className="flex gap-4 items-center">
+          <div className="my-2 mb-12 flex flex-col items-stretch justify-between gap-8 rounded-lg bg-card p-6 font-medium sm:flex-row sm:items-center">
+            <div className="flex items-center gap-4">
               <Robot className="size-8 min-w-8" />
               <span>Sign in to view your guilds / create new ones</span>
             </div>
@@ -65,17 +66,17 @@ const Page = () => {
               <span className="text-md font-semibold">Sign in</span>
             </Button>
           </div>
-          <div className="flex gap-4 flex-col mb-5">
+          <div className="mb-5 flex flex-col gap-4">
             <h2 className="text-lg font-bold">Explore verified guilds</h2>
             <div className="relative flex flex-col gap-3 sm:flex-row sm:gap-0">
               <MagnifyingGlass className="absolute left-4 top-4 text-muted-foreground" />
               <Input
-                className="text-md pr-6 pl-12 sm:rounded-r-none rounded-lg grow border h-12"
+                className="text-md h-12 grow rounded-lg border pl-12 pr-6 sm:rounded-r-none"
                 placeholder="Search verified guilds"
               />
               <ToggleGroup
                 type="single"
-                className="sm:bg-card self-start sm:px-4 sm:rounded-r-lg sm:border sm:h-12 sm:border-l-0"
+                className="self-start sm:h-12 sm:rounded-r-lg sm:border sm:border-l-0 sm:bg-card sm:px-4"
               >
                 <ToggleGroupItem value="featured" className="space-x-2" size="sm">
                   <PushPin />
@@ -88,7 +89,7 @@ const Page = () => {
               </ToggleGroup>
             </div>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {guildData &&
               guildData.map((data) => (
                 <GuildCard key={data.name} guildData={data} />

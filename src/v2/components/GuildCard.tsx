@@ -9,20 +9,25 @@ type Props = {
 }
 
 export const GuildCard: React.FC<Props> = ({ guildData }) => (
-  <div className="bg-card text-card-foreground rounded-lg px-6 py-7 grid grid-cols-[auto,1fr] gap-y-1 gap-x-4 items-center grid-rows-2">
+  <div className="grid grid-cols-[auto,1fr] grid-rows-2 items-center gap-x-4 gap-y-1 rounded-lg bg-card px-6 py-7 text-card-foreground">
     <Avatar className="row-span-2 size-12">
       <AvatarImage src={guildData.imageUrl} alt="guild emblem" />
       <AvatarFallback>G</AvatarFallback>
     </Avatar>
-    <h3 className="font-bold text-lg flex gap-1 items-center">
-      {guildData.name}
+    <div className="flex items-center gap-1">
+      <h3 className="max-w-36 truncate text-lg font-bold tracking-tight">
+        {guildData.name}
+      </h3>
       {guildData.tags.includes("VERIFIED") && (
         <div className="relative">
-          <div className="bg-white absolute inset-1" aria-hidden="true" />
+          <div
+            className="absolute inset-1 rounded-full bg-white"
+            aria-hidden="true"
+          />
           <CircleWavyCheck weight="fill" className="relative fill-blue-500" />
         </div>
       )}
-    </h3>
+    </div>
     <div className="flex gap-2">
       <Badge className="space-x-2">
         <Users />
