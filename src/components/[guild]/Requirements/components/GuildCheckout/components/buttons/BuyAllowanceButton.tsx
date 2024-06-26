@@ -38,7 +38,7 @@ const BuyAllowanceButton = (): JSX.Element => {
   const tokenName = isNativeCurrencyPicked ? nativeCurrency.name : name
 
   const { fee, isLoading: isVaultLoading } = useVault(
-    requirement.address,
+    requirement.address as `0x${string}`,
     requirement.data.id,
     requirement.chain
   )
@@ -49,7 +49,7 @@ const BuyAllowanceButton = (): JSX.Element => {
     isAllowing,
     allowanceError,
     allowSpendingTokens,
-  } = useAllowance(pickedCurrency, requirement.address)
+  } = useAllowance(pickedCurrency, requirement.address as `0x${string}`)
 
   const isEnoughAllowance =
     typeof fee === "bigint" && typeof allowance === "bigint"

@@ -17,7 +17,7 @@ const PaymentFeeCurrency = (): JSX.Element => {
   const { pickedCurrency, setPickedCurrency } = useGuildCheckoutContext()
 
   const { token, fee, error, isLoading } = useVault(
-    requirement?.address,
+    requirement?.address as `0x${string}`,
     requirement?.data?.id,
     requirement?.chain
   )

@@ -34,7 +34,7 @@ const PaymentRequirement = (props: RequirementProps): JSX.Element => {
     multiplePayments,
     isLoading: isVaultLoading,
     error: vaultError,
-  } = useVault(address, requirementData?.id, chain)
+  } = useVault(address as `0x${string}`, requirementData?.id, chain)
 
   const isNativeCurrency = token === NULL_ADDRESS
 

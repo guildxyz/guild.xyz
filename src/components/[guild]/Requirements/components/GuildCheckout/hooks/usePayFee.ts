@@ -33,10 +33,14 @@ const usePayFee = () => {
     multiplePayments,
     isLoading: isVaultLoading,
     refetch: refetchVault,
-  } = useVault(requirement.address, requirement.data.id, requirement.chain)
+  } = useVault(
+    requirement.address as `0x${string}`,
+    requirement.data.id,
+    requirement.chain
+  )
 
   const { data: hasPaid, isLoading: isHasPaidLoading } = useHasPaid(
-    requirement.address,
+    requirement.address as `0x${string}`,
     +requirement.data.id,
     requirement.chain
   )
@@ -60,7 +64,10 @@ const usePayFee = () => {
       ? coinBalanceData?.value >= fee
       : tokenBalanceData?.value >= fee)
 
-  const { allowance } = useAllowance(pickedCurrency, requirement.address)
+  const { allowance } = useAllowance(
+    pickedCurrency,
+    requirement.address as `0x${string}`
+  )
 
   const enabled =
     requirement?.chain === Chains[chainId] &&

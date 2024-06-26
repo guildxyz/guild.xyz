@@ -26,17 +26,21 @@ const BuyButton = (): JSX.Element => {
     multiplePayments,
     isLoading: isVaultLoading,
     error,
-  } = useVault(requirement.address, requirement.data.id, requirement.chain)
+  } = useVault(
+    requirement.address as `0x${string}`,
+    requirement.data.id,
+    requirement.chain
+  )
 
   const { data: hasPaid, isLoading: isHasPaidLoading } = useHasPaid(
-    requirement.address,
+    requirement.address as `0x${string}`,
     +requirement.data.id,
     requirement.chain
   )
 
   const { allowance, isAllowanceLoading, allowanceError } = useAllowance(
     pickedCurrency,
-    requirement.address
+    requirement.address as `0x${string}`
   )
 
   const {
