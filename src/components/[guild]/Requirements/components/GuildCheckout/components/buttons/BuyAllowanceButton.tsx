@@ -17,6 +17,7 @@ const BuyAllowanceButton = (): JSX.Element => {
   const { urlName } = useGuild()
 
   const requirement = useRequirementContext<"PAYMENT">()
+  const requirementAddress = requirement.address as `0x${string}`
 
   const requirementChainId = Chains[requirement.chain]
   const { pickedCurrency } = useGuildCheckoutContext()
@@ -38,7 +39,7 @@ const BuyAllowanceButton = (): JSX.Element => {
   const tokenName = isNativeCurrencyPicked ? nativeCurrency.name : name
 
   const { fee, isLoading: isVaultLoading } = useVault(
-    requirement.address as `0x${string}`,
+    requirementAddress,
     requirement.data.id,
     requirement.chain
   )
@@ -49,7 +50,7 @@ const BuyAllowanceButton = (): JSX.Element => {
     isAllowing,
     allowanceError,
     allowSpendingTokens,
-  } = useAllowance(pickedCurrency, requirement.address as `0x${string}`)
+  } = useAllowance(pickedCurrency, requirementAddress)
 
   const isEnoughAllowance =
     typeof fee === "bigint" && typeof allowance === "bigint"

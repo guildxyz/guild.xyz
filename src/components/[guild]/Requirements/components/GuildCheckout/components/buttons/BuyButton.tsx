@@ -19,6 +19,8 @@ const BuyButton = (): JSX.Element => {
   const { address, chainId } = useAccount()
 
   const requirement = useRequirementContext<"PAYMENT">()
+  const requirementAddress = requirement.address as `0x${string}`
+
   const { pickedCurrency, agreeWithTOS } = useGuildCheckoutContext()
 
   const {
@@ -26,21 +28,17 @@ const BuyButton = (): JSX.Element => {
     multiplePayments,
     isLoading: isVaultLoading,
     error,
-  } = useVault(
-    requirement.address as `0x${string}`,
-    requirement.data.id,
-    requirement.chain
-  )
+  } = useVault(requirementAddress, requirement.data.id, requirement.chain)
 
   const { data: hasPaid, isLoading: isHasPaidLoading } = useHasPaid(
-    requirement.address as `0x${string}`,
+    requirementAddress,
     +requirement.data.id,
     requirement.chain
   )
 
   const { allowance, isAllowanceLoading, allowanceError } = useAllowance(
     pickedCurrency,
-    requirement.address as `0x${string}`
+    requirementAddress
   )
 
   const {

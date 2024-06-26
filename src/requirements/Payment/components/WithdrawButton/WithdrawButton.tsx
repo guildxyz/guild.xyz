@@ -12,12 +12,13 @@ import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
 import useWithdraw from "./hooks/useWithdraw"
 
 const WithdrawButton = (): JSX.Element => {
-  const { address: vaultAddress, chain, data } = useRequirementContext<"PAYMENT">()
-  const { owner, token, balance } = useVault(
-    vaultAddress as `0x${string}`,
-    data?.id,
-    chain
-  )
+  const {
+    address: vaultAddressAsString,
+    chain,
+    data,
+  } = useRequirementContext<"PAYMENT">()
+  const vaultAddress = vaultAddressAsString as `0x${string}`
+  const { owner, token, balance } = useVault(vaultAddress, data?.id, chain)
   const {
     data: { symbol, decimals },
   } = useTokenData(chain, token)
@@ -31,7 +32,7 @@ const WithdrawButton = (): JSX.Element => {
     balance && decimals && Number(formatUnits(balance, decimals)) * 0.9
 
   const { onSubmitTransaction, isPreparing, isLoading, error } = useWithdraw(
-    vaultAddress as `0x${string}`,
+    vaultAddress,
     +data.id,
     chain
   )
