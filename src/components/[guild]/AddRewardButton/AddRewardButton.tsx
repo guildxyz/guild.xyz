@@ -91,8 +91,6 @@ const AddRewardButton = () => {
     setIsAddRewardPanelDirty(false)
   }
 
-  if (!AddRewardPanel) return null
-
   return (
     <>
       <Button
