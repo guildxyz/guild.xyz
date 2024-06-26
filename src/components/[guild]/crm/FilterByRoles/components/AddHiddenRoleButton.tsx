@@ -20,7 +20,6 @@ import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import { Plus } from "phosphor-react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
-import { Visibility } from "types"
 import getRandomInt from "utils/getRandomInt"
 import SetHiddenRoleRequirements from "./SetHiddenRoleRequirements"
 import useCreateHiddenRole from "./useCreateHiddenRole"
@@ -42,7 +41,7 @@ const AddHiddenRoleButton = (buttonProps) => {
     requirements: [],
     roleType: "NEW",
     imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
-    visibility: Visibility.HIDDEN,
+    visibility: "HIDDEN",
   }
 
   const methods = useForm({ mode: "all", defaultValues })

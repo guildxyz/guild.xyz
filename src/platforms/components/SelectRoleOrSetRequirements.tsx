@@ -9,7 +9,7 @@ import useRoleGroup from "components/[guild]/hooks/useRoleGroup"
 import SetRequirements from "components/create-guild/Requirements"
 import rewards, { PlatformAsRewardRestrictions } from "platforms/rewards"
 import { useFormContext, useWatch } from "react-hook-form"
-import { PlatformName, Visibility } from "types"
+import { PlatformName } from "types"
 import getRandomInt from "utils/getRandomInt"
 
 type Props = {
@@ -63,7 +63,7 @@ const SelectRoleOrSetRequirements = ({ isRoleSelectorDisabled }: Props) => {
       unregister("roleIds")
       setValue("name", data?.roleName || `New ${rewards[selection].name} role`)
       setValue("imageUrl", data?.imageUrl || `/guildLogos/${getRandomInt(286)}.svg`)
-      setValue("roleVisibility", Visibility.PUBLIC)
+      setValue("roleVisibility", "PUBLIC")
     }
 
     setActiveTab(value)

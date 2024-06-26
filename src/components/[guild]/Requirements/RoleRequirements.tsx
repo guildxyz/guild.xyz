@@ -43,7 +43,7 @@ const RoleRequirements = ({
 
   const requirements =
     role.hiddenRequirements || data?.length === 0
-      ? [...(data ?? []), { type: "HIDDEN", roleId: role.id } as Requirement]
+      ? [...(data ?? []), { roleId: role.id, visibility: "HIDDEN" } as Requirement]
       : data
 
   const isVirtualList = requirements?.length > VIRTUAL_LIST_REQUIREMENT_LIMIT

@@ -1,5 +1,7 @@
+import { schemas } from "@guildxyz/types"
 import { createContext, PropsWithChildren, useContext } from "react"
 import { Requirement } from "types"
+import { z } from "zod"
 
 // It's safe to use undefine here as the default value, since we'll always have a default value in RequirementProvider
 const RequirementContext = createContext<Requirement>(undefined)
@@ -22,6 +24,13 @@ const RequirementProvider = ({
   )
 }
 
-const useRequirementContext = () => useContext(RequirementContext)
+type ReqType = z.output<typeof schemas.RequirementSchema>["type"]
+const useRequirementContext = <RequirementType extends ReqType>() => {
+  const requirement = useContext(RequirementContext)
+  return requirement as unknown as Extract<
+    z.output<typeof schemas.RequirementSchema>,
+    { type: RequirementType }
+  >
+}
 
 export { RequirementProvider, useRequirementContext }

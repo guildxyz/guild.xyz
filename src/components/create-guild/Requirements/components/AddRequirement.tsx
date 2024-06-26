@@ -19,6 +19,7 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
+import { schemas, Schemas } from "@guildxyz/types"
 import useGuild from "components/[guild]/hooks/useGuild"
 import AddCard from "components/common/AddCard"
 import Button from "components/common/Button"
@@ -44,7 +45,7 @@ import {
   PROVIDER_TYPES,
   REQUIREMENT_PROVIDED_VALUES,
 } from "requirements/requirements"
-import { Requirement, Visibility } from "types"
+import { Requirement } from "types"
 import useCreateRequirement from "../hooks/useCreateRequirement"
 import BalancyFooter from "./BalancyFooter"
 import IsNegatedPicker from "./IsNegatedPicker"
@@ -184,7 +185,7 @@ const AddRequirement = ({
 }
 
 type AddRequirementFormProps = {
-  onAdd?: (req: Requirement) => void
+  onAdd?: (req: Schemas["RequirementCreationPayload"]) => void
   handleClose: (forceClose?: boolean) => void
   selectedType?: RequirementType
   setOnCloseAttemptToast: Dispatch<SetStateAction<string | boolean>>
@@ -204,10 +205,9 @@ const AddRequirementForm = forwardRef(
   ) => {
     const FormComponent = REQUIREMENTS[selectedType].formComponent
 
-    const methods = useForm<Requirement>({ mode: "all" })
+    const methods = useForm<Schemas["RequirementCreationPayload"]>({ mode: "all" })
 
-    const roleVisibility: Visibility = useWatch({ name: ".visibility" })
-    const roleId: number = useWatch({ name: ".id" })
+    const roleId: number = useWatch({ name: "id" })
 
     const [isPresent, safeToRemove] = usePresence()
     useEffect(() => {
@@ -228,14 +228,13 @@ const AddRequirementForm = forwardRef(
       },
     })
 
-    const formType = useWatch({ name: ".type" as any, control: methods.control })
-
     const onSubmit = methods.handleSubmit((data) => {
-      const requirement: Requirement = {
-        type: selectedType,
-        visibility: roleVisibility,
+      if (!selectedType) return
+
+      const requirement = schemas.RequirementCreationPayloadSchema.parse({
         ...data,
-      }
+        type: selectedType,
+      })
 
       if (!roleId) {
         onAdd?.(requirement)
@@ -266,14 +265,16 @@ const AddRequirementForm = forwardRef(
               providerTypesOnly={providerTypesOnly}
             />
 
-            {!!REQUIREMENT_PROVIDED_VALUES[formType ?? selectedType] && (
+            {!!REQUIREMENT_PROVIDED_VALUES[selectedType] && (
               <>
                 {" "}
                 <Divider mt={5} mb={3} />
                 <ProvidedValueDisplay
-                  requirement={{
-                    type: formType ?? (selectedType as RequirementType),
-                  }}
+                  requirement={
+                    {
+                      type: selectedType,
+                    } as Partial<Requirement>
+                  }
                 />
               </>
             )}
