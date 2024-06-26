@@ -4,6 +4,7 @@ import DataBlock from "components/common/DataBlock"
 import { ProvidedValueDisplayProps } from "requirements"
 import { GUILD_PIN_CONTRACTS } from "utils/guildCheckout/constants"
 import useNftMetadata, { useNftMetadataWithTraits } from "../hooks/useNftMetadata"
+import { Chain } from "wagmiConfig/chains"
 
 export function hasOnlyTypeProperty(obj) {
   const keys = Object.keys(obj)
@@ -11,8 +12,12 @@ export function hasOnlyTypeProperty(obj) {
 }
 
 const NftAmountProvidedValue = ({ requirement }: ProvidedValueDisplayProps) => {
+  // TODO: we could remove the cast once we'll have schemas for "ERC..." requirements
+  const requirementChain = requirement.chain as Chain
+  const requirementAddress = requirement.address as `0x${string}`
+
   const isGuildPin =
-    GUILD_PIN_CONTRACTS[requirement.chain] === requirement?.address?.toLowerCase()
+    GUILD_PIN_CONTRACTS[requirementChain] === requirement?.address?.toLowerCase()
   const guildIdAttribute =
     isGuildPin &&
     requirement.data?.attributes?.find((attr) => attr.trait_type === "guildId")
@@ -21,14 +26,11 @@ const NftAmountProvidedValue = ({ requirement }: ProvidedValueDisplayProps) => {
   const { name: guildPinGuildName } = useGuild(guildIdAttribute ?? "")
 
   const { metadata: metadataWithTraits } = useNftMetadata(
-    requirement.chain,
-    requirement.address,
+    requirementChain,
+    requirementAddress,
     requirement.data?.id
   )
-  const { metadata } = useNftMetadataWithTraits(
-    requirement.chain,
-    requirement.address
-  )
+  const { metadata } = useNftMetadataWithTraits(requirementChain, requirementAddress)
 
   const nftName = isGuildPin ? (
     <>

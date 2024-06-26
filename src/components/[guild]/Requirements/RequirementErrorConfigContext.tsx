@@ -5,7 +5,7 @@ type RequirementErrorConfig = Partial<Record<RequirementType, string>>
 
 const REQ_ERROR_CONFIG: RequirementErrorConfig = {
   GALAXY: "Galxe API error, please try again later",
-  TWITTER: "X API error, please try again later",
+  // TWITTER: "X API error, please try again later",
 }
 
 const RequirementErrorConfigContext = createContext<RequirementErrorConfig>({})

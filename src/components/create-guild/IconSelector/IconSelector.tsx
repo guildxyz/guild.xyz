@@ -1,7 +1,9 @@
 import {
   Box,
+  ChakraProps,
   FormControl,
   FormLabel,
+  Icon,
   IconButton,
   Img,
   ModalBody,
@@ -16,6 +18,7 @@ import {
   TabPanels,
   Tabs,
   Text,
+  useColorMode,
   useColorModeValue,
   useDisclosure,
   useRadioGroup,
@@ -24,9 +27,10 @@ import LogicDivider from "components/[guild]/LogicDivider"
 import GuildLogo from "components/common/GuildLogo"
 import { Modal } from "components/common/Modal"
 import { Uploader } from "hooks/usePinata/usePinata"
-import React, { useEffect } from "react"
+import { Image } from "phosphor-react"
+import React, { ComponentProps, useEffect } from "react"
 import { useController, useFormContext } from "react-hook-form"
-import { GuildFormType } from "types"
+import { CreateGuildFormType } from "../CreateGuildForm"
 import PhotoUploader from "./components/PhotoUploader"
 import SelectorButton from "./components/SelectorButton"
 import icons from "./icons.json"
@@ -36,11 +40,23 @@ type Props = {
   isDisabled?: boolean
   minW?: number
   minH?: number
+  onGeneratedBlobChange?: ComponentProps<
+    typeof PhotoUploader
+  >["onGeneratedBlobChange"]
+  boxSize?: ChakraProps["boxSize"]
+  iconSize?: ChakraProps["boxSize"]
 }
 
-const IconSelector = ({ uploader, isDisabled, minW, minH }: Props) => {
+const IconSelector = ({
+  uploader,
+  isDisabled,
+  minW,
+  minH,
+  onGeneratedBlobChange,
+  boxSize = 12,
+}: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { control } = useFormContext<GuildFormType>()
+  const { control } = useFormContext<CreateGuildFormType>()
 
   const { field } = useController({
     control,
@@ -60,7 +76,7 @@ const IconSelector = ({ uploader, isDisabled, minW, minH }: Props) => {
 
   const group = getRootProps()
   useEffect(() => {
-    const svg = field.value?.split("/").pop().split(".")[0]
+    const svg = field.value?.split("/").pop()?.split(".")[0]
     icons.map((category, i) => {
       if (category.icons.includes(Number(svg))) {
         setTabIndex(i)
@@ -68,12 +84,14 @@ const IconSelector = ({ uploader, isDisabled, minW, minH }: Props) => {
     })
   }, [field.value])
 
+  const { colorMode } = useColorMode()
+
   const iconButtonBgColor = useColorModeValue("gray.700", "blackAlpha.300")
   const iconButtonHoverBgColor = useColorModeValue("gray.600", "blackAlpha.200")
   const iconButtonActiveBgColor = useColorModeValue("gray.500", "blackAlpha.100")
 
   const tabBgColor = useColorModeValue("gray.100", "gray.600")
-  const guildLogoSxProp = useColorModeValue({ filter: "invert(0.75)" }, null)
+  const guildLogoSxProp = useColorModeValue({ filter: "invert(0.75)" }, {})
 
   return (
     <>
@@ -81,16 +99,26 @@ const IconSelector = ({ uploader, isDisabled, minW, minH }: Props) => {
         autoFocus
         onClick={onOpen}
         rounded="full"
-        boxSize={12}
+        boxSize={boxSize}
         flexShrink={0}
         colorScheme="gray"
-        icon={<GuildLogo imageUrl={field.value} bgColor="transparent" />}
+        icon={
+          field.value ? (
+            <GuildLogo imageUrl={field.value} bgColor="transparent" size={boxSize} />
+          ) : (
+            <Icon as={Image} boxSize="35%" />
+          )
+        }
         aria-label="Guild logo"
         variant="outline"
         borderWidth={1}
-        bg={iconButtonBgColor}
-        _hover={{ bg: iconButtonHoverBgColor }}
-        _active={{ bg: iconButtonActiveBgColor }}
+        {...(field.value || colorMode === "dark"
+          ? {
+              bg: iconButtonBgColor,
+              _hover: { bg: iconButtonHoverBgColor },
+              _active: { bg: iconButtonActiveBgColor },
+            }
+          : {})}
         isDisabled={isDisabled}
       />
       {!isDisabled && (
@@ -105,6 +133,7 @@ const IconSelector = ({ uploader, isDisabled, minW, minH }: Props) => {
                 closeModal={onClose}
                 minW={minW}
                 minH={minH}
+                onGeneratedBlobChange={onGeneratedBlobChange}
               />
               <LogicDivider logic="OR" px="0" my="5" />
               <FormControl>
@@ -134,7 +163,7 @@ const IconSelector = ({ uploader, isDisabled, minW, minH }: Props) => {
                       {icons.map((tab, index) => (
                         <Tab
                           border={0}
-                          bgColor={index === tabIndex && tabBgColor}
+                          bgColor={index === tabIndex ? tabBgColor : undefined}
                           key={index}
                           minW="max-content"
                         >

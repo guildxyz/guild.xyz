@@ -1,14 +1,14 @@
 import { Schemas } from "@guildxyz/types"
 import useCreateRequirement from "components/create-guild/Requirements/hooks/useCreateRequirement"
 import useHandleRequirementState from "components/create-guild/Requirements/hooks/useHandleRequirementState"
-import { ReactNode, createContext, useContext } from "react"
-import { Requirement } from "types"
+import { createContext, ReactNode, useContext } from "react"
+import { Requirement, RequirementCreateResponseOutput } from "types"
 import useRequirements from "./hooks/useRequirements"
 
 const RequirementHandlerContext = createContext<{
   onAddRequirement: (
-    requirement: Requirement
-  ) => Schemas["RequirementCreateResponse"]
+    requirement: Schemas["RequirementCreationPayload"]
+  ) => RequirementCreateResponseOutput | Promise<RequirementCreateResponseOutput>
   requirements: Requirement[]
   requirementsLoading?: boolean
   addRequirementLoading?: boolean
@@ -63,7 +63,7 @@ const ApiRequirementHandlerProvider = ({
   return (
     <RequirementHandlerContext.Provider
       value={{
-        onAddRequirement: onSubmit as any,
+        onAddRequirement: onSubmit,
         requirements,
         requirementsLoading: reqsLoading || isValidating,
         addRequirementLoading: isLoading,

@@ -76,7 +76,7 @@ export const useAccessedGuildPlatforms = (groupId?: number) => {
 }
 
 const AccessHub = (): JSX.Element => {
-  const { featureFlags, guildPin, groups, roles, onboardingComplete } = useGuild()
+  const { featureFlags, guildPin, groups, roles } = useGuild()
 
   const group = useRoleGroup()
   const { isAdmin } = useGuildPermission()
@@ -94,8 +94,9 @@ const AccessHub = (): JSX.Element => {
   const hasVisiblePages = !!groups?.length && roles?.some((role) => !!role.groupId)
 
   const showAccessHub =
-    (isAdmin ? !!onboardingComplete : isMember) ||
-    (!!accessedGuildPlatforms?.length && !!onboardingComplete) ||
+    isAdmin ||
+    isMember ||
+    !!accessedGuildPlatforms?.length ||
     (hasVisiblePages && !group)
 
   return (
@@ -137,9 +138,9 @@ const AccessHub = (): JSX.Element => {
                       {!group ? "No accessed reward" : "No rewards yet"}
                     </AlertTitle>
                     <AlertDescription>
-                      {!group
-                        ? "You're a member of the guild, but your roles don't give you any auto-managed rewards. The owner might add some in the future or reward you another way!"
-                        : "This page doesn’t have any auto-managed rewards yet. Add some roles below so their rewards will appear here!"}
+                      {!!group && isAdmin
+                        ? "This page doesn’t have any auto-managed rewards yet. Add some roles below so their rewards will appear here!"
+                        : "You're a member of the guild, but your roles don't give you any auto-managed rewards. The owner might add some in the future or reward you another way!"}
                     </AlertDescription>
                   </Stack>
                 </Alert>

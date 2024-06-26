@@ -1,3 +1,4 @@
+import { env } from "env"
 import loadGoogleFont from "fonts/loadGoogleFont"
 import { ImageResponse } from "next/og"
 import { Guild } from "types"
@@ -25,12 +26,12 @@ const handler = async (req, _) => {
   if (!urlName) return new ImageResponse(<></>, { status: 404 })
 
   const [guild, guildRoles]: [Guild, Guild["roles"]] = await Promise.all([
-    fetch(
-      `${process.env.NEXT_PUBLIC_API.replace("v1", "v2")}/guilds/${urlName}`
-    ).then((res) => res.json()),
-    fetch(
-      `${process.env.NEXT_PUBLIC_API.replace("v1", "v2")}/guilds/${urlName}/roles`
-    ).then((res) => res.json()),
+    fetch(`${env.NEXT_PUBLIC_API.replace("v1", "v2")}/guilds/${urlName}`).then(
+      (res) => res.json()
+    ),
+    fetch(`${env.NEXT_PUBLIC_API.replace("v1", "v2")}/guilds/${urlName}/roles`).then(
+      (res) => res.json()
+    ),
   ]).catch(() => [null, null])
 
   if (!guild?.id)

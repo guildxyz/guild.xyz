@@ -45,7 +45,7 @@ import Head from "next/head"
 import ErrorPage from "pages/_error"
 import { Info, Users } from "phosphor-react"
 import { MintPolygonIDProofProvider } from "platforms/PolygonID/components/MintPolygonIDProofProvider"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { SWRConfig } from "swr"
 import { Guild, SocialLinkKey } from "types"
 import fetcher from "utils/fetcher"
@@ -64,7 +64,6 @@ const DynamicAddRewardAndCampaign = dynamic(
 const DynamicMembersExporter = dynamic(
   () => import("components/[guild]/Members/components/MembersExporter")
 )
-const DynamicOnboarding = dynamic(() => import("components/[guild]/Onboarding"))
 const DynamicActiveStatusUpdates = dynamic(
   () => import("components/[guild]/ActiveStatusUpdates")
 )
@@ -89,7 +88,6 @@ const GuildPage = (): JSX.Element => {
     memberCount,
     roles,
     isLoading,
-    onboardingComplete,
     socialLinks,
     tags,
     featureFlags,
@@ -107,9 +105,7 @@ const GuildPage = (): JSX.Element => {
   )
 
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
-  const [isAddRoleStuck, setIsAddRoleStuck] = useState(false)
 
-  const showOnboarding = isAdmin && !onboardingComplete
   const accessedGuildPlatforms = useAccessedGuildPlatforms()
 
   useStayConnectedToast(() => {
@@ -176,32 +172,25 @@ const GuildPage = (): JSX.Element => {
         }
         imageUrl={imageUrl}
         background={localThemeColor}
-        backgroundOffset={showOnboarding ? 70 : undefined}
         backgroundImage={localBackgroundImage}
         action={isAdmin && isDetailed && <DynamicEditGuildButton />}
         backButton={<BackButton />}
       >
-        {showOnboarding ? (
-          <DynamicOnboarding />
-        ) : (
-          <GuildTabs
-            activeTab="HOME"
-            rightElement={
-              <HStack>
-                {isMember && !isAdmin && <DynamicRecheckAccessesButton />}
-                {!isMember ? (
-                  <JoinButton />
-                ) : !isAdmin ? (
-                  <LeaveButton />
-                ) : isAddRoleStuck ? (
-                  <DynamicAddAndOrderRoles />
-                ) : (
-                  <DynamicAddRewardAndCampaign />
-                )}
-              </HStack>
-            }
-          />
-        )}
+        <GuildTabs
+          activeTab="HOME"
+          rightElement={
+            <HStack>
+              {isMember && !isAdmin && <DynamicRecheckAccessesButton />}
+              {!isMember ? (
+                <JoinButton />
+              ) : !isAdmin ? (
+                <LeaveButton />
+              ) : (
+                <DynamicAddRewardAndCampaign />
+              )}
+            </HStack>
+          }
+        />
 
         <AccessHub />
 
@@ -212,7 +201,7 @@ const GuildPage = (): JSX.Element => {
           titleRightElement={
             isAdmin && (
               <Box my="-2 !important" ml="auto !important">
-                <DynamicAddAndOrderRoles setIsStuck={setIsAddRoleStuck} />
+                <DynamicAddAndOrderRoles />
               </Box>
             )
           }
@@ -220,7 +209,6 @@ const GuildPage = (): JSX.Element => {
         >
           <Roles />
         </Section>
-
         {/* we'll remove Members section completely, just keeping it for admins for now because of the Members exporter */}
         {isAdmin && (
           <>

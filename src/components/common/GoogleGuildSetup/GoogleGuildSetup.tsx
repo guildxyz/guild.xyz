@@ -1,3 +1,4 @@
+import { env } from "env"
 import {
   ButtonGroup,
   GridItem,
@@ -152,7 +153,7 @@ const GoogleGuildSetup = ({
   )
 }
 
-const GUILD_EMAIL_ADDRESS = process.env.NEXT_PUBLIC_GOOGLE_SERVICE_ACCOUNT_EMAIL
+const GUILD_EMAIL_ADDRESS = env.NEXT_PUBLIC_GOOGLE_SERVICE_ACCOUNT_EMAIL
 const AddDocumentModal = ({ isOpen, onClose = undefined }) => {
   const { platformUsers } = useUser()
   const googleAcc = platformUsers?.find(

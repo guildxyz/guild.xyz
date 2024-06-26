@@ -38,7 +38,7 @@ const FormResponses = (): JSX.Element => {
         imageUrl={imageUrl}
         showFooter={false}
       >
-        <FormResponsesTabs />
+        <FormResponsesTabs submissionCount={form?.submissionCount} />
         <NoPermissionToPageFallback>
           {isLoading ? (
             <Card py="7" px="4" flexDirection="row" alignItems="center">

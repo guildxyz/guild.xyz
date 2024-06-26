@@ -1,3 +1,4 @@
+import { env } from "env"
 import {
   Box,
   Center,
@@ -39,7 +40,7 @@ import WebInboxSkeleton from "./WebInboxSkeleton"
 const DynamicWeb3InboxMessage = dynamic(() => import("./Web3InboxMessage"))
 
 const WEB3_INBOX_INIT_PARAMS = {
-  projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
+  projectId: env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
   domain: "guild.xyz",
   allApps: process.env.NODE_ENV !== "production",
 }

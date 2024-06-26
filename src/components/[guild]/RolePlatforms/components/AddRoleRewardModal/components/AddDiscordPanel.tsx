@@ -24,7 +24,6 @@ const AddDiscordPanel = ({ onAdd }: AddRewardPanelProps) => {
               } as PlatformGuildData["DISCORD"],
             },
             isNew: true,
-            platformRoleId: null,
           })
         }}
       />

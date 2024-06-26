@@ -102,7 +102,10 @@ const useSubmitTransaction = (
     functionName: contractCallConfig.functionName as ContractFunctionName,
     args: contractCallConfig.args as ContractFunctionArgs,
     value: contractCallConfig.value as bigint,
-    shouldFetch: contractCallConfig.query?.enabled ?? true,
+    shouldFetch:
+      typeof contractCallConfig.query?.enabled === "boolean"
+        ? contractCallConfig.query.enabled
+        : true,
   })
 
   const {

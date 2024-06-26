@@ -1,3 +1,4 @@
+import { env } from "env"
 import {
   ListItem,
   ModalBody,
@@ -218,9 +219,11 @@ const DiscordBotPermissionsChecker = () => {
           if (rolesWithInvalidPosition.length > 0) {
             toastIdRef.current = toastWithButton({
               title: "Guild.xyz Discord bot is misconfigured",
-              description: `Our bot won't be able to assign the following roles to your members on the ${serverName} Discord server, since they're above the Guild.xyz bot role: ${rolesWithInvalidPosition
+              description: `${rolesWithInvalidPosition
                 .map((r) => r.roleName)
-                .join(", ")}`,
+                .join(", ")} ${
+                rolesWithInvalidPosition.length > 1 ? "roles" : "role"
+              } will not be assigned to your members on the ${serverName} Discord server, since they are above the Guild.xyz bot role.`,
               ...toastOptions,
             })
             setErrorType("ROLE_ORDER")
@@ -240,7 +243,7 @@ const DiscordBotPermissionsChecker = () => {
             rightIcon: <ArrowSquareOut />,
             onClick: () =>
               window.open(
-                `https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&permissions=268716145&scope=bot%20applications.commands`
+                `https://discord.com/api/oauth2/authorize?client_id=${env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&permissions=268716145&scope=bot%20applications.commands`
               ),
           },
           secondButtonProps: {

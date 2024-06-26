@@ -1,3 +1,4 @@
+import { env } from "env"
 import { HStack, Text, useDisclosure } from "@chakra-ui/react"
 import { ImageData } from "@nouns/assets"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
@@ -18,6 +19,7 @@ import useSWRImmutable from "swr/immutable"
 import { Trait } from "types"
 import { GUILD_PIN_CONTRACTS } from "utils/guildCheckout/constants"
 import shortenHex from "utils/shortenHex"
+import { Chain } from "wagmiConfig/chains"
 import useNftMetadata, {
   NOUNS_BACKGROUNDS,
   useNftMetadataWithTraits,
@@ -41,9 +43,13 @@ const getNounsRequirementType = (trait: Trait) =>
 const NftRequirement = (props: RequirementProps) => {
   const requirement = useRequirementContext()
 
+  // TODO: we could remove the cast once we'll have schemas for "ERC..." requirements
+  const requirementChain = requirement.chain as Chain
+  const requirementAddress = requirement.address as `0x${string}`
+
   // This is a really basic solution, and it'll only handle the "Joined Guild" NFTs. We should probably think about a better solution in the future.
   const isGuildPin =
-    GUILD_PIN_CONTRACTS[requirement.chain] === requirement.address.toLowerCase()
+    GUILD_PIN_CONTRACTS[requirementChain] === requirementAddress.toLowerCase()
 
   const guildIdAttribute =
     isGuildPin &&
@@ -58,10 +64,10 @@ const NftRequirement = (props: RequirementProps) => {
   const { name: guildPinGuildName } = useGuild(guildIdAttribute ?? "")
 
   const { metadata: metadataWithTraits, isLoading: isMetadataWithTraitsLoading } =
-    useNftMetadata(requirement.chain, requirement.address, requirement.data?.id)
+    useNftMetadata(requirementChain, requirementAddress, requirement.data?.id)
   const { metadata, isLoading } = useNftMetadataWithTraits(
-    requirement.chain,
-    requirement.address
+    requirementChain,
+    requirementAddress
   )
 
   const nftDataLoading = isLoading || isMetadataWithTraitsLoading
@@ -78,11 +84,11 @@ const NftRequirement = (props: RequirementProps) => {
     metadataWithTraits?.name || metadata?.name
   )
   const nftImage = guildPinImageCID
-    ? `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${guildPinImageCID}`
+    ? `${env.NEXT_PUBLIC_IPFS_GATEWAY}${guildPinImageCID}`
     : metadataWithTraits?.image || metadata?.image
 
   const shouldRenderImage =
-    ["ETHEREUM", "POLYGON"].includes(requirement.chain) &&
+    ["ETHEREUM", "POLYGON"].includes(requirementChain) &&
     (nftName || (requirement.name && requirement.name !== "-")) &&
     (nftDataLoading || nftImage)
 
@@ -128,7 +134,7 @@ const NftRequirement = (props: RequirementProps) => {
       {nftName ||
         (!requirement.name || requirement.name === "-"
           ? metadata?.slug ?? (
-              <DataBlock>{shortenHex(requirement.address, 3)}</DataBlock>
+              <DataBlock>{shortenHex(requirementAddress, 3)}</DataBlock>
             )
           : requirement.name !== "-" && requirement.name)}
 

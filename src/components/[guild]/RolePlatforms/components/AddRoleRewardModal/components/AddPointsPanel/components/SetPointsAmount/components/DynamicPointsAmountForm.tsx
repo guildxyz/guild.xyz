@@ -1,9 +1,11 @@
 import { Icon, Text, useColorModeValue, useDisclosure } from "@chakra-ui/react"
 import DynamicRewardSetup from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/DynamicSetup/DynamicRewardSetup"
+import { useEditRolePlatformContext } from "components/[guild]/RolePlatforms/components/EditRolePlatformModal"
 import Button from "components/common/Button"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import { ArrowSquareOut, Star } from "phosphor-react"
-import type { ReactNode } from "react"
+import { useEffect, type ReactNode } from "react"
+import { useWatch } from "react-hook-form"
 import InformationModal from "../../../../DynamicSetup/InformationModal"
 
 const DynamicPointsAmountForm = ({ imageUrl, baseFieldPath }) => {
@@ -15,6 +17,21 @@ const DynamicPointsAmountForm = ({ imageUrl, baseFieldPath }) => {
   ) : (
     <Icon as={Star} />
   )
+
+  const requirementId = useWatch({
+    name: `${
+      baseFieldPath ? baseFieldPath + "." : ""
+    }dynamicAmount.operation.input.requirementId`,
+  })
+
+  const { setIsSubmitDisabled = null } = useEditRolePlatformContext() || {}
+
+  useEffect(() => {
+    setIsSubmitDisabled?.(!requirementId)
+    return () => {
+      setIsSubmitDisabled?.(false)
+    }
+  }, [requirementId])
 
   return (
     <>

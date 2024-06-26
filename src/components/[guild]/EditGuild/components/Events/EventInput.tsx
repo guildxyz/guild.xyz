@@ -10,7 +10,8 @@ import {
   InputRightElement,
 } from "@chakra-ui/react"
 import { useFormContext, useWatch } from "react-hook-form"
-import { EventSourcesKey, GuildFormType } from "types"
+import { EventSourcesKey } from "types"
+import { EditGuildForm } from "../../EditGuildDrawer"
 
 type Props = {
   eventSource: EventSourcesKey
@@ -50,7 +51,7 @@ const EventInput = ({ eventSource }: Props) => {
     register,
     setValue,
     formState: { errors },
-  } = useFormContext<GuildFormType>()
+  } = useFormContext<EditGuildForm>()
 
   const link = useWatch({
     name: `eventSources.${eventSource}`,

@@ -39,7 +39,10 @@ const RequirementEditableCard = ({
   const editButtonRef = useRef()
 
   const { setValue } = useFormContext<RoleFormType>()
-  const methods = useForm({ mode: "all", defaultValues: field })
+  const methods = useForm<Requirement>({
+    mode: "all",
+    defaultValues: field,
+  })
 
   const showViewOriginal = field?.data?.customName || field?.data?.customImage
 
@@ -94,7 +97,7 @@ const RequirementEditableCard = ({
               mt={-0.5}
               defaultValues={{
                 visibility: field.visibility,
-                visibilityRoleId: field.visibilityRoleId,
+                visibilityRoleId: field.visibilityRoleId ?? undefined,
               }}
               onSave={({ visibility, visibilityRoleId }) => {
                 setValue(`requirements.${index}.visibility`, visibility, {

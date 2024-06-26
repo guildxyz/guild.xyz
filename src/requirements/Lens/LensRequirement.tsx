@@ -51,7 +51,7 @@ const LensRequirement = (props: RequirementProps) => {
     return <LensFollowRequirement {...props} />
 
   return (
-    <Requirement image={REQUIREMENTS.LENS.icon as string} {...props}>
+    <Requirement image={REQUIREMENTS.LENS_ACTION.icon as string} {...props}>
       {(() => {
         switch (requirement.type) {
           case "LENS_REACT":
@@ -100,7 +100,7 @@ const LensFollowRequirement = (props: RequirementProps) => {
 
   return (
     <Requirement
-      image={lensProfile?.img ?? (REQUIREMENTS.LENS.icon as string)}
+      image={lensProfile?.img ?? (REQUIREMENTS.LENS_FOLLOW.icon as string)}
       isImageLoading={isLoading}
       {...props}
     >

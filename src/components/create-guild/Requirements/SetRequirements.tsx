@@ -1,4 +1,5 @@
 import { ChakraProps, Collapse, Stack, Wrap } from "@chakra-ui/react"
+import { Schemas } from "@guildxyz/types"
 import LogicDivider from "components/[guild]/LogicDivider"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { SectionTitle } from "components/common/Section"
@@ -7,7 +8,7 @@ import useToast from "hooks/useToast"
 import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementType } from "requirements"
 import FreeRequirement from "requirements/Free/FreeRequirement"
-import { GuildFormType, Requirement, RolePlatform } from "types"
+import { Requirement, RolePlatform } from "types"
 import AddRequirement from "./components/AddRequirement"
 import BalancyCounterWithPopover from "./components/BalancyCounter"
 import LogicFormControl from "./components/LogicFormControl"
@@ -20,7 +21,7 @@ type Props = {
 }
 
 const SetRequirements = ({ titleSize = undefined }: Props): JSX.Element => {
-  const methods = useFormContext<GuildFormType["roles"][number]>()
+  const methods = useFormContext<Schemas["RoleCreationPayload"]>()
   const { getValues } = methods
   const logic = useWatch({ name: "logic" })
   const { requirements, append, remove, update, freeEntry } =
@@ -64,13 +65,14 @@ const SetRequirements = ({ titleSize = undefined }: Props): JSX.Element => {
             </CardMotionWrapper>
           ) : (
             requirements.map((req, i) => {
-              const type: RequirementType = getValues(`requirements.${i}.type`)
+              const type = getValues(`requirements.${i}.type`)
 
               return (
                 <CardMotionWrapper key={req.id}>
                   <RequirementEditableCard
-                    type={type}
-                    field={req as Requirement}
+                    // TODO: remove these type conversions once we use Zod schemas everywhere
+                    type={type as unknown as RequirementType}
+                    field={req as unknown as Requirement}
                     index={i}
                     removeRequirement={(idx) => {
                       if (isProviderReq(req)) {

@@ -1,3 +1,4 @@
+import { env } from "env"
 import { Circle, Icon, Spinner, Text } from "@chakra-ui/react"
 import usePinata from "hooks/usePinata"
 import useShowErrorToast from "hooks/useShowErrorToast"
@@ -26,7 +27,7 @@ const RequirementImageEditor = ({
   const showErrorToast = useShowErrorToast()
 
   const onSuccess = useCallback(
-    ({ IpfsHash }) => onSave(`${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`),
+    ({ IpfsHash }) => onSave(`${env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`),
     [onSave]
   )
 
