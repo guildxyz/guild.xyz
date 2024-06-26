@@ -16,18 +16,18 @@ import { Header } from "@/components/Header"
 import { GuildCard } from "@/components/GuildCard"
 import useSWR from "swr"
 import { GuildBase } from "types"
-
-export function PageBoundary({ children }: PropsWithChildren) {
-  return (
-    <div className="mx-auto max-w-screen-lg px-4 sm:px-8 md:px-10">{children}</div>
-  )
-}
+import { Separator } from "@/components/ui/Separator"
+import useIsStuck from "hooks/useIsStuck"
+import { PageBoundary } from "@/components/PageBoundary"
 
 const Page = () => {
   const { data: guildData } = useSWR<GuildBase[]>(
-    "https://api.guild.xyz/v2/guilds?limit=20",
+    "https://api.guild.xyz/v2/guilds?limit=40",
     async (url: string) => (await fetch(url)).json()
   )
+  const isAuthenticated = false
+  const { ref: navToggleRef, isStuck: navIsStuck } = useIsStuck()
+  const { ref: searchRef, isStuck: searchIsStuck } = useIsStuck()
   return (
     <div className="min-h-screen">
       <div className="relative">
@@ -45,17 +45,26 @@ const Page = () => {
       </div>
       <PageBoundary>
         <main>
-          <div className="my-4 flex items-start justify-between">
+          <div
+            className="sticky top-0 z-10 my-2 flex items-start justify-between py-2"
+            ref={navToggleRef}
+          >
+            <div
+              className="hidden data-[is-stuck='true']:absolute data-[is-stuck='true']:inset-y-0 data-[is-stuck='true']:block data-[is-stuck='true']:w-screen data-[is-stuck='true']:bg-background"
+              data-is-stuck={navIsStuck}
+            />
             <ToggleGroup type="single" className="space-x-2" size="lg">
               <ToggleGroupItem value="your-guilds">Your guilds</ToggleGroupItem>
               <ToggleGroupItem value="explore-guilds" size="lg">
                 Explore guilds
               </ToggleGroupItem>
             </ToggleGroup>
-            <Button variant="ghost" className="space-x-2">
-              <Plus />
-              <span>Create guild</span>
-            </Button>
+            {isAuthenticated && (
+              <Button variant="ghost" className="space-x-2">
+                <Plus />
+                <span>Create guild</span>
+              </Button>
+            )}
           </div>
           <div className="my-2 mb-12 flex flex-col items-stretch justify-between gap-8 rounded-lg bg-card p-6 font-medium sm:flex-row sm:items-center">
             <div className="flex items-center gap-4">
@@ -67,35 +76,41 @@ const Page = () => {
               <span className="text-md">Sign in</span>
             </Button>
           </div>
-          <div className="mb-5 flex flex-col gap-4">
-            <h2 className="text-lg font-bold tracking-tight">
-              Explore verified guilds
-            </h2>
-            <div className="relative flex flex-col gap-3 sm:flex-row sm:gap-0">
-              <Input
-                className="text-md relative h-12 grow rounded-lg border pl-12 pr-6 sm:rounded-r-none"
-                placeholder="Search verified guilds"
-              />
-              <div className="absolute left-4 flex h-12 items-center justify-center">
-                <MagnifyingGlass className="text-card-foreground" />
-              </div>
-              <ToggleGroup
-                type="single"
-                className="self-start sm:h-12 sm:rounded-r-lg sm:border sm:border-l-0 sm:bg-card sm:px-4"
-                defaultValue="featured"
-              >
-                <ToggleGroupItem value="featured" className="space-x-2" size="sm">
-                  <PushPin />
-                  <span>featured</span>
-                </ToggleGroupItem>
-                <ToggleGroupItem value="newest" className="space-x-2" size="sm">
-                  <Sparkle />
-                  <span>newest</span>
-                </ToggleGroupItem>
-              </ToggleGroup>
+          {isAuthenticated && <Separator className="mb-10" />}
+          <h2 className="text-lg font-bold tracking-tight">
+            Explore verified guilds
+          </h2>
+          <div
+            className="sticky top-12 z-10 flex flex-col gap-3 py-4 sm:flex-row sm:gap-0"
+            ref={searchRef}
+          >
+            <div
+              className="hidden data-[is-stuck='true']:absolute data-[is-stuck='true']:inset-0 data-[is-stuck='true']:block data-[is-stuck='true']:bg-background"
+              data-is-stuck={searchIsStuck}
+            />
+            <Input
+              className="text-md relative h-12 grow rounded-lg border pl-12 pr-6 sm:rounded-r-none"
+              placeholder="Search verified guilds"
+            />
+            <div className="absolute left-4 flex h-12 items-center justify-center">
+              <MagnifyingGlass className="text-card-foreground" />
             </div>
+            <ToggleGroup
+              type="single"
+              className="self-start sm:h-12 sm:rounded-r-lg sm:border sm:border-l-0 sm:bg-card sm:px-4"
+              defaultValue="featured"
+            >
+              <ToggleGroupItem value="featured" className="space-x-2" size="sm">
+                <PushPin />
+                <span>featured</span>
+              </ToggleGroupItem>
+              <ToggleGroupItem value="newest" className="space-x-2" size="sm">
+                <Sparkle />
+                <span>newest</span>
+              </ToggleGroupItem>
+            </ToggleGroup>
           </div>
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-1 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {guildData &&
               guildData.map((data) => (
                 <GuildCard key={data.name} guildData={data} />
