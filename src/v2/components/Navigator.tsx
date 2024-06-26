@@ -83,7 +83,7 @@ export function Navigator() {
                   <span>Terms of Use</span>
                 </ListItem>
               </ul>
-              <ul className="flex flex-col gap-1">
+              <ul className="flex w-36 flex-col items-stretch gap-1">
                 <li className="my-1 px-4 text-sm font-bold text-card-foreground">
                   Other
                 </li>

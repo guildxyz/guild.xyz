@@ -11,6 +11,8 @@ interface RootLayoutProps {
 
 export const metadata: Metadata = {
   title: "Guildhall",
+  description:
+    "Automated membership management for the platforms your community already uses.",
 }
 
 export default function RootLayout({ children }: RootLayoutProps) {

@@ -77,7 +77,7 @@ const Page = () => {
                 placeholder="Search verified guilds"
               />
               <div className="absolute left-4 flex h-12 items-center justify-center">
-                <MagnifyingGlass className="text-muted-foreground" />
+                <MagnifyingGlass className="text-card-foreground" />
               </div>
               <ToggleGroup
                 type="single"

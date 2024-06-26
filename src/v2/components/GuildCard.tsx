@@ -21,20 +21,18 @@ export const GuildCard: React.FC<Props> = ({ guildData }) => (
       <AvatarFallback>G</AvatarFallback>
     </Avatar>
     <div className="flex items-center gap-1">
-      <h3 className="max-w-36 truncate text-lg font-bold tracking-tight">
+      <h3 className="max-w-36 truncate text-lg font-bold tracking-tight text-foreground">
         {guildData.name}
       </h3>
       {guildData.tags.includes("VERIFIED") && (
         <TooltipProvider>
           <Tooltip>
-            <TooltipTrigger>
-              <div className="relative">
-                <div
-                  className="absolute inset-1 rounded-full bg-white"
-                  aria-hidden="true"
-                />
-                <CircleWavyCheck weight="fill" className="relative fill-blue-500" />
-              </div>
+            <TooltipTrigger className="relative" aria-label="verified">
+              <div
+                className="absolute inset-1 rounded-full bg-white"
+                aria-hidden="true"
+              />
+              <CircleWavyCheck weight="fill" className="relative fill-blue-500" />
             </TooltipTrigger>
             <TooltipContent>
               This guild is verified by <code>Guild.xyz</code>
