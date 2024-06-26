@@ -24,13 +24,13 @@ function HiddenAllowlistText({ isEmail }: { isEmail: boolean }) {
 
 const AllowlistRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext<"ALLOWLIST" | "ALLOWLIST_EMAIL">()
+  // TODO: we should add addressCount to the schema, and remove the cast later on
   const castedRequirement = requirement as unknown as Extract<
     Schemas["Requirement"],
     { type: "ALLOWLIST" | "ALLOWLIST_EMAIL" }
   > & {
     data: {
       // These are not included in the schemas, as these are appended on-the-fly by the BE, when sending the response
-      fileId?: string
       addressCount?: number
     }
   }
