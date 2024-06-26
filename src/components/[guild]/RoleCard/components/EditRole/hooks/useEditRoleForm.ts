@@ -1,8 +1,7 @@
-import { Visibility } from "@guildxyz/types"
+import { Logic, Visibility } from "@guildxyz/types"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useEffect } from "react"
 import { useForm } from "react-hook-form"
-import { Logic } from "types"
 
 export type RoleEditFormData = {
   id: number

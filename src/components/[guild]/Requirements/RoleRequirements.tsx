@@ -5,6 +5,7 @@ import {
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
+import { Logic } from "@guildxyz/types"
 import React, {
   Fragment,
   memo,
@@ -14,7 +15,7 @@ import React, {
   useRef,
 } from "react"
 import { VariableSizeList } from "react-window"
-import { Logic, Requirement, Role } from "types"
+import { Requirement, Role } from "types"
 import useRequirements from "../hooks/useRequirements"
 import LogicDivider from "../LogicDivider"
 import { RoleCardCollapseProps } from "../RoleCard"

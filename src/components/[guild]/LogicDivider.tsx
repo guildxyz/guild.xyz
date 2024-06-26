@@ -1,5 +1,6 @@
 import { Divider, Flex, HStack, useColorMode } from "@chakra-ui/react"
-import { Logic, Rest } from "types"
+import { Logic } from "@guildxyz/types"
+import { Rest } from "types"
 
 type Props = { logic: Logic } & Rest
 

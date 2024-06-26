@@ -1,4 +1,10 @@
-import { FarcasterProfile, schemas, Schemas, Visibility } from "@guildxyz/types"
+import {
+  FarcasterProfile,
+  Logic,
+  schemas,
+  Schemas,
+  Visibility,
+} from "@guildxyz/types"
 import { FeatureFlag } from "components/[guild]/EditGuild/components/FeatureFlags"
 import { ContractCallFunction } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
 import { RequirementType } from "requirements"
@@ -21,8 +27,6 @@ type WalletError = { code: number; message: string }
 type Rest = {
   [x: string]: any
 }
-
-type Logic = "AND" | "OR" | "ANY_OF"
 
 type Theme = {
   color?: string
@@ -757,7 +761,6 @@ export type {
   GuildPlatformWithOptionalId,
   GuildTags,
   LeaderboardPinData,
-  Logic,
   NFT,
   OneOf,
   PlatformAccountDetails,
