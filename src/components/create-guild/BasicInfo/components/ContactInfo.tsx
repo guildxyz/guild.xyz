@@ -40,16 +40,14 @@ const ContactInfo = ({ showAddButton = true }: Props): JSX.Element => {
   } = useFormContext<CreateGuildFormType>()
 
   const { fields, append, remove } = useFieldArray({
-    control,
     name: "contacts",
-    keyName: "formId",
   })
 
   return (
     <Stack maxW={{ base: "full", sm: "md" }}>
       <ClientOnly>
         {fields.map((contactField, index) => (
-          <HStack key={contactField.formId} alignItems="start">
+          <HStack key={contactField.id} alignItems="start">
             <Box maxW="64">
               <Controller
                 control={control}

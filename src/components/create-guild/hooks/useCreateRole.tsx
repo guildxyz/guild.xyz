@@ -8,7 +8,13 @@ import useCustomPosthogEvents from "hooks/useCustomPosthogEvents"
 import useMatchMutate from "hooks/useMatchMutate"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
-import { GuildBase, GuildPlatform, Requirement, Role } from "types"
+import {
+  GuildBase,
+  GuildPlatform,
+  Requirement,
+  RequirementCreationPayloadWithTempID,
+  Role,
+} from "types"
 import fetcher from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
 import preprocessRequirement from "utils/preprocessRequirement"
@@ -19,7 +25,7 @@ export type RoleToCreate = Omit<
 > & {
   guildId: number
   roleType?: "NEW"
-  requirements: Omit<Requirement, "id" | "roleId" | "name" | "symbol">[]
+  requirements: RequirementCreationPayloadWithTempID[]
 }
 
 type CreateRoleResponse = Role & {

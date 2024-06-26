@@ -1,8 +1,9 @@
+import { Schemas } from "@guildxyz/types"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useRequirements from "components/[guild]/hooks/useRequirements"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
-import { Requirement } from "types"
+import { RequirementCreateResponseOutput } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
 import preprocessRequirement from "utils/preprocessRequirement"
 
@@ -15,7 +16,9 @@ const useCreateRequirement = (
   const showErrorToast = useShowErrorToast()
 
   const fetcherWithSign = useFetcherWithSign()
-  const createRequirement = async (body: Requirement): Promise<Requirement> =>
+  const createRequirement = async (
+    body?: Schemas["RequirementCreationPayload"]
+  ): Promise<RequirementCreateResponseOutput> =>
     fetcherWithSign([
       `/v2/guilds/${guildId}/roles/${roleId}/requirements`,
       {
@@ -25,16 +28,16 @@ const useCreateRequirement = (
     ])
 
   return useSubmit<
-    Omit<Requirement, "id" | "roleId" | "name" | "symbol">,
-    Requirement & { deletedRequirements?: number[] }
+    Schemas["RequirementCreationPayload"],
+    RequirementCreateResponseOutput
   >(createRequirement, {
     onSuccess: (response) => {
       if (
         (response.type === "ALLOWLIST" || response.type === "ALLOWLIST_EMAIL") &&
         response.data?.fileId
       ) {
-        response.data ??= {}
-        response.data.status = "IN-PROGRESS"
+        // TODO: add the "status" prop to the schema
+        ;(response.data as any).status = "IN-PROGRESS"
       }
 
       mutateRequirements(
