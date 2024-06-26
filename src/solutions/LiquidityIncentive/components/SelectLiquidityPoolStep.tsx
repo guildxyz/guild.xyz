@@ -1,21 +1,84 @@
-import { Input, Stack, Text } from "@chakra-ui/react"
+import {
+  FormControl,
+  FormErrorMessage,
+  FormHelperText,
+  FormLabel,
+  Input,
+  Skeleton,
+  Stack,
+  Text,
+} from "@chakra-ui/react"
+import { consts } from "@guildxyz/types"
 import Button from "components/common/Button"
+import { useCallback } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
-
-let renderCount = 0
+import { usePairOfTokenId } from "requirements/Uniswap/hooks/usePairOfTokenId"
+import {
+  UNISWAP_POOL_URL,
+  useParsePoolTokenId,
+} from "requirements/Uniswap/hooks/useParsePoolTokenId"
+import {
+  ADDRESS_REGEX,
+  useParseVaultAddress,
+} from "requirements/Uniswap/hooks/useParseVaultAddress"
+import { useSymbolsOfPair } from "requirements/Uniswap/hooks/useSymbolsOfPair"
+import { useTokenSymbolsOfPoolVault } from "requirements/Uniswap/hooks/useTokenSymbolsOfPoolVault"
+import ChainPicker from "requirements/common/ChainPicker"
+import parseFromObject from "utils/parseFromObject"
+import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
 
 const SelectLiquidityPoolStep = ({ onContinue }: { onContinue: () => void }) => {
-  const methods = useFormContext()
+  const {
+    formState: { errors, touchedFields },
+    setValue,
+    clearErrors,
+    register,
+  } = useFormContext()
 
-  const { register, control } = methods
+  const resetForm = () => {
+    if (!parseFromObject(touchedFields, "pool")?.address) return
+    setValue(`pool.data.token0`, undefined)
+    setValue(`pool.data.token1`, undefined)
+    clearErrors([`pool.data.token0`, `pool.data.token1`])
+  }
 
-  const wat = useWatch({ name: "wat", control })
-  console.log(wat)
+  const chain: (typeof consts.UniswapV3PositionsChains)[number] = useWatch({
+    name: `pool.chain`,
+  })
 
-  const na = useWatch({ name: "na", control })
-  console.log(na)
+  const lpVaultAddress = useParseVaultAddress("pool")
 
-  console.log(renderCount++)
+  const setTokensAndFee = ([t0, t1, fee]) => {
+    setValue(`pool.data.token0`, t0, { shouldDirty: true })
+    setValue(`pool.data.token1`, t1, { shouldDirty: true })
+    setValue(`pool.data.defaultFee`, fee, { shouldDirty: true })
+  }
+
+  const { error, isLoading } = useTokenSymbolsOfPoolVault(
+    Chains[chain],
+    lpVaultAddress,
+    setTokensAndFee
+  )
+
+  const onChainFromParam = useCallback(
+    (chainFromParam) => {
+      setValue(`pool.chain`, chainFromParam, { shouldDirty: true })
+    },
+    [setValue]
+  )
+
+  const tokenId = useParsePoolTokenId("pool", onChainFromParam)
+
+  const { isLoading: isFetchingFromTokenId, error: tokenIdError } = usePairOfTokenId(
+    chain,
+    tokenId,
+    setTokensAndFee
+  )
+
+  const token0 = useWatch({ name: `pool.data.token0` })
+  const token1 = useWatch({ name: `pool.data.token1` })
+
+  const { symbol0, symbol1 } = useSymbolsOfPair(Chains[chain], token0, token1)
 
   return (
     <Stack gap={5}>
@@ -23,9 +86,63 @@ const SelectLiquidityPoolStep = ({ onContinue }: { onContinue: () => void }) => 
         Set the token you want to distribute as a reward.
       </Text>
 
-      <Input {...register("na")} />
+      <ChainPicker
+        controlName={`pool.chain` as const}
+        showDivider={false}
+        supportedChains={
+          consts.UniswapV3PositionsChains as unknown as Array<
+            (typeof consts.UniswapV3PositionsChains)[number]
+          >
+        }
+        onChange={resetForm}
+      />
 
-      <Button onClick={onContinue}>Continue</Button>
+      <FormControl
+        isRequired
+        isInvalid={
+          !!parseFromObject(errors, "pool")?.data?.lpVault ||
+          !!error ||
+          !!tokenIdError
+        }
+      >
+        <FormLabel>Pool address or URL</FormLabel>
+        <Input
+          {...register(`pool.data.lpVault`, {
+            required: "This field is required",
+            validate: (value) =>
+              ADDRESS_REGEX.test(value) ||
+              UNISWAP_POOL_URL.test(value) ||
+              "Field must be a uniswap pool url, or has to contain a valid EVM address",
+          })}
+        />
+
+        {(isLoading || (symbol0 && symbol1) || isFetchingFromTokenId) && (
+          <FormHelperText>
+            <Skeleton isLoaded={!!symbol0 && !!symbol1} display="inline">
+              <strong>
+                {symbol0 ?? "___"}/{symbol1 ?? "___"}
+              </strong>{" "}
+              pair detected on <strong>{CHAIN_CONFIG[chain]?.name}</strong>. If this
+              is not correct, ensure the correct chain is selected
+            </Skeleton>
+          </FormHelperText>
+        )}
+
+        <FormErrorMessage>
+          {parseFromObject(errors, "pool")?.data?.lpVault?.message ??
+            "Failed to identify pool. Make sure the correct chain is selected"}
+        </FormErrorMessage>
+      </FormControl>
+
+      <Button
+        colorScheme={"indigo"}
+        isDisabled={!!errors?.pool || !chain || !lpVaultAddress || !!error}
+        onClick={onContinue}
+        mb={5}
+        mt={3}
+      >
+        Continue
+      </Button>
     </Stack>
   )
 }

@@ -3,7 +3,6 @@ import {
   Collapse,
   HStack,
   IconButton,
-  Input,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -22,8 +21,9 @@ import {
 } from "@chakra-ui/react"
 import { Modal } from "components/common/Modal"
 import { ArrowLeft } from "phosphor-react"
-import { FormProvider, useForm, useWatch } from "react-hook-form"
+import { FormProvider, useForm } from "react-hook-form"
 import SelectLiquidityPoolStep from "./components/SelectLiquidityPoolStep"
+import SetPointsReward from "./components/SetPointsRewardStep"
 
 const LiquidityIncentiveSetupModal = ({
   isOpen,
@@ -34,7 +34,7 @@ const LiquidityIncentiveSetupModal = ({
 }) => {
   const steps = [
     { title: "Select liquidity pool", content: SelectLiquidityPoolStep },
-    { title: "Set points reward", content: Box },
+    { title: "Set points reward", content: SetPointsReward },
   ]
 
   const { activeStep, goToNext, setActiveStep } = useSteps({
@@ -42,13 +42,7 @@ const LiquidityIncentiveSetupModal = ({
     count: steps.length,
   })
 
-  const methods = useForm<any>({
-    mode: "all",
-    defaultValues: {},
-  })
-
-  const wat = useWatch({ name: "wat", control: methods.control })
-  console.log(wat)
+  const methods = useForm({ mode: "all" })
 
   return (
     <>
@@ -87,8 +81,6 @@ const LiquidityIncentiveSetupModal = ({
                 converision rate to fine-tune your incentive program.
               </Text>
 
-              <Input {...methods.register("wat")} />
-
               <Stepper
                 colorScheme="indigo"
                 index={activeStep}
@@ -123,7 +115,7 @@ const LiquidityIncentiveSetupModal = ({
                         animateOpacity
                         style={{ padding: "2px", margin: "-2px" }}
                       >
-                        <step.content onContinue={goToNext} onSubmit={null} />
+                        <step.content onContinue={goToNext} />
                       </Collapse>
                     </Box>
 
