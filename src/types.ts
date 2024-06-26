@@ -648,17 +648,6 @@ type SelectOption<T = string> = {
   img?: string | JSX.Element
 } & Rest
 
-// Requested with Discord OAuth token
-type DiscordServerData = {
-  id: string
-  name: string
-  icon: string
-  owner: boolean
-  permissions: number
-  features: string[]
-  permissions_new: string
-}
-
 export enum PlatformType {
   "UNSET" = -1,
   "DISCORD" = 1,
@@ -678,30 +667,6 @@ export enum PlatformType {
   "FORM" = 15,
   "GATHER_TOWN" = 16,
   "ERC20" = 17,
-}
-
-type WalletConnectConnectionData = {
-  connected: boolean
-  accounts: string[]
-  chainId: number
-  bridge: string
-  key: string
-  clientId: string
-  clientMeta: {
-    description: string
-    url: string
-    icons: string[]
-    name: string
-  }
-  peerId: string
-  peerMeta: {
-    description: string
-    url: string
-    icons: string[]
-    name: string
-  }
-  handshakeId: number
-  handshakeTopic: string
 }
 
 enum ValidationMethod {
@@ -780,7 +745,6 @@ export type {
   CoingeckoToken,
   DetailedPinLeaderboardUserData as DetailedUserLeaderboardData,
   DiscordError,
-  DiscordServerData,
   EventSources,
   EventSourcesKey,
   GitPoap,
@@ -819,6 +783,5 @@ export type {
   Trait,
   User,
   UserAddress,
-  WalletConnectConnectionData,
   WalletError,
 }
