@@ -17,11 +17,12 @@ import {
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import { Question } from "phosphor-react"
+import { useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import LiquidityConversion from "./LiquidityConversion"
 import SelectPointType from "./SelectPointType"
 
-const SetPointsReward = ({ onSubmit }: { onSubmit: () => void }) => {
+const SetPointsReward = ({ onSubmit }: { onSubmit: () => Promise<void> }) => {
   const {
     control,
     formState: { errors },
@@ -34,6 +35,8 @@ const SetPointsReward = ({ onSubmit }: { onSubmit: () => void }) => {
 
   const isConversionDisabled = pointsPlatformId === undefined && setupName === null
   const isSubmitDisabled = isConversionDisabled || !conversion
+
+  const [isLoading, setIsLoading] = useState(false)
 
   return (
     <Stack gap={5}>
@@ -53,7 +56,7 @@ const SetPointsReward = ({ onSubmit }: { onSubmit: () => void }) => {
           </Tooltip>
         </HStack>
         <Controller
-          name={`amount` as const}
+          name={`pool.data.minAmount` as const}
           control={control}
           rules={{
             min: {
@@ -94,10 +97,15 @@ const SetPointsReward = ({ onSubmit }: { onSubmit: () => void }) => {
 
       <Button
         colorScheme={"indigo"}
-        onClick={onSubmit}
+        onClick={async () => {
+          setIsLoading(true)
+          await onSubmit()
+          setIsLoading(false)
+        }}
         mb={5}
         mt={3}
         isDisabled={isSubmitDisabled}
+        isLoading={isLoading}
       >
         Save
       </Button>
