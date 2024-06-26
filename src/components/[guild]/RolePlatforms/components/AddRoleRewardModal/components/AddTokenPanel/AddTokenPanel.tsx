@@ -18,7 +18,7 @@ import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import { useRequirementHandlerContext } from "components/[guild]/RequirementHandlerContext"
 import { AddRewardPanelProps } from "platforms/rewards"
 import { FormProvider, useForm } from "react-hook-form"
-import { PlatformGuildData, PlatformType, Requirement } from "types"
+import { PlatformGuildData, PlatformType } from "types"
 import { ERC20_CONTRACTS } from "utils/guildCheckout/constants"
 import { Chain } from "wagmiConfig/chains"
 import DefaultAddRewardPanelWrapper from "../../DefaultAddRewardPanelWrapper"
@@ -48,7 +48,10 @@ export type AddTokenFormType = {
   snapshotId: number
   type: TokenRewardType
   staticValue?: number
-  snapshotRequirement?: Partial<Requirement>
+  snapshotRequirement?: Extract<
+    Schemas["RequirementCreationPayload"],
+    { type: "GUILD_SNAPSHOT" }
+  >
 }
 
 const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
@@ -78,7 +81,7 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
 
   const accessedTokens = useTokenRewards()
 
-  const constructSubmitData = async (_data) => {
+  const constructSubmitData = async (_data: AddTokenFormType) => {
     const platform = accessedTokens.find(
       (guildPlatform) =>
         guildPlatform.platformId === PlatformType.ERC20 &&
@@ -87,7 +90,9 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
           _data.tokenAddress?.toLowerCase()
     )
 
-    const createdRequirement = await onAddRequirement(_data.snapshotRequirement)
+    const createdRequirement = _data.snapshotRequirement
+      ? await onAddRequirement(_data.snapshotRequirement)
+      : undefined
 
     const dynamicAmount = {
       ...(_data.type === TokenRewardType.DYNAMIC_SNAPSHOT && {
@@ -146,7 +151,7 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
     }
   }
 
-  const onSubmit = async (_data) => {
+  const onSubmit = async (_data: AddTokenFormType) => {
     const submitData = await constructSubmitData(_data)
     onAdd(submitData)
   }

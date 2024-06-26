@@ -19,6 +19,7 @@ import { useFormContext, useWatch } from "react-hook-form"
 import Star from "static/icons/star.svg"
 import { PlatformGuildData, PlatformType, SelectOption } from "types"
 import ExistingPointsTypeSelect from "../../AddPointsPanel/components/ExistingPointsTypeSelect"
+import { AddTokenFormType } from "../AddTokenPanel"
 
 const SnapshotSelector = () => {
   const { onClose, onOpen, isOpen } = useDisclosure()
@@ -29,7 +30,7 @@ const SnapshotSelector = () => {
     (gp) => gp.platformId === PlatformType.POINTS
   )
 
-  const { setValue } = useFormContext()
+  const { setValue } = useFormContext<AddTokenFormType>()
 
   const selectedPointsId = useWatch({ name: "data.guildPlatformId" })
 
