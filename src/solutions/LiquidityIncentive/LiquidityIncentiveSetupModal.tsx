@@ -89,7 +89,7 @@ const LiquidityIncentiveSetupModal = ({
   const { onSubmit } = useCreateLiquidityIncentive(handleClose)
 
   const steps = [
-    { title: "Select liquidity pool", content: SelectLiquidityPoolStep },
+    { title: "Choose your liquidity pool", content: SelectLiquidityPoolStep },
     { title: "Set points reward", content: SetPointsReward },
   ]
 
@@ -130,9 +130,9 @@ const LiquidityIncentiveSetupModal = ({
 
             <ModalBody className="custom-scrollbar">
               <Text colorScheme="gray" fontWeight="semibold" mb="8">
-                Set up point-based incentive for liquidity providers. The more
-                liquidity a user provides, the more points they receive! Set a custom
-                converision rate to fine-tune your incentive program.
+                Set up a point-based incentive for liquidity providers. The more
+                liquidity a user provides, the more points they earn. Set a custom
+                conversion rate to fine-tune the rewards.
               </Text>
 
               <Stepper

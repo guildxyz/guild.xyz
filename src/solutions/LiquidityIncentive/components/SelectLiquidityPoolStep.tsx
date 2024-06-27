@@ -76,7 +76,7 @@ const SelectLiquidityPoolStep = ({ onContinue }: { onContinue: () => void }) => 
   return (
     <Stack gap={5}>
       <Text colorScheme="gray">
-        Set the token you want to distribute as a reward.
+        Select the chain and enter the URL or contract address of the liquidity pool.
       </Text>
 
       <ChainPicker
@@ -103,6 +103,7 @@ const SelectLiquidityPoolStep = ({ onContinue }: { onContinue: () => void }) => 
               UNISWAP_POOL_URL.test(value) ||
               "Field must be a uniswap pool url, or has to contain a valid EVM address",
           })}
+          placeholder="https://app.uniswap.org/pools/606400?chain=base"
         />
 
         {(isFetchingFromTokenId ||
