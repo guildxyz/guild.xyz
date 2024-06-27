@@ -29,7 +29,7 @@ export const GuildCard: React.FC<Props> = ({ guildData }) => (
       </AvatarFallback>
     </Avatar>
     <div className="flex items-center gap-1">
-      <h3 className="max-w-36 truncate text-lg font-bold tracking-tight text-foreground">
+      <h3 className="max-w-36 truncate text-lg font-bold tracking-tight text-foreground font-display">
         {guildData.name}
       </h3>
       {guildData.tags.includes("VERIFIED") && (
@@ -63,7 +63,7 @@ export const GuildCard: React.FC<Props> = ({ guildData }) => (
       </Badge>
       <Badge>{pluralize(guildData.rolesCount, "role")}</Badge>
     </div>
-  </Card>
+  </Card >
 )
 export const GuildCardSkeleton = () => (
   <Card className="-z-10 grid grid-cols-[auto,1fr] grid-rows-2 items-center gap-x-4 gap-y-1 px-6 py-7">
