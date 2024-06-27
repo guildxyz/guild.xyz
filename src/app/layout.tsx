@@ -1,8 +1,8 @@
-import type { Metadata } from "next"
-import { ThemeProvider } from "@/components/ThemeProvider"
-import { inter, dystopian } from "fonts"
-import "./globals.css"
+import Providers from "@/components/Providers"
 import clsx from "clsx"
+import { dystopian, inter } from "fonts"
+import type { Metadata } from "next"
+import "./globals.css"
 
 interface RootLayoutProps {
   children: React.ReactNode
@@ -19,15 +19,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
     <html lang="en" suppressHydrationWarning>
       <head />
       <body className={clsx(dystopian.variable, inter.variable)}>
-        <ThemeProvider
-          attribute="data-theme"
-          storageKey="chakra-ui-color-mode"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-        </ThemeProvider>
+        <Providers>{children}</Providers>
       </body>
     </html>
   )
