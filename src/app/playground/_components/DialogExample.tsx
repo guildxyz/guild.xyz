@@ -8,20 +8,20 @@ import {
   DialogTrigger,
 } from "@/components/ui/Dialog"
 
-const DialogExample = () => (
-  <Dialog>
-    <DialogTrigger>
-      <Button>Open</Button>
-    </DialogTrigger>
-    <DialogContent>
-      <DialogHeader>
-        <DialogTitle>Connect to Guild</DialogTitle>
-        <DialogDescription>Description</DialogDescription>
-      </DialogHeader>
+export function DialogExample() {
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button>Open</Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Connect to Guild</DialogTitle>
+          <DialogDescription>Description</DialogDescription>
+        </DialogHeader>
 
-      <p>This is the dialog content</p>
-    </DialogContent>
-  </Dialog>
-)
-
-export { DialogExample }
+        <p>This is the dialog content</p>
+      </DialogContent>
+    </Dialog>
+  )
+}
