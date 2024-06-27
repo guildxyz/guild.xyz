@@ -25,11 +25,11 @@ import TokenPicker from "requirements/common/TokenPicker"
 import parseFromObject from "utils/parseFromObject"
 import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
 import { usePairOfTokenId } from "./hooks/usePairOfTokenId"
-import {
+import useParsePoolChain, {
   UNISWAP_POOL_URL,
   UniswapChains,
-  useParsePoolTokenId,
-} from "./hooks/useParsePoolTokenId"
+} from "./hooks/useParsePoolChain"
+import { useParsePoolTokenId } from "./hooks/useParsePoolTokenId"
 import { ADDRESS_REGEX, useParseVaultAddress } from "./hooks/useParseVaultAddress"
 import { useSymbolsOfPair } from "./hooks/useSymbolsOfPair"
 import { useTokenSymbolsOfPoolVault } from "./hooks/useTokenSymbolsOfPoolVault"
@@ -66,7 +66,8 @@ const UniswapForm = ({
   )
 
   const lpVaultAddress = useParseVaultAddress(baseFieldPath)
-  const tokenId = useParsePoolTokenId(baseFieldPath, onChainFromParam)
+  const tokenId = useParsePoolTokenId(baseFieldPath)
+  useParsePoolChain(baseFieldPath, onChainFromParam)
 
   const setTokensAndFee = ([t0, t1, fee]: [
     `0x${string}`,

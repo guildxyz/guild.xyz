@@ -10,22 +10,17 @@ import DataBlock from "components/common/DataBlock"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import REQUIREMENTS from "requirements"
 import { Chains } from "wagmiConfig/chains"
-import { UniswapChains } from "./hooks/useParsePoolTokenId"
+import { UniswapChains } from "./hooks/useParsePoolChain"
 import { useSymbolsOfPair } from "./hooks/useSymbolsOfPair"
 
-const UNISWAP_TESTNETS = new Set<UniswapChains>([
-  "SEPOLIA",
-  "BASE_SEPOLIA",
-])
+const UNISWAP_TESTNETS = new Set<UniswapChains>(["SEPOLIA", "BASE_SEPOLIA"])
 
 // These are the chains, which Uniswapp calls differently then us
 const UniswapQueryChainNames = {
   BASE_MAINNET: "base",
   BSC: "bnb",
   BLAST_MAINNET: "blast",
-} as const satisfies Partial<
-  Record<UniswapChains, string>
->
+} as const satisfies Partial<Record<UniswapChains, string>>
 
 const UniswapRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
   const {

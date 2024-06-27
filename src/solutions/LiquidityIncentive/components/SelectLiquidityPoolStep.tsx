@@ -13,13 +13,17 @@ import Button from "components/common/Button"
 import { useCallback } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { usePairOfTokenId } from "requirements/Uniswap/hooks/usePairOfTokenId"
-import {
+import useParsePoolChain, {
   UNISWAP_POOL_URL,
   UniswapChains,
-  useParsePoolTokenId,
-} from "requirements/Uniswap/hooks/useParsePoolTokenId"
-import { ADDRESS_REGEX } from "requirements/Uniswap/hooks/useParseVaultAddress"
+} from "requirements/Uniswap/hooks/useParsePoolChain"
+import { useParsePoolTokenId } from "requirements/Uniswap/hooks/useParsePoolTokenId"
+import {
+  ADDRESS_REGEX,
+  useParseVaultAddress,
+} from "requirements/Uniswap/hooks/useParseVaultAddress"
 import { useSymbolsOfPair } from "requirements/Uniswap/hooks/useSymbolsOfPair"
+import { useTokenSymbolsOfPoolVault } from "requirements/Uniswap/hooks/useTokenSymbolsOfPoolVault"
 import ChainPicker from "requirements/common/ChainPicker"
 import parseFromObject from "utils/parseFromObject"
 import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
@@ -60,11 +64,21 @@ const SelectLiquidityPoolStep = ({ onContinue }: { onContinue: () => void }) => 
     [setValue]
   )
 
-  const tokenId = useParsePoolTokenId("pool", onChainFromParam)
+  const tokenId = useParsePoolTokenId("pool")
+  useParsePoolChain("pool", onChainFromParam)
 
   const { isLoading: isFetchingFromTokenId, error: tokenIdError } = usePairOfTokenId(
     chain,
     tokenId,
+    setTokensAndFee
+  )
+
+  const rawAddressInput = useWatch({ name: `pool.data.lpVault` })
+
+  const lpVaultAddress = useParseVaultAddress("pool")
+  const { error, isLoading } = useTokenSymbolsOfPoolVault(
+    Chains[chain],
+    lpVaultAddress,
     setTokensAndFee
   )
 
@@ -79,19 +93,12 @@ const SelectLiquidityPoolStep = ({ onContinue }: { onContinue: () => void }) => 
         Select the chain and enter the URL or contract address of the liquidity pool.
       </Text>
 
-      <ChainPicker
-        controlName={`pool.chain` as const}
-        showDivider={false}
-        supportedChains={
-          consts.UniswapV3PositionsChains as unknown as UniswapChains[]
-        }
-        onChange={resetForm}
-      />
-
       <FormControl
         isRequired
         isInvalid={
-          !!parseFromObject(errors, "pool")?.data?.lpVault || !!tokenIdError
+          !!parseFromObject(errors, "pool")?.data?.lpVault ||
+          !!tokenIdError ||
+          !!error
         }
       >
         <FormLabel>Pool address or URL</FormLabel>
@@ -106,19 +113,18 @@ const SelectLiquidityPoolStep = ({ onContinue }: { onContinue: () => void }) => 
           placeholder="https://app.uniswap.org/pools/606400?chain=base"
         />
 
-        {(isFetchingFromTokenId ||
-          (symbol0 && symbol1) ||
-          isFetchingFromTokenId) && (
-          <FormHelperText>
-            <Skeleton isLoaded={!!symbol0 && !!symbol1} display="inline">
-              <strong>
-                {symbol0 ?? "___"}/{symbol1 ?? "___"}
-              </strong>{" "}
-              pair detected on <strong>{CHAIN_CONFIG[chain]?.name}</strong>. If this
-              is not correct, ensure the correct chain is selected
-            </Skeleton>
-          </FormHelperText>
-        )}
+        {(isFetchingFromTokenId || (symbol0 && symbol1) || isFetchingFromTokenId) &&
+          !!rawAddressInput && (
+            <FormHelperText>
+              <Skeleton isLoaded={!!symbol0 && !!symbol1} display="inline">
+                <strong>
+                  {symbol0 ?? "___"}/{symbol1 ?? "___"}
+                </strong>{" "}
+                pair detected on <strong>{CHAIN_CONFIG[chain]?.name}</strong>. If
+                this is not correct, ensure the correct chain is selected
+              </Skeleton>
+            </FormHelperText>
+          )}
 
         <FormErrorMessage>
           {parseFromObject(errors, "pool")?.data?.lpVault?.message ??
@@ -126,9 +132,25 @@ const SelectLiquidityPoolStep = ({ onContinue }: { onContinue: () => void }) => 
         </FormErrorMessage>
       </FormControl>
 
+      <ChainPicker
+        controlName={`pool.chain` as const}
+        showDivider={false}
+        supportedChains={
+          consts.UniswapV3PositionsChains as unknown as UniswapChains[]
+        }
+        onChange={resetForm}
+      />
+
       <Button
         colorScheme={"indigo"}
-        isDisabled={!!errors?.pool || !chain || tokenIdError || (!token0 && !token1)}
+        isDisabled={
+          !!errors?.pool ||
+          !chain ||
+          !!tokenIdError ||
+          (!token0 && !token1) ||
+          isLoading ||
+          isFetchingFromTokenId
+        }
         onClick={onContinue}
         mb={5}
         mt={3}
