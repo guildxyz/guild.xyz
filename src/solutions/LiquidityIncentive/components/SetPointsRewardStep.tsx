@@ -9,6 +9,7 @@ import {
   Text,
   Tooltip,
 } from "@chakra-ui/react"
+import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import RadioButtonGroup from "components/common/RadioButtonGroup"
 import { Question } from "phosphor-react"
@@ -16,22 +17,26 @@ import { useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { UniswapChains } from "requirements/Uniswap/hooks/useParsePoolTokenId"
 import { useSymbolsOfPair } from "requirements/Uniswap/hooks/useSymbolsOfPair"
+import { PlatformType } from "types"
 import { Chains } from "wagmiConfig/chains"
 import { LiquidityIncentiveForm } from "../LiquidityIncentiveSetupModal"
 import LiquidityConversion from "./LiquidityConversion"
 import SelectPointType from "./SelectPointType"
 
 const SetPointsReward = ({ onSubmit }: { onSubmit: () => Promise<void> }) => {
-  const {
-    control,
-    formState: { errors },
-    setValue,
-  } = useFormContext<LiquidityIncentiveForm>()
+  const { setValue } = useFormContext<LiquidityIncentiveForm>()
+
+  const { guildPlatforms } = useGuild()
+  const numOfPointsPlatforms = guildPlatforms
+    ? guildPlatforms.filter((gp) => gp.platformId === PlatformType.POINTS).length
+    : 0
 
   const conversion = useWatch({ name: `conversion` })
   const pointsPlatformId = useWatch({ name: "pointsId" })
 
-  const isConversionDisabled = pointsPlatformId === null
+  const isConversionDisabled = numOfPointsPlatforms
+    ? pointsPlatformId === null
+    : false
   const isSubmitDisabled = isConversionDisabled || !conversion
 
   const [isLoading, setIsLoading] = useState(false)

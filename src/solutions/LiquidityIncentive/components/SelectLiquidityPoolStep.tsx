@@ -18,12 +18,8 @@ import {
   UniswapChains,
   useParsePoolTokenId,
 } from "requirements/Uniswap/hooks/useParsePoolTokenId"
-import {
-  ADDRESS_REGEX,
-  useParseVaultAddress,
-} from "requirements/Uniswap/hooks/useParseVaultAddress"
+import { ADDRESS_REGEX } from "requirements/Uniswap/hooks/useParseVaultAddress"
 import { useSymbolsOfPair } from "requirements/Uniswap/hooks/useSymbolsOfPair"
-import { useTokenSymbolsOfPoolVault } from "requirements/Uniswap/hooks/useTokenSymbolsOfPoolVault"
 import ChainPicker from "requirements/common/ChainPicker"
 import parseFromObject from "utils/parseFromObject"
 import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
@@ -47,8 +43,6 @@ const SelectLiquidityPoolStep = ({ onContinue }: { onContinue: () => void }) => 
     name: `pool.chain`,
   })
 
-  const lpVaultAddress = useParseVaultAddress("pool")
-
   const setTokensAndFee = ([t0, t1, fee]: [
     `0x${string}`,
     `0x${string}`,
@@ -58,12 +52,6 @@ const SelectLiquidityPoolStep = ({ onContinue }: { onContinue: () => void }) => 
     setValue(`pool.data.token1`, t1, { shouldDirty: true })
     setValue(`pool.data.defaultFee`, fee, { shouldDirty: true })
   }
-
-  const { error, isLoading } = useTokenSymbolsOfPoolVault(
-    Chains[chain],
-    lpVaultAddress,
-    setTokensAndFee
-  )
 
   const onChainFromParam = useCallback(
     (chainFromParam: UniswapChains) => {
@@ -103,9 +91,7 @@ const SelectLiquidityPoolStep = ({ onContinue }: { onContinue: () => void }) => 
       <FormControl
         isRequired
         isInvalid={
-          !!parseFromObject(errors, "pool")?.data?.lpVault ||
-          !!error ||
-          !!tokenIdError
+          !!parseFromObject(errors, "pool")?.data?.lpVault || !!tokenIdError
         }
       >
         <FormLabel>Pool address or URL</FormLabel>
@@ -119,7 +105,9 @@ const SelectLiquidityPoolStep = ({ onContinue }: { onContinue: () => void }) => 
           })}
         />
 
-        {(isLoading || (symbol0 && symbol1) || isFetchingFromTokenId) && (
+        {(isFetchingFromTokenId ||
+          (symbol0 && symbol1) ||
+          isFetchingFromTokenId) && (
           <FormHelperText>
             <Skeleton isLoaded={!!symbol0 && !!symbol1} display="inline">
               <strong>
@@ -139,7 +127,7 @@ const SelectLiquidityPoolStep = ({ onContinue }: { onContinue: () => void }) => 
 
       <Button
         colorScheme={"indigo"}
-        isDisabled={!!errors?.pool || !chain || !!error}
+        isDisabled={!!errors?.pool || !chain || tokenIdError || (!token0 && !token1)}
         onClick={onContinue}
         mb={5}
         mt={3}

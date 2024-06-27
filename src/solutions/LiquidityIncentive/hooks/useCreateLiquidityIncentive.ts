@@ -1,4 +1,5 @@
 import { DynamicAmount } from "@guildxyz/types"
+import { CREATE_NEW_OPTION } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddPointsPanel/components/ExistingPointsTypeSelect"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { RoleToCreate } from "components/create-guild/hooks/useCreateRole"
 import useCreateRRR from "hooks/useCreateRRR"
@@ -34,7 +35,7 @@ const useCreateLiquidityIncentive = (onSuccess: () => void) => {
     } satisfies RoleToCreate["requirements"][number] & { id: number }
 
     const pointsReward = {
-      ...(data.pointsId != undefined
+      ...(data.pointsId !== CREATE_NEW_OPTION && data.pointsId !== null
         ? {
             guildPlatformId: data.pointsId,
             guildPlatform: {
