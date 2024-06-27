@@ -169,7 +169,14 @@ const PROFILE_TARGETS = {
 }
 
 const FarcasterIncludeText = (props: RequirementProps) => {
-  const { type, data } = useRequirementContext()
+  const { type, data } = useRequirementContext<
+    "FARCASTER_FOLLOW_CHANNEL" | "FARCASTER_USERNAME" | "FARCASTER_BIO"
+  >()
+
+  // This should never happen, but tells TS, that the requirement is expected to be USERNAME / BIO
+  if (type === "FARCASTER_FOLLOW_CHANNEL") {
+    return null
+  }
 
   return (
     <Requirement
@@ -196,10 +203,10 @@ const types = {
   FARCASTER_FOLLOW_CHANNEL: FarcasterFollowChannel,
   FARCASTER_USERNAME: FarcasterIncludeText,
   FARCASTER_BIO: FarcasterIncludeText,
-}
+} as const
 
 const FarcasterRequirement = (props: RequirementProps) => {
-  const { type } = useRequirementContext()
+  const { type } = useRequirementContext<keyof typeof types>()
   const Component = types[type]
   return <Component {...props} />
 }
