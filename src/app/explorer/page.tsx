@@ -19,6 +19,13 @@ import { Separator } from "@/components/ui/Separator"
 import useIsStuck from "hooks/useIsStuck"
 import { PageBoundary } from "@/components/PageBoundary"
 import { Card } from "@/components/ui/Card"
+import { useEffect, useState } from "react"
+import useScrollspy from "hooks/useScrollSpy"
+
+enum ActiveSection {
+  YourGuilds = 'your-guilds',
+  ExploreGuilds = 'explore-guilds'
+}
 
 const Page = () => {
   const { data: guildData } = useSWR<GuildBase[]>(
@@ -28,12 +35,20 @@ const Page = () => {
   const isAuthenticated = false
   const { ref: navToggleRef, isStuck: navIsStuck } = useIsStuck()
   const { ref: searchRef, isStuck: searchIsStuck } = useIsStuck()
+  const [activeSection, setActiveSection] = useState<ActiveSection>(ActiveSection.YourGuilds)
+  const spyActiveSection = useScrollspy(Object.values(ActiveSection), 100);
+  useEffect(() => {
+    if (!spyActiveSection) return
+    setActiveSection(spyActiveSection as ActiveSection)
+  }, [spyActiveSection])
+
   return (
     <div className="min-h-screen">
+      <div className="fixed top-0 inset-x-0 from-background to-card/30 backdrop-blur border-border border-b bg-gradient-to-b h-28 -translate-y-28 data-[nav-stuck='true']:-translate-y-12 data-[nav-stuck='true']:data-[search-stuck='true']:translate-y-0 motion-safe:transition-transform duration-75" data-nav-stuck={navIsStuck} data-search-stuck={searchIsStuck} />
       <div className="relative">
         <Header />
         <PageBoundary>
-          <h1 className="pb-14 pt-9 font-display text-4xl font-bold tracking-tight text-white sm:text-5xl">
+          <h1 className="pb-14 pt-9 font-display text-4xl font-bold tracking-tight text-white sm:text-5xl" id={ActiveSection.YourGuilds}>
             Guildhall
           </h1>
         </PageBoundary>
@@ -46,15 +61,11 @@ const Page = () => {
       <PageBoundary>
         <main>
           <div className="sticky top-0 my-1 py-2" ref={navToggleRef}>
-            <div
-              className="absolute inset-0 bg-background opacity-0 transition-opacity duration-75 data-[is-stuck='true']:opacity-100"
-              data-is-stuck={navIsStuck}
-            />
             <div className="relative flex items-start justify-between">
-              <ToggleGroup type="single" className="space-x-2" size="lg" variant="mono">
-                <ToggleGroupItem value="your-guilds" >Your guilds</ToggleGroupItem>
-                <ToggleGroupItem value="explore-guilds" >
-                  Explore guilds
+              <ToggleGroup type="single" className="space-x-2" size={searchIsStuck ? "sm" : "lg"} variant="mono" onValueChange={(value) => value && setActiveSection(value as ActiveSection)} value={activeSection}>
+                <ToggleGroupItem value={ActiveSection.YourGuilds} asChild><a href={`#${ActiveSection.YourGuilds}`}>Your guilds</a></ToggleGroupItem>
+                <ToggleGroupItem value={ActiveSection.ExploreGuilds} asChild>
+                  <a href={`#${ActiveSection.ExploreGuilds}`}>Explore guilds</a>
                 </ToggleGroupItem>
               </ToggleGroup>
               {isAuthenticated && (
@@ -65,25 +76,23 @@ const Page = () => {
               )}
             </div>
           </div>
-          <Card className="my-2 mb-12 flex flex-col items-stretch justify-between gap-8 p-6 font-semibold sm:flex-row sm:items-center">
-            <div className="flex items-center gap-4">
-              <Robot className="size-8 min-w-8 text-white" />
-              <span>Sign in to view your guilds / create new ones</span>
-            </div>
-            <Button className="space-x-2">
-              <SignIn />
-              <span className="text-md">Sign in</span>
-            </Button>
-          </Card>
+          <section>
+            <Card className="my-2 mb-12 flex flex-col items-stretch justify-between gap-8 p-6 font-semibold sm:flex-row sm:items-center">
+              <div className="flex items-center gap-4">
+                <Robot className="size-8 min-w-8 text-white" />
+                <span>Sign in to view your guilds / create new ones</span>
+              </div>
+              <Button className="space-x-2">
+                <SignIn />
+                <span className="text-md">Sign in</span>
+              </Button>
+            </Card>
+          </section>
           {isAuthenticated && <Separator className="mb-10" />}
           <h2 className="text-lg font-bold tracking-tight">
             Explore verified guilds
           </h2>
-          <div className="sticky top-12" ref={searchRef}>
-            <div
-              className="absolute inset-0 bg-background opacity-0 transition-opacity duration-75 data-[is-stuck='true']:opacity-100"
-              data-is-stuck={searchIsStuck}
-            />
+          <div className="sticky top-10" ref={searchRef} id={ActiveSection.ExploreGuilds}>
             <div className="relative flex flex-col gap-3 py-4 sm:flex-row sm:gap-0">
               <Input
                 className="text-md relative h-12 grow rounded-xl border pl-12 pr-6 sm:rounded-r-none"

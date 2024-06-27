@@ -11,7 +11,7 @@
     --card-foreground: var(--foreground);
 
     --popover: 0 0% 100%;
-    --popover-foreground: 224 71.4% 4.1%;
+    --popover-foreground: var(--foreground);
 
     --primary: 239 84% 67%;
     --primary-foreground: 0 0% 100%;
@@ -44,7 +44,7 @@
     --card-foreground: var(--foreground);
 
     --popover: 240 5.26% 26.08%;
-    --popover-foreground: 240 2% 58%;
+    --popover-foreground: var(--foreground);
 
     --primary: 238.73 70% 63%;
     --primary-foreground: 0 0% 100%;
