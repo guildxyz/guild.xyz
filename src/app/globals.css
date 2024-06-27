@@ -4,8 +4,8 @@
 
 @layer base {
   :root {
-    --background: 240 4% 95%;
-    --foreground: 224 71.4% 4.1%;
+    --background: 240 5% 96%;
+    --foreground: 240 4% 16%;
 
     --card: 0 0% 100%;
     --card-foreground: var(--foreground);
@@ -13,7 +13,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 224 71.4% 4.1%;
 
-    --primary: 243, 75%, 59%;
+    --primary: 239 84% 67%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 220 14.3% 95.9%;
@@ -27,6 +27,9 @@
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 20% 98%;
+
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
 
     --border: 240 6% 90%;
     --input: var(--border);
@@ -57,6 +60,9 @@
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 20% 98%;
+
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
 
     --border: 240 3% 38%;
     --input: var(--border);
