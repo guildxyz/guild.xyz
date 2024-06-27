@@ -1,6 +1,9 @@
 "use client"
 
+import { FuelProvider } from "@fuels/react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { PostHogProvider } from "components/_app/PostHogProvider"
+import { fuelConfig } from "fuelConfig"
 import { ThemeProvider } from "next-themes"
 import { SWRConfig } from "swr"
 import { fetcherForSWR } from "utils/fetcher"
@@ -21,9 +24,12 @@ export default function Providers({ children }: { children: React.ReactNode }) {
       <SWRConfig value={{ fetcher: fetcherForSWR }}>
         <WagmiProvider config={wagmiConfig} reconnectOnMount={false}>
           <QueryClientProvider client={queryClient}>
-            {children}
-
-            {/* <Web3ConnectionManager /> */}
+            <FuelProvider ui={false} fuelConfig={fuelConfig}>
+              <PostHogProvider>
+                {children}
+                {/* <Web3ConnectionManager /> */}
+              </PostHogProvider>
+            </FuelProvider>
           </QueryClientProvider>
         </WagmiProvider>
       </SWRConfig>

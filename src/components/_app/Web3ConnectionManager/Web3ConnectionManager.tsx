@@ -1,14 +1,14 @@
 import ClientOnly from "components/common/ClientOnly"
 import { useAtom } from "jotai"
-import PlatformMergeErrorAlert from "./components/PlatformMergeErrorAlert"
-import WalletLinkHelperModal from "./components/WalletLinkHelperModal"
-import WalletSelectorModal, {
-  walletSelectorModalAtom,
-} from "./components/WalletSelectorModal"
+import { walletSelectorModalAtom } from "./components/WalletSelectorModal"
 import useAutoReconnect from "./hooks/useAutoReconnect"
 import useConnectFromLocalStorage from "./hooks/useConnectFromLocalStorage"
+import {
+  useTriggerWalletSelectorModal,
+  useTriggerWalletSelectorModalLegacy,
+} from "./hooks/useWeb3ConnectionManager"
 
-const Web3ConnectionManager = () => {
+const BaseWeb3ConnectionManager = () => {
   const [isWalletSelectorModalOpen, setIsWalletSelectorModalOpen] = useAtom(
     walletSelectorModalAtom
   )
@@ -18,15 +18,28 @@ const Web3ConnectionManager = () => {
 
   return (
     <ClientOnly>
-      <WalletSelectorModal
+      {/* <WalletSelectorModal
         isOpen={isWalletSelectorModalOpen}
         onOpen={() => setIsWalletSelectorModalOpen(true)}
         onClose={() => setIsWalletSelectorModalOpen(false)}
       />
       <WalletLinkHelperModal />
-      <PlatformMergeErrorAlert />
+      <PlatformMergeErrorAlert /> */}
     </ClientOnly>
   )
 }
 
-export default Web3ConnectionManager
+// Uses useRouter from next/router (works in pages router)
+const LegacyWeb3ConnectionManager = () => {
+  useTriggerWalletSelectorModalLegacy()
+  return <BaseWeb3ConnectionManager />
+}
+
+// Uses useRouter from next/navigation (works in app router)
+const Web3ConnectionManager = () => {
+  useTriggerWalletSelectorModal()
+  return <BaseWeb3ConnectionManager />
+}
+
+export default LegacyWeb3ConnectionManager
+export { Web3ConnectionManager }
