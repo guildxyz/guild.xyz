@@ -8,7 +8,6 @@ export const metadata: Metadata = {
   title: "Playground",
 }
 
-
 const Section = ({ title, children }: PropsWithChildren<{ title: string }>) => (
   <section className="flex flex-col gap-2">
     <h2 className="text-lg font-bold">{title}</h2>
@@ -29,12 +28,14 @@ export default function Page() {
         <Section title="Card">
           <Card className="p-4">This is a card</Card>
         </Section>
-        <Button variant='default'>primary (default)</Button>
-        <Button variant='outline'>outline</Button>
-        <Button variant='ghost'>ghost</Button>
-        <Button variant='accent'>accent</Button>
-        <Button variant='destructive'>destructive</Button>
-        <Button variant='success'>success</Button>
+        <Card className="flex gap-2 p-4">
+          <Button variant="default">primary (default)</Button>
+          <Button variant="outline">outline</Button>
+          <Button variant="ghost">ghost</Button>
+          <Button variant="accent">accent</Button>
+          <Button variant="destructive">destructive</Button>
+          <Button variant="success">success</Button>
+        </Card>
       </div>
     </div>
   )
