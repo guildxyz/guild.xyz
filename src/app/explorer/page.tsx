@@ -38,7 +38,7 @@ const Page = () => {
           </h1>
         </PageBoundary>
         <div className="absolute inset-0 -bottom-28 -z-10 overflow-hidden">
-          <div className="absolute inset-0 bg-[hsl(240deg_2.65%_22.16%)]" />
+          <div className="absolute inset-0 bg-[hsl(240deg_4%_16%)]" />
           <div className="absolute inset-0 bg-[url('/banner.png')] bg-[auto_115%] bg-[right_top_10px] bg-no-repeat opacity-10" />
           <div className="absolute inset-0 bg-gradient-to-tr from-[hsl(240deg_2.65%_22.16%)] from-50% to-transparent" />
         </div>
@@ -51,9 +51,9 @@ const Page = () => {
               data-is-stuck={navIsStuck}
             />
             <div className="relative flex items-start justify-between">
-              <ToggleGroup type="single" className="space-x-2" size="lg">
-                <ToggleGroupItem value="your-guilds">Your guilds</ToggleGroupItem>
-                <ToggleGroupItem value="explore-guilds">
+              <ToggleGroup type="single" className="space-x-2" size="lg" variant="mono">
+                <ToggleGroupItem value="your-guilds" >Your guilds</ToggleGroupItem>
+                <ToggleGroupItem value="explore-guilds" >
                   Explore guilds
                 </ToggleGroupItem>
               </ToggleGroup>
@@ -86,7 +86,7 @@ const Page = () => {
             />
             <div className="relative flex flex-col gap-3 py-4 sm:flex-row sm:gap-0">
               <Input
-                className="text-md relative h-12 grow rounded-lg border pl-12 pr-6 sm:rounded-r-none"
+                className="text-md relative h-12 grow rounded-xl border pl-12 pr-6 sm:rounded-r-none"
                 placeholder="Search verified guilds"
               />
               <div className="absolute left-4 flex h-12 items-center justify-center">
