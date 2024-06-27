@@ -1,4 +1,4 @@
-import "@/styles/globals.css"
+import "./globals.css"
 
 import { cn } from "@/lib/utils"
 import { inter } from "fonts"
