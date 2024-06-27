@@ -29,7 +29,7 @@ export function ThemeToggle() {
       <ToggleGroupItem
         value="light"
         aria-label="Toggle light mode"
-        size="sm"
+        size="icon"
         variant="primary"
       >
         <Sun />
@@ -37,7 +37,7 @@ export function ThemeToggle() {
       <ToggleGroupItem
         value="dark"
         aria-label="Toggle dark mode"
-        size="sm"
+        size="icon"
         variant="primary"
       >
         <Moon />
@@ -45,7 +45,7 @@ export function ThemeToggle() {
       <ToggleGroupItem
         value="system"
         aria-label="Toggle system default"
-        size="sm"
+        size="icon"
         variant="primary"
       >
         <Desktop />

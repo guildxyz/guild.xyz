@@ -22,7 +22,8 @@ import {
   Plus,
   Shield,
   UsersThree,
-  File, List
+  File,
+  List,
 } from "@phosphor-icons/react"
 import XLogo from "static/icons/x.svg"
 import GuildCastle from "components/explorer/AnimatedLogo"
@@ -31,13 +32,20 @@ import { ThemeToggle } from "./ThemeToggle"
 import Link from "next/link"
 
 export function Navigator() {
-  const [isOpen, setIsOpen] = React.useState(false);
+  const [isOpen, setIsOpen] = React.useState(false)
 
   return (
-    <NavigationMenu value={isOpen ? 'main-menu' : undefined} onValueChange={(value) => setIsOpen(!!value)}>
+    <NavigationMenu
+      value={isOpen ? "main-menu" : undefined}
+      onValueChange={(value) => setIsOpen(!!value)}
+    >
       <NavigationMenuList>
         <NavigationMenuItem value="main-menu">
-          <Button className="gap-2 rounded-2xl" variant={'ghost'} onClick={() => setIsOpen(prev => !prev)}>
+          <Button
+            className="gap-2 rounded-2xl text-white hover:bg-accent/10 hover:text-white active:bg-accent/20"
+            variant={"ghost"}
+            onClick={() => setIsOpen((prev) => !prev)}
+          >
             <GuildCastle />
             <span className="font-display text-base font-bold">Guild</span>
             <List />
