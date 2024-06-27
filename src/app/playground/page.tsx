@@ -2,6 +2,7 @@ import { Card } from "@/components/ui/Card"
 import { Metadata } from "next"
 import { PropsWithChildren } from "react"
 import { ThemeToggle } from "../../v2/components/ThemeToggle"
+import { DialogExample } from "./_components/DialogExample"
 
 export const metadata: Metadata = {
   title: "Playground",
@@ -19,6 +20,10 @@ export default function Page() {
 
         <Section title="Card">
           <Card className="p-4">This is a card</Card>
+        </Section>
+
+        <Section title="Modal">
+          <DialogExample />
         </Section>
       </div>
     </div>
