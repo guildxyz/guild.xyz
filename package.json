@@ -16,7 +16,7 @@
     "test": "cypress run",
     "test:mobile": "cypress run --config viewportWidth=375,viewportHeight=667",
     "snyk-protect": "snyk-protect",
-    "postinstall": "source .env.local && npm i --no-save --ignore-scripts --force $WAAS_WEB_URL $WAAS_VIEM_URL"
+    "postinstall": "npx dotenv-cli -e .env.local -- bash -c 'npm i --no-save --ignore-scripts $WAAS_WEB_URL $WAAS_VIEM_URL'"
   },
   "dependencies": {
     "@bugsnag/js": "^7.22.4",
