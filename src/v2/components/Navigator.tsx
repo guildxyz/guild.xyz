@@ -9,7 +9,6 @@ import {
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
 } from "@/components/ui/NavigationMenu"
 import {
   Book,
@@ -23,27 +22,30 @@ import {
   Plus,
   Shield,
   UsersThree,
-  File,
+  File, List
 } from "@phosphor-icons/react"
 import XLogo from "static/icons/x.svg"
 import GuildCastle from "components/explorer/AnimatedLogo"
-import { buttonVariants } from "@/components/ui/Button"
+import { Button, buttonVariants } from "@/components/ui/Button"
 import { ThemeToggle } from "./ThemeToggle"
 import Link from "next/link"
 
 export function Navigator() {
+  const [isOpen, setIsOpen] = React.useState(false);
+
   return (
-    <NavigationMenu>
+    <NavigationMenu value={isOpen ? 'main-menu' : undefined}>
       <NavigationMenuList>
-        <NavigationMenuItem>
-          <NavigationMenuTrigger className="space-x-2 bg-transparent">
+        <NavigationMenuItem value="main-menu">
+          <Button className="gap-2 rounded-2xl" variant={'ghost'} onClick={() => setIsOpen(prev => !prev)}>
             <GuildCastle />
             <span className="font-display text-base font-bold">Guild</span>
-          </NavigationMenuTrigger>
-          <NavigationMenuContent className="flex flex-col rounded-lg text-foreground">
+            <List />
+          </Button>
+          <NavigationMenuContent className="flex flex-col rounded-lg">
             <div className="flex gap-12 px-3 py-4">
               <ul className="flex flex-col gap-1">
-                <li className="my-1 px-4 text-sm font-bold text-card-foreground">
+                <li className="my-1 px-4 text-sm font-bold text-muted-foreground">
                   Navigation
                 </li>
                 <ListItem href="/explorer">
@@ -84,7 +86,7 @@ export function Navigator() {
                 </ListItem>
               </ul>
               <ul className="flex w-36 flex-col items-stretch gap-1">
-                <li className="my-1 px-4 text-sm font-bold text-card-foreground">
+                <li className="my-1 px-4 text-sm font-bold text-muted-foreground">
                   Other
                 </li>
                 <ListItem
@@ -137,7 +139,7 @@ export function Navigator() {
                 </ListItem>
               </ul>
             </div>
-            <div className="flex items-center justify-between bg-background px-7 py-4 text-foreground">
+            <div className="flex items-center justify-between bg-secondary px-7 py-4 text-foreground">
               <span>Theme:</span>
               <ThemeToggle />
             </div>
@@ -157,7 +159,7 @@ const ListItem = React.forwardRef<
       <NavigationMenuLink
         className={cn(
           buttonVariants({ variant: "ghost" }),
-          "flex items-center justify-start gap-2 whitespace-nowrap",
+          "flex items-center justify-start gap-2 whitespace-nowrap text-card-foreground",
           className
         )}
       >
