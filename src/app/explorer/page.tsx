@@ -12,19 +12,19 @@ import {
 import Robot from "/public/landing/robot.svg"
 import { Input } from "@/components/ui/Input"
 import { Header } from "@/components/Header"
-import { GuildCard } from "@/components/GuildCard"
+import { GuildCard, GuildCardSkeleton } from "@/components/GuildCard"
 import useSWR from "swr"
 import { GuildBase } from "types"
 import { Separator } from "@/components/ui/Separator"
 import useIsStuck from "hooks/useIsStuck"
 import { PageBoundary } from "@/components/PageBoundary"
 import { Card } from "@/components/ui/Card"
-import { useEffect, useState } from "react"
+import { useDeferredValue, useEffect, useState } from "react"
 import useScrollspy from "hooks/useScrollSpy"
 
 enum ActiveSection {
-  YourGuilds = 'your-guilds',
-  ExploreGuilds = 'explore-guilds'
+  YourGuilds = "your-guilds",
+  ExploreGuilds = "explore-guilds",
 }
 
 const Page = () => {
@@ -35,20 +35,31 @@ const Page = () => {
   const isAuthenticated = false
   const { ref: navToggleRef, isStuck: isNavStuck } = useIsStuck()
   const { ref: searchRef, isStuck: isSearchStuck } = useIsStuck()
-  const [activeSection, setActiveSection] = useState<ActiveSection>(ActiveSection.YourGuilds)
-  const spyActiveSection = useScrollspy(Object.values(ActiveSection), 100);
+  const [activeSection, setActiveSection] = useState<ActiveSection>(
+    ActiveSection.YourGuilds
+  )
+  const spyActiveSection = useScrollspy(Object.values(ActiveSection), 100)
   useEffect(() => {
     if (!spyActiveSection) return
     setActiveSection(spyActiveSection as ActiveSection)
   }, [spyActiveSection])
+  const [query, setQuery] = useState("")
+  const deferredQuery = useDeferredValue(query)
 
   return (
     <div className="min-h-screen">
-      <div className="fixed top-0 inset-x-0 from-background to-card/30 backdrop-blur border-border border-b bg-gradient-to-b h-28 -translate-y-28 data-[nav-stuck='true']:-translate-y-12 data-[nav-stuck='true']:data-[search-stuck='true']:translate-y-0 motion-safe:transition-transform duration-75" data-nav-stuck={isNavStuck} data-search-stuck={isSearchStuck} />
+      <div
+        className="fixed inset-x-0 top-0 h-28 -translate-y-28 border-b border-border bg-gradient-to-b from-background to-card/30 backdrop-blur duration-75 data-[nav-stuck='true']:-translate-y-12 data-[nav-stuck='true']:data-[search-stuck='true']:translate-y-0 motion-safe:transition-transform"
+        data-nav-stuck={isNavStuck}
+        data-search-stuck={isSearchStuck}
+      />
       <div className="relative">
         <Header />
         <PageBoundary>
-          <h1 className="pb-14 pt-9 font-display text-4xl font-bold tracking-tight text-white sm:text-5xl" id={ActiveSection.YourGuilds}>
+          <h1
+            className="pb-14 pt-9 font-display text-4xl font-bold tracking-tight text-white sm:text-5xl"
+            id={ActiveSection.YourGuilds}
+          >
             Guildhall
           </h1>
         </PageBoundary>
@@ -62,8 +73,19 @@ const Page = () => {
         <main>
           <div className="sticky top-0 my-1 py-2" ref={navToggleRef}>
             <div className="relative flex items-start justify-between">
-              <ToggleGroup type="single" className="space-x-2" size={isSearchStuck ? "sm" : "lg"} variant={isNavStuck ? "default" : "mono"} onValueChange={(value) => value && setActiveSection(value as ActiveSection)} value={activeSection}>
-                <ToggleGroupItem value={ActiveSection.YourGuilds} asChild><a href={`#${ActiveSection.YourGuilds}`}>Your guilds</a></ToggleGroupItem>
+              <ToggleGroup
+                type="single"
+                className="space-x-2"
+                size={isSearchStuck ? "sm" : "lg"}
+                variant={isNavStuck ? "default" : "mono"}
+                onValueChange={(value) =>
+                  value && setActiveSection(value as ActiveSection)
+                }
+                value={activeSection}
+              >
+                <ToggleGroupItem value={ActiveSection.YourGuilds} asChild>
+                  <a href={`#${ActiveSection.YourGuilds}`}>Your guilds</a>
+                </ToggleGroupItem>
                 <ToggleGroupItem value={ActiveSection.ExploreGuilds} asChild>
                   <a href={`#${ActiveSection.ExploreGuilds}`}>Explore guilds</a>
                 </ToggleGroupItem>
@@ -92,11 +114,16 @@ const Page = () => {
           <h2 className="text-lg font-bold tracking-tight">
             Explore verified guilds
           </h2>
-          <div className="sticky top-10" ref={searchRef} id={ActiveSection.ExploreGuilds}>
+          <div
+            className="sticky top-10"
+            ref={searchRef}
+            id={ActiveSection.ExploreGuilds}
+          >
             <div className="relative flex flex-col gap-3 py-4 sm:flex-row sm:gap-0">
               <Input
                 className="text-md relative h-12 grow rounded-xl border pl-12 pr-6 sm:rounded-r-none"
                 placeholder="Search verified guilds"
+                onChange={({ currentTarget }) => setQuery(currentTarget.value)}
               />
               <div className="absolute left-4 flex h-12 items-center justify-center">
                 <MagnifyingGlass className="text-muted-foreground" />
@@ -105,13 +132,14 @@ const Page = () => {
                 type="single"
                 className="self-start sm:h-12 sm:rounded-r-lg sm:border sm:border-l-0 sm:bg-card sm:px-4"
                 defaultValue="featured"
-                size="sm" variant="outline"
+                size="sm"
+                variant="outline"
               >
-                <ToggleGroupItem value="featured" className="space-x-2" >
+                <ToggleGroupItem value="featured" className="space-x-2">
                   <PushPin />
                   <span>featured</span>
                 </ToggleGroupItem>
-                <ToggleGroupItem value="newest" className="space-x-2" >
+                <ToggleGroupItem value="newest" className="space-x-2">
                   <Sparkle />
                   <span>newest</span>
                 </ToggleGroupItem>
@@ -119,10 +147,11 @@ const Page = () => {
             </div>
           </div>
           <div className="mt-1 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {guildData &&
-              guildData.map((data) => (
-                <GuildCard key={data.name} guildData={data} />
-              ))}
+            {guildData
+              ? guildData.map((data) => (
+                  <GuildCard key={data.name} guildData={data} />
+                ))
+              : Array.from({ length: 32 }, (_, i) => <GuildCardSkeleton key={i} />)}
           </div>
         </main>
       </PageBoundary>
