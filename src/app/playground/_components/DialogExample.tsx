@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/Button"
 import {
   Dialog,
   DialogContent,
@@ -9,7 +10,9 @@ import {
 
 const DialogExample = () => (
   <Dialog>
-    <DialogTrigger>Open</DialogTrigger>
+    <DialogTrigger>
+      <Button>Open</Button>
+    </DialogTrigger>
     <DialogContent>
       <DialogHeader>
         <DialogTitle>Connect to Guild</DialogTitle>
