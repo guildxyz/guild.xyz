@@ -1,11 +1,13 @@
+import { NavigationEvents } from "@/components/NavigationEvents"
 import Providers from "@/components/Providers"
 import clsx from "clsx"
 import { dystopian, inter } from "fonts"
 import type { Metadata } from "next"
+import { Suspense, type ReactNode } from "react"
 import "./globals.css"
 
 interface RootLayoutProps {
-  children: React.ReactNode
+  children: ReactNode
 }
 
 export const metadata: Metadata = {
@@ -20,6 +22,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <head />
       <body className={clsx(dystopian.variable, inter.variable)}>
         <Providers>{children}</Providers>
+        <Suspense fallback={null}>
+          <NavigationEvents />
+        </Suspense>
       </body>
     </html>
   )
