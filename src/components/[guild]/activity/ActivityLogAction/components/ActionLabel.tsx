@@ -151,13 +151,12 @@ const ActionLabel = (): JSX.Element => {
                 )}
               </>
             )
-          case ACTION.ClickJoinOnWeb:
+          case ACTION.JoinGuild:
             return (
               <>
-                <Text as="span">Join Guild through website</Text>
-                {showGuildTag ? (
-                  <ClickableGuildTag guildId={ids.guild} />
-                ) : (
+                <Text as="span">Join Guild</Text>
+                {showGuildTag && <ClickableGuildTag guildId={ids.guild} />}
+                {activityLogType !== "user" && (
                   <ClickableUserTag userId={ids.user} />
                 )}
               </>
@@ -196,7 +195,6 @@ const ActionLabel = (): JSX.Element => {
             const isChildOfUserStatusUpdate = [
               ACTION.UserStatusUpdate,
               ACTION.JoinGuild,
-              ACTION.ClickJoinOnWeb,
               ACTION.ClickJoinOnPlatform,
               ACTION.LeaveGuild,
             ].includes(parentaction)
