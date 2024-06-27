@@ -1,4 +1,7 @@
-/** @type {import("tailwindcss").Config} */
+import type { Config } from "tailwindcss"
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { fontFamily } from "tailwindcss/defaultTheme"
+
 module.exports = {
   darkMode: ["class"],
   content: ["./src/**/*.{ts,tsx}"],
@@ -12,6 +15,11 @@ module.exports = {
       },
     },
     extend: {
+      extend: {
+        fontFamily: {
+          sans: ["var(--font-inter)", ...fontFamily.sans],
+        },
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -69,4 +77,4 @@ module.exports = {
     },
   },
   plugins: [require("tailwindcss-animate")],
-}
+} satisfies Config

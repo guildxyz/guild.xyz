@@ -34,7 +34,8 @@
     "api/**/*.ts",
     "cypress.config.ts",
     "cypress/**/*.ts",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "tailwind.config.ts"
   ],
   "exclude": ["node_modules", ".next", "out"]
 }
