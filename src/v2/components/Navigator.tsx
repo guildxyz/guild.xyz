@@ -34,7 +34,7 @@ export function Navigator() {
   const [isOpen, setIsOpen] = React.useState(false);
 
   return (
-    <NavigationMenu value={isOpen ? 'main-menu' : undefined}>
+    <NavigationMenu value={isOpen ? 'main-menu' : undefined} onValueChange={(value) => setIsOpen(!!value)}>
       <NavigationMenuList>
         <NavigationMenuItem value="main-menu">
           <Button className="gap-2 rounded-2xl" variant={'ghost'} onClick={() => setIsOpen(prev => !prev)}>
