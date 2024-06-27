@@ -2,24 +2,22 @@ import {
   Box,
   Divider,
   FormControl,
-  FormErrorMessage,
   FormLabel,
   HStack,
   Icon,
-  InputGroup,
-  InputLeftAddon,
   Stack,
   Text,
-  Tooltip
+  Tooltip,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
+import RadioButtonGroup from "components/common/RadioButtonGroup"
 import { Question } from "phosphor-react"
 import { useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { UniswapChains } from "requirements/Uniswap/hooks/useParsePoolTokenId"
 import { useSymbolsOfPair } from "requirements/Uniswap/hooks/useSymbolsOfPair"
-import ControlledNumberInput from "requirements/WalletActivity/components/ControlledNumberInput"
 import { Chains } from "wagmiConfig/chains"
+import { LiquidityIncentiveForm } from "../LiquidityIncentiveSetupModal"
 import LiquidityConversion from "./LiquidityConversion"
 import SelectPointType from "./SelectPointType"
 
@@ -27,18 +25,23 @@ const SetPointsReward = ({ onSubmit }: { onSubmit: () => Promise<void> }) => {
   const {
     control,
     formState: { errors },
-  } = useFormContext()
+    setValue,
+  } = useFormContext<LiquidityIncentiveForm>()
 
   const conversion = useWatch({ name: `conversion` })
   const pointsPlatformId = useWatch({ name: "pointsId" })
 
-  const isConversionDisabled = pointsPlatformId === undefined
+  const isConversionDisabled = pointsPlatformId === null
   const isSubmitDisabled = isConversionDisabled || !conversion
 
   const [isLoading, setIsLoading] = useState(false)
 
   const chain: UniswapChains = useWatch({
     name: `pool.chain`,
+  })
+
+  const baseCurrency: "token0" | "token1" = useWatch({
+    name: "pool.data.baseCurrency",
   })
 
   const token0 = useWatch({ name: `pool.data.token0` })
@@ -52,36 +55,27 @@ const SetPointsReward = ({ onSubmit }: { onSubmit: () => Promise<void> }) => {
         Configure the reward users will earn for providing liquidity.
       </Text>
 
-      <FormControl isInvalid={!!errors?.amount}>
-        <HStack mb={2} spacing={0}>
-          <FormLabel mb={0}>Minimum liquidity required</FormLabel>
-          <Tooltip
-            label="Users must provide at least this amount of liquidity to the pool to earn the reward"
-            placement="top"
-            hasArrow
-          >
-            <Icon as={Question} color="GrayText" />
-          </Tooltip>
-        </HStack>
-        <InputGroup w={"full"}>
-
-          <InputLeftAddon>
-            <Text as="span" fontSize="xs" fontWeight="bold" noOfLines={1}>
-              {`${symbol0}/${symbol1} `}
-            </Text>
-          </InputLeftAddon>
-
-          <ControlledNumberInput
-            numberFormat="FLOAT"
-            name={"pool.data.minAmount"}
-            adaptiveStepSize
-            numberInputFieldProps={{ pr: 7, pl: 4, borderStartRadius: 0 }}
-            min={0}
-            w="full"
+      <FormControl>
+        <Stack gap={0}>
+          <HStack gap={0} mb={2}>
+            <FormLabel mb={0}>Base currency</FormLabel>
+            <Tooltip
+              label="The reward will be calculated based on the amount of liquidity provided in the currency you select."
+              hasArrow
+            >
+              <Icon as={Question} color="GrayText" />
+            </Tooltip>
+          </HStack>
+          <RadioButtonGroup
+            options={[
+              { label: symbol0 ?? "", value: "token0" },
+              { label: symbol1 ?? "", value: "token1" },
+            ]}
+            value={baseCurrency}
+            onChange={(newValue) => setValue("pool.data.baseCurrency", newValue)}
+            chakraStyles={{ size: "md" }}
           />
-
-        </InputGroup>
-        <FormErrorMessage>{errors?.amount?.message as string}</FormErrorMessage>
+        </Stack>
       </FormControl>
 
       <Divider />

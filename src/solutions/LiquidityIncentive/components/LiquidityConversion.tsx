@@ -14,6 +14,9 @@ const LiquidityConversion = () => {
     name: `pool.chain`,
   })
 
+  const baseCurrency: "token0" | "token1" = useWatch({
+    name: `pool.data.baseCurrency`,
+  })
   const token0 = useWatch({ name: `pool.data.token0` })
   const token1 = useWatch({ name: `pool.data.token1` })
 
@@ -45,7 +48,7 @@ const LiquidityConversion = () => {
   return (
     <ConversionInput
       name={"conversion"}
-      fromText={`${symbol0 ?? "___"}/${symbol1 ?? "___"}`}
+      fromText={(baseCurrency === "token0" ? symbol0 : symbol1) ?? ""}
       fromImage={undefined}
       toText={name}
       toImage={pointsPlatformImage}

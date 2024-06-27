@@ -29,7 +29,7 @@ import useCreateLiquidityIncentive from "./hooks/useCreateLiquidityIncentive"
 
 export type LiquidityIncentiveForm = {
   conversion: number
-  pointsId?: number // if points reward is selected
+  pointsId?: number | null // if points reward is selected
   imageUrl?: string // if points reward is created
   name?: string // if points reawrd is created
   pool: {
@@ -65,6 +65,7 @@ const defaultValues = {
   },
   name: "",
   imageUrl: "",
+  pointsId: null,
 }
 
 const LiquidityIncentiveSetupModal = ({

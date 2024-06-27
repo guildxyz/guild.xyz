@@ -29,10 +29,7 @@ const useCreateLiquidityIncentive = (onSuccess: () => void) => {
       type: "UNISWAP_V3_POSITIONS",
       visibility: Visibility.PUBLIC,
       isNegated: false,
-      data: {
-        ...data.pool.data,
-        minAmount: Number(data.pool.data.minAmount),
-      },
+      data: data.pool.data,
       chain: data.pool.chain,
     } satisfies RoleToCreate["requirements"][number] & { id: number }
 
