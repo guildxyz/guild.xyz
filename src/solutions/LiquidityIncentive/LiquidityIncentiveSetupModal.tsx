@@ -25,38 +25,39 @@ import { RoleToCreate } from "components/create-guild/hooks/useCreateRole"
 import useCreateRRR from "hooks/useCreateRRR"
 import { ArrowLeft } from "phosphor-react"
 import { FormProvider, useForm } from "react-hook-form"
+import { UniswapChains } from "requirements/Uniswap/hooks/useParsePoolTokenId"
 import { Logic, PlatformGuildData, PlatformType, Visibility } from "types"
-import { Chain } from "wagmiConfig/chains"
 import SelectLiquidityPoolStep from "./components/SelectLiquidityPoolStep"
 import SetPointsReward from "./components/SetPointsRewardStep"
 
-type LiquidityIncentiveForm = {
+export type LiquidityIncentiveForm = {
   conversion: number
   pointsId?: number // if points reward is selected
   imageUrl?: string // if points reward is created
   name?: string // if points reawrd is created
   pool: {
     data: {
-      lpVault: `0x${string}` // pool address
+      lpVault: `0x${string}` | null // pool address
       baseCurrency: string
       minAmount: number
-      token0: `0x${string}`
-      token1: `0x${string}`
+      token0?: `0x${string}` | null
+      token1?: `0x${string}` | null
       defaultFee: number
+      countedPositions: string
     }
-    chain: Chain
+    chain: UniswapChains
   }
 }
 
 const uniswapReqDefaults = {
-  lpVault: "",
+  lpVault: null,
   baseCurrency: "token0",
   countedPositions: "FULL_RANGE",
   minAmount: 0,
-  token0: "",
-  token1: "",
   defaultFee: 0,
-}
+  token0: null,
+  token1: null
+} satisfies LiquidityIncentiveForm["pool"]["data"]
 
 const LiquidityIncentiveSetupModal = ({
   isOpen,
@@ -65,7 +66,7 @@ const LiquidityIncentiveSetupModal = ({
   isOpen: boolean
   onClose: () => void
 }) => {
-  const { id, guildPlatforms } = useGuild()
+  const { id } = useGuild()
   const steps = [
     { title: "Select liquidity pool", content: SelectLiquidityPoolStep },
     { title: "Set points reward", content: SetPointsReward },
@@ -83,26 +84,23 @@ const LiquidityIncentiveSetupModal = ({
         ...uniswapReqDefaults,
       },
     },
-    name: null,
-    imageUrl: null,
+    name: "",
+    imageUrl: "",
   }
 
   const methods = useForm<LiquidityIncentiveForm>({
     mode: "all",
-    // @ts-ignore
     defaultValues,
   })
 
   const handleClose = () => {
     onClose()
-
-    // @ts-ignore
     methods.reset(defaultValues)
     setActiveStep(0)
   }
 
   const { onSubmit } = useCreateRRR({
-    onSuccess(res) {
+    onSuccess() {
       handleClose()
     },
   })
@@ -230,7 +228,7 @@ const LiquidityIncentiveSetupModal = ({
                   <Step
                     key={index}
                     style={{ width: "100%", height: "100%" }}
-                    onClick={activeStep > index ? () => setActiveStep(index) : null}
+                    onClick={activeStep > index ? () => setActiveStep(index) : undefined}
                   >
                     <StepIndicator>
                       <StepStatus
@@ -244,7 +242,7 @@ const LiquidityIncentiveSetupModal = ({
                       w="full"
                       mt={1}
                       minH={index === steps.length - 1 ? 0 : 12}
-                      _hover={activeStep > index && { cursor: "pointer" }}
+                      _hover={activeStep > index ? { cursor: "pointer" } : undefined}
                     >
                       <StepTitle>{step.title}</StepTitle>
                       <Collapse

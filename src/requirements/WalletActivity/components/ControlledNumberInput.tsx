@@ -107,10 +107,11 @@ const ControlledNumberInput = ({
    *   original value if within the acceptable range.
    */
   const replaceWithMin = (newValue) => {
-    if (!props?.min) return newValue
-    if (newValue < props.min) {
+    if (props?.min === undefined) return newValue
+    if (newValue < props.min || newValue === "") {
       const inputPrecision = getNumOfDecimals(newValue)
       const minPrecision = getNumOfDecimals(props.min)
+      console.log("ret min prop")
       return props.min.toFixed(Math.max(minPrecision, inputPrecision))
     }
     return newValue
@@ -118,7 +119,7 @@ const ControlledNumberInput = ({
 
   /** See the comment for `replaceWithMin` */
   const replaceWithMax = (newValue) => {
-    if (!props?.max) return newValue
+    if (props?.max === undefined) return newValue
     if (newValue > props.max) {
       const inputPrecision = getNumOfDecimals(newValue)
       const maxPrecision = getNumOfDecimals(props.max)

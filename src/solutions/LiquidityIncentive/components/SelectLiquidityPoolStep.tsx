@@ -15,6 +15,7 @@ import { useFormContext, useWatch } from "react-hook-form"
 import { usePairOfTokenId } from "requirements/Uniswap/hooks/usePairOfTokenId"
 import {
   UNISWAP_POOL_URL,
+  UniswapChains,
   useParsePoolTokenId,
 } from "requirements/Uniswap/hooks/useParsePoolTokenId"
 import {
@@ -42,13 +43,13 @@ const SelectLiquidityPoolStep = ({ onContinue }: { onContinue: () => void }) => 
     clearErrors([`pool.data.token0`, `pool.data.token1`])
   }
 
-  const chain: (typeof consts.UniswapV3PositionsChains)[number] = useWatch({
+  const chain: UniswapChains = useWatch({
     name: `pool.chain`,
   })
 
   const lpVaultAddress = useParseVaultAddress("pool")
 
-  const setTokensAndFee = ([t0, t1, fee]) => {
+  const setTokensAndFee = ([t0, t1, fee]: [`0x${string}`, `0x${string}`, number]) => {
     setValue(`pool.data.token0`, t0, { shouldDirty: true })
     setValue(`pool.data.token1`, t1, { shouldDirty: true })
     setValue(`pool.data.defaultFee`, fee, { shouldDirty: true })
@@ -61,7 +62,7 @@ const SelectLiquidityPoolStep = ({ onContinue }: { onContinue: () => void }) => 
   )
 
   const onChainFromParam = useCallback(
-    (chainFromParam) => {
+    (chainFromParam: UniswapChains) => {
       setValue(`pool.chain`, chainFromParam, { shouldDirty: true })
     },
     [setValue]
@@ -90,9 +91,7 @@ const SelectLiquidityPoolStep = ({ onContinue }: { onContinue: () => void }) => 
         controlName={`pool.chain` as const}
         showDivider={false}
         supportedChains={
-          consts.UniswapV3PositionsChains as unknown as Array<
-            (typeof consts.UniswapV3PositionsChains)[number]
-          >
+          consts.UniswapV3PositionsChains as unknown as UniswapChains[]
         }
         onChange={resetForm}
       />

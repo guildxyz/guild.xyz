@@ -1,16 +1,16 @@
 import { Icon } from "@chakra-ui/react"
-import { consts } from "@guildxyz/types"
 import ConversionInput from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/components/ConversionInput"
 import useGuildPlatform from "components/[guild]/hooks/useGuildPlatform"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import { ReactNode } from "react"
 import { useWatch } from "react-hook-form"
+import { UniswapChains } from "requirements/Uniswap/hooks/useParsePoolTokenId"
 import { useSymbolsOfPair } from "requirements/Uniswap/hooks/useSymbolsOfPair"
 import Star from "static/icons/star.svg"
 import { Chains } from "wagmiConfig/chains"
 
 const LiquidityConversion = () => {
-  const chain: (typeof consts.UniswapV3PositionsChains)[number] = useWatch({
+  const chain: UniswapChains = useWatch({
     name: `pool.chain`,
   })
 

@@ -89,7 +89,6 @@ const useCreateRRR = ({ onSuccess }: { onSuccess: (res) => void }) => {
   const { createRolePlatforms } = useCreateRolePlatforms()
 
   const submit = async (data: SubmitData) => {
-    console.log(data)
     const { requirements, rolePlatforms, roleIds: rawRoleIds = [], ...role } = data
     const roleIds = rawRoleIds.map(Number)
 

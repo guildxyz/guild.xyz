@@ -1,5 +1,5 @@
 import { HStack, Skeleton } from "@chakra-ui/react"
-import { Schemas, consts } from "@guildxyz/types"
+import { Schemas } from "@guildxyz/types"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
@@ -10,9 +10,10 @@ import DataBlock from "components/common/DataBlock"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import REQUIREMENTS from "requirements"
 import { Chains } from "wagmiConfig/chains"
+import { UniswapChains } from "./hooks/useParsePoolTokenId"
 import { useSymbolsOfPair } from "./hooks/useSymbolsOfPair"
 
-const UNISWAP_TESTNETS = new Set<(typeof consts.UniswapV3PositionsChains)[number]>([
+const UNISWAP_TESTNETS = new Set<UniswapChains>([
   "SEPOLIA",
   "BASE_SEPOLIA",
 ])
@@ -23,7 +24,7 @@ const UniswapQueryChainNames = {
   BSC: "bnb",
   BLAST_MAINNET: "blast",
 } as const satisfies Partial<
-  Record<(typeof consts.UniswapV3PositionsChains)[number], string>
+  Record<UniswapChains, string>
 >
 
 const UniswapRequirement = ({ ...rest }: RequirementProps): JSX.Element => {

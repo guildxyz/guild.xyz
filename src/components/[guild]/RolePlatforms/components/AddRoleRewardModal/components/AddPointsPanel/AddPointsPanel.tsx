@@ -118,7 +118,7 @@ const AddPointsPanel = ({ onAdd, onCancel }: AddRewardPanelProps) => {
           />
         )}
         <Collapse
-          in={!existingPointsRewards.length || selectedExistingId === null}
+          in={!existingPointsRewards.length || selectedExistingId === -1}
           style={{ flexShrink: 0 }}
         >
           <AddNewPointsType

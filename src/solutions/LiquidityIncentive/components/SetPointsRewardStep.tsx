@@ -6,19 +6,20 @@ import {
   FormLabel,
   HStack,
   Icon,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
+  InputGroup,
+  InputLeftAddon,
   Stack,
   Text,
-  Tooltip,
+  Tooltip
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import { Question } from "phosphor-react"
 import { useState } from "react"
-import { Controller, useFormContext, useWatch } from "react-hook-form"
+import { useFormContext, useWatch } from "react-hook-form"
+import { UniswapChains } from "requirements/Uniswap/hooks/useParsePoolTokenId"
+import { useSymbolsOfPair } from "requirements/Uniswap/hooks/useSymbolsOfPair"
+import ControlledNumberInput from "requirements/WalletActivity/components/ControlledNumberInput"
+import { Chains } from "wagmiConfig/chains"
 import LiquidityConversion from "./LiquidityConversion"
 import SelectPointType from "./SelectPointType"
 
@@ -31,12 +32,19 @@ const SetPointsReward = ({ onSubmit }: { onSubmit: () => Promise<void> }) => {
   const conversion = useWatch({ name: `conversion` })
   const pointsPlatformId = useWatch({ name: "pointsId" })
 
-  const setupName = useWatch({ name: "name" })
-
-  const isConversionDisabled = pointsPlatformId === undefined && setupName === null
+  const isConversionDisabled = pointsPlatformId === undefined
   const isSubmitDisabled = isConversionDisabled || !conversion
 
   const [isLoading, setIsLoading] = useState(false)
+
+  const chain: UniswapChains = useWatch({
+    name: `pool.chain`,
+  })
+
+  const token0 = useWatch({ name: `pool.data.token0` })
+  const token1 = useWatch({ name: `pool.data.token1` })
+
+  const { symbol0, symbol1 } = useSymbolsOfPair(Chains[chain], token0, token1)
 
   return (
     <Stack gap={5}>
@@ -55,36 +63,24 @@ const SetPointsReward = ({ onSubmit }: { onSubmit: () => Promise<void> }) => {
             <Icon as={Question} color="GrayText" />
           </Tooltip>
         </HStack>
-        <Controller
-          name={`pool.data.minAmount` as const}
-          control={control}
-          rules={{
-            min: {
-              value: 0,
-              message: "Amount must not be negative",
-            },
-          }}
-          defaultValue={0}
-          render={({ field: { onChange, onBlur, value, ref } }) => (
-            <NumberInput
-              defaultValue={0}
-              ref={ref}
-              value={value ?? ""}
-              onChange={(newValue) => {
-                const parsedValue = parseInt(newValue)
-                onChange(isNaN(parsedValue) ? 0 : parsedValue)
-              }}
-              onBlur={onBlur}
-              min={0}
-            >
-              <NumberInputField />
-              <NumberInputStepper>
-                <NumberIncrementStepper />
-                <NumberDecrementStepper />
-              </NumberInputStepper>
-            </NumberInput>
-          )}
-        />
+        <InputGroup w={"full"}>
+
+          <InputLeftAddon>
+            <Text as="span" fontSize="xs" fontWeight="bold" noOfLines={1}>
+              {`${symbol0}/${symbol1} `}
+            </Text>
+          </InputLeftAddon>
+
+          <ControlledNumberInput
+            numberFormat="FLOAT"
+            name={"pool.data.minAmount"}
+            adaptiveStepSize
+            numberInputFieldProps={{ pr: 7, pl: 4, borderStartRadius: 0 }}
+            min={0}
+            w="full"
+          />
+
+        </InputGroup>
         <FormErrorMessage>{errors?.amount?.message as string}</FormErrorMessage>
       </FormControl>
 

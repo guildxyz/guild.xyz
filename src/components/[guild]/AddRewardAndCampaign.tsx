@@ -22,7 +22,7 @@ import { useThemeContext } from "./ThemeContext"
 const AddRewardAndCampaign = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { isStuck } = useIsTabsStuck()
-  const { textColor, buttonColorScheme } = useThemeContext()
+  const { textColor = null, buttonColorScheme = null } = useThemeContext() || {}
 
   const {
     isOpen: isSolutionOpen,
@@ -44,8 +44,8 @@ const AddRewardAndCampaign = () => {
             borderTopLeftRadius="0"
             borderBottomLeftRadius="0"
             {...(!isStuck && {
-              color: textColor,
-              colorScheme: buttonColorScheme,
+              ...(textColor && { color: textColor }),
+              ...(buttonColorScheme && { colorScheme: buttonColorScheme }),
             })}
           />
           <Portal>

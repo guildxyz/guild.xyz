@@ -4,6 +4,8 @@ import { useWatch } from "react-hook-form"
 
 export const UNISWAP_POOL_URL = /https:\/\/app\.uniswap\.org\/pools\/([0-9]+)/i
 
+export type UniswapChains = (typeof consts.UniswapV3PositionsChains)[number]
+
 const uniswapParamToChainName = {
   mainnet: "ETHEREUM",
   sepolia: "SEPOLIA",
@@ -13,7 +15,7 @@ const uniswapParamToChainName = {
   optimism: "OPTIMISM",
   celo: "CELO",
   base: "BASE_MAINNET",
-} as const satisfies Record<string, (typeof consts.UniswapV3PositionsChains)[number]>
+} as const satisfies Record<string, UniswapChains>
 
 function tryToParseChain(input: string) {
   try {
@@ -36,7 +38,7 @@ function tryToParseChain(input: string) {
 export function useParsePoolTokenId(
   baseFieldPath: string,
   onChainFound?: (
-    chainName: (typeof consts.UniswapV3PositionsChains)[number]
+    chainName: UniswapChains
   ) => void
 ) {
   const lpVaultInputValue = useWatch({ name: `${baseFieldPath}.data.lpVault` })

@@ -25,7 +25,11 @@ import TokenPicker from "requirements/common/TokenPicker"
 import parseFromObject from "utils/parseFromObject"
 import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
 import { usePairOfTokenId } from "./hooks/usePairOfTokenId"
-import { UNISWAP_POOL_URL, useParsePoolTokenId } from "./hooks/useParsePoolTokenId"
+import {
+  UNISWAP_POOL_URL,
+  UniswapChains,
+  useParsePoolTokenId,
+} from "./hooks/useParsePoolTokenId"
 import { ADDRESS_REGEX, useParseVaultAddress } from "./hooks/useParseVaultAddress"
 import { useSymbolsOfPair } from "./hooks/useSymbolsOfPair"
 import { useTokenSymbolsOfPoolVault } from "./hooks/useTokenSymbolsOfPoolVault"
@@ -50,22 +54,25 @@ const UniswapForm = ({
 
   const [shouldShowUrlInput, setShouldShowUrlInput] = useState(false)
 
-  const chain: (typeof consts.UniswapV3PositionsChains)[number] = useWatch({
+  const chain: UniswapChains = useWatch({
     name: `${baseFieldPath}.chain`,
   })
 
   const onChainFromParam = useCallback(
-    (chainFromParam) => {
+    (chainFromParam: UniswapChains) => {
       setValue(`${baseFieldPath}.chain`, chainFromParam, { shouldDirty: true })
     },
     [baseFieldPath, setValue]
   )
 
   const lpVaultAddress = useParseVaultAddress(baseFieldPath)
-
   const tokenId = useParsePoolTokenId(baseFieldPath, onChainFromParam)
 
-  const setTokensAndFee = ([t0, t1, fee]) => {
+  const setTokensAndFee = ([t0, t1, fee]: [
+    `0x${string}`,
+    `0x${string}`,
+    number
+  ]) => {
     setValue(`${baseFieldPath}.data.token0`, t0, { shouldDirty: true })
     setValue(`${baseFieldPath}.data.token1`, t1, { shouldDirty: true })
     setValue(`${baseFieldPath}.data.defaultFee`, fee, { shouldDirty: true })
@@ -113,9 +120,7 @@ const UniswapForm = ({
       <ChainPicker
         controlName={`${baseFieldPath}.chain` as const}
         supportedChains={
-          consts.UniswapV3PositionsChains as unknown as Array<
-            (typeof consts.UniswapV3PositionsChains)[number]
-          >
+          consts.UniswapV3PositionsChains as unknown as UniswapChains[]
         }
         onChange={resetForm}
       />

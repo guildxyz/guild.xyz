@@ -16,7 +16,7 @@ import Star from "static/icons/star.svg"
 import { PlatformType } from "types"
 
 const SelectPointType = () => {
-  const { id, guildPlatforms } = useGuild()
+  const { guildPlatforms } = useGuild()
   const {
     control,
     register,
@@ -44,7 +44,7 @@ const SelectPointType = () => {
       )}
 
       <Collapse
-        in={!existingPointsRewards.length || selectedExistingId === null}
+        in={!existingPointsRewards.length || selectedExistingId === -1}
         style={{ flexShrink: 0 }}
       >
         <FormControl isInvalid={!!errors?.name} flex="1">

@@ -23,6 +23,8 @@ type Props = {
   fieldPath?: string
 } & FormControlProps
 
+export const CREATE_NEW_OPTION = -1
+
 const ExistingPointsTypeSelect = ({
   existingPointsRewards,
   selectedExistingId,
@@ -39,9 +41,9 @@ const ExistingPointsTypeSelect = ({
 
   const options = useMemo(() => {
     const result = existingPointsRewards?.map((gp) => ({
-      label: gp.platformGuildData.name || "points",
+      label: gp?.platformGuildData?.name || "points",
       value: gp.id,
-      img: gp.platformGuildData.imageUrl ?? (
+      img: gp?.platformGuildData?.imageUrl ?? (
         <Center boxSize={5}>
           <Star />
         </Center>
@@ -52,8 +54,8 @@ const ExistingPointsTypeSelect = ({
 
     return result.concat({
       label: "Create new",
-      value: null,
-      img: null,
+      value: CREATE_NEW_OPTION,
+      img: "",
     })
   }, [existingPointsRewards, showCreateNew])
 
