@@ -1,11 +1,16 @@
-import { Inter } from "next/font/google"
 import localFont from "next/font/local"
 
-const inter = Inter({
-  subsets: ["latin"],
+const inter = localFont({
   variable: "--font-inter",
   fallback: ["sans-serif"],
   weight: "variable",
+  src: [
+    {
+      path: "Inter.ttf",
+      weight: "variable",
+      style: "normal",
+    },
+  ],
 })
 
 const dystopian = localFont({

@@ -19,6 +19,7 @@ export default function Page() {
   return (
     <div className="p-8">
       <h1 className="text-2xl font-bold">Playground</h1>
+      <h1 className="text-2xl italic">Playground</h1>
 
       <div className="flex flex-col items-start gap-4">
         <Section title="Theme toggle">
