@@ -41,6 +41,7 @@
     "@lexical/selection": "^0.12.0",
     "@lexical/utils": "^0.12.0",
     "@nouns/assets": "^0.4.2",
+    "@radix-ui/react-slot": "^1.1.0",
     "@snyk/protect": "latest",
     "@t3-oss/env-nextjs": "^0.10.1",
     "@tanstack/react-query": "^5.26.3",

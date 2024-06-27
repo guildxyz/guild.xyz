@@ -1,10 +1,13 @@
 import type { Config } from "tailwindcss"
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { fontFamily } from "tailwindcss/defaultTheme"
 
-module.exports = {
+const config = {
   darkMode: ["class"],
-  content: ["./src/**/*.{ts,tsx}"],
+  content: [
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
+  ],
   prefix: "",
   theme: {
     container: {
@@ -15,10 +18,9 @@ module.exports = {
       },
     },
     extend: {
-      extend: {
-        fontFamily: {
-          sans: ["var(--font-inter)", ...fontFamily.sans],
-        },
+      fontFamily: {
+        sans: ["var(--font-inter,sans-serif)"],
+        display: ["var(--font-dystopian,sans-serif)"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -55,11 +57,11 @@ module.exports = {
           foreground: "hsl(var(--card-foreground))",
         },
       },
-      borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
-      },
+      // borderRadius: {
+      //   lg: "var(--radius)",
+      //   md: "calc(var(--radius) - 2px)",
+      //   sm: "calc(var(--radius) - 4px)",
+      // },
       keyframes: {
         "accordion-down": {
           from: { height: "0" },
@@ -78,3 +80,5 @@ module.exports = {
   },
   plugins: [require("tailwindcss-animate")],
 } satisfies Config
+
+export default config
