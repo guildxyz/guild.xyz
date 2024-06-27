@@ -9,7 +9,7 @@ import useCreateRole, {
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
-import { Requirement } from "types"
+import { Requirement, RolePlatform } from "types"
 import { mapRealRequirementIdsToRolePlatforms } from "utils/mapRealRequirementIdToRolePlatform"
 
 export type SubmitData =
@@ -17,7 +17,7 @@ export type SubmitData =
    * If RoleToCreate is provided and `roleIds` is empty, a new role will be created
    * with the associated rolePlatforms and requirements.
    */
-  Partial<RoleToCreate> & {
+  Partial<Omit<RoleToCreate, "requirements" | "rolePlatforms">> & {
     /**
      * Array of role IDs. If provided, rolePlatforms and requirements will be added
      * to all specified roles. If not provided, RoleToCreate will be used to create a
@@ -31,14 +31,14 @@ export type SubmitData =
      * created to match each temporalId-roleId pair with the actual backend-created
      * ID after creation.
      */
-    requirements: RoleToCreate["requirements"]
+    requirements: Array<RoleToCreate["requirements"][number] & { id: number }>
 
     /**
      * Array of rolePlatforms. These are created last, and their `roleId` fields will
      * be filled based on the `roleIds` array or the new role ID if a new role was
      * created.
      */
-    rolePlatforms: RoleToCreate["rolePlatforms"]
+    rolePlatforms: Array<Omit<RolePlatform, "id">>
   }
 
 /**

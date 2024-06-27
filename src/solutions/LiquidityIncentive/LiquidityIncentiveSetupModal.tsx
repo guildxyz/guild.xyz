@@ -19,16 +19,13 @@ import {
   Text,
   useSteps,
 } from "@chakra-ui/react"
-import useGuild from "components/[guild]/hooks/useGuild"
 import { Modal } from "components/common/Modal"
-import { RoleToCreate } from "components/create-guild/hooks/useCreateRole"
-import useCreateRRR from "hooks/useCreateRRR"
 import { ArrowLeft } from "phosphor-react"
 import { FormProvider, useForm } from "react-hook-form"
 import { UniswapChains } from "requirements/Uniswap/hooks/useParsePoolTokenId"
-import { Logic, PlatformGuildData, PlatformType, Visibility } from "types"
 import SelectLiquidityPoolStep from "./components/SelectLiquidityPoolStep"
 import SetPointsReward from "./components/SetPointsRewardStep"
+import useCreateLiquidityIncentive from "./hooks/useCreateLiquidityIncentive"
 
 export type LiquidityIncentiveForm = {
   conversion: number
@@ -56,8 +53,19 @@ const uniswapReqDefaults = {
   minAmount: 0,
   defaultFee: 0,
   token0: null,
-  token1: null
+  token1: null,
 } satisfies LiquidityIncentiveForm["pool"]["data"]
+
+const defaultValues = {
+  conversion: 1,
+  pool: {
+    data: {
+      ...uniswapReqDefaults,
+    },
+  },
+  name: "",
+  imageUrl: "",
+}
 
 const LiquidityIncentiveSetupModal = ({
   isOpen,
@@ -66,28 +74,6 @@ const LiquidityIncentiveSetupModal = ({
   isOpen: boolean
   onClose: () => void
 }) => {
-  const { id } = useGuild()
-  const steps = [
-    { title: "Select liquidity pool", content: SelectLiquidityPoolStep },
-    { title: "Set points reward", content: SetPointsReward },
-  ]
-
-  const { activeStep, goToNext, setActiveStep } = useSteps({
-    index: 0,
-    count: steps.length,
-  })
-
-  const defaultValues = {
-    conversion: 1,
-    pool: {
-      data: {
-        ...uniswapReqDefaults,
-      },
-    },
-    name: "",
-    imageUrl: "",
-  }
-
   const methods = useForm<LiquidityIncentiveForm>({
     mode: "all",
     defaultValues,
@@ -99,85 +85,17 @@ const LiquidityIncentiveSetupModal = ({
     setActiveStep(0)
   }
 
-  const { onSubmit } = useCreateRRR({
-    onSuccess() {
-      handleClose()
-    },
+  const { onSubmit } = useCreateLiquidityIncentive(handleClose)
+
+  const steps = [
+    { title: "Select liquidity pool", content: SelectLiquidityPoolStep },
+    { title: "Set points reward", content: SetPointsReward },
+  ]
+
+  const { activeStep, goToNext, setActiveStep } = useSteps({
+    index: 0,
+    count: steps.length,
   })
-
-  const submit = async (data: LiquidityIncentiveForm) => {
-    const uniswapRequirement = {
-      id: Date.now(),
-      type: "UNISWAP_V3_POSITIONS",
-      visibility: Visibility.PUBLIC,
-      isNegated: false,
-      data: data.pool.data,
-      chain: data.pool.chain,
-    }
-
-    const pointsReward = {
-      ...(data.pointsId != undefined
-        ? {
-            guildPlatformId: data.pointsId,
-            guildPlatform: {
-              platformName: "POINTS",
-              platformId: PlatformType.POINTS,
-              platformGuildId: "",
-              platformGuildData: {},
-            },
-          }
-        : {
-            guildPlatform: {
-              platformName: "POINTS",
-              platformId: PlatformType.POINTS,
-              platformGuildId: `points-${id}-${
-                data?.name?.toLowerCase() || "points"
-              }`,
-              platformGuildData: {
-                name: data.name,
-                imageUrl: data.imageUrl,
-              } satisfies PlatformGuildData["POINTS"],
-            },
-          }),
-      isNew: true,
-      dynamicAmount: {
-        operation: {
-          type: "LINEAR",
-          params: {
-            addition: 0,
-            multiplier: data.conversion,
-            shouldFloorResult: true,
-          },
-          input: {
-            type: "REQUIREMENT_AMOUNT",
-            requirementId: uniswapRequirement.id,
-          },
-        },
-      },
-      platformRoleData: {
-        score: 0,
-      },
-      visibility: Visibility.PUBLIC,
-    }
-
-    const role = {
-      guildId: id,
-      name: "Liquidity Incentive Program",
-      description: "",
-      logic: "AND" as Logic,
-      imageUrl: "/guildLogos/39.svg",
-      visibility: Visibility.PUBLIC,
-      anyOfNum: 1,
-    }
-
-    const dataToSubmit = {
-      ...role,
-      requirements: [uniswapRequirement] as RoleToCreate["requirements"],
-      rolePlatforms: [pointsReward] as any as RoleToCreate["rolePlatforms"],
-    }
-
-    await onSubmit(dataToSubmit)
-  }
 
   return (
     <>
@@ -228,7 +146,9 @@ const LiquidityIncentiveSetupModal = ({
                   <Step
                     key={index}
                     style={{ width: "100%", height: "100%" }}
-                    onClick={activeStep > index ? () => setActiveStep(index) : undefined}
+                    onClick={
+                      activeStep > index ? () => setActiveStep(index) : undefined
+                    }
                   >
                     <StepIndicator>
                       <StepStatus
@@ -252,7 +172,7 @@ const LiquidityIncentiveSetupModal = ({
                       >
                         <step.content
                           onContinue={goToNext}
-                          onSubmit={methods.handleSubmit(submit)}
+                          onSubmit={methods.handleSubmit(onSubmit)}
                         />
                       </Collapse>
                     </Box>
