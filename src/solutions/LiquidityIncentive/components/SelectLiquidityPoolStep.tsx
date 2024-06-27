@@ -49,7 +49,11 @@ const SelectLiquidityPoolStep = ({ onContinue }: { onContinue: () => void }) => 
 
   const lpVaultAddress = useParseVaultAddress("pool")
 
-  const setTokensAndFee = ([t0, t1, fee]: [`0x${string}`, `0x${string}`, number]) => {
+  const setTokensAndFee = ([t0, t1, fee]: [
+    `0x${string}`,
+    `0x${string}`,
+    number
+  ]) => {
     setValue(`pool.data.token0`, t0, { shouldDirty: true })
     setValue(`pool.data.token1`, t1, { shouldDirty: true })
     setValue(`pool.data.defaultFee`, fee, { shouldDirty: true })
@@ -135,7 +139,7 @@ const SelectLiquidityPoolStep = ({ onContinue }: { onContinue: () => void }) => 
 
       <Button
         colorScheme={"indigo"}
-        isDisabled={!!errors?.pool || !chain || !lpVaultAddress || !!error}
+        isDisabled={!!errors?.pool || !chain || !!error}
         onClick={onContinue}
         mb={5}
         mt={3}

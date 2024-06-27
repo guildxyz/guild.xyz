@@ -13,7 +13,7 @@ export const mapRealRequirementIdToRolePlatform = ({
   requirementIdMap,
   roleId,
   onMissingId,
-}: Props): Omit<RolePlatform, "id"> => {
+}: Props): Omit<RolePlatform, "id"> | null => {
   if (!rolePlatform.dynamicAmount) return { ...rolePlatform, roleId: roleId }
 
   const input: any = rolePlatform.dynamicAmount.operation.input

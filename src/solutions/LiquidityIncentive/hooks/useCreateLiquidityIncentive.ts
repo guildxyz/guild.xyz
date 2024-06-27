@@ -29,7 +29,10 @@ const useCreateLiquidityIncentive = (onSuccess: () => void) => {
       type: "UNISWAP_V3_POSITIONS",
       visibility: Visibility.PUBLIC,
       isNegated: false,
-      data: data.pool.data as any,
+      data: {
+        ...data.pool.data,
+        minAmount: Number(data.pool.data.minAmount),
+      },
       chain: data.pool.chain,
     } satisfies RoleToCreate["requirements"][number] & { id: number }
 
@@ -65,15 +68,13 @@ const useCreateLiquidityIncentive = (onSuccess: () => void) => {
             multiplier: data.conversion,
             shouldFloorResult: true,
           },
-          input: [
-            {
-              type: "REQUIREMENT_AMOUNT",
-              requirementId: uniswapRequirement.id,
-              roleId: -1, // will be overwritten by useCreateRRR
-            },
-          ],
+          input: {
+            type: "REQUIREMENT_AMOUNT",
+            requirementId: uniswapRequirement.id,
+            roleId: -1, // will be overwritten by useCreateRRR
+          },
         },
-      } satisfies DynamicAmount,
+      } as any as DynamicAmount,
       platformRoleData: {
         score: 0,
       },
