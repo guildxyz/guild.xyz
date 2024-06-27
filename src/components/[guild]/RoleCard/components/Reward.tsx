@@ -222,7 +222,7 @@ const RewardIcon = ({
     boxSize: 6,
   }
 
-  if (doIconFallback) {
+  if (doIconFallback || !props.src) {
     if (withMotionImg) {
       return (
         <MotionCircle {...motionElementProps} {...circleProps}>
