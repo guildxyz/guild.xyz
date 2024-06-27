@@ -1,6 +1,5 @@
 "use client"
 
-import { PropsWithChildren } from "react"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/ToggleGroup"
 import { Button } from "@/components/ui/Button"
 import {
@@ -44,9 +43,9 @@ const Page = () => {
         </div>
       </div>
       <main>
-        <div className="sticky top-0 z-20 my-2 py-2" ref={navToggleRef}>
+        <div className="sticky top-0 my-2 py-2" ref={navToggleRef}>
           <div
-            className="absolute inset-0 -translate-y-full bg-background opacity-0 transition-all data-[is-stuck='true']:transform-none data-[is-stuck='true']:opacity-100"
+            className="absolute inset-0 bg-background opacity-0 transition-opacity duration-75 data-[is-stuck='true']:opacity-100"
             data-is-stuck={navIsStuck}
           />
           <PageBoundary className="relative flex items-start justify-between">
@@ -67,7 +66,7 @@ const Page = () => {
         <PageBoundary>
           <div className="my-2 mb-12 flex flex-col items-stretch justify-between gap-8 rounded-lg bg-card p-6 font-medium sm:flex-row sm:items-center">
             <div className="flex items-center gap-4">
-              <Robot className="size-8 min-w-8" />
+              <Robot className="size-8 min-w-8 text-white" />
               <span>Sign in to view your guilds / create new ones</span>
             </div>
             <Button className="space-x-2" size="lg">
@@ -80,9 +79,9 @@ const Page = () => {
             Explore verified guilds
           </h2>
         </PageBoundary>
-        <div className="sticky top-12 z-10" ref={searchRef}>
+        <div className="sticky top-12" ref={searchRef}>
           <div
-            className="absolute inset-0 -translate-y-full bg-background opacity-0 transition-all data-[is-stuck='true']:transform-none data-[is-stuck='true']:opacity-100"
+            className="absolute inset-0 bg-background opacity-0 transition-opacity duration-75 data-[is-stuck='true']:opacity-100"
             data-is-stuck={searchIsStuck}
           />
           <PageBoundary className="relative flex flex-col gap-3 py-4 sm:flex-row sm:gap-0">

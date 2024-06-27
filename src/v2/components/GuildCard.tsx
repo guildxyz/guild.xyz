@@ -15,7 +15,7 @@ type Props = {
 }
 
 export const GuildCard: React.FC<Props> = ({ guildData }) => (
-  <div className="grid grid-cols-[auto,1fr] grid-rows-2 items-center gap-x-4 gap-y-1 rounded-lg bg-card px-6 py-7 text-card-foreground">
+  <div className="-z-10 grid grid-cols-[auto,1fr] grid-rows-2 items-center gap-x-4 gap-y-1 rounded-lg bg-card px-6 py-7 text-card-foreground">
     <Avatar className="row-span-2 size-12">
       <AvatarImage src={guildData.imageUrl} alt="guild emblem" />
       <AvatarFallback>G</AvatarFallback>
