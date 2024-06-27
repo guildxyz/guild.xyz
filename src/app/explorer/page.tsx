@@ -33,8 +33,8 @@ const Page = () => {
     async (url: string) => (await fetch(url)).json()
   )
   const isAuthenticated = false
-  const { ref: navToggleRef, isStuck: navIsStuck } = useIsStuck()
-  const { ref: searchRef, isStuck: searchIsStuck } = useIsStuck()
+  const { ref: navToggleRef, isStuck: isNavStuck } = useIsStuck()
+  const { ref: searchRef, isStuck: isSearchStuck } = useIsStuck()
   const [activeSection, setActiveSection] = useState<ActiveSection>(ActiveSection.YourGuilds)
   const spyActiveSection = useScrollspy(Object.values(ActiveSection), 100);
   useEffect(() => {
@@ -44,7 +44,7 @@ const Page = () => {
 
   return (
     <div className="min-h-screen">
-      <div className="fixed top-0 inset-x-0 from-background to-card/30 backdrop-blur border-border border-b bg-gradient-to-b h-28 -translate-y-28 data-[nav-stuck='true']:-translate-y-12 data-[nav-stuck='true']:data-[search-stuck='true']:translate-y-0 motion-safe:transition-transform duration-75" data-nav-stuck={navIsStuck} data-search-stuck={searchIsStuck} />
+      <div className="fixed top-0 inset-x-0 from-background to-card/30 backdrop-blur border-border border-b bg-gradient-to-b h-28 -translate-y-28 data-[nav-stuck='true']:-translate-y-12 data-[nav-stuck='true']:data-[search-stuck='true']:translate-y-0 motion-safe:transition-transform duration-75" data-nav-stuck={isNavStuck} data-search-stuck={isSearchStuck} />
       <div className="relative">
         <Header />
         <PageBoundary>
@@ -62,7 +62,7 @@ const Page = () => {
         <main>
           <div className="sticky top-0 my-1 py-2" ref={navToggleRef}>
             <div className="relative flex items-start justify-between">
-              <ToggleGroup type="single" className="space-x-2" size={searchIsStuck ? "sm" : "lg"} variant="mono" onValueChange={(value) => value && setActiveSection(value as ActiveSection)} value={activeSection}>
+              <ToggleGroup type="single" className="space-x-2" size={isSearchStuck ? "sm" : "lg"} variant={isNavStuck ? "default" : "mono"} onValueChange={(value) => value && setActiveSection(value as ActiveSection)} value={activeSection}>
                 <ToggleGroupItem value={ActiveSection.YourGuilds} asChild><a href={`#${ActiveSection.YourGuilds}`}>Your guilds</a></ToggleGroupItem>
                 <ToggleGroupItem value={ActiveSection.ExploreGuilds} asChild>
                   <a href={`#${ActiveSection.ExploreGuilds}`}>Explore guilds</a>
@@ -105,12 +105,13 @@ const Page = () => {
                 type="single"
                 className="self-start sm:h-12 sm:rounded-r-lg sm:border sm:border-l-0 sm:bg-card sm:px-4"
                 defaultValue="featured"
+                size="sm" variant="outline"
               >
-                <ToggleGroupItem value="featured" className="space-x-2" size="sm">
+                <ToggleGroupItem value="featured" className="space-x-2" >
                   <PushPin />
                   <span>featured</span>
                 </ToggleGroupItem>
-                <ToggleGroupItem value="newest" className="space-x-2" size="sm">
+                <ToggleGroupItem value="newest" className="space-x-2" >
                   <Sparkle />
                   <span>newest</span>
                 </ToggleGroupItem>

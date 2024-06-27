@@ -14,7 +14,7 @@ const toggleVariants = cva(
         default: "bg-transparent hover:bg-accent/50 hover:text-accent-foreground",
         primary:
           "bg-transparent hover:bg-accent/50 hover:text-accent-foreground data-[state=on]:bg-primary data-[state=on]:text-primary-foreground",
-        mono: "text-white hover:bg-white/10 data-[state='on']:bg-white/15 hover:text-white data-[state='on']:text-white",
+        mono: "text-white hover:bg-white/10 data-[state=on]:bg-white/15 hover:text-white data-[state=on]:text-white",
         outline:
           "border border-input bg-transparent hover:bg-accent/50 hover:text-accent-foreground",
       },
