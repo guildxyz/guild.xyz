@@ -33,7 +33,7 @@
     --ring: 224 71.4% 4.1%;
   }
 
-  .dark {
+  :root[data-theme="dark"] {
     --background: 240 3.7% 15.88%;
     --foreground: 210 20% 98%;
 
@@ -68,8 +68,8 @@
     --xl: 1280px;
   }
 
-  .dark video,
-  .dark img {
+  :root[data-theme="dark"] video,
+  :root[data-theme="dark"] img {
     filter: brightness(0.85) contrast(1.15);
   }
 }

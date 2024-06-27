@@ -20,7 +20,8 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <head />
       <body className={clsx(dystopian.variable, inter.variable)}>
         <ThemeProvider
-          attribute="class"
+          attribute="data-theme"
+          storageKey="chakra-ui-color-mode"
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
