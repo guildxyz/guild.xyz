@@ -8,61 +8,69 @@
     --foreground: 224 71.4% 4.1%;
 
     --card: 0 0% 100%;
-    --card-foreground: 224 71.4% 4.1%;
+    --card-foreground: 240 4% 16%;
 
     --popover: 0 0% 100%;
     --popover-foreground: 224 71.4% 4.1%;
 
-    --primary: 220.9 39.3% 11%;
-    --primary-foreground: 210 20% 98%;
+    --primary: 243, 75%, 59%;
+    --primary-foreground: 0 0% 100%;
 
     --secondary: 220 14.3% 95.9%;
     --secondary-foreground: 220.9 39.3% 11%;
 
-    --muted: 220 14.3% 95.9%;
-    --muted-foreground: 220 8.9% 46.1%;
+    --muted: 0 0% 100%;
+    --muted-foreground: 240 4% 46%;
 
-    --accent: 220 14.3% 95.9%;
-    --accent-foreground: 220.9 39.3% 11%;
+    --accent: 240 2% 35%;
+    --accent-foreground: 0 0% 92%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 20% 98%;
 
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
+    --border: 240 6% 90%;
+    --input: var(--border);
     --ring: 224 71.4% 4.1%;
-
-    --radius: 0.5rem;
   }
 
-  .dark {
-    --background: 224 71.4% 4.1%;
+  :root[data-theme="dark"] {
+    --background: 240 3.7% 15.88%;
     --foreground: 210 20% 98%;
 
-    --card: 224 71.4% 4.1%;
-    --card-foreground: 210 20% 98%;
+    --card: 240 5.26% 26.08%;
+    --card-foreground: 240 2% 58%;
 
-    --popover: 224 71.4% 4.1%;
-    --popover-foreground: 210 20% 98%;
+    --popover: 240 5.26% 26.08%;
+    --popover-foreground: 240 2% 58%;
 
-    --primary: 210 20% 98%;
-    --primary-foreground: 220.9 39.3% 11%;
+    --primary: 238.73 70% 63%;
+    --primary-foreground: 0 0% 100%;
 
     --secondary: 215 27.9% 16.9%;
     --secondary-foreground: 210 20% 98%;
 
-    --muted: 215 27.9% 16.9%;
-    --muted-foreground: 217.9 10.6% 64.9%;
+    --muted: 240 3% 13%;
+    --muted-foreground: 240 1% 42%;
 
-    --accent: 215 27.9% 16.9%;
-    --accent-foreground: 210 20% 98%;
+    --accent: 240 2% 35%;
+    --accent-foreground: 0 0% 92%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 20% 98%;
 
-    --border: 215 27.9% 16.9%;
-    --input: 215 27.9% 16.9%;
-    --ring: 216 12.2% 83.9%;
+    --border: 240 3% 38%;
+    --input: var(--border);
+    --ring: 240 0% 45%;
+
+    --sm: 640px;
+    --md: 768px;
+    --lg: 1024px;
+    --xl: 1280px;
+  }
+
+  :root[data-theme="dark"] video,
+  :root[data-theme="dark"] img {
+    filter: brightness(0.85) contrast(1.15);
   }
 }
 
@@ -71,6 +79,6 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply min-h-screen bg-background font-sans text-foreground;
   }
 }
