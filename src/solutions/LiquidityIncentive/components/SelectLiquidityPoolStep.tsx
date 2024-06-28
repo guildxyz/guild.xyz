@@ -4,6 +4,7 @@ import {
   FormHelperText,
   FormLabel,
   Input,
+  Link,
   Skeleton,
   Stack,
   Text,
@@ -89,7 +90,15 @@ const SelectLiquidityPoolStep = ({ onContinue }: { onContinue: () => void }) => 
   return (
     <Stack gap={5}>
       <Text colorScheme="gray">
-        Select the chain and enter the URL or contract address of the liquidity pool.
+        Enter the URL or contract address of the liquidity pool from{" "}
+        <Link
+          href="https://app.uniswap.org/pools"
+          textDecoration="underline"
+          isExternal
+        >
+          Uniswap Pools
+        </Link>
+        .
       </Text>
 
       <FormControl
