@@ -98,7 +98,7 @@ const LiquidityIncentiveSetupModal = ({
 
   const { triggerMembershipUpdate } = useMembershipUpdate()
 
-  const { onSubmit } = useCreateLiquidityIncentive(() => {
+  const { onSubmit, isLoading } = useCreateLiquidityIncentive(() => {
     triggerMembershipUpdate()
     handleClose()
   })
@@ -183,6 +183,7 @@ const LiquidityIncentiveSetupModal = ({
                       >
                         <step.content
                           onContinue={goToNext}
+                          isLoading={isLoading}
                           onSubmit={methods.handleSubmit(onSubmit)}
                         />
                       </Collapse>

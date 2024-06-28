@@ -13,7 +13,6 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import RadioButtonGroup from "components/common/RadioButtonGroup"
 import { Question } from "phosphor-react"
-import { useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { useSymbolsOfPair } from "requirements/Uniswap/hooks/useSymbolsOfPair"
 import { PlatformType } from "types"
@@ -22,7 +21,13 @@ import { LiquidityIncentiveForm } from "../LiquidityIncentiveSetupModal"
 import LiquidityConversion from "./LiquidityConversion"
 import SelectPointType from "./SelectPointType"
 
-const SetPointsReward = ({ onSubmit }: { onSubmit: () => Promise<void> }) => {
+const SetPointsReward = ({
+  onSubmit,
+  isLoading,
+}: {
+  onSubmit: () => Promise<void>
+  isLoading: boolean
+}) => {
   const { setValue, control } = useFormContext<LiquidityIncentiveForm>()
 
   const { guildPlatforms } = useGuild()
@@ -37,8 +42,6 @@ const SetPointsReward = ({ onSubmit }: { onSubmit: () => Promise<void> }) => {
     ? pointsPlatformId === null
     : false
   const isSubmitDisabled = isConversionDisabled || !conversion
-
-  const [isLoading, setIsLoading] = useState(false)
 
   const chain = useWatch({
     control,
@@ -95,11 +98,7 @@ const SetPointsReward = ({ onSubmit }: { onSubmit: () => Promise<void> }) => {
 
       <Button
         colorScheme={"indigo"}
-        onClick={async () => {
-          setIsLoading(true)
-          await onSubmit()
-          setIsLoading(false)
-        }}
+        onClick={onSubmit}
         mb={5}
         mt={3}
         isDisabled={isSubmitDisabled}
