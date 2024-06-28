@@ -1,17 +1,10 @@
-import { DynamicAmount } from "@guildxyz/types"
+import { DynamicAmount, Logic } from "@guildxyz/types"
 import { CREATE_NEW_OPTION } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddPointsPanel/components/ExistingPointsTypeSelect"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { RoleToCreate } from "components/create-guild/hooks/useCreateRole"
 import useCreateRRR from "hooks/useCreateRRR"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import {
-  GuildPlatform,
-  Logic,
-  PlatformGuildData,
-  PlatformType,
-  RolePlatform,
-  Visibility,
-} from "types"
+import { GuildPlatform, PlatformGuildData, PlatformType, RolePlatform } from "types"
 import getRandomInt from "utils/getRandomInt"
 import { LiquidityIncentiveForm } from "../LiquidityIncentiveSetupModal"
 
@@ -54,9 +47,9 @@ const createUniswapRequirement = (
 ): RoleToCreate["requirements"][number] & { id: number } => ({
   id: Date.now(),
   type: "UNISWAP_V3_POSITIONS",
-  visibility: Visibility.PUBLIC,
+  visibility: "PUBLIC",
   isNegated: false,
-  data: data.pool.data,
+  data: data.pool.data as any,
   chain: data.pool.chain,
 })
 
@@ -106,7 +99,7 @@ const createPointsReward = (
   platformRoleData: {
     score: 0,
   },
-  visibility: Visibility.PUBLIC,
+  visibility: "PUBLIC",
 })
 
 const createRole = (
@@ -117,7 +110,7 @@ const createRole = (
   description: "",
   logic: "AND" as Logic,
   imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
-  visibility: Visibility.PUBLIC,
+  visibility: "PUBLIC",
   anyOfNum: 1,
 })
 

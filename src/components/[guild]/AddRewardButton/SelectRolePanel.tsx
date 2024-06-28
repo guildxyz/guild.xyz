@@ -11,6 +11,7 @@ import {
   Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react"
+import { Visibility } from "@guildxyz/types"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import useCreateRRR, { SubmitData } from "hooks/useCreateRRR"
@@ -19,7 +20,6 @@ import SelectRoleOrSetRequirements from "platforms/components/SelectRoleOrSetReq
 import rewards, { CAPACITY_TIME_PLATFORMS } from "platforms/rewards"
 import { useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
-import { Visibility } from "types"
 import { RoleTypeToAddTo, useAddRewardContext } from "../AddRewardContext"
 import useGuild from "../hooks/useGuild"
 import { defaultValues } from "./AddRewardButton"
@@ -61,11 +61,8 @@ const SelectRolePanel = ({
 
   const [saveAsDraft, setSaveAsDraft] = useState(false)
 
-  const isRoleSelectorDisabled = selection === "ERC20"
   const isAddRewardButtonDisabled =
-    activeTab === RoleTypeToAddTo.NEW_ROLE || isRoleSelectorDisabled
-      ? !requirements?.length
-      : !roleIds?.length
+    activeTab === RoleTypeToAddTo.NEW_ROLE ? !requirements?.length : !roleIds?.length
 
   const { RewardPreview } = rewards[selection] ?? {}
 
@@ -127,10 +124,7 @@ const SelectRolePanel = ({
         display="flex"
         flexDir="column"
       >
-        <SelectRoleOrSetRequirements
-          selectedPlatform={selection}
-          isRoleSelectorDisabled={isRoleSelectorDisabled}
-        />
+        <SelectRoleOrSetRequirements selectedPlatform={selection} />
       </ModalBody>
 
       <ModalFooter pt="6" pb="8" gap={2}>
@@ -171,17 +165,17 @@ const SelectRolePanel = ({
 
 const changeDataToDraft = (data: SubmitData): SubmitData => {
   if (!data.roleIds?.length) {
-    return { ...data, visibility: Visibility.HIDDEN }
+    return { ...data, visibility: "HIDDEN" as Visibility }
   }
 
   const { rolePlatforms, requirements, roleIds } = data
 
   const hiddenRolePlatforms = rolePlatforms.map((rp) => ({
     ...rp,
-    visibility: Visibility.HIDDEN,
+    visibility: "HIDDEN" as Visibility,
   }))
   const hiddenRequirements = requirements.map((req) =>
-    req.type === "FREE" ? req : { ...req, visibility: Visibility.HIDDEN }
+    req.type === "FREE" ? req : { ...req, visibility: "HIDDEN" as Visibility }
   )
 
   return {

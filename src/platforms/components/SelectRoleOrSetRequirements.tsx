@@ -9,7 +9,7 @@ import useRoleGroup from "components/[guild]/hooks/useRoleGroup"
 import SetRequirements from "components/create-guild/Requirements"
 import rewards, { PlatformAsRewardRestrictions } from "platforms/rewards"
 import { useFormContext, useWatch } from "react-hook-form"
-import { PlatformName, Visibility } from "types"
+import { PlatformName } from "types"
 import getRandomInt from "utils/getRandomInt"
 
 type Props = {
@@ -55,15 +55,12 @@ const SelectRoleOrSetRequirements = ({ isRoleSelectorDisabled }: Props) => {
   const { unregister, setValue } = useFormContext()
   const { selection, activeTab, setActiveTab } = useAddRewardContext()
 
-  const erc20Type: "REQUIREMENT_AMOUNT" | "STATIC" | null =
-    selection === "ERC20" ? data?.dynamicAmount.operation.input.type : null
-
   const handleChange = (value: RoleTypeToAddTo) => {
     if (value === RoleTypeToAddTo.NEW_ROLE) {
       unregister("roleIds")
       setValue("name", data?.roleName || `New ${rewards[selection].name} role`)
       setValue("imageUrl", data?.imageUrl || `/guildLogos/${getRandomInt(286)}.svg`)
-      setValue("roleVisibility", Visibility.PUBLIC)
+      setValue("roleVisibility", "PUBLIC")
     }
 
     setActiveTab(value)
@@ -97,11 +94,7 @@ const SelectRoleOrSetRequirements = ({ isRoleSelectorDisabled }: Props) => {
           <RoleSelector
             isGuildPlatformAlreadyInUse={!!existingGuildPlatform}
             allowMultiple={
-              selection !== "ERC20"
-                ? asRewardRestriction === PlatformAsRewardRestrictions.MULTIPLE_ROLES
-                : erc20Type === "STATIC"
-                ? true
-                : false
+              asRewardRestriction === PlatformAsRewardRestrictions.MULTIPLE_ROLES
             }
             roles={relevantRoles}
             onChange={(selectedRoleIds) => setValue("roleIds", selectedRoleIds)}

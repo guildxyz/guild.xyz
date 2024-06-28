@@ -1,5 +1,4 @@
 import { HStack, Skeleton } from "@chakra-ui/react"
-import { Schemas } from "@guildxyz/types"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
@@ -36,10 +35,7 @@ const UniswapRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
     },
     roleId,
     id,
-  } = useRequirementContext() as Extract<
-    Schemas["Requirement"],
-    { type: "UNISWAP_V3_POSITIONS" }
-  >
+  } = useRequirementContext<"UNISWAP_V3_POSITIONS">()
 
   const { symbol0, symbol1 } = useSymbolsOfPair(
     Chains[chain],

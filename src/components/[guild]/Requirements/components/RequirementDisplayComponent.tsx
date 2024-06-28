@@ -22,7 +22,7 @@ const RequirementDisplayComponent = ({
   rightElement = <RequirementAccessIndicator />,
   ...rest
 }: Props) => {
-  if (requirement.type === "HIDDEN")
+  if (requirement.visibility === "HIDDEN")
     return (
       <Requirement
         image={<Icon as={Question} boxSize={5} />}

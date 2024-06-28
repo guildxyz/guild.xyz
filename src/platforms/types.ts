@@ -1,9 +1,3 @@
-import type {
-  GuildPlatformWithOptionalId,
-  RoleFormType,
-  PlatformName,
-  Requirement,
-} from "types"
 import type { ThemingProps } from "@chakra-ui/react"
 import type { RewardProps } from "components/[guild]/RoleCard/components/Reward"
 import type { IconProps } from "phosphor-react"
@@ -13,6 +7,12 @@ import type {
   PropsWithChildren,
   RefAttributes,
 } from "react"
+import type {
+  GuildPlatformWithOptionalId,
+  PlatformName,
+  Requirement,
+  RoleFormType,
+} from "types"
 
 export type CardSettingsComponent = () => JSX.Element
 
@@ -61,11 +61,12 @@ export type Rewards = Readonly<Record<PlatformName, RewardData>>
 
 export type AddRewardPanelProps = {
   onAdd: (
-    data: RoleFormType["rolePlatforms"][number] & {
+    data: NonNullable<RoleFormType["rolePlatforms"]>[number] & {
       requirements?: Requirement[]
       roleName?: string
     }
   ) => void
+  onCancel?: () => void
   skipSettings?: boolean
 }
 

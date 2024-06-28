@@ -1,4 +1,5 @@
 import { ModalOverlay, useDisclosure } from "@chakra-ui/react"
+import { Schemas, Visibility } from "@guildxyz/types"
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
@@ -6,8 +7,9 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import { atom, useAtomValue } from "jotai"
 import { Plus } from "phosphor-react"
 import rewards, { modalSizeForPlatform } from "platforms/rewards"
+import { RewardData } from "platforms/types"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
-import { Requirement, RoleFormType, Visibility } from "types"
+import { RoleFormType } from "types"
 import { AddRewardProvider, useAddRewardContext } from "../AddRewardContext"
 import { ClientStateRequirementHandlerProvider } from "../RequirementHandlerContext"
 import SelectRewardPanel from "../RolePlatforms/components/AddRoleRewardModal/SelectRewardPanel"
@@ -20,7 +22,7 @@ export type AddRewardForm = {
   // TODO: we could simplify the form - we don't need a rolePlatforms array here, we only need one rolePlatform
   rolePlatforms: RoleFormType["rolePlatforms"][number][]
   // TODO: use proper types, e.g. name & symbol shouldn't be required on this type
-  requirements?: Omit<Requirement, "id" | "roleId" | "name" | "symbol">[]
+  requirements?: Schemas["RequirementCreationPayload"][]
   roleIds?: number[]
   visibility: Visibility
   roleName?: string // Name for role, if new role is created with reward
@@ -30,12 +32,12 @@ export const defaultValues: AddRewardForm = {
   rolePlatforms: [],
   requirements: [{ type: "FREE" }],
   roleIds: [],
-  visibility: Visibility.PUBLIC,
+  visibility: "PUBLIC",
 }
 
 export const canCloseAddRewardModalAtom = atom(true)
 
-const AddRewardButton = (): JSX.Element => {
+const AddRewardButton = () => {
   const [isAddRewardPanelDirty, setIsAddRewardPanelDirty] =
     useAddRewardDiscardAlert()
   const {
@@ -64,7 +66,9 @@ const AddRewardButton = (): JSX.Element => {
   const { isStuck } = useIsTabsStuck()
   const { textColor, buttonColorScheme } = useThemeContext()
 
-  const { AddRewardPanel } = rewards[selection] ?? {}
+  // TODO: once we separate rewards from platforms, we should be able to use this without ??, and it should properly infer types too.
+  const rewardConfig = rewards[selection] ?? {}
+  const AddRewardPanel = rewardConfig.AddRewardPanel as RewardData["AddRewardPanel"]
   const showErrorToast = useShowErrorToast()
 
   const isRewardSetupStep = selection && step !== "HOME" && step !== "SELECT_ROLE"
@@ -122,7 +126,7 @@ const AddRewardButton = (): JSX.Element => {
           <ClientStateRequirementHandlerProvider methods={methods}>
             {step === "HOME" && <SelectRewardPanel />}
 
-            {isRewardSetupStep && (
+            {isRewardSetupStep && AddRewardPanel && (
               <AddRewardPanel
                 onAdd={(createdRolePlatform) => {
                   const {
@@ -135,7 +139,7 @@ const AddRewardButton = (): JSX.Element => {
                     visibility,
                   })
                   if (roleName) methods.setValue("roleName", roleName)
-                  if (requirements?.length > 0) {
+                  if (Array.isArray(requirements) && requirements.length > 0) {
                     methods.setValue("requirements", requirements)
                   }
                   setStep("SELECT_ROLE")

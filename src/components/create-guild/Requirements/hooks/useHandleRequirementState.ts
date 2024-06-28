@@ -1,5 +1,6 @@
+import { Schemas } from "@guildxyz/types"
 import { useFieldArray } from "react-hook-form"
-import { Requirement, RoleFormType } from "types"
+import { RequirementCreateResponseOutput, RoleFormType } from "types"
 
 const useHandleRequirementState = (methods) => {
   const requirements = methods.watch("requirements")
@@ -24,12 +25,16 @@ const useHandleRequirementState = (methods) => {
     }
   }
 
-  const append = (req: Requirement) => {
+  const append = (
+    req: Schemas["RequirementCreationPayload"]
+  ): RequirementCreateResponseOutput => {
     const reqToAdd = { id: Date.now(), ...req }
     if (freeEntry) {
       remove(0)
     }
     addRequirement(reqToAdd)
+    // TODO: find a better solution to avoid type casting
+    return reqToAdd as RequirementCreateResponseOutput
   }
 
   return { requirements, append, remove: removeReq, update, freeEntry }

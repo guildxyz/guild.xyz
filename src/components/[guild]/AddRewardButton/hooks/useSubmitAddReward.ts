@@ -1,3 +1,4 @@
+import { Visibility } from "@guildxyz/types"
 import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
@@ -5,7 +6,7 @@ import useCreateRole from "components/create-guild/hooks/useCreateRole"
 import useToast from "hooks/useToast"
 import rewards from "platforms/rewards"
 import { useFormContext } from "react-hook-form"
-import { PlatformType, Visibility } from "types"
+import { PlatformType } from "types"
 import getRandomInt from "utils/getRandomInt"
 import { defaultValues } from "../AddRewardButton"
 import useCreateReqBasedTokenReward from "../useCreateTokenReward"
@@ -135,8 +136,7 @@ const useSubmitAddReward = ({
     }
 
     if (!data.roleIds || data?.roleIds.length === 0) {
-      const roleVisibility =
-        saveAs === "DRAFT" ? Visibility.HIDDEN : Visibility.PUBLIC
+      const roleVisibility: Visibility = saveAs === "DRAFT" ? "HIDDEN" : "PUBLIC"
       onCreateRoleSubmit({
         ...data,
         name: data.roleName || `New ${rewards[selection].name} role`,
@@ -168,7 +168,7 @@ const useSubmitAddReward = ({
             ...data.rolePlatforms[0],
             visibility:
               saveAs === "DRAFT"
-                ? Visibility.HIDDEN
+                ? "HIDDEN"
                 : roles.find((role) => role.id === +roleId).visibility,
           })),
       })
