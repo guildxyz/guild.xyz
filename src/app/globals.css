@@ -33,7 +33,7 @@
 
     --border: 240 6% 90%;
     --input: var(--border);
-    --ring: 239 74% 80%;
+    --ring: 0 0% 42%;
 
     --sm: 640px;
     --md: 768px;
@@ -71,7 +71,7 @@
 
     --border: 240 3% 38%;
     --input: var(--border);
-    --ring: 239 64% 56%;
+    --ring: 0 0% 42%;
   }
 
   :root[data-theme="dark"] video,
