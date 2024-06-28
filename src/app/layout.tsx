@@ -1,11 +1,13 @@
-import type { Metadata } from "next"
-import { ThemeProvider } from "@/components/ThemeProvider"
-import { inter, dystopian } from "fonts"
-import "./globals.css"
+import { NavigationEvents } from "@/components/NavigationEvents"
+import Providers from "@/components/Providers"
 import clsx from "clsx"
+import { dystopian, inter } from "fonts"
+import type { Metadata } from "next"
+import { Suspense, type ReactNode } from "react"
+import "./globals.css"
 
 interface RootLayoutProps {
-  children: React.ReactNode
+  children: ReactNode
 }
 
 export const metadata: Metadata = {
@@ -19,15 +21,10 @@ export default function RootLayout({ children }: RootLayoutProps) {
     <html lang="en" suppressHydrationWarning>
       <head />
       <body className={clsx(dystopian.variable, inter.variable)}>
-        <ThemeProvider
-          attribute="data-theme"
-          storageKey="chakra-ui-color-mode"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-        </ThemeProvider>
+        <Providers>{children}</Providers>
+        <Suspense fallback={null}>
+          <NavigationEvents />
+        </Suspense>
       </body>
     </html>
   )
