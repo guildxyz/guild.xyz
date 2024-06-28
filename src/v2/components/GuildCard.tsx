@@ -11,6 +11,7 @@ import {
 } from "./ui/Tooltip"
 import { Skeleton } from "./ui/Skeleton"
 import { Card } from "./ui/Card"
+import Link from "next/link"
 
 type Props = {
   guildData: GuildBase
@@ -65,6 +66,9 @@ export const GuildCard: React.FC<Props> = ({ guildData }) => (
     </div>
   </Card >
 )
+
+export const GuildCardWithLink: typeof GuildCard = ({ guildData }) => <Link href={guildData.urlName}><GuildCard guildData={guildData} /></Link>
+
 export const GuildCardSkeleton = () => (
   <Card className="-z-10 grid grid-cols-[auto,1fr] grid-rows-2 items-center gap-x-4 gap-y-1 px-6 py-7">
     <Skeleton className="row-span-2 size-12 rounded-full" />

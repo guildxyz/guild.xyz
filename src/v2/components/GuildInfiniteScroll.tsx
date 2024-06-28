@@ -1,8 +1,8 @@
-import { GuildCard, GuildCardSkeleton } from "./GuildCard"
+import { GuildCardSkeleton, GuildCardWithLink } from "./GuildCard"
 import { atom, useAtomValue } from "jotai"
 import { env } from "env"
 import useUser from "components/[guild]/hooks/useUser"
-import { memo, useRef } from "react"
+import { memo, useEffect, useRef } from "react"
 import useSWRInfinite from "swr/infinite"
 import { GuildBase } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
@@ -12,20 +12,17 @@ import { Spinner } from "@phosphor-icons/react"
 export const guildQueryAtom = atom("")
 const BATCH_SIZE = 24
 
-// const GuildCards = memo(({ guildData }: { guildData?: GuildBase[] }) => {
-//   if (guildData?.length) {
-//     return guildData.map((data) => <GuildCard key={data.name} guildData={data} />)
-//   }
-//   return Array.from({ length: BATCH_SIZE }, (_, i) => <GuildCardSkeleton key={i} />)
-// })
+const GuildCardMemo = memo(GuildCardWithLink)
+const GuildCards = ({ guildData }: { guildData?: GuildBase[] }) => {
+  if (guildData?.length) {
+    return guildData.map((data) => <GuildCardMemo key={data.id} guildData={data} />)
+  }
+  return Array.from({ length: BATCH_SIZE }, (_, i) => <GuildCardSkeleton key={i} />)
+}
 
-const GuildCardMemo = memo(GuildCard)
-
-const useExploreGuilds = (query: string, guildsInitial: GuildBase[]) => {
+const useExploreGuilds = (searchParams: URLSearchParams, guildsInitial: GuildBase[]) => {
   const fetcherWithSign = useFetcherWithSign()
   const { isSuperAdmin } = useUser()
-  const searchParams = useAtomValue(guildQueryAtom)
-
   const options = {
     fallbackData: guildsInitial,
     dedupingInterval: 60000, // one minute
@@ -38,9 +35,8 @@ const useExploreGuilds = (query: string, guildsInitial: GuildBase[]) => {
       if (Array.isArray(previousPageData) && previousPageData.length !== BATCH_SIZE)
         return null
       const url = new URL('/v2/guilds', env.NEXT_PUBLIC_API)
-      const queryParams = new URLSearchParams(searchParams)
       const params: Record<string, string> = {
-        ...Object.fromEntries(queryParams.entries()),
+        ...Object.fromEntries(searchParams.entries()),
         offset: (BATCH_SIZE * pageIndex).toString(),
         limit: BATCH_SIZE.toString()
       }
@@ -58,23 +54,18 @@ const useExploreGuilds = (query: string, guildsInitial: GuildBase[]) => {
 }
 
 export const GuildInfiniteScroll = () => {
-  // const [search, setSearch] = useQueryState<string>("search", undefined)
-  // const [search, setSearch] = useState<string>("")
-  // const [order, setOrder] = useQueryState<Filters>("order", "FEATURED")
-  // const [order, setOrder] = useState("FEATURED")
-
-  // const prevSearch = ""
-  // const query = new URLSearchParams({ order, ...(search && { search }) }).toString()
+  const searchParams = new URLSearchParams(useAtomValue(guildQueryAtom))
+  const search = searchParams.get('search')
+  const prevSearch = useRef<string | null>();
   const ref = useRef<HTMLElement>(null)
-
-  const { data: filteredGuilds, setSize, isValidating, isLoading } = useExploreGuilds('', [])
-
+  const { data: filteredGuilds, setSize, isValidating, isLoading } = useExploreGuilds(searchParams, [])
   const renderedGuilds = filteredGuilds?.flat()
 
-  // useEffect(() => {
-  //   // if (prevSearch === search || prevSearch === undefined) return
-  //   setSize(1)
-  // }, [search, prevSearch, setSize])
+  useEffect(() => {
+    if (prevSearch.current === search || prevSearch.current === undefined) return
+    setSize(1)
+    return () => { prevSearch.current = search }
+  }, [search, setSize])
 
   useScrollBatchedRendering({
     batchSize: 1,
@@ -84,11 +75,11 @@ export const GuildInfiniteScroll = () => {
     offsetPixel: 420
   })
 
-  // if (!isValidating && !renderedGuilds?.length) {
-  //   return <div>
-  //     Can't fetch guilds from the backend right now. Check back later!
-  //   </div>
-  // }
+  if (!isValidating && !renderedGuilds?.length && !search?.length) {
+    return <div>
+      Can't fetch guilds from the backend right now. Check back later!
+    </div>
+  }
 
   return (
     <div>
@@ -96,9 +87,7 @@ export const GuildInfiniteScroll = () => {
         className="mt-1 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
         ref={ref}
       >
-        {
-          renderedGuilds?.map((guild) => <GuildCardMemo guildData={guild} key={guild.name} />)
-        }
+        <GuildCards guildData={renderedGuilds} />
       </section>
       <Spinner className="animate-spin mx-auto size-8 mt-6 invisible data-[active=true]:visible" data-active={isValidating || isLoading} />
     </div>
