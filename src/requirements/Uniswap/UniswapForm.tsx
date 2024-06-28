@@ -25,7 +25,11 @@ import TokenPicker from "requirements/common/TokenPicker"
 import parseFromObject from "utils/parseFromObject"
 import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
 import { usePairOfTokenId } from "./hooks/usePairOfTokenId"
-import { UNISWAP_POOL_URL, useParsePoolTokenId } from "./hooks/useParsePoolTokenId"
+import useParsePoolChain, {
+  UNISWAP_POOL_URL,
+  UniswapChains,
+} from "./hooks/useParsePoolChain"
+import { useParsePoolTokenId } from "./hooks/useParsePoolTokenId"
 import { ADDRESS_REGEX, useParseVaultAddress } from "./hooks/useParseVaultAddress"
 import { useSymbolsOfPair } from "./hooks/useSymbolsOfPair"
 import { useTokenSymbolsOfPoolVault } from "./hooks/useTokenSymbolsOfPoolVault"
@@ -36,6 +40,22 @@ const COUNTED_POSITIONS_OPTIONS = [
   { label: "Any range", value: "ALL" },
 ]
 
+type UniswapFormType = {
+  [key: string]: {
+    data: {
+      lpVault: `0x${string}`
+      baseCurrency?: "token0" | "token1"
+      minAmount?: number
+      maxAmount?: number
+      token0?: `0x${string}`
+      token1?: `0x${string}`
+      defaultFee: number
+      countedPositions: string
+    }
+    chain: UniswapChains
+  }
+}
+
 const UniswapForm = ({
   baseFieldPath,
   field,
@@ -45,26 +65,33 @@ const UniswapForm = ({
     setValue,
     clearErrors,
     register,
-  } = useFormContext()
+    control,
+  } = useFormContext<UniswapFormType>()
   const isEditMode = !!field?.id
 
   const [shouldShowUrlInput, setShouldShowUrlInput] = useState(false)
 
-  const chain: (typeof consts.UniswapV3PositionsChains)[number] = useWatch({
+  const chain = useWatch({
     name: `${baseFieldPath}.chain`,
+    control,
   })
 
   const onChainFromParam = useCallback(
-    (chainFromParam) => {
+    (chainFromParam: UniswapChains) => {
       setValue(`${baseFieldPath}.chain`, chainFromParam, { shouldDirty: true })
     },
     [baseFieldPath, setValue]
   )
 
   const lpVaultAddress = useParseVaultAddress(baseFieldPath)
-  const tokenId = useParsePoolTokenId(baseFieldPath, onChainFromParam)
+  const tokenId = useParsePoolTokenId(baseFieldPath)
+  useParsePoolChain(baseFieldPath, onChainFromParam)
 
-  const setTokensAndFee = ([t0, t1, fee]) => {
+  const setTokensAndFee = ([t0, t1, fee]: [
+    `0x${string}`,
+    `0x${string}`,
+    number
+  ]) => {
     setValue(`${baseFieldPath}.data.token0`, t0, { shouldDirty: true })
     setValue(`${baseFieldPath}.data.token1`, t1, { shouldDirty: true })
     setValue(`${baseFieldPath}.data.defaultFee`, fee, { shouldDirty: true })
@@ -97,10 +124,14 @@ const UniswapForm = ({
     setTokensAndFee
   )
 
-  const token0 = useWatch({ name: `${baseFieldPath}.data.token0` })
-  const token1 = useWatch({ name: `${baseFieldPath}.data.token1` })
+  const token0 = useWatch({ name: `${baseFieldPath}.data.token0`, control })
+  const token1 = useWatch({ name: `${baseFieldPath}.data.token1`, control })
 
-  const { symbol0, symbol1 } = useSymbolsOfPair(Chains[chain], token0, token1)
+  const { symbol0, symbol1 } = useSymbolsOfPair(
+    Chains[chain],
+    token0 ?? null,
+    token1 ?? null
+  )
 
   const baseCurrencyOptions = [
     { value: "token0", label: symbol0 ?? "Token 0" },
@@ -112,9 +143,7 @@ const UniswapForm = ({
       <ChainPicker
         controlName={`${baseFieldPath}.chain` as const}
         supportedChains={
-          consts.UniswapV3PositionsChains as unknown as Array<
-            (typeof consts.UniswapV3PositionsChains)[number]
-          >
+          consts.UniswapV3PositionsChains as unknown as UniswapChains[]
         }
         onChange={resetForm}
       />

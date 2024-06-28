@@ -3,8 +3,8 @@ import { useReadContracts } from "wagmi"
 
 export function useSymbolsOfPair(
   chainId: number,
-  token0: `0x${string}`,
-  token1: `0x${string}`
+  token0: `0x${string}` | null,
+  token1: `0x${string}` | null
 ) {
   const tokenContract = {
     functionName: "symbol",
@@ -19,8 +19,8 @@ export function useSymbolsOfPair(
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     contracts: [
-      { ...tokenContract, address: token0 },
-      { ...tokenContract, address: token1 },
+      { ...tokenContract, address: token0 ?? undefined },
+      { ...tokenContract, address: token1 ?? undefined },
     ],
     query: { enabled: !!token0 && !!token1, staleTime: Infinity },
   })

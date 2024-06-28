@@ -48,7 +48,7 @@ const useCreateRequirements = () => {
               roleId,
               error,
             })
-            console.error(error)
+            console.error("Failed to create requirement: ", error)
             return { status: "rejected", result: error }
           })
       )

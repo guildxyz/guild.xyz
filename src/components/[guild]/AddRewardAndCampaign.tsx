@@ -14,6 +14,7 @@ import {
 } from "@chakra-ui/react"
 import CreateCampaignModal from "components/[guild]/CreateCampaignModal"
 import { CaretDown, Plus } from "phosphor-react"
+import LiquidityIncentiveSetupModal from "solutions/LiquidityIncentive/LiquidityIncentiveSetupModal"
 import AddRewardButton from "./AddRewardButton"
 import { useIsTabsStuck } from "./Tabs"
 import { useThemeContext } from "./ThemeContext"
@@ -21,7 +22,13 @@ import { useThemeContext } from "./ThemeContext"
 const AddRewardAndCampaign = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { isStuck } = useIsTabsStuck()
-  const { textColor, buttonColorScheme } = useThemeContext()
+  const { textColor = null, buttonColorScheme = null } = useThemeContext() || {}
+
+  const {
+    isOpen: isSolutionOpen,
+    onClose: onSolutionClose,
+    onOpen: onSolutionOpen,
+  } = useDisclosure()
 
   return (
     <>
@@ -37,8 +44,8 @@ const AddRewardAndCampaign = () => {
             borderTopLeftRadius="0"
             borderBottomLeftRadius="0"
             {...(!isStuck && {
-              color: textColor,
-              colorScheme: buttonColorScheme,
+              ...(textColor && { color: textColor }),
+              ...(buttonColorScheme && { colorScheme: buttonColorScheme }),
             })}
           />
           <Portal>
@@ -48,6 +55,17 @@ const AddRewardAndCampaign = () => {
               zIndex="popover"
               overflow="hidden"
             >
+              <MenuItem
+                onClick={onSolutionOpen}
+                icon={<Icon as={Plus} mt="1" />}
+                alignItems="start"
+                py={4}
+              >
+                <Text as="span" fontWeight="semibold" fontSize="sm">
+                  Add solution
+                </Text>
+              </MenuItem>
+              <Divider />
               <MenuItem
                 onClick={onOpen}
                 icon={<Icon as={Plus} mt="1" />}
@@ -69,6 +87,10 @@ const AddRewardAndCampaign = () => {
         </Menu>
       </ButtonGroup>
       <CreateCampaignModal isOpen={isOpen} onClose={onClose} />
+      <LiquidityIncentiveSetupModal
+        isOpen={isSolutionOpen}
+        onClose={onSolutionClose}
+      />
     </>
   )
 }

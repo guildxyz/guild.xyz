@@ -3,7 +3,7 @@ import { useTokensOfPoolVault } from "./useTokensOfPoolVault"
 
 export function useTokenSymbolsOfPoolVault(
   chainId: number,
-  lpVaultAddress: `0x${string}`,
+  lpVaultAddress: `0x${string}` | null,
   onSuccess?: (data: [`0x${string}`, `0x${string}`, number]) => void
 ) {
   const {
@@ -15,7 +15,7 @@ export function useTokenSymbolsOfPoolVault(
   } = useTokensOfPoolVault(chainId, lpVaultAddress)
 
   useEffect(() => {
-    if (!token0 || !token1) {
+    if (!token0 || !token1 || !fee) {
       return
     }
     onSuccess?.([token0, token1, fee])

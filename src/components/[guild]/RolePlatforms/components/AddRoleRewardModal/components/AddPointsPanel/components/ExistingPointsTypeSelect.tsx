@@ -10,36 +10,33 @@ import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import { useMemo } from "react"
-import { useFormContext } from "react-hook-form"
+import { FormProvider, useForm } from "react-hook-form"
 import Star from "static/icons/star.svg"
 import { GuildPlatform } from "types"
-import { AddPointsFormType } from "../AddPointsPanel"
 
 type Props = {
   existingPointsRewards: GuildPlatform[]
-  selectedExistingId: number
+  selectedExistingId: number | undefined
   isLoading?: boolean
   showCreateNew?: boolean
+  onDone: (id: number) => void
 } & FormControlProps
+
+export const CREATE_NEW_OPTION = -1
 
 const ExistingPointsTypeSelect = ({
   existingPointsRewards,
   selectedExistingId,
   isLoading,
   showCreateNew,
+  onDone,
   ...rest
 }: Props) => {
-  const {
-    control,
-    setValue,
-    formState: { errors },
-  } = useFormContext<AddPointsFormType>()
-
   const options = useMemo(() => {
     const result = existingPointsRewards?.map((gp) => ({
-      label: gp.platformGuildData.name || "points",
+      label: gp?.platformGuildData?.name || "points",
       value: gp.id,
-      img: gp.platformGuildData.imageUrl ?? (
+      img: gp?.platformGuildData?.imageUrl ?? (
         <Center boxSize={5}>
           <Star />
         </Center>
@@ -50,8 +47,8 @@ const ExistingPointsTypeSelect = ({
 
     return result.concat({
       label: "Create new",
-      value: null,
-      img: null,
+      value: CREATE_NEW_OPTION,
+      img: "",
     })
   }, [existingPointsRewards, showCreateNew])
 
@@ -59,33 +56,39 @@ const ExistingPointsTypeSelect = ({
     (option) => option.value === selectedExistingId
   )?.img
 
+  const methods = useForm<{ selectedId?: number }>()
+  const {
+    formState: { errors },
+    control,
+  } = methods
+
   return (
-    <FormControl isInvalid={!!errors?.data?.guildPlatformId} {...rest}>
-      <FormLabel>Points type</FormLabel>
-      <InputGroup>
-        {selectedPointsImage && (
-          <InputLeftElement>
-            {typeof selectedPointsImage === "string" ? (
-              <OptionImage img={selectedPointsImage} alt="Points icon" />
-            ) : (
-              selectedPointsImage
-            )}
-          </InputLeftElement>
-        )}
-        <ControlledSelect
-          name={`data.guildPlatformId`}
-          control={control as any}
-          options={options}
-          beforeOnChange={(newValue) => {
-            setValue("data.guildPlatformId", newValue?.id, {
-              shouldDirty: false,
-            })
-          }}
-          isLoading={isLoading}
-        />
-      </InputGroup>
-      <FormErrorMessage>{errors?.data?.guildPlatformId?.message}</FormErrorMessage>
-    </FormControl>
+    <FormProvider {...methods}>
+      <FormControl isInvalid={!!errors?.selectedId} {...rest}>
+        <FormLabel>Points type</FormLabel>
+        <InputGroup>
+          {selectedPointsImage && (
+            <InputLeftElement>
+              {typeof selectedPointsImage === "string" ? (
+                <OptionImage img={selectedPointsImage} alt="Points icon" />
+              ) : (
+                selectedPointsImage
+              )}
+            </InputLeftElement>
+          )}
+          <ControlledSelect
+            name={"selectedId"}
+            control={control as any}
+            options={options}
+            afterOnChange={(newValue: any) => {
+              onDone(newValue?.value)
+            }}
+            isLoading={isLoading}
+          />
+        </InputGroup>
+        <FormErrorMessage>{errors?.selectedId?.message}</FormErrorMessage>
+      </FormControl>
+    </FormProvider>
   )
 }
 

@@ -1,6 +1,6 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 
-const useGuildPlatform = (guildPlatformId: number) => {
+const useGuildPlatform = (guildPlatformId: number | null) => {
   const { guildPlatforms, isLoading, error } = useGuild()
   const guildPlatform = guildPlatforms.find((gp) => gp.id === guildPlatformId)
 

@@ -8,7 +8,9 @@ import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { PlatformGuildData, PlatformType } from "types"
 import DefaultAddRewardPanelWrapper from "../../DefaultAddRewardPanelWrapper"
 import AddNewPointsType from "./components/AddNewPointsType"
-import ExistingPointsTypeSelect from "./components/ExistingPointsTypeSelect"
+import ExistingPointsTypeSelect, {
+  CREATE_NEW_OPTION,
+} from "./components/ExistingPointsTypeSelect"
 import SetPointsAmount from "./components/SetPointsAmount"
 
 export type AddPointsFormType = {
@@ -41,7 +43,7 @@ const AddPointsPanel = ({ onAdd, onCancel }: AddRewardPanelProps) => {
   })
   useAddRewardDiscardAlert(methods.formState.isDirty)
 
-  const { control } = methods
+  const { control, setValue } = methods
   const selectedExistingId = useWatch({
     control,
     name: "data.guildPlatformId",
@@ -115,10 +117,15 @@ const AddPointsPanel = ({ onAdd, onCancel }: AddRewardPanelProps) => {
             selectedExistingId={selectedExistingId}
             showCreateNew
             mb="5"
+            onDone={(id) => {
+              setValue("data.guildPlatformId", id)
+            }}
           />
         )}
         <Collapse
-          in={!existingPointsRewards.length || selectedExistingId === null}
+          in={
+            !existingPointsRewards.length || selectedExistingId === CREATE_NEW_OPTION
+          }
           style={{ flexShrink: 0 }}
         >
           <AddNewPointsType

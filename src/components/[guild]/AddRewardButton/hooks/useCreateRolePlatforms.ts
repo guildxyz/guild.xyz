@@ -22,7 +22,7 @@ const useCreateRolePlatforms = () => {
   }
 
   const createRolePlatforms = async (
-    rolePlatforms: RolePlatform[]
+    rolePlatforms: Omit<RolePlatform, "id">[]
   ): Promise<CreateRolePlatformResponse[]> => {
     const promises = rolePlatforms.map((rolePlatform) =>
       fetcherWithSign([
