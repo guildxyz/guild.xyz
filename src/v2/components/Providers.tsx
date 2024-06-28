@@ -4,6 +4,7 @@ import { FuelProvider } from "@fuels/react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import IntercomProvider from "components/_app/IntercomProvider"
 import { PostHogProvider } from "components/_app/PostHogProvider"
+import { Web3ConnectionManager } from "components/_app/Web3ConnectionManager/Web3ConnectionManager"
 import { fuelConfig } from "fuelConfig"
 import { ThemeProvider } from "next-themes"
 import { SWRConfig } from "swr"
@@ -30,7 +31,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
               <PostHogProvider>
                 <IntercomProvider>
                   {children}
-                  {/* <Web3ConnectionManager /> */}
+                  <Web3ConnectionManager />
                 </IntercomProvider>
               </PostHogProvider>
             </FuelProvider>

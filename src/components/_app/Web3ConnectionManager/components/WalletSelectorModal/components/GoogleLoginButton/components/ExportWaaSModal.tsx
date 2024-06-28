@@ -28,7 +28,7 @@ import { Check, Copy, Wallet } from "phosphor-react"
 import { useState } from "react"
 import fetcher from "utils/fetcher"
 import { useConnect } from "wagmi"
-import { connectorButtonProps } from "../../ConnectorButton"
+// import { connectorButtonProps } from "../../ConnectorButton"
 import useDriveOAuth from "../hooks/useDriveOAuth"
 import { getDriveFileAppProperties, listWalletsOnDrive } from "../utils/googleDrive"
 
@@ -266,7 +266,7 @@ const ExportWaasModal = ({
                     />
                   </Center>
                 }
-                {...connectorButtonProps}
+                // {...connectorButtonProps}
               >
                 Authenticate with Google
               </Button>

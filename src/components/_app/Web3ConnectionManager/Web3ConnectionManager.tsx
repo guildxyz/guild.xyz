@@ -1,6 +1,8 @@
 import ClientOnly from "components/common/ClientOnly"
 import { useAtom } from "jotai"
-import { walletSelectorModalAtom } from "./components/WalletSelectorModal"
+import WalletSelectorModal, {
+  walletSelectorModalAtom,
+} from "./components/WalletSelectorModal"
 import useAutoReconnect from "./hooks/useAutoReconnect"
 import useConnectFromLocalStorage from "./hooks/useConnectFromLocalStorage"
 import {
@@ -18,11 +20,12 @@ const BaseWeb3ConnectionManager = () => {
 
   return (
     <ClientOnly>
-      {/* <WalletSelectorModal
+      <WalletSelectorModal
         isOpen={isWalletSelectorModalOpen}
         onOpen={() => setIsWalletSelectorModalOpen(true)}
         onClose={() => setIsWalletSelectorModalOpen(false)}
       />
+      {/* 
       <WalletLinkHelperModal />
       <PlatformMergeErrorAlert /> */}
     </ClientOnly>

@@ -73,11 +73,6 @@
     --lg: 1024px;
     --xl: 1280px;
   }
-
-  :root[data-theme="dark"] video,
-  :root[data-theme="dark"] img {
-    filter: brightness(0.85) contrast(1.15);
-  }
 }
 
 @layer base {
