@@ -61,12 +61,11 @@ const AddRewardAndCampaign = () => {
                 alignItems="start"
                 py={4}
               >
-                <Stack spacing={0.5}>
-                  <Text as="span" fontWeight="semibold" fontSize="sm">
-                    Add solution
-                  </Text>
-                </Stack>
+                <Text as="span" fontWeight="semibold" fontSize="sm">
+                  Add solution
+                </Text>
               </MenuItem>
+              <Divider />
               <MenuItem
                 onClick={onOpen}
                 icon={<Icon as={Plus} mt="1" />}

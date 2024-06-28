@@ -37,7 +37,6 @@ const SelectLiquidityPoolStep = ({ onContinue }: { onContinue: () => void }) => 
   } = useFormContext()
 
   const resetForm = () => {
-    if (!parseFromObject(touchedFields, "pool")?.address) return
     setValue(`pool.data.token0`, undefined)
     setValue(`pool.data.token1`, undefined)
     clearErrors([`pool.data.token0`, `pool.data.token1`])

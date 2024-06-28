@@ -8,7 +8,9 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
-import ExistingPointsTypeSelect from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddPointsPanel/components/ExistingPointsTypeSelect"
+import ExistingPointsTypeSelect, {
+  CREATE_NEW_OPTION,
+} from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddPointsPanel/components/ExistingPointsTypeSelect"
 import useGuild from "components/[guild]/hooks/useGuild"
 import RewardImagePicker from "platforms/SecretText/SecretTextDataForm/components/RewardImagePicker"
 import { useFormContext, useWatch } from "react-hook-form"
@@ -44,7 +46,9 @@ const SelectPointType = () => {
       )}
 
       <Collapse
-        in={!existingPointsRewards.length || selectedExistingId === -1}
+        in={
+          !existingPointsRewards.length || selectedExistingId === CREATE_NEW_OPTION
+        }
         style={{ flexShrink: 0 }}
       >
         <FormControl isInvalid={!!errors?.name} flex="1">

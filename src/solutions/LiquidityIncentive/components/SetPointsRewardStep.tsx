@@ -15,7 +15,6 @@ import RadioButtonGroup from "components/common/RadioButtonGroup"
 import { Question } from "phosphor-react"
 import { useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
-import { UniswapChains } from "requirements/Uniswap/hooks/useParsePoolChain"
 import { useSymbolsOfPair } from "requirements/Uniswap/hooks/useSymbolsOfPair"
 import { PlatformType } from "types"
 import { Chains } from "wagmiConfig/chains"
@@ -24,15 +23,15 @@ import LiquidityConversion from "./LiquidityConversion"
 import SelectPointType from "./SelectPointType"
 
 const SetPointsReward = ({ onSubmit }: { onSubmit: () => Promise<void> }) => {
-  const { setValue } = useFormContext<LiquidityIncentiveForm>()
+  const { setValue, control } = useFormContext<LiquidityIncentiveForm>()
 
   const { guildPlatforms } = useGuild()
   const numOfPointsPlatforms = guildPlatforms
     ? guildPlatforms.filter((gp) => gp.platformId === PlatformType.POINTS).length
     : 0
 
-  const conversion = useWatch({ name: `conversion` })
-  const pointsPlatformId = useWatch({ name: "pointsId" })
+  const conversion = useWatch({ name: `conversion`, control })
+  const pointsPlatformId = useWatch({ name: "pointsId", control })
 
   const isConversionDisabled = numOfPointsPlatforms
     ? pointsPlatformId === null
@@ -41,16 +40,18 @@ const SetPointsReward = ({ onSubmit }: { onSubmit: () => Promise<void> }) => {
 
   const [isLoading, setIsLoading] = useState(false)
 
-  const chain: UniswapChains = useWatch({
+  const chain = useWatch({
+    control,
     name: `pool.chain`,
   })
 
-  const baseCurrency: "token0" | "token1" = useWatch({
+  const baseCurrency = useWatch({
     name: "pool.data.baseCurrency",
+    control,
   })
 
-  const token0 = useWatch({ name: `pool.data.token0` })
-  const token1 = useWatch({ name: `pool.data.token1` })
+  const token0 = useWatch({ name: `pool.data.token0`, control })
+  const token1 = useWatch({ name: `pool.data.token1`, control })
 
   const { symbol0, symbol1 } = useSymbolsOfPair(Chains[chain], token0, token1)
 
@@ -77,8 +78,10 @@ const SetPointsReward = ({ onSubmit }: { onSubmit: () => Promise<void> }) => {
               { label: symbol1 ?? "", value: "token1" },
             ]}
             value={baseCurrency}
-            onChange={(newValue) => setValue("pool.data.baseCurrency", newValue)}
-            chakraStyles={{ size: "md" }}
+            onChange={(newValue: "token0" | "token1") =>
+              setValue("pool.data.baseCurrency", newValue)
+            }
+            chakraStyles={{ size: "sm" }}
           />
         </Stack>
       </FormControl>

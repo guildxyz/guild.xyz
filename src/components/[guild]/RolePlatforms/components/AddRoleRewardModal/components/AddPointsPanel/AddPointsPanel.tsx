@@ -8,7 +8,9 @@ import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { PlatformGuildData, PlatformType } from "types"
 import DefaultAddRewardPanelWrapper from "../../DefaultAddRewardPanelWrapper"
 import AddNewPointsType from "./components/AddNewPointsType"
-import ExistingPointsTypeSelect from "./components/ExistingPointsTypeSelect"
+import ExistingPointsTypeSelect, {
+  CREATE_NEW_OPTION,
+} from "./components/ExistingPointsTypeSelect"
 import SetPointsAmount from "./components/SetPointsAmount"
 
 export type AddPointsFormType = {
@@ -118,7 +120,9 @@ const AddPointsPanel = ({ onAdd, onCancel }: AddRewardPanelProps) => {
           />
         )}
         <Collapse
-          in={!existingPointsRewards.length || selectedExistingId === -1}
+          in={
+            !existingPointsRewards.length || selectedExistingId === CREATE_NEW_OPTION
+          }
           style={{ flexShrink: 0 }}
         >
           <AddNewPointsType

@@ -36,10 +36,10 @@ export type LiquidityIncentiveForm = {
   pool: {
     data: {
       lpVault: `0x${string}` | null // pool address
-      baseCurrency: string
+      baseCurrency: "token0" | "token1"
       minAmount: number
-      token0?: `0x${string}` | null
-      token1?: `0x${string}` | null
+      token0: `0x${string}` | null
+      token1: `0x${string}` | null
       defaultFee: number
       countedPositions: string
     }
@@ -69,6 +69,11 @@ const defaultValues = {
   pointsId: null,
 }
 
+const steps = [
+  { title: "Choose your liquidity pool", content: SelectLiquidityPoolStep },
+  { title: "Set points reward", content: SetPointsReward },
+]
+
 const LiquidityIncentiveSetupModal = ({
   isOpen,
   onClose,
@@ -93,11 +98,6 @@ const LiquidityIncentiveSetupModal = ({
     triggerMembershipUpdate()
     handleClose()
   })
-
-  const steps = [
-    { title: "Choose your liquidity pool", content: SelectLiquidityPoolStep },
-    { title: "Set points reward", content: SetPointsReward },
-  ]
 
   const { activeStep, goToNext, setActiveStep } = useSteps({
     index: 0,

@@ -3,32 +3,42 @@ import ConversionInput from "components/[guild]/RolePlatforms/components/AddRole
 import useGuildPlatform from "components/[guild]/hooks/useGuildPlatform"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import { ReactNode } from "react"
-import { useWatch } from "react-hook-form"
-import { UniswapChains } from "requirements/Uniswap/hooks/useParsePoolChain"
+import { useFormContext, useWatch } from "react-hook-form"
 import { useSymbolsOfPair } from "requirements/Uniswap/hooks/useSymbolsOfPair"
 import Star from "static/icons/star.svg"
 import { Chains } from "wagmiConfig/chains"
+import { LiquidityIncentiveForm } from "../LiquidityIncentiveSetupModal"
 
 const LiquidityConversion = () => {
-  const chain: UniswapChains = useWatch({
+  const { control } = useFormContext<LiquidityIncentiveForm>()
+  useWatch({ control, name: "pool.chain" })
+
+  const chain = useWatch({
     name: `pool.chain`,
+    control,
   })
 
-  const baseCurrency: "token0" | "token1" = useWatch({
+  const baseCurrency = useWatch({
     name: `pool.data.baseCurrency`,
+    control,
   })
-  const token0 = useWatch({ name: `pool.data.token0` })
-  const token1 = useWatch({ name: `pool.data.token1` })
+  const token0 = useWatch({ name: `pool.data.token0`, control })
+  const token1 = useWatch({ name: `pool.data.token1`, control })
 
-  const { symbol0, symbol1 } = useSymbolsOfPair(Chains[chain], token0, token1)
+  const { symbol0, symbol1 } = useSymbolsOfPair(
+    Chains[chain],
+    token0 || null,
+    token1 || null
+  )
 
-  const pointsPlatformId = useWatch({ name: "pointsId" })
-  const setupImageUrl = useWatch({ name: "imageUrl" })
+  const pointsPlatformId = useWatch({ name: "pointsId", control })
+  const setupImageUrl = useWatch({ name: "imageUrl", control })
 
-  const setupName = useWatch({ name: "name" })
+  const setupName = useWatch({ name: "name", control })
 
-  const { guildPlatform: selectedPointsPlatform } =
-    useGuildPlatform(pointsPlatformId)
+  const { guildPlatform: selectedPointsPlatform } = useGuildPlatform(
+    pointsPlatformId || null
+  )
 
   const imageUrl =
     selectedPointsPlatform?.platformGuildData?.imageUrl || setupImageUrl

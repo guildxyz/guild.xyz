@@ -1,12 +1,12 @@
 import {
   Circle,
+  FormControl,
+  FormHelperText,
   FormLabel,
   HStack,
   IconButton,
   InputGroup,
   InputLeftElement,
-  Stack,
-  Text,
 } from "@chakra-ui/react"
 import { ArrowRight, Lock, LockOpen } from "phosphor-react"
 import { ReactNode, useEffect, useState } from "react"
@@ -93,104 +93,98 @@ const ConversionInput = ({
   }
 
   return (
-    <Stack gap={0}>
-      <FormProvider {...methods}>
-        <HStack justifyContent={"space-between"}>
-          <FormLabel>Conversion</FormLabel>
-          <IconButton
-            opacity={conversionLocked ? 1 : 0.5}
-            icon={conversionLocked ? <Lock /> : <LockOpen />}
-            size={"xs"}
-            rounded={"full"}
-            variant={"ghost"}
-            aria-label="Lock/unlock conversion"
-            onClick={toggleConversionLock}
-          />
-        </HStack>
+    <FormProvider {...methods}>
+      <HStack justifyContent={"space-between"}>
+        <FormLabel>Conversion</FormLabel>
+        <IconButton
+          opacity={conversionLocked ? 1 : 0.5}
+          icon={conversionLocked ? <Lock /> : <LockOpen />}
+          size={"xs"}
+          rounded={"full"}
+          variant={"ghost"}
+          aria-label="Lock/unlock conversion"
+          onClick={toggleConversionLock}
+        />
+      </HStack>
 
-        <HStack w={"full"}>
-          <Stack w={"full"} gap={1}>
-            <InputGroup>
-              {fromImage && <InputLeftElement>{fromImage}</InputLeftElement>}
+      <HStack w={"full"}>
+        <FormControl>
+          <InputGroup>
+            {fromImage && <InputLeftElement>{fromImage}</InputLeftElement>}
 
-              {conversionLocked ? (
-                <ControlledNumberInput
-                  numberFormat="FLOAT"
-                  onChange={tokenPreviewChange}
-                  name={"tokenPreview"}
-                  adaptiveStepSize
-                  numberInputFieldProps={{ pr: 7, pl: fromImage ? 10 : 4 }}
-                  min={MIN_TOKEN_AMOUNT}
-                  w="full"
-                />
-              ) : (
-                <ControlledNumberInput
-                  numberFormat="FLOAT"
-                  onChange={(valString) => updateConversionRate(valString, "token")}
-                  name={"tokenAmount"}
-                  adaptiveStepSize
-                  numberInputFieldProps={{ pr: 7, pl: fromImage ? 10 : 4 }}
-                  min={MIN_TOKEN_AMOUNT}
-                  w="full"
-                />
-              )}
-            </InputGroup>
-            {(fromText || toText) && (
-              <Text colorScheme="gray" fontSize={"xs"} fontWeight={"bold"}>
-                {fromText || " "}
-              </Text>
+            {conversionLocked ? (
+              <ControlledNumberInput
+                numberFormat="FLOAT"
+                onChange={tokenPreviewChange}
+                name={"tokenPreview"}
+                adaptiveStepSize
+                numberInputFieldProps={{ pr: 7, pl: fromImage ? 10 : 4 }}
+                min={MIN_TOKEN_AMOUNT}
+                w="full"
+              />
+            ) : (
+              <ControlledNumberInput
+                numberFormat="FLOAT"
+                onChange={(valString) => updateConversionRate(valString, "token")}
+                name={"tokenAmount"}
+                adaptiveStepSize
+                numberInputFieldProps={{ pr: 7, pl: fromImage ? 10 : 4 }}
+                min={MIN_TOKEN_AMOUNT}
+                w="full"
+              />
             )}
-          </Stack>
-
-          <Circle
-            background={"whiteAlpha.200"}
-            p="1"
-            mb={fromText || toText ? 5 : 0}
+          </InputGroup>
+          <FormHelperText
+            color={"GrayText"}
+            fontSize={"xs"}
+            fontWeight={"bold"}
+            mt={1}
           >
-            <ArrowRight size={12} color="grayText" />
-          </Circle>
+            {(!!fromText || !!toText) && (fromText || " ")}
+          </FormHelperText>
+        </FormControl>
 
-          <Stack gap={0} w="full">
-            <InputGroup>
-              {toImage && <InputLeftElement>{toImage}</InputLeftElement>}
+        <Circle background={"whiteAlpha.200"} p="1" mb={fromText || toText ? 5 : 0}>
+          <ArrowRight size={12} color="grayText" />
+        </Circle>
 
-              {/* {toText && <InputLeftAddon>
-              <Text as="span" fontSize="xs" fontWeight="bold" noOfLines={1}>
-                {toText}
-              </Text>
-            </InputLeftAddon>} */}
+        <FormControl>
+          <InputGroup>
+            {toImage && <InputLeftElement>{toImage}</InputLeftElement>}
 
-              {conversionLocked ? (
-                <ControlledNumberInput
-                  numberFormat="FLOAT"
-                  name={"pointPreview"}
-                  adaptiveStepSize
-                  numberInputFieldProps={{ pr: 7, pl: toImage ? 10 : 4 }}
-                  min={MIN_TOKEN_AMOUNT}
-                  isReadOnly
-                  w="full"
-                />
-              ) : (
-                <ControlledNumberInput
-                  numberFormat="FLOAT"
-                  onChange={(valString) => updateConversionRate(valString, "point")}
-                  name={"pointAmount"}
-                  adaptiveStepSize
-                  numberInputFieldProps={{ pr: 7, pl: toImage ? 10 : 4 }}
-                  min={MIN_TOKEN_AMOUNT}
-                  w="full"
-                />
-              )}
-            </InputGroup>
-            {(fromText || toText) && (
-              <Text colorScheme="gray" fontSize={"xs"} fontWeight={"bold"}>
-                {toText || " "}
-              </Text>
+            {conversionLocked ? (
+              <ControlledNumberInput
+                numberFormat="FLOAT"
+                name={"pointPreview"}
+                adaptiveStepSize
+                numberInputFieldProps={{ pr: 7, pl: toImage ? 10 : 4 }}
+                min={MIN_TOKEN_AMOUNT}
+                isReadOnly
+                w="full"
+              />
+            ) : (
+              <ControlledNumberInput
+                numberFormat="FLOAT"
+                onChange={(valString) => updateConversionRate(valString, "point")}
+                name={"pointAmount"}
+                adaptiveStepSize
+                numberInputFieldProps={{ pr: 7, pl: toImage ? 10 : 4 }}
+                min={MIN_TOKEN_AMOUNT}
+                w="full"
+              />
             )}
-          </Stack>
-        </HStack>
-      </FormProvider>
-    </Stack>
+          </InputGroup>
+          <FormHelperText
+            color={"GrayText"}
+            fontSize={"xs"}
+            fontWeight={"bold"}
+            mt={1}
+          >
+            {(!!fromText || !!toText) && (toText || " ")}
+          </FormHelperText>
+        </FormControl>
+      </HStack>
+    </FormProvider>
   )
 }
 
