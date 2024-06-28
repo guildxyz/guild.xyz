@@ -16,6 +16,7 @@ import RewardImagePicker from "platforms/SecretText/SecretTextDataForm/component
 import { useFormContext, useWatch } from "react-hook-form"
 import Star from "static/icons/star.svg"
 import { PlatformType } from "types"
+import { LiquidityIncentiveForm } from "../LiquidityIncentiveSetupModal"
 
 const SelectPointType = () => {
   const { guildPlatforms } = useGuild()
@@ -24,7 +25,7 @@ const SelectPointType = () => {
     register,
     formState: { errors },
     setValue,
-  } = useFormContext()
+  } = useFormContext<LiquidityIncentiveForm>()
 
   const existingPointsRewards = guildPlatforms
     ? guildPlatforms.filter((gp) => gp.platformId === PlatformType.POINTS)
@@ -40,7 +41,7 @@ const SelectPointType = () => {
       {!!existingPointsRewards.length && (
         <ExistingPointsTypeSelect
           existingPointsRewards={existingPointsRewards}
-          selectedExistingId={selectedExistingId}
+          selectedExistingId={selectedExistingId ?? undefined}
           showCreateNew
           onDone={(id) => setValue("pointsId", id)}
         />

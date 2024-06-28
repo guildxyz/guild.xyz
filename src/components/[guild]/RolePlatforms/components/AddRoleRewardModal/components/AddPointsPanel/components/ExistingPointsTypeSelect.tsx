@@ -16,7 +16,7 @@ import { GuildPlatform } from "types"
 
 type Props = {
   existingPointsRewards: GuildPlatform[]
-  selectedExistingId: number
+  selectedExistingId: number | undefined
   isLoading?: boolean
   showCreateNew?: boolean
   onDone: (id: number) => void
