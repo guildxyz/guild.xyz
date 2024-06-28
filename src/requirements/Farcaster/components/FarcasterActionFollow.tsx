@@ -15,7 +15,7 @@ export default function FarcasterActionFollow() {
 
   const { onSubmit, isLoading, response } = useFarcasterAction(roleId, "follow")
 
-  if (!farcasterProfiles || !farcasterProfiles?.[0]?.fid || response) {
+  if (!farcasterProfiles?.[0]?.fid || response) {
     return null
   }
 

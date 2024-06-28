@@ -17,7 +17,7 @@ export default function FarcasterActionReaction({
 
   const { onSubmit, isLoading, response } = useFarcasterAction(roleId, reactionType)
 
-  if (!farcasterProfiles || !farcasterProfiles?.[0]?.fid || response) {
+  if (!farcasterProfiles?.[0]?.fid || response) {
     return null
   }
 
