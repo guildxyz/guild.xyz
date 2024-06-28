@@ -10,17 +10,16 @@ import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import { useMemo } from "react"
-import { useFormContext } from "react-hook-form"
+import { FormProvider, useForm } from "react-hook-form"
 import Star from "static/icons/star.svg"
 import { GuildPlatform } from "types"
-import parseFromObject from "utils/parseFromObject"
 
 type Props = {
   existingPointsRewards: GuildPlatform[]
   selectedExistingId: number
   isLoading?: boolean
   showCreateNew?: boolean
-  fieldPath?: string
+  onDone: (id: number) => void
 } & FormControlProps
 
 export const CREATE_NEW_OPTION = -1
@@ -30,15 +29,9 @@ const ExistingPointsTypeSelect = ({
   selectedExistingId,
   isLoading,
   showCreateNew,
-  fieldPath = "data.guildPlatformId",
+  onDone,
   ...rest
 }: Props) => {
-  const {
-    control,
-    setValue,
-    formState: { errors },
-  } = useFormContext()
-
   const options = useMemo(() => {
     const result = existingPointsRewards?.map((gp) => ({
       label: gp?.platformGuildData?.name || "points",
@@ -63,35 +56,39 @@ const ExistingPointsTypeSelect = ({
     (option) => option.value === selectedExistingId
   )?.img
 
+  const methods = useForm<{ selectedId?: number }>()
+  const {
+    formState: { errors },
+    control,
+  } = methods
+
   return (
-    <FormControl isInvalid={!!parseFromObject(errors, fieldPath)} {...rest}>
-      <FormLabel>Points type</FormLabel>
-      <InputGroup>
-        {selectedPointsImage && (
-          <InputLeftElement>
-            {typeof selectedPointsImage === "string" ? (
-              <OptionImage img={selectedPointsImage} alt="Points icon" />
-            ) : (
-              selectedPointsImage
-            )}
-          </InputLeftElement>
-        )}
-        <ControlledSelect
-          name={fieldPath}
-          control={control as any}
-          options={options}
-          beforeOnChange={(newValue) => {
-            setValue(fieldPath, newValue?.id, {
-              shouldDirty: false,
-            })
-          }}
-          isLoading={isLoading}
-        />
-      </InputGroup>
-      <FormErrorMessage>
-        {parseFromObject(errors, fieldPath)?.message}
-      </FormErrorMessage>
-    </FormControl>
+    <FormProvider {...methods}>
+      <FormControl isInvalid={!!errors?.selectedId} {...rest}>
+        <FormLabel>Points type</FormLabel>
+        <InputGroup>
+          {selectedPointsImage && (
+            <InputLeftElement>
+              {typeof selectedPointsImage === "string" ? (
+                <OptionImage img={selectedPointsImage} alt="Points icon" />
+              ) : (
+                selectedPointsImage
+              )}
+            </InputLeftElement>
+          )}
+          <ControlledSelect
+            name={"selectedId"}
+            control={control as any}
+            options={options}
+            afterOnChange={(newValue: any) => {
+              onDone(newValue?.value)
+            }}
+            isLoading={isLoading}
+          />
+        </InputGroup>
+        <FormErrorMessage>{errors?.selectedId?.message}</FormErrorMessage>
+      </FormControl>
+    </FormProvider>
   )
 }
 

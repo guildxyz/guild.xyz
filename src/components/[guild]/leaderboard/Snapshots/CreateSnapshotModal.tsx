@@ -42,7 +42,7 @@ const CreateSnapshotModal = ({ onClose, isOpen, onSuccess }: Props) => {
 
   const methods = useForm()
 
-  const { control } = methods
+  const { control, setValue } = methods
 
   const { field: selectedExistingId } = useController({
     control,
@@ -126,6 +126,9 @@ const CreateSnapshotModal = ({ onClose, isOpen, onSuccess }: Props) => {
               <ExistingPointsTypeSelect
                 existingPointsRewards={existingPointsRewards}
                 selectedExistingId={selectedExistingId.value}
+                onDone={(id) => {
+                  setValue("data.guildPlatformId", id)
+                }}
               />
               <FormControl>
                 <FormLabel>Snapshot name</FormLabel>

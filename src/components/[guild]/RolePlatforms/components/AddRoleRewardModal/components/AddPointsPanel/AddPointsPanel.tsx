@@ -43,7 +43,7 @@ const AddPointsPanel = ({ onAdd, onCancel }: AddRewardPanelProps) => {
   })
   useAddRewardDiscardAlert(methods.formState.isDirty)
 
-  const { control } = methods
+  const { control, setValue } = methods
   const selectedExistingId = useWatch({
     control,
     name: "data.guildPlatformId",
@@ -117,6 +117,9 @@ const AddPointsPanel = ({ onAdd, onCancel }: AddRewardPanelProps) => {
             selectedExistingId={selectedExistingId}
             showCreateNew
             mb="5"
+            onDone={(id) => {
+              setValue("data.guildPlatformId", id)
+            }}
           />
         )}
         <Collapse

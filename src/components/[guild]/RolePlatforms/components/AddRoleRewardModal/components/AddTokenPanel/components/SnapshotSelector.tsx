@@ -95,6 +95,9 @@ const SnapshotSelector = () => {
         existingPointsRewards={existingPointsRewards}
         selectedExistingId={selectedPointsId}
         mb={3}
+        onDone={(id) => {
+          setValue("data.guildPlatformId", id)
+        }}
       />
 
       {snapshots?.length === 0 ? (

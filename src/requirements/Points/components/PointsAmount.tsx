@@ -1,6 +1,6 @@
 import ExistingPointsTypeSelect from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddPointsPanel/components/ExistingPointsTypeSelect"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { useWatch } from "react-hook-form"
+import { useFormContext, useWatch } from "react-hook-form"
 import GuildSelect from "requirements/common/GuildSelect"
 import MinMaxAmount from "requirements/common/MinMaxAmount"
 import { PlatformType, Requirement } from "types"
@@ -11,6 +11,7 @@ type Props = {
 }
 
 const PointsAmount = ({ baseFieldPath, field }: Props): JSX.Element => {
+  const { setValue } = useFormContext()
   const guildId = useWatch({ name: `${baseFieldPath}.data.guildId` })
   const guildPlatformId = useWatch({ name: `${baseFieldPath}.data.guildPlatformId` })
 
@@ -28,6 +29,9 @@ const PointsAmount = ({ baseFieldPath, field }: Props): JSX.Element => {
         existingPointsRewards={existingPointsRewards}
         selectedExistingId={guildPlatformId}
         isLoading={isLoading}
+        onDone={(id) => {
+          setValue("data.guildPlatformId", id)
+        }}
       />
 
       <MinMaxAmount baseFieldPath={baseFieldPath} field={field} />

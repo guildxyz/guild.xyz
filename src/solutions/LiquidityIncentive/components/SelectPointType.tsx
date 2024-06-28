@@ -23,6 +23,7 @@ const SelectPointType = () => {
     control,
     register,
     formState: { errors },
+    setValue,
   } = useFormContext()
 
   const existingPointsRewards = guildPlatforms
@@ -41,7 +42,7 @@ const SelectPointType = () => {
           existingPointsRewards={existingPointsRewards}
           selectedExistingId={selectedExistingId}
           showCreateNew
-          fieldPath="pointsId"
+          onDone={(id) => setValue("pointsId", id)}
         />
       )}
 
