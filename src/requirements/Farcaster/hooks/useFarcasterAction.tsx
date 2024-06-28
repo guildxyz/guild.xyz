@@ -22,7 +22,7 @@ export default function useFarcasterAction(
         throw new Error("Unknown Farcaster action")
       }
       if (!farcasterProfiles?.[0]?.fid) {
-        throw new Error("First connect ypur Farcaster account")
+        throw new Error("First connect your Farcaster account")
       }
 
       await fetcherWithSign([
