@@ -13,6 +13,7 @@ export const guildQueryAtom = atom("")
 const BATCH_SIZE = 24
 
 const GuildCardMemo = memo(GuildCardWithLink)
+
 const GuildCards = ({ guildData }: { guildData?: GuildBase[] }) => {
   if (guildData?.length) {
     return guildData.map((data) => <GuildCardMemo key={data.id} guildData={data} />)
@@ -56,16 +57,16 @@ const useExploreGuilds = (searchParams: URLSearchParams, guildsInitial: GuildBas
 export const GuildInfiniteScroll = () => {
   const searchParams = new URLSearchParams(useAtomValue(guildQueryAtom))
   const search = searchParams.get('search')
-  const prevSearch = useRef<string | null>();
+  // const prevSearch = useRef<string | null>();
   const ref = useRef<HTMLElement>(null)
   const { data: filteredGuilds, setSize, isValidating, isLoading } = useExploreGuilds(searchParams, [])
   const renderedGuilds = filteredGuilds?.flat()
 
-  useEffect(() => {
-    if (prevSearch.current === search || prevSearch.current === undefined) return
-    setSize(1)
-    return () => { prevSearch.current = search }
-  }, [search, setSize])
+  // useEffect(() => {
+  //   if (prevSearch.current === search || prevSearch.current === undefined) return
+  //   setSize(1)
+  //   return () => { prevSearch.current = search }
+  // }, [search, setSize])
 
   useScrollBatchedRendering({
     batchSize: 1,
@@ -75,10 +76,12 @@ export const GuildInfiniteScroll = () => {
     offsetPixel: 420
   })
 
-  if (!isValidating && !renderedGuilds?.length && !search?.length) {
-    return <div>
-      Can't fetch guilds from the backend right now. Check back later!
-    </div>
+  if (!renderedGuilds?.length && !isLoading) {
+    if (!isValidating && !search?.length) {
+      return <div>Can't fetch guilds from the backend right now. Check back later!</div>
+    } else {
+      return <div>{`No results for ${search}`}</div>
+    }
   }
 
   return (
