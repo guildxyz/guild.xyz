@@ -51,7 +51,7 @@ export function Navigator() {
             <List />
           </Button>
           <NavigationMenuContent className="flex flex-col rounded-lg">
-            <div className="flex gap-12 px-3 py-4">
+            <div className="flex gap-4 sm:gap-12 px-3 py-4 flex-col sm:flex-row">
               <ul className="flex flex-col gap-1">
                 <li className="my-1 px-4 text-sm font-bold text-muted-foreground">
                   Navigation

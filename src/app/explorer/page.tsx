@@ -43,7 +43,7 @@ const Page = () => {
   return (
     <div className="min-h-screen">
       <div
-        className="fixed inset-x-0 top-0 h-28 -translate-y-28 border-b border-border bg-gradient-to-b from-background to-card/30 backdrop-blur backdrop-saturate-150 duration-75 data-[nav-stuck='true']:-translate-y-12 data-[nav-stuck='true']:data-[search-stuck='true']:translate-y-0 motion-safe:transition-transform"
+        className="fixed inset-x-0 top-0 h-40 -translate-y-40 sm:h-28 sm:-translate-y-28 border-b border-border bg-gradient-to-b from-background to-card/30 backdrop-blur backdrop-saturate-150 duration-75 sm:data-[nav-stuck='true']:-translate-y-12 data-[nav-stuck='true']:-translate-y-24 data-[nav-stuck='true']:data-[search-stuck='true']:translate-y-0 motion-safe:transition-transform"
         data-nav-stuck={isNavStuck}
         data-search-stuck={isSearchStuck}
       />
