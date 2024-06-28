@@ -145,7 +145,7 @@ const Page = () => {
             </div>
           </div>
           <GuildInfiniteScroll />
-          <p className="my-12 mb-8 text-center text-sm text-muted-foreground">
+          <p className="my-8 text-center text-sm text-muted-foreground">
             This website is{" "}
             <Link href="https://github.com/guildxyz/guild.xyz" target="_blank">
               open source
