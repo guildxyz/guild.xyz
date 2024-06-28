@@ -34,6 +34,10 @@ export type LiquidityIncentiveForm = {
   imageUrl?: string // if points reward is created
   name?: string // if points reawrd is created
   pool: {
+    /**
+     * TODO: figure out better typing solution form resetting needs to allow for
+     * nulls
+     */
     data: {
       lpVault: `0x${string}` | null // pool address
       baseCurrency: "token0" | "token1"

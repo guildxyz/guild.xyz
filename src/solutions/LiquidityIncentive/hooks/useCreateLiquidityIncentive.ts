@@ -1,4 +1,4 @@
-import { DynamicAmount, Logic } from "@guildxyz/types"
+import { DynamicAmount, Logic, Schemas } from "@guildxyz/types"
 import { CREATE_NEW_OPTION } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddPointsPanel/components/ExistingPointsTypeSelect"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { RoleToCreate } from "components/create-guild/hooks/useCreateRole"
@@ -44,7 +44,10 @@ const useCreateLiquidityIncentive = (onSuccess: () => void) => {
 
 const createUniswapRequirement = (
   data: LiquidityIncentiveForm
-): RoleToCreate["requirements"][number] & { id: number } => ({
+): Extract<
+  Schemas["RequirementCreationPayload"],
+  { type: "UNISWAP_V3_POSITIONS" }
+> & { id: number } => ({
   id: Date.now(),
   type: "UNISWAP_V3_POSITIONS",
   visibility: "PUBLIC",

@@ -9,7 +9,11 @@ import useCreateRole, {
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
-import { Requirement, RolePlatform } from "types"
+import {
+  Requirement,
+  RequirementCreationPayloadWithTempID,
+  RolePlatform,
+} from "types"
 import { mapRealRequirementIdsToRolePlatforms } from "utils/mapRealRequirementIdToRolePlatform"
 
 export type SubmitData =
@@ -31,7 +35,7 @@ export type SubmitData =
      * created to match each temporalId-roleId pair with the actual backend-created
      * ID after creation.
      */
-    requirements: Array<RoleToCreate["requirements"][number] & { id: number }>
+    requirements: RequirementCreationPayloadWithTempID[]
 
     /**
      * Array of rolePlatforms. These are created last, and their `roleId` fields will
