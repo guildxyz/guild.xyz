@@ -9,8 +9,7 @@ import DataBlockWithCopy from "components/common/DataBlockWithCopy"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import { ArrowSquareOut } from "phosphor-react"
 import REQUIREMENTS from "requirements"
-import FarcasterActionFollow from "./components/FarcasterActionFollow"
-import FarcasterActionReaction from "./components/FarcasterActionReaction"
+import FarcasterAction from "./components/FarcasterAction"
 import FarcasterCast from "./components/FarcasterCast"
 import useFarcasterCast from "./hooks/useFarcasterCast"
 import { useFarcasterChannel } from "./hooks/useFarcasterChannels"
@@ -53,7 +52,7 @@ const FarcasterFollowUser = (props: RequirementProps) => {
         !isFarcasterConnected ? (
           <RequirementConnectButton />
         ) : access === false ? (
-          <FarcasterActionFollow />
+          <FarcasterAction />
         ) : undefined
       }
       image={farcasterUser?.pfp_url || "/requirementLogos/farcaster.png"}
@@ -112,9 +111,7 @@ const FarcasterLikeRecast = (props: RequirementProps) => {
         !isFarcasterConnected ? (
           <RequirementConnectButton />
         ) : access === false ? (
-          <FarcasterActionReaction
-            reactionType={type === "FARCASTER_LIKE" ? "like" : "recast"}
-          />
+          <FarcasterAction />
         ) : undefined
       }
       image={REQUIREMENTS.FARCASTER_LIKE.icon.toString()}
