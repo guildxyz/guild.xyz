@@ -1,4 +1,3 @@
-import { Box } from "@chakra-ui/react"
 import useUser from "components/[guild]/hooks/useUser"
 import { useYourGuilds } from "components/explorer/YourGuilds"
 import { PropsWithChildren, useEffect, useRef, useState } from "react"
@@ -87,7 +86,7 @@ const IntercomTrigger = (props: PropsWithChildren<IntercomTriggerProps>) => {
     }
   }
 
-  return <Box ref={ref} onClick={onClick} {...props} />
+  return <div ref={ref} onClick={onClick} {...props} />
 }
 
 const triggerChat = () => {
@@ -148,4 +147,4 @@ declare global {
 }
 
 export default IntercomProvider
-export { IntercomTrigger, addIntercomSettings, pushToIntercomSetting, triggerChat }
+export { addIntercomSettings, IntercomTrigger, pushToIntercomSetting, triggerChat }

@@ -2,6 +2,7 @@
 
 import { FuelProvider } from "@fuels/react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import IntercomProvider from "components/_app/IntercomProvider"
 import { PostHogProvider } from "components/_app/PostHogProvider"
 import { fuelConfig } from "fuelConfig"
 import { ThemeProvider } from "next-themes"
@@ -12,6 +13,7 @@ import { wagmiConfig } from "wagmiConfig"
 
 const queryClient = new QueryClient()
 
+// TODO: add AppErrorBoundary
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
     <ThemeProvider
@@ -26,8 +28,10 @@ export default function Providers({ children }: { children: React.ReactNode }) {
           <QueryClientProvider client={queryClient}>
             <FuelProvider ui={false} fuelConfig={fuelConfig}>
               <PostHogProvider>
-                {children}
-                {/* <Web3ConnectionManager /> */}
+                <IntercomProvider>
+                  {children}
+                  {/* <Web3ConnectionManager /> */}
+                </IntercomProvider>
               </PostHogProvider>
             </FuelProvider>
           </QueryClientProvider>
