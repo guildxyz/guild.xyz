@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/Button"
 import {
   Dialog,
+  DialogCloseButton,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -21,6 +22,8 @@ export function DialogExample() {
         </DialogHeader>
 
         <p>This is the dialog content</p>
+
+        <DialogCloseButton />
       </DialogContent>
     </Dialog>
   )
