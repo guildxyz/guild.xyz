@@ -14,11 +14,7 @@ import useScrollspy from "hooks/useScrollSpy"
 import { GuildInfiniteScroll } from "@/components/GuildInfiniteScroll"
 import Link from "next/link"
 import { GuildSearchBar } from "@/components/GuildSeachBar"
-
-enum ActiveSection {
-  YourGuilds = "your-guilds",
-  ExploreGuilds = "explore-guilds",
-}
+import { ActiveSection } from "./types"
 
 const Page = () => {
   const isAuthenticated = false
@@ -57,8 +53,8 @@ const Page = () => {
         </div>
       </div>
       <div>
-          <main>
-        <PageBoundary>
+        <main>
+          <PageBoundary>
             <div className="sticky top-0 my-1 py-2" ref={navToggleRef}>
               <div className="relative flex items-start justify-between">
                 <ToggleGroup
@@ -86,32 +82,31 @@ const Page = () => {
                 )}
               </div>
             </div>
-            <section>
-              <Card className="my-2 mb-12 flex flex-col items-stretch justify-between gap-8 p-6 font-semibold sm:flex-row sm:items-center">
-                <div className="flex items-center gap-4">
-                  <Robot className="size-8 min-w-8 text-white" />
-                  <span>Sign in to view your guilds / create new ones</span>
-                </div>
-                <Button className="space-x-2">
-                  <SignIn />
-                  <span className="text-md">Sign in</span>
-                </Button>
-              </Card>
-            </section>
+            <Card className="my-2 mb-12 flex flex-col items-stretch justify-between gap-8 p-6 font-semibold sm:flex-row sm:items-center">
+              <div className="flex items-center gap-4">
+                <Robot className="size-8 min-w-8 text-white" />
+                <span>Sign in to view your guilds / create new ones</span>
+              </div>
+              <Button className="space-x-2">
+                <SignIn />
+                <span className="text-md">Sign in</span>
+              </Button>
+            </Card>
             {isAuthenticated && <Separator className="mb-10" />}
-            <h2 className="text-lg font-bold tracking-tight">
-              Explore verified guilds
-            </h2>
-            <div
-              className="sticky top-10"
-              ref={searchRef}
-              id={ActiveSection.ExploreGuilds}
-            >
-              <GuildSearchBar />
-            </div>
-            <GuildInfiniteScroll />
-        </PageBoundary>
-          </main>
+            <section id={ActiveSection.ExploreGuilds}>
+              <h2 className="text-lg font-bold tracking-tight">
+                Explore verified guilds
+              </h2>
+              <div
+                className="sticky top-10"
+                ref={searchRef}
+              >
+                <GuildSearchBar />
+              </div>
+              <GuildInfiniteScroll />
+            </section>
+          </PageBoundary>
+        </main>
       </div>
       <footer className="mt-auto">
         <PageBoundary>

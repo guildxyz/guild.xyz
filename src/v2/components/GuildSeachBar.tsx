@@ -7,6 +7,7 @@ import { useSetAtom } from "jotai"
 import { guildQueryAtom } from "./GuildInfiniteScroll"
 import React, { useDeferredValue, useEffect, useState } from "react"
 import { useSearchParams, usePathname } from "next/navigation"
+import { ActiveSection } from "app/explorer/types"
 
 enum Order {
   Featured = "FEATURED",
@@ -46,13 +47,17 @@ export const GuildSearchBar = () => {
       onValueChange={(value) => value && setOrder(value as Order)}
       value={order}
     >
-      <ToggleGroupItem value={Order.Featured} className="space-x-2">
-        <PushPin />
-        <span>featured</span>
+      <ToggleGroupItem value={Order.Featured} className="space-x-2" asChild>
+        <a href={`#${ActiveSection.ExploreGuilds}`}>
+          <PushPin />
+          <span>featured</span>
+        </a>
       </ToggleGroupItem>
-      <ToggleGroupItem value={Order.Newest} className="space-x-2">
-        <Sparkle />
-        <span>newest</span>
+      <ToggleGroupItem value={Order.Newest} className="space-x-2" asChild>
+        <a href={`#${ActiveSection.ExploreGuilds}`}>
+          <Sparkle />
+          <span>newest</span>
+        </a>
       </ToggleGroupItem>
     </ToggleGroup>
   </div>
