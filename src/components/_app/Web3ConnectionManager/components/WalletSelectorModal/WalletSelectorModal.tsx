@@ -36,6 +36,7 @@ import GoogleLoginButton from "./components/GoogleLoginButton"
 import useIsWalletConnectModalActive from "./hooks/useIsWalletConnectModalActive"
 import useLinkAddress from "./hooks/useLinkAddress"
 import processConnectionError from "./utils/processConnectionError"
+import { COINBASE_WALLET_SDK_ID } from "./constants"
 
 type Props = {
   isOpen: boolean
@@ -44,7 +45,6 @@ type Props = {
 }
 
 const COINBASE_INJECTED_WALLET_ID = "com.coinbase.wallet"
-export const COINBASE_WALLET_SDK_ID = "coinbaseWalletSDK"
 
 const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
   const { isWeb3Connected, isInSafeContext, disconnect, address } =
@@ -180,8 +180,8 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
                         (typeof err?.error === "string"
                           ? err?.error
                           : typeof err === "string"
-                          ? err
-                          : err?.errors?.[0]?.msg),
+                            ? err
+                            : err?.errors?.[0]?.msg),
                     }
                   },
                 }

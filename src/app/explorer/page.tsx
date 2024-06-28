@@ -18,8 +18,12 @@ import { PageBoundary } from "@/components/PageBoundary"
 import { Card } from "@/components/ui/Card"
 import { useEffect, useState } from "react"
 import useScrollspy from "hooks/useScrollSpy"
-import { GuildInfiniteScroll, guildQueryAtom } from "@/components/GuildInfiniteScroll"
+import {
+  GuildInfiniteScroll,
+  guildQueryAtom,
+} from "@/components/GuildInfiniteScroll"
 import { useSetAtom } from "jotai"
+import Link from "next/link"
 
 enum ActiveSection {
   YourGuilds = "your-guilds",
@@ -38,12 +42,12 @@ const Page = () => {
     if (!spyActiveSection) return
     setActiveSection(spyActiveSection as ActiveSection)
   }, [spyActiveSection])
-  const setGuildQuery = useSetAtom(guildQueryAtom);
+  const setGuildQuery = useSetAtom(guildQueryAtom)
 
   return (
     <div className="min-h-screen">
       <div
-        className="fixed inset-x-0 top-0 h-40 -translate-y-40 sm:h-28 sm:-translate-y-28 border-b border-border bg-gradient-to-b from-background to-card/30 backdrop-blur backdrop-saturate-150 duration-75 sm:data-[nav-stuck='true']:-translate-y-12 data-[nav-stuck='true']:-translate-y-24 data-[nav-stuck='true']:data-[search-stuck='true']:translate-y-0 motion-safe:transition-transform"
+        className="fixed inset-x-0 top-0 h-40 -translate-y-40 border-b border-border bg-gradient-to-b from-background to-card/30 backdrop-blur backdrop-saturate-150 duration-75 data-[nav-stuck='true']:-translate-y-24 data-[nav-stuck='true']:data-[search-stuck='true']:translate-y-0 motion-safe:transition-transform sm:h-28 sm:-translate-y-28 sm:data-[nav-stuck='true']:-translate-y-12"
         data-nav-stuck={isNavStuck}
         data-search-stuck={isSearchStuck}
       />
@@ -141,6 +145,16 @@ const Page = () => {
             </div>
           </div>
           <GuildInfiniteScroll />
+          <p className="my-12 mb-8 text-center text-sm text-muted-foreground">
+            This website is{" "}
+            <Link href="https://github.com/guildxyz/guild.xyz" target="_blank">
+              open source
+            </Link>
+            , and built on the{" "}
+            <Link target="_blank" href="https://www.npmjs.com/package/@guildxyz/sdk">
+              Guild SDK
+            </Link>
+          </p>
         </main>
       </PageBoundary>
     </div>

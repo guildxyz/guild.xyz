@@ -7,7 +7,7 @@ import { useAtomValue, useSetAtom } from "jotai"
 import { Wallet } from "phosphor-react"
 import { useAccount, type Connector } from "wagmi"
 import { walletLinkHelperModalAtom } from "../../WalletLinkHelperModal"
-import { COINBASE_WALLET_SDK_ID } from "../WalletSelectorModal"
+import { COINBASE_WALLET_SDK_ID } from "../constants"
 
 type Props = {
   connector: Connector
