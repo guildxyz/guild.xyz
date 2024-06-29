@@ -47,7 +47,7 @@ const ConnectorButton = ({
 
   return (
     <Button
-      variant="accent"
+      variant="secondary"
       size="xl"
       className="flex w-full justify-start gap-2"
       onClick={() => {

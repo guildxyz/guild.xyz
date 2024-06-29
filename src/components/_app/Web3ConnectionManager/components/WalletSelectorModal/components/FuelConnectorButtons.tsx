@@ -35,7 +35,7 @@ const FuelConnectorButtons = () => {
         .map((connector) => (
           <Button
             key={connector.name}
-            variant="accent"
+            variant="secondary"
             size="xl"
             className="w-full"
             onClick={() => {
