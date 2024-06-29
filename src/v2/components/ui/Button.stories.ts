@@ -15,12 +15,28 @@ export const Primary: Story = {
   args: {
     children: "Primary",
     size: "default",
+    disabled: false,
+    variant: "default",
   },
   argTypes: {
     size: {
+      type: "string",
       control: "radio",
       options: ["xs", "sm", "default", "lg", "xl"] satisfies ButtonProps["size"][],
-      type: "string",
+    },
+    disabled: {
+      type: "boolean",
+      control: "boolean",
+    },
+    variant: {
+      control: {
+        disable: true,
+      },
+    },
+    asChild: {
+      control: {
+        disable: true,
+      },
     },
   },
 }
@@ -88,5 +104,21 @@ export const Link: Story = {
   },
   argTypes: {
     ...Primary.argTypes,
+  },
+}
+
+export const Loading: Story = {
+  args: {
+    ...Primary.args,
+    isLoading: true,
+    loadingText: "Loading...",
+  },
+  argTypes: {
+    ...Primary.argTypes,
+    disabled: {
+      control: {
+        disable: true,
+      },
+    },
   },
 }
