@@ -46,6 +46,11 @@ const config = {
           active: "hsl(var(--destructive-active))",
           foreground: "hsl(var(--destructive-foreground))",
         },
+        "destructive-ghost": {
+          hover: "hsl(var(--destructive-ghost-hover))",
+          active: "hsl(var(--destructive-ghost-active))",
+          foreground: "hsl(var(--destructive-ghost-foreground))",
+        },
         success: {
           DEFAULT: "hsl(var(--success))",
           hover: "hsl(var(--success-hover))",

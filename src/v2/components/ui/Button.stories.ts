@@ -96,6 +96,18 @@ export const Destructive: Story = {
   },
 }
 
+export const DestructiveGhost: Story = {
+  name: "Destructive ghost",
+  args: {
+    ...Primary.args,
+    variant: "destructive-ghost",
+    children: "Destructive ghost",
+  },
+  argTypes: {
+    ...Primary.argTypes,
+  },
+}
+
 export const Link: Story = {
   args: {
     ...Primary.args,

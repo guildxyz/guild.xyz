@@ -33,6 +33,9 @@
     --destructive-hover: 0 72% 51%;
     --destructive-active: 0 74% 42%;
     --destructive-foreground: 210 20% 98%;
+    --destructive-ghost-hover: 0, 96%, 89%, 0.16;
+    --destructive-ghost-active: 0, 96%, 89%, 0.24;
+    --destructive-ghost-foreground: 0 72% 51%;
 
     --success: 142 71% 45%;
     --success-hover: 142 76% 36%;
@@ -74,6 +77,9 @@
     --destructive-hover: 0 91% 71%;
     --destructive-active: 0 94% 82%;
     --destructive-foreground: 210 20% 98%;
+    --destructive-ghost-hover: 0, 96%, 89%, 0.16;
+    --destructive-ghost-active: 0, 96%, 89%, 0.24;
+    --destructive-ghost-foreground: 0 96% 89%;
 
     --success: 142 71% 45%;
     --success-hover: 142 69% 58%;
