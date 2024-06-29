@@ -1,8 +1,8 @@
-import type { Metadata } from "next"
 import { ThemeProvider } from "@/components/ThemeProvider"
-import { inter, dystopian } from "fonts"
-import "./globals.css"
 import clsx from "clsx"
+import { dystopian, inter } from "fonts"
+import type { Metadata } from "next"
+import "./globals.css"
 
 interface RootLayoutProps {
   children: React.ReactNode
