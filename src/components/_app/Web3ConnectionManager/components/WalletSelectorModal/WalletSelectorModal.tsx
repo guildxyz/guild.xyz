@@ -237,11 +237,10 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
               return set.onSubmit()
             }}
             disabled={!id && !publicUserError}
-            // TODO
-            // isLoading={
-            //   linkAddress.isLoading || set.isLoading || (!id && !publicUserError)
-            // }
-            // loadingText={!id ? "Looking for keypairs" : "Check your wallet"}
+            isLoading={
+              linkAddress.isLoading || set.isLoading || (!id && !publicUserError)
+            }
+            loadingText={!id ? "Looking for keypairs" : "Check your wallet"}
             className="mb-4 animate-fade-in"
           >
             {isAddressLink ? "Link address" : "Verify address"}{" "}

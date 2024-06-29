@@ -16,26 +16,7 @@ type Props = {
   error: Error | null
 }
 
-// const connectorButtonProps: ButtonProps = {
-//   w: "full",
-//   size: "xl",
-//   iconSpacing: 4,
-//   justifyContent: "start",
-//   mb: 2.5,
-//   sx: {
-//     "> div.chakra-button__spinner": {
-//       boxSize: 6,
-//       justifyContent: "center",
-//     },
-//   },
-// }
-
-const ConnectorButton = ({
-  connector,
-  pendingConnector,
-  connect,
-  error,
-}: Props): JSX.Element => {
+const ConnectorButton = ({ connector, pendingConnector, connect, error }: Props) => {
   const { isConnected, connector: activeConnector } = useAccount()
 
   const { keyPair } = useUserPublic()
@@ -44,6 +25,8 @@ const ConnectorButton = ({
 
   const addressLinkParams = useAtomValue(addressLinkParamsAtom)
   const setIsWalletLinkHelperModalOpen = useSetAtom(walletLinkHelperModalAtom)
+
+  if (!connector) return null
 
   return (
     <Button
@@ -54,15 +37,13 @@ const ConnectorButton = ({
         if (addressLinkParams?.userId) setIsWalletLinkHelperModalOpen(true)
         connect({ connector })
       }}
-      // TODO
-      // isDisabled={activeConnector?.id === connector.id}
-      // isLoading={
-      //   (pendingConnector?.id === connector.id ||
-      //     (isConnected && activeConnector?.id === connector.id && !keyPair)) &&
-      //   !error
-      // }
-      // loadingText={`${connectorName} - connecting...`}
-      // {...connectorButtonProps}
+      disabled={activeConnector?.id === connector.id}
+      isLoading={
+        (pendingConnector?.id === connector.id ||
+          (isConnected && activeConnector?.id === connector.id && !keyPair)) &&
+        !error
+      }
+      loadingText={`${connectorName} - connecting...`}
     >
       {connectorIcon ? (
         <div className="flex size-6 items-center justify-center">
