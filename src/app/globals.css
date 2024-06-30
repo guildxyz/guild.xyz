@@ -8,10 +8,11 @@
     --foreground: 240 4% 16%;
 
     --card: 0 0% 100%;
+    --card-secondary: 0 0% 98%;
     --card-foreground: var(--foreground);
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 224 71.4% 4.1%;
+    --popover: var(--card);
+    --popover-foreground: var(--card-foreground);
 
     --primary: 239 84% 67%;
     --primary-hover: 243 75% 59%;
@@ -52,10 +53,11 @@
     --foreground: 210 20% 98%;
 
     --card: 240 5.26% 26.08%;
+    --card-secondary: 240 5% 22%;
     --card-foreground: var(--foreground);
 
-    --popover: 240 5.26% 26.08%;
-    --popover-foreground: 240 2% 58%;
+    --popover: var(--card);
+    --popover-foreground: var(--card-foreground);
 
     --primary: 238.73 70% 63%;
     --primary-hover: 234 89% 74%;
