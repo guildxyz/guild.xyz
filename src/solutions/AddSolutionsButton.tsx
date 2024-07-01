@@ -184,7 +184,7 @@ const AddSolutionsButton = () => {
                 <SolutionSelectButton
                   title="Token liquidity program"
                   description="Points reward for liquidity providers"
-                  imageUrl="/platforms/x.svg"
+                  imageUrl="/solutions/liquidity.png"
                   onSelection={() => {
                     const AddPanel = solutions["LIQUIDITY"]
                     setAddPanel(

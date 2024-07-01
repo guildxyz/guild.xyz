@@ -76,7 +76,9 @@ const PlatformSelectButton = ({
         platformName === platform && !platformUserData?.readonly
     )
 
-  const circleBgColor = useColorModeValue("gray.700", "gray.600")
+  const circleBgColor = useColorModeValue("gray.100", "gray.600")
+  const iconColor = useColorModeValue("black", "white")
+
   const DynamicCtaIcon = useMemo(
     () => dynamic(async () => (!isPlatformConnected ? ArrowSquareIn : CaretRight)),
     [isPlatformConnected]
@@ -104,7 +106,12 @@ const PlatformSelectButton = ({
       >
         <HStack spacing={4}>
           {imageUrl ? (
-            <Circle size="12" pos="relative" overflow="hidden">
+            <Circle
+              size="12"
+              pos="relative"
+              overflow="hidden"
+              bgColor={circleBgColor}
+            >
               <Image src={imageUrl} alt="Guild logo" fill sizes="3rem" />
             </Circle>
           ) : (
@@ -114,7 +121,7 @@ const PlatformSelectButton = ({
               pos="relative"
               overflow="hidden"
             >
-              <Icon as={icon} boxSize={5} weight="regular" color="white" />
+              <Icon as={icon} boxSize={5} weight="regular" color={iconColor} />
             </Circle>
           )}
           <VStack
