@@ -48,6 +48,16 @@
     --border: 240 6% 90%;
     --input: var(--border);
     --ring: 224 71.4% 4.1%;
+
+    --toast-success: 137 64% 98%;
+    --toast-error: 0 78% 98%;
+    --toast-warning: 40 79% 96%;
+    --toast-info: 218 80% 98%;
+
+    --sm: 640px;
+    --md: 768px;
+    --lg: 1024px;
+    --xl: 1280px;
   }
 
   :root[data-theme="dark"] {
@@ -96,10 +106,10 @@
     --input: var(--border);
     --ring: 240 0% 45%;
 
-    --sm: 640px;
-    --md: 768px;
-    --lg: 1024px;
-    --xl: 1280px;
+    --toast-success: 180 4% 35%;
+    --toast-error: 317 4% 35%;
+    --toast-warning: 30 6% 34%;
+    --toast-info: 226 7% 36%;
   }
 
   :root[data-theme="dark"] video,

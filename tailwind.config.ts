@@ -77,6 +77,10 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        "toast-success": "hsla(var(--toast-success))",
+        "toast-error": "hsla(var(--toast-error))",
+        "toast-warning": "hsla(var(--toast-warning))",
+        "toast-info": "hsla(var(--toast-info))",
       },
       keyframes: {
         "accordion-down": {
