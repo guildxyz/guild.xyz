@@ -45,6 +45,16 @@
     --border: 240 6% 90%;
     --input: var(--border);
     --ring: 224 71.4% 4.1%;
+
+    --toast-success: 141, 79%, 85%, 0.16;
+    --toast-error: 0, 96%, 89%, 0.16;
+    --toast-warning: 38, 93%, 77%, 0.16;
+    --toast-info: 213, 97%, 87%, 0.16;
+
+    --sm: 640px;
+    --md: 768px;
+    --lg: 1024px;
+    --xl: 1280px;
   }
 
   :root[data-theme="dark"] {
@@ -89,6 +99,11 @@
     --border: 240 3% 38%;
     --input: var(--border);
     --ring: 240 0% 45%;
+
+    --toast-success: 141, 79%, 85%, 0.16;
+    --toast-error: 0, 96%, 89%, 0.16;
+    --toast-warning: 38, 93%, 77%, 0.16;
+    --toast-info: 213, 97%, 87%, 0.16;
 
     --sm: 640px;
     --md: 768px;
