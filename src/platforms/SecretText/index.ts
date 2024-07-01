@@ -1,14 +1,15 @@
-import { PlatformAsRewardRestrictions, RewardData } from "platforms/types"
-import SecretTextCardMenu from "./SecretTextCardMenu"
-import TextCardButton from "./TextCardButton"
-import useSecretTextCardProps from "./useSecretTextCardProps"
-import Box from "static/icons/box.svg"
 import dynamic from "next/dynamic"
 import { AddRewardPanelLoadingSpinner } from "platforms/components/AddRewardPanelLoadingSpinner"
 import LoadingRewardPreview from "platforms/components/LoadingRewardPreview"
+import { PlatformAsRewardRestrictions, RewardData } from "platforms/types"
+import Box from "static/icons/box.svg"
+import SecretTextCardMenu from "./SecretTextCardMenu"
+import TextCardButton from "./TextCardButton"
+import useSecretTextCardProps from "./useSecretTextCardProps"
 
 export default {
   icon: Box,
+  imageUrl: "/platforms/text.png",
   name: "Secret",
   colorScheme: "gray",
   gatedEntity: "",

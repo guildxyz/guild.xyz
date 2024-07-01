@@ -1,16 +1,17 @@
+import dynamic from "next/dynamic"
 import { Star } from "phosphor-react"
+import { AddRewardPanelLoadingSpinner } from "platforms/components/AddRewardPanelLoadingSpinner"
+import LoadingRewardPreview from "platforms/components/LoadingRewardPreview"
 import {
   CardSettingsComponent,
   PlatformAsRewardRestrictions,
   RewardData,
 } from "platforms/types"
 import usePointsCardProps from "./usePointsCardProps"
-import dynamic from "next/dynamic"
-import LoadingRewardPreview from "platforms/components/LoadingRewardPreview"
-import { AddRewardPanelLoadingSpinner } from "platforms/components/AddRewardPanelLoadingSpinner"
 
 export default {
   icon: Star,
+  imageUrl: "/platforms/points.png",
   name: "Points",
   colorScheme: "gray",
   gatedEntity: "",

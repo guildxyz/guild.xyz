@@ -7,7 +7,6 @@ import {
   ModalCloseButton,
   ModalContent,
   ModalHeader,
-  ModalOverlay,
   Step,
   StepIcon,
   StepIndicator,
@@ -20,7 +19,6 @@ import {
   useSteps,
 } from "@chakra-ui/react"
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
-import { Modal } from "components/common/Modal"
 import { ArrowLeft } from "phosphor-react"
 import { FormProvider, useForm } from "react-hook-form"
 import { UniswapChains } from "requirements/Uniswap/hooks/useParsePoolChain"
@@ -79,11 +77,9 @@ const steps = [
 ]
 
 const LiquidityIncentiveSetupModal = ({
-  isOpen,
   onClose,
 }: {
-  isOpen: boolean
-  onClose: () => void
+  onClose: (closeAll?: boolean) => void
 }) => {
   const methods = useForm<LiquidityIncentiveForm>({
     mode: "all",
@@ -91,7 +87,7 @@ const LiquidityIncentiveSetupModal = ({
   })
 
   const handleClose = () => {
-    onClose()
+    onClose(true)
     methods.reset(defaultValues)
     setActiveStep(0)
   }
@@ -109,95 +105,80 @@ const LiquidityIncentiveSetupModal = ({
   })
 
   return (
-    <>
-      <Modal
-        isOpen={isOpen}
-        onClose={handleClose}
-        size="xl"
-        scrollBehavior="inside"
-        colorScheme="dark"
-      >
-        <ModalOverlay />
+    <ModalContent>
+      <FormProvider {...methods}>
+        <ModalCloseButton />
 
-        <ModalContent>
-          <FormProvider {...methods}>
-            <ModalCloseButton />
+        <ModalHeader>
+          <HStack>
+            <IconButton
+              rounded="full"
+              aria-label="Back"
+              size="sm"
+              mb="-3px"
+              icon={<ArrowLeft size={20} />}
+              variant="ghost"
+              onClick={() => onClose(false)}
+            />
+            <Text>Liquidity incentive program</Text>
+          </HStack>
+        </ModalHeader>
 
-            <ModalHeader>
-              <HStack>
-                <IconButton
-                  rounded="full"
-                  aria-label="Back"
-                  size="sm"
-                  mb="-3px"
-                  icon={<ArrowLeft size={20} />}
-                  variant="ghost"
-                  onClick={onClose}
-                />
-                <Text>Liquidity incentive program</Text>
-              </HStack>
-            </ModalHeader>
+        <ModalBody className="custom-scrollbar">
+          <Text colorScheme="gray" fontWeight="semibold" mb="8">
+            Create a point-based incentive for liquidity providers. More liquidity
+            means more points. Set a custom conversion rate to fine-tune the rewards.
+          </Text>
 
-            <ModalBody className="custom-scrollbar">
-              <Text colorScheme="gray" fontWeight="semibold" mb="8">
-                Create a point-based incentive for liquidity providers. More
-                liquidity means more points. Set a custom conversion rate to
-                fine-tune the rewards.
-              </Text>
-
-              <Stepper
-                colorScheme="indigo"
-                index={activeStep}
-                orientation="vertical"
-                gap="0"
-                w="full"
-                height="100%"
+          <Stepper
+            colorScheme="indigo"
+            index={activeStep}
+            orientation="vertical"
+            gap="0"
+            w="full"
+            height="100%"
+          >
+            {steps.map((step, index) => (
+              <Step
+                key={index}
+                style={{ width: "100%", height: "100%" }}
+                onClick={activeStep > index ? () => setActiveStep(index) : undefined}
               >
-                {steps.map((step, index) => (
-                  <Step
-                    key={index}
-                    style={{ width: "100%", height: "100%" }}
-                    onClick={
-                      activeStep > index ? () => setActiveStep(index) : undefined
-                    }
+                <StepIndicator>
+                  <StepStatus
+                    complete={<StepIcon />}
+                    incomplete={<StepNumber />}
+                    active={<StepNumber />}
+                  />
+                </StepIndicator>
+
+                <Box
+                  w="full"
+                  mt={1}
+                  minH={index === steps.length - 1 ? 0 : 12}
+                  _hover={activeStep > index ? { cursor: "pointer" } : undefined}
+                >
+                  <StepTitle>{step.title}</StepTitle>
+                  <Collapse
+                    in={activeStep === index}
+                    animateOpacity
+                    style={{ padding: "2px", margin: "-2px" }}
                   >
-                    <StepIndicator>
-                      <StepStatus
-                        complete={<StepIcon />}
-                        incomplete={<StepNumber />}
-                        active={<StepNumber />}
-                      />
-                    </StepIndicator>
+                    <step.content
+                      onContinue={goToNext}
+                      isLoading={isLoading}
+                      onSubmit={methods.handleSubmit(onSubmit)}
+                    />
+                  </Collapse>
+                </Box>
 
-                    <Box
-                      w="full"
-                      mt={1}
-                      minH={index === steps.length - 1 ? 0 : 12}
-                      _hover={activeStep > index ? { cursor: "pointer" } : undefined}
-                    >
-                      <StepTitle>{step.title}</StepTitle>
-                      <Collapse
-                        in={activeStep === index}
-                        animateOpacity
-                        style={{ padding: "2px", margin: "-2px" }}
-                      >
-                        <step.content
-                          onContinue={goToNext}
-                          isLoading={isLoading}
-                          onSubmit={methods.handleSubmit(onSubmit)}
-                        />
-                      </Collapse>
-                    </Box>
-
-                    <StepSeparator />
-                  </Step>
-                ))}
-              </Stepper>
-            </ModalBody>
-          </FormProvider>
-        </ModalContent>
-      </Modal>
-    </>
+                <StepSeparator />
+              </Step>
+            ))}
+          </Stepper>
+        </ModalBody>
+      </FormProvider>
+    </ModalContent>
   )
 }
 
