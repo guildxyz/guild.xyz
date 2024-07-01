@@ -1,12 +1,11 @@
-import { env } from "env"
+import { useToast } from "@/components/ui/hooks/useToast"
 import useUser from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { platformMergeAlertAtom } from "components/_app/Web3ConnectionManager/components/PlatformMergeErrorAlert"
+import { env } from "env"
 import usePopupWindow from "hooks/usePopupWindow"
-import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit, { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
-import useToast from "hooks/useToast"
 import { useSetAtom } from "jotai"
 import { OAuthResultParams } from "pages/oauth-result"
 import rewards from "platforms/rewards"
@@ -76,7 +75,7 @@ const useConnectPlatform = (
   const { id, mutate: mutateUser } = useUser()
   const fetcherWithSign = useFetcherWithSign()
   const fetchUserEmail = useFetchUserEmail()
-  const toast = useToast()
+  const { toast } = useToast()
   const showPlatformMergeAlert = useSetAtom(platformMergeAlertAtom)
   const { onOpen } = usePopupWindow()
 
@@ -184,7 +183,8 @@ const useConnectPlatform = (
       },
       onError: (error) => {
         toast({
-          status: "error",
+          variant: "error",
+          title: "Error",
           description:
             error.message ?? `Failed to connect ${rewards[platformName].name}`,
         })
@@ -219,7 +219,7 @@ const useConnectPlatform = (
 
 const useConnect = (useSubmitOptions?: UseSubmitOptions, isAutoConnect = false) => {
   const { captureEvent } = usePostHogContext()
-  const showErrorToast = useShowErrorToast()
+  // const showErrorToast = useShowErrorToast()
   const showPlatformMergeAlert = useSetAtom(platformMergeAlertAtom)
 
   const { mutate: mutateUser, id } = useUser()
@@ -309,17 +309,18 @@ const useConnect = (useSubmitOptions?: UseSubmitOptions, isAutoConnect = false) 
         )
         showPlatformMergeAlert({ addressOrDomain, platformName })
       } else {
-        showErrorToast(
-          toastError
-            ? { error: toastError, correlationId: rawError.correlationId }
-            : // temporary until we solve the X rate limit
-            platformName === "TWITTER"
-            ? {
-                error:
-                  "There're a lot of users connecting now, and X is rate limiting us, so your request timed out. Please try again later!",
-              }
-            : rawError
-        )
+        // TODO: migrate the useShowErrorToast hook
+        // showErrorToast(
+        //   toastError
+        //     ? { error: toastError, correlationId: rawError.correlationId }
+        //     : // temporary until we solve the X rate limit
+        //       platformName === "TWITTER"
+        //       ? {
+        //           error:
+        //             "There're a lot of users connecting now, and X is rate limiting us, so your request timed out. Please try again later!",
+        //         }
+        //       : rawError
+        // )
       }
     },
   })

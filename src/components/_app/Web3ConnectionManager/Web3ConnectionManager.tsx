@@ -26,6 +26,7 @@ const BaseWeb3ConnectionManager = () => {
         onClose={() => setIsWalletSelectorModalOpen(false)}
       />
       {/* 
+      TODO: implement these components
       <WalletLinkHelperModal />
       <PlatformMergeErrorAlert /> */}
     </ClientOnly>

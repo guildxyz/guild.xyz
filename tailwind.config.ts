@@ -24,6 +24,7 @@ const config = {
       },
       colors: {
         border: "hsl(var(--border))",
+        "border-secondary": "hsl(var(--border-secondary))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
@@ -83,6 +84,25 @@ const config = {
           error: "hsla(var(--toast-error))",
           warning: "hsla(var(--toast-warning))",
           info: "hsla(var(--toast-info))",
+        },
+        // Platforms
+        discord: {
+          DEFAULT: "hsl(var(--discord))",
+        },
+        telegram: {
+          DEFAULT: "hsl(var(--telegram))",
+        },
+        twitter: {
+          DEFAULT: "hsl(var(--twitter))",
+        },
+        github: {
+          DEFAULT: "hsl(var(--github))",
+        },
+        farcaster: {
+          DEFAULT: "hsl(var(--farcaster))",
+        },
+        polygonid: {
+          DEFAULT: "hsl(var(--polygonid))",
         },
       },
       keyframes: {

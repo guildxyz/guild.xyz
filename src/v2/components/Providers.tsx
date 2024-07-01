@@ -11,6 +11,7 @@ import { SWRConfig } from "swr"
 import { fetcherForSWR } from "utils/fetcher"
 import { WagmiProvider } from "wagmi"
 import { wagmiConfig } from "wagmiConfig"
+import { AccountModal } from "./Account/components/AccountModal"
 import { Toaster } from "./ui/Toaster"
 
 const queryClient = new QueryClient()
@@ -32,6 +33,8 @@ export default function Providers({ children }: { children: React.ReactNode }) {
               <PostHogProvider>
                 <IntercomProvider>
                   {children}
+
+                  <AccountModal />
                   <Web3ConnectionManager />
                 </IntercomProvider>
               </PostHogProvider>

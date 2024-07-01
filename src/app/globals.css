@@ -47,6 +47,7 @@
     --success-foreground: 0 0% 100%;
 
     --border: 240 6% 90%;
+    --border-secondary: 240 6% 94%;
     --input: var(--border);
     --ring: 224 71.4% 4.1%;
 
@@ -54,6 +55,14 @@
     --toast-error: 0 78% 98%;
     --toast-warning: 40 79% 96%;
     --toast-info: 218 80% 98%;
+
+    /* TODO: hover/active colors */
+    --discord: 233 78% 63%;
+    --telegram: 200 73% 50%;
+    --twitter: 0 0% 0%;
+    --github: 0 0% 20%;
+    --farcaster: 238 76% 69%;
+    --polygonid: 259 59% 59%;
 
     --sm: 640px;
     --md: 768px;
@@ -105,6 +114,7 @@
     --success-foreground: 0 0% 100%;
 
     --border: 240 3% 38%;
+    --border-secondary: 240 3% 28%;
     --input: var(--border);
     --ring: 240 0% 45%;
 

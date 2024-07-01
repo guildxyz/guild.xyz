@@ -1,12 +1,13 @@
 import { cn } from "@/lib/utils"
 import dynamic from "next/dynamic"
+import { memo } from "react"
 import addressAvatarPairs from "static/avatars/addressAvatarPairs"
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   address: `0x${string}`
 }
 
-const GuildAvatar = ({ address, className }: Props) => {
+const GuildAvatar = memo(({ address, className }: Props) => {
   const Avatar = dynamic(
     () =>
       import(
@@ -19,6 +20,6 @@ const GuildAvatar = ({ address, className }: Props) => {
       <Avatar />
     </div>
   )
-}
+})
 
 export { GuildAvatar }
