@@ -11,5 +11,3 @@ export const CAPACITY_TIME_PLATFORMS: PlatformName[] = [
   "GATHER_TOWN",
   "ERC20",
 ] as const
-
-

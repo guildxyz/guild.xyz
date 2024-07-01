@@ -14,9 +14,11 @@ import {
 import { Schemas } from "@guildxyz/types"
 import { useTokenRewards } from "components/[guild]/AccessHub/hooks/useTokenRewards"
 import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hooks/useAddRewardDiscardAlert"
+import { useAddRewardContext } from "components/[guild]/AddRewardContext"
+import { useRequirementHandlerContext } from "components/[guild]/RequirementHandlerContext"
 import { AddRewardPanelProps } from "platforms/rewards"
 import { FormProvider, useForm } from "react-hook-form"
-import { PlatformGuildData, PlatformType, Requirement } from "types"
+import { PlatformGuildData, PlatformType } from "types"
 import { ERC20_CONTRACTS } from "utils/guildCheckout/constants"
 import { Chain } from "wagmiConfig/chains"
 import DefaultAddRewardPanelWrapper from "../../DefaultAddRewardPanelWrapper"
@@ -46,7 +48,10 @@ export type AddTokenFormType = {
   snapshotId: number
   type: TokenRewardType
   staticValue?: number
-  requirements?: Requirement[]
+  snapshotRequirement?: Extract<
+    Schemas["RequirementCreationPayload"],
+    { type: "GUILD_SNAPSHOT" }
+  >
 }
 
 const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
@@ -59,6 +64,9 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
     },
   })
   useAddRewardDiscardAlert(methods.formState.isDirty)
+
+  const { onAddRequirement } = useRequirementHandlerContext()
+  const { targetRoleId } = useAddRewardContext()
 
   const steps = [
     { title: "Set token", content: SetTokenStep },
@@ -73,7 +81,7 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
 
   const accessedTokens = useTokenRewards()
 
-  const constructSubmitData = (_data) => {
+  const constructSubmitData = async (_data: AddTokenFormType) => {
     const platform = accessedTokens.find(
       (guildPlatform) =>
         guildPlatform.platformId === PlatformType.ERC20 &&
@@ -81,6 +89,10 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
         guildPlatform.platformGuildData.tokenAddress.toLowerCase() ===
           _data.tokenAddress?.toLowerCase()
     )
+
+    const createdRequirement = _data.snapshotRequirement
+      ? await onAddRequirement(_data.snapshotRequirement)
+      : undefined
 
     const dynamicAmount = {
       ...(_data.type === TokenRewardType.DYNAMIC_SNAPSHOT && {
@@ -92,7 +104,8 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
           },
           input: {
             type: "REQUIREMENT_AMOUNT",
-            // Will be filled after role creation
+            roleId: targetRoleId,
+            requirementId: createdRequirement?.id || null,
           },
         },
       }),
@@ -134,15 +147,13 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
 
     return {
       ...guildPlatformPart,
-      ...(_data.type !== TokenRewardType.STATIC && {
-        requirements: _data.requirements,
-      }),
       ...rolePlatformPart,
     }
   }
 
-  const onSubmit = (_data) => {
-    onAdd(constructSubmitData(_data))
+  const onSubmit = async (_data: AddTokenFormType) => {
+    const submitData = await constructSubmitData(_data)
+    onAdd(submitData)
   }
 
   return (

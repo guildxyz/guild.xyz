@@ -24,7 +24,7 @@ import { Transition, motion } from "framer-motion"
 import { ArrowSquareOut, LockSimple } from "phosphor-react"
 import GoogleCardWarning from "platforms/Google/GoogleCardWarning"
 import rewards from "platforms/rewards"
-import { PropsWithChildren, ReactNode, useMemo } from "react"
+import { PropsWithChildren, ReactNode, useMemo, useState } from "react"
 import { GuildPlatform, PlatformType, Role, RolePlatform } from "types"
 import capitalize from "utils/capitalize"
 
@@ -105,11 +105,13 @@ const Reward = ({
   return (
     <RewardDisplay
       icon={
-        <RewardIcon
-          rolePlatformId={platform.id}
-          guildPlatform={platform?.guildPlatform}
-          withMotionImg={withMotionImg}
-        />
+        platform.guildPlatform && (
+          <RewardIcon
+            rolePlatformId={platform.id}
+            guildPlatform={platform.guildPlatform}
+            withMotionImg={withMotionImg}
+          />
+        )
       }
       label={
         <>
@@ -184,7 +186,7 @@ const RewardDisplay = ({
 
 export type RewardIconProps = {
   rolePlatformId: number
-  guildPlatform?: GuildPlatform
+  guildPlatform: GuildPlatform
   withMotionImg?: boolean
   transition?: Transition
 }
@@ -198,43 +200,45 @@ const RewardIcon = ({
   withMotionImg = true,
   transition,
 }: RewardIconProps) => {
-  const circleBgColor = useColorModeValue("gray.700", "gray.600")
-
+  const [doIconFallback, setDoIconFallback] = useState(false)
   const props = {
     src:
-      guildPlatform?.platformGuildData?.imageUrl ??
-      rewards[PlatformType[guildPlatform?.platformId]]?.imageUrl,
-    alt: guildPlatform?.platformGuildName,
+      guildPlatform.platformGuildData?.imageUrl ??
+      rewards[PlatformType[guildPlatform.platformId]].imageUrl,
+    alt: guildPlatform.platformGuildName,
     boxSize: 6,
     rounded: "full",
-  }
-
-  const circleProps = {
-    bgColor: circleBgColor,
-    boxSize: 6,
+    onError: () => {
+      setDoIconFallback(true)
+    },
   }
 
   const motionElementProps = {
     layoutId: `${rolePlatformId}_reward_img`,
     transition: { type: "spring", duration: 0.5, ...transition },
   }
+  const circleBgColor = useColorModeValue("gray.700", "gray.600")
+  const circleProps = {
+    bgColor: circleBgColor,
+    boxSize: 6,
+  }
 
-  if (!props.src) {
-    if (withMotionImg)
+  if (doIconFallback || !props.src) {
+    if (withMotionImg) {
       return (
         <MotionCircle {...motionElementProps} {...circleProps}>
           <Icon
-            as={rewards[PlatformType[guildPlatform?.platformId]]?.icon}
+            as={rewards[PlatformType[guildPlatform.platformId]].icon}
             color="white"
             boxSize={3}
           />
         </MotionCircle>
       )
-
+    }
     return (
       <Circle {...circleProps}>
         <Icon
-          as={rewards[PlatformType[guildPlatform?.platformId]]?.icon}
+          as={rewards[PlatformType[guildPlatform.platformId]].icon}
           color="white"
           boxSize={3}
         />
@@ -242,9 +246,16 @@ const RewardIcon = ({
     )
   }
 
-  if (withMotionImg) return <MotionImg {...motionElementProps} {...props} />
-
-  return <Img {...props} />
+  return (
+    <Circle as="picture">
+      <source srcSet={rewards[PlatformType[guildPlatform.platformId]].imageUrl} />
+      {withMotionImg ? (
+        <MotionImg {...motionElementProps} {...props} />
+      ) : (
+        <Img {...props} />
+      )}
+    </Circle>
+  )
 }
 
 const RewardWrapper = ({ platform, ...props }: RewardProps) => {
