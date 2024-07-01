@@ -115,18 +115,16 @@ const AddSolutionsButton = () => {
     title: string
     description?: string
     platform: PlatformName
-  }) => {
-    return (
-      <PlatformSelectButton
-        platform={platform}
-        title={title}
-        description={description}
-        icon={rewards[platform].icon}
-        imageUrl={rewards[platform].imageUrl}
-        onSelection={onSelectReward}
-      />
-    )
-  }
+  }) => (
+    <PlatformSelectButton
+      platform={platform}
+      title={title}
+      description={description}
+      icon={rewards[platform].icon}
+      imageUrl={rewards[platform].imageUrl}
+      onSelection={onSelectReward}
+    />
+  )
 
   return (
     <>
@@ -186,9 +184,9 @@ const AddSolutionsButton = () => {
                   description="Points reward for liquidity providers"
                   imageUrl="/solutions/liquidity.png"
                   onSelection={() => {
-                    const AddPanel = solutions["LIQUIDITY"]
+                    const AddSolutionPanel = solutions.LIQUIDITY
                     setAddPanel(
-                      <AddPanel
+                      <AddSolutionPanel
                         onClose={(closeAll) => {
                           if (closeAll) handleClose()
                           setStep("HOME")

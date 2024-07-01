@@ -31,7 +31,7 @@ const DynamicPointsAmountForm = ({ imageUrl, baseFieldPath }) => {
     return () => {
       setIsSubmitDisabled?.(false)
     }
-  }, [requirementId])
+  }, [requirementId, setIsSubmitDisabled])
 
   return (
     <>
