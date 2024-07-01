@@ -30,18 +30,31 @@ const config = {
         foreground: "hsl(var(--foreground))",
         primary: {
           DEFAULT: "hsl(var(--primary))",
+          hover: "hsl(var(--primary-hover))",
+          active: "hsl(var(--primary-active))",
           foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))",
+          DEFAULT: "hsla(var(--secondary))",
+          hover: "hsla(var(--secondary-hover))",
+          active: "hsla(var(--secondary-active))",
           foreground: "hsl(var(--secondary-foreground))",
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
+          hover: "hsl(var(--destructive-hover))",
+          active: "hsl(var(--destructive-active))",
           foreground: "hsl(var(--destructive-foreground))",
+        },
+        "destructive-ghost": {
+          hover: "hsl(var(--destructive-ghost-hover))",
+          active: "hsl(var(--destructive-ghost-active))",
+          foreground: "hsl(var(--destructive-ghost-foreground))",
         },
         success: {
           DEFAULT: "hsl(var(--success))",
+          hover: "hsl(var(--success-hover))",
+          active: "hsl(var(--success-active))",
           foreground: "hsl(var(--success-foreground))",
         },
         muted: {
@@ -55,6 +68,10 @@ const config = {
         popover: {
           DEFAULT: "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",
+        },
+        tooltip: {
+          DEFAULT: "hsl(var(--tooltip))",
+          foreground: "hsl(var(--tooltip-foreground))",
         },
         card: {
           DEFAULT: "hsl(var(--card))",

@@ -1,9 +1,9 @@
 import { NavigationEvents } from "@/components/NavigationEvents"
 import Providers from "@/components/Providers"
+import { Suspense, type ReactNode } from "react"
 import clsx from "clsx"
 import { dystopian, inter } from "fonts"
 import type { Metadata } from "next"
-import { Suspense, type ReactNode } from "react"
 import "./globals.css"
 
 interface RootLayoutProps {

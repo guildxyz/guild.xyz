@@ -2,6 +2,7 @@
 
 import { X } from "@phosphor-icons/react"
 import * as DialogPrimitive from "@radix-ui/react-dialog"
+import { FocusScope, FocusScopeProps } from "@radix-ui/react-focus-scope"
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
@@ -12,8 +13,6 @@ const Dialog = DialogPrimitive.Root
 const DialogTrigger = DialogPrimitive.Trigger
 
 const DialogPortal = DialogPrimitive.Portal
-
-const DialogClose = DialogPrimitive.Close
 
 const DialogOverlay = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Overlay>,
@@ -52,28 +51,46 @@ export const dialogContentVariants = cva(
 
 export interface DialogContentProps
   extends React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>,
-    VariantProps<typeof dialogContentVariants> {}
+  VariantProps<typeof dialogContentVariants> {
+  trapFocus?: FocusScopeProps["trapped"]
+}
 
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
   DialogContentProps
->(({ size, className, children, ...props }, ref) => (
+>(({ size, trapFocus = true, className, children, ...props }, ref) => (
   <DialogPortal>
     <DialogOverlay />
-    <DialogPrimitive.Content
-      ref={ref}
-      className={cn(dialogContentVariants({ size, className }))}
-      {...props}
-    >
-      {children}
-      <DialogPrimitive.Close className="absolute right-10 top-8 rounded-full opacity-70 transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
-        <X className="h-5 w-5" />
-        <span className="sr-only">Close</span>
-      </DialogPrimitive.Close>
-    </DialogPrimitive.Content>
+    <FocusScope trapped={trapFocus} loop>
+      <DialogPrimitive.Content
+        ref={ref}
+        className={cn(dialogContentVariants({ size, className }))}
+        {...props}
+      >
+        {children}
+      </DialogPrimitive.Content>
+    </FocusScope>
   </DialogPortal>
 ))
 DialogContent.displayName = DialogPrimitive.Content.displayName
+
+const DialogCloseButton = React.forwardRef<
+  React.ElementRef<typeof DialogPrimitive.Close>,
+  DialogPrimitive.DialogCloseProps
+>(({ className, ...props }, ref) => (
+  <DialogPrimitive.Close
+    ref={ref}
+    className={cn(
+      "absolute right-10 top-8 rounded-full opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground",
+      className
+    )}
+    {...props}
+  >
+    <X className="h-5 w-5" />
+    <span className="sr-only">Close</span>
+  </DialogPrimitive.Close>
+))
+DialogCloseButton.displayName = DialogPrimitive.Close.displayName
 
 const DialogHeader = ({
   className,
@@ -126,7 +143,7 @@ DialogDescription.displayName = DialogPrimitive.Description.displayName
 
 export {
   Dialog,
-  DialogClose,
+  DialogCloseButton,
   DialogContent,
   DialogDescription,
   DialogFooter,
