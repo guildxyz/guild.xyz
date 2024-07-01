@@ -29,6 +29,7 @@
     "@dotlottie/react-player": "^1.6.18",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.0",
+    "@esbuild/linux-x64": "^0.22.0",
     "@fuels/connectors": "^0.5.0",
     "@fuels/react": "^0.20.0",
     "@guildxyz/types": "1.9.24",
