@@ -14,8 +14,7 @@ import {
 } from "@chakra-ui/react"
 import CreateCampaignModal from "components/[guild]/CreateCampaignModal"
 import { CaretDown, Plus } from "phosphor-react"
-import LiquidityIncentiveSetupModal from "solutions/LiquidityIncentive/LiquidityIncentiveSetupModal"
-import AddRewardButton from "./AddRewardButton"
+import AddSolutionsButton from "solutions/AddSolutionsButton"
 import { useIsTabsStuck } from "./Tabs"
 import { useThemeContext } from "./ThemeContext"
 
@@ -24,16 +23,10 @@ const AddRewardAndCampaign = () => {
   const { isStuck } = useIsTabsStuck()
   const { textColor = null, buttonColorScheme = null } = useThemeContext() || {}
 
-  const {
-    isOpen: isSolutionOpen,
-    onClose: onSolutionClose,
-    onOpen: onSolutionOpen,
-  } = useDisclosure()
-
   return (
     <>
       <ButtonGroup isAttached>
-        <AddRewardButton />
+        <AddSolutionsButton />
         <Divider orientation="vertical" h="8" />
         <Menu placement="bottom-end" autoSelect={false}>
           <MenuButton
@@ -56,17 +49,6 @@ const AddRewardAndCampaign = () => {
               overflow="hidden"
             >
               <MenuItem
-                onClick={onSolutionOpen}
-                icon={<Icon as={Plus} mt="1" />}
-                alignItems="start"
-                py={4}
-              >
-                <Text as="span" fontWeight="semibold" fontSize="sm">
-                  Add solution
-                </Text>
-              </MenuItem>
-              <Divider />
-              <MenuItem
                 onClick={onOpen}
                 icon={<Icon as={Plus} mt="1" />}
                 alignItems="start"
@@ -87,10 +69,6 @@ const AddRewardAndCampaign = () => {
         </Menu>
       </ButtonGroup>
       <CreateCampaignModal isOpen={isOpen} onClose={onClose} />
-      <LiquidityIncentiveSetupModal
-        isOpen={isSolutionOpen}
-        onClose={onSolutionClose}
-      />
     </>
   )
 }
