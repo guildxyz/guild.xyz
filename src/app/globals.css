@@ -46,10 +46,10 @@
     --input: var(--border);
     --ring: 224 71.4% 4.1%;
 
-    --toast-success: 141, 79%, 85%, 0.16;
-    --toast-error: 0, 96%, 89%, 0.16;
-    --toast-warning: 38, 93%, 77%, 0.16;
-    --toast-info: 213, 97%, 87%, 0.16;
+    --toast-success: 137 64% 98%;
+    --toast-error: 0 78% 98%;
+    --toast-warning: 40 79% 96%;
+    --toast-info: 218 80% 98%;
 
     --sm: 640px;
     --md: 768px;
@@ -100,10 +100,10 @@
     --input: var(--border);
     --ring: 240 0% 45%;
 
-    --toast-success: 141, 79%, 85%, 0.16;
-    --toast-error: 0, 96%, 89%, 0.16;
-    --toast-warning: 38, 93%, 77%, 0.16;
-    --toast-info: 213, 97%, 87%, 0.16;
+    --toast-success: 180 4% 35%;
+    --toast-error: 317 4% 35%;
+    --toast-warning: 30 6% 34%;
+    --toast-info: 226 7% 36%;
 
     --sm: 640px;
     --md: 768px;
