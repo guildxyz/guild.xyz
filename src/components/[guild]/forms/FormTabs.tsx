@@ -11,11 +11,17 @@ const FormResponsesTabs = ({ submissionCount, ...rest }: Props): JSX.Element => 
     <TabButton isActive>
       <HStack spacing={1.5}>
         <Text as="span">Responses</Text>
-        <Tag size="sm" color="inherit">
-          {new Intl.NumberFormat("en", { notation: "compact" }).format(
-            submissionCount ?? 0
-          )}
-        </Tag>
+        <Tooltip
+          label={`${submissionCount} responses`}
+          hasArrow
+          isDisabled={(submissionCount ?? 0) < 1000}
+        >
+          <Tag size="sm" color="inherit">
+            {new Intl.NumberFormat("en", { notation: "compact" }).format(
+              submissionCount ?? 0
+            )}
+          </Tag>
+        </Tooltip>
       </HStack>
     </TabButton>
     <Tooltip label="Soon" hasArrow shouldWrapChildren>
