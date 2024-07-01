@@ -78,10 +78,12 @@ const config = {
           secondary: "hsl(var(--card-secondary))",
           foreground: "hsl(var(--card-foreground))",
         },
-        "toast-success": "hsla(var(--toast-success))",
-        "toast-error": "hsla(var(--toast-error))",
-        "toast-warning": "hsla(var(--toast-warning))",
-        "toast-info": "hsla(var(--toast-info))",
+        toast: {
+          success: "hsla(var(--toast-success))",
+          error: "hsla(var(--toast-error))",
+          warning: "hsla(var(--toast-warning))",
+          info: "hsla(var(--toast-info))",
+        },
       },
       keyframes: {
         "accordion-down": {
