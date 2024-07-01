@@ -1,3 +1,4 @@
+import { useToast } from "@/components/ui/hooks/useToast"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { walletSelectorModalAtom } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
@@ -6,9 +7,7 @@ import {
   deleteKeyPairFromIdb,
   getKeyPairFromIdb,
 } from "hooks/useSetKeyPair"
-import useToast from "hooks/useToast"
 import { useSetAtom } from "jotai"
-import { useRouter } from "next/router"
 import { KeyedMutator } from "swr"
 import useSWRImmutable from "swr/immutable"
 import { User } from "types"
@@ -72,8 +71,7 @@ const useUserPublic = (
   const { address } = useWeb3ConnectionManager()
   const setIsWalletSelectorModalOpen = useSetAtom(walletSelectorModalAtom)
   const { captureEvent } = usePostHogContext()
-  const toast = useToast()
-  const router = useRouter()
+  const { toast } = useToast()
 
   const idToUseRaw = userIdOrAddress ?? address
   const idToUse =
@@ -99,7 +97,7 @@ const useUserPublic = (
           })
 
           toast({
-            status: "warning",
+            variant: "warning",
             title: "Session expired",
             description:
               "You've connected your account from a new device, so you have to sign a new message to stay logged in",
@@ -109,7 +107,17 @@ const useUserPublic = (
       }
 
       // If we didn't set the keyPair field, the user either doesn't have one locally, or has an invalid one
-      if (!user.keyPair && !ignoredRoutes.includes(router.route)) {
+
+      // if (!user.keyPair && !ignoredRoutes.includes(router.route)) {
+      //   setIsWalletSelectorModalOpen(true)
+      // }
+
+      /**
+       * TODO: We use window.location.href because useRouter (from next/router) won't
+       * work in the app directory. We should use useRouter from next/navigation once
+       * we migrate everything to the app router.
+       */
+      if (!user.keyPair && !ignoredRoutes.includes(window.location.pathname)) {
         setIsWalletSelectorModalOpen(true)
       }
 

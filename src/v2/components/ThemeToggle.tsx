@@ -3,15 +3,11 @@
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/ToggleGroup"
 import { Desktop, Moon, Sun } from "@phosphor-icons/react"
 import { useTheme } from "next-themes"
-import { useEffect, useState } from "react"
+import { useIsClient } from "usehooks-ts"
 
 export function ThemeToggle() {
   const { setTheme, theme } = useTheme()
-  const [isClient, setIsClient] = useState(false)
-
-  useEffect(() => {
-    setIsClient(true)
-  }, [])
+  const isClient = useIsClient()
 
   if (!isClient) {
     return
@@ -29,7 +25,7 @@ export function ThemeToggle() {
       <ToggleGroupItem
         value="light"
         aria-label="Toggle light mode"
-        size="sm"
+        size="icon"
         variant="primary"
         className="size-8"
       >
@@ -38,7 +34,7 @@ export function ThemeToggle() {
       <ToggleGroupItem
         value="dark"
         aria-label="Toggle dark mode"
-        size="sm"
+        size="icon"
         variant="primary"
         className="size-8"
       >
@@ -47,7 +43,7 @@ export function ThemeToggle() {
       <ToggleGroupItem
         value="system"
         aria-label="Toggle system default"
-        size="sm"
+        size="icon"
         variant="primary"
         className="size-8"
       >

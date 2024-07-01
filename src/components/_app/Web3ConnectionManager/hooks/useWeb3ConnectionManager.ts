@@ -6,6 +6,7 @@ import {
 } from "@fuels/react"
 import parseFuelAddress from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPin/Fuel/parseFuelAddress"
 import { atom, useAtom, useSetAtom } from "jotai"
+import { useSearchParams } from "next/navigation"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
 import { User } from "types"
@@ -23,11 +24,29 @@ type Web3ConnectionManagerType = {
   signMessage: (message: string) => Promise<string>
 }
 
-const useWeb3ConnectionManager = (): Web3ConnectionManagerType => {
+const useTriggerWalletSelectorModalLegacy = () => {
   const router = useRouter()
-
   const setIsWalletSelectorModalOpen = useSetAtom(walletSelectorModalAtom)
+  const { isWeb3Connected } = useWeb3ConnectionManager()
 
+  useEffect(() => {
+    if (!isWeb3Connected && router.query.redirectUrl)
+      setIsWalletSelectorModalOpen(true)
+  }, [isWeb3Connected, router.query, setIsWalletSelectorModalOpen])
+}
+
+const useTriggerWalletSelectorModal = () => {
+  const searchParams = useSearchParams()
+  const setIsWalletSelectorModalOpen = useSetAtom(walletSelectorModalAtom)
+  const { isWeb3Connected } = useWeb3ConnectionManager()
+
+  useEffect(() => {
+    if (!isWeb3Connected && searchParams?.get("redirectUrl"))
+      setIsWalletSelectorModalOpen(true)
+  }, [isWeb3Connected, searchParams, setIsWalletSelectorModalOpen])
+}
+
+const useWeb3ConnectionManager = (): Web3ConnectionManagerType => {
   const [isInSafeContext, setIsInSafeContext] = useAtom(safeContextAtom)
 
   const {
@@ -49,11 +68,6 @@ const useWeb3ConnectionManager = (): Web3ConnectionManagerType => {
 
   const isWeb3Connected = isEvmConnected || isFuelConnected
   const address = evmAddress || fuelAddress
-
-  useEffect(() => {
-    if (!isWeb3Connected && router.query.redirectUrl)
-      setIsWalletSelectorModalOpen(true)
-  }, [isWeb3Connected, router.query, setIsWalletSelectorModalOpen])
 
   const type = isEvmConnected ? "EVM" : isFuelConnected ? "FUEL" : null
 
@@ -86,3 +100,4 @@ const useWeb3ConnectionManager = (): Web3ConnectionManagerType => {
 }
 
 export default useWeb3ConnectionManager
+export { useTriggerWalletSelectorModal, useTriggerWalletSelectorModalLegacy }

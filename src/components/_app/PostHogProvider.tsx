@@ -1,5 +1,5 @@
-import { env } from "env"
 import { useUserPublic } from "components/[guild]/hooks/useUser"
+import { env } from "env"
 import { useRouter } from "next/router"
 import { posthog } from "posthog-js"
 import {
@@ -76,18 +76,6 @@ const CustomPostHogProvider = ({
     }
   }, [isWeb3Connected, ph])
 
-  const router = useRouter()
-
-  useEffect(() => {
-    const handleRouteChange = () => ph.capture("$pageview")
-    router.events.on("routeChangeComplete", handleRouteChange)
-
-    return () => {
-      router.events.off("routeChangeComplete", handleRouteChange)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
   const identifyUser = useCallback(
     (userData: User) => {
       posthog.identify(userData.id.toString(), {
@@ -110,10 +98,10 @@ const CustomPostHogProvider = ({
             typeof options?.error?.message === "string"
               ? options.error.message
               : typeof options?.error === "string"
-              ? options.error
-              : typeof options?.errorMessage === "string"
-              ? options.errorMessage
-              : undefined
+                ? options.error
+                : typeof options?.errorMessage === "string"
+                  ? options.errorMessage
+                  : undefined
 
           if (
             /**
@@ -158,6 +146,35 @@ const PostHogProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element 
   </DefaultPostHogProvider>
 )
 
+/**
+ * UseRouter doesn't work in app router & we also need to track page change events
+ * differently there, so we made this LegacyPostHogProvider which contains the page
+ * router related logic.
+ *
+ * We can delete it once we migrate to app router.
+ */
+const LegacyPostHogProvider = ({
+  children,
+}: PropsWithChildren<unknown>): JSX.Element => {
+  const router = useRouter()
+
+  useEffect(() => {
+    const handleRouteChange = () => posthog.capture("$pageview")
+    router.events.on("routeChangeComplete", handleRouteChange)
+
+    return () => {
+      router.events.off("routeChangeComplete", handleRouteChange)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  return (
+    <DefaultPostHogProvider client={posthog}>
+      <CustomPostHogProvider>{children}</CustomPostHogProvider>
+    </DefaultPostHogProvider>
+  )
+}
+
 const usePostHogContext = () => useContext(PostHogContext)
 
-export { PostHogProvider, usePostHogContext }
+export { LegacyPostHogProvider, PostHogProvider, usePostHogContext }

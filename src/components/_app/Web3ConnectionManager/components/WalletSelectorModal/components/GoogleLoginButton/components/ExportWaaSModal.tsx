@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Link } from "@chakra-ui/next-js"
 import {
   Center,
@@ -16,6 +17,7 @@ import {
   useClipboard,
   useDisclosure,
 } from "@chakra-ui/react"
+// @ts-ignore
 import type { RawPrivateKey, Waas } from "@coinbase/waas-sdk-web"
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { usePostHogContext } from "components/_app/PostHogProvider"
@@ -28,17 +30,19 @@ import { Check, Copy, Wallet } from "phosphor-react"
 import { useState } from "react"
 import fetcher from "utils/fetcher"
 import { useConnect } from "wagmi"
-import { connectorButtonProps } from "../../ConnectorButton"
+// import { connectorButtonProps } from "../../ConnectorButton"
 import useDriveOAuth from "../hooks/useDriveOAuth"
 import { getDriveFileAppProperties, listWalletsOnDrive } from "../utils/googleDrive"
 
 const WAAS_DEPRECATION_ERROR_MESSAGE =
   "Looks like you don't have an existing Google-based Guild account. We recommend signing in with the Smart Wallet option"
 
+// @ts-ignore
 let cwaasModule: typeof import("@coinbase/waas-sdk-web")
 const cwaasImport = async () => {
   if (cwaasModule) return cwaasModule
   // eslint-disable-next-line import/no-extraneous-dependencies
+  // @ts-ignore
   const mod = await import("@coinbase/waas-sdk-web")
   cwaasModule = mod
   return mod
@@ -266,7 +270,7 @@ const ExportWaasModal = ({
                     />
                   </Center>
                 }
-                {...connectorButtonProps}
+                // {...connectorButtonProps}
               >
                 Authenticate with Google
               </Button>

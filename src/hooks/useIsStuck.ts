@@ -1,4 +1,3 @@
-import { useRouter } from "next/router"
 import { useEffect, useRef, useState } from "react"
 
 /**
@@ -8,9 +7,9 @@ import { useEffect, useRef, useState } from "react"
 const useIsStuck = () => {
   const ref = useRef(null)
   const [isStuck, setIsStuck] = useState(false)
-  const { isReady } = useRouter()
 
   useEffect(() => {
+    if (!ref.current) return
     const cachedRef = ref.current
     const topOffsetPx = parseInt(getComputedStyle(cachedRef).top) + 1
     const bottomOffsetPx = parseInt(getComputedStyle(cachedRef).bottom) + 1
@@ -30,7 +29,7 @@ const useIsStuck = () => {
     )
     observer.observe(cachedRef)
     return () => observer.unobserve(cachedRef)
-  }, [ref, isReady])
+  }, [ref])
 
   return { ref, isStuck }
 }
