@@ -57,7 +57,7 @@ const SolutionSelectButton = ({
             >
               {title}
             </Heading>
-            <Text letterSpacing="wide" colorScheme="gray">
+            <Text colorScheme="gray" lineHeight={1.33}>
               {description}
             </Text>
           </VStack>

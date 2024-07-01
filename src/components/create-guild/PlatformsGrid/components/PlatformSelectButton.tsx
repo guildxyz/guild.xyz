@@ -140,7 +140,7 @@ const PlatformSelectButton = ({
               {title}
             </Heading>
             {description && (
-              <Text letterSpacing="wide" colorScheme="gray">
+              <Text colorScheme="gray" lineHeight={1.33}>
                 {(isLoading && `${loadingText}...`) || description}
               </Text>
             )}
