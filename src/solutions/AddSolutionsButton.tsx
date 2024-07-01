@@ -21,6 +21,7 @@ import {
 import { ClientStateRequirementHandlerProvider } from "components/[guild]/RequirementHandlerContext"
 import { useIsTabsStuck } from "components/[guild]/Tabs"
 import { useThemeContext } from "components/[guild]/ThemeContext"
+import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
@@ -32,7 +33,7 @@ import { AddRewardPanelLoadingSpinner } from "platforms/components/AddRewardPane
 import rewards, { modalSizeForPlatform } from "platforms/rewards"
 import { useState } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
-import { PlatformName } from "types"
+import { PlatformName, PlatformType } from "types"
 import SolutionSelectButton from "./SolutionSelectButton"
 
 const solutions = {
@@ -48,6 +49,8 @@ const solutions = {
 const AddSolutionsButton = () => {
   const { selection, step, isOpen, onOpen, setStep, onClose, setSelection } =
     useAddRewardContext()
+
+  const { guildPlatforms, featureFlags } = useGuild()
 
   const {
     isOpen: isDiscardAlertOpen,
@@ -124,6 +127,10 @@ const AddSolutionsButton = () => {
       imageUrl={rewards[platform].imageUrl}
       onSelection={onSelectReward}
     />
+  )
+
+  const showPolygonId = !!guildPlatforms?.some(
+    (gp) => gp.platformId === PlatformType.POLYGON_ID
   )
 
   return (
@@ -223,10 +230,11 @@ const AddSolutionsButton = () => {
                   platform: "TEXT",
                 })}
 
-                {getPlatformSelectButton({
-                  title: "PolygonID credentials",
-                  platform: "POLYGON_ID",
-                })}
+                {showPolygonId &&
+                  getPlatformSelectButton({
+                    title: "PolygonID credentials",
+                    platform: "POLYGON_ID",
+                  })}
 
                 {getPlatformSelectButton({
                   title: "Gather Town gating",
