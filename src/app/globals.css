@@ -104,11 +104,6 @@
     --toast-error: 317 4% 35%;
     --toast-warning: 30 6% 34%;
     --toast-info: 226 7% 36%;
-
-    --sm: 640px;
-    --md: 768px;
-    --lg: 1024px;
-    --xl: 1280px;
   }
 
   :root[data-theme="dark"] video,
