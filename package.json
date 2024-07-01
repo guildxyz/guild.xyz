@@ -44,6 +44,7 @@
     "@lexical/utils": "^0.12.0",
     "@nouns/assets": "^0.4.2",
     "@phosphor-icons/react": "^2.1.6",
+    "@radix-ui/react-alert-dialog": "^1.1.1",
     "@radix-ui/react-dialog": "^1.1.1",
     "@radix-ui/react-focus-scope": "^1.1.0",
     "@radix-ui/react-slot": "^1.1.0",
