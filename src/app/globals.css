@@ -8,10 +8,11 @@
     --foreground: 240 4% 16%;
 
     --card: 0 0% 100%;
+    --card-secondary: 0 0% 98%;
     --card-foreground: var(--foreground);
 
-    --popover: 0 0% 100%;
-    --popover-foreground: var(--foreground);
+    --popover: var(--card);
+    --popover-foreground: var(--card-foreground);
 
     --tooltip: 0 0% 0%;
     --tooltip-foreground: 0 0% 100%;
@@ -46,17 +47,22 @@
     --success-foreground: 0 0% 100%;
 
     --border: 240 6% 90%;
+    --border-secondary: 240 6% 94%;
     --input: var(--border);
-<<<<<<< HEAD
-    --ring: 0 0% 42%;
-=======
     --ring: 224 71.4% 4.1%;
 
     --toast-success: 137 64% 98%;
     --toast-error: 0 78% 98%;
     --toast-warning: 40 79% 96%;
     --toast-info: 218 80% 98%;
->>>>>>> 544146df1fb398c5eebac0114cf33638de0b6202
+
+    /* TODO: hover/active colors */
+    --discord: 233 78% 63%;
+    --telegram: 200 73% 50%;
+    --twitter: 0 0% 0%;
+    --github: 0 0% 20%;
+    --farcaster: 238 76% 69%;
+    --polygonid: 259 59% 59%;
 
     --sm: 640px;
     --md: 768px;
@@ -69,10 +75,11 @@
     --foreground: 210 20% 98%;
 
     --card: 240 5.26% 26.08%;
+    --card-secondary: 240 5% 22%;
     --card-foreground: var(--foreground);
 
-    --popover: 240 5.26% 26.08%;
-    --popover-foreground: var(--foreground);
+    --popover: var(--card);
+    --popover-foreground: var(--card-foreground);
 
     --tooltip: 240 5% 84%;
     --tooltip-foreground: 240 4% 16%;
@@ -107,6 +114,7 @@
     --success-foreground: 0 0% 100%;
 
     --border: 240 3% 38%;
+    --border-secondary: 240 3% 28%;
     --input: var(--border);
     --ring: 240 0% 45%;
 
@@ -114,11 +122,6 @@
     --toast-error: 317 4% 35%;
     --toast-warning: 30 6% 34%;
     --toast-info: 226 7% 36%;
-  }
-
-  :root[data-theme="dark"] video,
-  :root[data-theme="dark"] img {
-    filter: brightness(0.85) contrast(1.15);
   }
 }
 

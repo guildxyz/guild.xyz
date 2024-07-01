@@ -1,18 +1,19 @@
-import { Center, Img, useColorModeValue } from "@chakra-ui/react"
+import { Button } from "@/components/ui/Button"
 import { useConnectors, useIsConnected } from "@fuels/react"
 import { usePostHogContext } from "components/_app/PostHogProvider"
-import Button from "components/common/Button"
 import { useEffect, useState } from "react"
-import { connectorButtonProps } from "./ConnectorButton"
+import { connectorButtonBaseProps } from "./ConnectorButton"
 
 const FuelConnectorButtons = () => {
   const { connectors } = useConnectors()
   const { isConnected } = useIsConnected()
 
-  const fueletLogo = useColorModeValue(
-    "/walletLogos/fuelet-black.svg",
-    "/walletLogos/fuelet-white.svg"
-  )
+  // const fueletLogo = useColorModeValue(
+  //   "/walletLogos/fuelet-black.svg",
+  //   "/walletLogos/fuelet-white.svg"
+  // )
+  // TODO: color mode support
+  const fueletLogo = "/walletLogos/fuelet-black.svg"
 
   const connectorIcons: Record<string, string> = {
     "Fuel Wallet": "/walletLogos/fuel.svg",
@@ -34,6 +35,7 @@ const FuelConnectorButtons = () => {
         ?.filter((connector) => connector.installed)
         .map((connector) => (
           <Button
+            {...connectorButtonBaseProps}
             key={connector.name}
             onClick={() => {
               captureEvent("Click on Connect Fuel", {
@@ -57,20 +59,16 @@ const FuelConnectorButtons = () => {
                 }
               })
             }}
-            leftIcon={
-              <Center boxSize={6}>
-                <Img
-                  src={connectorIcons[connector.name]}
-                  maxW={6}
-                  maxH={6}
-                  alt={connector.name}
-                />
-              </Center>
-            }
             isLoading={connector.name === activatingConnector}
             loadingText="Connecting..."
-            {...connectorButtonProps}
           >
+            <div className="flex size-6 items-center justify-center">
+              <img
+                src={connectorIcons[connector.name]}
+                className="size-6"
+                alt={connector.name}
+              />
+            </div>
             {connector.name}
           </Button>
         ))}

@@ -24,6 +24,7 @@ const config = {
       },
       colors: {
         border: "hsl(var(--border))",
+        "border-secondary": "hsl(var(--border-secondary))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
@@ -75,12 +76,34 @@ const config = {
         },
         card: {
           DEFAULT: "hsl(var(--card))",
+          secondary: "hsl(var(--card-secondary))",
           foreground: "hsl(var(--card-foreground))",
         },
-        "toast-success": "hsla(var(--toast-success))",
-        "toast-error": "hsla(var(--toast-error))",
-        "toast-warning": "hsla(var(--toast-warning))",
-        "toast-info": "hsla(var(--toast-info))",
+        toast: {
+          success: "hsla(var(--toast-success))",
+          error: "hsla(var(--toast-error))",
+          warning: "hsla(var(--toast-warning))",
+          info: "hsla(var(--toast-info))",
+        },
+        // Platforms
+        discord: {
+          DEFAULT: "hsl(var(--discord))",
+        },
+        telegram: {
+          DEFAULT: "hsl(var(--telegram))",
+        },
+        twitter: {
+          DEFAULT: "hsl(var(--twitter))",
+        },
+        github: {
+          DEFAULT: "hsl(var(--github))",
+        },
+        farcaster: {
+          DEFAULT: "hsl(var(--farcaster))",
+        },
+        polygonid: {
+          DEFAULT: "hsl(var(--polygonid))",
+        },
       },
       keyframes: {
         "accordion-down": {
@@ -91,10 +114,19 @@ const config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        // Copied from our old styles.ts
+        "fade-in": { from: { opacity: "0" }, to: { opacity: "1" } },
+        "slide-fade-in": {
+          from: { opacity: "0", transform: "translateY(10px)" },
+          to: { opacity: "1", transform: "translateY(0px)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        // Copied from where we used these animations
+        "fade-in": "fade-in .3s .1s both",
+        "slide-fade-in": "fade-in .2s",
       },
     },
   },

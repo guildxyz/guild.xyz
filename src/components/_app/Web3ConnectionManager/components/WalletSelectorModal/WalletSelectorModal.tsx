@@ -1,42 +1,37 @@
+import { Button } from "@/components/ui/Button"
 import {
-  Box,
-  Icon,
-  IconButton,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  Stack,
-  Text,
-  usePrevious,
-} from "@chakra-ui/react"
-
-import { Link } from "@chakra-ui/next-js"
+  Dialog,
+  DialogCloseButton,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/Dialog"
+import { usePrevious } from "@/hooks/usePrevious"
 import { useUserPublic } from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
-import { Error as ErrorComponent } from "components/common/Error"
 import { addressLinkParamsAtom } from "components/common/Layout/components/Account/components/AccountModal/components/LinkAddressButton"
-import { Modal } from "components/common/Modal"
-import ModalButton from "components/common/ModalButton"
 import useSetKeyPair from "hooks/useSetKeyPair"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useAtom, useSetAtom } from "jotai"
-import { ArrowLeft, ArrowSquareOut } from "phosphor-react"
+import Link from "next/link"
+import { ArrowSquareOut } from "phosphor-react"
 import { useEffect } from "react"
 import { useAccount, useConnect, type Connector } from "wagmi"
+import { COINBASE_INJECTED_WALLET_ID, COINBASE_WALLET_SDK_ID } from "wagmiConfig"
 import useWeb3ConnectionManager from "../../hooks/useWeb3ConnectionManager"
 import { walletLinkHelperModalAtom } from "../WalletLinkHelperModal"
 import AccountButton from "./components/AccountButton"
 import ConnectorButton from "./components/ConnectorButton"
 import FuelConnectorButtons from "./components/FuelConnectorButtons"
-import GoogleLoginButton from "./components/GoogleLoginButton"
 import useIsWalletConnectModalActive from "./hooks/useIsWalletConnectModalActive"
 import useLinkAddress from "./hooks/useLinkAddress"
+<<<<<<< HEAD
 import processConnectionError from "./utils/processConnectionError"
 import { COINBASE_WALLET_SDK_ID } from "./constants"
+=======
+>>>>>>> 7deb36d6b803763fdc923e153a47905754608356
 
 type Props = {
   isOpen: boolean
@@ -44,8 +39,11 @@ type Props = {
   onOpen: () => void
 }
 
+<<<<<<< HEAD
 const COINBASE_INJECTED_WALLET_ID = "com.coinbase.wallet"
 
+=======
+>>>>>>> 7deb36d6b803763fdc923e153a47905754608356
 const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
   const { isWeb3Connected, isInSafeContext, disconnect, address } =
     useWeb3ConnectionManager()
@@ -66,13 +64,6 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
 
   const [addressLinkParams, setAddressLinkParams] = useAtom(addressLinkParamsAtom)
   const isAddressLink = !!addressLinkParams?.userId
-
-  const closeModalAndSendAction = () => {
-    onClose()
-    setTimeout(() => {
-      disconnect()
-    }, 200)
-  }
 
   const { captureEvent } = usePostHogContext()
 
@@ -131,49 +122,40 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
     )
   }, [triesToLinkCurrentAddress, setAddressLinkParams, showErrorToast])
 
-  return (
-    <Modal
-      isOpen={isOpen}
-      onClose={closeModalAndSendAction}
-      closeOnOverlayClick={!isWeb3Connected || !!keyPair}
-      closeOnEsc={!isWeb3Connected || !!keyPair}
-      trapFocus={!isWalletConnectModalActive}
-    >
-      <ModalOverlay />
-      <ModalContent data-test="wallet-selector-modal">
-        <ModalHeader display={"flex"}>
-          {isConnectedAndKeyPairReady && !keyPair && (
-            <IconButton
-              rounded="full"
-              aria-label="Back"
-              size="sm"
-              icon={<ArrowLeft size={20} />}
-              variant="ghost"
-              onClick={() => {
-                set.reset()
-                disconnect()
-              }}
-            />
-          )}
-          <Text ml="1.5" mt="-1px">
-            {isAddressLink ? "Link address" : "Connect to Guild"}
-          </Text>
-        </ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
-          <ErrorComponent
-            {...(set.error || linkAddress.error
-              ? {
-                  error: set.error ?? linkAddress.error,
-                  processError: (err: any) => {
-                    if (err?.code === "ACTION_REJECTED") {
-                      return {
-                        title: "Rejected",
-                        description: "Signature request has been rejected",
-                      }
-                    }
+  const conditionalOnClose = () => {
+    if (!isWeb3Connected || !!keyPair) onClose()
+  }
 
+  return (
+    <Dialog
+      open={isOpen}
+      onOpenChange={(open) => {
+        if (open) return
+        setTimeout(() => {
+          disconnect()
+        }, 200)
+      }}
+    >
+      <DialogContent
+        onPointerDownOutside={conditionalOnClose}
+        onEscapeKeyDown={conditionalOnClose}
+        trapFocus={!isWalletConnectModalActive}
+      >
+        <DialogHeader className="flex-row items-center gap-1.5">
+          <DialogTitle className="-mt-1">
+            {isAddressLink ? "Link address" : "Connect to Guild"}
+          </DialogTitle>
+        </DialogHeader>
+
+        {/* TODO: generate & customize an Alert component & use it in the Error component */}
+        {/* <ErrorComponent
+          {...(set.error || linkAddress.error
+            ? {
+                error: set.error ?? linkAddress.error,
+                processError: (err: any) => {
+                  if (err?.code === "ACTION_REJECTED") {
                     return {
+<<<<<<< HEAD
                       title: "Error",
                       description:
                         err?.message ??
@@ -182,49 +164,60 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
                           : typeof err === "string"
                             ? err
                             : err?.errors?.[0]?.msg),
+=======
+                      title: "Rejected",
+                      description: "Signature request has been rejected",
                     }
-                  },
-                }
-              : { error, processError: processConnectionError })}
-          />
-          {shouldShowVerify && (
-            <Text mb="6" animation={"fadeIn .3s .1s both"}>
-              Sign message to verify that you're the owner of this address.
-            </Text>
-          )}
+                  }
 
-          {isWeb3Connected ? (
-            <AccountButton />
-          ) : (
-            <Stack spacing="0">
-              {!connector && !addressLinkParams?.userId && (
-                <>
-                  <CardMotionWrapper key={COINBASE_WALLET_SDK_ID}>
-                    <ConnectorButton
-                      connector={connectors.find(
-                        (conn) => conn.id === COINBASE_WALLET_SDK_ID
-                      )}
-                      connect={connect}
-                      pendingConnector={
-                        isPending && (variables?.connector as Connector)
-                      }
-                      error={error}
-                    />
-                  </CardMotionWrapper>
+                  return {
+                    title: "Error",
+                    description:
+                      err?.message ??
+                      (typeof err?.error === "string"
+                        ? err?.error
+                        : typeof err === "string"
+                          ? err
+                          : err?.errors?.[0]?.msg),
+                  }
+                },
+              }
+            : { error, processError: processConnectionError })}
+        /> */}
 
-                  <Text
-                    mt={6}
-                    mb={2}
-                    textTransform={"uppercase"}
-                    fontSize={"xs"}
-                    fontWeight={700}
-                    color={"gray"}
-                  >
-                    Or connect with wallet
-                  </Text>
-                </>
-              )}
+        {shouldShowVerify && (
+          <p className="mb-6 animate-fade-in">
+            Sign message to verify that you're the owner of this address.
+          </p>
+        )}
 
+        {isWeb3Connected ? (
+          <AccountButton />
+        ) : (
+          <div className="flex flex-col gap-0">
+            {!connector && !addressLinkParams?.userId && (
+              <>
+                <CardMotionWrapper key={COINBASE_WALLET_SDK_ID}>
+                  <ConnectorButton
+                    connector={connectors.find(
+                      (conn) => conn.id === COINBASE_WALLET_SDK_ID
+                    )}
+                    connect={connect}
+                    pendingConnector={
+                      isPending ? (variables?.connector as Connector) : undefined
+>>>>>>> 7deb36d6b803763fdc923e153a47905754608356
+                    }
+                    error={error}
+                  />
+                </CardMotionWrapper>
+
+                <p className="mb-2 mt-6 text-xs font-bold uppercase text-muted-foreground">
+                  Or connect with wallet
+                </p>
+              </>
+            )}
+
+            <div className="flex flex-col gap-2">
               {connectors
                 .filter(
                   (conn) =>
@@ -241,100 +234,98 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
                       connector={conn}
                       connect={connect}
                       pendingConnector={
-                        isPending && (variables?.connector as Connector)
+                        isPending ? (variables?.connector as Connector) : undefined
                       }
                       error={error}
                     />
                   </CardMotionWrapper>
                 ))}
-              <GoogleLoginButton />
+              {/* TODO: migrate these components too */}
+              {/* <GoogleLoginButton />*/}
               <FuelConnectorButtons key="fuel" />
-            </Stack>
-          )}
+            </div>
+          </div>
+        )}
 
-          {shouldShowVerify && (
-            <Box animation={"fadeIn .3s .1s both"}>
-              <ModalButton
-                data-test="verify-address-button"
-                size="xl"
-                mb="4"
-                colorScheme={"green"}
-                onClick={() => {
-                  if (isAddressLink) {
-                    return linkAddress.onSubmit(addressLinkParams)
-                  }
-                  return set.onSubmit()
-                }}
-                isLoading={
-                  linkAddress.isLoading || set.isLoading || (!id && !publicUserError)
-                }
-                isDisabled={!id && !publicUserError}
-                loadingText={!id ? "Looking for keypairs" : "Check your wallet"}
-              >
-                {isAddressLink ? "Link address" : "Verify address"}
-              </ModalButton>
-            </Box>
-          )}
-        </ModalBody>
-        <ModalFooter mt="-4">
+        {shouldShowVerify && (
+          <Button
+            size="xl"
+            variant="success"
+            onClick={() => {
+              if (isAddressLink) {
+                return linkAddress.onSubmit(addressLinkParams)
+              }
+              return set.onSubmit()
+            }}
+            disabled={!id && !publicUserError}
+            isLoading={
+              linkAddress.isLoading || set.isLoading || (!id && !publicUserError)
+            }
+            loadingText={!id ? "Looking for keypairs" : "Check your wallet"}
+            className="mb-4 animate-fade-in"
+          >
+            {isAddressLink ? "Link address" : "Verify address"}{" "}
+          </Button>
+        )}
+
+        <DialogFooter>
           {!isConnectedAndKeyPairReady ? (
-            <Stack textAlign="center" fontSize="sm" w="full">
-              <Text colorScheme="gray">
+            <div className="flex w-full flex-col gap-2 text-center text-sm">
+              <p className="text-muted-foreground">
                 <span>{"New to Ethereum wallets? "}</span>
-                <Link
-                  colorScheme="blue"
-                  href="https://ethereum.org/en/wallets/"
-                  isExternal
-                >
-                  Learn more
-                  <Icon as={ArrowSquareOut} mx="1" />
-                </Link>
-              </Text>
+                {/* TODO: custom link component with generalised styles */}
+                <a href="https://ethereum.org/en/wallets">Learn more</a>
+                <ArrowSquareOut className="ml-1 inline" />
+              </p>
 
-              <Text colorScheme="gray">
+              <p className="text-muted-foreground">
                 <span>{"By continuing, you agree to our "}</span>
                 <Link
                   href="/privacy-policy"
-                  fontWeight={"semibold"}
+                  className="font-semibold"
                   onClick={onClose}
                 >
                   Privacy Policy
                 </Link>
                 <span>{" and "}</span>
-                <Link href="/terms-of-use" fontWeight={"semibold"} onClick={onClose}>
+                <Link
+                  href="/terms-of-use"
+                  className="font-semibold"
+                  onClick={onClose}
+                >
                   Terms & conditions
                 </Link>
-              </Text>
-            </Stack>
+              </p>
+            </div>
           ) : (
-            <Stack textAlign="center" fontSize="sm" w="full">
-              <Text colorScheme="gray">
+            <div className="flex w-full flex-col gap-2 text-center text-sm">
+              <p className="text-muted-foreground">
                 Signing the message doesn't cost any gas
-              </Text>
-              <Text colorScheme="gray">
+              </p>
+              <p className="text-muted-foreground">
                 <span>{"This site is protected by reCAPTCHA, so the Google "}</span>
-                <Link
+                <a
                   href="https://policies.google.com/privacy"
-                  isExternal
-                  fontWeight={"semibold"}
+                  className="font-semibold"
                 >
                   Privacy Policy
-                </Link>{" "}
+                </a>{" "}
                 <span>{"and "}</span>
-                <Link
+                <a
                   href="https://policies.google.com/terms"
-                  isExternal
-                  fontWeight={"semibold"}
+                  className="font-semibold"
                 >
                   Terms of Service
-                </Link>
+                </a>
                 <span>{" apply"}</span>
-              </Text>
-            </Stack>
+              </p>
+            </div>
           )}
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+        </DialogFooter>
+
+        <DialogCloseButton onClick={conditionalOnClose} />
+      </DialogContent>
+    </Dialog>
   )
 }
 

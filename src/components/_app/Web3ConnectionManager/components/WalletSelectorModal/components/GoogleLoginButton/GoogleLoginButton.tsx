@@ -1,6 +1,6 @@
 import { Center, Img, Tag, useDisclosure } from "@chakra-ui/react"
 import Button from "components/common/Button"
-import { connectorButtonProps } from "../ConnectorButton"
+// import { connectorButtonProps } from "../ConnectorButton"
 import ExportWaaSModal from "./components/ExportWaaSModal"
 
 const GoogleLoginButton = () => {
@@ -23,13 +23,13 @@ const GoogleLoginButton = () => {
           </Center>
         }
         rightIcon={<Tag ml="auto">Deprecated</Tag>}
-        {...connectorButtonProps}
-        sx={{
-          ...connectorButtonProps.sx,
-          "> .chakra-button__icon:last-child": {
-            marginLeft: "auto!important",
-          },
-        }}
+        // {...connectorButtonProps}
+        // sx={{
+        //   ...connectorButtonProps.sx,
+        //   "> .chakra-button__icon:last-child": {
+        //     marginLeft: "auto!important",
+        //   },
+        // }}
       >
         Google
       </Button>

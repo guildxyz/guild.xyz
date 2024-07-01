@@ -1,4 +1,3 @@
-import { useColorMode } from "@chakra-ui/react"
 import { useIsConnected } from "@fuels/react"
 import { useAccount, type Connector } from "wagmi"
 import { COINBASE_WALLET_SDK_ID } from "../components/WalletSelectorModal/constants"
@@ -34,7 +33,8 @@ const useConnectorNameAndIcon = (connectorParam?: Connector) => {
 
   const connector = connectorParam ?? evmConnectorFromHook
 
-  const { colorMode } = useColorMode()
+  // TODO: find a solution for this
+  const colorMode = "light"
 
   const connectorIcon =
     CUSTOM_CONNECTOR_ICONS[connector?.id]?.[colorMode] ??

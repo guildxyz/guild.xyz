@@ -7,7 +7,7 @@ import { CircleNotch } from "@phosphor-icons/react/dist/ssr"
 import clsx from "clsx"
 
 const buttonVariants = cva(
-  "font-medium inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 rounded-xl text-base",
+  "font-medium inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm ring-offset-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:!opacity-50 rounded-xl text-base",
   {
     variants: {
       variant: {
@@ -25,6 +25,7 @@ const buttonVariants = cva(
         "destructive-ghost":
           "hover:bg-destructive-ghost-hover active:bg-destructive-ghost-active text-destructive-ghost-foreground",
         link: "text-muted-foreground underline-offset-4 hover:underline",
+        unstyled: "",
       },
       size: {
         xs: "h-6 px-2 text-xs",
@@ -66,6 +67,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const Comp = asChild ? Slot : "button"
+
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}

@@ -1,6 +1,6 @@
+import { GuildAvatar } from "@/components/GuildAvatar"
+import { Button } from "@/components/ui/Button"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
-import Button from "components/common/Button"
-import GuildAvatar from "components/common/GuildAvatar"
 import shortenHex from "utils/shortenHex"
 
 const AccountButton = () => {
@@ -9,15 +9,9 @@ const AccountButton = () => {
   if (!address) return null
 
   return (
-    <Button
-      mb="4"
-      rightIcon={<GuildAvatar address={address} size={5} />}
-      isDisabled
-      w="full"
-      size="xl"
-      justifyContent="space-between"
-    >
+    <Button variant="secondary" className="mb-4 justify-between" disabled size="xl">
       {shortenHex(address)}
+      <GuildAvatar address={address} />
     </Button>
   )
 }

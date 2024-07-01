@@ -1,9 +1,7 @@
-import { Card } from "@/components/ui/Card"
-import { Metadata } from "next"
-import { PropsWithChildren } from "react"
-import { ThemeToggle } from "../../v2/components/ThemeToggle"
-import { DialogExample } from "./_components/DialogExample"
 import { Header } from "@/components/Header"
+import { Metadata } from "next"
+import Link from "next/link"
+import { PropsWithChildren } from "react"
 
 export const metadata: Metadata = {
   title: "Playground",
@@ -20,21 +18,13 @@ export default function Page() {
   return (
     <div className="p-8">
       <h1 className="text-2xl font-bold">Playground</h1>
-      <h1 className="text-2xl italic">Playground</h1>
 
       <div className="flex flex-col items-start gap-4">
-        <Section title="Theme toggle">
-          <ThemeToggle />
-        </Section>
-
-        <Section title="Card">
-          <Card className="p-4">This is a card</Card>
-        </Section>
-
-        <Section title="Modal">
-          <DialogExample />
-        </Section>
         <Header />
+
+        <span>
+          Go to <Link href="/explorer">explorer</Link>
+        </span>
       </div>
     </div>
   )
