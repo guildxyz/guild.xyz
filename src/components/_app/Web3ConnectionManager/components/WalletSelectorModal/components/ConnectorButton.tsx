@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/Button"
+import { Button, ButtonProps } from "@/components/ui/Button"
 import { useUserPublic } from "components/[guild]/hooks/useUser"
 import useConnectorNameAndIcon from "components/_app/Web3ConnectionManager/hooks/useConnectorNameAndIcon"
 import { addressLinkParamsAtom } from "components/common/Layout/components/Account/components/AccountModal/components/LinkAddressButton"
@@ -16,6 +16,12 @@ type Props = {
   error: Error | null
 }
 
+export const connectorButtonBaseProps = {
+  variant: "secondary",
+  size: "xl",
+  className: "flex w-full justify-start gap-2",
+} satisfies ButtonProps
+
 const ConnectorButton = ({ connector, pendingConnector, connect, error }: Props) => {
   const { isConnected, connector: activeConnector } = useAccount()
 
@@ -30,9 +36,7 @@ const ConnectorButton = ({ connector, pendingConnector, connect, error }: Props)
 
   return (
     <Button
-      variant="secondary"
-      size="xl"
-      className="flex w-full justify-start gap-2"
+      {...connectorButtonBaseProps}
       onClick={() => {
         if (addressLinkParams?.userId) setIsWalletLinkHelperModalOpen(true)
         connect({ connector })

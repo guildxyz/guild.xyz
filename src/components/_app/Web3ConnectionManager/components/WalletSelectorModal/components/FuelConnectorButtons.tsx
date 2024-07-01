@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/Button"
 import { useConnectors, useIsConnected } from "@fuels/react"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { useEffect, useState } from "react"
+import { connectorButtonBaseProps } from "./ConnectorButton"
 
 const FuelConnectorButtons = () => {
   const { connectors } = useConnectors()
@@ -34,10 +35,8 @@ const FuelConnectorButtons = () => {
         ?.filter((connector) => connector.installed)
         .map((connector) => (
           <Button
+            {...connectorButtonBaseProps}
             key={connector.name}
-            variant="secondary"
-            size="xl"
-            className="w-full"
             onClick={() => {
               captureEvent("Click on Connect Fuel", {
                 connectorName: connector?.name,
@@ -60,10 +59,8 @@ const FuelConnectorButtons = () => {
                 }
               })
             }}
-            // TODO
-            // isLoading={connector.name === activatingConnector}
-            // loadingText="Connecting..."
-            // {...connectorButtonProps}
+            isLoading={connector.name === activatingConnector}
+            loadingText="Connecting..."
           >
             <div className="flex size-6 items-center justify-center">
               <img
