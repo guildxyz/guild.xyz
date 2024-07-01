@@ -5,9 +5,10 @@ import { Input } from "./ui/Input"
 import { ToggleGroup, ToggleGroupItem } from "./ui/ToggleGroup"
 import { useSetAtom } from "jotai"
 import { guildQueryAtom } from "./GuildInfiniteScroll"
-import React, { useDeferredValue, useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useSearchParams, usePathname } from "next/navigation"
 import { ActiveSection } from "app/explorer/types"
+import useDebouncedState from "hooks/useDebouncedState"
 
 enum Order {
   Featured = "FEATURED",
@@ -20,14 +21,14 @@ export const GuildSearchBar = () => {
   const pathName = usePathname()
   const [order, setOrder] = useState<Order>(searchParams?.get('order') as Order || Order.Featured);
   const [search, setSearch] = useState(searchParams?.get('search') || '')
-  const deferredSearch = useDeferredValue(search)
+  const debouncedSearch = useDebouncedState(search, 80)
 
   useEffect(() => {
     if (pathName === null) return
-    const newSearchParams = new URLSearchParams(Object.entries({ order, search: deferredSearch }).filter(([_, value]) => value))
-    window.history.replaceState(null, '', `${pathName}?${newSearchParams.toString()}`)
+    const newSearchParams = new URLSearchParams(Object.entries({ order, search: debouncedSearch }).filter(([_, value]) => value))
+    history.replaceState(null, '', `${pathName}${window.location.hash}?${newSearchParams.toString()}`)
     setGuildQuery(newSearchParams.toString())
-  }, [deferredSearch, order, setGuildQuery, pathName])
+  }, [debouncedSearch, order, setGuildQuery, pathName])
 
   return <div className="relative flex flex-col gap-3 py-4 sm:flex-row sm:gap-0">
     <Input
