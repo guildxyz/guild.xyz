@@ -6,6 +6,8 @@ import * as React from "react"
 import { buttonVariants } from "@/components/ui/Button"
 import { cn } from "@/lib/utils"
 
+// TODO: re-use classNames from the Dialog component
+
 const AlertDialog = AlertDialogPrimitive.Root
 
 const AlertDialogTrigger = AlertDialogPrimitive.Trigger
@@ -17,7 +19,6 @@ const AlertDialogOverlay = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Overlay>
 >(({ className, ...props }, ref) => (
   <AlertDialogPrimitive.Overlay
-    // TODO: maybe we could re-use className from DialogOverlay?
     className={cn(
       "fixed inset-0 z-50 bg-black/50 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
       className
