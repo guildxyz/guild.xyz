@@ -2,7 +2,7 @@ import { GuildCardSkeleton, GuildCardWithLink } from "./GuildCard"
 import { atom, useAtomValue } from "jotai"
 import { env } from "env"
 import useUser from "components/[guild]/hooks/useUser"
-import { memo, useEffect, useRef } from "react"
+import { memo, useRef } from "react"
 import useSWRInfinite from "swr/infinite"
 import { GuildBase } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
@@ -31,6 +31,7 @@ const useExploreGuilds = (searchParams: URLSearchParams, guildsInitial: GuildBas
   }
 
   // sending authed request for superAdmins, so they can see unverified & hideFromExplorer guilds too
+  // @ts-expect-error TODO: resolve this type error
   return useSWRInfinite<GuildBase[]>(
     (pageIndex, previousPageData) => {
       if (Array.isArray(previousPageData) && previousPageData.length !== BATCH_SIZE)
