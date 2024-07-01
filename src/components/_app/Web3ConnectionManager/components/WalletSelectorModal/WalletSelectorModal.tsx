@@ -19,7 +19,6 @@ import Link from "next/link"
 import { ArrowSquareOut } from "phosphor-react"
 import { useEffect } from "react"
 import { useAccount, useConnect, type Connector } from "wagmi"
-import { COINBASE_INJECTED_WALLET_ID, COINBASE_WALLET_SDK_ID } from "wagmiConfig"
 import useWeb3ConnectionManager from "../../hooks/useWeb3ConnectionManager"
 import { walletLinkHelperModalAtom } from "../WalletLinkHelperModal"
 import AccountButton from "./components/AccountButton"
@@ -27,11 +26,8 @@ import ConnectorButton from "./components/ConnectorButton"
 import FuelConnectorButtons from "./components/FuelConnectorButtons"
 import useIsWalletConnectModalActive from "./hooks/useIsWalletConnectModalActive"
 import useLinkAddress from "./hooks/useLinkAddress"
-<<<<<<< HEAD
 import processConnectionError from "./utils/processConnectionError"
-import { COINBASE_WALLET_SDK_ID } from "./constants"
-=======
->>>>>>> 7deb36d6b803763fdc923e153a47905754608356
+import { COINBASE_WALLET_SDK_ID, COINBASE_INJECTED_WALLET_ID } from "./constants"
 
 type Props = {
   isOpen: boolean
@@ -39,11 +35,6 @@ type Props = {
   onOpen: () => void
 }
 
-<<<<<<< HEAD
-const COINBASE_INJECTED_WALLET_ID = "com.coinbase.wallet"
-
-=======
->>>>>>> 7deb36d6b803763fdc923e153a47905754608356
 const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
   const { isWeb3Connected, isInSafeContext, disconnect, address } =
     useWeb3ConnectionManager()
