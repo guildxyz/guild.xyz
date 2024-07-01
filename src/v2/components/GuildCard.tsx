@@ -12,6 +12,7 @@ import {
 import { Skeleton } from "./ui/Skeleton"
 import { Card } from "./ui/Card"
 import Link from "next/link"
+import Image from "next/image"
 
 type Props = {
   guildData: GuildBase
@@ -23,8 +24,10 @@ export const GuildCard: React.FC<Props> = ({ guildData }) => (
       <AvatarImage
         src={guildData.imageUrl}
         className="bg-black/50"
-        alt="guild emblem"
-      />
+        asChild
+      >
+        <Image height={40} width={40} src={guildData.imageUrl} alt="guild emblem" />
+      </AvatarImage>
       <AvatarFallback className="bg-transparent">
         <Skeleton className="size-full" />
       </AvatarFallback>
