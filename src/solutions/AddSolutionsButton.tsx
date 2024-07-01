@@ -129,7 +129,7 @@ const AddSolutionsButton = () => {
     />
   )
 
-  const showPolygonId = !!guildPlatforms?.some(
+  const showPolygonId = !guildPlatforms?.some(
     (gp) => gp.platformId === PlatformType.POLYGON_ID
   )
 
