@@ -69,11 +69,19 @@ const config = {
           DEFAULT: "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",
         },
+        tooltip: {
+          DEFAULT: "hsl(var(--tooltip))",
+          foreground: "hsl(var(--tooltip-foreground))",
+        },
         card: {
           DEFAULT: "hsl(var(--card))",
           secondary: "hsl(var(--card-secondary))",
           foreground: "hsl(var(--card-foreground))",
         },
+        "toast-success": "hsla(var(--toast-success))",
+        "toast-error": "hsla(var(--toast-error))",
+        "toast-warning": "hsla(var(--toast-warning))",
+        "toast-info": "hsla(var(--toast-info))",
       },
       keyframes: {
         "accordion-down": {

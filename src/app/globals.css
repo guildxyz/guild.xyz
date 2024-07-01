@@ -14,6 +14,9 @@
     --popover: var(--card);
     --popover-foreground: var(--card-foreground);
 
+    --tooltip: 0 0% 0%;
+    --tooltip-foreground: 0 0% 100%;
+
     --primary: 239 84% 67%;
     --primary-hover: 243 75% 59%;
     --primary-active: 245 58% 51%;
@@ -46,6 +49,16 @@
     --border: 240 6% 90%;
     --input: var(--border);
     --ring: 224 71.4% 4.1%;
+
+    --toast-success: 137 64% 98%;
+    --toast-error: 0 78% 98%;
+    --toast-warning: 40 79% 96%;
+    --toast-info: 218 80% 98%;
+
+    --sm: 640px;
+    --md: 768px;
+    --lg: 1024px;
+    --xl: 1280px;
   }
 
   :root[data-theme="dark"] {
@@ -58,6 +71,9 @@
 
     --popover: var(--card);
     --popover-foreground: var(--card-foreground);
+
+    --tooltip: 240 5% 84%;
+    --tooltip-foreground: 240 4% 16%;
 
     --primary: 238.73 70% 63%;
     --primary-hover: 234 89% 74%;
@@ -92,10 +108,10 @@
     --input: var(--border);
     --ring: 240 0% 45%;
 
-    --sm: 640px;
-    --md: 768px;
-    --lg: 1024px;
-    --xl: 1280px;
+    --toast-success: 180 4% 35%;
+    --toast-error: 317 4% 35%;
+    --toast-warning: 30 6% 34%;
+    --toast-info: 226 7% 36%;
   }
 }
 
