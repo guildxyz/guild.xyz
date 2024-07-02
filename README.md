@@ -12,7 +12,7 @@ Open source interface for Guild.xyz -- a tool for platformless membership manage
 - Framework
   - React with Next.js
 - Styling:
-  - Chakra UI
+  - Chakra UI (migration to Tailwind CSS and Radix UI in progress)
   - Phosphor icons
   - Framer motion
 - State management:
