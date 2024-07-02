@@ -23,7 +23,7 @@ import Button from "components/common/Button"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Modal } from "components/common/Modal"
 import { CaretLeft, CaretRight } from "phosphor-react"
-import { FormSubmission } from "platforms/Forms/hooks/useFormSubmissions"
+import { FormSubmission } from "rewards/Forms/hooks/useFormSubmissions"
 import CollapsibleIdentityTags from "./CollapsibleIdentityTags"
 
 type Props = {

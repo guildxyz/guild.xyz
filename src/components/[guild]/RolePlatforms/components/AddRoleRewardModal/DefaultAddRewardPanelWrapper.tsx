@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react"
 import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import { ArrowLeft } from "phosphor-react"
-import rewards from "platforms/rewards"
+import rewards from "rewards"
 import { ReactNode } from "react"
 
 export const DefaultAddRewardPanelWrapper = ({

@@ -1,4 +1,4 @@
-import rewards from "platforms/rewards"
+import rewards from "rewards"
 import { PlatformType } from "types"
 import capitalize from "utils/capitalize"
 

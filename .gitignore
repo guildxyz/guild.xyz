@@ -33,3 +33,5 @@ cypress/screenshots
 cypress/videos
 
 .idea
+
+*.tsbuildinfo

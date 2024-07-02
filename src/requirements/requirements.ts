@@ -12,7 +12,7 @@ import {
   Wallet,
   Wrench,
 } from "phosphor-react"
-import rewards from "platforms/rewards"
+import rewards from "rewards"
 import { ComponentType } from "react"
 import {
   ProvidedValueDisplayProps,
