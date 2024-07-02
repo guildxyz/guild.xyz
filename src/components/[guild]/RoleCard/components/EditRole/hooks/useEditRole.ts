@@ -3,7 +3,6 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit/useSubmit"
-import { OneOf } from "types"
 import replacer from "utils/guildJsonReplacer"
 import { RoleEditFormData } from "./useEditRoleForm"
 
@@ -15,29 +14,11 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
   const showErrorToast = useShowErrorToast()
   const fetcherWithSign = useFetcherWithSign()
 
-  const submit = async (data: RoleEditFormData) => {
-    const {
-      // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-unused-vars
-      id: _id,
-      ...baseRoleData
-    } = data
-
-    const roleUpdate: Promise<
-      OneOf<
-        Omit<RoleEditFormData, "requirements" | "rolePlatforms">,
-        { error: string; correlationId: string }
-      >
-    > =
-      Object.keys(baseRoleData ?? {}).length > 0
-        ? fetcherWithSign([
-            `/v2/guilds/${id}/roles/${roleId}`,
-            { method: "PUT", body: baseRoleData },
-          ]).catch((error) => error)
-        : new Promise((resolve) => resolve(undefined))
-
-    const updatedRole = await roleUpdate
-    return updatedRole
-  }
+  const submit = async (data: RoleEditFormData) =>
+    fetcherWithSign([
+      `/v2/guilds/${id}/roles/${roleId}`,
+      { method: "PUT", body: data },
+    ])
 
   const useSubmitResponse = useSubmit(submit, {
     onSuccess: (updatedRole) => {
