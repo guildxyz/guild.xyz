@@ -25,9 +25,10 @@ const useCreateRequirements = () => {
     roleIds: number[]
   ) => {
     const requirementIdMap: RequirementIdMap = {}
+    const requirementsToCreate = requirements.filter((req) => req.type !== "FREE")
 
     const promises = roleIds.flatMap((roleId) =>
-      requirements.map((req) =>
+      requirementsToCreate.map((req) =>
         fetcherWithSign([
           `/v2/guilds/${guildId}/roles/${roleId}/requirements`,
           {
