@@ -1,7 +1,7 @@
 import { Tooltip } from "@chakra-ui/react"
+import { ArrowSquareOut } from "@phosphor-icons/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
-import { ArrowSquareOut } from "phosphor-react"
 import { claimTextButtonTooltipLabel } from "platforms/SecretText/TextCardButton"
 import { GuildPlatform } from "types"
 import {

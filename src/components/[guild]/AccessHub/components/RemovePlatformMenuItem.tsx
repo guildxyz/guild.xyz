@@ -1,9 +1,9 @@
 import { MenuItem, useColorModeValue, useDisclosure } from "@chakra-ui/react"
+import { TrashSimple } from "@phosphor-icons/react"
 import useRemoveGuildPlatform from "components/[guild]/AccessHub/hooks/useRemoveGuildPlatform"
 import { AlreadyGrantedAccessesWillRemainInfo } from "components/[guild]/RolePlatforms/components/RemovePlatformButton/RemovePlatformButton"
 import useGuild from "components/[guild]/hooks/useGuild"
 import ConfirmationAlert from "components/create-guild/Requirements/components/ConfirmationAlert"
-import { TrashSimple } from "phosphor-react"
 import rewards from "platforms/rewards"
 import { PlatformType } from "types"
 

@@ -1,4 +1,4 @@
-import { EnvelopeSimple } from "phosphor-react"
+import { EnvelopeSimple } from "@phosphor-icons/react"
 import { PlatformAsRewardRestrictions, RewardData } from "platforms/types"
 
 export default {

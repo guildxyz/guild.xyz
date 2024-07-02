@@ -1,10 +1,10 @@
-import { Key } from "phosphor-react"
-import { PlatformAsRewardRestrictions, RewardData } from "platforms/types"
-import useUniqueTextCardProps from "./useUniqueTextCardProps"
-import TextCardButton from "platforms/SecretText/TextCardButton"
-import UniqueTextCardMenu from "./UniqueTextCardMenu"
+import { Key } from "@phosphor-icons/react"
 import dynamic from "next/dynamic"
 import LoadingRewardPreview from "platforms/components/LoadingRewardPreview"
+import TextCardButton from "platforms/SecretText/TextCardButton"
+import { PlatformAsRewardRestrictions, RewardData } from "platforms/types"
+import UniqueTextCardMenu from "./UniqueTextCardMenu"
+import useUniqueTextCardProps from "./useUniqueTextCardProps"
 
 export default {
   icon: Key,

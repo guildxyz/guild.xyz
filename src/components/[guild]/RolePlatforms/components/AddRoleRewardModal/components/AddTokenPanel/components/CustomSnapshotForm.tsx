@@ -17,13 +17,13 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react"
+import { Info, Upload } from "@phosphor-icons/react"
 import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import CopyableAddress from "components/common/CopyableAddress"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
 import Papa from "papaparse"
-import { Info, Upload } from "phosphor-react"
 import { useDropzone } from "react-dropzone"
 import { useFormContext, useWatch } from "react-hook-form"
 

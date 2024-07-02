@@ -52,8 +52,8 @@ export const CAPACITY_TIME_PLATFORMS: PlatformName[] = [
 ] as const
 
 import type { ThemingProps } from "@chakra-ui/react"
+import type { IconProps } from "@phosphor-icons/react"
 import type { RewardProps } from "components/[guild]/RoleCard/components/Reward"
-import type { IconProps } from "phosphor-react"
 import type {
   ComponentType,
   ForwardRefExoticComponent,

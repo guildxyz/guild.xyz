@@ -8,7 +8,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { DotsThreeVertical, IconProps } from "phosphor-react"
+import { DotsThreeVertical, IconProps } from "@phosphor-icons/react"
 import rewards from "platforms/rewards"
 import { ForwardRefExoticComponent, RefAttributes } from "react"
 import { useActivityLog } from "../../ActivityLogContext"

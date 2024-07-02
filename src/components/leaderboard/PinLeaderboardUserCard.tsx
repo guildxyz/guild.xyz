@@ -1,4 +1,3 @@
-import { env } from "env"
 import { Link } from "@chakra-ui/next-js"
 import {
   Center,
@@ -21,12 +20,13 @@ import {
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
+import { CaretDown, Trophy } from "@phosphor-icons/react"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import GuildAvatar from "components/common/GuildAvatar"
+import { env } from "env"
 import useResolveAddress from "hooks/useResolveAddress"
 import dynamic from "next/dynamic"
-import { CaretDown, Trophy } from "phosphor-react"
 import { GuildPinMetadata } from "types"
 import base64ToObject from "utils/base64ToObject"
 import shortenHex from "utils/shortenHex"

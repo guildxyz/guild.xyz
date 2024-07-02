@@ -1,4 +1,5 @@
 import { Icon, Spinner, Tooltip } from "@chakra-ui/react"
+import { ArrowSquareIn, LockSimple } from "@phosphor-icons/react"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import DynamicTag from "components/[guild]/RoleCard/components/DynamicReward/DynamicTag"
 import {
@@ -12,7 +13,6 @@ import Button from "components/common/Button"
 import useMembership, {
   useRoleMembership,
 } from "components/explorer/hooks/useMembership"
-import { ArrowSquareIn, LockSimple } from "phosphor-react"
 import { claimTextButtonTooltipLabel } from "platforms/SecretText/TextCardButton"
 import ClaimTokenButton from "platforms/Token/ClaimTokenButton"
 import { useIsFromGeogatedCountry } from "platforms/Token/GeogatedCountryAlert"

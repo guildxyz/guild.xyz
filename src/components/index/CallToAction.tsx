@@ -1,6 +1,6 @@
 import { Box, Flex, Heading, Text } from "@chakra-ui/react"
+import { CaretRight } from "@phosphor-icons/react"
 import { useRouter } from "next/router"
-import { CaretRight } from "phosphor-react"
 import LandingButton from "./LandingButton"
 
 const CallToAction = (): JSX.Element => {

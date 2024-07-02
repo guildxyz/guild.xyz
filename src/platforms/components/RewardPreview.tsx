@@ -9,7 +9,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { Question } from "phosphor-react"
+import { Question } from "@phosphor-icons/react"
 import rewards from "platforms/rewards"
 import { PropsWithChildren } from "react"
 import { PlatformName } from "types"
