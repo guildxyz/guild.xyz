@@ -8,8 +8,8 @@ import {
   Text,
   Textarea,
 } from "@chakra-ui/react"
+import { ArrowSquareOut } from "@phosphor-icons/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import { ArrowSquareOut } from "phosphor-react"
 import { Controller, useFormContext } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"

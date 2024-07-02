@@ -1,4 +1,5 @@
 import { Icon, Spinner, Text, Tooltip } from "@chakra-ui/react"
+import { ArrowSquareIn, LockSimple } from "@phosphor-icons/react"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import {
   RewardDisplay,
@@ -11,11 +12,10 @@ import Button from "components/common/Button"
 import useMembership, {
   useRoleMembership,
 } from "components/explorer/hooks/useMembership"
-import { ArrowSquareIn, LockSimple } from "phosphor-react"
+import { useMemo } from "react"
+import rewards from "rewards"
 import { claimTextButtonTooltipLabel } from "rewards/SecretText/TextCardButton"
 import useClaimText, { ClaimTextModal } from "rewards/SecretText/hooks/useClaimText"
-import rewards from "rewards"
-import { useMemo } from "react"
 import { PlatformType } from "types"
 import {
   getRolePlatformStatus,

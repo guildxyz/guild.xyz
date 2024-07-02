@@ -1,4 +1,5 @@
 import { Icon, Spinner, Tooltip } from "@chakra-ui/react"
+import { ArrowSquareIn, LockSimple } from "@phosphor-icons/react"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import {
   RewardDisplay,
@@ -10,11 +11,10 @@ import Button from "components/common/Button"
 import useMembership, {
   useRoleMembership,
 } from "components/explorer/hooks/useMembership"
-import { ArrowSquareIn, LockSimple } from "phosphor-react"
+import { useMemo } from "react"
+import rewards from "rewards"
 import { useMintPolygonIDProofContext } from "rewards/PolygonID/components/MintPolygonIDProofProvider"
 import useConnectedDID from "rewards/PolygonID/hooks/useConnectedDID"
-import rewards from "rewards"
-import { useMemo } from "react"
 import { PlatformType } from "types"
 
 const PolygonIDReward = ({ platform, withMotionImg }: RewardProps) => {

@@ -12,15 +12,15 @@ import {
   UnorderedList,
   chakra,
 } from "@chakra-ui/react"
+import { ArrowSquareOut } from "@phosphor-icons/react"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import Button from "components/common/Button"
 import CopyableAddress from "components/common/CopyableAddress"
 import { Alert } from "components/common/Modal"
 import useToast from "hooks/useToast"
 import { atom, useAtom } from "jotai"
-import { ArrowSquareOut } from "phosphor-react"
-import rewards from "rewards"
 import { useRef } from "react"
+import rewards from "rewards"
 import { PlatformName } from "types"
 import capitalize from "utils/capitalize"
 import shortenHex from "utils/shortenHex"

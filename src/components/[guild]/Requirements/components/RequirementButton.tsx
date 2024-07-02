@@ -1,6 +1,6 @@
 import { Img } from "@chakra-ui/react"
+import { ArrowSquareOut } from "@phosphor-icons/react"
 import Button from "components/common/Button"
-import { ArrowSquareOut } from "phosphor-react"
 import { forwardRef, PropsWithChildren } from "react"
 import { Rest } from "types"
 

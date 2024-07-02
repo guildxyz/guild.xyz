@@ -13,8 +13,8 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
+import { SortAscending, SortDescending, TrashSimple } from "@phosphor-icons/react"
 import { Column } from "@tanstack/react-table"
-import { SortAscending, SortDescending, TrashSimple } from "phosphor-react"
 import capitalize from "utils/capitalize"
 
 type Props = {

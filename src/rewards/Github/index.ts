@@ -1,10 +1,10 @@
-import { PlatformAsRewardRestrictions, RewardData } from "rewards/types"
-import GithubCardMenu from "./GithubCardMenu"
-import useGithubCardProps from "./useGithubCardProps"
-import { GithubLogo } from "phosphor-react"
+import { GithubLogo } from "@phosphor-icons/react"
 import dynamic from "next/dynamic"
 import { AddRewardPanelLoadingSpinner } from "rewards/components/AddRewardPanelLoadingSpinner"
 import LoadingRewardPreview from "rewards/components/LoadingRewardPreview"
+import { PlatformAsRewardRestrictions, RewardData } from "rewards/types"
+import GithubCardMenu from "./GithubCardMenu"
+import useGithubCardProps from "./useGithubCardProps"
 
 export default {
   icon: GithubLogo,

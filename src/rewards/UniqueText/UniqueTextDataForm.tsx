@@ -6,13 +6,13 @@ import {
   Text,
   Textarea,
 } from "@chakra-ui/react"
+import { File } from "@phosphor-icons/react"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import useDropzone from "hooks/useDropzone"
-import { File } from "phosphor-react"
-import PublicRewardDataForm from "rewards/SecretText/SecretTextDataForm/components/PublicRewardDataForm"
 import { PropsWithChildren, useState } from "react"
 import { useController, useFormContext, useWatch } from "react-hook-form"
+import PublicRewardDataForm from "rewards/SecretText/SecretTextDataForm/components/PublicRewardDataForm"
 import Key from "static/icons/key.svg"
 
 export type UniqueTextRewardForm = {

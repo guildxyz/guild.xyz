@@ -1,10 +1,10 @@
 import { Circle, Icon, Tag, Tooltip, useColorModeValue } from "@chakra-ui/react"
+import { ArrowRight } from "@phosphor-icons/react"
 import { useAccessedGuildPoints } from "components/[guild]/AccessHub/hooks/useAccessedGuildPoints"
 import useRequirements from "components/[guild]/hooks/useRequirements"
 import GuildLogo from "components/common/GuildLogo"
-import { ArrowRight } from "phosphor-react"
-import { useTokenRewardContext } from "rewards/Token/TokenRewardContext"
 import { useMemo } from "react"
+import { useTokenRewardContext } from "rewards/Token/TokenRewardContext"
 import Star from "static/icons/star.svg"
 import { RolePlatform } from "types"
 

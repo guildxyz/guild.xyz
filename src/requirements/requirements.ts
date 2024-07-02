@@ -1,5 +1,3 @@
-import { RequirementProps } from "components/[guild]/Requirements/components/Requirement"
-import dynamic from "next/dynamic"
 import {
   Coins,
   CurrencyCircleDollar,
@@ -11,8 +9,9 @@ import {
   Robot,
   Wallet,
   Wrench,
-} from "phosphor-react"
-import rewards from "rewards"
+} from "@phosphor-icons/react"
+import { RequirementProps } from "components/[guild]/Requirements/components/Requirement"
+import dynamic from "next/dynamic"
 import { ComponentType } from "react"
 import {
   ProvidedValueDisplayProps,
@@ -20,6 +19,7 @@ import {
   RequirementType,
 } from "requirements"
 import { VISIT_LINK_REGEX } from "requirements/VisitLink/VisitLinkRequirement"
+import rewards from "rewards"
 import Star from "static/icons/star.svg"
 import GuildLogo from "static/logo.svg"
 
