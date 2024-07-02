@@ -24,12 +24,11 @@ import { RoleTypeToAddTo, useAddRewardContext } from "../AddRewardContext"
 import useGuild from "../hooks/useGuild"
 import { defaultValues } from "./AddRewardButton"
 import AvailabilitySetup from "./components/AvailabilitySetup"
-import useSubmitAddReward from "./hooks/useSubmitAddReward"
 
 const SelectRolePanel = ({
   onSuccess,
 }: {
-  onSuccess?: Parameters<typeof useSubmitAddReward>[0]["onSuccess"]
+  onSuccess?: Parameters<typeof useCreateRRR>[0]["onSuccess"]
 }) => {
   const { modalRef, selection, activeTab, setStep, isBackButtonDisabled } =
     useAddRewardContext()

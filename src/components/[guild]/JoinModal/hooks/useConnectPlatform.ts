@@ -314,12 +314,12 @@ const useConnect = (useSubmitOptions?: UseSubmitOptions, isAutoConnect = false) 
           toastError
             ? { error: toastError, correlationId: rawError.correlationId }
             : // temporary until we solve the X rate limit
-              platformName === "TWITTER"
-              ? {
-                  error:
-                    "There're a lot of users connecting now, and X is rate limiting us, so your request timed out. Please try again later!",
-                }
-              : rawError
+            platformName === "TWITTER"
+            ? {
+                error:
+                  "There're a lot of users connecting now, and X is rate limiting us, so your request timed out. Please try again later!",
+              }
+            : rawError
         )
       }
     },
