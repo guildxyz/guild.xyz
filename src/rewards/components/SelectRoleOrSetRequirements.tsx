@@ -7,8 +7,9 @@ import RoleSelector from "components/[guild]/RoleSelector"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useRoleGroup from "components/[guild]/hooks/useRoleGroup"
 import SetRequirements from "components/create-guild/Requirements"
-import rewards, { PlatformAsRewardRestrictions } from "rewards"
+import { useCallback, useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
+import rewards, { PlatformAsRewardRestrictions } from "rewards"
 import { PlatformName } from "types"
 import getRandomInt from "utils/getRandomInt"
 
@@ -55,16 +56,16 @@ const SelectRoleOrSetRequirements = ({ isRoleSelectorDisabled }: Props) => {
   const { unregister, setValue } = useFormContext()
   const { selection, activeTab, setActiveTab } = useAddRewardContext()
 
-  const handleChange = (value: RoleTypeToAddTo) => {
-    if (value === RoleTypeToAddTo.NEW_ROLE) {
-      unregister("roleIds")
-      setValue("name", data?.roleName || `New ${rewards[selection].name} role`)
-      setValue("imageUrl", data?.imageUrl || `/guildLogos/${getRandomInt(286)}.svg`)
-      setValue("roleVisibility", "PUBLIC")
-    }
+  const initNewRole = useCallback(() => {
+    unregister("roleIds")
+    setValue("name", data?.roleName || `New ${rewards[selection].name} role`)
+    setValue("imageUrl", data?.imageUrl || `/guildLogos/${getRandomInt(286)}.svg`)
+    setValue("roleVisibility", "PUBLIC")
+  }, [data, selection, setValue, unregister])
 
-    setActiveTab(value)
-  }
+  useEffect(() => {
+    if (activeTab === RoleTypeToAddTo.NEW_ROLE) initNewRole()
+  }, [activeTab, initNewRole])
 
   const { asRewardRestriction } = rewards[selection]
 
@@ -76,7 +77,7 @@ const SelectRoleOrSetRequirements = ({ isRoleSelectorDisabled }: Props) => {
       variant="solid"
       colorScheme="indigo"
       index={isRoleSelectorDisabled ? RoleTypeToAddTo.NEW_ROLE : activeTab}
-      onChange={handleChange}
+      onChange={setActiveTab}
     >
       <TabList mt="6" mb="7">
         <Tab
