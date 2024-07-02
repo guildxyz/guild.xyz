@@ -1,8 +1,8 @@
-import { useFetcherWithSign } from "../utils/fetcher"
+import { useFetcherWithSign } from "hooks/useFetcherWithSign"
+import useSWRImmutable from "swr/immutable"
 import useGuild from "../components/[guild]/hooks/useGuild"
 import useUser from "../components/[guild]/hooks/useUser"
 import { RolePlatform } from "../types"
-import useSWRImmutable from "swr/immutable"
 
 export type UserReward = {
   claimed: boolean

@@ -1,6 +1,6 @@
+import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import useSWRImmutable from "swr/immutable"
 import { Role } from "types"
-import { useFetcherWithSign } from "utils/fetcher"
 import useGuild from "./useGuild"
 
 const useRole = (guildId: number | string, roleId: number) => {

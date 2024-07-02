@@ -21,10 +21,10 @@ import Button from "components/common/Button"
 import ErrorAlert from "components/common/ErrorAlert"
 import { Modal } from "components/common/Modal"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
+import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import { Robot } from "phosphor-react"
 import { useEffect } from "react"
 import useSWRImmutable from "swr/immutable"
-import { useFetcherWithSign } from "utils/fetcher"
 import useVerifyCaptcha from "../hooks/useVerifyCaptcha"
 
 const CompleteCaptcha = (props: ButtonProps): JSX.Element => {

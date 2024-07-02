@@ -22,14 +22,14 @@ import ExplorerCardMotionWrapper from "components/explorer/ExplorerCardMotionWra
 import GuildCard from "components/explorer/GuildCard"
 import GuildCardsGrid from "components/explorer/GuildCardsGrid"
 import SearchBar from "components/explorer/SearchBar"
+import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import useIsStuck from "hooks/useIsStuck"
 import { useQueryState } from "hooks/useQueryState"
+import { useScrollBatchedRendering } from "hooks/useScrollBatchedRendering"
 import { forwardRef, useEffect } from "react"
 import useSWRInfinite from "swr/infinite"
 import { GuildBase } from "types"
-import { useFetcherWithSign } from "utils/fetcher"
 import SearchBarFilters, { Filters } from "./SearchBarFilters"
-import { useScrollBatchedRendering } from "hooks/useScrollBatchedRendering"
 
 const BATCH_SIZE = 24
 
