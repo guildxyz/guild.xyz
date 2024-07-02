@@ -44,6 +44,8 @@ const ExistingRequirementEditableCard = ({
   } = useDisclosure()
 
   const RequirementComponent = REQUIREMENTS[requirement.type]?.displayComponent
+  const FormComponent = REQUIREMENTS[requirement.type].formComponent
+
   const editButtonRef = useRef()
   const removeButtonRef = useRef()
 
@@ -98,7 +100,7 @@ const ExistingRequirementEditableCard = ({
         />
       </RequirementBaseCard>
 
-      {!isEditDisabled && (
+      {!isEditDisabled && !!FormComponent && (
         <ExistingRequirementEditModal
           isOpen={isEditOpen}
           onClose={onEditClose}

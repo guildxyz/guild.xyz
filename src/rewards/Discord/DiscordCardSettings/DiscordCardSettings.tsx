@@ -7,6 +7,7 @@ import GuildifyExistingRole from "./components/GuildifyExistingRole"
 const roleOptions = [
   {
     value: "NEW",
+    defaultValue: "NEW",
     title: "Create a new Discord role for me",
     icon: Sparkle,
   },
@@ -24,12 +25,11 @@ const DiscordCardSettings = (): JSX.Element => {
 
   const { field } = useController({
     name: "roleType",
-    defaultValue: "NEW",
   })
 
   const handleChange = (value) => {
     field.onChange(value)
-    if (value === "NEW") setValue(`platformRoleId`, null)
+    if (value === "NEW") setValue("platformRoleId", "")
   }
 
   return (
