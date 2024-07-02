@@ -1,6 +1,7 @@
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { walletSelectorModalAtom } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import {
   StoredKeyPair,
   deleteKeyPairFromIdb,
@@ -12,7 +13,7 @@ import { useRouter } from "next/router"
 import { KeyedMutator } from "swr"
 import useSWRImmutable from "swr/immutable"
 import { User } from "types"
-import fetcher, { useFetcherWithSign } from "utils/fetcher"
+import fetcher from "utils/fetcher"
 
 // We don't open WaletSelectorModal on these routes
 const ignoredRoutes = [

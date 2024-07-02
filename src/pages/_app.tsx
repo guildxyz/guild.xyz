@@ -1,3 +1,4 @@
+import { env } from "env"
 import { Box, Progress, Slide, useColorMode } from "@chakra-ui/react"
 import { FuelWalletConnector, FueletWalletConnector } from "@fuels/connectors"
 import { FuelProvider } from "@fuels/react"
@@ -82,7 +83,7 @@ const App = ({
 
       {shouldUseReCAPTCHA && (
         <DynamicReCAPTCHA
-          sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+          sitekey={env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
           size="invisible"
         />
       )}

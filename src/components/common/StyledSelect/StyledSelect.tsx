@@ -73,7 +73,11 @@ const StyledSelect = forwardRef(
           IndicatorSeparator: null,
           ...props.components,
         }}
-        menuPortalTarget={document?.getElementById("chakra-react-select-portal")}
+        menuPortalTarget={
+          typeof document !== "undefined"
+            ? document.getElementById("chakra-react-select-portal")
+            : undefined
+        }
         menuShouldBlockScroll={true}
         menuShouldScrollIntoView={false}
       />

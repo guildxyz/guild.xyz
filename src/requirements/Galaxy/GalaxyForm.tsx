@@ -133,6 +133,9 @@ const GalaxyForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element
             }}
             // We don't filter campaigns client side, since we already get back a filtered list from the API
             filterOption={() => true}
+            fallbackValue={mappedCampaigns.find(
+              (c) => c.galaxyId === selectedGalaxyId
+            )}
             noResultText={
               !debouncedSearchText.length ? "Start typing..." : undefined
             }

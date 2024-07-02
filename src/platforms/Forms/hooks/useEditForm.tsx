@@ -33,7 +33,8 @@ const useEditForm = ({
 
           prevForms.map((form) => {
             if (form.id !== response.id) return form
-            return response
+            // the BE doesn't send submissionCount on the update endpoint, so we have to preserve that
+            return { ...response, submissionCount: form.submissionCount }
           })
         },
         { revalidate: false }

@@ -1,9 +1,9 @@
 import useUser from "components/[guild]/hooks/useUser"
+import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { UserAddress } from "types"
-import { useFetcherWithSign } from "utils/fetcher"
 
 type EditPrimaryAddressData = {
   address: `0x${string}`

@@ -76,7 +76,7 @@ export const useAccessedGuildPlatforms = (groupId?: number) => {
 }
 
 const AccessHub = (): JSX.Element => {
-  const { featureFlags, guildPin, groups, roles, onboardingComplete } = useGuild()
+  const { featureFlags, guildPin, groups, roles } = useGuild()
 
   const group = useRoleGroup()
   const { isAdmin } = useGuildPermission()
@@ -94,8 +94,9 @@ const AccessHub = (): JSX.Element => {
   const hasVisiblePages = !!groups?.length && roles?.some((role) => !!role.groupId)
 
   const showAccessHub =
-    (isAdmin ? !!onboardingComplete : isMember) ||
-    (!!accessedGuildPlatforms?.length && !!onboardingComplete) ||
+    isAdmin ||
+    isMember ||
+    !!accessedGuildPlatforms?.length ||
     (hasVisiblePages && !group)
 
   return (

@@ -1,3 +1,4 @@
+import { env } from "env"
 import Bugsnag from "@bugsnag/js"
 
 export const bugsnagStart = () => {
@@ -9,7 +10,7 @@ export const bugsnagStart = () => {
     return
 
   Bugsnag.start({
-    apiKey: process.env.NEXT_PUBLIC_BUGSNAG_KEY,
+    apiKey: env.NEXT_PUBLIC_BUGSNAG_KEY,
     plugins: [],
     endpoints: {
       notify: "/api/bugsnag/notify",

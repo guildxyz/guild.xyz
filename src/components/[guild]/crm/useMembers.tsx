@@ -1,8 +1,8 @@
 import useActiveStatusUpdates from "hooks/useActiveStatusUpdates"
+import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import { useCallback, useMemo } from "react"
 import useSWRInfinite from "swr/infinite"
-import { PlatformAccountDetails, Visibility } from "types"
-import { useFetcherWithSign } from "utils/fetcher"
+import { PlatformAccountDetails } from "types"
 import useGuild from "../hooks/useGuild"
 import { useUserPublic } from "../hooks/useUser"
 import { sortAccounts } from "./Identities"
@@ -60,12 +60,8 @@ const useMembers = (queryString: string) => {
           platformUsers: user.platformUsers.sort(sortAccounts),
           isShared: user.isShared === true || user.isShared === null,
           roles: {
-            hidden: user.roles.filter(
-              (role) => role.visibility === Visibility.HIDDEN
-            ),
-            public: user.roles.filter(
-              (role) => role.visibility !== Visibility.HIDDEN
-            ),
+            hidden: user.roles.filter((role) => role.visibility === "HIDDEN"),
+            public: user.roles.filter((role) => role.visibility !== "HIDDEN"),
           },
         }))
       ),

@@ -1,13 +1,17 @@
-import { Schemas } from "@guildxyz/types"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { unstable_serialize, useSWRConfig } from "swr"
-import { GuildPlatform, Requirement, RolePlatform } from "types"
+import {
+  Guild,
+  GuildPlatform,
+  RequirementCreateResponseOutput,
+  RolePlatform,
+} from "types"
 import { CreateRolePlatformResponse } from "./useCreateRolePlatforms"
 
 const groupRequirementsByRoleId = (
   roleIds: number[],
-  requirements: Schemas["RequirementCreateResponse"][]
-): { [roleId: number]: Schemas["RequirementCreateResponse"][] } =>
+  requirements: RequirementCreateResponseOutput[]
+): { [roleId: number]: RequirementCreateResponseOutput[] } =>
   roleIds.reduce((acc, roleId) => {
     acc[roleId] = requirements.filter((req) => req.roleId === roleId)
     return acc
@@ -54,7 +58,7 @@ const useMutateAdditionsToRoles = () => {
 
   const mutateAdditionsInGuild = (
     roleIds: number[],
-    createdRequirements: Schemas["RequirementCreateResponse"][],
+    createdRequirements: RequirementCreateResponseOutput[],
     // TODO: create a RoleRewardCreateResponse schema in our types package
     createdRolePlatforms: CreateRolePlatformResponse[]
   ) => {
@@ -89,26 +93,25 @@ const useMutateAdditionsToRoles = () => {
           return {
             ...role,
             requirements: [
-              ...role.requirements.filter(
-                (req) => !reqIdsToDelete.includes(req.id as number)
-              ),
-              // TODO: we can remove the Requirement[] cast once we start using the Guild schema from our types package in the useGuild hook
-              ...(createdRequirementsOnRole as Requirement[]),
+              ...role.requirements.filter((req) => !reqIdsToDelete.includes(req.id)),
+              ...createdRequirementsOnRole,
             ],
             rolePlatforms: [...role.rolePlatforms, ...createdRolePlatformsOnRole],
           }
         })
 
         // Return the updated data
-        return {
-          ...prev,
-          // TODO: we can remove the GuildPlatform[] cast once we start using the Guild schema from our types package in the useGuild hook
-          guildPlatforms: [
-            ...prev.guildPlatforms,
-            ...(createdGuildPlatforms as GuildPlatform[]),
-          ],
-          roles: updatedRoles,
-        }
+        return !!prev
+          ? ({
+              ...prev,
+              // TODO: we can remove the GuildPlatform[] cast once we start using the Guild schema from our types package in the useGuild hook
+              guildPlatforms: [
+                ...(prev?.guildPlatforms ?? []),
+                ...(createdGuildPlatforms as GuildPlatform[]),
+              ],
+              roles: updatedRoles,
+            } satisfies Guild)
+          : undefined
       },
       { revalidate: false }
     )
@@ -116,7 +119,7 @@ const useMutateAdditionsToRoles = () => {
 
   const mutateAdditionsToRoles = (
     roleIds: number[],
-    createdRequirements: Schemas["RequirementCreateResponse"][],
+    createdRequirements: RequirementCreateResponseOutput[],
     // TODO: create a RoleRewardCreateResponse schema in our types package
     createdRolePlatforms: CreateRolePlatformResponse[]
   ) => {

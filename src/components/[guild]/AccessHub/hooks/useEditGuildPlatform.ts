@@ -1,11 +1,11 @@
 import { ContractCallFunction } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPlatform from "components/[guild]/hooks/useGuildPlatform"
+import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import { CAPACITY_TIME_PLATFORMS } from "platforms/rewards"
 import { GuildPlatform, PlatformName, PlatformType } from "types"
-import { useFetcherWithSign } from "utils/fetcher"
 
 type PartialGuildPlatform = Partial<
   Omit<GuildPlatform, "platformGuildData"> & {

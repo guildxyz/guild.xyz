@@ -1,3 +1,4 @@
+import { env } from "env"
 import {
   Checkbox,
   Collapse,
@@ -62,7 +63,7 @@ export default function AllowlistFormInputs({
   const uploadFileToGcs = useSubmit(async (file: File) => {
     const [data, body] = await Promise.all([
       fetcher(
-        `${process.env.NEXT_PUBLIC_API.replace(
+        `${env.NEXT_PUBLIC_API.replace(
           "/v1",
           "/v2"
         )}/third-party/google/signed-url?requirementType=${

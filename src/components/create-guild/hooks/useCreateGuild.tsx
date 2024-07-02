@@ -1,16 +1,18 @@
+import { Schemas } from "@guildxyz/types"
 import processConnectorError from "components/[guild]/JoinModal/utils/processConnectorError"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import { useYourGuilds } from "components/explorer/YourGuilds"
-import useCustomPosthogEvents from "hooks/useCustomPosthogEvents"
 import useMatchMutate from "hooks/useMatchMutate"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
-import { Guild, GuildBase, PlatformType } from "types"
+import { Guild, GuildBase } from "types"
 import fetcher from "utils/fetcher"
-import replacer from "utils/guildJsonReplacer"
+import getRandomInt from "utils/getRandomInt"
+import slugify from "utils/slugify"
+import { CreateGuildFormType } from "../CreateGuildForm"
 
 const useCreateGuild = ({
   onError,
@@ -20,7 +22,6 @@ const useCreateGuild = ({
   onSuccess?: () => void
 } = {}) => {
   const { captureEvent } = usePostHogContext()
-  const { rewardCreated } = useCustomPosthogEvents()
 
   const { mutate: mutateYourGuilds } = useYourGuilds()
   const matchMutate = useMatchMutate()
@@ -44,23 +45,11 @@ const useCreateGuild = ({
     onSuccess: (response_) => {
       triggerConfetti()
 
-      captureEvent("guild creation flow > guild successfully created", {
+      captureEvent("Created guild", {
         $set: {
           createdGuild: true,
         },
       })
-
-      if (response_.guildPlatforms?.length > 0) {
-        response_.guildPlatforms.forEach((guildPlatform) => {
-          rewardCreated(guildPlatform.platformId, response_?.urlName)
-        })
-      }
-
-      if (response_.guildPlatforms?.[0]?.platformId === PlatformType.CONTRACT_CALL) {
-        captureEvent("Created NFT reward", {
-          hook: "useCreateGuild",
-        })
-      }
 
       mutateYourGuilds((prev) => mutateGuildsCache(prev, response_), {
         revalidate: false,
@@ -83,8 +72,27 @@ const useCreateGuild = ({
 
   return {
     ...useSubmitResponse,
-    onSubmit: (data) =>
-      useSubmitResponse.onSubmit(JSON.parse(JSON.stringify(data, replacer))),
+    /**
+     * Temporarily creating a default Member role, later the users will be able to
+     * pick from Guild Templates
+     */
+    onSubmit: (data: CreateGuildFormType) =>
+      useSubmitResponse.onSubmit({
+        ...data,
+        urlName: slugify(data.name),
+        imageUrl: data.imageUrl || `/guildLogos/${getRandomInt(286)}.svg`,
+        roles: [
+          {
+            name: "Member",
+            imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
+            requirements: [
+              {
+                type: "FREE",
+              },
+            ],
+          },
+        ],
+      } satisfies Schemas["GuildCreationPayload"]),
   }
 }
 

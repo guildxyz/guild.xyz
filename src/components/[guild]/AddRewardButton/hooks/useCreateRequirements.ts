@@ -2,9 +2,12 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { RequirementIdMap } from "hooks/useCreateRRR"
 import useShowErrorToast from "hooks/useShowErrorToast"
+import {
+  RequirementCreateResponseOutput,
+  RequirementCreationPayloadWithTempID,
+} from "types"
 
-import { Requirement } from "types"
-import { useFetcherWithSign } from "utils/fetcher"
+import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import preprocessRequirement from "utils/preprocessRequirement"
 
 const useCreateRequirements = () => {
@@ -17,7 +20,8 @@ const useCreateRequirements = () => {
   }
 
   const createRequirements = async (
-    requirements: Partial<Requirement>[],
+    // We can assign generated IDs to requirements on our frontend, so it's safe to extend this type with an ID
+    requirements: RequirementCreationPayloadWithTempID[],
     roleIds: number[]
   ) => {
     const requirementIdMap: RequirementIdMap = {}
@@ -31,7 +35,7 @@ const useCreateRequirements = () => {
             body: preprocessRequirement(req),
           },
         ])
-          .then((res) => {
+          .then((res: RequirementCreateResponseOutput) => {
             if (!requirementIdMap[req.id]) requirementIdMap[req.id] = {}
             requirementIdMap[req.id][roleId] = res.id
             return { status: "fulfilled", result: res }

@@ -3,7 +3,7 @@ import useTokenData from "hooks/useTokenData"
 import { Info, Question } from "phosphor-react"
 import { GUILD_FEE_PERCENTAGE, NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { formatUnits } from "viem"
-import { CHAIN_CONFIG } from "wagmiConfig/chains"
+import { Chain, CHAIN_CONFIG } from "wagmiConfig/chains"
 import { useRequirementContext } from "../../RequirementContext"
 import usePrice from "../hooks/usePrice"
 import usePurchaseAsset from "../hooks/usePurchaseAsset"
@@ -15,9 +15,12 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
   const requirement = useRequirementContext()
   const { pickedCurrency } = useGuildCheckoutContext()
 
+  // TODO: we could remove the cast once we'll have schemas for "ERC..." requirements
+  const requirementChain = requirement.chain as Chain
+
   const {
     data: { symbol },
-  } = useTokenData(requirement.chain, pickedCurrency)
+  } = useTokenData(requirementChain, pickedCurrency)
 
   const {
     data: {
@@ -39,7 +42,7 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
     ? parseFloat(
         formatUnits(
           estimatedGas,
-          CHAIN_CONFIG[requirement.chain].nativeCurrency.decimals
+          CHAIN_CONFIG[requirementChain].nativeCurrency.decimals
         )
       )
     : null
@@ -168,7 +171,7 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
               {!estimatedGasInFloat
                 ? "Couldn't estimate"
                 : `${estimatedGasInFloat.toFixed(8)} ${
-                    CHAIN_CONFIG[requirement.chain].nativeCurrency.symbol
+                    CHAIN_CONFIG[requirementChain].nativeCurrency.symbol
                   }`}
             </Text>
           </Skeleton>

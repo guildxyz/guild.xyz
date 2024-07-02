@@ -8,6 +8,7 @@ import {
   ButtonProps,
   HStack,
   Icon,
+  IconButton,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -16,6 +17,7 @@ import {
   ModalOverlay,
   Skeleton,
   Text,
+  Tooltip,
   VStack,
   useBreakpointValue,
   useDisclosure,
@@ -24,15 +26,16 @@ import useUser from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
+import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import useSubmit, { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
-import { DeviceMobileCamera } from "phosphor-react"
+import { ArrowCounterClockwise, DeviceMobileCamera } from "phosphor-react"
 import rewards from "platforms/rewards"
 import { QRCodeSVG } from "qrcode.react"
 import { useCallback, useEffect, useState } from "react"
 import { isMobile } from "react-device-detect"
 import { useCountdown } from "usehooks-ts"
-import fetcher, { useFetcherWithSign } from "utils/fetcher"
+import fetcher from "utils/fetcher"
 import DisconnectAccountButton from "./components/DisconnectAccountButton"
 import SocialAccountUI from "./components/SocialAccountUI"
 
@@ -211,7 +214,7 @@ const ConnectFarcasterButton = ({
                     : `${seconds} seconds`}
                 </Text>
 
-                {/* <Tooltip label="Regenerate now">
+                <Tooltip label="Regenerate now">
                   <IconButton
                     isDisabled={!shouldEnableRegenerateButton}
                     size="xs"
@@ -225,7 +228,7 @@ const ConnectFarcasterButton = ({
                       onRegenerate()
                     }}
                   />
-                </Tooltip> */}
+                </Tooltip>
               </HStack>
 
               <Text color={"gray"} textAlign={"center"} fontSize="sm">

@@ -14,13 +14,14 @@ import {
 import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import ErrorAlert from "components/common/ErrorAlert"
+import { env } from "env"
+import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import useToast from "hooks/useToast"
 import { ArrowsClockwise } from "phosphor-react"
 import { QRCodeSVG } from "qrcode.react"
 import { useEffect } from "react"
 import useSWR from "swr"
 import useSWRImmutable from "swr/immutable"
-import { useFetcherWithSign } from "utils/fetcher"
 import useConnectedDID from "../hooks/useConnectedDID"
 import { useMintPolygonIDProofContext } from "./MintPolygonIDProofProvider"
 
@@ -45,7 +46,7 @@ const ConnectDIDModal = ({ isOpen, onClose }: Props) => {
   } = useSWRImmutable(
     isOpen
       ? [
-          `${process.env.NEXT_PUBLIC_POLYGONID_API}/v1/users/${userId}/polygon-id/auth`,
+          `${env.NEXT_PUBLIC_POLYGONID_API}/v1/users/${userId}/polygon-id/auth`,
           {
             method: "GET",
           },
@@ -57,7 +58,7 @@ const ConnectDIDModal = ({ isOpen, onClose }: Props) => {
   const { mutate: mutateConnectedDID } = useConnectedDID()
   const { data: connectedDID } = useSWR<string>(
     userId && isOpen && qrCode
-      ? `${process.env.NEXT_PUBLIC_POLYGONID_API}/v1/users/${userId}/polygon-id?poll=true`
+      ? `${env.NEXT_PUBLIC_POLYGONID_API}/v1/users/${userId}/polygon-id?poll=true`
       : null,
     {
       onErrorRetry: (_error, _key, _config, revalidate, _revalidateOps) => {

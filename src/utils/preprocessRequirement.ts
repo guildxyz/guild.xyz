@@ -1,6 +1,12 @@
+import { Schemas } from "@guildxyz/types"
 import { Requirement } from "types"
 
-const preprocessRequirement = (requirement: Partial<Requirement>): Requirement => {
+const preprocessRequirement = (
+  requirement?:
+    | Partial<Schemas["RequirementCreationPayload"]>
+    | Partial<Schemas["RequirementUpdatePayload"]>
+    | Partial<Requirement>
+): Requirement => {
   const processedRequirement: Requirement = structuredClone(
     requirement
   ) as Requirement

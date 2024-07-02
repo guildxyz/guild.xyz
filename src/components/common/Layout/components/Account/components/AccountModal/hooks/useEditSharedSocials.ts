@@ -1,8 +1,8 @@
 import useUser from "components/[guild]/hooks/useUser"
+import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit/useSubmit"
 import useToast from "hooks/useToast"
-import { useFetcherWithSign } from "utils/fetcher"
 
 const useEditSharedSocials = (guildId) => {
   const { id, mutate } = useUser()

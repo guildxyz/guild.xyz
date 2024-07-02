@@ -1,3 +1,4 @@
+import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import useScrollEffect from "hooks/useScrollEffect"
 import { useRouter } from "next/router"
 import {
@@ -10,7 +11,6 @@ import {
 } from "react"
 import useSWRInfinite, { SWRInfiniteResponse } from "swr/infinite"
 import { PlatformName, Requirement } from "types"
-import { useFetcherWithSign } from "utils/fetcher"
 import { useUserPublic } from "../hooks/useUser"
 import {
   isSupportedQueryParam,
@@ -162,7 +162,11 @@ const ActivityLogProvider = ({
         ? ADMIN_ACTIONS
         : actionGroup === ActivityLogActionGroup.UserAction
         ? USER_ACTIONS
-        : []
+        : /**
+           * Adding all actions to the query by default in order to make sure we don't fetch
+           * unsupported ones (e.g. the "click join on web" action)
+           */
+          [...USER_ACTIONS, ...ADMIN_ACTIONS]
 
     actions.forEach((action) => {
       searchParams.append("action", action.toString())
