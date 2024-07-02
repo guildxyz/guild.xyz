@@ -2,11 +2,11 @@ import { Schemas } from "@guildxyz/types"
 import { sortAccounts } from "components/[guild]/crm/Identities"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
+import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import { useCallback, useMemo } from "react"
 import useSWRImmutable from "swr/immutable"
 import useSWRInfinite from "swr/infinite"
 import { PlatformAccountDetails } from "types"
-import { useFetcherWithSign } from "utils/fetcher"
 
 type SubmissionAnswer = {
   fieldId: string

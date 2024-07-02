@@ -60,8 +60,8 @@ const AddRoleRewardModal = ({ onAdd }: Props) => {
         step === "SELECT_ROLE"
           ? "2xl"
           : isRewardSetupStep
-          ? modalSizeForPlatform(selection)
-          : "4xl"
+            ? modalSizeForPlatform(selection)
+            : "4xl"
       }
       scrollBehavior="inside"
       colorScheme="dark"
@@ -69,11 +69,7 @@ const AddRoleRewardModal = ({ onAdd }: Props) => {
       <ModalOverlay />
 
       {step === "HOME" && (
-        <SelectRewardPanel
-          disabledRewards={{
-            ERC20: `Token rewards cannot be added to existing roles. Please use the "Add reward" button in the top right corner of the Guild page to create the reward with a new role.`,
-          }}
-        >
+        <SelectRewardPanel>
           <SelectExistingPlatform onClose={onClose} onSelect={onAdd} />
           <Text fontWeight="bold" mb="3">
             Add new reward

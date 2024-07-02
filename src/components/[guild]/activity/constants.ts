@@ -68,7 +68,6 @@ export enum ACTION {
   RestartStatusUpdate = "restart status update",
   StopStatusUpdate = "stop status update",
   // User
-  ClickJoinOnWeb = "click join on web",
   ClickJoinOnPlatform = "click join on platform",
   JoinGuild = "join guild",
   LeaveGuild = "leave guild",
@@ -234,10 +233,6 @@ export const activityLogActionIcons: Record<
     as: ArrowsClockwise,
     color: "red.500",
   },
-  [ACTION.ClickJoinOnWeb]: {
-    as: SignIn,
-    color: "green.500",
-  },
   [ACTION.ClickJoinOnPlatform]: {
     as: SignIn,
     color: "green.500",
@@ -329,7 +324,6 @@ export const HIDDEN_ACTIONS: ACTION[] = [
 ]
 
 export const USER_ACTIONS: ACTION[] = [
-  ACTION.ClickJoinOnWeb,
   ACTION.ClickJoinOnPlatform,
   ACTION.JoinGuild,
   ACTION.LeaveGuild,

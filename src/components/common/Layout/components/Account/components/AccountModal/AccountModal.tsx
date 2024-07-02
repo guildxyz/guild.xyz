@@ -18,6 +18,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import useUser, { useUserPublic } from "components/[guild]/hooks/useUser"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import useConnectorNameAndIcon from "components/_app/Web3ConnectionManager/hooks/useConnectorNameAndIcon"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
@@ -47,6 +48,7 @@ const AccountModal = () => {
     onOpen: openNetworkModal,
     onClose: closeNetworkModal,
   } = useDisclosure()
+  const { captureEvent } = usePostHogContext()
   const { id } = useUser()
   const { deleteKeys } = useUserPublic()
 
@@ -109,7 +111,10 @@ const AccountModal = () => {
                       <Button
                         variant="ghost"
                         p="0"
-                        onClick={openNetworkModal}
+                        onClick={() => {
+                          captureEvent("Opened network modal")
+                          openNetworkModal()
+                        }}
                         size="xs"
                         mt="-2px"
                       >
