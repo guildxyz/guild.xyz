@@ -18,7 +18,7 @@ import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hoo
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Question } from "phosphor-react"
-import rewards, { AddRewardPanelProps } from "platforms/rewards"
+import rewards, { AddRewardPanelProps } from "rewards"
 import { useEffect } from "react"
 import { FormProvider, useController, useForm, useWatch } from "react-hook-form"
 import usePoapById from "requirements/Poap/hooks/usePoapById"

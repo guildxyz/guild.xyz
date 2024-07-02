@@ -7,7 +7,7 @@ import {
   TagRightIcon,
 } from "@chakra-ui/react"
 import { DotsThreeVertical, IconProps } from "phosphor-react"
-import rewards from "platforms/rewards"
+import rewards from "rewards"
 import { ForwardRefExoticComponent, RefAttributes } from "react"
 import { PlatformName, PlatformType } from "types"
 import { useActivityLog } from "../../ActivityLogContext"

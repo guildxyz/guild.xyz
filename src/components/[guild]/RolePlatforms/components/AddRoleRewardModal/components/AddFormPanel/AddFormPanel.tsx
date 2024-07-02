@@ -6,7 +6,7 @@ import useCreateForm from "components/[guild]/CreateFormModal/hooks/useCreateFor
 import { FormCreationSchema } from "components/[guild]/CreateFormModal/schemas"
 import Button from "components/common/Button"
 import { ArrowRight } from "phosphor-react"
-import { AddRewardPanelProps } from "platforms/rewards"
+import { AddRewardPanelProps } from "rewards"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { PlatformGuildData, PlatformType } from "types"
 import { uuidv7 } from "uuidv7"

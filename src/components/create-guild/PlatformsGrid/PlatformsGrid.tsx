@@ -1,6 +1,6 @@
 import { Box, Heading, SimpleGrid, Stack, StackProps } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
-import rewards from "platforms/rewards"
+import rewards from "rewards"
 import { PlatformName, PlatformType } from "types"
 import PlatformSelectButton from "./components/PlatformSelectButton"
 

@@ -18,7 +18,7 @@ import { useSetAtom } from "jotai"
 import dynamic from "next/dynamic"
 import Image from "next/image"
 import { ArrowSquareIn, CaretRight, IconProps } from "phosphor-react"
-import rewards from "platforms/rewards"
+import rewards from "rewards"
 import { ComponentType, RefAttributes, useMemo } from "react"
 import { PlatformName, Rest } from "types"
 

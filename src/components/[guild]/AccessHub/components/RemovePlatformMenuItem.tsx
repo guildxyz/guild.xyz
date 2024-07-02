@@ -4,7 +4,7 @@ import { AlreadyGrantedAccessesWillRemainInfo } from "components/[guild]/RolePla
 import useGuild from "components/[guild]/hooks/useGuild"
 import ConfirmationAlert from "components/create-guild/Requirements/components/ConfirmationAlert"
 import { TrashSimple } from "phosphor-react"
-import rewards from "platforms/rewards"
+import rewards from "rewards"
 import { PlatformType } from "types"
 
 type Props = {

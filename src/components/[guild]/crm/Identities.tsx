@@ -8,7 +8,7 @@ import {
 } from "@chakra-ui/react"
 import { useCardBg } from "components/common/Card"
 import { LockSimple, Wallet } from "phosphor-react"
-import rewards from "platforms/rewards"
+import rewards from "rewards"
 import { PropsWithChildren, memo } from "react"
 import { PlatformAccountDetails, PlatformType, Rest } from "types"
 import shortenHex from "utils/shortenHex"

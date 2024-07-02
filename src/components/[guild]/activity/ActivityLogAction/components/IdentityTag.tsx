@@ -1,6 +1,6 @@
 import { Tag, TagLabel, TagLeftIcon } from "@chakra-ui/react"
 import { Wallet } from "phosphor-react"
-import rewards from "platforms/rewards"
+import rewards from "rewards"
 import { PlatformName } from "types"
 
 type Props = {
