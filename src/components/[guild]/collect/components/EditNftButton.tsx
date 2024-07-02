@@ -1,7 +1,7 @@
 import { IconButton, useDisclosure } from "@chakra-ui/react"
+import { GearSix } from "@phosphor-icons/react"
 import { ContractCallFunction } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
 import { useThemeContext } from "components/[guild]/ThemeContext"
-import { GearSix } from "phosphor-react"
 import EditNftModal from "rewards/ContractCall/components/EditNftModal"
 import { useCollectNftContext } from "./CollectNftContext"
 

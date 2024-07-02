@@ -1,11 +1,11 @@
-import { PencilSimpleLine } from "phosphor-react"
-import { PlatformAsRewardRestrictions, RewardData } from "rewards/types"
-import useFormCardProps from "./useFormCardProps"
-import FormCardLinkButton from "./FormCardLinkButton"
-import FormCardMenu from "./FormCardMenu"
+import { PencilSimpleLine } from "@phosphor-icons/react"
 import dynamic from "next/dynamic"
 import { AddRewardPanelLoadingSpinner } from "rewards/components/AddRewardPanelLoadingSpinner"
 import LoadingRewardPreview from "rewards/components/LoadingRewardPreview"
+import { PlatformAsRewardRestrictions, RewardData } from "rewards/types"
+import FormCardLinkButton from "./FormCardLinkButton"
+import FormCardMenu from "./FormCardMenu"
+import useFormCardProps from "./useFormCardProps"
 
 export default {
   icon: PencilSimpleLine,

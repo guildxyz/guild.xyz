@@ -1,4 +1,5 @@
 import { Box, HStack, Img, Stack, Text } from "@chakra-ui/react"
+import { Plus, SignIn } from "@phosphor-icons/react"
 import { walletSelectorModalAtom } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import ActionCard from "components/common/ActionCard"
@@ -9,7 +10,6 @@ import GuildCardsGrid from "components/explorer/GuildCardsGrid"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import { useSetAtom } from "jotai"
 import Link from "next/link"
-import { Plus, SignIn } from "phosphor-react"
 import { forwardRef } from "react"
 import { GuildBase } from "types"
 

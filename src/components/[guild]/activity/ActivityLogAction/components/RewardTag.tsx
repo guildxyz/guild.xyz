@@ -6,9 +6,9 @@ import {
   TagProps,
   TagRightIcon,
 } from "@chakra-ui/react"
-import { DotsThreeVertical, IconProps } from "phosphor-react"
-import rewards from "rewards"
+import { DotsThreeVertical, IconProps } from "@phosphor-icons/react"
 import { ForwardRefExoticComponent, RefAttributes } from "react"
+import rewards from "rewards"
 import { PlatformName, PlatformType } from "types"
 import { useActivityLog } from "../../ActivityLogContext"
 import ClickableTagPopover from "./ClickableTagPopover"

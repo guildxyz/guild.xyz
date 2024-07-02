@@ -1,13 +1,13 @@
-import { Star } from "phosphor-react"
+import { Star } from "@phosphor-icons/react"
+import dynamic from "next/dynamic"
+import { AddRewardPanelLoadingSpinner } from "rewards/components/AddRewardPanelLoadingSpinner"
+import LoadingRewardPreview from "rewards/components/LoadingRewardPreview"
 import {
   CardSettingsComponent,
   PlatformAsRewardRestrictions,
   RewardData,
 } from "rewards/types"
 import usePointsCardProps from "./usePointsCardProps"
-import dynamic from "next/dynamic"
-import LoadingRewardPreview from "rewards/components/LoadingRewardPreview"
-import { AddRewardPanelLoadingSpinner } from "rewards/components/AddRewardPanelLoadingSpinner"
 
 export default {
   icon: Star,

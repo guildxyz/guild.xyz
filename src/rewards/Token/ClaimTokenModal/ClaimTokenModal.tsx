@@ -15,6 +15,7 @@ import {
   Tooltip,
   VStack,
 } from "@chakra-ui/react"
+import { ArrowSquareOut } from "@phosphor-icons/react"
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import SwitchNetworkButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/SwitchNetworkButton"
 import useIsBalanceSufficient from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/hooks/useIsBalanceSufficient"
@@ -22,9 +23,8 @@ import AvailabilityTags from "components/[guild]/RolePlatforms/components/Platfo
 import Button from "components/common/Button"
 import { useCardBg } from "components/common/Card"
 import Image from "next/image"
-import { ArrowSquareOut } from "phosphor-react"
-import { claimTextButtonTooltipLabel } from "rewards/SecretText/TextCardButton"
 import { useMemo, useState } from "react"
+import { claimTextButtonTooltipLabel } from "rewards/SecretText/TextCardButton"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import {
   getRolePlatformStatus,

@@ -1,11 +1,11 @@
-import { DiscordLogo } from "phosphor-react"
-import useDiscordCardProps from "./useDiscordCardProps"
-import DiscordCardSettings from "./DiscordCardSettings"
-import DiscordCardMenu from "./DiscordCardMenu"
-import { PlatformAsRewardRestrictions, RewardData } from "rewards/types"
+import { DiscordLogo } from "@phosphor-icons/react"
 import dynamic from "next/dynamic"
 import { AddRewardPanelLoadingSpinner } from "rewards/components/AddRewardPanelLoadingSpinner"
 import LoadingRewardPreview from "rewards/components/LoadingRewardPreview"
+import { PlatformAsRewardRestrictions, RewardData } from "rewards/types"
+import DiscordCardMenu from "./DiscordCardMenu"
+import DiscordCardSettings from "./DiscordCardSettings"
+import useDiscordCardProps from "./useDiscordCardProps"
 
 export default {
   icon: DiscordLogo,

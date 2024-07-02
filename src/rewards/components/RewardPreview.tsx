@@ -9,9 +9,9 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { Question } from "phosphor-react"
-import rewards from "rewards"
+import { Question } from "@phosphor-icons/react"
 import { PropsWithChildren } from "react"
+import rewards from "rewards"
 import { PlatformName } from "types"
 
 type Props = {
