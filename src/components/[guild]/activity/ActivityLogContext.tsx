@@ -11,12 +11,12 @@ import {
 } from "react"
 import useSWRInfinite, { SWRInfiniteResponse } from "swr/infinite"
 import { PlatformName, Requirement } from "types"
-import { useUserPublic } from "../hooks/useUser"
 import {
   isSupportedQueryParam,
   SupportedQueryParam,
 } from "./ActivityLogFiltersBar/components/ActivityLogFiltersContext"
 
+import { useUserPublic } from "@/hooks/useUserPublic"
 import {
   ActivityLogAction,
   ActivityLogActionGroup,

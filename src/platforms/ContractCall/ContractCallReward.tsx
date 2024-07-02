@@ -10,7 +10,7 @@ import {
   RewardProps,
 } from "../../components/[guild]/RoleCard/components/Reward"
 
-import { usePostHogContext } from "components/_app/PostHogProvider"
+import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import Link from "next/link"
 import { forwardRef } from "react"
 import NftAvailabilityTags from "./components/NftAvailabilityTags"

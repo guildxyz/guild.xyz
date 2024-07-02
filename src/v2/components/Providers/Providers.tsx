@@ -1,0 +1,62 @@
+"use client"
+
+import { FuelProvider } from "@fuels/react"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { fuelConfig } from "fuelConfig"
+import { atom } from "jotai"
+import { ThemeProvider } from "next-themes"
+import { SWRConfig } from "swr"
+import { fetcherForSWR } from "utils/fetcher"
+import { WagmiProvider } from "wagmi"
+import { wagmiConfig } from "wagmiConfig"
+import { AccountModal } from "../Account/components/AccountModal"
+import { Toaster } from "../ui/Toaster"
+import { Web3ConnectionManager } from "../Web3ConnectionManager"
+import { PostHogProvider } from "./PostHogProvider"
+
+const queryClient = new QueryClient()
+
+// Atoms for global modals - TODO: move the types to another file
+export const walletSelectorModalAtom = atom(false)
+export const accountModalAtom = atom(false)
+
+export type AddressLinkParams = {
+  userId?: number
+  address?: `0x${string}`
+}
+export const addressLinkParamsAtom = atom<AddressLinkParams>({
+  userId: undefined,
+  address: undefined,
+})
+export const walletLinkHelperModalAtom = atom(false)
+
+// TODO: add AppErrorBoundary
+export function Providers({ children }: { children: React.ReactNode }) {
+  return (
+    <ThemeProvider
+      attribute="data-theme"
+      storageKey="chakra-ui-color-mode"
+      defaultTheme="system"
+      enableSystem
+      disableTransitionOnChange
+    >
+      <SWRConfig value={{ fetcher: fetcherForSWR }}>
+        <WagmiProvider config={wagmiConfig} reconnectOnMount={false}>
+          <QueryClientProvider client={queryClient}>
+            <FuelProvider ui={false} fuelConfig={fuelConfig}>
+              <PostHogProvider>
+                {/* TODO: <IntercomProvider> */}
+                {children}
+                <AccountModal />
+                <Web3ConnectionManager />
+                {/* </IntercomProvider> */}
+              </PostHogProvider>
+            </FuelProvider>
+          </QueryClientProvider>
+        </WagmiProvider>
+      </SWRConfig>
+
+      <Toaster />
+    </ThemeProvider>
+  )
+}

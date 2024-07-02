@@ -1,4 +1,4 @@
-import { platformMergeAlertAtom } from "components/_app/Web3ConnectionManager/components/PlatformMergeErrorAlert"
+import { platformMergeAlertAtom } from "@/components/Web3ConnectionManager/PlatformMergeErrorAlert"
 import { useSetAtom } from "jotai"
 import { useRouter } from "next/router"
 import rewards from "platforms/rewards"

@@ -1,5 +1,5 @@
+import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import { Checkbox, Icon, Link, Text } from "@chakra-ui/react"
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import { ArrowSquareOut } from "phosphor-react"
 import { useFormContext } from "react-hook-form"
 

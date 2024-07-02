@@ -1,9 +1,10 @@
 import { Flex, Heading, Icon, Stack } from "@chakra-ui/react"
-import IntercomProvider, { triggerChat } from "components/_app/IntercomProvider"
+import IntercomProvider from "components/_app/IntercomProvider"
 import Button from "components/common/Button"
 import Head from "next/head"
 import { ChatCircle, House } from "phosphor-react"
 import NotFoundIcon from "static/avatars/58.svg"
+import { triggerChat } from "utils/intercom"
 
 const Page = ({ statusCode }): JSX.Element => (
   <>

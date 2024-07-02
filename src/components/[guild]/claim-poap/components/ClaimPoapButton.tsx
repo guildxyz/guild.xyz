@@ -1,7 +1,7 @@
+import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import { ButtonProps } from "@chakra-ui/react"
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import useShowErrorToast from "hooks/useShowErrorToast"
@@ -67,8 +67,8 @@ const ClaimPoapButton = ({ rolePlatform, ...rest }: Props) => {
           isAccessLoading
             ? "Checking access"
             : isMembershipUpdateLoading
-            ? "Checking eligibility"
-            : "Claiming POAP"
+              ? "Checking eligibility"
+              : "Claiming POAP"
         }
         onClick={() => {
           captureEvent("Click: ClaimPoapButton", {
@@ -92,8 +92,8 @@ const ClaimPoapButton = ({ rolePlatform, ...rest }: Props) => {
         {claimed
           ? "View mint link"
           : !hasRoleAccess
-          ? "Check access & claim"
-          : "Claim now"}
+            ? "Check access & claim"
+            : "Claim now"}
       </Button>
       <MintLinkModal
         isLoading={isLoading}

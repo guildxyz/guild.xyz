@@ -1,4 +1,4 @@
-import { env } from "env"
+import { accountModalAtom } from "@/components/Providers/Providers"
 import {
   ButtonGroup,
   GridItem,
@@ -16,6 +16,7 @@ import {
 } from "@chakra-ui/react"
 import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
+import { env } from "env"
 import { AnimatePresence } from "framer-motion"
 import useGateables from "hooks/useGateables"
 import { useSetAtom } from "jotai"
@@ -25,7 +26,6 @@ import { useFormContext, useWatch } from "react-hook-form"
 import { PlatformType } from "types"
 import AddCard from "../AddCard"
 import CardMotionWrapper from "../CardMotionWrapper"
-import { accountModalAtom } from "../Layout/components/Account/components/AccountModal"
 import { Modal } from "../Modal"
 import GoogleDocCard, { GoogleSkeletonCard } from "./components/GoogleDocCard"
 import GoogleDocSetupCard from "./components/GoogleDocSetupCard"

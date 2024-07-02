@@ -21,6 +21,9 @@ const nextConfig = {
       ],
     })
 
+    // To get rid of "Can't resolve ..." errors which come from some wallet connector SDKs
+    config.externals.push("pino-pretty", "lokijs", "encoding")
+
     if (process.env.VERCEL_ENV === "production") {
       if (!config.plugins) config.plugins = []
       config.plugins.push(

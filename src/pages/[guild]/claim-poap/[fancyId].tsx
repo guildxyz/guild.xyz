@@ -1,3 +1,4 @@
+import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import {
   Box,
   Divider,
@@ -17,7 +18,6 @@ import ShareAndReportButtons from "components/[guild]/collect/components/ShareAn
 import SmallImageAndRoleName from "components/[guild]/collect/components/SmallImageAndRoleName"
 import useShouldShowSmallImage from "components/[guild]/collect/hooks/useShouldShowSmallImage"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import { AnimatePresence } from "framer-motion"

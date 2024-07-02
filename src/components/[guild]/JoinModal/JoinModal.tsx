@@ -1,3 +1,4 @@
+import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import {
   Box,
   Collapse,
@@ -12,7 +13,6 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
@@ -186,8 +186,8 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
                 joinProgress?.state === "FINISHED"
                   ? "Finalizing results"
                   : !!joinProgress
-                  ? "See status above"
-                  : "Checking access"
+                    ? "See status above"
+                    : "Checking access"
               }
               isDisabled={!isWeb3Connected}
             >

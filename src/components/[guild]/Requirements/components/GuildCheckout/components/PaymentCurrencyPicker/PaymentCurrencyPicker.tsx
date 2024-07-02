@@ -1,3 +1,4 @@
+import { accountModalAtom } from "@/components/Providers/Providers"
 import {
   Circle,
   HStack,
@@ -11,7 +12,6 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
-import { accountModalAtom } from "components/common/Layout/components/Account/components/AccountModal"
 import { useSetAtom } from "jotai"
 import { ArrowSquareOut, CaretDown } from "phosphor-react"
 import { useEffect } from "react"

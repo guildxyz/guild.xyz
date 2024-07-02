@@ -1,17 +1,16 @@
-import { env } from "env"
 /* eslint-disable @typescript-eslint/naming-convention */
+import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import { useAccount, useProvider, useWallet } from "@fuels/react"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import { useToastWithTweetButton } from "hooks/useToast"
 import { useState } from "react"
 import fetcher from "utils/fetcher"
+import parseFuelAddress from "utils/parseFuelAddress"
 import { useMintGuildPinContext } from "../../../MintGuildPinContext"
 import type { GuildActionInput } from "../GuildPinContractAbi"
 import { GuildPinContractAbi__factory } from "../GuildPinContractAbi_factory"
-import parseFuelAddress from "../parseFuelAddress"
 import useFuelGuildPinFee from "./useFuelGuildPinFee"
 
 type FuelMintData = {

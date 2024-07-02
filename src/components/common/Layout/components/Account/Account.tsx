@@ -1,22 +1,17 @@
-import { ButtonGroup, Divider, HStack, Text, VStack } from "@chakra-ui/react"
+import { walletSelectorModalAtom } from "@/components/Providers/Providers"
+import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import { ButtonGroup, Divider } from "@chakra-ui/react"
 import useUser from "components/[guild]/hooks/useUser"
-import { walletSelectorModalAtom } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal"
-import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
-import GuildAvatar from "components/common/GuildAvatar"
-import useResolveAddress from "hooks/useResolveAddress"
 import { useSetAtom } from "jotai"
 import { SignIn } from "phosphor-react"
-import shortenHex from "utils/shortenHex"
 import AccountButton from "./components/AccountButton"
-import { accountModalAtom } from "./components/AccountModal"
 import Notifications from "./components/Notifications/Notifications"
 
 const Account = (): JSX.Element => {
   const { address } = useWeb3ConnectionManager()
-  const setIsAccountModalOpen = useSetAtom(accountModalAtom)
   const setIsWalletSelectorModalOpen = useSetAtom(walletSelectorModalAtom)
 
-  const domainName = useResolveAddress(address)
+  // const domainName = useResolveAddress(address)
   const { addresses } = useUser()
 
   if (!address) {
@@ -46,7 +41,7 @@ const Account = (): JSX.Element => {
          */
         h="var(--chakra-space-11)"
       />
-      <AccountButton onClick={() => setIsAccountModalOpen(true)}>
+      {/* <AccountButton onClick={() => setIsAccountModalOpen(true)}>
         <HStack spacing={3}>
           <VStack spacing={0} alignItems="flex-end">
             <Text
@@ -71,7 +66,7 @@ const Account = (): JSX.Element => {
           </VStack>
           <GuildAvatar address={address} size={4} />
         </HStack>
-      </AccountButton>
+      </AccountButton> */}
     </ButtonGroup>
   )
 }

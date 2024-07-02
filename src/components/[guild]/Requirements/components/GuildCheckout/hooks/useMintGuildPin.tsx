@@ -1,10 +1,10 @@
-import { env } from "env"
-import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
-import useGuild from "components/[guild]/hooks/useGuild"
 import {
   isUserRejectedError,
   usePostHogContext,
-} from "components/_app/PostHogProvider"
+} from "@/components/Providers/PostHogProvider"
+import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
+import useGuild from "components/[guild]/hooks/useGuild"
+import { env } from "env"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import { useToastWithTweetButton } from "hooks/useToast"

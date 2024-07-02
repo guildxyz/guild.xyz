@@ -1,5 +1,5 @@
+import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import useUser from "components/[guild]/hooks/useUser"
-import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import guildPinAbi from "static/abis/guildPin"
 import useSWRImmutable from "swr/immutable"
 import { GuildPinMetadata, User } from "types"
@@ -191,7 +191,7 @@ const fetchGuildPinsOnChain = async (
 const fetchGuildPins = async ([_, addresses, includeTestnets]: [
   string,
   User["addresses"],
-  boolean
+  boolean,
 ]) => {
   const TESTNET_KEYS: GuildPinsSupportedChain[] = ["SEPOLIA"]
   const guildPinChains = Object.keys(GUILD_PIN_CONTRACTS).filter((key) =>
