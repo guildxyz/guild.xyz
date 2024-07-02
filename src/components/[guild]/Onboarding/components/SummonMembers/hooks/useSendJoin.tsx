@@ -1,10 +1,10 @@
 import processConnectorError from "components/[guild]/JoinModal/utils/processConnectorError"
 import useGuild from "components/[guild]/hooks/useGuild"
+import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { PlatformGuildData, PlatformType } from "types"
-import { useFetcherWithSign } from "utils/fetcher"
 import { DiscordEmbedForm } from "../components/SendDiscordJoinButtonModal"
 
 const useSendJoin = (onSuccess?: () => void) => {

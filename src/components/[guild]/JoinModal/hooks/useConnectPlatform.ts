@@ -1,7 +1,8 @@
-import { env } from "env"
 import useUser from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { platformMergeAlertAtom } from "components/_app/Web3ConnectionManager/components/PlatformMergeErrorAlert"
+import { env } from "env"
+import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import usePopupWindow from "hooks/usePopupWindow"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit, { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
@@ -13,7 +14,7 @@ import rewards from "platforms/rewards"
 import { useCallback, useMemo } from "react"
 import useSWR from "swr"
 import { PlatformName, PlatformType } from "types"
-import fetcher, { useFetcherWithSign } from "utils/fetcher"
+import fetcher from "utils/fetcher"
 import useFetchUserEmail from "./useFetchUserEmail"
 
 type AuthLevel = "membership" | "creation"
@@ -313,12 +314,12 @@ const useConnect = (useSubmitOptions?: UseSubmitOptions, isAutoConnect = false) 
           toastError
             ? { error: toastError, correlationId: rawError.correlationId }
             : // temporary until we solve the X rate limit
-            platformName === "TWITTER"
-            ? {
-                error:
-                  "There're a lot of users connecting now, and X is rate limiting us, so your request timed out. Please try again later!",
-              }
-            : rawError
+              platformName === "TWITTER"
+              ? {
+                  error:
+                    "There're a lot of users connecting now, and X is rate limiting us, so your request timed out. Please try again later!",
+                }
+              : rawError
         )
       }
     },

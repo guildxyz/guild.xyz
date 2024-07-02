@@ -1,9 +1,9 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
-import { useFetcherWithSign } from "utils/fetcher"
 
 const useAddRoleRewards = ({
   onSuccess,

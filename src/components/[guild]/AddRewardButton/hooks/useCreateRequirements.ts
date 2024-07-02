@@ -7,7 +7,7 @@ import {
   RequirementCreationPayloadWithTempID,
 } from "types"
 
-import { useFetcherWithSign } from "utils/fetcher"
+import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import preprocessRequirement from "utils/preprocessRequirement"
 
 const useCreateRequirements = () => {
