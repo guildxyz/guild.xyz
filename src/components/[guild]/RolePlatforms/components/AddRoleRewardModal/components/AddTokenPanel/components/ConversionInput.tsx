@@ -6,7 +6,7 @@ import {
   InputGroup,
   InputLeftElement,
 } from "@chakra-ui/react"
-import { ArrowRight, Lock, LockOpen } from "@phosphor-icons/react"
+import { ArrowRight, Lock, LockOpen } from "phosphor-react"
 import { ReactNode, useEffect, useState } from "react"
 import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
 import ControlledNumberInput from "requirements/WalletActivity/components/ControlledNumberInput"

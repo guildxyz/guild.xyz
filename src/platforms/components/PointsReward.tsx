@@ -1,6 +1,5 @@
 import { Link } from "@chakra-ui/next-js"
 import { Icon, Tooltip, useColorModeValue } from "@chakra-ui/react"
-import { ArrowRight, Check } from "@phosphor-icons/react"
 import DynamicTag from "components/[guild]/RoleCard/components/DynamicReward/DynamicTag"
 import {
   RewardDisplay,
@@ -9,6 +8,7 @@ import {
 } from "components/[guild]/RoleCard/components/Reward"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
+import { ArrowRight, Check } from "phosphor-react"
 import useDynamicRewardUserAmount from "platforms/Token/hooks/useDynamicRewardUserAmount"
 
 const PointsReward = ({ platform, withMotionImg }: RewardProps) => {

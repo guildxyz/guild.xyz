@@ -1,10 +1,10 @@
 import { Circle, FormControl, Icon, useColorModeValue } from "@chakra-ui/react"
-import { ListNumbers } from "@phosphor-icons/react"
 import CustomSnapshotForm from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/components/CustomSnapshotForm"
 import { SnapshotOption } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/components/DynamicAmount"
 import GuildPointsSnapshotForm from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/components/GuildPointsSnapshotForm"
 import RadioSelect from "components/common/RadioSelect"
 import { Option } from "components/common/RadioSelect/RadioSelect"
+import { ListNumbers } from "phosphor-react"
 import { useController, useFormContext } from "react-hook-form"
 import Star from "static/icons/star.svg"
 

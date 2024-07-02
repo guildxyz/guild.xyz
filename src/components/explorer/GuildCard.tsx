@@ -11,11 +11,11 @@ import {
   VStack,
   Wrap,
 } from "@chakra-ui/react"
-import { Users } from "@phosphor-icons/react"
 import DisplayCard from "components/common/DisplayCard"
 import GuildLogo from "components/common/GuildLogo"
 import VerifiedIcon from "components/common/VerifiedIcon"
 import image from "next/image"
+import { Users } from "phosphor-react"
 import { GuildBase } from "types"
 import pluralize from "utils/pluralize"
 

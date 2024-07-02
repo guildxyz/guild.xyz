@@ -19,7 +19,6 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
-import { PencilSimple } from "@phosphor-icons/react"
 import useUser from "components/[guild]/hooks/useUser"
 import { useConnectEmail } from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import Button from "components/common/Button"
@@ -27,6 +26,7 @@ import { Error } from "components/common/Error"
 import { Modal } from "components/common/Modal"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
+import { PencilSimple } from "phosphor-react"
 import rewards from "platforms/rewards"
 import { useEffect, useRef, useState } from "react"
 import { useController, useForm, useWatch } from "react-hook-form"

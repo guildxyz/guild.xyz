@@ -7,11 +7,11 @@ import {
   Portal,
   TagRightIcon,
 } from "@chakra-ui/react"
-import { Info, UserSwitch } from "@phosphor-icons/react"
 import Button from "components/common/Button"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
+import { Info, UserSwitch } from "phosphor-react"
 import { PropsWithChildren, useMemo } from "react"
 import fetcher from "utils/fetcher"
 import formatRelativeTimeFromNow, {

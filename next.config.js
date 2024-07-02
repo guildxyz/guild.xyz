@@ -80,7 +80,6 @@ const nextConfig = {
   },
   experimental: {
     scrollRestoration: true,
-    optimizePackageImports: ["@phosphor-icons/react"],
   },
   async rewrites() {
     return {

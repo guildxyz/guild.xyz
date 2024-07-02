@@ -1,3 +1,4 @@
+import { env } from "env"
 import {
   AspectRatio,
   Box,
@@ -9,10 +10,9 @@ import {
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
-import { DownloadSimple } from "@phosphor-icons/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
-import { env } from "env"
+import { DownloadSimple } from "phosphor-react"
 import GuildGhost from "static/avatars/ghost.svg"
 import useSWRImmutable from "swr/immutable"
 import convertSVGToPNG from "utils/convertSVGToPNG"

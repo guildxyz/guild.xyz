@@ -1,5 +1,4 @@
 import { Icon, Spinner, Text, Tooltip } from "@chakra-ui/react"
-import { ArrowSquareOut, LockSimple } from "@phosphor-icons/react"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import {
   RewardDisplay,
@@ -10,6 +9,7 @@ import AvailabilityTags from "components/[guild]/RolePlatforms/components/Platfo
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
+import { ArrowSquareOut, LockSimple } from "phosphor-react"
 import ClaimGatherModal from "platforms/Gather/ClaimGatherModal"
 import useClaimGather from "platforms/Gather/hooks/useClaimGather"
 import { claimTextButtonTooltipLabel } from "platforms/SecretText/TextCardButton"

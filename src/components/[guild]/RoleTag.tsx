@@ -9,7 +9,7 @@ import {
   TagRightIcon,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { IconProps } from "@phosphor-icons/react"
+import { IconProps } from "phosphor-react"
 import { ForwardRefExoticComponent, memo, RefAttributes } from "react"
 
 type Props = {

@@ -1,9 +1,9 @@
 import { Circle, Img, SkeletonCircle, SkeletonProps } from "@chakra-ui/react"
-import { ArrowRight } from "@phosphor-icons/react"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import { motion } from "framer-motion"
+import { ArrowRight } from "phosphor-react"
 import {
   RewardDisplay,
   RewardIconProps,

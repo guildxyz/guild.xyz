@@ -9,9 +9,9 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
-import { CaretDown } from "@phosphor-icons/react"
-import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import Card from "components/common/Card"
+import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
+import { CaretDown } from "phosphor-react"
 import { Requirement } from "types"
 import { ACTION, ActivityLogAction as Action } from "../constants"
 import {

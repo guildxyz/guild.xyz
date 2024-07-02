@@ -1,5 +1,4 @@
 import { Tooltip } from "@chakra-ui/react"
-import { ArrowRight } from "@phosphor-icons/react"
 import {
   RewardDisplay,
   RewardIcon,
@@ -11,6 +10,7 @@ import Button from "components/common/Button"
 import { useClaimedReward } from "hooks/useClaimedReward"
 import dynamic from "next/dynamic"
 import Link from "next/link"
+import { ArrowRight } from "phosphor-react"
 import { claimTextButtonTooltipLabel } from "platforms/SecretText/TextCardButton"
 import rewards from "platforms/rewards"
 import { PlatformType } from "types"

@@ -1,11 +1,11 @@
-import { Buildings } from "@phosphor-icons/react"
-import dynamic from "next/dynamic"
-import { AddRewardPanelLoadingSpinner } from "platforms/components/AddRewardPanelLoadingSpinner"
-import LoadingRewardPreview from "platforms/components/LoadingRewardPreview"
+import { Buildings } from "phosphor-react"
 import { PlatformAsRewardRestrictions, RewardData } from "platforms/types"
+import useGatherCardProps from "./useGatherCardProps"
 import GatherCardButton from "./GatherCardButton"
 import GatherCardMenu from "./GatherCardMenu"
-import useGatherCardProps from "./useGatherCardProps"
+import dynamic from "next/dynamic"
+import LoadingRewardPreview from "platforms/components/LoadingRewardPreview"
+import { AddRewardPanelLoadingSpinner } from "platforms/components/AddRewardPanelLoadingSpinner"
 
 export default {
   icon: Buildings,

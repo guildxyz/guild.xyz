@@ -1,3 +1,5 @@
+import { RequirementProps } from "components/[guild]/Requirements/components/Requirement"
+import dynamic from "next/dynamic"
 import {
   Coins,
   CurrencyCircleDollar,
@@ -9,9 +11,7 @@ import {
   Robot,
   Wallet,
   Wrench,
-} from "@phosphor-icons/react"
-import { RequirementProps } from "components/[guild]/Requirements/components/Requirement"
-import dynamic from "next/dynamic"
+} from "phosphor-react"
 import rewards from "platforms/rewards"
 import { ComponentType } from "react"
 import {

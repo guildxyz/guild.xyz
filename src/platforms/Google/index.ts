@@ -1,12 +1,12 @@
-import { GoogleLogo } from "@phosphor-icons/react"
+import { GoogleLogo } from "phosphor-react"
+import { PlatformAsRewardRestrictions, RewardData } from "platforms/types"
+import useGoogleCardProps from "./useGoogleCardProps"
+import GoogleCardSettings from "./GoogleCardSettings"
+import GoogleCardMenu from "./GoogleCardMenu"
+import GoogleCardWarning from "./GoogleCardWarning"
 import dynamic from "next/dynamic"
 import { AddRewardPanelLoadingSpinner } from "platforms/components/AddRewardPanelLoadingSpinner"
 import LoadingRewardPreview from "platforms/components/LoadingRewardPreview"
-import { PlatformAsRewardRestrictions, RewardData } from "platforms/types"
-import GoogleCardMenu from "./GoogleCardMenu"
-import GoogleCardSettings from "./GoogleCardSettings"
-import GoogleCardWarning from "./GoogleCardWarning"
-import useGoogleCardProps from "./useGoogleCardProps"
 
 export default {
   icon: GoogleLogo,

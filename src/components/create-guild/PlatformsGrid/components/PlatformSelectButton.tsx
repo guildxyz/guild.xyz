@@ -9,7 +9,6 @@ import {
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
-import { ArrowSquareIn, CaretRight, IconProps } from "@phosphor-icons/react"
 import useUser from "components/[guild]/hooks/useUser"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import { walletSelectorModalAtom } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal"
@@ -18,6 +17,7 @@ import DisplayCard from "components/common/DisplayCard"
 import { useSetAtom } from "jotai"
 import dynamic from "next/dynamic"
 import Image from "next/image"
+import { ArrowSquareIn, CaretRight, IconProps } from "phosphor-react"
 import rewards from "platforms/rewards"
 import { ComponentType, RefAttributes, useMemo } from "react"
 import { PlatformName, Rest } from "types"

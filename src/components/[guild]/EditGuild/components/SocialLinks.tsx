@@ -10,10 +10,10 @@ import {
   SimpleGrid,
 } from "@chakra-ui/react"
 import { SocialLinks as SocialLinksType } from "@guildxyz/types"
-import { Plus } from "@phosphor-icons/react"
 import SocialIcon from "components/[guild]/SocialIcon"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
+import { Plus } from "phosphor-react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { SelectOption, SocialLinkKey, supportedSocialLinks } from "types"
 import capitalize from "utils/capitalize"

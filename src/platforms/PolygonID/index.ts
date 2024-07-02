@@ -1,11 +1,11 @@
-import { Key } from "@phosphor-icons/react"
+import { Key } from "phosphor-react"
+import usePolygonIDCardProps from "./usePolygonIDCardProps"
+import PolygonIDCardButton from "./PolygonIDCardButton"
+import PolygonIDCardMenu from "./PolygonIDCardMenu"
+import { PlatformAsRewardRestrictions, RewardData } from "platforms/types"
 import dynamic from "next/dynamic"
 import { AddRewardPanelLoadingSpinner } from "platforms/components/AddRewardPanelLoadingSpinner"
 import LoadingRewardPreview from "platforms/components/LoadingRewardPreview"
-import { PlatformAsRewardRestrictions, RewardData } from "platforms/types"
-import PolygonIDCardButton from "./PolygonIDCardButton"
-import PolygonIDCardMenu from "./PolygonIDCardMenu"
-import usePolygonIDCardProps from "./usePolygonIDCardProps"
 
 export default {
   icon: Key,

@@ -7,12 +7,12 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
-import { SignIn } from "@phosphor-icons/react"
 import { walletSelectorModalAtom } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import { accountModalAtom } from "components/common/Layout/components/Account/components/AccountModal"
 import { useSetAtom } from "jotai"
+import { SignIn } from "phosphor-react"
 import useGuildPermission from "./hooks/useGuildPermission"
 import useUser from "./hooks/useUser"
 

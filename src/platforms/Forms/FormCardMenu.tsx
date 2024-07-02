@@ -1,9 +1,9 @@
 import { MenuItem, useDisclosure } from "@chakra-ui/react"
-import { PencilSimple, Table } from "@phosphor-icons/react"
 import RemovePlatformMenuItem from "components/[guild]/AccessHub/components/RemovePlatformMenuItem"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useGuildForm } from "components/[guild]/hooks/useGuildForms"
 import LinkMenuItem from "components/common/LinkMenuItem"
+import { PencilSimple, Table } from "phosphor-react"
 import PlatformCardMenu from "../../components/[guild]/RolePlatforms/components/PlatformCard/components/PlatformCardMenu"
 import EditFormModal from "./EditFormModal"
 

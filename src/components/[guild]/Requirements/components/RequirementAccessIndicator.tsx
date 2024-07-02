@@ -6,13 +6,13 @@ import {
   PopoverHeader,
   Text,
 } from "@chakra-ui/react"
-import { ArrowSquareIn, Check, LockSimple, Warning, X } from "@phosphor-icons/react"
 import RecheckAccessesButton from "components/[guild]/RecheckAccessesButton"
 import Button from "components/common/Button"
 import { accountModalAtom } from "components/common/Layout/components/Account/components/AccountModal"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import { useSetAtom } from "jotai"
 import dynamic from "next/dynamic"
+import { ArrowSquareIn, Check, LockSimple, Warning, X } from "phosphor-react"
 import RequirementAccessIndicatorUI from "./RequirementAccessIndicatorUI"
 import { useRequirementContext } from "./RequirementContext"
 

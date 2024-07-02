@@ -1,4 +1,3 @@
-import { ArrowSquareOut } from "@phosphor-icons/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
@@ -6,6 +5,7 @@ import OptionCard from "components/common/OptionCard"
 import { Gateables } from "hooks/useGateables"
 import useServerPermissions from "hooks/useServerPermissions"
 import Link from "next/link"
+import { ArrowSquareOut } from "phosphor-react"
 import { PlatformType } from "types"
 
 type Props = {

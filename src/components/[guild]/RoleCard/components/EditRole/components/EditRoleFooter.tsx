@@ -1,7 +1,7 @@
 import { DrawerFooter, Icon } from "@chakra-ui/react"
-import { Check } from "@phosphor-icons/react"
 import Button from "components/common/Button"
 import { AnimatePresence, motion } from "framer-motion"
+import { Check } from "phosphor-react"
 
 const MotionDrawerFooter = motion(DrawerFooter)
 const FOOTER_OFFSET = 76 // Footer is 76px high

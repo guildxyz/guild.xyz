@@ -1,10 +1,10 @@
-import { TelegramLogo } from "@phosphor-icons/react"
+import { TelegramLogo } from "phosphor-react"
+import { PlatformAsRewardRestrictions, RewardData } from "platforms/types"
+import useTelegramCardProps from "./useTelegramCardProps"
+import TelegramCardMenu from "./TelegramCardMenu"
 import dynamic from "next/dynamic"
 import { AddRewardPanelLoadingSpinner } from "platforms/components/AddRewardPanelLoadingSpinner"
 import LoadingRewardPreview from "platforms/components/LoadingRewardPreview"
-import { PlatformAsRewardRestrictions, RewardData } from "platforms/types"
-import TelegramCardMenu from "./TelegramCardMenu"
-import useTelegramCardProps from "./useTelegramCardProps"
 
 export default {
   icon: TelegramLogo,

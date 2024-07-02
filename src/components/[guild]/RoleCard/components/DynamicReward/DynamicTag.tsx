@@ -1,8 +1,8 @@
 import { Icon, Tag, Tooltip, Wrap, useDisclosure } from "@chakra-ui/react"
-import { Lightning, Warning } from "@phosphor-icons/react"
 import { useRequirementHandlerContext } from "components/[guild]/RequirementHandlerContext"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useRequirements from "components/[guild]/hooks/useRequirements"
+import { Lightning, Warning } from "phosphor-react"
 import DynamicRewardModal from "platforms/Token/DynamicRewardModal"
 import { Rest, RolePlatform } from "types"
 

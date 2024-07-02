@@ -1,3 +1,4 @@
+import { env } from "env"
 import {
   ButtonGroup,
   GridItem,
@@ -13,13 +14,12 @@ import {
   useClipboard,
   useDisclosure,
 } from "@chakra-ui/react"
-import { Check, CopySimple, PencilSimple } from "@phosphor-icons/react"
 import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
-import { env } from "env"
 import { AnimatePresence } from "framer-motion"
 import useGateables from "hooks/useGateables"
 import { useSetAtom } from "jotai"
+import { Check, CopySimple, PencilSimple } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { PlatformType } from "types"

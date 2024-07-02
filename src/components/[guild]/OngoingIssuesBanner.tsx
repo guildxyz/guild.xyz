@@ -1,7 +1,7 @@
 import { Button } from "@chakra-ui/react"
-import { ArrowSquareOut } from "@phosphor-icons/react"
 import InfoBanner from "components/_app/InfoBanner"
 import { triggerChat } from "components/_app/IntercomProvider"
+import { ArrowSquareOut } from "phosphor-react"
 
 const OngoingIssuesBanner = () => (
   <InfoBanner>
