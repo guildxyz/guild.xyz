@@ -1,4 +1,4 @@
-import { AddRewardPanelProps } from "platforms/rewards"
+import { AddRewardPanelProps } from "rewards"
 import DefaultAddRewardPanelWrapper from "../../DefaultAddRewardPanelWrapper"
 import CreateNftForm from "./components/CreateNftForm"
 

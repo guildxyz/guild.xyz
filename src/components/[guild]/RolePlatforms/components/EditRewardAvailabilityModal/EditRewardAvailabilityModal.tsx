@@ -17,7 +17,7 @@ import Button from "components/common/Button"
 import CheckboxColorCard from "components/common/CheckboxColorCard"
 import { Modal } from "components/common/Modal"
 import { Clock, Hash } from "phosphor-react"
-import rewards from "platforms/rewards"
+import rewards from "rewards"
 import { FormProvider, useController, useForm } from "react-hook-form"
 import { PlatformName } from "types"
 import StartEndTimeForm, {

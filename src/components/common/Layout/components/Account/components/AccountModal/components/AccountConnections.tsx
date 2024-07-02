@@ -18,7 +18,7 @@ import {
 import useUser from "components/[guild]/hooks/useUser"
 import { SectionProps } from "components/common/Section"
 import { Question } from "phosphor-react"
-import rewards from "platforms/rewards"
+import rewards from "rewards"
 import { PropsWithChildren, useMemo } from "react"
 import { PlatformName } from "types"
 import useDelegateVaults from "../../delegate/useDelegateVaults"

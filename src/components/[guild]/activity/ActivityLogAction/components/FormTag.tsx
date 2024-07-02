@@ -9,7 +9,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import { DotsThreeVertical, IconProps } from "phosphor-react"
-import rewards from "platforms/rewards"
+import rewards from "rewards"
 import { ForwardRefExoticComponent, RefAttributes } from "react"
 import { useActivityLog } from "../../ActivityLogContext"
 import ClickableTagPopover from "./ClickableTagPopover"
