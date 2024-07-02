@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -24,9 +28,20 @@
     ],
     "strictNullChecks": true,
     "paths": {
-      "@/*": ["./v2/*"]
+      "@/*": [
+        "./v2/*"
+      ]
     }
   },
+  "include": [
+    "next-env.d.ts",
+    ".next/types/**/*.ts",
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules"
+  ],
   "include": [
     "next-env.d.ts",
     "./src/**/*.ts",
@@ -35,7 +50,7 @@
     "cypress.config.ts",
     "cypress/**/*.ts",
     ".next/types/**/*.ts",
-    "tailwind.config.ts"
+    "tailwind.config.ts",
   ],
-  "exclude": ["node_modules", ".next", "out"]
+  "exclude": ["node_modules", ".next", "out", "src/pages/**/*.{tsx,ts}", "src/components/**/*.{tsx,ts}", "src/requirements/**/*.{tsx,ts}" ]
 }
