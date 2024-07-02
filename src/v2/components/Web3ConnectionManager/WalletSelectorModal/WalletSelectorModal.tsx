@@ -8,20 +8,22 @@ import {
   DialogTitle,
 } from "@/components/ui/Dialog"
 import { usePrevious } from "@/hooks/usePrevious"
-import { useUserPublic } from "components/[guild]/hooks/useUser"
-import { usePostHogContext } from "components/_app/PostHogProvider"
+import { useUserPublic } from "@/hooks/useUserPublic"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
-import { addressLinkParamsAtom } from "components/common/Layout/components/Account/components/AccountModal/components/LinkAddressButton"
 import useSetKeyPair from "hooks/useSetKeyPair"
-import useShowErrorToast from "hooks/useShowErrorToast"
+// import useShowErrorToast from "hooks/useShowErrorToast"
+import { usePostHogContext } from "@/components/Providers/PostHogProvider"
+import {
+  addressLinkParamsAtom,
+  walletLinkHelperModalAtom,
+} from "@/components/Providers/Providers"
+import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import { ArrowSquareOut } from "@phosphor-icons/react/dist/ssr"
 import { useAtom, useSetAtom } from "jotai"
 import Link from "next/link"
-import { ArrowSquareOut } from "phosphor-react"
 import { useEffect } from "react"
 import { useAccount, useConnect, type Connector } from "wagmi"
 import { COINBASE_INJECTED_WALLET_ID, COINBASE_WALLET_SDK_ID } from "wagmiConfig"
-import useWeb3ConnectionManager from "../../hooks/useWeb3ConnectionManager"
-import { walletLinkHelperModalAtom } from "../WalletLinkHelperModal"
 import AccountButton from "./components/AccountButton"
 import ConnectorButton from "./components/ConnectorButton"
 import FuelConnectorButtons from "./components/FuelConnectorButtons"
@@ -45,6 +47,7 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
    * injected wallet option
    */
   const shouldShowInjected =
+    typeof window !== "undefined" &&
     !!window.ethereum &&
     connectors
       .filter((c) => c.id !== COINBASE_INJECTED_WALLET_ID)
@@ -102,15 +105,17 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
     !prevAddress &&
     address === addressLinkParams.address
 
-  const showErrorToast = useShowErrorToast()
+  // TODO
+  // const showErrorToast = useShowErrorToast()
 
   useEffect(() => {
     if (!triesToLinkCurrentAddress) return
     setAddressLinkParams({ userId: undefined, address: undefined })
-    showErrorToast(
-      "You cannot link an address to itself. Please choose a different address."
-    )
-  }, [triesToLinkCurrentAddress, setAddressLinkParams, showErrorToast])
+
+    // showErrorToast(
+    //   "You cannot link an address to itself. Please choose a different address."
+    // )
+  }, [triesToLinkCurrentAddress, setAddressLinkParams /*, showErrorToast*/])
 
   const conditionalOnClose = () => {
     if (!isWeb3Connected || !!keyPair) onClose()

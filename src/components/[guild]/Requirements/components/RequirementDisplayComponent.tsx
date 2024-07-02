@@ -1,5 +1,5 @@
+import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import { Icon } from "@chakra-ui/react"
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import DataBlock from "components/common/DataBlock"
 import { Question, Warning } from "phosphor-react"
 import { PropsWithChildren } from "react"

@@ -1,3 +1,4 @@
+import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import {
   FormControl,
   FormLabel,
@@ -10,7 +11,6 @@ import {
   Text,
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Modal } from "components/common/Modal"

@@ -1,3 +1,4 @@
+import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import {
   Accordion,
   AccordionButton,
@@ -25,7 +26,6 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPlatform from "components/[guild]/hooks/useGuildPlatform"
 import useRequirements from "components/[guild]/hooks/useRequirements"
 import SnapshotModal from "components/[guild]/leaderboard/Snapshots/SnapshotModal"
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import { SectionTitle } from "components/common/Section"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
@@ -262,8 +262,8 @@ const EditTokenModal = ({
                     rpIsLoading
                       ? "Updating the conversion rate..."
                       : reqIsLoading
-                      ? "Updating the snapshot..."
-                      : "Saving..."
+                        ? "Updating the snapshot..."
+                        : "Saving..."
                   }
                   size="lg"
                   width="fill"

@@ -1,5 +1,6 @@
 import { CopyableAddress } from "@/components/CopyableAddress"
 import { GuildAvatar } from "@/components/GuildAvatar"
+import { accountModalAtom } from "@/components/Providers/Providers"
 import { Button } from "@/components/ui/Button"
 import {
   Dialog,
@@ -14,19 +15,17 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/Tooltip"
+import useConnectorNameAndIcon from "@/components/Web3ConnectionManager/hooks/useConnectorNameAndIcon"
+import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import { useUserPublic } from "@/hooks/useUserPublic"
 import { SignOut } from "@phosphor-icons/react/dist/ssr"
-import useUser, { useUserPublic } from "components/[guild]/hooks/useUser"
-import useConnectorNameAndIcon from "components/_app/Web3ConnectionManager/hooks/useConnectorNameAndIcon"
-import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
-import useResolveAddress from "hooks/useResolveAddress"
-import { deleteKeyPairFromIdb } from "hooks/useSetKeyPair"
+import useUser from "components/[guild]/hooks/useUser"
 import { useAtom } from "jotai"
+import { deleteKeyPairFromIdb } from "utils/keyPair"
 import { useAccount } from "wagmi"
-import { accountModalAtom } from "."
-import { AccountConnections } from "./components/AccountConnections"
 
 const AccountModal = () => {
-  const { address, type, disconnect } = useWeb3ConnectionManager()
+  const { address, disconnect } = useWeb3ConnectionManager()
   const { connectorName } = useConnectorNameAndIcon()
 
   const [isOpen, setIsOpen] = useAtom(accountModalAtom)
@@ -36,7 +35,9 @@ const AccountModal = () => {
   const { deleteKeys } = useUserPublic()
 
   const { address: evmAddress } = useAccount()
-  const domain = useResolveAddress(evmAddress)
+  // const domain = useResolveAddress(evmAddress)
+  //TODO
+  const domain = ""
 
   // TODO: do we need to keep the network modal? We should check the number of "Opened network modal" PostHog events and decide if we should keep it or not.
 
@@ -110,7 +111,7 @@ const AccountModal = () => {
               </TooltipProvider>
             </div>
 
-            <AccountConnections />
+            {/* <AccountConnections /> */}
             {/* <hr className="my-4" /> */}
             {/*TODO: <UsersGuildPins /> */}
           </>

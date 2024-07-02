@@ -1,3 +1,5 @@
+import { usePostHogContext } from "@/components/Providers/PostHogProvider"
+import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import {
   Divider,
   Icon,
@@ -11,8 +13,6 @@ import {
 } from "@chakra-ui/react"
 import { ActivityLogProvider } from "components/[guild]/activity/ActivityLogContext"
 import useUser from "components/[guild]/hooks/useUser"
-import { usePostHogContext } from "components/_app/PostHogProvider"
-import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import useLocalStorage from "hooks/useLocalStorage"
 import dynamic from "next/dynamic"
 import { Bell } from "phosphor-react"

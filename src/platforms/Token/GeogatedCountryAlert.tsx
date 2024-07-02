@@ -10,11 +10,11 @@ import {
   PopoverTrigger,
   Portal,
 } from "@chakra-ui/react"
-import { triggerChat } from "components/_app/IntercomProvider"
 import Button from "components/common/Button"
 import { IpGeodata } from "pages/api/ip-geodata"
 import { Chat } from "phosphor-react"
 import useSWRImmutable from "swr/immutable"
+import { triggerChat } from "utils/intercom"
 
 const BLOCKED_COUNTRY_CODES = [
   "US",

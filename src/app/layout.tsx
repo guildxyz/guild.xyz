@@ -1,5 +1,5 @@
-import { NavigationEvents } from "@/components/NavigationEvents"
-import Providers from "@/components/Providers"
+import { Providers } from "@/components/Providers"
+import { PostHogPageViews } from "@/components/Providers/PostHogPageViews"
 import clsx from "clsx"
 import { dystopian, inter } from "fonts"
 import type { Metadata } from "next"
@@ -21,10 +21,12 @@ export default function RootLayout({ children }: RootLayoutProps) {
     <html lang="en" suppressHydrationWarning>
       <head />
       <body className={clsx(dystopian.variable, inter.variable)}>
-        <Providers>{children}</Providers>
-        <Suspense fallback={null}>
-          <NavigationEvents />
-        </Suspense>
+        <Providers>
+          {children}
+          <Suspense fallback={null}>
+            <PostHogPageViews />
+          </Suspense>
+        </Providers>
       </body>
     </html>
   )

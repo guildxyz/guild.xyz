@@ -1,3 +1,4 @@
+import { accountModalAtom } from "@/components/Providers/Providers"
 import {
   ButtonGroup,
   Collapse,
@@ -18,7 +19,6 @@ import RecheckAccessesButton from "components/[guild]/RecheckAccessesButton"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useRequirements from "components/[guild]/hooks/useRequirements"
 import Button from "components/common/Button"
-import { accountModalAtom } from "components/common/Layout/components/Account/components/AccountModal"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import { useSetAtom } from "jotai"
 import {
@@ -113,8 +113,8 @@ const HiddenRequirementAccessIndicator = ({ roleId }: Props) => {
     role.logic === "AND"
       ? count.accessed === hiddenReqsAccessData.length
       : role.logic === "ANY_OF"
-      ? count.accessed >= role.anyOfNum
-      : count.accessed > 0
+        ? count.accessed >= role.anyOfNum
+        : count.accessed > 0
   )
     return (
       <RequirementAccessIndicatorUI

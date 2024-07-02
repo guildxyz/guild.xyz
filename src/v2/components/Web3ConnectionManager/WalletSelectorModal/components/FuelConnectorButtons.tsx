@@ -1,6 +1,6 @@
+import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import { Button } from "@/components/ui/Button"
 import { useConnectors, useIsConnected } from "@fuels/react"
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import { useEffect, useState } from "react"
 import { connectorButtonBaseProps } from "./ConnectorButton"
 

@@ -5,9 +5,6 @@ import { bugsnagStart } from "bugsnag"
 import AppErrorBoundary from "components/_app/AppErrorBoundary"
 import Chakra from "components/_app/Chakra"
 import IntercomProvider from "components/_app/IntercomProvider"
-import { LegacyPostHogProvider } from "components/_app/PostHogProvider"
-import Web3ConnectionManager from "components/_app/Web3ConnectionManager"
-import ClientOnly from "components/common/ClientOnly"
 import { env } from "env"
 import { dystopian, inter } from "fonts"
 import { fuelConfig } from "fuelConfig"
@@ -30,6 +27,9 @@ import "../app/globals.css"
  * https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/inert#browser_compatibility
  */
 import { AccountModal } from "@/components/Account/components/AccountModal"
+import { LegacyPostHogProvider } from "components/_app/LegacyPostHogProvider"
+import { LegacyWeb3ConnectionManager } from "components/_app/LegacyWeb3ConnectionManager"
+import ClientOnly from "components/common/ClientOnly"
 import "wicg-inert"
 
 const DynamicReCAPTCHA = dynamic(() => import("components/common/ReCAPTCHA"))
@@ -132,7 +132,7 @@ const App = ({
                       </ClientOnly>
                     </IntercomProvider>
 
-                    <Web3ConnectionManager />
+                    <LegacyWeb3ConnectionManager />
                   </LegacyPostHogProvider>
                 </FuelProvider>
               </QueryClientProvider>

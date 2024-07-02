@@ -1,6 +1,6 @@
+import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import { Collapse, Icon, Tooltip } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import useToken from "hooks/useToken"
 import { Check, Question, Warning } from "phosphor-react"
@@ -83,8 +83,8 @@ const BuyAllowanceButton = (): JSX.Element => {
           isVaultLoading || isAllowanceLoading
             ? "Checking allowance"
             : isAllowing
-            ? "Allowing"
-            : "Check your wallet"
+              ? "Allowing"
+              : "Check your wallet"
         }
         onClick={onClick}
         w="full"

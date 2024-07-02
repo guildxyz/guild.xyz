@@ -1,21 +1,14 @@
-import { useUserPublic } from "components/[guild]/hooks/useUser"
+import { useUserPublic } from "@/hooks/useUserPublic"
 import { env } from "env"
-import { useRouter } from "next/router"
 import { posthog } from "posthog-js"
 import {
   PostHogProvider as DefaultPostHogProvider,
   usePostHog,
 } from "posthog-js/react"
-import {
-  PropsWithChildren,
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-} from "react"
+import { createContext, ReactNode, useCallback, useContext, useEffect } from "react"
 import { User } from "types"
-import useConnectorNameAndIcon from "./Web3ConnectionManager/hooks/useConnectorNameAndIcon"
-import useWeb3ConnectionManager from "./Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import useConnectorNameAndIcon from "../Web3ConnectionManager/hooks/useConnectorNameAndIcon"
+import { useWeb3ConnectionManager } from "../Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 
 const USER_REJECTED_ERROR = "User rejected the request"
 const REJECT_BY_THE_USER_ERROR = "Reject by the user"
@@ -62,9 +55,7 @@ const PostHogContext = createContext<{
   startSessionRecording: () => {},
 })
 
-const CustomPostHogProvider = ({
-  children,
-}: PropsWithChildren<unknown>): JSX.Element => {
+export function CustomPostHogProvider({ children }: { children: ReactNode }) {
   const { isWeb3Connected, address, type: walletType } = useWeb3ConnectionManager()
   const { connectorName } = useConnectorNameAndIcon()
   const { id } = useUserPublic()
@@ -79,7 +70,7 @@ const CustomPostHogProvider = ({
   const identifyUser = useCallback(
     (userData: User) => {
       posthog.identify(userData.id.toString(), {
-        primaryAddress: userData.addresses.find((a) => a.isPrimary).address,
+        primaryAddress: userData.addresses.find((a) => a.isPrimary)?.address,
         currentAddress: address,
         walletType,
         wallet: connectorName,
@@ -140,41 +131,14 @@ const CustomPostHogProvider = ({
   )
 }
 
-const PostHogProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element => (
-  <DefaultPostHogProvider client={posthog}>
-    <CustomPostHogProvider>{children}</CustomPostHogProvider>
-  </DefaultPostHogProvider>
-)
-
-/**
- * UseRouter doesn't work in app router & we also need to track page change events
- * differently there, so we made this LegacyPostHogProvider which contains the page
- * router related logic.
- *
- * We can delete it once we migrate to app router.
- */
-const LegacyPostHogProvider = ({
-  children,
-}: PropsWithChildren<unknown>): JSX.Element => {
-  const router = useRouter()
-
-  useEffect(() => {
-    const handleRouteChange = () => posthog.capture("$pageview")
-    router.events.on("routeChangeComplete", handleRouteChange)
-
-    return () => {
-      router.events.off("routeChangeComplete", handleRouteChange)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
+export function PostHogProvider({ children }: { children: ReactNode }) {
   return (
-    <DefaultPostHogProvider client={posthog}>
+    <DefaultPostHogProvider>
       <CustomPostHogProvider>{children}</CustomPostHogProvider>
     </DefaultPostHogProvider>
   )
 }
 
-const usePostHogContext = () => useContext(PostHogContext)
-
-export { LegacyPostHogProvider, PostHogProvider, usePostHogContext }
+export function usePostHogContext() {
+  return useContext(PostHogContext)
+}

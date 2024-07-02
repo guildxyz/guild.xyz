@@ -1,3 +1,4 @@
+import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import {
   HStack,
   IconButton,
@@ -12,7 +13,6 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import { Visibility } from "@guildxyz/types"
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import useCreateRRR, { SubmitData } from "hooks/useCreateRRR"
 import { ArrowLeft, Info } from "phosphor-react"

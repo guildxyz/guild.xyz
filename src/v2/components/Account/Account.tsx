@@ -4,22 +4,22 @@ import { cn } from "@/lib/utils"
 import { SignIn } from "@phosphor-icons/react/dist/ssr"
 import clsx from "clsx"
 import useUser from "components/[guild]/hooks/useUser"
-import { walletSelectorModalAtom } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal"
-import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
-import useResolveAddress from "hooks/useResolveAddress"
 import { useSetAtom } from "jotai"
 import shortenHex from "utils/shortenHex"
 import { GuildAvatar } from "../GuildAvatar"
+import { accountModalAtom, walletSelectorModalAtom } from "../Providers/Providers"
 import { Button } from "../ui/Button"
 import { Card } from "../ui/Card"
-import { accountModalAtom } from "./components/AccountModal"
+import { useWeb3ConnectionManager } from "../Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 
 export const Account = () => {
   const { address } = useWeb3ConnectionManager()
   const setIsAccountModalOpen = useSetAtom(accountModalAtom)
   const setIsWalletSelectorModalOpen = useSetAtom(walletSelectorModalAtom)
 
-  const domainName = useResolveAddress(address)
+  // const domainName = useResolveAddress(address)
+  // TODO
+  const domainName = ""
   const { addresses } = useUser()
   const linkedAddressesCount = (addresses?.length ?? 1) - 1
 

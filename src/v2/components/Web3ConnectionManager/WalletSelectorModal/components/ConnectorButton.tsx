@@ -1,13 +1,15 @@
+import {
+  addressLinkParamsAtom,
+  walletLinkHelperModalAtom,
+} from "@/components/Providers/Providers"
 import { Button, ButtonProps } from "@/components/ui/Button"
-import { useUserPublic } from "components/[guild]/hooks/useUser"
-import useConnectorNameAndIcon from "components/_app/Web3ConnectionManager/hooks/useConnectorNameAndIcon"
-import { addressLinkParamsAtom } from "components/common/Layout/components/Account/components/AccountModal/components/LinkAddressButton"
+import useConnectorNameAndIcon from "@/components/Web3ConnectionManager/hooks/useConnectorNameAndIcon"
+import { useUserPublic } from "@/hooks/useUserPublic"
 import { useAtomValue, useSetAtom } from "jotai"
 import { Wallet } from "phosphor-react"
 import { Config, useAccount, type Connector } from "wagmi"
 import { ConnectMutate } from "wagmi/query"
 import { COINBASE_WALLET_SDK_ID } from "wagmiConfig"
-import { walletLinkHelperModalAtom } from "../../WalletLinkHelperModal"
 
 type Props = {
   connector?: Connector

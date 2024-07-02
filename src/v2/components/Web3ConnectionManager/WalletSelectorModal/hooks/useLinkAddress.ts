@@ -1,11 +1,10 @@
-import { useUserPublic } from "components/[guild]/hooks/useUser"
-import { usePostHogContext } from "components/_app/PostHogProvider"
-import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import {
   AddressLinkParams,
   addressLinkParamsAtom,
-} from "components/common/Layout/components/Account/components/AccountModal/components/LinkAddressButton"
-import { deleteKeyPairFromIdb, getKeyPairFromIdb } from "hooks/useSetKeyPair"
+} from "@/components/Providers/Providers"
+import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import { useUserPublic } from "@/hooks/useUserPublic"
 import useSubmit from "hooks/useSubmit"
 import { SignProps } from "hooks/useSubmit/useSubmit"
 import { useAtom } from "jotai"
@@ -13,6 +12,7 @@ import randomBytes from "randombytes"
 import { useEffect } from "react"
 import { mutate } from "swr"
 import { fetcherWithSign } from "utils/fetcher"
+import { deleteKeyPairFromIdb, getKeyPairFromIdb } from "utils/keyPair"
 import { WalletClient } from "viem"
 
 const getAddressLinkProof = async (

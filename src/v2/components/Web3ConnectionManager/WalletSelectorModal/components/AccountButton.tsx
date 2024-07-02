@@ -1,7 +1,7 @@
 import { GuildAvatar } from "@/components/GuildAvatar"
 import { Button } from "@/components/ui/Button"
-import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import shortenHex from "utils/shortenHex"
+import { useWeb3ConnectionManager } from "../../hooks/useWeb3ConnectionManager"
 
 const AccountButton = () => {
   const { address } = useWeb3ConnectionManager()

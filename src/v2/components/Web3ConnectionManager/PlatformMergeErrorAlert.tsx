@@ -24,7 +24,7 @@ import { useRef } from "react"
 import { PlatformName } from "types"
 import capitalize from "utils/capitalize"
 import shortenHex from "utils/shortenHex"
-import useWeb3ConnectionManager from "../hooks/useWeb3ConnectionManager"
+import { useWeb3ConnectionManager } from "./hooks/useWeb3ConnectionManager"
 
 export const platformMergeAlertAtom = atom<
   false | { addressOrDomain: string; platformName: PlatformName }

@@ -18,7 +18,7 @@ import {
 } from "@chakra-ui/react"
 import type { RawPrivateKey, Waas } from "@coinbase/waas-sdk-web"
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { usePostHogContext } from "components/_app/PostHogProvider"
+import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import ConfirmationAlert from "components/create-guild/Requirements/components/ConfirmationAlert"

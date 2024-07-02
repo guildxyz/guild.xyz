@@ -1,7 +1,7 @@
 "use client"
 
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/ToggleGroup"
-import { Desktop, Moon, Sun } from "@phosphor-icons/react"
+import { Desktop, Moon, Sun } from "@phosphor-icons/react/dist/ssr"
 import { useTheme } from "next-themes"
 import { useIsClient } from "usehooks-ts"
 

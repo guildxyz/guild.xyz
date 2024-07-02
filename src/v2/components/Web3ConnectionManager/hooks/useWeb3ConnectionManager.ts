@@ -4,49 +4,22 @@ import {
   useIsConnected,
   useWallet,
 } from "@fuels/react"
-import parseFuelAddress from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPin/Fuel/parseFuelAddress"
-import { atom, useAtom, useSetAtom } from "jotai"
-import { useSearchParams } from "next/navigation"
-import { useRouter } from "next/router"
+import { UserProfile } from "@guildxyz/types"
+import { atom, useAtom } from "jotai"
 import { useEffect } from "react"
-import { User } from "types"
+import parseFuelAddress from "utils/parseFuelAddress"
 import { useAccount, useDisconnect, useSignMessage } from "wagmi"
-import { walletSelectorModalAtom } from "../components/WalletSelectorModal"
 
 const safeContextAtom = atom(false)
 
-type Web3ConnectionManagerType = {
+export function useWeb3ConnectionManager(): {
   isInSafeContext: boolean
   isWeb3Connected: boolean
   address?: `0x${string}`
-  type?: User["addresses"][number]["walletType"]
+  type?: UserProfile["addresses"][number]["walletType"]
   disconnect: () => void
   signMessage: (message: string) => Promise<string>
-}
-
-const useTriggerWalletSelectorModalLegacy = () => {
-  const router = useRouter()
-  const setIsWalletSelectorModalOpen = useSetAtom(walletSelectorModalAtom)
-  const { isWeb3Connected } = useWeb3ConnectionManager()
-
-  useEffect(() => {
-    if (!isWeb3Connected && router.query.redirectUrl)
-      setIsWalletSelectorModalOpen(true)
-  }, [isWeb3Connected, router.query, setIsWalletSelectorModalOpen])
-}
-
-const useTriggerWalletSelectorModal = () => {
-  const searchParams = useSearchParams()
-  const setIsWalletSelectorModalOpen = useSetAtom(walletSelectorModalAtom)
-  const { isWeb3Connected } = useWeb3ConnectionManager()
-
-  useEffect(() => {
-    if (!isWeb3Connected && searchParams?.get("redirectUrl"))
-      setIsWalletSelectorModalOpen(true)
-  }, [isWeb3Connected, searchParams, setIsWalletSelectorModalOpen])
-}
-
-const useWeb3ConnectionManager = (): Web3ConnectionManagerType => {
+} {
   const [isInSafeContext, setIsInSafeContext] = useAtom(safeContextAtom)
 
   const {
@@ -98,6 +71,3 @@ const useWeb3ConnectionManager = (): Web3ConnectionManagerType => {
     signMessage,
   }
 }
-
-export default useWeb3ConnectionManager
-export { useTriggerWalletSelectorModal, useTriggerWalletSelectorModalLegacy }

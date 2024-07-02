@@ -1,3 +1,4 @@
+import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import {
   ModalBody,
   ModalCloseButton,
@@ -11,7 +12,6 @@ import {
   useColorMode,
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import { useMintGuildPinContext } from "../../MintGuildPinContext"

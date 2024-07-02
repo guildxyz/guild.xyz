@@ -1,6 +1,6 @@
+import { walletSelectorModalAtom } from "@/components/Providers/Providers"
+import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { Box, HStack, Img, Stack, Text } from "@chakra-ui/react"
-import { walletSelectorModalAtom } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal"
-import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import ActionCard from "components/common/ActionCard"
 import Button from "components/common/Button"
 import Card from "components/common/Card"

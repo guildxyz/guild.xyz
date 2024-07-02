@@ -10,10 +10,9 @@ import {
 import LogicDivider from "components/[guild]/LogicDivider"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
-import { atom, useAtom } from "jotai"
+import { useAtom } from "jotai"
 import { SignOut } from "phosphor-react"
-
-export const walletLinkHelperModalAtom = atom(false)
+import { walletLinkHelperModalAtom } from "../Providers/Providers"
 
 const WalletLinkHelperModal = () => {
   const [isWalletLinkHelperModalOpen, setIsWalletLinkModalOpen] = useAtom(

@@ -1,5 +1,5 @@
+import { walletSelectorModalAtom } from "@/components/Providers/Providers"
 import { Center, Collapse, Img, useColorModeValue } from "@chakra-ui/react"
-import { walletSelectorModalAtom } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal"
 import ActionCard from "components/common/ActionCard"
 import Button from "components/common/Button"
 import { LinkButton } from "components/common/LinkMenuItem"

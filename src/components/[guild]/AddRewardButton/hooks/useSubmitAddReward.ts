@@ -1,7 +1,7 @@
+import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import { Visibility } from "@guildxyz/types"
 import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import useCreateRole from "components/create-guild/hooks/useCreateRole"
 import useToast from "hooks/useToast"
 import rewards from "platforms/rewards"
