@@ -18,7 +18,7 @@ const GuildifyExistingRole = () => {
   const { errors, dirtyFields, defaultValues } = useFormState()
   const { setValue } = useFormContext()
   const { roles: guildRoles } = useGuild()
-  const { guildPlatform, index } = useRolePlatform()
+  const { guildPlatform } = useRolePlatform()
   const {
     data: { roles: discordRoles },
   } = useServerData(guildPlatform.platformGuildId, { memberCountDetails: true })
@@ -52,7 +52,7 @@ const GuildifyExistingRole = () => {
 
         <Box maxW="sm">
           <ControlledSelect
-            name={`rolePlatforms.${index}.platformRoleId`}
+            name="platformRoleId"
             isLoading={!options}
             options={options}
             beforeOnChange={(newValue) => {
@@ -62,7 +62,7 @@ const GuildifyExistingRole = () => {
           />
         </Box>
         <FormErrorMessage>
-          {errors.rolePlatforms?.[index]?.platformRoleId?.message}
+          {errors?.platformRoleId?.message?.toString()}
         </FormErrorMessage>
       </FormControl>
       <Text fontWeight={"normal"} colorScheme="gray" mt="6">
