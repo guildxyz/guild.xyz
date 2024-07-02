@@ -58,18 +58,20 @@ const SelectRoleOrSetRequirements = ({ isRoleSelectorDisabled }: Props) => {
 
   const handleChange = (value: RoleTypeToAddTo) => {
     if (value === RoleTypeToAddTo.NEW_ROLE) {
-      unregister("roleIds")
-      setValue("name", data?.roleName || `New ${rewards[selection].name} role`)
-      setValue("imageUrl", data?.imageUrl || `/guildLogos/${getRandomInt(286)}.svg`)
-      setValue("roleVisibility", "PUBLIC")
+      initNewRole()
     }
-
     setActiveTab(value)
   }
 
+  const initNewRole = () => {
+    unregister("roleIds")
+    setValue("name", data?.roleName || `New ${rewards[selection].name} role`)
+    setValue("imageUrl", data?.imageUrl || `/guildLogos/${getRandomInt(286)}.svg`)
+    setValue("roleVisibility", "PUBLIC")
+  }
+
   useEffect(() => {
-    if (activeTab === RoleTypeToAddTo.NEW_ROLE)
-      setValue("name", data?.roleName || `New ${rewards[selection].name} role`)
+    if (activeTab === RoleTypeToAddTo.NEW_ROLE) initNewRole()
   }, [activeTab, setValue, data, selection])
 
   const { asRewardRestriction } = rewards[selection]
