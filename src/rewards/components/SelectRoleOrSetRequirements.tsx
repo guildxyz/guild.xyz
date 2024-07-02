@@ -7,8 +7,9 @@ import RoleSelector from "components/[guild]/RoleSelector"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useRoleGroup from "components/[guild]/hooks/useRoleGroup"
 import SetRequirements from "components/create-guild/Requirements"
-import rewards, { PlatformAsRewardRestrictions } from "rewards"
+import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
+import rewards, { PlatformAsRewardRestrictions } from "rewards"
 import { PlatformName } from "types"
 import getRandomInt from "utils/getRandomInt"
 
@@ -65,6 +66,11 @@ const SelectRoleOrSetRequirements = ({ isRoleSelectorDisabled }: Props) => {
 
     setActiveTab(value)
   }
+
+  useEffect(() => {
+    if (activeTab === RoleTypeToAddTo.NEW_ROLE)
+      setValue("name", data?.roleName || `New ${rewards[selection].name} role`)
+  }, [activeTab, setValue, data, selection])
 
   const { asRewardRestriction } = rewards[selection]
 
