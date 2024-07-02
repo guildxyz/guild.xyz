@@ -15,12 +15,6 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
-import RecheckAccessesButton from "components/[guild]/RecheckAccessesButton"
-import useGuild from "components/[guild]/hooks/useGuild"
-import useRequirements from "components/[guild]/hooks/useRequirements"
-import Button from "components/common/Button"
-import { useRoleMembership } from "components/explorer/hooks/useMembership"
-import { useSetAtom } from "jotai"
 import {
   ArrowSquareIn,
   CaretDown,
@@ -30,7 +24,13 @@ import {
   LockSimple,
   Warning,
   X,
-} from "phosphor-react"
+} from "@phosphor-icons/react"
+import RecheckAccessesButton from "components/[guild]/RecheckAccessesButton"
+import useGuild from "components/[guild]/hooks/useGuild"
+import useRequirements from "components/[guild]/hooks/useRequirements"
+import Button from "components/common/Button"
+import { useRoleMembership } from "components/explorer/hooks/useMembership"
+import { useSetAtom } from "jotai"
 import capitalize from "utils/capitalize"
 import {
   POPOVER_FOOTER_STYLES,

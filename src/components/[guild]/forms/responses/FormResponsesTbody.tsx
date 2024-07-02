@@ -5,7 +5,7 @@ import {
   CrmRow,
   CrmSkeletonRow,
 } from "components/[guild]/crm/CRMTable/CrmTbody"
-import { FormSubmission } from "platforms/Forms/hooks/useFormSubmissions"
+import { FormSubmission } from "rewards/Forms/hooks/useFormSubmissions"
 import { useState } from "react"
 import ResponseModal from "./ResponseModal"
 

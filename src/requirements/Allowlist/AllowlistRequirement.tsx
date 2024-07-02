@@ -1,5 +1,6 @@
 import { Fade, HStack, Icon, Text, useDisclosure } from "@chakra-ui/react"
 import { Schemas } from "@guildxyz/types"
+import { ArrowSquareIn, ListPlus } from "@phosphor-icons/react"
 import RequirementConnectButton from "components/[guild]/Requirements/components/ConnectRequirementPlatformButton"
 import Requirement, {
   RequirementProps,
@@ -9,7 +10,6 @@ import useRequirement from "components/[guild]/hooks/useRequirement"
 import Button from "components/common/Button"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import useDebouncedState from "hooks/useDebouncedState"
-import { ArrowSquareIn, ListPlus } from "phosphor-react"
 import { useState } from "react"
 import SearchableVirtualListModal from "requirements/common/SearchableVirtualListModal"
 import { isAddress } from "viem"

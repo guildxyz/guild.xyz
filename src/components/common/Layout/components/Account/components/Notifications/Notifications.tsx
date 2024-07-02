@@ -11,11 +11,11 @@ import {
   PopoverTrigger,
   Stack,
 } from "@chakra-ui/react"
+import { Bell } from "@phosphor-icons/react"
 import { ActivityLogProvider } from "components/[guild]/activity/ActivityLogContext"
 import useUser from "components/[guild]/hooks/useUser"
 import useLocalStorage from "hooks/useLocalStorage"
 import dynamic from "next/dynamic"
-import { Bell } from "phosphor-react"
 import AccountButton from "../AccountButton"
 import WebInboxSkeleton from "../Web3Inbox/WebInboxSkeleton"
 import NotificationsActivityLog from "./components/NotificationsActivityLog"

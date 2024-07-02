@@ -6,8 +6,8 @@ import { useConnect } from "components/[guild]/JoinModal/hooks/useConnectPlatfor
 // TODO: move this out to a constants folder maybe?
 import { Message } from "components/[guild]/JoinModal/hooks/useOauthPopupWindow"
 import useUser from "components/[guild]/hooks/useUser"
-import rewards from "platforms/rewards"
 import { useEffect } from "react"
+import rewards from "rewards"
 
 const useConnectFromLocalStorage = () => {
   const { keyPair } = useUserPublic()

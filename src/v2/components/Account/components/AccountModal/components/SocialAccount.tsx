@@ -8,8 +8,8 @@ import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershi
 import useDisconnect from "components/common/Layout/components/Account/components/AccountModal/hooks/useDisconnect"
 import useMembership from "components/explorer/hooks/useMembership"
 import { motion } from "framer-motion"
-import rewards from "platforms/rewards"
 import { ReactNode } from "react"
+import rewards from "rewards"
 import { PlatformName } from "types"
 import { DisconnectAccountButton } from "./DisconnectAccountButton"
 

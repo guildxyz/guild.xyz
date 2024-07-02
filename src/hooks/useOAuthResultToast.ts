@@ -1,7 +1,7 @@
 import { platformMergeAlertAtom } from "@/components/Web3ConnectionManager/PlatformMergeErrorAlert"
 import { useSetAtom } from "jotai"
 import { useRouter } from "next/router"
-import rewards from "platforms/rewards"
+import rewards from "rewards"
 import { useEffect } from "react"
 import { PlatformName } from "types"
 import useToast from "./useToast"

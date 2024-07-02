@@ -1,4 +1,5 @@
 import { Box, Collapse, Spacer, Spinner, Stack, Tag } from "@chakra-ui/react"
+import { Plus } from "@phosphor-icons/react"
 import {
   AddRewardProvider,
   useAddRewardContext,
@@ -11,7 +12,6 @@ import AddCard from "components/common/AddCard"
 import Button from "components/common/Button"
 import Section from "components/common/Section"
 import { atom } from "jotai"
-import { Plus } from "phosphor-react"
 import useAddRolePlatform from "../hooks/useAddRolePlatform"
 import ExistingRolePlatformCard from "./ExistingRolePlatformCard"
 

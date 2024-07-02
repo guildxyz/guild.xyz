@@ -3,10 +3,10 @@ import {
   walletSelectorModalAtom,
 } from "@/components/Providers/Providers"
 import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import { Plus } from "@phosphor-icons/react"
 import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import { useSetAtom } from "jotai"
-import { Plus } from "phosphor-react"
 
 const LinkAddressButton = (props) => {
   const { id } = useUser()

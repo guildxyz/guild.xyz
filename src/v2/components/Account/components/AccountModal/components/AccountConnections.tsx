@@ -1,8 +1,8 @@
 import { cn } from "@/lib/utils"
 import useUser from "components/[guild]/hooks/useUser"
 import useDelegateVaults from "components/common/Layout/components/Account/components/delegate/useDelegateVaults"
-import rewards from "platforms/rewards"
 import { ReactNode, useMemo } from "react"
+import rewards from "rewards"
 import { PlatformName } from "types"
 import { SocialAccount } from "./SocialAccount"
 

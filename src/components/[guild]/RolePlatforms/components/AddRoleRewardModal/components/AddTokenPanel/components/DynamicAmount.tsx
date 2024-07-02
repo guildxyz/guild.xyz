@@ -1,11 +1,11 @@
 import { Icon, Stack, Text } from "@chakra-ui/react"
+import { Star } from "@phosphor-icons/react"
 import useGuildPlatform from "components/[guild]/hooks/useGuildPlatform"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import useTokenData from "hooks/useTokenData"
-import { Star } from "phosphor-react"
-import DynamicTypeForm from "platforms/Token/DynamicTypeForm"
 import { ReactNode } from "react"
 import { useWatch } from "react-hook-form"
+import DynamicTypeForm from "rewards/Token/DynamicTypeForm"
 import Token from "static/icons/token.svg"
 import ConversionInput from "./ConversionInput"
 

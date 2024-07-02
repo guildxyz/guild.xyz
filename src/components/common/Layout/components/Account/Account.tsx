@@ -1,9 +1,9 @@
 import { walletSelectorModalAtom } from "@/components/Providers/Providers"
 import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { ButtonGroup, Divider } from "@chakra-ui/react"
+import { SignIn } from "@phosphor-icons/react"
 import useUser from "components/[guild]/hooks/useUser"
 import { useSetAtom } from "jotai"
-import { SignIn } from "phosphor-react"
 import AccountButton from "./components/AccountButton"
 import Notifications from "./components/Notifications/Notifications"
 

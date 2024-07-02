@@ -20,11 +20,11 @@ import {
   Stack,
   Textarea,
 } from "@chakra-ui/react"
+import { Plus } from "@phosphor-icons/react"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
-import { Plus } from "phosphor-react"
 import { useEffect, useMemo, useState } from "react"
 import {
   useController,
@@ -84,8 +84,8 @@ const NftForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element =>
     field?.data?.attributes?.length
       ? "ATTRIBUTE"
       : field?.data?.ids?.length > 0
-      ? "CUSTOM_ID"
-      : "AMOUNT"
+        ? "CUSTOM_ID"
+        : "AMOUNT"
   )
 
   const {

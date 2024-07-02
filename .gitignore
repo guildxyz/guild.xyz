@@ -33,5 +33,8 @@ cypress/screenshots
 cypress/videos
 
 .idea
+
+*.tsbuildinfo
+
 *storybook.log
 storybook-static

@@ -22,12 +22,12 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
+import { DotsThree, LinkBreak, UserSwitch } from "@phosphor-icons/react"
 import Button from "components/common/Button"
 import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Alert } from "components/common/Modal"
 import Image from "next/image"
-import { DotsThree, LinkBreak, UserSwitch } from "phosphor-react"
 import { useRef } from "react"
 import { User } from "types"
 import shortenHex from "utils/shortenHex"

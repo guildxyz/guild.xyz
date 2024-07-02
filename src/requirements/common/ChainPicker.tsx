@@ -6,10 +6,10 @@ import {
   InputGroup,
   InputLeftElement,
 } from "@chakra-ui/react"
+import { Question } from "@phosphor-icons/react"
 import ControlledSelect from "components/common/ControlledSelect"
 import { StyledSelectProps } from "components/common/StyledSelect/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
-import { Question } from "phosphor-react"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { useChainId } from "wagmi"

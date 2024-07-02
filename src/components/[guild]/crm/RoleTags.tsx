@@ -15,8 +15,8 @@ import {
   useColorModeValue,
   Wrap,
 } from "@chakra-ui/react"
+import { Funnel } from "@phosphor-icons/react"
 import Button from "components/common/Button"
-import { Funnel } from "phosphor-react"
 import { memo } from "react"
 import { Role } from "types"
 import pluralize from "utils/pluralize"
@@ -76,13 +76,15 @@ const RoleTags = memo(({ roles, setFilterValue }: Props) => {
             <PopoverArrow />
             <PopoverBody>
               <Wrap>
-                {moreRoles?.slice(0, 15).map(({ roleId, requirementId, amount }) => (
-                  <CrmRoleTag
-                    key={requirementId ?? roleId}
-                    role={rolesData.find((r) => r.id === roleId) as any}
-                    amount={amount}
-                  />
-                ))}
+                {moreRoles
+                  ?.slice(0, 15)
+                  .map(({ roleId, requirementId, amount }) => (
+                    <CrmRoleTag
+                      key={requirementId ?? roleId}
+                      role={rolesData.find((r) => r.id === roleId) as any}
+                      amount={amount}
+                    />
+                  ))}
               </Wrap>
             </PopoverBody>
           </PopoverContent>

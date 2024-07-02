@@ -1,6 +1,6 @@
 import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hooks/useAddRewardDiscardAlert"
 import GitHubGuildSetup from "components/common/GitHubGuildSetup"
-import { AddRewardPanelProps } from "platforms/rewards"
+import { AddRewardPanelProps } from "rewards"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformType } from "types"
 import DefaultAddRewardPanelWrapper from "../DefaultAddRewardPanelWrapper"

@@ -1,7 +1,7 @@
 import { FormControl, FormLabel, HStack, Stack, Text } from "@chakra-ui/react"
+import { Check, Minus, X } from "@phosphor-icons/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import RadioButtonGroup from "components/common/RadioButtonGroup"
-import { Check, Minus, X } from "phosphor-react"
 import { useFieldArray, useFormContext, useFormState } from "react-hook-form"
 
 export const ExpectedMultipleChoice = ({ field }) => {
@@ -38,8 +38,8 @@ export const ExpectedMultipleChoice = ({ field }) => {
               findIndexInArray("acceptedAnswers", option) > -1
                 ? "include"
                 : findIndexInArray("rejectedAnswers", option) > -1
-                ? "exclude"
-                : "ignore"
+                  ? "exclude"
+                  : "ignore"
             }
             onChange={(newValue) => onChange(option, newValue)}
           />

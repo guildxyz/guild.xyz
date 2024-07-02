@@ -9,8 +9,8 @@ import {
   Tag,
   Text,
 } from "@chakra-ui/react"
+import { Chat } from "@phosphor-icons/react"
 import Button from "components/common/Button"
-import { Chat } from "phosphor-react"
 import { triggerChat } from "utils/intercom"
 
 const AlphaTag = () => (
