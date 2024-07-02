@@ -19,12 +19,12 @@ import {
   useClipboard,
   useDisclosure,
 } from "@chakra-ui/react"
-import Button from "components/common/Button"
-import { Modal } from "components/common/Modal"
+import { Check, Copy, DownloadSimple, Export } from "@phosphor-icons/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import RoleSelector from "components/[guild]/RoleSelector"
+import Button from "components/common/Button"
+import { Modal } from "components/common/Modal"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
-import { Check, Copy, DownloadSimple, Export } from "phosphor-react"
 import { useRef } from "react"
 
 const MembersExporter = (): JSX.Element => {

@@ -11,12 +11,12 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
+import { ArrowSquareOut, Plus, TrashSimple } from "@phosphor-icons/react"
 import Button from "components/common/Button"
 import ClientOnly from "components/common/ClientOnly"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import { CreateGuildFormType } from "components/create-guild/CreateGuildForm"
-import { ArrowSquareOut, Plus, TrashSimple } from "phosphor-react"
 import { Controller, useFieldArray, useFormContext } from "react-hook-form"
 import { SelectOption } from "types"
 

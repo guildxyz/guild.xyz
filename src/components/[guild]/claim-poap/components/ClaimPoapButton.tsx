@@ -5,7 +5,7 @@ import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import useClaimText from "platforms/SecretText/hooks/useClaimText"
+import useClaimText from "rewards/SecretText/hooks/useClaimText"
 import { useAccount } from "wagmi"
 import { useClaimedReward } from "../../../../hooks/useClaimedReward"
 import { RolePlatform } from "../../../../types"
@@ -67,8 +67,8 @@ const ClaimPoapButton = ({ rolePlatform, ...rest }: Props) => {
           isAccessLoading
             ? "Checking access"
             : isMembershipUpdateLoading
-            ? "Checking eligibility"
-            : "Claiming POAP"
+              ? "Checking eligibility"
+              : "Claiming POAP"
         }
         onClick={() => {
           captureEvent("Click: ClaimPoapButton", {
@@ -92,8 +92,8 @@ const ClaimPoapButton = ({ rolePlatform, ...rest }: Props) => {
         {claimed
           ? "View mint link"
           : !hasRoleAccess
-          ? "Check access & claim"
-          : "Claim now"}
+            ? "Check access & claim"
+            : "Claim now"}
       </Button>
       <MintLinkModal
         isLoading={isLoading}

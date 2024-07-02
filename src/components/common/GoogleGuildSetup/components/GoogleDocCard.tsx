@@ -14,7 +14,7 @@ import CardMotionWrapper from "components/common/CardMotionWrapper"
 import OptionCard from "components/common/OptionCard"
 import { Gateables } from "hooks/useGateables"
 import NextLink from "next/link"
-import { fileTypeNames } from "platforms/Google/useGoogleCardProps"
+import { fileTypeNames } from "rewards/Google/useGoogleCardProps"
 import { PlatformType } from "types"
 
 type Props = {

@@ -14,6 +14,7 @@ import {
 } from "@chakra-ui/react"
 
 import { Link } from "@chakra-ui/next-js"
+import { ArrowLeft, ArrowSquareOut } from "@phosphor-icons/react"
 import { useUserPublic } from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
@@ -24,7 +25,6 @@ import ModalButton from "components/common/ModalButton"
 import useSetKeyPair from "hooks/useSetKeyPair"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useAtom, useSetAtom } from "jotai"
-import { ArrowLeft, ArrowSquareOut } from "phosphor-react"
 import { useEffect } from "react"
 import { useAccount, useConnect, type Connector } from "wagmi"
 import useWeb3ConnectionManager from "../../hooks/useWeb3ConnectionManager"
@@ -180,8 +180,8 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
                         (typeof err?.error === "string"
                           ? err?.error
                           : typeof err === "string"
-                          ? err
-                          : err?.errors?.[0]?.msg),
+                            ? err
+                            : err?.errors?.[0]?.msg),
                     }
                   },
                 }

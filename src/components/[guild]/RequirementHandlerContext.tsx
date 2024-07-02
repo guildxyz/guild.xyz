@@ -2,13 +2,21 @@ import { Schemas } from "@guildxyz/types"
 import useCreateRequirement from "components/create-guild/Requirements/hooks/useCreateRequirement"
 import useHandleRequirementState from "components/create-guild/Requirements/hooks/useHandleRequirementState"
 import { createContext, ReactNode, useContext } from "react"
-import { Requirement, RequirementCreateResponseOutput } from "types"
+import {
+  ClientStateRequirementCreateResponse,
+  Requirement,
+  RequirementCreateResponseOutput,
+} from "types"
 import useRequirements from "./hooks/useRequirements"
 
 const RequirementHandlerContext = createContext<{
   onAddRequirement: (
     requirement: Schemas["RequirementCreationPayload"]
-  ) => RequirementCreateResponseOutput | Promise<RequirementCreateResponseOutput>
+  ) =>
+    | RequirementCreateResponseOutput
+    | ClientStateRequirementCreateResponse
+    | Promise<RequirementCreateResponseOutput>
+    | Promise<ClientStateRequirementCreateResponse>
   requirements: Requirement[]
   requirementsLoading?: boolean
   addRequirementLoading?: boolean

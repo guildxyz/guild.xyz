@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
-import useRolePlatformsOfReward from "platforms/Token/hooks/useRolePlatformsOfReward"
+import useRolePlatformsOfReward from "rewards/Token/hooks/useRolePlatformsOfReward"
 import { useEffect, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { PlatformType } from "types"

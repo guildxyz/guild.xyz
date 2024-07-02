@@ -14,6 +14,7 @@ import {
   Tooltip,
 } from "@chakra-ui/react"
 import { Schemas } from "@guildxyz/types"
+import { DotsSixVertical, PencilSimple, Trash } from "@phosphor-icons/react"
 import { CreateForm } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddFormPanel"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
@@ -21,7 +22,6 @@ import CardMotionWrapper from "components/common/CardMotionWrapper"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Reorder, useDragControls } from "framer-motion"
-import { DotsSixVertical, PencilSimple, Trash } from "phosphor-react"
 import { useState } from "react"
 import { useController, useFormContext, useWatch } from "react-hook-form"
 import { SelectOption } from "types"
@@ -122,8 +122,8 @@ const FormCardEditable = ({ index, fieldId, onUpdate, onRemove }: Props) => {
                                   },
                                 ]
                               : isRate
-                              ? [...Array(10)].map((_, i) => ({ value: i + 1 }))
-                              : [],
+                                ? [...Array(10)].map((_, i) => ({ value: i + 1 }))
+                                : [],
                           })
                         }}
                       />

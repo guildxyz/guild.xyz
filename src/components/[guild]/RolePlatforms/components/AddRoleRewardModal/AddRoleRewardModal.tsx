@@ -3,10 +3,7 @@ import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hoo
 import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
-import rewards, {
-  AddRewardPanelProps,
-  modalSizeForPlatform,
-} from "platforms/rewards"
+import rewards, { AddRewardPanelProps, modalSizeForPlatform } from "rewards"
 import { useWatch } from "react-hook-form"
 import { RoleFormType } from "types"
 import SelectRewardPanel from "./SelectRewardPanel"
@@ -60,8 +57,8 @@ const AddRoleRewardModal = ({ onAdd }: Props) => {
         step === "SELECT_ROLE"
           ? "2xl"
           : isRewardSetupStep
-          ? modalSizeForPlatform(selection)
-          : "4xl"
+            ? modalSizeForPlatform(selection)
+            : "4xl"
       }
       scrollBehavior="inside"
       colorScheme="dark"

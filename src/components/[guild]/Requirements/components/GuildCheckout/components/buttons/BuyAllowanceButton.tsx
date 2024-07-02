@@ -1,9 +1,9 @@
 import { Collapse, Icon, Tooltip } from "@chakra-ui/react"
+import { Check, Question, Warning } from "@phosphor-icons/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import useToken from "hooks/useToken"
-import { Check, Question, Warning } from "phosphor-react"
 import useVault from "requirements/Payment/hooks/useVault"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { useChainId } from "wagmi"
@@ -83,8 +83,8 @@ const BuyAllowanceButton = (): JSX.Element => {
           isVaultLoading || isAllowanceLoading
             ? "Checking allowance"
             : isAllowing
-            ? "Allowing"
-            : "Check your wallet"
+              ? "Allowing"
+              : "Check your wallet"
         }
         onClick={onClick}
         w="full"

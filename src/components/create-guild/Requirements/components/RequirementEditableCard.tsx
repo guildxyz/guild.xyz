@@ -36,6 +36,8 @@ const RequirementEditableCard = ({
 }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const RequirementComponent = REQUIREMENTS[type]?.displayComponent
+  const FormComponent = REQUIREMENTS[type].formComponent
+
   const editButtonRef = useRef()
 
   const { setValue } = useFormContext<RoleFormType>()
@@ -60,7 +62,7 @@ const RequirementEditableCard = ({
       </UnsupportedRequirementTypeCard>
     )
 
-  const rightElement = !isEditDisabled && (
+  const rightElement = !isEditDisabled && !!FormComponent && (
     <Button ref={editButtonRef} size="sm" onClick={onOpen}>
       Edit
     </Button>
@@ -139,7 +141,7 @@ const RequirementEditableCard = ({
         <RemoveRequirementButton onClick={() => onRemove()} />
       </RequirementBaseCard>
 
-      {!isEditDisabled && (
+      {!isEditDisabled && !!FormComponent && (
         <FormProvider {...methods}>
           <DynamicRequirementEditModal
             requirementField={field}

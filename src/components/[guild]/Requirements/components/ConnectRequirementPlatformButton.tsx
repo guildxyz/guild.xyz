@@ -7,7 +7,7 @@ import { ConnectEmailButton } from "components/common/Layout/components/Account/
 import { ConnectFarcasterButton } from "components/common/Layout/components/Account/components/AccountModal/components/SocialAccount/FarcasterProfile"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import useToast from "hooks/useToast"
-import rewards from "platforms/rewards"
+import rewards from "rewards"
 import REQUIREMENTS, { RequirementType } from "requirements"
 import { PlatformName } from "types"
 import { useRequirementContext } from "./RequirementContext"
@@ -40,8 +40,8 @@ const RequirementConnectButton = (props: ButtonProps) => {
     platform === "EMAIL"
       ? !emails?.pending && emails?.emailAddress
       : platform === "FARCASTER"
-      ? !farcasterProfiles || !!farcasterProfiles?.[0]
-      : !isReconnection && (!platformUsers || platformFromDb)
+        ? !farcasterProfiles || !!farcasterProfiles?.[0]
+        : !isReconnection && (!platformUsers || platformFromDb)
   )
     return null
 
@@ -58,8 +58,8 @@ const RequirementConnectButton = (props: ButtonProps) => {
     platform === "EMAIL"
       ? ConnectEmailButton
       : platform === "FARCASTER"
-      ? ConnectFarcasterButton
-      : ConnectRequirementPlatformButton
+        ? ConnectFarcasterButton
+        : ConnectRequirementPlatformButton
 
   return (
     <ButtonComponent

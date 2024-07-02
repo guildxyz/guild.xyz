@@ -1,8 +1,8 @@
 import { Collapse, Icon, Tooltip } from "@chakra-ui/react"
+import { Question, Warning } from "@phosphor-icons/react"
 import useAllowance from "components/[guild]/Requirements/components/GuildCheckout/hooks/useAllowance"
 import Button from "components/common/Button"
 import useTokenData from "hooks/useTokenData"
-import { Question, Warning } from "phosphor-react"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { useAccount } from "wagmi"
 import { Chain, Chains } from "wagmiConfig/chains"
@@ -43,8 +43,8 @@ const AllowanceButton = ({ chain, token, contract }: Props) => {
           isAllowanceLoading
             ? "Checking allowance"
             : isAllowing
-            ? "Allowing"
-            : "Check your wallet"
+              ? "Allowing"
+              : "Check your wallet"
         }
         leftIcon={allowanceError ? <Icon as={Warning} /> : null}
         rightIcon={

@@ -1,14 +1,14 @@
 import { ModalOverlay, useDisclosure } from "@chakra-ui/react"
 import { Schemas, Visibility } from "@guildxyz/types"
+import { Plus } from "@phosphor-icons/react"
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { atom, useAtomValue } from "jotai"
-import { Plus } from "phosphor-react"
-import rewards, { modalSizeForPlatform } from "platforms/rewards"
-import { RewardData } from "platforms/types"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
+import rewards, { modalSizeForPlatform } from "rewards"
+import { RewardData } from "rewards/types"
 import { RoleFormType } from "types"
 import { AddRewardProvider, useAddRewardContext } from "../AddRewardContext"
 import { ClientStateRequirementHandlerProvider } from "../RequirementHandlerContext"
@@ -115,8 +115,8 @@ const AddRewardButton = () => {
             step === "SELECT_ROLE"
               ? "2xl"
               : isRewardSetupStep
-              ? modalSizeForPlatform(selection)
-              : "4xl"
+                ? modalSizeForPlatform(selection)
+                : "4xl"
           }
           scrollBehavior="inside"
           colorScheme="dark"
