@@ -1,4 +1,5 @@
 import {
+  Box,
   Circle,
   HStack,
   Heading,
@@ -8,6 +9,7 @@ import {
 } from "@chakra-ui/react"
 import DisplayCard from "components/common/DisplayCard"
 import Image from "next/image"
+import { transparentize } from "utils/transparentize"
 
 export type Props = {
   title: string
@@ -42,6 +44,7 @@ const SolutionCard = ({
         outlineColor={outlineColor}
         outlineOffset="-1px"
         onClick={onClick}
+        zIndex={2}
         _before={{
           content: `""`,
           position: "absolute",
@@ -57,10 +60,42 @@ const SolutionCard = ({
           transition: "0.3s",
           filter: `blur(2px) saturate(70%)`,
         }}
+        _after={{
+          transition: "0.3s",
+          opacity: 0,
+          content: `""`,
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          bg: `linear-gradient(to top, ${transparentize(
+            cardBg,
+            1
+          )}, ${transparentize(cardBg, 0)} 66%)`,
+        }}
         _hover={{
-          _before: { opacity: 0.25, filter: `blur(0) saturate(100%)` },
+          _before: {
+            opacity: 0.25,
+            filter: `blur(0) saturate(100%)`,
+          },
+          _after: {
+            opacity: 1,
+          },
         }}
       >
+        <Box
+          position="absolute"
+          top={0}
+          left={0}
+          right={0}
+          bottom={0}
+          outline="1px solid"
+          outlineColor={outlineColor}
+          outlineOffset="-1px"
+          zIndex={3}
+          rounded={"2xl"}
+        />
         <Stack spacing={3} zIndex={1} justifyContent={"space-between"} h={"100%"}>
           <HStack gap={3}>
             <Circle
