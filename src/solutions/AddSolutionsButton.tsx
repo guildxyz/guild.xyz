@@ -1,14 +1,20 @@
 import {
+  Circle,
+  HStack,
+  Heading,
+  Icon,
   ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalHeader,
   ModalOverlay,
   SimpleGrid,
+  Stack,
   Text,
+  useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
-import { Plus } from "@phosphor-icons/react"
+import { IconProps, Plus } from "@phosphor-icons/react"
 import {
   AddRewardForm,
   defaultValues,
@@ -26,10 +32,12 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
+import DisplayCard from "components/common/DisplayCard"
 import { Modal } from "components/common/Modal"
 import PlatformSelectButton from "components/create-guild/PlatformsGrid/components/PlatformSelectButton"
 import dynamic from "next/dynamic"
-import { useState } from "react"
+import Image from "next/image"
+import { ComponentType, RefAttributes, useState } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import rewards, { modalSizeForPlatform } from "rewards"
 import { AddRewardPanelLoadingSpinner } from "rewards/components/AddRewardPanelLoadingSpinner"
@@ -174,6 +182,13 @@ const AddSolutionsButton = () => {
 
             <ModalBody className="custom-scrollbar">
               <SimpleGrid columns={{ base: 1, md: 2 }} gap={{ base: 4, md: 5 }}>
+                <SolutionCard
+                  title="Token liquidity program"
+                  description="Reward users with points for providing liquidity to your token."
+                  imageUrl="/solutions/liquidity.png"
+                  bgImageUrl="/solutions/nft-background.png"
+                />
+
                 {getPlatformSelectButton({
                   title: "Points and leaderboard",
                   description: "Launch XP, Stars, Keys, Gems, or whatever you need",
@@ -279,5 +294,93 @@ const AddSolutionsButtonWrapper = (): JSX.Element => (
     <AddSolutionsButton />
   </AddRewardProvider>
 )
+
+const SolutionCard = ({
+  title,
+  description,
+  imageUrl,
+  bgImageUrl,
+  icon,
+}: {
+  title: string
+  description?: string
+  imageUrl?: string
+  bgImageUrl?: string
+  icon?: ComponentType<IconProps & RefAttributes<SVGSVGElement>>
+}) => {
+  const circleBgColor = useColorModeValue("gray.100", "gray.600")
+  const iconColor = useColorModeValue("black", "white")
+
+  return (
+    <>
+      <DisplayCard
+        boxShadow={"none"}
+        px={4}
+        py={4}
+        position="relative"
+        outline="1px solid white"
+        outlineColor="whiteAlpha.300"
+        outlineOffset="-1px"
+        _before={{
+          content: `""`,
+          position: "absolute",
+          top: 0,
+          left: 0,
+          bg: `url('${bgImageUrl}')`,
+          bgRepeat: "no-repeat",
+          bgPosition: "center",
+          bgSize: "cover",
+          width: "100%",
+          height: "100%",
+          opacity: 0.3,
+          transition: "0.3s",
+          filter: `blur(3px) saturate(50%)`,
+        }}
+        _hover={{
+          _before: { opacity: 0.5, filter: `blur(3px) saturate(80%)` },
+        }}
+      >
+        <Stack spacing={3} zIndex={1}>
+          <HStack>
+            {imageUrl ? (
+              <Circle
+                size="12"
+                pos="relative"
+                overflow="hidden"
+                bgColor={circleBgColor}
+              >
+                <Image src={imageUrl} alt="Guild logo" fill sizes="3rem" />
+              </Circle>
+            ) : (
+              <Circle
+                bgColor={circleBgColor}
+                size="12"
+                pos="relative"
+                overflow="hidden"
+              >
+                <Icon as={icon} boxSize={5} weight="regular" color={iconColor} />
+              </Circle>
+            )}
+
+            <Heading
+              fontSize="md"
+              fontWeight="bold"
+              letterSpacing="wide"
+              maxW="full"
+              noOfLines={1}
+            >
+              {title}
+            </Heading>
+          </HStack>
+          {description && (
+            <Text colorScheme="gray" lineHeight={1.33}>
+              {description}
+            </Text>
+          )}
+        </Stack>
+      </DisplayCard>
+    </>
+  )
+}
 
 export default AddSolutionsButtonWrapper
