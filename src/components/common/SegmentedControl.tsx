@@ -106,6 +106,7 @@ const SegmentedControlButton = ({
           outline: "none",
           boxShadow: "outline",
         }}
+        color={!state.isChecked ? "GrayText" : ""}
         {...getRadioProps()}
         onKeyDown={(e) => {
           if (e.code === "Enter" || e.code === "Space") {

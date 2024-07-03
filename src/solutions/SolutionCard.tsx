@@ -28,11 +28,13 @@ const SolutionCard = ({
 }: Props) => {
   const circleBgColor = useColorModeValue("whiteAlpha.300", "blackAlpha.300")
   const outlineColor = useColorModeValue("blackAlpha.300", "whiteAlpha.300")
+  const cardBg = useColorModeValue("white", "gray.800")
 
   return (
     <>
       <DisplayCard
         boxShadow={"none"}
+        bg={cardBg}
         px={4}
         py={4}
         position="relative"
@@ -51,12 +53,12 @@ const SolutionCard = ({
           bgSize: "cover",
           width: "100%",
           height: "100%",
-          opacity: 0.25,
+          opacity: 0.15,
           transition: "0.3s",
-          filter: `blur(3px) saturate(70%)`,
+          filter: `blur(0px) saturate(70%)`,
         }}
         _hover={{
-          _before: { opacity: 0.4, filter: `blur(1.5px) saturate(100%)` },
+          _before: { opacity: 0.25, filter: `blur(0) saturate(100%)` },
         }}
       >
         <Stack spacing={3} zIndex={1} justifyContent={"space-between"} h={"100%"}>

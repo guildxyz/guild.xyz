@@ -1,5 +1,7 @@
 import {
+  Box,
   Collapse,
+  HStack,
   Heading,
   ModalBody,
   ModalCloseButton,
@@ -7,7 +9,6 @@ import {
   ModalHeader,
   ModalOverlay,
   SimpleGrid,
-  Stack,
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
@@ -28,9 +29,12 @@ import { useThemeContext } from "components/[guild]/ThemeContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
+import CardMotionWrapper from "components/common/CardMotionWrapper"
 import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
 import SegmentedControl from "components/common/SegmentedControl"
+import SearchBar from "components/explorer/SearchBar"
+import { AnimatePresence } from "framer-motion"
 import dynamic from "next/dynamic"
 import { useState } from "react"
 import { FormProvider, useController, useForm, useWatch } from "react-hook-form"
@@ -38,8 +42,15 @@ import rewards, { modalSizeForPlatform } from "rewards"
 import { AddRewardPanelLoadingSpinner } from "rewards/components/AddRewardPanelLoadingSpinner"
 import { PlatformName, PlatformType } from "types"
 import SolutionCard from "./SolutionCard"
+import {
+  SolutionCardData,
+  engagement,
+  memberships,
+  sybil,
+  tokens,
+} from "./SolutionCardData"
 
-const solutions = {
+export const solutions = {
   LIQUIDITY: dynamic(
     () => import("solutions/LiquidityIncentive/LiquidityIncentiveSetupModal"),
     {
@@ -49,13 +60,38 @@ const solutions = {
   ),
 }
 
-type Solutions = keyof typeof solutions
+export type Solutions = keyof typeof solutions
+
+const categories = [
+  {
+    label: "All",
+    value: "all",
+  },
+  {
+    label: "Memberships",
+    value: "memberships",
+  },
+  {
+    label: "Tokens",
+    value: "tokens",
+  },
+  {
+    label: "Engagement",
+    value: "engagement",
+  },
+  {
+    label: "Sybil Protection",
+    value: "sybil",
+  },
+]
 
 const AddSolutionsButton = () => {
   const { selection, step, isOpen, onOpen, setStep, onClose, setSelection } =
     useAddRewardContext()
 
-  const { guildPlatforms, featureFlags } = useGuild()
+  const { guildPlatforms } = useGuild()
+
+  const [search, setSearch] = useState("")
 
   const {
     isOpen: isDiscardAlertOpen,
@@ -132,29 +168,6 @@ const AddSolutionsButton = () => {
     (gp) => gp.platformId === PlatformType.POLYGON_ID
   )
 
-  const categories = [
-    {
-      label: "All",
-      value: "all",
-    },
-    {
-      label: "Memberships",
-      value: "memberships",
-    },
-    {
-      label: "Tokens",
-      value: "tokens",
-    },
-    {
-      label: "Engagement",
-      value: "engagement",
-    },
-    {
-      label: "Sybil Protection",
-      value: "sybil",
-    },
-  ]
-
   const categoryFormMethods = useForm({ mode: "all" })
   const {
     field: { ref: _ref, ...categoryField },
@@ -199,194 +212,97 @@ const AddSolutionsButton = () => {
         {step === "HOME" && (
           <ModalContent>
             <ModalCloseButton />
-            <ModalHeader>
-              <Text>Add solution</Text>
-            </ModalHeader>
+            <ModalHeader fontFamily={"inherit"} fontSize={"inherit"}>
+              <Heading
+                as="h1"
+                mb={3}
+                fontSize={{ base: "2xl", md: "3xl", lg: "4xl" }}
+                fontFamily="display"
+                textAlign={"center"}
+                wordBreak={"break-word"}
+              >
+                Guild Solutions
+              </Heading>
 
-            <ModalBody className="custom-scrollbar">
+              <Text
+                colorScheme="gray"
+                fontWeight="semibold"
+                mb="8"
+                textAlign={"center"}
+              >
+                Short description if needed.
+              </Text>
+
+              <SearchBar {...{ search, setSearch }} mb={3} />
               <FormProvider {...categoryFormMethods}>
                 <SegmentedControl options={categories} {...categoryField} />
               </FormProvider>
-              <Stack mt={8} spacing={0}>
-                <Collapse
-                  in={
-                    categoryField.value === "all" ||
-                    categoryField.value === "memberships"
-                  }
-                >
-                  <section>
-                    <Heading
-                      textColor={"GrayText"}
-                      fontSize={"large"}
-                      fontWeight={"medium"}
-                      mb={3}
-                    >
-                      Memberships
-                    </Heading>
-                    <SimpleGrid
-                      columns={{ base: 1, md: 2 }}
-                      gap={{ base: 4, md: 5 }}
-                      mb={8}
-                    >
-                      <SolutionCard
-                        title="Discord membership"
-                        description="Exclusive Discord roles for accessing your server and channels."
-                        imageUrl="/platforms/discord.png"
-                        bgImageUrl="/solutions/discord-bg.jpg"
-                        onClick={() => onSelectReward("DISCORD")}
-                      />
-                      <SolutionCard
-                        title="Telegram group gating"
-                        description="Start your exclusive token-gated Telegram group."
-                        imageUrl="/platforms/telegram.png"
-                        bgImageUrl="/solutions/telegram-bg.jpg"
-                        onClick={() => onSelectReward("TELEGRAM")}
-                      />
-                      <SolutionCard
-                        title="Gather Town gating"
-                        description="Gather brings the best of in-person collaboration to distributed teams."
-                        imageUrl="/platforms/gather.png"
-                        bgImageUrl="/solutions/gather-bg.jpg"
-                        onClick={() => onSelectReward("GATHER_TOWN")}
-                      />
-                      <SolutionCard
-                        title="Google Docs gating"
-                        description="Provide exclusive access to Google files for users who meet specific requirements."
-                        imageUrl="/platforms/google.png"
-                        bgImageUrl="/solutions/google-bg.jpg"
-                        onClick={() => onSelectReward("GOOGLE")}
-                      />
-                      <SolutionCard
-                        title="GitHub repository gating"
-                        description="Grant access to a private codebase for qualifying contributors."
-                        imageUrl="/platforms/github.png"
-                        bgImageUrl="/solutions/github-bg.jpg"
-                        onClick={() => onSelectReward("GITHUB")}
-                      />
-                    </SimpleGrid>
-                  </section>
-                </Collapse>
+            </ModalHeader>
 
-                <Collapse
-                  in={
-                    categoryField.value === "all" || categoryField.value === "tokens"
-                  }
-                >
-                  <section>
-                    <Heading
-                      textColor={"GrayText"}
-                      fontSize={"large"}
-                      fontWeight={"medium"}
-                      mb={3}
-                    >
-                      Tokens
-                    </Heading>
-                    <SimpleGrid
-                      columns={{ base: 1, md: 2 }}
-                      gap={{ base: 4, md: 5 }}
-                      mb={8}
-                    >
-                      <SolutionCard
-                        title="NFT Drop"
-                        description="Launch NFT sales or open editions with specific collection requirements."
-                        imageUrl="/platforms/nft.png"
-                        bgImageUrl="/solutions/nft-bg.jpg"
-                        onClick={() => onSelectReward("CONTRACT_CALL")}
-                      />
-                      <SolutionCard
-                        title="Token liquidity program"
-                        description="Reward users with points for providing liquidity to your token."
-                        imageUrl="/solutions/liquidity.png"
-                        bgImageUrl="/solutions/liquidity-bg.jpg"
-                        onClick={() => onSelectSolution("LIQUIDITY")}
-                      />
-                    </SimpleGrid>
-                  </section>
-                </Collapse>
+            <ModalBody className="custom-scrollbar">
+              <AnimatePresence>
+                <Box>
+                  <Collapse
+                    in={
+                      categoryField.value === "all" ||
+                      categoryField.value === "memberships"
+                    }
+                  >
+                    <Category
+                      heading="Memberships"
+                      items={memberships}
+                      onSelectReward={onSelectReward}
+                      onSelectSolution={onSelectSolution}
+                      searchQuery={search}
+                    />
+                  </Collapse>
 
-                <Collapse
-                  in={
-                    categoryField.value === "all" ||
-                    categoryField.value === "engagement"
-                  }
-                >
-                  <section>
-                    <Heading
-                      textColor={"GrayText"}
-                      fontSize={"large"}
-                      fontWeight={"medium"}
-                      mb={3}
-                    >
-                      Engagement
-                    </Heading>
-                    <SimpleGrid
-                      columns={{ base: 1, md: 2 }}
-                      gap={{ base: 4, md: 5 }}
-                      mb={8}
-                    >
-                      <SolutionCard
-                        title="POAP Distribution"
-                        description="Reward your attendees with POAPs (link)"
-                        imageUrl="/platforms/poap.png"
-                        bgImageUrl="/solutions/poap-bg.jpg"
-                        onClick={() => onSelectReward("POAP")}
-                      />
-                      <SolutionCard
-                        title="Points and Leaderboard"
-                        description="Launch XP, Stars, Keys, Gems, or any other rewards you need.."
-                        imageUrl="/platforms/points.png"
-                        bgImageUrl="/solutions/points-bg.jpg"
-                        onClick={() => onSelectReward("POINTS")}
-                      />
-                      <SolutionCard
-                        title="Forms & Surveys"
-                        description="Collect verified information, feedback, and applications, and reward your community."
-                        imageUrl="/platforms/form.png"
-                        bgImageUrl="/solutions/form-bg.jpg"
-                        onClick={() => onSelectReward("FORM")}
-                      />
-                      <SolutionCard
-                        title="Text or link distribution"
-                        description="Distribute secret messages or promotion codes."
-                        imageUrl="/platforms/text.png"
-                        bgImageUrl="/solutions/text-bg.jpg"
-                        onClick={() => onSelectReward("TEXT")}
-                      />
-                    </SimpleGrid>
-                  </section>
-                </Collapse>
+                  <Collapse
+                    in={
+                      categoryField.value === "all" ||
+                      categoryField.value === "tokens"
+                    }
+                  >
+                    <Category
+                      heading="Tokens"
+                      items={tokens}
+                      onSelectReward={onSelectReward}
+                      onSelectSolution={onSelectSolution}
+                      searchQuery={search}
+                    />
+                  </Collapse>
 
-                <Collapse
-                  in={
-                    categoryField.value === "all" || categoryField.value === "sybil"
-                  }
-                >
-                  <section>
-                    <Heading
-                      textColor={"GrayText"}
-                      fontSize={"large"}
-                      fontWeight={"medium"}
-                      mb={3}
-                    >
-                      Sybil protection
-                    </Heading>
-                    <SimpleGrid
-                      columns={{ base: 1, md: 2 }}
-                      gap={{ base: 4, md: 5 }}
-                      mb={8}
-                    >
-                      {/* TODO: Disable if !showPolygonId */}
-                      <SolutionCard
-                        title="PolygonID credentials"
-                        description="Self-Sovereign Identity Solution with Zero-Knowledge Proofs."
-                        imageUrl="/requirementLogos/polygonId.svg"
-                        bgImageUrl="/solutions/polygon-bg.jpg"
-                        onClick={() => onSelectReward("POLYGON_ID")}
-                      />
-                    </SimpleGrid>
-                  </section>
-                </Collapse>
-              </Stack>
+                  <Collapse
+                    in={
+                      categoryField.value === "all" ||
+                      categoryField.value === "engagement"
+                    }
+                  >
+                    <Category
+                      heading="Engagement"
+                      items={engagement}
+                      onSelectReward={onSelectReward}
+                      onSelectSolution={onSelectSolution}
+                      searchQuery={search}
+                    />
+                  </Collapse>
+
+                  <Collapse
+                    in={
+                      categoryField.value === "all" ||
+                      categoryField.value === "sybil"
+                    }
+                  >
+                    <Category
+                      heading="Sybil Protection"
+                      items={sybil}
+                      onSelectReward={onSelectReward}
+                      onSelectSolution={onSelectSolution}
+                      searchQuery={search}
+                    />
+                  </Collapse>
+                </Box>
+              </AnimatePresence>
             </ModalBody>
           </ModalContent>
         )}
@@ -415,5 +331,61 @@ const AddSolutionsButtonWrapper = (): JSX.Element => (
     <AddSolutionsButton />
   </AddRewardProvider>
 )
+
+const Category = ({
+  heading,
+  items,
+  onSelectReward,
+  onSelectSolution,
+  searchQuery,
+}: {
+  heading: string
+  items: SolutionCardData[]
+  onSelectReward: (reward: PlatformName) => void
+  onSelectSolution: (solution: Solutions) => void
+  searchQuery?: string
+}) => {
+  const filteredItems = items.filter((item) =>
+    !!searchQuery
+      ? item.title.toLowerCase().includes(searchQuery.toLowerCase())
+      : item
+  )
+
+  return (
+    <>
+      <section>
+        <HStack mb={3}>
+          <Heading textColor={"GrayText"} fontSize={"large"} fontWeight={"medium"}>
+            {heading}
+          </Heading>
+          {!!searchQuery && (
+            <Text color={"GrayText"} fontWeight={"normal"}>
+              ({filteredItems.length} results)
+            </Text>
+          )}
+        </HStack>
+        <SimpleGrid
+          columns={{ base: 1, md: 2 }}
+          gap={{ base: 4, md: 5 }}
+          mb={filteredItems.length === 0 ? 2 : 8}
+        >
+          {filteredItems.map((item, index) => (
+            <CardMotionWrapper>
+              <SolutionCard
+                key={item.title}
+                {...item}
+                onClick={
+                  item.handlerType === "reward"
+                    ? () => onSelectReward(item.handlerParam as PlatformName)
+                    : () => onSelectSolution(item.handlerParam as Solutions)
+                }
+              />
+            </CardMotionWrapper>
+          ))}
+        </SimpleGrid>
+      </section>
+    </>
+  )
+}
 
 export default AddSolutionsButtonWrapper
