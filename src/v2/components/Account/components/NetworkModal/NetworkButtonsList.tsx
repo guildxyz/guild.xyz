@@ -1,4 +1,3 @@
-import { SimpleGrid } from "@chakra-ui/react"
 import useTriggerNetworkChange from "hooks/useTriggerNetworkChange"
 import { CHAIN_CONFIG, Chains, supportedChains } from "wagmiConfig/chains"
 import NetworkButton from "./NetworkButton"
@@ -11,11 +10,7 @@ const NetworkButtonsList = ({ networkChangeCallback }: Props): JSX.Element => {
   const { requestNetworkChange } = useTriggerNetworkChange()
 
   return (
-    <SimpleGrid
-      columns={{ md: 2, lg: 3 }}
-      spacing={{ base: 3, md: "18px" }}
-      w="full"
-    >
+    <div className="grid gap-3 md:grid-cols-2 md:gap-4 lg:grid-cols-3">
       <>
         {supportedChains
           .filter((chain) => !CHAIN_CONFIG[chain].deprecated)
@@ -39,7 +34,7 @@ const NetworkButtonsList = ({ networkChangeCallback }: Props): JSX.Element => {
             />
           ))}
       </>
-    </SimpleGrid>
+    </div>
   )
 }
 
