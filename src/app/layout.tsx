@@ -23,9 +23,6 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <body className={clsx(dystopian.variable, inter.variable)}>
         <Providers>
           {children}
-          <Suspense fallback={null}>
-            <PostHogPageViews />
-          </Suspense>
         </Providers>
       </body>
     </html>
