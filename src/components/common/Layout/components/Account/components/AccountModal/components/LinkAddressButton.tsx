@@ -1,7 +1,7 @@
 import {
   addressLinkParamsAtom,
   walletSelectorModalAtom,
-} from "@/components/Providers/Providers"
+} from "@/components/Providers/atoms"
 import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { Plus } from "@phosphor-icons/react"
 import useUser from "components/[guild]/hooks/useUser"

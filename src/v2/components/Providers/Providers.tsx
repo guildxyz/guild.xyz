@@ -3,7 +3,6 @@
 import { FuelProvider } from "@fuels/react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { fuelConfig } from "fuelConfig"
-import { atom } from "jotai"
 import { ThemeProvider } from "next-themes"
 import { SWRConfig } from "swr"
 import { fetcherForSWR } from "utils/fetcher"
@@ -13,22 +12,9 @@ import { AccountModal } from "../Account/components/AccountModal"
 import { Toaster } from "../ui/Toaster"
 import { Web3ConnectionManager } from "../Web3ConnectionManager"
 import { PostHogProvider } from "./PostHogProvider"
+import { Suspense } from "react"
 
 const queryClient = new QueryClient()
-
-// Atoms for global modals - TODO: move the types to another file
-export const walletSelectorModalAtom = atom(false)
-export const accountModalAtom = atom(false)
-
-export type AddressLinkParams = {
-  userId?: number
-  address?: `0x${string}`
-}
-export const addressLinkParamsAtom = atom<AddressLinkParams>({
-  userId: undefined,
-  address: undefined,
-})
-export const walletLinkHelperModalAtom = atom(false)
 
 // TODO: add AppErrorBoundary
 export function Providers({ children }: { children: React.ReactNode }) {
@@ -48,7 +34,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
                 {/* TODO: <IntercomProvider> */}
                 {children}
                 <AccountModal />
-                <Web3ConnectionManager />
+                <Suspense>
+                  <Web3ConnectionManager />
+                </Suspense>
                 {/* </IntercomProvider> */}
               </PostHogProvider>
             </FuelProvider>

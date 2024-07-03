@@ -16,7 +16,7 @@ import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import {
   addressLinkParamsAtom,
   walletLinkHelperModalAtom,
-} from "@/components/Providers/Providers"
+} from "@/components/Providers/atoms"
 import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { ArrowSquareOut } from "@phosphor-icons/react/dist/ssr"
 import { useAtom, useSetAtom } from "jotai"

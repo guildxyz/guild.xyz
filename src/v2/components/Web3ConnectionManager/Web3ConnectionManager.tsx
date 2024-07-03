@@ -1,6 +1,6 @@
 import useAutoReconnect from "@/hooks/useAutoReconnect"
 import { useAtom } from "jotai"
-import { walletSelectorModalAtom } from "../Providers/Providers"
+import { walletSelectorModalAtom } from "../Providers/atoms"
 import { useTriggerWalletSelectorModal } from "./hooks/useTriggerWalletSelectorModal"
 import WalletSelectorModal from "./WalletSelectorModal"
 

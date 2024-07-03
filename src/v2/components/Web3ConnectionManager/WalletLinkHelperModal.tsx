@@ -12,7 +12,7 @@ import LogicDivider from "components/[guild]/LogicDivider"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import { useAtom } from "jotai"
-import { walletLinkHelperModalAtom } from "../Providers/Providers"
+import { walletLinkHelperModalAtom } from "../Providers/atoms"
 
 const WalletLinkHelperModal = () => {
   const [isWalletLinkHelperModalOpen, setIsWalletLinkModalOpen] = useAtom(

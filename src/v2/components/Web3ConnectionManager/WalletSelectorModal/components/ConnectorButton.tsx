@@ -1,7 +1,7 @@
 import {
   addressLinkParamsAtom,
   walletLinkHelperModalAtom,
-} from "@/components/Providers/Providers"
+} from "@/components/Providers/atoms"
 import { Button, ButtonProps } from "@/components/ui/Button"
 import useConnectorNameAndIcon from "@/components/Web3ConnectionManager/hooks/useConnectorNameAndIcon"
 import { useUserPublic } from "@/hooks/useUserPublic"

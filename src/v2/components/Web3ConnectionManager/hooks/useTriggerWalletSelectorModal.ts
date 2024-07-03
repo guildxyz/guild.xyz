@@ -1,4 +1,4 @@
-import { walletSelectorModalAtom } from "@/components/Providers/Providers"
+import { walletSelectorModalAtom } from "@/components/Providers/atoms"
 import { useSetAtom } from "jotai"
 import { useSearchParams } from "next/navigation"
 import { useEffect } from "react"

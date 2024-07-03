@@ -1,5 +1,5 @@
 import { usePostHogContext } from "@/components/Providers/PostHogProvider"
-import { walletSelectorModalAtom } from "@/components/Providers/Providers"
+import { walletSelectorModalAtom } from "@/components/Providers/atoms"
 import { useToast } from "@/components/ui/hooks/useToast"
 import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { PublicUserProfile } from "@guildxyz/types"
