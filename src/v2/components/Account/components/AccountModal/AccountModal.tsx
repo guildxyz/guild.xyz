@@ -1,6 +1,6 @@
 import { CopyableAddress } from "@/components/CopyableAddress"
 import { GuildAvatar } from "@/components/GuildAvatar"
-import { accountModalAtom } from "@/components/Providers/Providers"
+import { accountModalAtom } from "@/components/Providers/atoms"
 import { Button } from "@/components/ui/Button"
 import {
   Dialog,

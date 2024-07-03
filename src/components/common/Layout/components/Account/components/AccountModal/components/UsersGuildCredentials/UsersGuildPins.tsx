@@ -1,4 +1,4 @@
-import { accountModalAtom } from "@/components/Providers/Providers"
+import { accountModalAtom } from "@/components/Providers/atoms"
 import { Alert, AlertIcon, Box, Flex, Text } from "@chakra-ui/react"
 import useUsersGuildPins from "hooks/useUsersGuildPins"
 import { useAtomValue } from "jotai"

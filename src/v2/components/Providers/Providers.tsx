@@ -3,7 +3,6 @@
 import { FuelProvider } from "@fuels/react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { fuelConfig } from "fuelConfig"
-import { atom } from "jotai"
 import { ThemeProvider } from "next-themes"
 import { SWRConfig } from "swr"
 import { fetcherForSWR } from "utils/fetcher"
@@ -17,8 +16,6 @@ import { PostHogProvider } from "./PostHogProvider"
 const queryClient = new QueryClient()
 
 // Atoms for global modals - TODO: move the types to another file
-export const walletSelectorModalAtom = atom(false)
-export const accountModalAtom = atom(false)
 
 export type AddressLinkParams = {
   userId?: number

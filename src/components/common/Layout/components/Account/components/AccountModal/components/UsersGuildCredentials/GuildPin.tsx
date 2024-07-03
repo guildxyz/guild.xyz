@@ -1,4 +1,4 @@
-import { accountModalAtom } from "@/components/Providers/Providers"
+import { accountModalAtom } from "@/components/Providers/atoms"
 import { Link } from "@chakra-ui/next-js"
 import { Card, Circle, Img, Tag, useColorModeValue } from "@chakra-ui/react"
 import { useSetAtom } from "jotai"

@@ -1,4 +1,4 @@
-import { accountModalAtom } from "@/components/Providers/Providers"
+import { accountModalAtom } from "@/components/Providers/atoms"
 import {
   ButtonGroup,
   Collapse,
