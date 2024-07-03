@@ -9,7 +9,7 @@ import useDisconnect from "components/common/Layout/components/Account/component
 import useMembership from "components/explorer/hooks/useMembership"
 import { motion } from "framer-motion"
 import { ReactNode } from "react"
-import rewards from "rewards"
+// import rewards from "rewards"
 import { PlatformName } from "types"
 import { DisconnectAccountButton } from "./DisconnectAccountButton"
 
@@ -62,47 +62,48 @@ const SocialAccountUI = ({
   username?: string
   isConnected?: boolean
   children: ReactNode
-}) => {
-  const { icon: IconComponent, name: platformName } = rewards[type]
-  const bgClassName = PLATFORM_COLORS[type] ?? ""
+}) =>
+  null
+// const { icon: IconComponent, name: platformName } = rewards[type]
+// const bgClassName = PLATFORM_COLORS[type] ?? ""
+//
+// return (
+//   <motion.div layout className="flex w-full items-center gap-3">
+//     <div
+//       className={cn(
+//         "relative flex size-7 items-center justify-center rounded-full bg-card text-white",
+//         bgClassName
+//       )}
+//     >
+//       {!!avatarUrl ? (
+//         <>
+//           <img
+//             src={avatarUrl}
+//             alt={username}
+//             className="h-full w-full rounded-full object-cover"
+//           />
+//           <div
+//             className={cn(
+//               "absolute -bottom-0.5 -right-1 flex size-4 items-center justify-center rounded-full border border-card-secondary",
+//               bgClassName
+//             )}
+//           >
+//             <IconComponent weight="bold" className="size-2.5" />
+//           </div>
+//         </>
+//       ) : (
+//         <IconComponent weight="bold" className="size-4" />
+//       )}
+//     </div>
+//
+//     <span className="line-clamp-1 text-sm font-bold">
+//       {username ?? `${platformName} ${isConnected ? "connected" : ""}`}
+//     </span>
+//
+//     {children}
+//   </motion.div>
+// )
 
-  return (
-    <motion.div layout className="flex w-full items-center gap-3">
-      <div
-        className={cn(
-          "relative flex size-7 items-center justify-center rounded-full bg-card text-white",
-          bgClassName
-        )}
-      >
-        {!!avatarUrl ? (
-          <>
-            <img
-              src={avatarUrl}
-              alt={username}
-              className="h-full w-full rounded-full object-cover"
-            />
-            <div
-              className={cn(
-                "absolute -bottom-0.5 -right-1 flex size-4 items-center justify-center rounded-full border border-card-secondary",
-                bgClassName
-              )}
-            >
-              <IconComponent weight="bold" className="size-2.5" />
-            </div>
-          </>
-        ) : (
-          <IconComponent weight="bold" className="size-4" />
-        )}
-      </div>
-
-      <span className="line-clamp-1 text-sm font-bold">
-        {username ?? `${platformName} ${isConnected ? "connected" : ""}`}
-      </span>
-
-      {children}
-    </motion.div>
-  )
-}
 
 // TODO: we should move these to `rewards.ts` eventually
 const PLATFORM_COLORS = {
@@ -173,7 +174,7 @@ const DisconnectPlatformButton = ({ type }: { type: PlatformName }) => {
         isLoading,
         loadingText,
         onConfirm,
-        name: rewards[type].name,
+        name: '' // rewards[type].name,
       }}
     />
   )

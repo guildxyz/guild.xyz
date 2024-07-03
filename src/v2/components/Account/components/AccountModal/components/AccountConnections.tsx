@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils"
 import useUser from "components/[guild]/hooks/useUser"
 import useDelegateVaults from "components/common/Layout/components/Account/components/delegate/useDelegateVaults"
 import { ReactNode, useMemo } from "react"
-import rewards from "rewards"
+// import rewards from "rewards"
 import { PlatformName } from "types"
 import { SocialAccount } from "./SocialAccount"
 
@@ -11,14 +11,15 @@ const AccountConnections = () => {
   const vaults = useDelegateVaults()
 
   const orderedSocials = useMemo(() => {
-    const connectedPlatforms =
-      platformUsers
-        ?.filter((platformUser) => rewards[platformUser.platformName]?.isPlatform)
-        ?.map((platformUser) => platformUser.platformName as string) ?? []
-    const notConnectedPlatforms = Object.keys(rewards).filter(
-      (platform) =>
-        rewards[platform].isPlatform && !connectedPlatforms?.includes(platform)
-    )
+    const connectedPlatforms: PlatformName[] = []
+    // platformUsers
+    //   ?.filter((platformUser) => rewards[platformUser.platformName]?.isPlatform)
+    //   ?.map((platformUser) => platformUser.platformName as string) ?? []
+    const notConnectedPlatforms: PlatformName[] = []
+    // Object.keys(rewards).filter(
+    //   (platform) =>
+    //     rewards[platform].isPlatform && !connectedPlatforms?.includes(platform)
+    // )
     return [...connectedPlatforms, ...notConnectedPlatforms] as PlatformName[]
   }, [platformUsers])
 
@@ -32,12 +33,12 @@ const AccountConnections = () => {
             {platform === "EMAIL" ? (
               <></>
             ) : // <EmailAddress key={"EMAIL"} />
-            platform === "FARCASTER" ? (
-              <></>
-            ) : (
-              // <FarcasterProfile key={"FARCASTER"} />
-              <SocialAccount key={platform} type={platform} />
-            )}
+              platform === "FARCASTER" ? (
+                <></>
+              ) : (
+                // <FarcasterProfile key={"FARCASTER"} />
+                <SocialAccount key={platform} type={platform} />
+              )}
             {i < orderedSocials.length - 1 && (
               <hr className="border-border-secondary" />
             )}
