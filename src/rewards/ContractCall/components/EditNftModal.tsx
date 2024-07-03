@@ -19,7 +19,7 @@ import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
-import { useCallback } from "react"
+import { MutableRefObject, useCallback } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { GuildPlatform } from "types"
 import { formatUnits } from "viem"
@@ -31,9 +31,10 @@ type Props = {
   isOpen: boolean
   onClose: () => void
   guildPlatform: GuildPlatform
+  finalFocusRef?: MutableRefObject<null>
 }
 
-const EditNftModal = ({ isOpen, onClose, guildPlatform }: Props) => {
+const EditNftModal = ({ isOpen, onClose, guildPlatform, finalFocusRef }: Props) => {
   const { chain, contractAddress } = guildPlatform.platformGuildData
 
   const { roles } = useGuild()
@@ -61,6 +62,7 @@ const EditNftModal = ({ isOpen, onClose, guildPlatform }: Props) => {
       scrollBehavior="inside"
       colorScheme="dark"
       size="4xl"
+      finalFocusRef={finalFocusRef}
     >
       <ModalOverlay />
       <ModalContent>
