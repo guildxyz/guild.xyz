@@ -12,6 +12,7 @@ import { AccountModal } from "../Account/components/AccountModal"
 import { Toaster } from "../ui/Toaster"
 import { Web3ConnectionManager } from "../Web3ConnectionManager"
 import { PostHogProvider } from "./PostHogProvider"
+import { Suspense } from "react"
 
 const queryClient = new QueryClient()
 
@@ -33,7 +34,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
                 {/* TODO: <IntercomProvider> */}
                 {children}
                 <AccountModal />
-                <Web3ConnectionManager />
+                <Suspense>
+                  <Web3ConnectionManager />
+                </Suspense>
                 {/* </IntercomProvider> */}
               </PostHogProvider>
             </FuelProvider>
