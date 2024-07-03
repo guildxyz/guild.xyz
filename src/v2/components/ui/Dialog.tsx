@@ -53,6 +53,7 @@ export interface DialogContentProps
   extends React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>,
     VariantProps<typeof dialogContentVariants> {
   trapFocus?: FocusScopeProps["trapped"]
+  scrollable?: boolean
 }
 
 const DialogContent = React.forwardRef<
