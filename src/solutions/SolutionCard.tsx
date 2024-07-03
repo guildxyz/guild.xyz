@@ -55,7 +55,7 @@ const SolutionCard = ({
           height: "100%",
           opacity: 0.15,
           transition: "0.3s",
-          filter: `blur(0px) saturate(70%)`,
+          filter: `blur(2px) saturate(70%)`,
         }}
         _hover={{
           _before: { opacity: 0.25, filter: `blur(0) saturate(100%)` },
