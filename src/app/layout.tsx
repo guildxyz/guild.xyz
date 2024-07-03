@@ -1,5 +1,5 @@
 import { Providers } from "@/components/Providers"
-import { PostHogPageViews } from "@/components/Providers/PostHogPageViews"
+// import { PostHogPageViews } from "@/components/Providers/PostHogPageViews"
 import clsx from "clsx"
 import { dystopian, inter } from "fonts"
 import type { Metadata } from "next"
@@ -23,9 +23,6 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <body className={clsx(dystopian.variable, inter.variable)}>
         <Providers>
           {children}
-          <Suspense fallback={null}>
-            <PostHogPageViews />
-          </Suspense>
         </Providers>
       </body>
     </html>
