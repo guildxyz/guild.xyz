@@ -11,14 +11,15 @@ import {
   PopoverTrigger,
   Spacer,
   Stack,
+  StackProps,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
+import { Question } from "@phosphor-icons/react"
 import useUser from "components/[guild]/hooks/useUser"
 import { SectionProps } from "components/common/Section"
-import { Question } from "phosphor-react"
-import rewards from "platforms/rewards"
-import { useMemo } from "react"
+import { PropsWithChildren, useMemo } from "react"
+import rewards from "rewards"
 import { PlatformName } from "types"
 import useDelegateVaults from "../../delegate/useDelegateVaults"
 import LinkAddressButton from "./LinkAddressButton"
@@ -26,6 +27,7 @@ import LinkDelegateVaultButton from "./LinkDelegateVaultButton"
 import LinkedAddress, { LinkedAddressSkeleton } from "./LinkedAddress"
 import SharedSocials from "./SharedSocials"
 import SocialAccount, { EmailAddress } from "./SocialAccount"
+import FarcasterProfile from "./SocialAccount/FarcasterProfile"
 
 const AccountConnections = () => {
   const { isLoading, addresses, platformUsers, sharedSocials } = useUser()
@@ -37,7 +39,7 @@ const AccountConnections = () => {
         ?.filter((platformUser) => rewards[platformUser.platformName]?.isPlatform)
         ?.map((platformUser) => platformUser.platformName as string) ?? []
     const notConnectedPlatforms = Object.keys(rewards).filter(
-      (platform: PlatformName) =>
+      (platform) =>
         rewards[platform].isPlatform && !connectedPlatforms?.includes(platform)
     )
     return [...connectedPlatforms, ...notConnectedPlatforms] as PlatformName[]
@@ -47,12 +49,14 @@ const AccountConnections = () => {
     <>
       <AccountSectionTitle
         title="Social accounts"
-        titleRightElement={sharedSocials?.length && <SharedSocials />}
+        titleRightElement={sharedSocials?.length > 0 ? <SharedSocials /> : undefined}
       />
       <AccountSection mb="6" divider={<Divider />}>
         {orderedSocials.map((platform) =>
           platform === "EMAIL" ? (
             <EmailAddress key={"EMAIL"} />
+          ) : platform === "FARCASTER" ? (
+            <FarcasterProfile key={"FARCASTER"} />
           ) : (
             <SocialAccount key={platform} type={platform} />
           )
@@ -62,7 +66,7 @@ const AccountConnections = () => {
       <AccountSectionTitle
         title="Linked addresses"
         titleRightElement={
-          addresses?.length > 1 && (
+          addresses?.length > 1 ? (
             <>
               <Popover placement="top" trigger="hover">
                 <PopoverTrigger>
@@ -78,7 +82,7 @@ const AccountConnections = () => {
               <Spacer />
               <LinkAddressButton variant="ghost" my="-1 !important" />
             </>
-          )
+          ) : undefined
         }
         spacing={3}
         pt="4"
@@ -113,7 +117,7 @@ const AccountConnections = () => {
               <LinkedAddress key={addressData?.address} addressData={addressData} />
             ))
             .concat(
-              vaults?.length ? <LinkDelegateVaultButton vaults={vaults} /> : null
+              vaults?.length > 0 ? <LinkDelegateVaultButton vaults={vaults} /> : []
             )
         )}
       </AccountSection>
@@ -121,7 +125,10 @@ const AccountConnections = () => {
   )
 }
 
-export const AccountSection = ({ children, ...rest }) => {
+export const AccountSection = ({
+  children,
+  ...rest
+}: PropsWithChildren<StackProps>) => {
   const bg = useColorModeValue("gray.50", "blackAlpha.200")
 
   return (

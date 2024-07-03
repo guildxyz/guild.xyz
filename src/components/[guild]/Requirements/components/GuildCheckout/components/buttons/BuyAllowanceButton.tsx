@@ -1,9 +1,9 @@
 import { Collapse, Icon, Tooltip } from "@chakra-ui/react"
+import { Check, Question, Warning } from "@phosphor-icons/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import useToken from "hooks/useToken"
-import { Check, Question, Warning } from "phosphor-react"
 import useVault from "requirements/Payment/hooks/useVault"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { useChainId } from "wagmi"
@@ -16,7 +16,9 @@ const BuyAllowanceButton = (): JSX.Element => {
   const { captureEvent } = usePostHogContext()
   const { urlName } = useGuild()
 
-  const requirement = useRequirementContext()
+  const requirement = useRequirementContext<"PAYMENT">()
+  const requirementAddress = requirement.address as `0x${string}`
+
   const requirementChainId = Chains[requirement.chain]
   const { pickedCurrency } = useGuildCheckoutContext()
 
@@ -37,7 +39,7 @@ const BuyAllowanceButton = (): JSX.Element => {
   const tokenName = isNativeCurrencyPicked ? nativeCurrency.name : name
 
   const { fee, isLoading: isVaultLoading } = useVault(
-    requirement.address,
+    requirementAddress,
     requirement.data.id,
     requirement.chain
   )
@@ -48,7 +50,7 @@ const BuyAllowanceButton = (): JSX.Element => {
     isAllowing,
     allowanceError,
     allowSpendingTokens,
-  } = useAllowance(pickedCurrency, requirement.address)
+  } = useAllowance(pickedCurrency, requirementAddress)
 
   const isEnoughAllowance =
     typeof fee === "bigint" && typeof allowance === "bigint"

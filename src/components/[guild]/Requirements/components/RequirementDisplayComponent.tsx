@@ -1,7 +1,7 @@
 import { Icon } from "@chakra-ui/react"
+import { Question, Warning } from "@phosphor-icons/react"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import DataBlock from "components/common/DataBlock"
-import { Question, Warning } from "phosphor-react"
 import { PropsWithChildren } from "react"
 import { ErrorBoundary } from "react-error-boundary"
 import REQUIREMENTS from "requirements"
@@ -22,7 +22,7 @@ const RequirementDisplayComponent = ({
   rightElement = <RequirementAccessIndicator />,
   ...rest
 }: Props) => {
-  if (requirement.type === "HIDDEN")
+  if (requirement.visibility === "HIDDEN")
     return (
       <Requirement
         image={<Icon as={Question} boxSize={5} />}

@@ -1,8 +1,9 @@
 import { Circle, Icon, Spinner, Text } from "@chakra-ui/react"
+import { Upload, X } from "@phosphor-icons/react"
+import { env } from "env"
 import usePinata from "hooks/usePinata"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
-import { Upload, X } from "phosphor-react"
 import { PropsWithChildren, useCallback, useState } from "react"
 import { useDropzone } from "react-dropzone"
 import { useRequirementContext } from "./RequirementContext"
@@ -26,7 +27,7 @@ const RequirementImageEditor = ({
   const showErrorToast = useShowErrorToast()
 
   const onSuccess = useCallback(
-    ({ IpfsHash }) => onSave(`${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`),
+    ({ IpfsHash }) => onSave(`${env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`),
     [onSave]
   )
 

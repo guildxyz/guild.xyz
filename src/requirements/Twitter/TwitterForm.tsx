@@ -81,7 +81,7 @@ const twitterRequirementTypes = [
     TwitterRequirement: TwitterMinimumCount,
   },
   {
-    label: "Have specific text in username",
+    label: "Have specific text in name",
     value: "TWITTER_NAME",
     TwitterRequirement: TwitterTextToInclude,
   },

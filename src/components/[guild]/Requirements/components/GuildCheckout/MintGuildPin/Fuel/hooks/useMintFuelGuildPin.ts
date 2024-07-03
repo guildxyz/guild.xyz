@@ -8,7 +8,7 @@ import { useToastWithTweetButton } from "hooks/useToast"
 import { useState } from "react"
 import fetcher from "utils/fetcher"
 import { useMintGuildPinContext } from "../../../MintGuildPinContext"
-import type { GuildActionInput } from "../GuildPinContractAbi"
+import type { ClaimParametersInput, GuildActionInput } from "../GuildPinContractAbi"
 import { GuildPinContractAbi__factory } from "../GuildPinContractAbi_factory"
 import parseFuelAddress from "../parseFuelAddress"
 import useFuelGuildPinFee from "./useFuelGuildPinFee"
@@ -28,10 +28,8 @@ type FuelMintData = {
   signature: string
 }
 
-export const FUEL_GUILD_PIN_CONTRACT_ID =
-  "fuel1yvn3x47tp8knyhfc9706qvuydsqxlnd8fj7ehcycepm9pfclskdseq9fz0"
 export const FUEL_GUILD_PIN_CONTRACT_ID_0X =
-  "0x23271357cb09ed325d382f9fa033846c006fcda74cbd9be098c87650a71f859b"
+  "0xb67efb48d800c5f5394163f5b5b4a9e6b06dc5c9e5fc3a49fa73e6b84bc3863b"
 export const FUEL_FAKE_CHAIN_ID = 123456789
 
 const useMintFuelGuildPin = () => {
@@ -81,14 +79,19 @@ const useMintFuelGuildPin = () => {
 
     setLoadingText("Check your wallet")
 
+    // We shouldn't run into these
+    if (!provider) throw new Error("Couldn't find Fuel provider")
+    if (!wallet) throw new Error("Couldn't find Fuel wallet")
+    if (typeof fee === "undefined") throw new Error("Couldn't fetch fee")
+
     const contract = GuildPinContractAbi__factory.connect(
-      FUEL_GUILD_PIN_CONTRACT_ID,
+      FUEL_GUILD_PIN_CONTRACT_ID_0X,
       wallet
     )
 
     const contractCallParams = {
       recipient: {
-        value: userAddress,
+        bits: userAddress,
       },
       action: guildAction,
       user_id: userId,
@@ -100,14 +103,14 @@ const useMintFuelGuildPin = () => {
       cid: cid.padEnd(64, " "),
       admin_treasury: {
         ContractId: {
-          value: adminTreasury,
+          bits: adminTreasury,
         },
       },
       admin_fee: adminFee,
       contract_id: {
-        value: contractAddress,
+        bits: contractAddress,
       },
-    } as const
+    } as const satisfies ClaimParametersInput
 
     await contract.functions
       .claim(contractCallParams, signature)
@@ -132,7 +135,7 @@ const useMintFuelGuildPin = () => {
     //         ...metadata,
     //         image: metadata.image.replace(
     //           "ipfs://",
-    //           process.env.NEXT_PUBLIC_IPFS_GATEWAY
+    //           env.NEXT_PUBLIC_IPFS_GATEWAY
     //         ),
     //       },
     //     ])

@@ -11,12 +11,8 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
-import Button from "components/common/Button"
-import { useSetAtom } from "jotai"
-import dynamic from "next/dynamic"
-import { useRouter } from "next/router"
-import { explorerScrollRestorationAtom } from "pages/explorer"
 import {
+  Book,
   CircleWavyCheck,
   Code,
   DiscordLogo,
@@ -24,13 +20,17 @@ import {
   House,
   Info,
   List,
+  Package,
   Palette,
   Plus,
   Shield,
-  Package,
   UsersThree,
-  Book,
-} from "phosphor-react"
+} from "@phosphor-icons/react"
+import Button from "components/common/Button"
+import { useSetAtom } from "jotai"
+import dynamic from "next/dynamic"
+import { useRouter } from "next/router"
+import { explorerScrollRestorationAtom } from "pages/explorer"
 import XLogo from "static/icons/x.svg"
 import NavButton from "./components/NavButton"
 import NavGroup from "./components/NavGroup"
@@ -54,12 +54,12 @@ const NavMenu = (): JSX.Element => {
           aria-label="Navigation menu"
           rightIcon={<Icon as={List} mt="1px" />}
           iconSpacing="3"
-          fontFamily={"display"}
+          fontFamily="display"
           fontWeight="black"
-          borderRadius={"2xl"}
+          borderRadius="2xl"
           variant="ghost"
         >
-          <HStack spacing={"7px"}>
+          <HStack spacing="7px">
             <AnimatedLogo />
             <Text as="span">Guild</Text>
           </HStack>
@@ -68,8 +68,8 @@ const NavMenu = (): JSX.Element => {
       <PopoverContent
         w="auto"
         minW="xs"
-        borderRadius={"lg"}
-        overflow={"hidden"}
+        borderRadius="lg"
+        overflow="hidden"
         zIndex="popover"
       >
         <PopoverBody px={{ base: 2, sm: 3 }} py="4">

@@ -1,4 +1,5 @@
 import { Icon, Text } from "@chakra-ui/react"
+import { Coins } from "@phosphor-icons/react"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
 import BuyPass from "components/[guild]/Requirements/components/GuildCheckout/BuyPass"
 import { GuildCheckoutProvider } from "components/[guild]/Requirements/components/GuildCheckout/components/GuildCheckoutContext"
@@ -10,7 +11,6 @@ import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import DataBlock from "components/common/DataBlock"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import useToken from "hooks/useToken"
-import { Coins } from "phosphor-react"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { formatUnits } from "viem"
 import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
@@ -27,14 +27,14 @@ const PaymentRequirement = (props: RequirementProps): JSX.Element => {
     chain,
     address,
     data: requirementData,
-  } = useRequirementContext()
+  } = useRequirementContext<"PAYMENT">()
   const {
     token,
     fee,
     multiplePayments,
     isLoading: isVaultLoading,
     error: vaultError,
-  } = useVault(address, requirementData?.id, chain)
+  } = useVault(address as `0x${string}`, requirementData?.id, chain)
 
   const isNativeCurrency = token === NULL_ADDRESS
 

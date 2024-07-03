@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
-import useRolePlatformsOfReward from "platforms/Token/hooks/useRolePlatformsOfReward"
+import useRolePlatformsOfReward from "rewards/Token/hooks/useRolePlatformsOfReward"
 import { useEffect, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { PlatformType } from "types"
@@ -22,11 +22,11 @@ const TokenAmountStep = ({ onContinue }: { onContinue: () => void }) => {
 
   const type = useWatch({ control, name: `type` })
 
-  const requirements = useWatch({ control, name: `requirements` })
   const multiplier = useWatch({ control, name: `multiplier` })
   const addition = useWatch({ control, name: `addition` })
   const chain = useWatch({ control, name: `chain` })
   const address = useWatch({ control, name: `tokenAddress` })
+  const snapshotRequirement = useWatch({ control, name: `snapshotRequirement` })
 
   const { guildPlatforms } = useGuild()
 
@@ -57,7 +57,7 @@ const TokenAmountStep = ({ onContinue }: { onContinue: () => void }) => {
   const getContinueDisabled = () => {
     switch (type) {
       case TokenRewardType.DYNAMIC_SNAPSHOT:
-        return requirements === undefined || multiplier === undefined
+        return snapshotRequirement === undefined || multiplier === undefined
       case TokenRewardType.STATIC:
         return addition === undefined
       case TokenRewardType.DYNAMIC_POINTS:
@@ -69,21 +69,6 @@ const TokenAmountStep = ({ onContinue }: { onContinue: () => void }) => {
   }
 
   const isContinueDisabled = getContinueDisabled()
-
-  const options = [
-    {
-      label: "Dynamic amount",
-      value: TokenRewardType.DYNAMIC_SNAPSHOT,
-      disabled:
-        dynamicExists &&
-        "Only one dynamic reward is permitted for each type of token.",
-    },
-    {
-      label: "Static amount",
-      value: TokenRewardType.STATIC,
-    },
-  ]
-
   const [isCollapsed, ,] = useState(false)
 
   if (dynamicExists)
@@ -103,22 +88,6 @@ const TokenAmountStep = ({ onContinue }: { onContinue: () => void }) => {
 
   return (
     <Stack gap={5}>
-      {/* <RadioButtonGroup
-        options={options}
-        value={type}
-        onChange={(val) => {
-          setValue("type", val)
-        }}
-        chakraStyles={{
-          spacing: 1.5,
-          mt: 2,
-          size: "sm",
-          width: "full",
-          colorScheme: "indigo",
-          mb: -2,
-        }}
-      /> */}
-
       <Collapse
         startingHeight={150}
         animateOpacity
@@ -126,14 +95,6 @@ const TokenAmountStep = ({ onContinue }: { onContinue: () => void }) => {
         style={{ padding: "2px", margin: "-2px" }}
       >
         <Stack gap={5}>
-          {/* {[
-            TokenRewardType.DYNAMIC_POINTS,
-            TokenRewardType.DYNAMIC_SNAPSHOT,
-          ].includes(type) ? (
-            <DynamicAmount />
-          ) : (
-            <StaticAmount />
-          )} */}
           <DynamicAmount />
         </Stack>
       </Collapse>

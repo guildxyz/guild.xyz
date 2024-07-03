@@ -13,12 +13,13 @@ import {
   useClipboard,
   useDisclosure,
 } from "@chakra-ui/react"
+import { Check, CopySimple, PencilSimple } from "@phosphor-icons/react"
 import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
+import { env } from "env"
 import { AnimatePresence } from "framer-motion"
 import useGateables from "hooks/useGateables"
 import { useSetAtom } from "jotai"
-import { Check, CopySimple, PencilSimple } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { PlatformType } from "types"
@@ -152,7 +153,7 @@ const GoogleGuildSetup = ({
   )
 }
 
-const GUILD_EMAIL_ADDRESS = process.env.NEXT_PUBLIC_GOOGLE_SERVICE_ACCOUNT_EMAIL
+const GUILD_EMAIL_ADDRESS = env.NEXT_PUBLIC_GOOGLE_SERVICE_ACCOUNT_EMAIL
 const AddDocumentModal = ({ isOpen, onClose = undefined }) => {
   const { platformUsers } = useUser()
   const googleAcc = platformUsers?.find(

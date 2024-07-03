@@ -1,6 +1,7 @@
 import { Box, Progress, Slide, useColorMode } from "@chakra-ui/react"
 import { FuelWalletConnector, FueletWalletConnector } from "@fuels/connectors"
 import { FuelProvider } from "@fuels/react"
+import { IconContext } from "@phosphor-icons/react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { bugsnagStart } from "bugsnag"
 import AppErrorBoundary from "components/_app/AppErrorBoundary"
@@ -10,13 +11,13 @@ import { PostHogProvider } from "components/_app/PostHogProvider"
 import Web3ConnectionManager from "components/_app/Web3ConnectionManager"
 import ClientOnly from "components/common/ClientOnly"
 import AccountModal from "components/common/Layout/components/Account/components/AccountModal"
+import { env } from "env"
 import { dystopian, inter } from "fonts"
 import useOAuthResultToast from "hooks/useOAuthResultToast"
 import { useAtomValue } from "jotai"
 import type { AppProps } from "next/app"
 import dynamic from "next/dynamic"
 import { useRouter } from "next/router"
-import { IconContext } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { SWRConfig } from "swr"
 import "theme/custom-scrollbar.css"
@@ -82,7 +83,7 @@ const App = ({
 
       {shouldUseReCAPTCHA && (
         <DynamicReCAPTCHA
-          sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+          sitekey={env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
           size="invisible"
         />
       )}

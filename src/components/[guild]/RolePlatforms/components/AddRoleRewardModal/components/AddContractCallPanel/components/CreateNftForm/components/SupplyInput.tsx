@@ -61,7 +61,6 @@ const SupplyInput = () => {
         as={FormControl}
         colSpan={{ base: 3, md: 1 }}
         isInvalid={!!errors.maxSupply}
-        isDisabled={supplyType === "UNLIMITED"}
       >
         <FormLabel>Max</FormLabel>
         <NumberInput

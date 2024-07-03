@@ -1,3 +1,4 @@
+import { env } from "env"
 import {
   beraTestnet,
   bitfinityTestnet,
@@ -201,7 +202,7 @@ export const wagmiConfig = createConfig({
           version: "4",
         }),
         walletConnect({
-          projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
+          projectId: env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
           showQrModal: true,
           qrModalOptions: {
             explorerRecommendedWalletIds: [

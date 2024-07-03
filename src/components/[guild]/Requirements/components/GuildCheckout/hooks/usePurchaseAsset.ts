@@ -62,7 +62,7 @@ const usePurchaseAsset = () => {
   })
 
   const { data: purchasedTokenData } = useToken({
-    address: requirement?.address,
+    address: requirement?.address as `0x${string}`,
     chainId: Chains[requirement?.chain],
   })
 

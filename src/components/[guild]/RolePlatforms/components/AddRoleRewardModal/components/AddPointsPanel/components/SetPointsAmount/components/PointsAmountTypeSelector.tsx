@@ -8,15 +8,11 @@ import {
   MenuOptionGroup,
   Portal,
   Text,
-  Tooltip,
 } from "@chakra-ui/react"
-import { useAddRewardContext } from "components/[guild]/AddRewardContext"
+import { CaretDown, Lightning } from "@phosphor-icons/react"
 import Button from "components/common/Button"
-import { CaretDown, Lightning } from "phosphor-react"
 
 const PointsAmountTypeSelector = ({ type, setType }) => {
-  const { targetRoleId } = useAddRewardContext()
-
   const options = [
     {
       label: "Static",
@@ -40,9 +36,6 @@ const PointsAmountTypeSelector = ({ type, setType }) => {
       description:
         "User points will be calculated based on a dynamic value, e.g. token balance",
       value: "dynamic",
-      disabled:
-        !targetRoleId &&
-        "You can set up Dynamic points by editing an existing role, as they depend on the role's requirements",
     },
   ]
 
@@ -74,18 +67,11 @@ const PointsAmountTypeSelector = ({ type, setType }) => {
                 value={option.value}
                 py="2.5"
                 borderBottomWidth={i !== options.length - 1 && 1}
-                isDisabled={!!option.disabled}
               >
-                <Tooltip
-                  label={option.disabled}
-                  isDisabled={!option.disabled}
-                  hasArrow
-                >
-                  <Box w="full">
-                    <Text fontWeight={"semibold"}>{option.label}</Text>
-                    <Text colorScheme="gray">{option.description}</Text>
-                  </Box>
-                </Tooltip>
+                <Box w="full">
+                  <Text fontWeight={"semibold"}>{option.label}</Text>
+                  <Text colorScheme="gray">{option.description}</Text>
+                </Box>
               </MenuItemOption>
             ))}
           </MenuOptionGroup>

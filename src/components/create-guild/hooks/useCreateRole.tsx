@@ -1,13 +1,20 @@
 import processConnectorError from "components/[guild]/JoinModal/utils/processConnectorError"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useRoleGroup from "components/[guild]/hooks/useRoleGroup"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import { useYourGuilds } from "components/explorer/YourGuilds"
 import useCustomPosthogEvents from "hooks/useCustomPosthogEvents"
 import useMatchMutate from "hooks/useMatchMutate"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
-import { GuildBase, GuildPlatform, Requirement, Role } from "types"
+import {
+  GuildBase,
+  GuildPlatform,
+  Requirement,
+  RequirementCreationPayloadWithTempID,
+  Role,
+} from "types"
 import fetcher from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
 import preprocessRequirement from "utils/preprocessRequirement"
@@ -18,7 +25,7 @@ export type RoleToCreate = Omit<
 > & {
   guildId: number
   roleType?: "NEW"
-  requirements: Omit<Requirement, "id" | "roleId" | "name" | "symbol">[]
+  requirements: RequirementCreationPayloadWithTempID[]
 }
 
 type CreateRoleResponse = Role & {
@@ -29,9 +36,11 @@ type CreateRoleResponse = Role & {
 const useCreateRole = ({
   onSuccess,
   onError,
+  skipMutate,
 }: {
   onSuccess?: (res?: CreateRoleResponse) => void
   onError?: (error: any) => void
+  skipMutate?: boolean
 }) => {
   const { id, mutateGuild } = useGuild()
   const group = useRoleGroup()
@@ -42,6 +51,11 @@ const useCreateRole = ({
 
   const showErrorToast = useShowErrorToast()
   const triggerConfetti = useJsConfetti()
+
+  const { captureEvent } = usePostHogContext()
+  const postHogOptions = {
+    hook: "useCreateRole",
+  }
 
   const fetchData = async (
     signedValidation: SignedValidation
@@ -54,6 +68,7 @@ const useCreateRole = ({
         error: processConnectorError(error_.error) ?? error_.error,
         correlationId: error_.correlationId,
       })
+      captureEvent("Failed to create role", { ...postHogOptions, error_ })
       onError?.(error_)
     },
     onSuccess: async (response_) => {
@@ -65,19 +80,21 @@ const useCreateRole = ({
         })
       }
 
-      mutateYourGuilds((prev) => mutateGuildsCache(prev, id), {
-        revalidate: false,
-      })
-      matchMutate<GuildBase[]>(
-        /\/guilds\?order/,
-        (prev) => mutateGuildsCache(prev, id),
-        { revalidate: false }
-      )
+      if (!skipMutate) {
+        mutateYourGuilds((prev) => mutateGuildsCache(prev, id), {
+          revalidate: false,
+        })
+        matchMutate<GuildBase[]>(
+          /\/guilds\?order/,
+          (prev) => mutateGuildsCache(prev, id),
+          { revalidate: false }
+        )
 
-      mutateGuild((curr) => ({
-        ...curr,
-        roles: [...curr.roles, response_],
-      }))
+        mutateGuild((curr) => ({
+          ...curr,
+          roles: [...curr.roles, response_],
+        }))
+      }
       window.location.hash = `role-${response_.id}`
 
       onSuccess?.(response_)
@@ -99,7 +116,7 @@ const useCreateRole = ({
   }
 }
 
-const mutateGuildsCache = (prev: GuildBase[], guildId: number) =>
+export const mutateGuildsCache = (prev: GuildBase[], guildId: number) =>
   prev?.map((guild) => {
     if (guild.id !== guildId) return guild
     return {

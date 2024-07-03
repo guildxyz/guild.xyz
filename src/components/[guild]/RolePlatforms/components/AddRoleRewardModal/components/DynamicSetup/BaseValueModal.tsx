@@ -8,43 +8,31 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react"
+import { CaretRight } from "@phosphor-icons/react"
 import LogicDivider from "components/[guild]/LogicDivider"
+import { useRequirementHandlerContext } from "components/[guild]/RequirementHandlerContext"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
-import useRequirements from "components/[guild]/hooks/useRequirements"
 import DisplayCard from "components/common/DisplayCard"
 import { Modal } from "components/common/Modal"
 import AddRequirement from "components/create-guild/Requirements/components/AddRequirement"
-import useCreateRequirement from "components/create-guild/Requirements/hooks/useCreateRequirement"
-import { CaretRight } from "phosphor-react"
 import { REQUIREMENT_PROVIDED_VALUES } from "requirements/requirements"
-import { Requirement } from "types"
 
 type Props = {
-  roleId: number
   isOpen: boolean
   onClose: () => void
-  onSelect: (reqId: number) => void
+  onSelect: (reqId: number | string) => void
 }
 
-const BaseValueModal = ({ roleId, isOpen, onClose, onSelect }: Props) => {
-  const { data: requirements, mutate, isLoading } = useRequirements(roleId)
+const BaseValueModal = ({ isOpen, onClose, onSelect }: Props) => {
+  const {
+    requirements,
+    requirementsLoading,
+    addRequirementLoading,
+    onAddRequirement,
+  } = useRequirementHandlerContext()
 
   const dynamicRequirements =
     requirements?.filter((req) => !!REQUIREMENT_PROVIDED_VALUES[req.type]) || []
-
-  const {
-    onSubmit: onCreateRequirementSubmit,
-    isLoading: isCreateRequirementLoading,
-  } = useCreateRequirement(roleId, {
-    onSuccess: () => {
-      mutate()
-    },
-    onError: () => {},
-  })
-
-  const addRequirement = (req: Requirement) => {
-    onCreateRequirementSubmit(req)
-  }
 
   const Loader = () => (
     <VStack my={5}>
@@ -53,7 +41,7 @@ const BaseValueModal = ({ roleId, isOpen, onClose, onSelect }: Props) => {
     </VStack>
   )
 
-  const handleSelect = (reqId: number) => {
+  const handleSelect = (reqId: number | string) => {
     onSelect(reqId)
   }
 
@@ -75,7 +63,7 @@ const BaseValueModal = ({ roleId, isOpen, onClose, onSelect }: Props) => {
                   Choose a base value provided by a requirement on this role.
                 </Text>
                 <Stack>
-                  {isLoading || isCreateRequirementLoading ? (
+                  {addRequirementLoading || requirementsLoading ? (
                     <Loader />
                   ) : (
                     <>
@@ -99,7 +87,7 @@ const BaseValueModal = ({ roleId, isOpen, onClose, onSelect }: Props) => {
                 </Stack>
 
                 <LogicDivider logic="OR" my={2} />
-                <AddRequirement onAdd={addRequirement} providerTypesOnly />
+                <AddRequirement onAdd={onAddRequirement} providerTypesOnly />
               </>
             ) : (
               <>
@@ -107,10 +95,10 @@ const BaseValueModal = ({ roleId, isOpen, onClose, onSelect }: Props) => {
                   You need to set up a requirement on this role first, to provide a
                   base value for your dynamic reward.
                 </Text>
-                {isLoading || isCreateRequirementLoading ? (
+                {addRequirementLoading || requirementsLoading ? (
                   <Loader />
                 ) : (
-                  <AddRequirement onAdd={addRequirement} providerTypesOnly />
+                  <AddRequirement onAdd={onAddRequirement} providerTypesOnly />
                 )}
               </>
             )}

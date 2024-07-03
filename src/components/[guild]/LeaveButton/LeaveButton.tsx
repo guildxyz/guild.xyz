@@ -8,11 +8,11 @@ import {
   Tooltip,
   useDisclosure,
 } from "@chakra-ui/react"
+import { SignOut } from "@phosphor-icons/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import { Alert } from "components/common/Modal"
 import useMembership from "components/explorer/hooks/useMembership"
-import { SignOut } from "phosphor-react"
 import { useRef } from "react"
 import { useIsTabsStuck } from "../Tabs/Tabs"
 import { useThemeContext } from "../ThemeContext"
@@ -55,8 +55,8 @@ const LeaveButton = ({ disableColoring = false }) => {
         <AlertDialogContent>
           <AlertDialogHeader pb="5">Leave guild</AlertDialogHeader>
           <AlertDialogBody>
-            Are you sure? You'll be able to join again as long as you satisfy the
-            requirements of at least one role in it.
+            Are you sure? You'll lose all your roles and can only get them back if
+            you still meet all the requirements.
           </AlertDialogBody>
           <AlertDialogFooter>
             <Button ref={cancelRef} onClick={onClose}>

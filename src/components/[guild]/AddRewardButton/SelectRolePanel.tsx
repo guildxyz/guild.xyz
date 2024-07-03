@@ -11,23 +11,24 @@ import {
   Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react"
+import { Visibility } from "@guildxyz/types"
+import { ArrowLeft, Info } from "@phosphor-icons/react"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
-import { ArrowLeft, Info } from "phosphor-react"
-import SelectRoleOrSetRequirements from "platforms/components/SelectRoleOrSetRequirements"
-import rewards, { CAPACITY_TIME_PLATFORMS } from "platforms/rewards"
+import useCreateRRR, { SubmitData } from "hooks/useCreateRRR"
 import { useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
+import rewards, { CAPACITY_TIME_PLATFORMS } from "rewards"
+import SelectRoleOrSetRequirements from "rewards/components/SelectRoleOrSetRequirements"
 import { RoleTypeToAddTo, useAddRewardContext } from "../AddRewardContext"
 import useGuild from "../hooks/useGuild"
 import { defaultValues } from "./AddRewardButton"
 import AvailabilitySetup from "./components/AvailabilitySetup"
-import useSubmitAddReward from "./hooks/useSubmitAddReward"
 
 const SelectRolePanel = ({
   onSuccess,
 }: {
-  onSuccess?: Parameters<typeof useSubmitAddReward>[0]["onSuccess"]
+  onSuccess?: Parameters<typeof useCreateRRR>[0]["onSuccess"]
 }) => {
   const { modalRef, selection, activeTab, setStep, isBackButtonDisabled } =
     useAddRewardContext()
@@ -50,7 +51,7 @@ const SelectRolePanel = ({
     roleIds: roleIds,
   }
 
-  const { onSubmit, isLoading } = useSubmitAddReward({
+  const { onSubmit, isLoading } = useCreateRRR({
     onSuccess: (res) => {
       captureEvent("reward created (AddRewardButton)", postHogOptions)
       onSuccess?.(res)
@@ -59,11 +60,8 @@ const SelectRolePanel = ({
 
   const [saveAsDraft, setSaveAsDraft] = useState(false)
 
-  const isRoleSelectorDisabled = selection === "ERC20"
   const isAddRewardButtonDisabled =
-    activeTab === RoleTypeToAddTo.NEW_ROLE || isRoleSelectorDisabled
-      ? !requirements?.length
-      : !roleIds?.length
+    activeTab === RoleTypeToAddTo.NEW_ROLE ? !requirements?.length : !roleIds?.length
 
   const { RewardPreview } = rewards[selection] ?? {}
 
@@ -125,10 +123,7 @@ const SelectRolePanel = ({
         display="flex"
         flexDir="column"
       >
-        <SelectRoleOrSetRequirements
-          selectedPlatform={selection}
-          isRoleSelectorDisabled={isRoleSelectorDisabled}
-        />
+        <SelectRoleOrSetRequirements selectedPlatform={selection} />
       </ModalBody>
 
       <ModalFooter pt="6" pb="8" gap={2}>
@@ -136,7 +131,8 @@ const SelectRolePanel = ({
           isDisabled={isAddRewardButtonDisabled}
           onClick={methods.handleSubmit((data) => {
             setSaveAsDraft(true)
-            onSubmit(data, "DRAFT")
+            const draftData = changeDataToDraft(data as SubmitData)
+            onSubmit(draftData)
           })}
           isLoading={saveAsDraft && isLoading}
           rightIcon={
@@ -156,10 +152,7 @@ const SelectRolePanel = ({
         <Button
           isDisabled={isAddRewardButtonDisabled}
           colorScheme="green"
-          onClick={methods.handleSubmit((data) => {
-            setSaveAsDraft(false)
-            onSubmit(data)
-          })}
+          onClick={methods.handleSubmit(onSubmit)}
           isLoading={!saveAsDraft && isLoading}
         >
           Save
@@ -167,6 +160,28 @@ const SelectRolePanel = ({
       </ModalFooter>
     </ModalContent>
   )
+}
+
+const changeDataToDraft = (data: SubmitData): SubmitData => {
+  if (!data.roleIds?.length) {
+    return { ...data, visibility: "HIDDEN" as Visibility }
+  }
+
+  const { rolePlatforms, requirements, roleIds } = data
+
+  const hiddenRolePlatforms = rolePlatforms.map((rp) => ({
+    ...rp,
+    visibility: "HIDDEN" as Visibility,
+  }))
+  const hiddenRequirements = requirements.map((req) =>
+    req.type === "FREE" ? req : { ...req, visibility: "HIDDEN" as Visibility }
+  )
+
+  return {
+    rolePlatforms: hiddenRolePlatforms,
+    requirements: hiddenRequirements,
+    roleIds,
+  }
 }
 
 export default SelectRolePanel

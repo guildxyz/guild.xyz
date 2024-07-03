@@ -7,13 +7,13 @@ import {
   SimpleGrid,
   Stack,
 } from "@chakra-ui/react"
+import { StarHalf } from "@phosphor-icons/react"
 import Card from "components/common/Card"
 import ClientOnly from "components/common/ClientOnly"
 import useMembership from "components/explorer/hooks/useMembership"
 import dynamic from "next/dynamic"
-import { StarHalf } from "phosphor-react"
-import PointsRewardCard from "platforms/Points/PointsRewardCard"
-import { TokenRewardCard } from "platforms/Token/TokenRewardCard"
+import PointsRewardCard from "rewards/Points/PointsRewardCard"
+import { TokenRewardCard } from "rewards/Token/TokenRewardCard"
 import { PlatformType } from "types"
 import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
@@ -76,7 +76,7 @@ export const useAccessedGuildPlatforms = (groupId?: number) => {
 }
 
 const AccessHub = (): JSX.Element => {
-  const { featureFlags, guildPin, groups, roles, onboardingComplete } = useGuild()
+  const { featureFlags, guildPin, groups, roles } = useGuild()
 
   const group = useRoleGroup()
   const { isAdmin } = useGuildPermission()
@@ -94,8 +94,9 @@ const AccessHub = (): JSX.Element => {
   const hasVisiblePages = !!groups?.length && roles?.some((role) => !!role.groupId)
 
   const showAccessHub =
-    (isAdmin ? !!onboardingComplete : isMember) ||
-    (!!accessedGuildPlatforms?.length && !!onboardingComplete) ||
+    isAdmin ||
+    isMember ||
+    !!accessedGuildPlatforms?.length ||
     (hasVisiblePages && !group)
 
   return (
@@ -137,9 +138,9 @@ const AccessHub = (): JSX.Element => {
                       {!group ? "No accessed reward" : "No rewards yet"}
                     </AlertTitle>
                     <AlertDescription>
-                      {!group
-                        ? "You're a member of the guild, but your roles don't give you any auto-managed rewards. The owner might add some in the future or reward you another way!"
-                        : "This page doesn’t have any auto-managed rewards yet. Add some roles below so their rewards will appear here!"}
+                      {!!group && isAdmin
+                        ? "This page doesn’t have any auto-managed rewards yet. Add some roles below so their rewards will appear here!"
+                        : "You're a member of the guild, but your roles don't give you any auto-managed rewards. The owner might add some in the future or reward you another way!"}
                     </AlertDescription>
                   </Stack>
                 </Alert>

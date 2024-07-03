@@ -1,5 +1,5 @@
 import DiscordGuildSetup from "components/common/DiscordGuildSetup"
-import { AddRewardPanelProps } from "platforms/rewards"
+import { AddRewardPanelProps } from "rewards"
 import { useWatch } from "react-hook-form"
 import { PlatformGuildData, PlatformType } from "types"
 import DefaultAddRewardPanelWrapper from "../DefaultAddRewardPanelWrapper"
@@ -24,7 +24,6 @@ const AddDiscordPanel = ({ onAdd }: AddRewardPanelProps) => {
               } as PlatformGuildData["DISCORD"],
             },
             isNew: true,
-            platformRoleId: null,
           })
         }}
       />

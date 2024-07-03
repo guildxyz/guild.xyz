@@ -1,7 +1,7 @@
 import useGuild from "components/[guild]/hooks/useGuild"
+import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import { useState } from "react"
 import useSWRImmutable from "swr/immutable"
-import { useFetcherWithSign } from "utils/fetcher"
 
 export const crmOrderByParams = { joinedAt: "join date", roles: "number of roles" }
 type CRMOrderByParams = keyof typeof crmOrderByParams

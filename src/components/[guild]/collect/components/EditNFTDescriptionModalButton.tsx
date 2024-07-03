@@ -1,7 +1,7 @@
 import { Icon, IconButton, useDisclosure } from "@chakra-ui/react"
-import { PencilSimple } from "phosphor-react"
-import EditNFTDescriptionModal from "platforms/ContractCall/components/EditNFTDescriptionModal"
+import { PencilSimple } from "@phosphor-icons/react"
 import React from "react"
+import EditNFTDescriptionModal from "rewards/ContractCall/components/EditNFTDescriptionModal"
 import { GuildPlatform } from "types"
 
 type Props = {

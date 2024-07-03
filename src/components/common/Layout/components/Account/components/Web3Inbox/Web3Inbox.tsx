@@ -16,6 +16,7 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
+import { ArrowRight, ArrowSquareOut } from "@phosphor-icons/react"
 import {
   initWeb3InboxClient,
   useNotifications,
@@ -28,10 +29,10 @@ import {
 } from "@web3inbox/react"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
+import { env } from "env"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
 import dynamic from "next/dynamic"
-import { ArrowRight, ArrowSquareOut } from "phosphor-react"
 import { useRef, useState } from "react"
 import { useAccount, useSignMessage } from "wagmi"
 import WebInboxSkeleton from "./WebInboxSkeleton"
@@ -39,7 +40,7 @@ import WebInboxSkeleton from "./WebInboxSkeleton"
 const DynamicWeb3InboxMessage = dynamic(() => import("./Web3InboxMessage"))
 
 const WEB3_INBOX_INIT_PARAMS = {
-  projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
+  projectId: env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
   domain: "guild.xyz",
   allApps: process.env.NODE_ENV !== "production",
 }

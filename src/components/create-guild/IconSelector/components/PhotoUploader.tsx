@@ -1,10 +1,10 @@
 import { FormControl, FormLabel, HStack } from "@chakra-ui/react"
+import { File } from "@phosphor-icons/react"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import GuildLogo from "components/common/GuildLogo"
 import useDropzone, { ERROR_MESSAGES } from "hooks/useDropzone"
 import { Uploader } from "hooks/usePinata/usePinata"
-import { File } from "phosphor-react"
 import { FileError } from "react-dropzone"
 import { useFormContext, useWatch } from "react-hook-form"
 
@@ -13,6 +13,7 @@ type Props = {
   closeModal?: () => void
   minW?: number
   minH?: number
+  onGeneratedBlobChange?: (objectURL: string) => void
 }
 
 type FileWithWidthandHeight = File & { width: number; height: number }
@@ -60,6 +61,7 @@ const PhotoUploader = ({
   closeModal,
   minW,
   minH,
+  onGeneratedBlobChange,
 }: Props): JSX.Element => {
   const { setValue } = useFormContext()
   const imageUrl = useWatch({ name: "imageUrl" })
@@ -103,7 +105,9 @@ const PhotoUploader = ({
       ),
     onDrop: (accepted) => {
       if (accepted.length > 0) {
-        setValue("imageUrl", URL.createObjectURL(accepted[0]))
+        const generatedBlob = URL.createObjectURL(accepted[0])
+        onGeneratedBlobChange?.(generatedBlob)
+        setValue("imageUrl", generatedBlob)
         closeModal?.()
         onUpload({ data: [accepted[0]] })
       }

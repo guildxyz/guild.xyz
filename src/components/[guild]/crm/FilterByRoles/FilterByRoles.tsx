@@ -19,10 +19,10 @@ import {
   useColorMode,
   useColorModeValue,
 } from "@chakra-ui/react"
+import { Funnel } from "@phosphor-icons/react"
 import { MemberCountWithSyncIndicator } from "components/[guild]/RoleCard/components/MemberCount"
-import { Funnel } from "phosphor-react"
 import { memo, useState } from "react"
-import { Role, Visibility } from "types"
+import { Role } from "types"
 import useGuild from "../../hooks/useGuild"
 import FilterByRolesLogicSelector from "./FilterByRolesLogicSelector"
 import AddAndEditHiddenRoles from "./components/AddAndEditHiddenRoles"
@@ -33,8 +33,8 @@ const FilterByRoles = ({ getFilterValue, setFilterValue }: any) => {
   const { roles } = useGuild()
   const [searchValue, setSearchValue] = useState("")
 
-  const publicRoles = roles?.filter((role) => role.visibility !== Visibility.HIDDEN)
-  const hiddenRoles = roles?.filter((role) => role.visibility === Visibility.HIDDEN)
+  const publicRoles = roles?.filter((role) => role.visibility !== "HIDDEN")
+  const hiddenRoles = roles?.filter((role) => role.visibility === "HIDDEN")
 
   const selectedRoleIds: number[] = getFilterValue()?.roleIds ?? []
   const setSelectedRoleIds = (newValue: number[]) => {

@@ -1,12 +1,13 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useYourGuilds } from "components/explorer/YourGuilds"
+import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import useMatchMutate from "hooks/useMatchMutate"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import { useRouter } from "next/router"
-import { GuildBase, GuildFormType } from "types"
-import { useFetcherWithSign } from "utils/fetcher"
+import { GuildBase } from "types"
 import replacer from "utils/guildJsonReplacer"
+import { EditGuildForm } from "../EditGuildDrawer"
 
 type Props = {
   onSuccess?: () => void
@@ -34,7 +35,7 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
 
   const id = guildId ?? guild?.id
 
-  const submit = async (data: GuildFormType) => {
+  const submit = async (data: Partial<EditGuildForm>) => {
     const existingFeatureFlags = guild?.featureFlags ?? []
     const existingContacts = guild?.contacts ?? []
     const existingAdmins = guild?.admins ?? []
@@ -249,7 +250,10 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
     } as const
   }
 
-  const useSubmitResponse = useSubmit(submit, {
+  const useSubmitResponse = useSubmit<
+    Partial<EditGuildForm>,
+    Awaited<ReturnType<typeof submit>>
+  >(submit, {
     onSuccess: ({ admin, contacts, featureFlags, guildUpdateResult }) => {
       // Show success / error toasts
       if (
@@ -397,7 +401,7 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
 
   return {
     ...useSubmitResponse,
-    onSubmit: (data) =>
+    onSubmit: (data: Partial<EditGuildForm>) =>
       useSubmitResponse.onSubmit(JSON.parse(JSON.stringify(data, replacer))),
   }
 }

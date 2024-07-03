@@ -9,13 +9,14 @@ import {
   Textarea,
   Tooltip,
 } from "@chakra-ui/react"
+import { ArrowCounterClockwise, Check, File } from "@phosphor-icons/react"
 import { isValidAddress } from "components/[guild]/EditGuild/components/Admins/Admins"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import { env } from "env"
 import useDropzone from "hooks/useDropzone"
 import useSubmit from "hooks/useSubmit"
 import { useRouter } from "next/router"
-import { ArrowCounterClockwise, Check, File } from "phosphor-react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import fetcher from "utils/fetcher"
 import parseFromObject from "utils/parseFromObject"
@@ -62,7 +63,7 @@ export default function AllowlistFormInputs({
   const uploadFileToGcs = useSubmit(async (file: File) => {
     const [data, body] = await Promise.all([
       fetcher(
-        `${process.env.NEXT_PUBLIC_API.replace(
+        `${env.NEXT_PUBLIC_API.replace(
           "/v1",
           "/v2"
         )}/third-party/google/signed-url?requirementType=${

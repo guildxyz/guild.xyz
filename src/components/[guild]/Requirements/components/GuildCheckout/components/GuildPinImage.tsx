@@ -9,9 +9,10 @@ import {
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
+import { DownloadSimple } from "@phosphor-icons/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
-import { DownloadSimple } from "phosphor-react"
+import { env } from "env"
 import GuildGhost from "static/avatars/ghost.svg"
 import useSWRImmutable from "swr/immutable"
 import convertSVGToPNG from "utils/convertSVGToPNG"
@@ -36,7 +37,7 @@ const GuildPinImage = (): JSX.Element => {
     [GuildAction.IS_ADMIN]: `This is an onchain proof that you're an admin of ${name} on Guild.xyz.`,
   }
 
-  const pinUrl = `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${pinImage}`
+  const pinUrl = `${env.NEXT_PUBLIC_IPFS_GATEWAY}${pinImage}`
 
   return (
     <>

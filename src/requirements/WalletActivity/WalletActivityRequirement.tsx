@@ -1,4 +1,11 @@
 import { Icon } from "@chakra-ui/react"
+import {
+  ArrowsLeftRight,
+  Coins,
+  FileText,
+  IconProps,
+  Wallet,
+} from "@phosphor-icons/react"
 import DataBlockWithDate from "components/[guild]/Requirements/components/DataBlockWithDate"
 import Requirement, {
   RequirementProps,
@@ -7,7 +14,6 @@ import RequirementChainIndicator from "components/[guild]/Requirements/component
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import DataBlock from "components/common/DataBlock"
 import DataBlockWithCopy from "components/common/DataBlockWithCopy"
-import { ArrowsLeftRight, Coins, FileText, IconProps, Wallet } from "phosphor-react"
 import { ForwardRefExoticComponent, RefAttributes } from "react"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 import shortenHex from "utils/shortenHex"
@@ -27,7 +33,16 @@ const requirementIcons: Record<
 }
 
 const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
-  const requirement = useRequirementContext()
+  const requirement = useRequirementContext<
+    | "COVALENT_FIRST_TX"
+    | "COVALENT_FIRST_TX_RELATIVE"
+    | "COVALENT_CONTRACT_DEPLOY"
+    | "COVALENT_CONTRACT_DEPLOY_RELATIVE"
+    | "COVALENT_TX_COUNT"
+    | "COVALENT_TX_COUNT_RELATIVE"
+    | "COVALENT_TX_VALUE"
+    | "COVALENT_TX_VALUE_RELATIVE"
+  >()
 
   const maxAmount = requirement.data?.timestamps?.maxAmount
   const minAmount = requirement.data?.timestamps?.minAmount
@@ -36,7 +51,7 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
     if (maxAmount && minAmount === undefined)
       return (
         <>
-          {`Have a wallet created before `}
+          {`Have your first transaction before `}
           <DataBlockWithDate timestamp={maxAmount} />
         </>
       )
@@ -44,7 +59,7 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
     if (maxAmount === undefined && minAmount)
       return (
         <>
-          {`Have a wallet created after `}
+          {`Have your first transaction after `}
           <DataBlockWithDate timestamp={minAmount} />
         </>
       )
@@ -52,14 +67,14 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
     if (maxAmount && minAmount)
       return (
         <>
-          {`Have a wallet created between `}
+          {`Have your first transaction between `}
           <DataBlockWithDate timestamp={minAmount} />
           {` and `}
           <DataBlockWithDate timestamp={maxAmount} />
         </>
       )
 
-    return <>Have a wallet with at least one transaction</>
+    return <>Have at least one transaction</>
   }
 
   const getFirstTxRelativeContent = () => {
@@ -69,30 +84,33 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
     if (maxAmount && !minAmount)
       return (
         <>
-          {`Have a wallet older than `}
+          {`Have a transaction more than `}
           <DataBlock>{formattedMax}</DataBlock>
+          {` old`}
         </>
       )
 
     if (!maxAmount && minAmount)
       return (
         <>
-          {`Have a wallet younger than `}
+          {`Have a transaction less than `}
           <DataBlock>{formattedMin}</DataBlock>
+          {` old`}
         </>
       )
 
     if (maxAmount && minAmount)
       return (
         <>
-          {`Have a wallet older than `}
+          {`Have a transaction that is more than `}
           <DataBlock>{formattedMax}</DataBlock>
-          {` and younger than `}
+          {` old and less than `}
           <DataBlock>{formattedMin}</DataBlock>
+          {` old`}
         </>
       )
 
-    return <>Have a wallet with at least one transaction</>
+    return <>Have at least one transaction</>
   }
 
   return (

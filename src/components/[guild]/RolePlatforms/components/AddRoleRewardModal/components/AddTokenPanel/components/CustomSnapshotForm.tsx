@@ -17,13 +17,13 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react"
+import { Info, Upload } from "@phosphor-icons/react"
 import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import CopyableAddress from "components/common/CopyableAddress"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
 import Papa from "papaparse"
-import { Info, Upload } from "phosphor-react"
 import { useDropzone } from "react-dropzone"
 import { useFormContext, useWatch } from "react-hook-form"
 
@@ -32,7 +32,7 @@ const CustomSnapshotForm = () => {
   const showErrorToast = useShowErrorToast()
   const toast = useToast()
 
-  const requirements = useWatch({ name: "requirements" })
+  const snapshotRequirement = useWatch({ name: "snapshotRequirement" })
   const { addresses } = useUser()
 
   const { getRootProps, getInputProps } = useDropzone({
@@ -44,15 +44,13 @@ const CustomSnapshotForm = () => {
         reader.onload = function (e) {
           parseAndValidateCSV(e.target.result as string)
             .then((validatedData) => {
-              setValue("requirements", [
-                {
-                  type: "GUILD_SNAPSHOT",
-                  data: {
-                    snapshot: validatedData,
-                    isHidden: false,
-                  },
+              setValue("snapshotRequirement", {
+                type: "GUILD_SNAPSHOT",
+                data: {
+                  snapshot: validatedData,
+                  isHidden: false,
                 },
-              ])
+              })
             })
             .catch((error) => {
               showErrorToast(error)
@@ -66,7 +64,7 @@ const CustomSnapshotForm = () => {
 
   return (
     <>
-      {requirements?.length > 0 ? (
+      {!!snapshotRequirement ? (
         <Box padding={4}>
           <Alert status="success" alignItems={"center"}>
             <AlertIcon mt={0} /> Snapshot uploaded!{" "}
@@ -75,7 +73,7 @@ const CustomSnapshotForm = () => {
               variant="link"
               fontWeight="bold"
               fontSize="small"
-              onClick={() => setValue("requirements", [])}
+              onClick={() => setValue("snapshotRequirement", null)}
             >
               Remove
             </Button>

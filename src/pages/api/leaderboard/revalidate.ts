@@ -1,3 +1,4 @@
+import { env } from "env"
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next"
 
 const handler: NextApiHandler = async (
@@ -10,7 +11,7 @@ const handler: NextApiHandler = async (
     return
   }
 
-  if (req.query.secret !== process.env.LEADERBOARD_REVALIDATION_SECRET) {
+  if (req.query.secret !== env.LEADERBOARD_REVALIDATION_SECRET) {
     return res.status(401).json({ message: "Invalid token" })
   }
 

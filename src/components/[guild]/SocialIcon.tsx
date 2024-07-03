@@ -5,7 +5,7 @@ import {
   MediumLogo,
   SpotifyLogo,
   YoutubeLogo,
-} from "phosphor-react"
+} from "@phosphor-icons/react"
 import { ForwardRefExoticComponent, RefAttributes } from "react"
 import XLogo from "static/icons/x.svg"
 import MirrorLogo from "static/socialIcons/mirror.svg"

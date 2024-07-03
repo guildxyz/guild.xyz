@@ -4,9 +4,9 @@
 /* eslint-disable */
 
 /*
-  Fuels version: 0.60.0
-  Forc version: 0.44.0
-  Fuel-Core version: 0.20.5
+  Fuels version: 0.90.0
+  Forc version: 0.60.0
+  Fuel-Core version: 0.30.0
 */
 
 import type {
@@ -15,6 +15,7 @@ import type {
   BytesLike,
   DeployContractOptions,
   Provider,
+  StorageSlot,
 } from "fuels"
 import { Contract, ContractFactory, Interface } from "fuels"
 import type {
@@ -23,6 +24,7 @@ import type {
 } from "./GuildPinContractAbi"
 
 const _abi = {
+  encoding: "1",
   types: [
     {
       typeId: 0,
@@ -88,12 +90,12 @@ const _abi = {
       components: [
         {
           name: "Address",
-          type: 15,
+          type: 17,
           typeArguments: null,
         },
         {
           name: "ContractId",
-          type: 20,
+          type: 22,
           typeArguments: null,
         },
       ],
@@ -118,6 +120,45 @@ const _abi = {
     },
     {
       typeId: 7,
+      type: "enum InitializationError",
+      components: [
+        {
+          name: "CannotReinitialized",
+          type: 0,
+          typeArguments: null,
+        },
+      ],
+      typeParameters: null,
+    },
+    {
+      typeId: 8,
+      type: "enum Metadata",
+      components: [
+        {
+          name: "B256",
+          type: 2,
+          typeArguments: null,
+        },
+        {
+          name: "Bytes",
+          type: 20,
+          typeArguments: null,
+        },
+        {
+          name: "Int",
+          type: 34,
+          typeArguments: null,
+        },
+        {
+          name: "String",
+          type: 32,
+          typeArguments: null,
+        },
+      ],
+      typeParameters: null,
+    },
+    {
+      typeId: 9,
       type: "enum Option",
       components: [
         {
@@ -127,14 +168,14 @@ const _abi = {
         },
         {
           name: "Some",
-          type: 10,
+          type: 12,
           typeArguments: null,
         },
       ],
-      typeParameters: [10],
+      typeParameters: [12],
     },
     {
-      typeId: 8,
+      typeId: 10,
       type: "enum State",
       components: [
         {
@@ -156,7 +197,7 @@ const _abi = {
       typeParameters: null,
     },
     {
-      typeId: 9,
+      typeId: 11,
       type: "enum TokenError",
       components: [
         {
@@ -213,66 +254,42 @@ const _abi = {
       typeParameters: null,
     },
     {
-      typeId: 10,
+      typeId: 12,
       type: "generic T",
       components: null,
       typeParameters: null,
     },
     {
-      typeId: 11,
+      typeId: 13,
       type: "raw untyped ptr",
       components: null,
       typeParameters: null,
     },
     {
-      typeId: 12,
+      typeId: 14,
       type: "str[5]",
       components: null,
       typeParameters: null,
     },
     {
-      typeId: 13,
+      typeId: 15,
       type: "str[64]",
       components: null,
       typeParameters: null,
     },
     {
-      typeId: 14,
+      typeId: 16,
       type: "str[9]",
       components: null,
       typeParameters: null,
     },
     {
-      typeId: 15,
+      typeId: 17,
       type: "struct Address",
       components: [
         {
-          name: "value",
+          name: "bits",
           type: 2,
-          typeArguments: null,
-        },
-      ],
-      typeParameters: null,
-    },
-    {
-      typeId: 16,
-      type: "struct AssetId",
-      components: [
-        {
-          name: "value",
-          type: 2,
-          typeArguments: null,
-        },
-      ],
-      typeParameters: null,
-    },
-    {
-      typeId: 17,
-      type: "struct B512",
-      components: [
-        {
-          name: "bytes",
-          type: 1,
           typeArguments: null,
         },
       ],
@@ -280,16 +297,11 @@ const _abi = {
     },
     {
       typeId: 18,
-      type: "struct Bytes",
+      type: "struct AssetId",
       components: [
         {
-          name: "buf",
-          type: 27,
-          typeArguments: null,
-        },
-        {
-          name: "len",
-          type: 31,
+          name: "bits",
+          type: 2,
           typeArguments: null,
         },
       ],
@@ -297,11 +309,40 @@ const _abi = {
     },
     {
       typeId: 19,
+      type: "struct B512",
+      components: [
+        {
+          name: "bits",
+          type: 1,
+          typeArguments: null,
+        },
+      ],
+      typeParameters: null,
+    },
+    {
+      typeId: 20,
+      type: "struct Bytes",
+      components: [
+        {
+          name: "buf",
+          type: 30,
+          typeArguments: null,
+        },
+        {
+          name: "len",
+          type: 34,
+          typeArguments: null,
+        },
+      ],
+      typeParameters: null,
+    },
+    {
+      typeId: 21,
       type: "struct ClaimParameters",
       components: [
         {
           name: "recipient",
-          type: 15,
+          type: 17,
           typeArguments: null,
         },
         {
@@ -311,37 +352,37 @@ const _abi = {
         },
         {
           name: "user_id",
-          type: 31,
+          type: 34,
           typeArguments: null,
         },
         {
           name: "guild_id",
-          type: 31,
+          type: 34,
           typeArguments: null,
         },
         {
           name: "guild_name",
-          type: 13,
+          type: 15,
           typeArguments: null,
         },
         {
           name: "created_at",
-          type: 31,
+          type: 34,
           typeArguments: null,
         },
         {
           name: "signed_at",
-          type: 31,
+          type: 34,
           typeArguments: null,
         },
         {
           name: "chain_id",
-          type: 31,
+          type: 34,
           typeArguments: null,
         },
         {
           name: "cid",
-          type: 13,
+          type: 15,
           typeArguments: null,
         },
         {
@@ -351,23 +392,23 @@ const _abi = {
         },
         {
           name: "admin_fee",
-          type: 31,
+          type: 34,
           typeArguments: null,
         },
         {
           name: "contract_id",
-          type: 20,
+          type: 22,
           typeArguments: null,
         },
       ],
       typeParameters: null,
     },
     {
-      typeId: 20,
+      typeId: 22,
       type: "struct ContractId",
       components: [
         {
-          name: "value",
+          name: "bits",
           type: 2,
           typeArguments: null,
         },
@@ -375,7 +416,7 @@ const _abi = {
       typeParameters: null,
     },
     {
-      typeId: 21,
+      typeId: 23,
       type: "struct ContractInitialized",
       components: [
         {
@@ -385,7 +426,7 @@ const _abi = {
         },
         {
           name: "signer",
-          type: 22,
+          type: 24,
           typeArguments: null,
         },
         {
@@ -395,36 +436,7 @@ const _abi = {
         },
         {
           name: "fee",
-          type: 31,
-          typeArguments: null,
-        },
-      ],
-      typeParameters: null,
-    },
-    {
-      typeId: 22,
-      type: "struct EvmAddress",
-      components: [
-        {
-          name: "value",
-          type: 2,
-          typeArguments: null,
-        },
-      ],
-      typeParameters: null,
-    },
-    {
-      typeId: 23,
-      type: "struct FeeChanged",
-      components: [
-        {
-          name: "old",
-          type: 31,
-          typeArguments: null,
-        },
-        {
-          name: "new",
-          type: 31,
+          type: 34,
           typeArguments: null,
         },
       ],
@@ -432,16 +444,11 @@ const _abi = {
     },
     {
       typeId: 24,
-      type: "struct OwnerChanged",
+      type: "struct EvmAddress",
       components: [
         {
-          name: "old",
-          type: 5,
-          typeArguments: null,
-        },
-        {
-          name: "new",
-          type: 5,
+          name: "bits",
+          type: 2,
           typeArguments: null,
         },
       ],
@@ -449,16 +456,16 @@ const _abi = {
     },
     {
       typeId: 25,
-      type: "struct PinBurned",
+      type: "struct FeeChanged",
       components: [
         {
-          name: "pin_owner",
-          type: 15,
+          name: "old",
+          type: 34,
           typeArguments: null,
         },
         {
-          name: "pin_id",
-          type: 31,
+          name: "new",
+          type: 34,
           typeArguments: null,
         },
       ],
@@ -466,16 +473,11 @@ const _abi = {
     },
     {
       typeId: 26,
-      type: "struct PinMinted",
+      type: "struct OwnershipSet",
       components: [
         {
-          name: "recipient",
-          type: 15,
-          typeArguments: null,
-        },
-        {
-          name: "pin_id",
-          type: 31,
+          name: "new_owner",
+          type: 5,
           typeArguments: null,
         },
       ],
@@ -483,16 +485,16 @@ const _abi = {
     },
     {
       typeId: 27,
-      type: "struct RawBytes",
+      type: "struct OwnershipTransferred",
       components: [
         {
-          name: "ptr",
-          type: 11,
+          name: "new_owner",
+          type: 5,
           typeArguments: null,
         },
         {
-          name: "cap",
-          type: 31,
+          name: "previous_owner",
+          type: 5,
           typeArguments: null,
         },
       ],
@@ -500,16 +502,16 @@ const _abi = {
     },
     {
       typeId: 28,
-      type: "struct SignerChanged",
+      type: "struct PinBurned",
       components: [
         {
-          name: "old",
-          type: 22,
+          name: "pin_owner",
+          type: 17,
           typeArguments: null,
         },
         {
-          name: "new",
-          type: 22,
+          name: "pin_id",
+          type: 34,
           typeArguments: null,
         },
       ],
@@ -517,11 +519,16 @@ const _abi = {
     },
     {
       typeId: 29,
-      type: "struct String",
+      type: "struct PinMinted",
       components: [
         {
-          name: "bytes",
-          type: 18,
+          name: "recipient",
+          type: 17,
+          typeArguments: null,
+        },
+        {
+          name: "pin_id",
+          type: 34,
           typeArguments: null,
         },
       ],
@@ -529,6 +536,52 @@ const _abi = {
     },
     {
       typeId: 30,
+      type: "struct RawBytes",
+      components: [
+        {
+          name: "ptr",
+          type: 13,
+          typeArguments: null,
+        },
+        {
+          name: "cap",
+          type: 34,
+          typeArguments: null,
+        },
+      ],
+      typeParameters: null,
+    },
+    {
+      typeId: 31,
+      type: "struct SignerChanged",
+      components: [
+        {
+          name: "old",
+          type: 24,
+          typeArguments: null,
+        },
+        {
+          name: "new",
+          type: 24,
+          typeArguments: null,
+        },
+      ],
+      typeParameters: null,
+    },
+    {
+      typeId: 32,
+      type: "struct String",
+      components: [
+        {
+          name: "bytes",
+          type: 20,
+          typeArguments: null,
+        },
+      ],
+      typeParameters: null,
+    },
+    {
+      typeId: 33,
       type: "struct TreasuryChanged",
       components: [
         {
@@ -545,13 +598,13 @@ const _abi = {
       typeParameters: null,
     },
     {
-      typeId: 31,
+      typeId: 34,
       type: "u64",
       components: null,
       typeParameters: null,
     },
     {
-      typeId: 32,
+      typeId: 35,
       type: "u8",
       components: null,
       typeParameters: null,
@@ -577,7 +630,7 @@ const _abi = {
       inputs: [
         {
           name: "fee",
-          type: 31,
+          type: 34,
           typeArguments: null,
         },
       ],
@@ -619,7 +672,7 @@ const _abi = {
       inputs: [
         {
           name: "signer",
-          type: 22,
+          type: 24,
           typeArguments: null,
         },
       ],
@@ -662,7 +715,7 @@ const _abi = {
       name: "fee",
       output: {
         name: "",
-        type: 31,
+        type: 34,
         typeArguments: null,
       },
       attributes: [
@@ -706,7 +759,7 @@ const _abi = {
       inputs: [
         {
           name: "pin_id",
-          type: 31,
+          type: 34,
           typeArguments: null,
         },
       ],
@@ -727,12 +780,12 @@ const _abi = {
       inputs: [
         {
           name: "params",
-          type: 19,
+          type: 21,
           typeArguments: null,
         },
         {
           name: "signature",
-          type: 17,
+          type: 19,
           typeArguments: null,
         },
       ],
@@ -757,14 +810,14 @@ const _abi = {
       inputs: [
         {
           name: "id",
-          type: 15,
+          type: 17,
           typeArguments: null,
         },
       ],
       name: "balance_of",
       output: {
         name: "",
-        type: 31,
+        type: 34,
         typeArguments: null,
       },
       attributes: [
@@ -778,12 +831,12 @@ const _abi = {
       inputs: [
         {
           name: "user",
-          type: 15,
+          type: 17,
           typeArguments: null,
         },
         {
           name: "guild_id",
-          type: 31,
+          type: 34,
           typeArguments: null,
         },
         {
@@ -795,11 +848,11 @@ const _abi = {
       name: "pin_id_by_address",
       output: {
         name: "",
-        type: 7,
+        type: 9,
         typeArguments: [
           {
             name: "",
-            type: 31,
+            type: 34,
             typeArguments: null,
           },
         ],
@@ -815,12 +868,12 @@ const _abi = {
       inputs: [
         {
           name: "user_id",
-          type: 31,
+          type: 34,
           typeArguments: null,
         },
         {
           name: "guild_id",
-          type: 31,
+          type: 34,
           typeArguments: null,
         },
         {
@@ -832,11 +885,11 @@ const _abi = {
       name: "pin_id_by_user_id",
       output: {
         name: "",
-        type: 7,
+        type: 9,
         typeArguments: [
           {
             name: "",
-            type: 31,
+            type: 34,
             typeArguments: null,
           },
         ],
@@ -852,18 +905,18 @@ const _abi = {
       inputs: [
         {
           name: "pin_id",
-          type: 31,
+          type: 34,
           typeArguments: null,
         },
       ],
       name: "pin_owner",
       output: {
         name: "",
-        type: 7,
+        type: 9,
         typeArguments: [
           {
             name: "",
-            type: 15,
+            type: 17,
             typeArguments: null,
           },
         ],
@@ -880,7 +933,7 @@ const _abi = {
       name: "total_minted",
       output: {
         name: "",
-        type: 31,
+        type: 34,
         typeArguments: null,
       },
       attributes: [
@@ -894,14 +947,14 @@ const _abi = {
       inputs: [
         {
           name: "guild_id",
-          type: 31,
+          type: 34,
           typeArguments: null,
         },
       ],
       name: "total_minted_per_guild",
       output: {
         name: "",
-        type: 31,
+        type: 34,
         typeArguments: null,
       },
       attributes: [
@@ -916,7 +969,7 @@ const _abi = {
       name: "owner",
       output: {
         name: "",
-        type: 8,
+        type: 10,
         typeArguments: null,
       },
       attributes: [
@@ -930,14 +983,41 @@ const _abi = {
       inputs: [
         {
           name: "asset",
-          type: 16,
+          type: 18,
           typeArguments: null,
         },
       ],
       name: "decimals",
       output: {
         name: "",
-        type: 7,
+        type: 9,
+        typeArguments: [
+          {
+            name: "",
+            type: 35,
+            typeArguments: null,
+          },
+        ],
+      },
+      attributes: [
+        {
+          name: "storage",
+          arguments: ["read"],
+        },
+      ],
+    },
+    {
+      inputs: [
+        {
+          name: "asset",
+          type: 18,
+          typeArguments: null,
+        },
+      ],
+      name: "name",
+      output: {
+        name: "",
+        type: 9,
         typeArguments: [
           {
             name: "",
@@ -957,45 +1037,18 @@ const _abi = {
       inputs: [
         {
           name: "asset",
-          type: 16,
-          typeArguments: null,
-        },
-      ],
-      name: "name",
-      output: {
-        name: "",
-        type: 7,
-        typeArguments: [
-          {
-            name: "",
-            type: 29,
-            typeArguments: null,
-          },
-        ],
-      },
-      attributes: [
-        {
-          name: "storage",
-          arguments: ["read"],
-        },
-      ],
-    },
-    {
-      inputs: [
-        {
-          name: "asset",
-          type: 16,
+          type: 18,
           typeArguments: null,
         },
       ],
       name: "symbol",
       output: {
         name: "",
-        type: 7,
+        type: 9,
         typeArguments: [
           {
             name: "",
-            type: 29,
+            type: 32,
             typeArguments: null,
           },
         ],
@@ -1012,7 +1065,7 @@ const _abi = {
       name: "total_assets",
       output: {
         name: "",
-        type: 31,
+        type: 34,
         typeArguments: null,
       },
       attributes: [
@@ -1026,18 +1079,50 @@ const _abi = {
       inputs: [
         {
           name: "asset",
-          type: 16,
+          type: 18,
           typeArguments: null,
         },
       ],
       name: "total_supply",
       output: {
         name: "",
-        type: 7,
+        type: 9,
         typeArguments: [
           {
             name: "",
-            type: 31,
+            type: 34,
+            typeArguments: null,
+          },
+        ],
+      },
+      attributes: [
+        {
+          name: "storage",
+          arguments: ["read"],
+        },
+      ],
+    },
+    {
+      inputs: [
+        {
+          name: "asset_id",
+          type: 18,
+          typeArguments: null,
+        },
+        {
+          name: "key",
+          type: 32,
+          typeArguments: null,
+        },
+      ],
+      name: "metadata",
+      output: {
+        name: "",
+        type: 9,
+        typeArguments: [
+          {
+            name: "",
+            type: 8,
             typeArguments: null,
           },
         ],
@@ -1053,14 +1138,14 @@ const _abi = {
       inputs: [
         {
           name: "pin_id",
-          type: 31,
+          type: 34,
           typeArguments: null,
         },
       ],
       name: "encoded_metadata",
       output: {
         name: "",
-        type: 29,
+        type: 32,
         typeArguments: null,
       },
       attributes: [
@@ -1074,14 +1159,14 @@ const _abi = {
       inputs: [
         {
           name: "pin_id",
-          type: 31,
+          type: 34,
           typeArguments: null,
         },
       ],
-      name: "metadata",
+      name: "pin_metadata",
       output: {
         name: "",
-        type: 29,
+        type: 32,
         typeArguments: null,
       },
       attributes: [
@@ -1094,7 +1179,7 @@ const _abi = {
   ],
   loggedTypes: [
     {
-      logId: 0,
+      logId: "2894384429946533623",
       loggedType: {
         name: "",
         type: 6,
@@ -1102,183 +1187,15 @@ const _abi = {
       },
     },
     {
-      logId: 1,
+      logId: "2161305517876418151",
       loggedType: {
         name: "",
-        type: 21,
+        type: 7,
         typeArguments: [],
       },
     },
     {
-      logId: 2,
-      loggedType: {
-        name: "",
-        type: 3,
-        typeArguments: [],
-      },
-    },
-    {
-      logId: 3,
-      loggedType: {
-        name: "",
-        type: 23,
-        typeArguments: [],
-      },
-    },
-    {
-      logId: 4,
-      loggedType: {
-        name: "",
-        type: 3,
-        typeArguments: [],
-      },
-    },
-    {
-      logId: 5,
-      loggedType: {
-        name: "",
-        type: 24,
-        typeArguments: [],
-      },
-    },
-    {
-      logId: 6,
-      loggedType: {
-        name: "",
-        type: 3,
-        typeArguments: [],
-      },
-    },
-    {
-      logId: 7,
-      loggedType: {
-        name: "",
-        type: 28,
-        typeArguments: [],
-      },
-    },
-    {
-      logId: 8,
-      loggedType: {
-        name: "",
-        type: 3,
-        typeArguments: [],
-      },
-    },
-    {
-      logId: 9,
-      loggedType: {
-        name: "",
-        type: 30,
-        typeArguments: [],
-      },
-    },
-    {
-      logId: 10,
-      loggedType: {
-        name: "",
-        type: 9,
-        typeArguments: [],
-      },
-    },
-    {
-      logId: 11,
-      loggedType: {
-        name: "",
-        type: 9,
-        typeArguments: [],
-      },
-    },
-    {
-      logId: 12,
-      loggedType: {
-        name: "",
-        type: 9,
-        typeArguments: [],
-      },
-    },
-    {
-      logId: 13,
-      loggedType: {
-        name: "",
-        type: 9,
-        typeArguments: [],
-      },
-    },
-    {
-      logId: 14,
-      loggedType: {
-        name: "",
-        type: 9,
-        typeArguments: [],
-      },
-    },
-    {
-      logId: 15,
-      loggedType: {
-        name: "",
-        type: 25,
-        typeArguments: [],
-      },
-    },
-    {
-      logId: 16,
-      loggedType: {
-        name: "",
-        type: 6,
-        typeArguments: [],
-      },
-    },
-    {
-      logId: 17,
-      loggedType: {
-        name: "",
-        type: 9,
-        typeArguments: [],
-      },
-    },
-    {
-      logId: 18,
-      loggedType: {
-        name: "",
-        type: 9,
-        typeArguments: [],
-      },
-    },
-    {
-      logId: 19,
-      loggedType: {
-        name: "",
-        type: 9,
-        typeArguments: [],
-      },
-    },
-    {
-      logId: 20,
-      loggedType: {
-        name: "",
-        type: 9,
-        typeArguments: [],
-      },
-    },
-    {
-      logId: 21,
-      loggedType: {
-        name: "",
-        type: 9,
-        typeArguments: [],
-      },
-    },
-    {
-      logId: 22,
-      loggedType: {
-        name: "",
-        type: 9,
-        typeArguments: [],
-      },
-    },
-    {
-      logId: 23,
+      logId: "16280289466020123285",
       loggedType: {
         name: "",
         type: 26,
@@ -1286,19 +1203,97 @@ const _abi = {
       },
     },
     {
-      logId: 24,
+      logId: "14366998805467575349",
       loggedType: {
         name: "",
-        type: 9,
+        type: 23,
         typeArguments: [],
       },
     },
     {
-      logId: 25,
+      logId: "4571204900286667806",
+      loggedType: {
+        name: "",
+        type: 3,
+        typeArguments: [],
+      },
+    },
+    {
+      logId: "2446762064164283588",
+      loggedType: {
+        name: "",
+        type: 25,
+        typeArguments: [],
+      },
+    },
+    {
+      logId: "12970362301975156672",
+      loggedType: {
+        name: "",
+        type: 27,
+        typeArguments: [],
+      },
+    },
+    {
+      logId: "1176917155281974327",
+      loggedType: {
+        name: "",
+        type: 31,
+        typeArguments: [],
+      },
+    },
+    {
+      logId: "15028988019905214435",
+      loggedType: {
+        name: "",
+        type: 33,
+        typeArguments: [],
+      },
+    },
+    {
+      logId: "8391453796649435963",
+      loggedType: {
+        name: "",
+        type: 11,
+        typeArguments: [],
+      },
+    },
+    {
+      logId: "7283728223483314652",
+      loggedType: {
+        name: "",
+        type: 28,
+        typeArguments: [],
+      },
+    },
+    {
+      logId: "6914920428417705670",
+      loggedType: {
+        name: "",
+        type: 29,
+        typeArguments: [],
+      },
+    },
+    {
+      logId: "11132648958528852192",
+      loggedType: {
+        name: "",
+        type: 32,
+        typeArguments: [],
+      },
+    },
+    {
+      logId: "15587543869071072960",
       loggedType: {
         name: "",
         type: 9,
-        typeArguments: [],
+        typeArguments: [
+          {
+            name: "",
+            type: 34,
+            typeArguments: null,
+          },
+        ],
       },
     },
   ],
@@ -1308,19 +1303,19 @@ const _abi = {
       name: "NAME",
       configurableType: {
         name: "",
-        type: 14,
+        type: 16,
         typeArguments: null,
       },
-      offset: 147320,
+      offset: 86520,
     },
     {
       name: "SYMBOL",
       configurableType: {
         name: "",
-        type: 12,
+        type: 14,
         typeArguments: null,
       },
-      offset: 147336,
+      offset: 86536,
     },
     {
       name: "OWNER",
@@ -1329,7 +1324,7 @@ const _abi = {
         type: 5,
         typeArguments: [],
       },
-      offset: 146552,
+      offset: 86296,
     },
     {
       name: "SIGNER",
@@ -1338,16 +1333,16 @@ const _abi = {
         type: 2,
         typeArguments: null,
       },
-      offset: 146520,
+      offset: 86344,
     },
     {
       name: "SIGNATURE_VALIDITY_PERIOD",
       configurableType: {
         name: "",
-        type: 31,
+        type: 34,
         typeArguments: null,
       },
-      offset: 147168,
+      offset: 86488,
     },
     {
       name: "TREASURY",
@@ -1356,42 +1351,83 @@ const _abi = {
         type: 5,
         typeArguments: [],
       },
-      offset: 146592,
+      offset: 86376,
     },
     {
       name: "FEE",
       configurableType: {
         name: "",
-        type: 31,
+        type: 34,
         typeArguments: null,
       },
-      offset: 146632,
+      offset: 86416,
     },
   ],
 }
 
-export class GuildPinContractAbi__factory {
-  static readonly abi = _abi
-  static createInterface(): GuildPinContractAbiInterface {
-    return new Interface(_abi as any) as unknown as GuildPinContractAbiInterface
-  }
-  static connect(
+const _storageSlots: StorageSlot[] = [
+  {
+    key: "0a860bae2f483542169820f52be34ca40c507a967660cdc5941c15815204bc4d",
+    value: "0000000000000000000000000000000000000000000000000000000000000000",
+  },
+  {
+    key: "b48b753af346966d0d169c0b2e3234611f65d5cfdb57c7b6e7cd6ca93707bee0",
+    value: "0000000000000000000000000000000000000000000000000000000000000000",
+  },
+  {
+    key: "c5e69153be998bc6f957aeb6f8fd46a0e9c5bc2d3dff421a73e02f64a3012fbb",
+    value: "0000000000000000000000000000000000000000000000000000000000000000",
+  },
+  {
+    key: "d02e07f5a716bd3b6670aaf9a73352164e6b946c24db14f72005b7029e67d96a",
+    value: "0000000000000000000000000000000000000000000000000000000000000000",
+  },
+  {
+    key: "de9090cb50e71c2588c773487d1da7066d0c719849a7e58dc8b6397a25c567c0",
+    value: "0000000000000000000000000000000000000000000000000000000000000000",
+  },
+  {
+    key: "de9090cb50e71c2588c773487d1da7066d0c719849a7e58dc8b6397a25c567c1",
+    value: "0000000000000000000000000000000000000000000000000000000000000000",
+  },
+  {
+    key: "f383b0ce51358be57daa3b725fe44acdb2d880604e367199080b4379c41bb6ed",
+    value: "0000000000000000000000000000000000000000000000000000000000000000",
+  },
+]
+
+export const GuildPinContractAbi__factory = {
+  abi: _abi,
+
+  storageSlots: _storageSlots,
+
+  createInterface(): GuildPinContractAbiInterface {
+    return new Interface(_abi) as unknown as GuildPinContractAbiInterface
+  },
+
+  connect(
     id: string | AbstractAddress,
     accountOrProvider: Account | Provider
   ): GuildPinContractAbi {
     return new Contract(
       id,
-      _abi as any,
+      _abi,
       accountOrProvider
     ) as unknown as GuildPinContractAbi
-  }
-  static async deployContract(
+  },
+
+  async deployContract(
     bytecode: BytesLike,
     wallet: Account,
     options: DeployContractOptions = {}
   ): Promise<GuildPinContractAbi> {
-    const factory = new ContractFactory(bytecode, _abi as any, wallet)
-    const contract = await factory.deployContract(options)
+    const factory = new ContractFactory(bytecode, _abi, wallet)
+
+    const contract = await factory.deployContract({
+      storageSlots: _storageSlots,
+      ...options,
+    })
+
     return contract as unknown as GuildPinContractAbi
-  }
+  },
 }

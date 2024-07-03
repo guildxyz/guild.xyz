@@ -1,7 +1,7 @@
 import { Alert, AlertDescription, AlertIcon, HStack, Text } from "@chakra-ui/react"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import useGateables from "hooks/useGateables"
-import rewards from "platforms/rewards"
+import rewards from "rewards"
 import { PlatformName, PlatformType } from "types"
 import Button from "./Button"
 

@@ -1,3 +1,4 @@
+import { env } from "env"
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
 import {
@@ -184,10 +185,7 @@ const useMintGuildPin = () => {
           chainId,
           tokenId,
           ...metadata,
-          image: metadata.image.replace(
-            "ipfs://",
-            process.env.NEXT_PUBLIC_IPFS_GATEWAY
-          ),
+          image: metadata.image.replace("ipfs://", env.NEXT_PUBLIC_IPFS_GATEWAY),
         }
 
         const updatedPins = prevData?.usersPins

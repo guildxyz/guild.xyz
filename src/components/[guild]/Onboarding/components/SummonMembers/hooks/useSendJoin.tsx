@@ -1,11 +1,11 @@
 import processConnectorError from "components/[guild]/JoinModal/utils/processConnectorError"
 import useGuild from "components/[guild]/hooks/useGuild"
+import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { PlatformGuildData, PlatformType } from "types"
-import { useFetcherWithSign } from "utils/fetcher"
-import { SummonMembersForm } from "../SummonMembers"
+import { DiscordEmbedForm } from "../components/SendDiscordJoinButtonModal"
 
 const useSendJoin = (onSuccess?: () => void) => {
   const { mutateGuild } = useGuild()
@@ -14,7 +14,7 @@ const useSendJoin = (onSuccess?: () => void) => {
   const showErrorToast = useShowErrorToast()
   const fetcerWithSign = useFetcherWithSign()
 
-  const sendJoin = ({ serverId, ...body }: SummonMembersForm) =>
+  const sendJoin = ({ serverId, ...body }: DiscordEmbedForm) =>
     fetcerWithSign([
       `/v2/discord/servers/${serverId}/button`,
       {

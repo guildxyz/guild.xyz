@@ -14,6 +14,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import HCaptcha from "@hcaptcha/react-hcaptcha"
+import { Robot } from "@phosphor-icons/react"
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import useUser from "components/[guild]/hooks/useUser"
@@ -21,10 +22,9 @@ import Button from "components/common/Button"
 import ErrorAlert from "components/common/ErrorAlert"
 import { Modal } from "components/common/Modal"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
-import { Robot } from "phosphor-react"
+import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import { useEffect } from "react"
 import useSWRImmutable from "swr/immutable"
-import { useFetcherWithSign } from "utils/fetcher"
 import useVerifyCaptcha from "../hooks/useVerifyCaptcha"
 
 const CompleteCaptcha = (props: ButtonProps): JSX.Element => {

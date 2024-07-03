@@ -7,13 +7,13 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
+import { ArrowRight } from "@phosphor-icons/react"
 import { ActivityLogActionProvider } from "components/[guild]/activity/ActivityLogAction/ActivityLogActionContext"
 import ActionIcon from "components/[guild]/activity/ActivityLogAction/components/ActionIcon"
 import ActionLabel from "components/[guild]/activity/ActivityLogAction/components/ActionLabel"
 import { useActivityLog } from "components/[guild]/activity/ActivityLogContext"
 import Button from "components/common/Button"
 import Link from "next/link"
-import { ArrowRight } from "phosphor-react"
 import GhostIcon from "static/avatars/ghost.svg"
 
 const SHOWN_ACTIONS_COUNT = 3

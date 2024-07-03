@@ -4,9 +4,10 @@ import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershi
 import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import { ConnectEmailButton } from "components/common/Layout/components/Account/components/AccountModal/components/SocialAccount/EmailAddress"
+import { ConnectFarcasterButton } from "components/common/Layout/components/Account/components/AccountModal/components/SocialAccount/FarcasterProfile"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import useToast from "hooks/useToast"
-import rewards from "platforms/rewards"
+import rewards from "rewards"
 import REQUIREMENTS, { RequirementType } from "requirements"
 import { PlatformName } from "types"
 import { useRequirementContext } from "./RequirementContext"
@@ -18,7 +19,7 @@ function requirementTypeToPlatformName(type: RequirementType): PlatformName {
 }
 
 const RequirementConnectButton = (props: ButtonProps) => {
-  const { platformUsers, emails } = useUser()
+  const { platformUsers, emails, farcasterProfiles } = useUser()
   const { type, roleId, id } = useRequirementContext()
   const platform = requirementTypeToPlatformName(type)
 
@@ -38,6 +39,8 @@ const RequirementConnectButton = (props: ButtonProps) => {
   if (
     platform === "EMAIL"
       ? !emails?.pending && emails?.emailAddress
+      : platform === "FARCASTER"
+      ? !farcasterProfiles || !!farcasterProfiles?.[0]
       : !isReconnection && (!platformUsers || platformFromDb)
   )
     return null
@@ -52,7 +55,11 @@ const RequirementConnectButton = (props: ButtonProps) => {
   }
 
   const ButtonComponent =
-    platform === "EMAIL" ? ConnectEmailButton : ConnectRequirementPlatformButton
+    platform === "EMAIL"
+      ? ConnectEmailButton
+      : platform === "FARCASTER"
+      ? ConnectFarcasterButton
+      : ConnectRequirementPlatformButton
 
   return (
     <ButtonComponent

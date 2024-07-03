@@ -1,8 +1,15 @@
-import { Schemas } from "@guildxyz/types"
+import {
+  FarcasterProfile,
+  Logic,
+  schemas,
+  Schemas,
+  Visibility,
+} from "@guildxyz/types"
 import { FeatureFlag } from "components/[guild]/EditGuild/components/FeatureFlags"
 import { ContractCallFunction } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
 import { RequirementType } from "requirements"
 import type { Chain, Chains } from "wagmiConfig/chains"
+import { z } from "zod"
 
 export const FUEL_ADDRESS_REGEX = /^0x[a-f0-9]{64}$/i
 
@@ -20,8 +27,6 @@ type WalletError = { code: number; message: string }
 type Rest = {
   [x: string]: any
 }
-
-type Logic = "AND" | "OR" | "ANY_OF"
 
 type Theme = {
   color?: string
@@ -94,6 +99,7 @@ type PlatformName =
   | "FORM"
   | "GATHER_TOWN"
   | "ERC20"
+  | "FARCASTER"
 
 type PlatformUserData = {
   acessToken?: string
@@ -142,6 +148,8 @@ type User = {
     pending: boolean
     createdAt: Date
   }
+
+  farcasterProfiles: FarcasterProfile[]
 }
 
 type BaseUser = {
@@ -488,26 +496,28 @@ type Trait = {
   }
 }
 
-type Requirement = {
-  id: number
-  type: RequirementType
-  address?: `0x${string}`
-  chain?: Chain
-  data?: Record<string, any>
-  roleId: number
-  name: string
-  symbol: string
-  decimals?: number
-  isNegated?: boolean
-  visibility?: Visibility
-  visibilityRoleId?: number | null
+type Requirement = z.output<typeof schemas.RequirementSchema>
+type RequirementCreateResponseOutput = z.output<
+  typeof schemas.RequirementCreateResponseSchema
+>
 
-  // Props used inside the forms on the UI
-  formFieldId?: number
-  balancyDecimals?: number
-  createdAt?: string
-  updatedAt?: string
-}
+type ClientStateRequirementCreateResponse = Omit<
+  Schemas["RequirementCreateResponse"],
+  /**
+   * These props won't be included in the response when we only store the requirement
+   * object on client side, so we omit them from the type & add them back as optional
+   * props
+   */
+  "id" | "createdAt" | "updatedAt" | "roleId" | "deletedRequirements"
+> &
+  Partial<
+    Pick<
+      Schemas["RequirementCreateResponse"],
+      "createdAt" | "updatedAt" | "roleId" | "deletedRequirements"
+    >
+  > & {
+    id: string | number
+  }
 
 type RolePlatformStatus = "ALL_CLAIMED" | "NOT_STARTED" | "ENDED" | "ACTIVE"
 
@@ -527,12 +537,6 @@ type RolePlatform = {
   startTime?: string
   endTime?: string
   dynamicAmount?: Schemas["DynamicAmount"]
-}
-
-enum Visibility {
-  PUBLIC = "PUBLIC",
-  PRIVATE = "PRIVATE",
-  HIDDEN = "HIDDEN",
 }
 
 type SimpleRole = {
@@ -633,9 +637,16 @@ type Guild = {
   parentRoles: number[]
 }
 
+type RequirementCreationPayloadWithTempID = Schemas["RequirementCreationPayload"] & {
+  id?: number
+}
+
 type RoleFormType = Partial<
   Omit<Role, "requirements" | "rolePlatforms" | "name"> & {
-    requirements: Array<Partial<Requirement>>
+    requirements: Array<
+      | Partial<RequirementCreationPayloadWithTempID>
+      | Partial<ClientStateRequirementCreateResponse>
+    >
     rolePlatforms: Array<
       Partial<Omit<RolePlatform, "guildPlatform">> & {
         guildPlatform?: GuildPlatformWithOptionalId
@@ -644,34 +655,6 @@ type RoleFormType = Partial<
     >
   } & { name: string }
 >
-
-type GuildFormType = Partial<
-  Pick<
-    Guild,
-    | "id"
-    | "urlName"
-    | "name"
-    | "imageUrl"
-    | "description"
-    | "theme"
-    | "contacts"
-    | "featureFlags"
-    | "tags"
-    | "eventSources"
-  >
-> & {
-  guildPlatforms?: (Partial<GuildPlatform> & { platformName: string })[]
-  roles?: Array<RoleFormType>
-  logic?: Logic
-  requirements?: Requirement[]
-  socialLinks?: Record<string, string>
-  admins?: Array<{
-    address: string
-    id?: number
-    isOwner?: boolean
-  }>
-  eventSources?: Record<EventSourcesKey, string>
-}
 
 type Group = {
   id: number
@@ -689,17 +672,6 @@ type SelectOption<T = string> = {
   value: T
   img?: string | JSX.Element
 } & Rest
-
-// Requested with Discord OAuth token
-type DiscordServerData = {
-  id: string
-  name: string
-  icon: string
-  owner: boolean
-  permissions: number
-  features: string[]
-  permissions_new: string
-}
 
 export enum PlatformType {
   "UNSET" = -1,
@@ -720,30 +692,6 @@ export enum PlatformType {
   "FORM" = 15,
   "GATHER_TOWN" = 16,
   "ERC20" = 17,
-}
-
-type WalletConnectConnectionData = {
-  connected: boolean
-  accounts: string[]
-  chainId: number
-  bridge: string
-  key: string
-  clientId: string
-  clientMeta: {
-    description: string
-    url: string
-    icons: string[]
-    name: string
-  }
-  peerId: string
-  peerMeta: {
-    description: string
-    url: string
-    icons: string[]
-    name: string
-  }
-  handshakeId: number
-  handshakeTopic: string
 }
 
 enum ValidationMethod {
@@ -816,13 +764,13 @@ type DetailedPinLeaderboardUserData = {
   pins: LeaderboardPinData[]
 }
 
-export { ValidationMethod, Visibility, supportedEventSources, supportedSocialLinks }
+export { supportedEventSources, supportedSocialLinks, ValidationMethod }
 export type {
   BaseUser,
+  ClientStateRequirementCreateResponse,
   CoingeckoToken,
   DetailedPinLeaderboardUserData as DetailedUserLeaderboardData,
   DiscordError,
-  DiscordServerData,
   EventSources,
   EventSourcesKey,
   GitPoap,
@@ -830,13 +778,11 @@ export type {
   Guild,
   GuildAdmin,
   GuildBase,
-  GuildFormType,
   GuildPinMetadata,
   GuildPlatform,
   GuildPlatformWithOptionalId,
   GuildTags,
   LeaderboardPinData,
-  Logic,
   NFT,
   OneOf,
   PlatformAccountDetails,
@@ -845,6 +791,8 @@ export type {
   Poap,
   RequestMintLinksForm,
   Requirement,
+  RequirementCreateResponseOutput,
+  RequirementCreationPayloadWithTempID,
   RequirementType,
   Rest,
   Role,
@@ -860,6 +808,5 @@ export type {
   Trait,
   User,
   UserAddress,
-  WalletConnectConnectionData,
   WalletError,
 }

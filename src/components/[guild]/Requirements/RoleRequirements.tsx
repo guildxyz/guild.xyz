@@ -5,6 +5,7 @@ import {
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
+import { Logic } from "@guildxyz/types"
 import React, {
   Fragment,
   memo,
@@ -14,7 +15,7 @@ import React, {
   useRef,
 } from "react"
 import { VariableSizeList } from "react-window"
-import { Logic, Requirement, Role } from "types"
+import { Requirement, Role } from "types"
 import useRequirements from "../hooks/useRequirements"
 import LogicDivider from "../LogicDivider"
 import { RoleCardCollapseProps } from "../RoleCard"
@@ -43,7 +44,7 @@ const RoleRequirements = ({
 
   const requirements =
     role.hiddenRequirements || data?.length === 0
-      ? [...(data ?? []), { type: "HIDDEN", roleId: role.id } as Requirement]
+      ? [...(data ?? []), { roleId: role.id, visibility: "HIDDEN" } as Requirement]
       : data
 
   const isVirtualList = requirements?.length > VIRTUAL_LIST_REQUIREMENT_LIMIT

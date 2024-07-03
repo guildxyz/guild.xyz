@@ -3,7 +3,7 @@ import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hoo
 import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
-import { AddRewardPanelProps } from "platforms/rewards"
+import { AddRewardPanelProps } from "rewards"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { PlatformGuildData, PlatformType } from "types"
 import DefaultAddRewardPanelWrapper from "../../DefaultAddRewardPanelWrapper"
@@ -24,7 +24,7 @@ export type AddPointsFormType = {
   }
 }
 
-const AddPointsPanel = ({ onAdd }: AddRewardPanelProps) => {
+const AddPointsPanel = ({ onAdd, onCancel }: AddRewardPanelProps) => {
   const { id, guildPlatforms } = useGuild()
 
   const { targetRoleId } = useAddRewardContext()
@@ -103,7 +103,7 @@ const AddPointsPanel = ({ onAdd }: AddRewardPanelProps) => {
 
   return (
     <FormProvider {...methods}>
-      <DefaultAddRewardPanelWrapper>
+      <DefaultAddRewardPanelWrapper onCancel={onCancel}>
         <Text colorScheme="gray" fontWeight="semibold" mb="8">
           Gamify your guild with a score system, so users can collect points / XP /
           your custom branded score, and compete on a leaderboard. You’ll also be

@@ -1,5 +1,6 @@
 import { Fade, HStack, Icon, Text, useDisclosure } from "@chakra-ui/react"
 import { Schemas } from "@guildxyz/types"
+import { ArrowSquareIn, ListPlus } from "@phosphor-icons/react"
 import RequirementConnectButton from "components/[guild]/Requirements/components/ConnectRequirementPlatformButton"
 import Requirement, {
   RequirementProps,
@@ -9,7 +10,6 @@ import useRequirement from "components/[guild]/hooks/useRequirement"
 import Button from "components/common/Button"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import useDebouncedState from "hooks/useDebouncedState"
-import { ArrowSquareIn, ListPlus } from "phosphor-react"
 import { useState } from "react"
 import SearchableVirtualListModal from "requirements/common/SearchableVirtualListModal"
 import { isAddress } from "viem"
@@ -23,13 +23,14 @@ function HiddenAllowlistText({ isEmail }: { isEmail: boolean }) {
 }
 
 const AllowlistRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
-  const requirement = useRequirementContext() as Extract<
+  const requirement = useRequirementContext<"ALLOWLIST" | "ALLOWLIST_EMAIL">()
+  // TODO: we should add addressCount to the schema, and remove the cast later on
+  const castedRequirement = requirement as unknown as Extract<
     Schemas["Requirement"],
     { type: "ALLOWLIST" | "ALLOWLIST_EMAIL" }
   > & {
     data: {
       // These are not included in the schemas, as these are appended on-the-fly by the BE, when sending the response
-      fileId?: string
       addressCount?: number
     }
   }
@@ -42,12 +43,12 @@ const AllowlistRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
     hideAllowlist,
     addressCount,
     fileId,
-  } = requirement.data
+  } = castedRequirement.data
 
   const willSearchAddresses = search !== debouncedSearch
   const { data: req, isValidating: isSearchingAddresses } = useRequirement(
-    requirement?.roleId,
-    requirement?.id,
+    castedRequirement?.roleId,
+    castedRequirement?.id,
     debouncedSearch
   )
 
@@ -60,12 +61,12 @@ const AllowlistRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const isEmail = requirement.type === "ALLOWLIST_EMAIL"
+  const isEmail = castedRequirement.type === "ALLOWLIST_EMAIL"
 
-  const { reqAccesses } = useRoleMembership(requirement.roleId)
+  const { reqAccesses } = useRoleMembership(castedRequirement.roleId)
 
   const hasAccess = reqAccesses?.find(
-    ({ requirementId }) => requirementId === requirement.id
+    ({ requirementId }) => requirementId === castedRequirement.id
   )?.access
 
   const shouldShowSearchHints =

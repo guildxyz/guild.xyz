@@ -59,7 +59,6 @@ const MintPerAddressInput = () => {
     <FormControl
       as={Grid}
       isInvalid={!!errors.mintableAmountPerUser}
-      isDisabled={mintLimitType === "UNLIMITED"}
       templateColumns="repeat(3, 1fr)"
       columnGap={4}
       rowGap={2}

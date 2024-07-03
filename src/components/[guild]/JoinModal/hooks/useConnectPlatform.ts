@@ -1,6 +1,8 @@
 import useUser from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { platformMergeAlertAtom } from "components/_app/Web3ConnectionManager/components/PlatformMergeErrorAlert"
+import { env } from "env"
+import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import usePopupWindow from "hooks/usePopupWindow"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit, { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
@@ -8,11 +10,11 @@ import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
 import useToast from "hooks/useToast"
 import { useSetAtom } from "jotai"
 import { OAuthResultParams } from "pages/oauth-result"
-import rewards from "platforms/rewards"
+import rewards from "rewards"
 import { useCallback, useMemo } from "react"
 import useSWR from "swr"
 import { PlatformName, PlatformType } from "types"
-import fetcher, { useFetcherWithSign } from "utils/fetcher"
+import fetcher from "utils/fetcher"
 import useFetchUserEmail from "./useFetchUserEmail"
 
 type AuthLevel = "membership" | "creation"
@@ -53,7 +55,7 @@ function getOAuthURL(
   scope?: AuthLevel,
   force?: boolean
 ) {
-  const url = new URL(`../v2/oauth/${platformName}`, process.env.NEXT_PUBLIC_API)
+  const url = new URL(`../v2/oauth/${platformName}`, env.NEXT_PUBLIC_API)
   url.searchParams.set("path", window.location.pathname)
   url.searchParams.set("token", authToken)
   if (scope) {

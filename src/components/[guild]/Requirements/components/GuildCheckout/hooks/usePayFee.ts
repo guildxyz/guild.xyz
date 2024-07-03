@@ -22,7 +22,9 @@ const usePayFee = () => {
 
   const { address, chainId } = useAccount()
 
-  const requirement = useRequirementContext()
+  const requirement = useRequirementContext<"PAYMENT">()
+  const requirementAddress = requirement.address as `0x${string}`
+
   const { pickedCurrency, onClose } = useGuildCheckoutContext()
 
   const showErrorToast = useShowErrorToast()
@@ -33,11 +35,11 @@ const usePayFee = () => {
     multiplePayments,
     isLoading: isVaultLoading,
     refetch: refetchVault,
-  } = useVault(requirement.address, requirement.data.id, requirement.chain)
+  } = useVault(requirementAddress, requirement.data.id, requirement.chain)
 
   const { data: hasPaid, isLoading: isHasPaidLoading } = useHasPaid(
-    requirement.address,
-    requirement.data.id,
+    requirementAddress,
+    +requirement.data.id,
     requirement.chain
   )
 
@@ -60,7 +62,7 @@ const usePayFee = () => {
       ? coinBalanceData?.value >= fee
       : tokenBalanceData?.value >= fee)
 
-  const { allowance } = useAllowance(pickedCurrency, requirement.address)
+  const { allowance } = useAllowance(pickedCurrency, requirementAddress)
 
   const enabled =
     requirement?.chain === Chains[chainId] &&

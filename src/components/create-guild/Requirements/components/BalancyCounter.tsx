@@ -11,8 +11,8 @@ import {
   useClipboard,
   Wrap,
 } from "@chakra-ui/react"
+import { Copy, DownloadSimple, Question, Warning } from "@phosphor-icons/react"
 import Button from "components/common/Button"
-import { Copy, DownloadSimple, Question, Warning } from "phosphor-react"
 import useBalancy from "../hooks/useBalancy"
 
 const BalancyCounterWithPopover = ({ ...rest }) => {

@@ -6,8 +6,8 @@ import Requirement, {
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useGuildForm } from "components/[guild]/hooks/useGuildForms"
-import { useUserFormSubmission } from "platforms/Forms/hooks/useFormSubmissions"
-import rewards from "platforms/rewards"
+import { useUserFormSubmission } from "rewards/Forms/hooks/useFormSubmissions"
+import rewards from "rewards"
 
 const FormRequirement = (props: RequirementProps) => {
   const { urlName } = useGuild()
@@ -40,7 +40,9 @@ const FormRequirement = (props: RequirementProps) => {
           </Link>
         </Skeleton>
       </Tooltip>
-      <Text as="span">{" form"}</Text>
+      <Text as="span">{` form ${
+        data.answers?.length ? "with specified answers" : ""
+      }`}</Text>
     </Requirement>
   )
 }

@@ -15,7 +15,6 @@ import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
 import { Reorder } from "framer-motion"
 import { useMemo, useState } from "react"
-import { Visibility } from "types"
 import useReorderRoles from "../hooks/useReorderRoles"
 import DraggableRoleCard from "./DraggableRoleCard"
 
@@ -51,7 +50,7 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
   }, [relevantRoles])
 
   const publicAndSecretRoles = sortedRoles.filter(
-    (role) => role.visibility !== Visibility.HIDDEN
+    (role) => role.visibility !== "HIDDEN"
   )
 
   const defaultRoleIdsOrder = publicAndSecretRoles?.map((role) => role.id)

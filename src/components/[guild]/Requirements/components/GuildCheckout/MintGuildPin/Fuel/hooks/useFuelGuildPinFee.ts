@@ -1,17 +1,19 @@
 import { useWallet } from "@fuels/react"
 import useSWRImmutable from "swr/immutable"
 import { GuildPinContractAbi__factory } from "../GuildPinContractAbi_factory"
-import { FUEL_GUILD_PIN_CONTRACT_ID } from "./useMintFuelGuildPin"
+import { FUEL_GUILD_PIN_CONTRACT_ID_0X } from "./useMintFuelGuildPin"
 
 const useFuelGuildPinFee = () => {
   const { wallet } = useWallet()
 
   const getFee = async () => {
+    if (!wallet) throw new Error("Couldn't find Fuel wallet")
+
     const contract = GuildPinContractAbi__factory.connect(
-      FUEL_GUILD_PIN_CONTRACT_ID,
+      FUEL_GUILD_PIN_CONTRACT_ID_0X,
       wallet
     )
-    const { value } = await contract.functions.fee().simulate()
+    const { value } = await contract.functions.fee().get()
 
     return value
   }
