@@ -53,10 +53,10 @@ const SolutionCard = ({
           height: "100%",
           opacity: 0.25,
           transition: "0.3s",
-          filter: `blur(3px) saturate(50%)`,
+          filter: `blur(3px) saturate(70%)`,
         }}
         _hover={{
-          _before: { opacity: 0.4, filter: `blur(3px) saturate(80%)` },
+          _before: { opacity: 0.4, filter: `blur(1.5px) saturate(100%)` },
         }}
       >
         <Stack spacing={3} zIndex={1} justifyContent={"space-between"} h={"100%"}>

@@ -185,35 +185,35 @@ const AddSolutionsButton = () => {
                       title="Discord membership"
                       description="Exclusive Discord roles for accessing your server and channels."
                       imageUrl="/platforms/discord.png"
-                      bgImageUrl="/solutions/nft-background.png"
+                      bgImageUrl="/solutions/discord-bg.jpg"
                       onClick={() => onSelectReward("DISCORD")}
                     />
                     <SolutionCard
                       title="Telegram group gating"
                       description="Start your exclusive token-gated Telegram group."
                       imageUrl="/platforms/telegram.png"
-                      bgImageUrl="/solutions/nft-background.png"
+                      bgImageUrl="/solutions/telegram-bg.jpg"
                       onClick={() => onSelectReward("TELEGRAM")}
                     />
                     <SolutionCard
                       title="Gather Town gating"
                       description="Gather brings the best of in-person collaboration to distributed teams."
                       imageUrl="/platforms/gather.png"
-                      bgImageUrl="/solutions/nft-background.png"
+                      bgImageUrl="/solutions/gather-bg.jpg"
                       onClick={() => onSelectReward("GATHER_TOWN")}
                     />
                     <SolutionCard
                       title="Google Docs gating"
                       description="Provide exclusive access to Google files for users who meet specific requirements."
                       imageUrl="/platforms/google.png"
-                      bgImageUrl="/solutions/nft-background.png"
+                      bgImageUrl="/solutions/google-bg.jpg"
                       onClick={() => onSelectReward("GOOGLE")}
                     />
                     <SolutionCard
                       title="GitHub repository gating"
                       description="Grant access to a private codebase for qualifying contributors."
                       imageUrl="/platforms/github.png"
-                      bgImageUrl="/solutions/nft-background.png"
+                      bgImageUrl="/solutions/github-bg.jpg"
                       onClick={() => onSelectReward("GITHUB")}
                     />
                   </SimpleGrid>
@@ -232,14 +232,14 @@ const AddSolutionsButton = () => {
                       title="NFT Drop"
                       description="Launch NFT sales or open editions with specific collection requirements."
                       imageUrl="/platforms/nft.png"
-                      bgImageUrl="/solutions/nft-background.png"
+                      bgImageUrl="/solutions/nft-bg.jpg"
                       onClick={() => onSelectReward("CONTRACT_CALL")}
                     />
                     <SolutionCard
                       title="Token liquidity program"
                       description="Reward users with points for providing liquidity to your token."
                       imageUrl="/solutions/liquidity.png"
-                      bgImageUrl="/solutions/nft-background.png"
+                      bgImageUrl="/solutions/liquidity-bg.jpg"
                       onClick={() => onSelectSolution("LIQUIDITY")}
                     />
                   </SimpleGrid>
@@ -259,28 +259,28 @@ const AddSolutionsButton = () => {
                       title="POAP Distribution"
                       description="Reward your attendees with POAPs (link)"
                       imageUrl="/platforms/poap.png"
-                      bgImageUrl="/solutions/nft-background.png"
+                      bgImageUrl="/solutions/poap-bg.jpg"
                       onClick={() => onSelectReward("POAP")}
                     />
                     <SolutionCard
                       title="Points and Leaderboard"
                       description="Launch XP, Stars, Keys, Gems, or any other rewards you need.."
                       imageUrl="/platforms/points.png"
-                      bgImageUrl="/solutions/nft-background.png"
+                      bgImageUrl="/solutions/points-bg.jpg"
                       onClick={() => onSelectReward("POINTS")}
                     />
                     <SolutionCard
                       title="Forms & Surveys"
                       description="Collect verified information, feedback, and applications, and reward your community."
                       imageUrl="/platforms/form.png"
-                      bgImageUrl="/solutions/nft-background.png"
+                      bgImageUrl="/solutions/form-bg.jpg"
                       onClick={() => onSelectReward("FORM")}
                     />
                     <SolutionCard
                       title="Text or link distribution"
                       description="Distribute secret messages or promotion codes."
                       imageUrl="/platforms/text.png"
-                      bgImageUrl="/solutions/nft-background.png"
+                      bgImageUrl="/solutions/text-bg.jpg"
                       onClick={() => onSelectReward("TEXT")}
                     />
                   </SimpleGrid>
@@ -299,9 +299,9 @@ const AddSolutionsButton = () => {
                     {/* TODO: Disable if !showPolygonId */}
                     <SolutionCard
                       title="PolygonID credentials"
-                      description="Reward your attendees with POAPs (link)"
+                      description="Self-Sovereign Identity Solution with Zero-Knowledge Proofs."
                       imageUrl="/requirementLogos/polygonId.svg"
-                      bgImageUrl="/solutions/nft-background.png"
+                      bgImageUrl="/solutions/polygon-bg.jpg"
                       onClick={() => onSelectReward("POLYGON_ID")}
                     />
                   </SimpleGrid>
