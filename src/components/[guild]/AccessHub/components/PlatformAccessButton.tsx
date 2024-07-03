@@ -1,7 +1,7 @@
 import { Icon } from "@chakra-ui/react"
+import { ArrowSquareOut } from "@phosphor-icons/react"
 import Button from "components/common/Button"
-import { ArrowSquareOut } from "phosphor-react"
-import rewards from "platforms/rewards"
+import rewards from "rewards"
 import { GuildPlatform, PlatformType } from "types"
 import usePlatformAccessButton from "./usePlatformAccessButton"
 

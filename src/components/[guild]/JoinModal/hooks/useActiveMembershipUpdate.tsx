@@ -1,10 +1,10 @@
 import type { AccessCheckJob, JoinJob } from "@guildxyz/types"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useMembership from "components/explorer/hooks/useMembership"
+import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
 import { atom, useAtom } from "jotai"
 import useSWRImmutable from "swr/immutable"
-import { useFetcherWithSign } from "utils/fetcher"
 import { groupBy } from "../utils/mapAccessJobState"
 
 const SUCCESS_EVENT_NAME = "MEMBERSHIP_UPDATE_SUCCESS"

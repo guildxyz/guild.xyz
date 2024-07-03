@@ -26,6 +26,13 @@ import {
   Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react"
+import {
+  ArrowSquareOut,
+  Clock,
+  Hash,
+  Plus,
+  TrashSimple,
+} from "@phosphor-icons/react"
 import StartEndTimeForm from "components/[guild]/RolePlatforms/components/EditRewardAvailabilityModal/components/StartEndTimeForm"
 import useGuildFee from "components/[guild]/collect/hooks/useGuildFee"
 import Button from "components/common/Button"
@@ -33,7 +40,6 @@ import CheckboxColorCard from "components/common/CheckboxColorCard"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import useTriggerNetworkChange from "hooks/useTriggerNetworkChange"
 import { useRouter } from "next/router"
-import { ArrowSquareOut, Clock, Hash, Plus, TrashSimple } from "phosphor-react"
 import {
   useController,
   useFieldArray,

@@ -31,9 +31,9 @@ export type SubmitData =
 
     /**
      * Array of requirements. If referenced in a rolePlatform, the requirement should
-     * have a temporal `id` generated with Date.now() A requirementIdMap will be
-     * created to match each temporalId-roleId pair with the actual backend-created
-     * ID after creation.
+     * have a temporal `id` generated using uuid. A requirementIdMap will be created
+     * to match each temporalId-roleId pair with the actual backend-created ID after
+     * creation.
      */
     requirements: RequirementCreationPayloadWithTempID[]
 
@@ -66,7 +66,7 @@ export type SubmitData =
  *   backend.
  */
 export type RequirementIdMap = {
-  [tempRequirementId: number]: {
+  [tempRequirementId: string]: {
     [roleId: number]: number // real requirement ID assigned by the backend
   }
 }

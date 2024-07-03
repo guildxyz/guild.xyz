@@ -3,7 +3,7 @@ import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hoo
 import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
-import { AddRewardPanelProps } from "platforms/rewards"
+import { AddRewardPanelProps } from "rewards"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { PlatformGuildData, PlatformType } from "types"
 import DefaultAddRewardPanelWrapper from "../../DefaultAddRewardPanelWrapper"

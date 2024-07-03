@@ -8,6 +8,7 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
+import { Plus } from "@phosphor-icons/react"
 import {
   AddRewardForm,
   defaultValues,
@@ -28,11 +29,10 @@ import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
 import PlatformSelectButton from "components/create-guild/PlatformsGrid/components/PlatformSelectButton"
 import dynamic from "next/dynamic"
-import { Plus } from "phosphor-react"
-import { AddRewardPanelLoadingSpinner } from "platforms/components/AddRewardPanelLoadingSpinner"
-import rewards, { modalSizeForPlatform } from "platforms/rewards"
 import { useState } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
+import rewards, { modalSizeForPlatform } from "rewards"
+import { AddRewardPanelLoadingSpinner } from "rewards/components/AddRewardPanelLoadingSpinner"
 import { PlatformName, PlatformType } from "types"
 import SolutionSelectButton from "./SolutionSelectButton"
 

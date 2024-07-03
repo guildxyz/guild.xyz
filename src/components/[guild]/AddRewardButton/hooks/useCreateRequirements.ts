@@ -7,7 +7,7 @@ import {
   RequirementCreationPayloadWithTempID,
 } from "types"
 
-import { useFetcherWithSign } from "utils/fetcher"
+import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import preprocessRequirement from "utils/preprocessRequirement"
 
 const useCreateRequirements = () => {
@@ -25,9 +25,10 @@ const useCreateRequirements = () => {
     roleIds: number[]
   ) => {
     const requirementIdMap: RequirementIdMap = {}
+    const requirementsToCreate = requirements.filter((req) => req.type !== "FREE")
 
     const promises = roleIds.flatMap((roleId) =>
-      requirements.map((req) =>
+      requirementsToCreate.map((req) =>
         fetcherWithSign([
           `/v2/guilds/${guildId}/roles/${roleId}/requirements`,
           {

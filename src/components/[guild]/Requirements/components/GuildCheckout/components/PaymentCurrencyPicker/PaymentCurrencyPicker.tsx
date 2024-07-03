@@ -10,10 +10,10 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
+import { ArrowSquareOut, CaretDown } from "@phosphor-icons/react"
 import Button from "components/common/Button"
 import { accountModalAtom } from "components/common/Layout/components/Account/components/AccountModal"
 import { useSetAtom } from "jotai"
-import { ArrowSquareOut, CaretDown } from "phosphor-react"
 import { useEffect } from "react"
 import { SUPPORTED_CURRENCIES } from "utils/guildCheckout/constants"
 import shortenHex from "utils/shortenHex"

@@ -1,12 +1,15 @@
 import { Icon, Link, Skeleton, Text } from "@chakra-ui/react"
+import { ArrowSquareOut } from "@phosphor-icons/react"
 import RequirementConnectButton from "components/[guild]/Requirements/components/ConnectRequirementPlatformButton"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
+import useUser from "components/[guild]/hooks/useUser"
 import DataBlockWithCopy from "components/common/DataBlockWithCopy"
-import { ArrowSquareOut } from "phosphor-react"
+import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import REQUIREMENTS from "requirements"
+import FarcasterAction from "./components/FarcasterAction"
 import FarcasterCast from "./components/FarcasterCast"
 import useFarcasterCast from "./hooks/useFarcasterCast"
 import { useFarcasterChannel } from "./hooks/useFarcasterChannels"
@@ -23,22 +26,40 @@ const FarcasterProfile = (props: RequirementProps) => (
 )
 
 const FarcasterFollowUser = (props: RequirementProps) => {
-  const { data, type } = useRequirementContext()
+  const { farcasterProfiles } = useUser()
+  const isFarcasterConnected = !!farcasterProfiles?.[0]?.fid
+
+  const { data, type, roleId, id } = useRequirementContext<
+    "FARCASTER_FOLLOW" | "FARCASTER_FOLLOWED_BY"
+  >()
 
   const { data: farcasterUser } = useFarcasterUser(
+    // TODO: Why is this check needed? Can't we just pass data.id?
     ["FARCASTER_FOLLOW", "FARCASTER_FOLLOWED_BY"].includes(type)
       ? data?.id
       : undefined
   )
 
+  const { reqAccesses } = useRoleMembership(roleId)
+
+  const access = reqAccesses?.find(
+    ({ requirementId }) => requirementId === id
+  )?.access
+
   return (
     <Requirement
-      footer={<RequirementConnectButton />}
+      footer={
+        !isFarcasterConnected ? (
+          <RequirementConnectButton />
+        ) : access === false ? (
+          <FarcasterAction />
+        ) : undefined
+      }
       image={farcasterUser?.pfp_url || "/requirementLogos/farcaster.png"}
       {...props}
     >
       {type === "FARCASTER_FOLLOW" ? "Follow " : "Be followed by "}
-      <Skeleton isLoaded={!!farcasterUser}>
+      <Skeleton isLoaded={!!farcasterUser} display={"inline"}>
         <Link
           href={`https://warpcast.com/${farcasterUser?.username}`}
           isExternal
@@ -68,7 +89,9 @@ const FarcasterTotalFollowers = (props: RequirementProps) => {
 }
 
 const FarcasterLikeRecast = (props: RequirementProps) => {
-  const { data, type } = useRequirementContext()
+  const { farcasterProfiles } = useUser()
+  const isFarcasterConnected = !!farcasterProfiles?.[0]?.fid
+  const { data, type, roleId, id } = useRequirementContext()
 
   const {
     data: cast,
@@ -76,16 +99,28 @@ const FarcasterLikeRecast = (props: RequirementProps) => {
     error: castError,
   } = useFarcasterCast(data?.hash)
 
+  const { reqAccesses } = useRoleMembership(roleId)
+
+  const access = reqAccesses?.find(
+    ({ requirementId }) => requirementId === id
+  )?.access
+
   return (
     <Requirement
-      footer={<RequirementConnectButton />}
+      footer={
+        !isFarcasterConnected ? (
+          <RequirementConnectButton />
+        ) : access === false ? (
+          <FarcasterAction />
+        ) : undefined
+      }
       image={REQUIREMENTS.FARCASTER_LIKE.icon.toString()}
       {...props}
     >
       {type === "FARCASTER_LIKE" ? "Like" : "Recast"}
       <>
         {" this cast: "}
-        <Skeleton isLoaded={!!cast}>
+        <Skeleton isLoaded={!!cast} display="inline">
           <FarcasterCast
             size="sm"
             cast={cast!}
@@ -131,7 +166,14 @@ const PROFILE_TARGETS = {
 }
 
 const FarcasterIncludeText = (props: RequirementProps) => {
-  const { type, data } = useRequirementContext()
+  const { type, data } = useRequirementContext<
+    "FARCASTER_FOLLOW_CHANNEL" | "FARCASTER_USERNAME" | "FARCASTER_BIO"
+  >()
+
+  // This should never happen, but tells TS, that the requirement is expected to be USERNAME / BIO
+  if (type === "FARCASTER_FOLLOW_CHANNEL") {
+    return null
+  }
 
   return (
     <Requirement
@@ -158,10 +200,10 @@ const types = {
   FARCASTER_FOLLOW_CHANNEL: FarcasterFollowChannel,
   FARCASTER_USERNAME: FarcasterIncludeText,
   FARCASTER_BIO: FarcasterIncludeText,
-}
+} as const
 
 const FarcasterRequirement = (props: RequirementProps) => {
-  const { type } = useRequirementContext()
+  const { type } = useRequirementContext<keyof typeof types>()
   const Component = types[type]
   return <Component {...props} />
 }

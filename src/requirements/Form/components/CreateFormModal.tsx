@@ -1,6 +1,6 @@
 import { ModalOverlay } from "@chakra-ui/react"
 import { Modal } from "components/common/Modal"
-import rewards, { modalSizeForPlatform } from "platforms/rewards"
+import rewards, { modalSizeForPlatform } from "rewards"
 
 const CreateFormModal = ({ isOpen, onClose, onAdd }) => (
   <Modal

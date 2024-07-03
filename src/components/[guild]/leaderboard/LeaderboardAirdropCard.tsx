@@ -14,13 +14,13 @@ import {
 import Card, { useCardBg } from "components/common/Card"
 import useMembership from "components/explorer/hooks/useMembership"
 import Image from "next/image"
-import ClaimTokenButton from "platforms/Token/ClaimTokenButton"
+import ClaimTokenButton from "rewards/Token/ClaimTokenButton"
 import {
   TokenRewardProvider,
   useTokenRewardContext,
-} from "platforms/Token/TokenRewardContext"
-import { useClaimableTokens } from "platforms/Token/hooks/useCalculateToken"
-import useRolePlatformsOfReward from "platforms/Token/hooks/useRolePlatformsOfReward"
+} from "rewards/Token/TokenRewardContext"
+import { useClaimableTokens } from "rewards/Token/hooks/useCalculateToken"
+import useRolePlatformsOfReward from "rewards/Token/hooks/useRolePlatformsOfReward"
 import { GuildPlatform } from "types"
 import { useTokenRewards } from "../AccessHub/hooks/useTokenRewards"
 import AvailabilityTags from "../RolePlatforms/components/PlatformCard/components/AvailabilityTags"

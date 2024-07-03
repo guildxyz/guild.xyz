@@ -501,6 +501,24 @@ type RequirementCreateResponseOutput = z.output<
   typeof schemas.RequirementCreateResponseSchema
 >
 
+type ClientStateRequirementCreateResponse = Omit<
+  Schemas["RequirementCreateResponse"],
+  /**
+   * These props won't be included in the response when we only store the requirement
+   * object on client side, so we omit them from the type & add them back as optional
+   * props
+   */
+  "id" | "createdAt" | "updatedAt" | "roleId" | "deletedRequirements"
+> &
+  Partial<
+    Pick<
+      Schemas["RequirementCreateResponse"],
+      "createdAt" | "updatedAt" | "roleId" | "deletedRequirements"
+    >
+  > & {
+    id: string | number
+  }
+
 type RolePlatformStatus = "ALL_CLAIMED" | "NOT_STARTED" | "ENDED" | "ACTIVE"
 
 type RolePlatform = {
@@ -625,7 +643,10 @@ type RequirementCreationPayloadWithTempID = Schemas["RequirementCreationPayload"
 
 type RoleFormType = Partial<
   Omit<Role, "requirements" | "rolePlatforms" | "name"> & {
-    requirements: Array<Partial<RequirementCreationPayloadWithTempID>>
+    requirements: Array<
+      | Partial<RequirementCreationPayloadWithTempID>
+      | Partial<ClientStateRequirementCreateResponse>
+    >
     rolePlatforms: Array<
       Partial<Omit<RolePlatform, "guildPlatform">> & {
         guildPlatform?: GuildPlatformWithOptionalId
@@ -746,6 +767,7 @@ type DetailedPinLeaderboardUserData = {
 export { supportedEventSources, supportedSocialLinks, ValidationMethod }
 export type {
   BaseUser,
+  ClientStateRequirementCreateResponse,
   CoingeckoToken,
   DetailedPinLeaderboardUserData as DetailedUserLeaderboardData,
   DiscordError,
