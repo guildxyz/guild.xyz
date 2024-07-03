@@ -6,7 +6,6 @@ import dynamic from "next/dynamic"
 import LoadingRewardPreview from "rewards/components/LoadingRewardPreview"
 
 export default {
-  icon: null,
   imageUrl: "/platforms/poap.png",
   name: "POAP",
   colorScheme: "purple",

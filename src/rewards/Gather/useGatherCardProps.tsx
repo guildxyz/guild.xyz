@@ -10,18 +10,24 @@ const useGatherCardProps = (guildPlatform: GuildPlatform) => {
   const { roles } = useGuild()
 
   const rolePlatform = roles
-    .flatMap((role) => role.rolePlatforms)
+    ?.flatMap((role) => role.rolePlatforms)
     .find((rp) => rp.guildPlatformId === guildPlatform.id)
 
+  if (!guildPlatform.platformGuildData?.name) {
+    return
+  }
+
   return {
-    name: guildPlatform.platformGuildData?.name,
+    name: guildPlatform.platformGuildData.name,
     type: "GATHER_TOWN" as PlatformName,
     image: (
       <Circle size={10} bgColor={bgColor} overflow="hidden">
         <Img src={rewards.GATHER_TOWN.imageUrl} boxSize={10} color="white" />
       </Circle>
     ),
-    info: rolePlatform && <AvailabilityTags rolePlatform={rolePlatform} mt={1} />,
+    info: rolePlatform ? (
+      <AvailabilityTags rolePlatform={rolePlatform} mt={1} />
+    ) : undefined,
   }
 }
 

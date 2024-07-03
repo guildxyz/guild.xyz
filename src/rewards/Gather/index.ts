@@ -14,7 +14,7 @@ export default {
   colorScheme: "GATHER_TOWN",
   gatedEntity: "space",
   asRewardRestriction: PlatformAsRewardRestrictions.MULTIPLE_ROLES,
-  cardPropsHook: useGatherCardProps,
+  cardPropsHook: undefined, // useGatherCardProps,
   cardButton: GatherCardButton,
   cardMenuComponent: GatherCardMenu,
   RoleCardComponent: dynamic(() => import("rewards/components/GatherReward"), {

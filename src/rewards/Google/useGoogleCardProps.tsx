@@ -1,5 +1,6 @@
 import { Circle, Img, useColorModeValue } from "@chakra-ui/react"
 import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
+import { CardPropsHook } from "rewards/types"
 import { GuildPlatformWithOptionalId, PlatformName } from "types"
 
 const fileTypeNames = {
@@ -30,7 +31,9 @@ const getFileTypeName = (fileType: string) => {
   return staticFileType
 }
 
-const useGoogleCardProps = (guildPlatform: GuildPlatformWithOptionalId) => {
+const useGoogleCardProps: CardPropsHook = (
+  guildPlatform: GuildPlatformWithOptionalId
+) => {
   const rolePlatform = useRolePlatform()
   const imageBgColor = useColorModeValue("gray.100", "gray.800")
 
@@ -38,22 +41,30 @@ const useGoogleCardProps = (guildPlatform: GuildPlatformWithOptionalId) => {
     ? `, ${rolePlatform.platformRoleId || "reader"} access`
     : ""
 
+  if (!guildPlatform.platformGuildName) return
   return {
     type: "GOOGLE" as PlatformName,
     image: guildPlatform.platformGuildData?.iconLink ? (
       <Circle size={10} bgColor={imageBgColor}>
         <Img
           src={guildPlatform.platformGuildData?.iconLink}
-          alt={fileTypeNames[guildPlatform.platformGuildData?.mimeType]}
+          alt={
+            guildPlatform.platformGuildData?.mimeType &&
+            fileTypeNames[
+              guildPlatform.platformGuildData.mimeType as keyof typeof fileTypeNames
+            ]
+          }
         />
       </Circle>
     ) : (
       "/platforms/google.png"
     ),
     name: guildPlatform.platformGuildName,
-    info: `${getFileTypeName(
+    info: `${
       guildPlatform.platformGuildData?.mimeType
-    )}${accessInfo}`,
+        ? getFileTypeName(guildPlatform.platformGuildData.mimeType)
+        : ""
+    }${accessInfo}`,
   }
 }
 

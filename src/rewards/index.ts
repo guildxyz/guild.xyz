@@ -16,7 +16,7 @@ import twitterRewardV1, { twitterReward } from "rewards/Twitter"
 import uniqueTextReward from "rewards/UniqueText"
 import { Rewards } from "./types"
 
-export default {
+const rewards: Rewards = {
   TWITTER_V1: twitterRewardV1,
   TWITTER: twitterReward,
   EMAIL: emailReward,
@@ -34,7 +34,9 @@ export default {
   GITHUB: githubReward,
   POAP: poapReward,
   FARCASTER: farcasterReward,
-} as const satisfies Partial<Rewards>
+} as const
+
+export default rewards
 
 export * from "./types"
 export * from "./constants"

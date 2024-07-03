@@ -15,7 +15,7 @@ const usePolygonIDCardProps = () => {
         <Img src={rewards.POLYGON_ID.imageUrl} boxSize={10} color="white" />
       </Circle>
     ),
-    info: !rolePlatform && "Onchain & zero-knowledge",
+    info: !rolePlatform ? "Onchain & zero-knowledge" : undefined,
   }
 }
 

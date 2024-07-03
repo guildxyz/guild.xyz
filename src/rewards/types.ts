@@ -35,7 +35,7 @@ export enum PlatformAsRewardRestrictions {
 }
 
 export type RewardData = {
-  icon: ForwardRefExoticComponent<IconProps & RefAttributes<SVGSVGElement>>
+  icon?: ForwardRefExoticComponent<IconProps & RefAttributes<SVGSVGElement>>
   imageUrl?: string
   name: string
   colorScheme: ThemingProps["colorScheme"]
@@ -47,11 +47,11 @@ export type RewardData = {
    */
   autoRewardSetup?: boolean
   cardSettingsComponent?: CardSettingsComponent
-  cardMenuComponent?: (props) => JSX.Element
-  cardWarningComponent?: (props) => JSX.Element
-  cardButton?: (props) => JSX.Element
+  cardMenuComponent?: (props: any) => JSX.Element
+  cardWarningComponent?: (props: any) => JSX.Element
+  cardButton?: (props: any) => JSX.Element
   AddRewardPanel?: ComponentType<AddRewardPanelProps>
-  RewardPreview?: ComponentType<PropsWithChildren<unknown>>
+  RewardPreview?: ComponentType<PropsWithChildren>
   RoleCardComponent?: ComponentType<RewardProps>
   isPlatform?: boolean
   asRewardRestriction: PlatformAsRewardRestrictions
@@ -70,11 +70,13 @@ export type AddRewardPanelProps = {
   skipSettings?: boolean
 }
 
-export type CardPropsHook = (guildPlatform: GuildPlatformWithOptionalId) => {
-  type: PlatformName
-  name: string
-  image?: string | JSX.Element
-  info?: string | JSX.Element
-  link?: string
-  shouldHide?: boolean
-}
+export type CardPropsHook = (guildPlatform: GuildPlatformWithOptionalId) =>
+  | {
+      type: PlatformName
+      name: string
+      image?: string | JSX.Element
+      info?: string | JSX.Element
+      link?: string
+      shouldHide?: boolean
+    }
+  | undefined

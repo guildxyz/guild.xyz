@@ -8,7 +8,6 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import { atom, useAtomValue } from "jotai"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import rewards, { modalSizeForPlatform } from "rewards"
-import { RewardData } from "rewards/types"
 import { RoleFormType } from "types"
 import { AddRewardProvider, useAddRewardContext } from "../AddRewardContext"
 import { ClientStateRequirementHandlerProvider } from "../RequirementHandlerContext"
@@ -66,9 +65,7 @@ const AddRewardButton = () => {
   const { isStuck } = useIsTabsStuck()
   const { textColor, buttonColorScheme } = useThemeContext()
 
-  // TODO: once we separate rewards from platforms, we should be able to use this without ??, and it should properly infer types too.
-  const rewardConfig = rewards[selection] ?? {}
-  const AddRewardPanel = rewardConfig.AddRewardPanel as RewardData["AddRewardPanel"]
+  const { AddRewardPanel } = rewards[selection]
   const showErrorToast = useShowErrorToast()
 
   const isRewardSetupStep = selection && step !== "HOME" && step !== "SELECT_ROLE"
@@ -115,8 +112,8 @@ const AddRewardButton = () => {
             step === "SELECT_ROLE"
               ? "2xl"
               : isRewardSetupStep
-              ? modalSizeForPlatform(selection)
-              : "4xl"
+                ? modalSizeForPlatform(selection)
+                : "4xl"
           }
           scrollBehavior="inside"
           colorScheme="dark"
