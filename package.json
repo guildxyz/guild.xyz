@@ -5,7 +5,7 @@
   "scripts": {
     "prepare": "npm run snyk-protect && husky install",
     "dev": "next dev",
-    "build": "TS_CONFIG_PATH='./tsconfig.build.json' next build",
+    "build": "TS_CONFIG_PATH='./tsconfig.build.json' NODE_OPTIONS='--max-old-space-size=4096' next build",
     "start": "next start",
     "type-check": "tsc --pretty --noEmit --incremental false --project './tsconfig.build.json'",
     "format": "prettier --write .",
