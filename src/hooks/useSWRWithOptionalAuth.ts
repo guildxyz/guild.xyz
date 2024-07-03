@@ -1,8 +1,8 @@
 import { useUserPublic } from "components/[guild]/hooks/useUser"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import useSWR, { mutate, MutatorOptions, SWRResponse, unstable_serialize } from "swr"
 import useSWRImmutable from "swr/immutable"
-import { useFetcherWithSign } from "utils/fetcher"
 
 type SWRSettings = Parameters<typeof useSWR>[2]
 

@@ -1,10 +1,10 @@
 import { Schemas } from "@guildxyz/types"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useRequirements from "components/[guild]/hooks/useRequirements"
+import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import { RequirementCreateResponseOutput } from "types"
-import { useFetcherWithSign } from "utils/fetcher"
 import preprocessRequirement from "utils/preprocessRequirement"
 
 const useCreateRequirement = (
