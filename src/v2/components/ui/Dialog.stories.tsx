@@ -14,13 +14,11 @@ import {
 } from "./Dialog"
 
 const DialogExample = ({
-  scrollableContent,
   size,
   longContent,
   showHeader = true,
   showFooter,
 }: {
-  scrollableContent?: DialogContentProps["scrollable"]
   size?: DialogContentProps["size"]
   longContent?: ComponentProps<typeof DynamicDialogContent>["longContent"]
   showHeader?: boolean
@@ -28,7 +26,7 @@ const DialogExample = ({
 }) => (
   <Dialog defaultOpen>
     <DialogTrigger>Open dialog</DialogTrigger>
-    <DialogContent scrollable={scrollableContent} size={size}>
+    <DialogContent size={size}>
       {showHeader && (
         <DialogHeader>
           <DialogTitle>Awesome dialog</DialogTitle>
@@ -56,18 +54,12 @@ type Story = StoryObj<typeof DialogExample>
 
 export const Default: Story = {
   args: {
-    scrollableContent: false,
     longContent: false,
     size: "md",
     showHeader: true,
     showFooter: false,
   },
   argTypes: {
-    scrollableContent: {
-      control: {
-        disable: true,
-      },
-    },
     size: {
       control: {
         type: "select",
@@ -75,15 +67,6 @@ export const Default: Story = {
       options: ["sm", "md", "lg", "xl", "2xl", "3xl", "4xl"],
     },
   },
-}
-
-export const ScrollableContent: Story = {
-  args: {
-    ...Default.args,
-    scrollableContent: true,
-    longContent: true,
-  },
-  argTypes: Default.argTypes,
 }
 
 const DynamicDialogContent = ({ longContent }: { longContent?: boolean }) => {
