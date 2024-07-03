@@ -20,7 +20,7 @@ import { Alert } from "components/common/Modal"
 import useToast from "hooks/useToast"
 import { atom, useAtom } from "jotai"
 import { useRef } from "react"
-// import rewards from "rewards"
+import rewards from "rewards"
 import { PlatformName } from "types"
 import capitalize from "utils/capitalize"
 import shortenHex from "utils/shortenHex"
@@ -37,7 +37,7 @@ const PlatformMergeErrorAlert = () => {
   const { addressOrDomain, platformName } = state || {}
   const onClose = () => setState(false)
 
-  const socialAccountName = "social" // rewards[platformName]?.name ?? "social"
+  const socialAccountName = rewards[platformName]?.name ?? "social"
   const { onConnect, isLoading } = useConnectPlatform(
     platformName ?? "DISCORD",
     () => {
