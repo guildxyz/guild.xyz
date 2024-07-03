@@ -1,7 +1,7 @@
 import {
   accountModalAtom,
   walletSelectorModalAtom,
-} from "@/components/Providers/Providers"
+} from "@/components/Providers/atoms"
 import {
   Alert,
   AlertDescription,

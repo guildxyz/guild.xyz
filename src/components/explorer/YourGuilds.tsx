@@ -1,4 +1,4 @@
-import { walletSelectorModalAtom } from "@/components/Providers/Providers"
+import { walletSelectorModalAtom } from "@/components/Providers/atoms"
 import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { Box, HStack, Img, Stack, Text } from "@chakra-ui/react"
 import { Plus, SignIn } from "@phosphor-icons/react"

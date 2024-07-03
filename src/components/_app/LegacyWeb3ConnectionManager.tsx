@@ -1,4 +1,4 @@
-import { walletSelectorModalAtom } from "@/components/Providers/Providers"
+import { walletSelectorModalAtom } from "@/components/Providers/atoms"
 import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { Web3ConnectionManagerBase } from "@/components/Web3ConnectionManager/Web3ConnectionManager"
 import { useSetAtom } from "jotai"

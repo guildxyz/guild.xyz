@@ -15,18 +15,6 @@ import { PostHogProvider } from "./PostHogProvider"
 
 const queryClient = new QueryClient()
 
-// Atoms for global modals - TODO: move the types to another file
-
-export type AddressLinkParams = {
-  userId?: number
-  address?: `0x${string}`
-}
-export const addressLinkParamsAtom = atom<AddressLinkParams>({
-  userId: undefined,
-  address: undefined,
-})
-export const walletLinkHelperModalAtom = atom(false)
-
 // TODO: add AppErrorBoundary
 export function Providers({ children }: { children: React.ReactNode }) {
   return (

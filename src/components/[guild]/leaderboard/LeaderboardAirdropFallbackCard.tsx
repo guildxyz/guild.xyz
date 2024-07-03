@@ -1,4 +1,4 @@
-import { walletSelectorModalAtom } from "@/components/Providers/Providers"
+import { walletSelectorModalAtom } from "@/components/Providers/atoms"
 import { Center, Collapse, Img, useColorModeValue } from "@chakra-ui/react"
 import { SignIn, X } from "@phosphor-icons/react"
 import ActionCard from "components/common/ActionCard"
