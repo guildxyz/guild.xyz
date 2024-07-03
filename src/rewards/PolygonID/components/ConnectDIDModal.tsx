@@ -23,18 +23,19 @@ import { useEffect } from "react"
 import useSWR from "swr"
 import useSWRImmutable from "swr/immutable"
 import useConnectedDID from "../hooks/useConnectedDID"
-import { useMintPolygonIDProofContext } from "./MintPolygonIDProofProvider"
 
 type Props = {
   isOpen: boolean
   onClose: () => void
+  onMintPolygonIDProofModalOpen: () => void
 }
 
-const ConnectDIDModal = ({ isOpen, onClose }: Props) => {
+const ConnectDIDModal = ({
+  isOpen,
+  onClose,
+  onMintPolygonIDProofModalOpen,
+}: Props) => {
   const { id: userId } = useUser()
-
-  const { onMintPolygonIDProofModalOpen } = useMintPolygonIDProofContext()
-
   const toast = useToast()
 
   const fetcherWithSign = useFetcherWithSign()
