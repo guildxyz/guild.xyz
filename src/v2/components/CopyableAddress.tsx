@@ -1,8 +1,14 @@
 import { cn } from "@/lib/utils"
-import { ButtonHTMLAttributes } from "react"
+import { ButtonHTMLAttributes, useRef, useState } from "react"
 import { useCopyToClipboard } from "usehooks-ts"
 import shortenHex from "utils/shortenHex"
 import { Button } from "./ui/Button"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "./ui/Tooltip"
 
 interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   address: string
@@ -17,24 +23,34 @@ const CopyableAddress = ({
   className,
   ...props
 }: Props): JSX.Element => {
-  const [copiedText, copyToClipboard] = useCopyToClipboard()
+  const buttonRef = useRef<HTMLButtonElement>(null)
+  const [, copyToClipboard] = useCopyToClipboard()
+  const [forceOpenTooltip, setForceOpenTooltip] = useState(false)
 
   return (
-    // <Tooltip
-    //   placement="top"
-    //   label={!!copiedText ? "Copied" : "Click to copy address"}
-    //   closeOnClick={false}
-    //   hasArrow
-    // >
-    <Button
-      onClick={() => copyToClipboard(address)}
-      variant="unstyled"
-      className={cn("h-max !px-0 !py-0", className)}
-      {...props}
-    >
-      {domain || shortenHex(address, decimals)}
-    </Button>
-    // </Tooltip>
+    <TooltipProvider>
+      <Tooltip defaultOpen={false} open={forceOpenTooltip || undefined}>
+        <TooltipTrigger asChild>
+          <Button
+            ref={buttonRef}
+            onClick={() =>
+              copyToClipboard(address).then(() => {
+                setForceOpenTooltip(true)
+                setTimeout(() => setForceOpenTooltip(false), 3000)
+              })
+            }
+            variant="unstyled"
+            className={cn("h-max !px-0 !py-0", className)}
+            {...props}
+          >
+            {domain || shortenHex(address, decimals)}
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>
+          <span>{forceOpenTooltip ? "Copied" : "Click to copy address"}</span>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   )
 }
 
