@@ -9,7 +9,6 @@ import useContractCallCardProps from "./useContractCallCardProps"
 
 export default {
   icon: Photo,
-  imageUrl: "/platforms/nft.png",
   name: "NFT",
   colorScheme: "cyan",
   gatedEntity: "",

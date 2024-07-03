@@ -9,7 +9,6 @@ import useSecretTextCardProps from "./useSecretTextCardProps"
 
 export default {
   icon: Box,
-  imageUrl: "/platforms/text.png",
   name: "Secret",
   colorScheme: "gray",
   gatedEntity: "",

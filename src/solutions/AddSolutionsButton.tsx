@@ -1,8 +1,5 @@
 import {
-  Circle,
-  HStack,
   Heading,
-  Icon,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -11,10 +8,9 @@ import {
   SimpleGrid,
   Stack,
   Text,
-  useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
-import { IconProps, Plus } from "@phosphor-icons/react"
+import { Plus } from "@phosphor-icons/react"
 import {
   AddRewardForm,
   defaultValues,
@@ -32,17 +28,14 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
-import DisplayCard from "components/common/DisplayCard"
 import { Modal } from "components/common/Modal"
-import PlatformSelectButton from "components/create-guild/PlatformsGrid/components/PlatformSelectButton"
 import dynamic from "next/dynamic"
-import Image from "next/image"
-import { ComponentType, RefAttributes, useState } from "react"
+import { useState } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import rewards, { modalSizeForPlatform } from "rewards"
 import { AddRewardPanelLoadingSpinner } from "rewards/components/AddRewardPanelLoadingSpinner"
 import { PlatformName, PlatformType } from "types"
-import SolutionSelectButton from "./SolutionSelectButton"
+import SolutionCard from "./SolutionCard"
 
 const solutions = {
   LIQUIDITY: dynamic(
@@ -53,6 +46,8 @@ const solutions = {
     }
   ),
 }
+
+type Solutions = keyof typeof solutions
 
 const AddSolutionsButton = () => {
   const { selection, step, isOpen, onOpen, setStep, onClose, setSelection } =
@@ -118,24 +113,18 @@ const AddSolutionsButton = () => {
     setStep("REWARD_SETUP")
   }
 
-  const getPlatformSelectButton = ({
-    title,
-    description,
-    platform,
-  }: {
-    title: string
-    description?: string
-    platform: PlatformName
-  }) => (
-    <PlatformSelectButton
-      platform={platform}
-      title={title}
-      description={description}
-      icon={rewards[platform].icon}
-      imageUrl={rewards[platform].imageUrl}
-      onSelection={onSelectReward}
-    />
-  )
+  const onSelectSolution = (solution: Solutions) => {
+    const AddSolutionPanel = solutions[solution]
+    setAddPanel(
+      <AddSolutionPanel
+        onClose={(closeAll) => {
+          if (closeAll) handleClose()
+          setStep("HOME")
+        }}
+      />
+    )
+    setStep("SOLUTION_SETUP")
+  }
 
   const showPolygonId = !guildPlatforms?.some(
     (gp) => gp.platformId === PlatformType.POLYGON_ID
@@ -181,91 +170,143 @@ const AddSolutionsButton = () => {
             </ModalHeader>
 
             <ModalBody className="custom-scrollbar">
-              <SimpleGrid columns={{ base: 1, md: 2 }} gap={{ base: 4, md: 5 }}>
-                <SolutionCard
-                  title="Token liquidity program"
-                  description="Reward users with points for providing liquidity to your token."
-                  imageUrl="/solutions/liquidity.png"
-                  bgImageUrl="/solutions/nft-background.png"
-                />
+              <Stack spacing={8}>
+                <section>
+                  <Heading
+                    textColor={"GrayText"}
+                    fontSize={"large"}
+                    fontWeight={"medium"}
+                    mb={3}
+                  >
+                    Memberships
+                  </Heading>
+                  <SimpleGrid columns={{ base: 1, md: 2 }} gap={{ base: 4, md: 5 }}>
+                    <SolutionCard
+                      title="Discord membership"
+                      description="Exclusive Discord roles for accessing your server and channels."
+                      imageUrl="/platforms/discord.png"
+                      bgImageUrl="/solutions/nft-background.png"
+                      onClick={() => onSelectReward("DISCORD")}
+                    />
+                    <SolutionCard
+                      title="Telegram group gating"
+                      description="Start your exclusive token-gated Telegram group."
+                      imageUrl="/platforms/telegram.png"
+                      bgImageUrl="/solutions/nft-background.png"
+                      onClick={() => onSelectReward("TELEGRAM")}
+                    />
+                    <SolutionCard
+                      title="Gather Town gating"
+                      description="Gather brings the best of in-person collaboration to distributed teams."
+                      imageUrl="/platforms/gather.png"
+                      bgImageUrl="/solutions/nft-background.png"
+                      onClick={() => onSelectReward("GATHER_TOWN")}
+                    />
+                    <SolutionCard
+                      title="Google Docs gating"
+                      description="Provide exclusive access to Google files for users who meet specific requirements."
+                      imageUrl="/platforms/google.png"
+                      bgImageUrl="/solutions/nft-background.png"
+                      onClick={() => onSelectReward("GOOGLE")}
+                    />
+                    <SolutionCard
+                      title="GitHub repository gating"
+                      description="Grant access to a private codebase for qualifying contributors."
+                      imageUrl="/platforms/github.png"
+                      bgImageUrl="/solutions/nft-background.png"
+                      onClick={() => onSelectReward("GITHUB")}
+                    />
+                  </SimpleGrid>
+                </section>
+                <section>
+                  <Heading
+                    textColor={"GrayText"}
+                    fontSize={"large"}
+                    fontWeight={"medium"}
+                    mb={3}
+                  >
+                    Tokens
+                  </Heading>
+                  <SimpleGrid columns={{ base: 1, md: 2 }} gap={{ base: 4, md: 5 }}>
+                    <SolutionCard
+                      title="NFT Drop"
+                      description="Launch NFT sales or open editions with specific collection requirements."
+                      imageUrl="/platforms/nft.png"
+                      bgImageUrl="/solutions/nft-background.png"
+                      onClick={() => onSelectReward("CONTRACT_CALL")}
+                    />
+                    <SolutionCard
+                      title="Token liquidity program"
+                      description="Reward users with points for providing liquidity to your token."
+                      imageUrl="/solutions/liquidity.png"
+                      bgImageUrl="/solutions/nft-background.png"
+                      onClick={() => onSelectSolution("LIQUIDITY")}
+                    />
+                  </SimpleGrid>
+                </section>
 
-                {getPlatformSelectButton({
-                  title: "Points and leaderboard",
-                  description: "Launch XP, Stars, Keys, Gems, or whatever you need",
-                  platform: "POINTS",
-                })}
+                <section>
+                  <Heading
+                    textColor={"GrayText"}
+                    fontSize={"large"}
+                    fontWeight={"medium"}
+                    mb={3}
+                  >
+                    Engagement
+                  </Heading>
+                  <SimpleGrid columns={{ base: 1, md: 2 }} gap={{ base: 4, md: 5 }}>
+                    <SolutionCard
+                      title="POAP Distribution"
+                      description="Reward your attendees with POAPs (link)"
+                      imageUrl="/platforms/poap.png"
+                      bgImageUrl="/solutions/nft-background.png"
+                      onClick={() => onSelectReward("POAP")}
+                    />
+                    <SolutionCard
+                      title="Points and Leaderboard"
+                      description="Launch XP, Stars, Keys, Gems, or any other rewards you need.."
+                      imageUrl="/platforms/points.png"
+                      bgImageUrl="/solutions/nft-background.png"
+                      onClick={() => onSelectReward("POINTS")}
+                    />
+                    <SolutionCard
+                      title="Forms & Surveys"
+                      description="Collect verified information, feedback, and applications, and reward your community."
+                      imageUrl="/platforms/form.png"
+                      bgImageUrl="/solutions/nft-background.png"
+                      onClick={() => onSelectReward("FORM")}
+                    />
+                    <SolutionCard
+                      title="Text or link distribution"
+                      description="Distribute secret messages or promotion codes."
+                      imageUrl="/platforms/text.png"
+                      bgImageUrl="/solutions/nft-background.png"
+                      onClick={() => onSelectReward("TEXT")}
+                    />
+                  </SimpleGrid>
+                </section>
 
-                {getPlatformSelectButton({
-                  title: "NFT drop",
-                  description: "Sales, open editions, and gating",
-                  platform: "CONTRACT_CALL",
-                })}
-
-                <SolutionSelectButton
-                  title="Token liquidity program"
-                  description="Points reward for liquidity providers"
-                  imageUrl="/solutions/liquidity.png"
-                  onSelection={() => {
-                    const AddSolutionPanel = solutions.LIQUIDITY
-                    setAddPanel(
-                      <AddSolutionPanel
-                        onClose={(closeAll) => {
-                          if (closeAll) handleClose()
-                          setStep("HOME")
-                        }}
-                      />
-                    )
-                    setStep("SOLUTION_SETUP")
-                  }}
-                />
-
-                {getPlatformSelectButton({
-                  title: "Web3 form",
-                  description: "Quizzes, surveys, or simple questions",
-                  platform: "FORM",
-                })}
-
-                {getPlatformSelectButton({
-                  title: "Discord role gating",
-                  platform: "DISCORD",
-                })}
-
-                {getPlatformSelectButton({
-                  title: "Telegram group gating",
-                  platform: "TELEGRAM",
-                })}
-
-                {getPlatformSelectButton({
-                  title: "POAP distribution",
-                  platform: "POAP",
-                })}
-
-                {getPlatformSelectButton({
-                  title: "Text or link distribution",
-                  platform: "TEXT",
-                })}
-
-                {showPolygonId &&
-                  getPlatformSelectButton({
-                    title: "PolygonID credentials",
-                    platform: "POLYGON_ID",
-                  })}
-
-                {getPlatformSelectButton({
-                  title: "Gather Town gating",
-                  platform: "GATHER_TOWN",
-                })}
-
-                {getPlatformSelectButton({
-                  title: "Google Docs gating",
-                  platform: "GOOGLE",
-                })}
-
-                {getPlatformSelectButton({
-                  title: "GitHub repository gating",
-                  platform: "GITHUB",
-                })}
-              </SimpleGrid>
+                <section>
+                  <Heading
+                    textColor={"GrayText"}
+                    fontSize={"large"}
+                    fontWeight={"medium"}
+                    mb={3}
+                  >
+                    Sybil protection
+                  </Heading>
+                  <SimpleGrid columns={{ base: 1, md: 2 }} gap={{ base: 4, md: 5 }}>
+                    {/* TODO: Disable if !showPolygonId */}
+                    <SolutionCard
+                      title="PolygonID credentials"
+                      description="Reward your attendees with POAPs (link)"
+                      imageUrl="/requirementLogos/polygonId.svg"
+                      bgImageUrl="/solutions/nft-background.png"
+                      onClick={() => onSelectReward("POLYGON_ID")}
+                    />
+                  </SimpleGrid>
+                </section>
+              </Stack>
             </ModalBody>
           </ModalContent>
         )}
@@ -294,93 +335,5 @@ const AddSolutionsButtonWrapper = (): JSX.Element => (
     <AddSolutionsButton />
   </AddRewardProvider>
 )
-
-const SolutionCard = ({
-  title,
-  description,
-  imageUrl,
-  bgImageUrl,
-  icon,
-}: {
-  title: string
-  description?: string
-  imageUrl?: string
-  bgImageUrl?: string
-  icon?: ComponentType<IconProps & RefAttributes<SVGSVGElement>>
-}) => {
-  const circleBgColor = useColorModeValue("gray.100", "gray.600")
-  const iconColor = useColorModeValue("black", "white")
-
-  return (
-    <>
-      <DisplayCard
-        boxShadow={"none"}
-        px={4}
-        py={4}
-        position="relative"
-        outline="1px solid white"
-        outlineColor="whiteAlpha.300"
-        outlineOffset="-1px"
-        _before={{
-          content: `""`,
-          position: "absolute",
-          top: 0,
-          left: 0,
-          bg: `url('${bgImageUrl}')`,
-          bgRepeat: "no-repeat",
-          bgPosition: "center",
-          bgSize: "cover",
-          width: "100%",
-          height: "100%",
-          opacity: 0.3,
-          transition: "0.3s",
-          filter: `blur(3px) saturate(50%)`,
-        }}
-        _hover={{
-          _before: { opacity: 0.5, filter: `blur(3px) saturate(80%)` },
-        }}
-      >
-        <Stack spacing={3} zIndex={1}>
-          <HStack>
-            {imageUrl ? (
-              <Circle
-                size="12"
-                pos="relative"
-                overflow="hidden"
-                bgColor={circleBgColor}
-              >
-                <Image src={imageUrl} alt="Guild logo" fill sizes="3rem" />
-              </Circle>
-            ) : (
-              <Circle
-                bgColor={circleBgColor}
-                size="12"
-                pos="relative"
-                overflow="hidden"
-              >
-                <Icon as={icon} boxSize={5} weight="regular" color={iconColor} />
-              </Circle>
-            )}
-
-            <Heading
-              fontSize="md"
-              fontWeight="bold"
-              letterSpacing="wide"
-              maxW="full"
-              noOfLines={1}
-            >
-              {title}
-            </Heading>
-          </HStack>
-          {description && (
-            <Text colorScheme="gray" lineHeight={1.33}>
-              {description}
-            </Text>
-          )}
-        </Stack>
-      </DisplayCard>
-    </>
-  )
-}
 
 export default AddSolutionsButtonWrapper

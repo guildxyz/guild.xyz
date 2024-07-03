@@ -9,7 +9,6 @@ import useFormCardProps from "./useFormCardProps"
 
 export default {
   icon: PencilSimpleLine,
-  imageUrl: "/platforms/form.png",
   name: "Form",
   colorScheme: "primary",
   gatedEntity: "",

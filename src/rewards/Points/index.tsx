@@ -11,7 +11,6 @@ import usePointsCardProps from "./usePointsCardProps"
 
 export default {
   icon: Star,
-  imageUrl: "/platforms/points.png",
   name: "Points",
   colorScheme: "gray",
   gatedEntity: "",
