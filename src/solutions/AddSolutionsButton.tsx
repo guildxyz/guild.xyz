@@ -170,7 +170,7 @@ const AddSolutionsButton = () => {
 
   const categoryFormMethods = useForm({ mode: "all" })
   const {
-    field: { ref: _ref, ...categoryField },
+    field: { ref, ...categoryField },
   } = useController({
     control: categoryFormMethods.control,
     name: "category",
@@ -370,9 +370,8 @@ const Category = ({
           mb={filteredItems.length === 0 ? 2 : 8}
         >
           {filteredItems.map((item, index) => (
-            <CardMotionWrapper>
+            <CardMotionWrapper key={item.title}>
               <SolutionCard
-                key={item.title}
                 {...item}
                 onClick={
                   item.handlerType === "reward"

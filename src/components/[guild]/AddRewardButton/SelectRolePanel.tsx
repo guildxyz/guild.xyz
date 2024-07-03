@@ -67,7 +67,7 @@ const SelectRolePanel = ({
 
   const goBack = () => {
     if (!rewards[selection].autoRewardSetup) methods.reset(defaultValues)
-    selection === "POLYGON_ID" ? setStep("HOME") : setStep("REWARD_SETUP")
+    setStep(selection === "POLYGON_ID" ? "HOME" : "REWARD_SETUP")
   }
 
   return (
