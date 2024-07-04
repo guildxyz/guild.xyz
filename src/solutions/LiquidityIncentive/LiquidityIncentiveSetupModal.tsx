@@ -1,11 +1,18 @@
 import {
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
   Box,
   Collapse,
   HStack,
+  Icon,
   IconButton,
   ModalBody,
   ModalCloseButton,
   ModalContent,
+  ModalFooter,
   ModalHeader,
   Step,
   StepIcon,
@@ -16,10 +23,13 @@ import {
   StepTitle,
   Stepper,
   Text,
+  chakra,
+  useColorModeValue,
   useSteps,
 } from "@chakra-ui/react"
-import { ArrowLeft } from "@phosphor-icons/react"
+import { ArrowLeft, Info } from "@phosphor-icons/react"
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
+import { triggerChat } from "components/_app/IntercomProvider"
 import { FormProvider, useForm } from "react-hook-form"
 import { UniswapChains } from "requirements/Uniswap/hooks/useParsePoolChain"
 import SelectLiquidityPoolStep from "./components/SelectLiquidityPoolStep"
@@ -104,6 +114,8 @@ const LiquidityIncentiveSetupModal = ({
     count: steps.length,
   })
 
+  const footerBg = useColorModeValue("blackAlpha.100", "blackAlpha.400")
+
   return (
     <ModalContent>
       <FormProvider {...methods}>
@@ -178,6 +190,39 @@ const LiquidityIncentiveSetupModal = ({
           </Stepper>
         </ModalBody>
       </FormProvider>
+      <ModalFooter pt={6} pb={6} bg={footerBg} border={"none"}>
+        <Accordion allowToggle w="full">
+          <AccordionItem border={"none"}>
+            <AccordionButton
+              display={"flex"}
+              rounded={"lg"}
+              fontWeight={"semibold"}
+              px={0}
+              opacity={0.5}
+              _hover={{ opacity: 1 }}
+            >
+              <Icon as={Info} mr={2} />
+              This solution uses Uniswap v3
+              <AccordionIcon ml={"auto"} />
+            </AccordionButton>
+            <AccordionPanel>
+              <Text color={"GrayText"}>
+                Please note that our liquidity incentive setup flow currently
+                supports only Uniswap V3. If you require assistance with other
+                liquidity protocols or platforms, please{" "}
+                <chakra.span
+                  textDecoration={"underline"}
+                  _hover={{ cursor: "pointer" }}
+                  onClick={() => triggerChat()}
+                >
+                  contact our support team
+                </chakra.span>{" "}
+                for further assistance.
+              </Text>
+            </AccordionPanel>
+          </AccordionItem>
+        </Accordion>
+      </ModalFooter>
     </ModalContent>
   )
 }
