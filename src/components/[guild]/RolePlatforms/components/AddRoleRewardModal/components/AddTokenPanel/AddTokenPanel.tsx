@@ -16,7 +16,7 @@ import { useTokenRewards } from "components/[guild]/AccessHub/hooks/useTokenRewa
 import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hooks/useAddRewardDiscardAlert"
 import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import { useRequirementHandlerContext } from "components/[guild]/RequirementHandlerContext"
-import { AddRewardPanelProps } from "platforms/rewards"
+import { AddRewardPanelProps } from "rewards"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformGuildData, PlatformType } from "types"
 import { ERC20_CONTRACTS } from "utils/guildCheckout/constants"

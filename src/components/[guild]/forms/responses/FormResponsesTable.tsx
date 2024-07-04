@@ -18,7 +18,7 @@ import FormResponsesTbody from "components/[guild]/forms/responses/FormResponses
 import { useRouter } from "next/router"
 import useFormSubmissions, {
   FormSubmission,
-} from "platforms/Forms/hooks/useFormSubmissions"
+} from "rewards/Forms/hooks/useFormSubmissions"
 import { useEffect, useMemo, useRef, useState } from "react"
 
 const columnHelper = createColumnHelper<FormSubmission>()

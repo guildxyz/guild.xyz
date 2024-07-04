@@ -1,6 +1,6 @@
 import { Box, FormControl, HStack, Img, Input, Stack, Text } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import RewardImagePicker from "platforms/SecretText/SecretTextDataForm/components/RewardImagePicker"
+import RewardImagePicker from "rewards/SecretText/SecretTextDataForm/components/RewardImagePicker"
 import { useFormContext } from "react-hook-form"
 import Star from "static/icons/star.svg"
 

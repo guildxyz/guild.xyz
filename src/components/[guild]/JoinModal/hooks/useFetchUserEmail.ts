@@ -1,6 +1,6 @@
 import useUser from "components/[guild]/hooks/useUser"
+import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import { User } from "types"
-import { useFetcherWithSign } from "utils/fetcher"
 
 export default function useFetchUserEmail() {
   const { id } = useUser()

@@ -23,7 +23,7 @@ const useUsersFuelGuildPins = (disabled = false) => {
   const fetchFuelGuildPins = async () => []
   // TODO
   // const contract = GuildPinContractAbi__factory.connect(
-  //   FUEL_GUILD_PIN_CONTRACT_ID,
+  //   FUEL_GUILD_PIN_CONTRACT_ID_0X,
   //   wallet
   // )
 

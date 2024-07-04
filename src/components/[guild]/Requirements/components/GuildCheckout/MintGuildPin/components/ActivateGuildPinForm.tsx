@@ -1,9 +1,9 @@
-import { env } from "env"
 import { Checkbox, Stack, useColorModeValue } from "@chakra-ui/react"
 import useEditGuild from "components/[guild]/EditGuild/hooks/useEditGuild"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import useCreateRole from "components/create-guild/hooks/useCreateRole"
+import { env } from "env"
 import useToast from "hooks/useToast"
 import { FormProvider, useController, useForm, useWatch } from "react-hook-form"
 import { traitsSupportedChains } from "requirements/Nft/NftForm"
@@ -100,11 +100,10 @@ const ActivateGuildPinForm = (): JSX.Element => {
       <Stack w="full" spacing={4}>
         <ChainPicker
           controlName="chain"
-          // supportedChains={[
-          //   ...(Object.keys(GUILD_PIN_CONTRACTS) as Chain[]),
-          //   "FUEL",
-          // ]}
-          supportedChains={Object.keys(GUILD_PIN_CONTRACTS) as Chain[]}
+          supportedChains={[
+            ...(Object.keys(GUILD_PIN_CONTRACTS) as Chain[]),
+            "FUEL",
+          ]}
           showDivider={false}
           menuPlacement="top"
         />

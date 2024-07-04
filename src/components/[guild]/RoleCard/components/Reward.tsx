@@ -11,6 +11,7 @@ import {
   Wrap,
   useColorModeValue,
 } from "@chakra-ui/react"
+import { ArrowSquareOut, LockSimple } from "@phosphor-icons/react"
 import usePlatformAccessButton from "components/[guild]/AccessHub/components/usePlatformAccessButton"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import { ApiRequirementHandlerProvider } from "components/[guild]/RequirementHandlerContext"
@@ -21,10 +22,9 @@ import useMembership, {
   useRoleMembership,
 } from "components/explorer/hooks/useMembership"
 import { Transition, motion } from "framer-motion"
-import { ArrowSquareOut, LockSimple } from "phosphor-react"
-import GoogleCardWarning from "platforms/Google/GoogleCardWarning"
-import rewards from "platforms/rewards"
 import { PropsWithChildren, ReactNode, useMemo, useState } from "react"
+import rewards from "rewards"
+import GoogleCardWarning from "rewards/Google/GoogleCardWarning"
 import { GuildPlatform, PlatformType, Role, RolePlatform } from "types"
 import capitalize from "utils/capitalize"
 

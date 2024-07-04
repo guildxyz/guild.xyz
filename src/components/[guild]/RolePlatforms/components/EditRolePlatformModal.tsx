@@ -8,7 +8,7 @@ import {
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
-import rewards from "platforms/rewards"
+import rewards from "rewards"
 import { createContext, useContext, useRef, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformType, RoleFormType, RolePlatform } from "types"

@@ -15,11 +15,11 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
+import { Question } from "@phosphor-icons/react"
 import useUser from "components/[guild]/hooks/useUser"
 import { SectionProps } from "components/common/Section"
-import { Question } from "phosphor-react"
-import rewards from "platforms/rewards"
 import { PropsWithChildren, useMemo } from "react"
+import rewards from "rewards"
 import { PlatformName } from "types"
 import useDelegateVaults from "../../delegate/useDelegateVaults"
 import LinkAddressButton from "./LinkAddressButton"

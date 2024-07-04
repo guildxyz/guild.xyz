@@ -3,10 +3,7 @@ import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hoo
 import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
-import rewards, {
-  AddRewardPanelProps,
-  modalSizeForPlatform,
-} from "platforms/rewards"
+import rewards, { AddRewardPanelProps, modalSizeForPlatform } from "rewards"
 import { useWatch } from "react-hook-form"
 import { RoleFormType } from "types"
 import SelectRewardPanel from "./SelectRewardPanel"
