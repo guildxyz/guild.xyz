@@ -32,6 +32,12 @@ const SolutionCard = ({
 
   return (
     <DisplayCard
+      as="button"
+      _focus={{
+        outlineWidth: "4px",
+        outlineOffset: "-4px",
+      }}
+      textAlign="left"
       boxShadow={"none"}
       bg={cardBg}
       outline="1px solid"
