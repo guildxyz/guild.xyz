@@ -3,8 +3,8 @@ import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hoo
 import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
-import { AddRewardPanelProps } from "rewards"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
+import { AddRewardPanelProps } from "rewards"
 import { PlatformGuildData, PlatformType } from "types"
 import DefaultAddRewardPanelWrapper from "../../DefaultAddRewardPanelWrapper"
 import AddNewPointsType from "./components/AddNewPointsType"
@@ -117,8 +117,8 @@ const AddPointsPanel = ({ onAdd, onCancel }: AddRewardPanelProps) => {
             selectedExistingId={selectedExistingId}
             showCreateNew
             mb="5"
-            onDone={(id) => {
-              setValue("data.guildPlatformId", id)
+            onDone={(idToSet) => {
+              setValue("data.guildPlatformId", idToSet)
             }}
           />
         )}
