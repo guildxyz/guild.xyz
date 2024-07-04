@@ -36,6 +36,6 @@ export default {
   FARCASTER: farcasterReward,
 } as const satisfies Partial<Rewards>
 
-export * from "./types"
 export * from "./constants"
+export * from "./types"
 export * from "./utils"

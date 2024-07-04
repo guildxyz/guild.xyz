@@ -7,6 +7,7 @@ export default {
   name: "Farcaster",
   colorScheme: "FARCASTER",
   gatedEntity: "farcaster",
+  autoRewardSetup: false,
   isPlatform: true,
   asRewardRestriction: PlatformAsRewardRestrictions.NOT_APPLICABLE,
-} as const satisfies RewardData
+} satisfies RewardData

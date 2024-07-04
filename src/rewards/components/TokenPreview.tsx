@@ -1,12 +1,13 @@
+import { PropsWithChildren } from "react"
+import { useWatch } from "react-hook-form"
 import {
   TokenRewardProvider,
   useTokenRewardContext,
 } from "rewards/Token/TokenRewardContext"
-import { useWatch } from "react-hook-form"
 import { GuildPlatform } from "types"
 import RewardPreview from "./RewardPreview"
 
-const TokenPreview = ({ children }): JSX.Element => {
+const TokenPreview = ({ children }: PropsWithChildren): JSX.Element => {
   const { token, imageUrl } = useTokenRewardContext()
 
   return (
@@ -16,7 +17,7 @@ const TokenPreview = ({ children }): JSX.Element => {
   )
 }
 
-const TokenPreviewWrapper = ({ children }): JSX.Element => {
+const TokenPreviewWrapper = ({ children }: PropsWithChildren): JSX.Element => {
   const guildPlatform: GuildPlatform = useWatch({
     name: "rolePlatforms.0.guildPlatform",
   })

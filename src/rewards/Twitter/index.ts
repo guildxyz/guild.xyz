@@ -3,12 +3,14 @@ import XLogo from "static/icons/x.svg"
 
 export default {
   icon: XLogo,
+  imageUrl: null,
   name: "X",
   colorScheme: "TWITTER",
   gatedEntity: "account",
-  asRewardRestriction: PlatformAsRewardRestrictions.NOT_APPLICABLE,
+  autoRewardSetup: false,
   isPlatform: true,
-} as const satisfies RewardData
+  asRewardRestriction: PlatformAsRewardRestrictions.NOT_APPLICABLE,
+} satisfies RewardData
 
 export const twitterReward = {
   icon: XLogo,
@@ -16,5 +18,7 @@ export const twitterReward = {
   name: "X",
   colorScheme: "TWITTER",
   gatedEntity: "account",
+  autoRewardSetup: false,
+  isPlatform: false,
   asRewardRestriction: PlatformAsRewardRestrictions.NOT_APPLICABLE,
-}
+} satisfies RewardData
