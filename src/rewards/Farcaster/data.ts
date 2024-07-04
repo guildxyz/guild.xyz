@@ -1,12 +1,13 @@
 import { PlatformAsRewardRestrictions, RewardData } from "rewards/types"
 import FarcasterIcon from "static/socialIcons/farcaster.svg"
 
-export default {
+export const farcasterData = {
   icon: FarcasterIcon,
   imageUrl: "/requirementLogos/farcaster.png",
   name: "Farcaster",
   colorScheme: "FARCASTER",
   gatedEntity: "farcaster",
+  autoRewardSetup: false,
   isPlatform: true,
   asRewardRestriction: PlatformAsRewardRestrictions.NOT_APPLICABLE,
-} as const satisfies RewardData
+} satisfies RewardData
