@@ -36,15 +36,15 @@ const nextConfig = {
       )
     }
 
-    config.plugins.push(
-      new CircularDependencyPlugin({
-        exclude: /.next|node_modules/,
-        include: /src/,
-        // TODO: if all circular dependencies are resolved, set this argument to true
-        failOnError: false,
-        allowAsyncCycles: false,
-      })
-    )
+    // config.plugins.push(
+    //   new CircularDependencyPlugin({
+    //     exclude: /.next|node_modules/,
+    //     include: /src/,
+    //     // TODO: if all circular dependencies are resolved, set this argument to true
+    //     failOnError: false,
+    //     allowAsyncCycles: false,
+    //   })
+    // )
 
     return config
   },
