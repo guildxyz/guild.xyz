@@ -1,12 +1,12 @@
 import { PlatformAsRewardRestrictions, RewardData } from "rewards/types"
+import Box from "static/icons/box.svg"
 
-export default {
-  icon: null as unknown as RewardData["icon"],
-  imageUrl: "/platforms/poap.png",
-  name: "POAP",
-  colorScheme: "purple",
-  gatedEntity: "POAP",
+export const secretTextData = {
+  icon: Box,
+  name: "Secret",
+  colorScheme: "gray",
+  gatedEntity: "",
   autoRewardSetup: false,
   isPlatform: false,
   asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
-} satisfies RewardData
+} as const satisfies RewardData

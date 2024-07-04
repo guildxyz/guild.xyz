@@ -1,4 +1,3 @@
-import { PropsWithChildren } from "react"
 import { useWatch } from "react-hook-form"
 import {
   TokenRewardProvider,
@@ -6,6 +5,7 @@ import {
 } from "rewards/Token/TokenRewardContext"
 import { GuildPlatform } from "types"
 import RewardPreview from "./RewardPreview"
+import { PropsWithChildren } from "react"
 
 const TokenPreview = ({ children }: PropsWithChildren): JSX.Element => {
   const { token, imageUrl } = useTokenRewardContext()

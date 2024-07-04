@@ -1,7 +1,7 @@
 import { Buildings } from "@phosphor-icons/react"
 import { PlatformAsRewardRestrictions, RewardData } from "rewards/types"
 
-export default {
+export const gatherData = {
   icon: Buildings,
   imageUrl: "/platforms/gather.png",
   name: "Gather",
@@ -10,4 +10,4 @@ export default {
   autoRewardSetup: false,
   isPlatform: false,
   asRewardRestriction: PlatformAsRewardRestrictions.MULTIPLE_ROLES,
-} satisfies RewardData
+} as const satisfies RewardData

@@ -35,8 +35,8 @@ export enum PlatformAsRewardRestrictions {
 }
 
 export type RewardData = {
-  icon: ForwardRefExoticComponent<IconProps & RefAttributes<SVGSVGElement>>
-  imageUrl: string | null
+  icon?: ForwardRefExoticComponent<IconProps & RefAttributes<SVGSVGElement>>
+  imageUrl?: string
   name: string
   colorScheme: ThemingProps["colorScheme"]
   gatedEntity: string
@@ -52,11 +52,11 @@ export type RewardData = {
 export type RewardComponentsData = {
   cardPropsHook?: CardPropsHook
   cardSettingsComponent?: CardSettingsComponent
-  cardMenuComponent?: (props) => JSX.Element
-  cardWarningComponent?: (props) => JSX.Element
-  cardButton?: (props) => JSX.Element
+  cardMenuComponent?: (props: any) => JSX.Element
+  cardWarningComponent?: (props: any) => JSX.Element
+  cardButton?: (props: any) => JSX.Element
   AddRewardPanel?: ComponentType<AddRewardPanelProps>
-  RewardPreview?: ComponentType<PropsWithChildren<unknown>>
+  RewardPreview?: ComponentType<PropsWithChildren>
   RoleCardComponent?: ComponentType<RewardProps>
 }
 

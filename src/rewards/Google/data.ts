@@ -1,7 +1,7 @@
 import { GoogleLogo } from "@phosphor-icons/react"
 import { PlatformAsRewardRestrictions, RewardData } from "rewards/types"
 
-export default {
+export const googleData = {
   icon: GoogleLogo,
   imageUrl: "/platforms/google.png",
   name: "Google Workspace",

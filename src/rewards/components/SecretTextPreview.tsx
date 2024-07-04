@@ -1,8 +1,8 @@
 import { Circle, Icon, useColorModeValue } from "@chakra-ui/react"
-import { PropsWithChildren } from "react"
 import { useWatch } from "react-hook-form"
 import rewards from "rewards"
 import RewardPreview from "./RewardPreview"
+import { PropsWithChildren } from "react"
 
 const SecretTextPreview = ({ children }: PropsWithChildren): JSX.Element => {
   const platformGuildData = useWatch({

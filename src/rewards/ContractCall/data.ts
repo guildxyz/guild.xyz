@@ -1,13 +1,12 @@
 import { PlatformAsRewardRestrictions, RewardData } from "rewards/types"
-import Token from "static/icons/token.svg"
+import Photo from "static/icons/photo.svg"
 
-export default {
-  icon: Token,
-  imageUrl: null,
-  name: "Token",
-  colorScheme: "gold",
+export const contractCallData = {
+  icon: Photo,
+  name: "NFT",
+  colorScheme: "cyan",
   gatedEntity: "",
   autoRewardSetup: false,
   isPlatform: false,
   asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
-} satisfies RewardData
+} as const satisfies RewardData

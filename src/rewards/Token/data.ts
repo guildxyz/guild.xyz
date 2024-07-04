@@ -1,13 +1,12 @@
 import { PlatformAsRewardRestrictions, RewardData } from "rewards/types"
-import Box from "static/icons/box.svg"
+import Token from "static/icons/token.svg"
 
-export default {
-  icon: Box,
-  imageUrl: null,
-  name: "Secret",
-  colorScheme: "gray",
+export const tokenData = {
+  icon: Token,
+  name: "Token",
+  colorScheme: "gold",
   gatedEntity: "",
   autoRewardSetup: false,
   isPlatform: false,
   asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
-} satisfies RewardData
+} as const satisfies RewardData

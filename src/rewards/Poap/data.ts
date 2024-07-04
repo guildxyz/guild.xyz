@@ -1,13 +1,11 @@
-import { Key } from "@phosphor-icons/react"
 import { PlatformAsRewardRestrictions, RewardData } from "rewards/types"
 
-export default {
-  icon: Key,
-  imageUrl: null,
-  name: "Unique secret",
-  colorScheme: "gray",
-  gatedEntity: "",
+export const poapData = {
+  imageUrl: "/platforms/poap.png",
+  name: "POAP",
+  colorScheme: "purple",
+  gatedEntity: "POAP",
   autoRewardSetup: false,
   isPlatform: false,
   asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
-} satisfies RewardData
+} as const satisfies RewardData

@@ -27,4 +27,4 @@ export default {
       loading: AddRewardPanelLoadingSpinner,
     }
   ),
-} satisfies RewardComponentsData
+} as const satisfies RewardComponentsData
