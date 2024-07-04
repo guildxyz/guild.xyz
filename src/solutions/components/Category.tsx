@@ -2,9 +2,8 @@ import { HStack, Heading, SimpleGrid, Text } from "@chakra-ui/react"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { PlatformName } from "types"
 import pluralize from "utils/pluralize"
-import { Solutions } from "./AddSolutionsButton"
+import { SolutionCardData, SolutionName } from "../types"
 import SolutionCard from "./SolutionCard"
-import { SolutionCardData } from "./SolutionCardData"
 
 const Category = ({
   heading,
@@ -16,7 +15,7 @@ const Category = ({
   heading: string
   items: SolutionCardData[]
   onSelectReward: (reward: PlatformName) => void
-  onSelectSolution: (solution: Solutions) => void
+  onSelectSolution: (solution: SolutionName) => void
   searchQuery?: string
 }) => {
   const filteredItems = items.filter((item) =>
@@ -56,7 +55,7 @@ const Category = ({
                 onClick={
                   item.handlerType === "reward"
                     ? () => onSelectReward(item.handlerParam as PlatformName)
-                    : () => onSelectSolution(item.handlerParam as Solutions)
+                    : () => onSelectSolution(item.handlerParam as SolutionName)
                 }
               />
             </CardMotionWrapper>

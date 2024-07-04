@@ -1,14 +1,39 @@
-import { PlatformName } from "types"
-import { Solutions } from "./AddSolutionsButton"
+import dynamic from "next/dynamic"
+import { AddRewardPanelLoadingSpinner } from "rewards/components/AddRewardPanelLoadingSpinner"
+import { SolutionCardData } from "./types"
 
-export type SolutionCardData = {
-  title: string
-  description: string
-  imageUrl: string
-  bgImageUrl: string
-  handlerType: "reward" | "solution"
-  handlerParam: PlatformName | Solutions
+export const solutions = {
+  LIQUIDITY: dynamic(
+    () => import("solutions/LiquidityIncentive/LiquidityIncentiveSetupModal"),
+    {
+      ssr: false,
+      loading: AddRewardPanelLoadingSpinner,
+    }
+  ),
 }
+
+export const categories = [
+  {
+    label: "All",
+    value: "all",
+  },
+  {
+    label: "Memberships",
+    value: "memberships",
+  },
+  {
+    label: "Tokens",
+    value: "tokens",
+  },
+  {
+    label: "Engagement",
+    value: "engagement",
+  },
+  {
+    label: "Sybil Protection",
+    value: "sybil",
+  },
+]
 
 export const memberships: SolutionCardData[] = [
   {
