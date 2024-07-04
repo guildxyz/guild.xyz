@@ -21,7 +21,7 @@ const DialogOverlay = React.forwardRef<
   <DialogPrimitive.Overlay
     ref={ref}
     className={cn(
-      "fixed inset-0 z-50 bg-black/50 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+      "fixed inset-0 z-50 grid place-items-center overflow-y-auto bg-black/50 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
       className
     )}
     {...props}
@@ -30,7 +30,7 @@ const DialogOverlay = React.forwardRef<
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName
 
 export const dialogContentVariants = cva(
-  "fixed left-[50%] top-[50%] z-50 grid w-full translate-x-[-50%] translate-y-[-50%] rounded-xl bg-card p-10 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]",
+  "w-full my-16 relative rounded-xl bg-card shadow-lg p-10 duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
   {
     variants: {
       size: {
@@ -51,7 +51,7 @@ export const dialogContentVariants = cva(
 
 export interface DialogContentProps
   extends React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>,
-  VariantProps<typeof dialogContentVariants> {
+    VariantProps<typeof dialogContentVariants> {
   trapFocus?: FocusScopeProps["trapped"]
 }
 
@@ -60,16 +60,17 @@ const DialogContent = React.forwardRef<
   DialogContentProps
 >(({ size, trapFocus = true, className, children, ...props }, ref) => (
   <DialogPortal>
-    <DialogOverlay />
-    <FocusScope trapped={trapFocus} loop>
-      <DialogPrimitive.Content
-        ref={ref}
-        className={cn(dialogContentVariants({ size, className }))}
-        {...props}
-      >
-        {children}
-      </DialogPrimitive.Content>
-    </FocusScope>
+    <DialogOverlay>
+      <FocusScope trapped={trapFocus} loop>
+        <DialogPrimitive.Content
+          ref={ref}
+          className={cn(dialogContentVariants({ size, className }))}
+          {...props}
+        >
+          {children}
+        </DialogPrimitive.Content>
+      </FocusScope>
+    </DialogOverlay>
   </DialogPortal>
 ))
 DialogContent.displayName = DialogPrimitive.Content.displayName
