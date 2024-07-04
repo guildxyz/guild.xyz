@@ -1,6 +1,6 @@
+import { accountModalAtom } from "@/components/Providers/atoms"
 import { Link } from "@chakra-ui/next-js"
 import { Card, Circle, Img, Tag, useColorModeValue } from "@chakra-ui/react"
-import { accountModalAtom } from "components/common/Layout/components/Account/components/AccountModal"
 import { useSetAtom } from "jotai"
 
 type Props = {

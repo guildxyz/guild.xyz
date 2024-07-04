@@ -1,18 +1,12 @@
+import {
+  addressLinkParamsAtom,
+  walletSelectorModalAtom,
+} from "@/components/Providers/atoms"
+import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { Plus } from "@phosphor-icons/react"
 import useUser from "components/[guild]/hooks/useUser"
-import { walletSelectorModalAtom } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal"
-import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
-import { atom, useSetAtom } from "jotai"
-
-export type AddressLinkParams = {
-  userId?: number
-  address?: `0x${string}`
-}
-export const addressLinkParamsAtom = atom<AddressLinkParams>({
-  userId: undefined,
-  address: undefined,
-})
+import { useSetAtom } from "jotai"
 
 const LinkAddressButton = (props) => {
   const { id } = useUser()

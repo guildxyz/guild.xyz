@@ -1,8 +1,8 @@
+import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import useCreateRequirements from "components/[guild]/AddRewardButton/hooks/useCreateRequirements"
 import useCreateRolePlatforms from "components/[guild]/AddRewardButton/hooks/useCreateRolePlatforms"
 import useMutateAdditionsToRoles from "components/[guild]/AddRewardButton/hooks/useMutateAdditionsToRoles"
 import useMutateCreatedRole from "components/[guild]/AddRewardButton/hooks/useMutateCreatedRole"
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import useCreateRole, {
   RoleToCreate,
 } from "components/create-guild/hooks/useCreateRole"

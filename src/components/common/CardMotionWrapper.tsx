@@ -1,4 +1,4 @@
-import { EASINGS } from "@chakra-ui/react"
+// import { EASINGS } from "@chakra-ui/react"
 import { LazyMotion, domMax, m } from "framer-motion"
 import { PropsWithChildren } from "react"
 
@@ -21,14 +21,14 @@ const CardMotionWrapper = ({
       animate={{
         opacity: 1,
         scale: 1,
-        transition: { delay, duration: 0.2, ease: EASINGS.easeOut },
+        // transition: { delay, duration: 0.2, ease: EASINGS.easeOut },
       }}
       exit={{
         opacity: 0,
         scale: 0.95,
-        transition: { duration: 0.1, ease: EASINGS.easeIn },
+        // transition: { duration: 0.1, ease: EASINGS.easeIn },
       }}
-      transition={{ duration: 0.3, ease: EASINGS.easeInOut }}
+      // transition={{ duration: 0.3, ease: EASINGS.easeInOut }}
       // TODO: solve this if it is relevant
       // sx={{ "> *": { height: "full" } }}
     >

@@ -34,8 +34,8 @@ export const dialogContentVariants = cva(
   {
     variants: {
       size: {
-        md: "max-w-md",
         sm: "max-w-sm",
+        md: "max-w-md",
         lg: "max-w-lg",
         xl: "max-w-xl",
         "2xl": "max-w-2xl",
@@ -60,8 +60,8 @@ const DialogContent = React.forwardRef<
   DialogContentProps
 >(({ size, trapFocus = true, className, children, ...props }, ref) => (
   <DialogPortal>
-    <DialogOverlay>
-      <FocusScope trapped={trapFocus} loop>
+    <FocusScope trapped={trapFocus} loop>
+      <DialogOverlay>
         <DialogPrimitive.Content
           ref={ref}
           className={cn(dialogContentVariants({ size, className }))}
@@ -69,8 +69,8 @@ const DialogContent = React.forwardRef<
         >
           {children}
         </DialogPrimitive.Content>
-      </FocusScope>
-    </DialogOverlay>
+      </DialogOverlay>
+    </FocusScope>
   </DialogPortal>
 ))
 DialogContent.displayName = DialogPrimitive.Content.displayName

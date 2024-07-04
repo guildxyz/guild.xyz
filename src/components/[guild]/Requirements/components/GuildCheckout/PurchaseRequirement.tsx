@@ -1,3 +1,4 @@
+import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import {
   Collapse,
   Icon,
@@ -13,7 +14,6 @@ import {
 } from "@chakra-ui/react"
 import { ShoppingCartSimple } from "@phosphor-icons/react"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import { useAccount } from "wagmi"

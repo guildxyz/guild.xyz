@@ -1,7 +1,7 @@
+import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { Icon } from "@chakra-ui/react"
 import usePlatformsToReconnect from "components/[guild]/hooks/usePlatformsToReconnect"
 import useUser from "components/[guild]/hooks/useUser"
-import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Script from "next/script"
 import rewards from "rewards"
 import { useEffect } from "react"

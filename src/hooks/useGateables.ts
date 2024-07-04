@@ -1,5 +1,6 @@
+import { useUserPublic } from "@/hooks/useUserPublic"
 import { DiscordGateable, GitHubGateable, GoogleGateable } from "@guildxyz/types"
-import useUser, { useUserPublic } from "components/[guild]/hooks/useUser"
+import useUser from "components/[guild]/hooks/useUser"
 import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import useSWR, { SWRConfiguration } from "swr"
 import { PlatformType } from "types"

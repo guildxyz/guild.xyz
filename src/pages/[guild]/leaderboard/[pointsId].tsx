@@ -1,3 +1,4 @@
+import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import {
   Alert,
   AlertDescription,
@@ -23,7 +24,6 @@ import LeaderboardUserCard, {
   LeaderboardUserCardSkeleton,
 } from "components/[guild]/leaderboard/LeaderboardUserCard"
 import usePointsLeaderboard from "components/[guild]/leaderboard/hooks/usePointsLeaderboard"
-import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Card from "components/common/Card"
 import ErrorAlert from "components/common/ErrorAlert"
 import GuildLogo from "components/common/GuildLogo"

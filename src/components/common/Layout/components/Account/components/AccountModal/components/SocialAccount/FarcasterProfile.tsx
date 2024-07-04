@@ -1,3 +1,4 @@
+import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import {
   Accordion,
   AccordionButton,
@@ -25,7 +26,6 @@ import {
 import { FarcasterProfile as FarcasterProfileType } from "@guildxyz/types"
 import { ArrowCounterClockwise, DeviceMobileCamera } from "@phosphor-icons/react"
 import useUser from "components/[guild]/hooks/useUser"
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import { useFetcherWithSign } from "hooks/useFetcherWithSign"

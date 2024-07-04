@@ -1,5 +1,5 @@
+import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import useUsersGuildPins from "hooks/useUsersGuildPins"
 import { useAccount, useBalance } from "wagmi"
@@ -42,8 +42,8 @@ const MintGuildPinButton = (): JSX.Element => {
   const loadingText = isMinting
     ? mintLoadingText
     : isValidating
-    ? "Checking your NFTs"
-    : "Checking your balance"
+      ? "Checking your NFTs"
+      : "Checking your balance"
 
   const isDisabled =
     isInvalidImage ||
@@ -73,10 +73,10 @@ const MintGuildPinButton = (): JSX.Element => {
       {isInvalidImage || isTooSmallImage
         ? "Setup required"
         : alreadyMintedOnChain
-        ? "Already minted"
-        : !isSufficientBalance
-        ? "Insufficient balance"
-        : "Mint NFT"}
+          ? "Already minted"
+          : !isSufficientBalance
+            ? "Insufficient balance"
+            : "Mint NFT"}
     </Button>
   )
 }

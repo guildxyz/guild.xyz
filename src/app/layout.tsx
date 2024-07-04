@@ -1,9 +1,9 @@
-import { NavigationEvents } from "@/components/NavigationEvents"
-import Providers from "@/components/Providers"
-import { Suspense, type ReactNode } from "react"
+import { Providers } from "@/components/Providers"
+import { PostHogPageViews } from "@/components/Providers/PostHogPageViews"
 import clsx from "clsx"
 import { dystopian, inter } from "fonts"
 import type { Metadata } from "next"
+import { Suspense, type ReactNode } from "react"
 import "./globals.css"
 
 interface RootLayoutProps {
@@ -21,10 +21,13 @@ export default function RootLayout({ children }: RootLayoutProps) {
     <html lang="en" suppressHydrationWarning>
       <head />
       <body className={clsx(dystopian.variable, inter.variable)}>
-        <Providers>{children}</Providers>
-        <Suspense fallback={null}>
-          <NavigationEvents />
-        </Suspense>
+        <Providers>
+          {children}
+
+          <Suspense>
+            <PostHogPageViews />
+          </Suspense>
+        </Providers>
       </body>
     </html>
   )

@@ -1,5 +1,6 @@
 import { CopyableAddress } from "@/components/CopyableAddress"
 import { GuildAvatar } from "@/components/GuildAvatar"
+import { accountModalAtom } from "@/components/Providers/atoms"
 import { Button } from "@/components/ui/Button"
 import {
   Dialog,
@@ -14,19 +15,22 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/Tooltip"
-import { SignOut } from "@phosphor-icons/react/dist/ssr"
-import useUser, { useUserPublic } from "components/[guild]/hooks/useUser"
-import useConnectorNameAndIcon from "components/_app/Web3ConnectionManager/hooks/useConnectorNameAndIcon"
-import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import useConnectorNameAndIcon from "@/components/Web3ConnectionManager/hooks/useConnectorNameAndIcon"
+import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import { useDisclosure } from "@/hooks/useDisclosure"
+import { useUserPublic } from "@/hooks/useUserPublic"
+import { LinkBreak, SignOut } from "@phosphor-icons/react/dist/ssr"
+import useUser from "components/[guild]/hooks/useUser"
 import useResolveAddress from "hooks/useResolveAddress"
-import { deleteKeyPairFromIdb } from "hooks/useSetKeyPair"
 import { useAtom } from "jotai"
+import { deleteKeyPairFromIdb } from "utils/keyPair"
 import { useAccount } from "wagmi"
-import { accountModalAtom } from "."
+import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
+import NetworkModal from "../NetworkModal"
 import { AccountConnections } from "./components/AccountConnections"
 
 const AccountModal = () => {
-  const { address, type, disconnect } = useWeb3ConnectionManager()
+  const { address, disconnect, type } = useWeb3ConnectionManager()
   const { connectorName } = useConnectorNameAndIcon()
 
   const [isOpen, setIsOpen] = useAtom(accountModalAtom)
@@ -35,10 +39,14 @@ const AccountModal = () => {
   const { id } = useUser()
   const { deleteKeys } = useUserPublic()
 
-  const { address: evmAddress } = useAccount()
+  const { address: evmAddress, chainId } = useAccount()
   const domain = useResolveAddress(evmAddress)
 
-  // TODO: do we need to keep the network modal? We should check the number of "Opened network modal" PostHog events and decide if we should keep it or not.
+  const {
+    isOpen: isNetworkModalOpen,
+    onOpen: openNetworkModal,
+    onClose: closeNetworkModal,
+  } = useDisclosure()
 
   const handleLogout = () => {
     const keysToRemove = Object.keys({ ...window.localStorage }).filter((key) =>
@@ -61,6 +69,8 @@ const AccountModal = () => {
   return (
     <Dialog open={isOpen}>
       <DialogContent onPointerDownOutside={onClose} onEscapeKeyDown={onClose}>
+        <DialogCloseButton onClick={onClose} />
+
         <DialogHeader>
           <DialogTitle>Account</DialogTitle>
         </DialogHeader>
@@ -83,11 +93,36 @@ const AccountModal = () => {
                   <p className="line-clamp-1 text-sm font-medium text-muted-foreground">
                     {`Connected with ${connectorName}`}
                   </p>
+
+                  {type === "EVM" ? (
+                    <Button
+                      variant="ghost"
+                      onClick={() => openNetworkModal()}
+                      size="xs"
+                      className="w-6 px-0"
+                    >
+                      {CHAIN_CONFIG[Chains[chainId]] ? (
+                        <img
+                          src={CHAIN_CONFIG[Chains[chainId]].iconUrl}
+                          alt={CHAIN_CONFIG[Chains[chainId]].name}
+                          className="size-4"
+                        />
+                      ) : (
+                        <LinkBreak />
+                      )}
+                    </Button>
+                  ) : (
+                    <img
+                      src="/walletLogos/fuel.svg"
+                      alt={CHAIN_CONFIG[Chains[chainId]].name}
+                      className="size-4"
+                    />
+                  )}
                 </div>
-                {/* <NetworkModal
-                    isOpen={isNetworkModalOpen}
-                    onClose={closeNetworkModal}
-                  /> */}
+                <NetworkModal
+                  isOpen={isNetworkModalOpen}
+                  onClose={closeNetworkModal}
+                />
               </div>
 
               <TooltipProvider>
@@ -117,8 +152,6 @@ const AccountModal = () => {
         ) : (
           <p className="mb-6 text-2xl font-semibold">Not connected</p>
         )}
-
-        <DialogCloseButton onClick={onClose} />
       </DialogContent>
     </Dialog>
   )

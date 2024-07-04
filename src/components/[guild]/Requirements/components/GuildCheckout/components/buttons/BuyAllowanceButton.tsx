@@ -1,7 +1,7 @@
+import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import { Collapse, Icon, Tooltip } from "@chakra-ui/react"
 import { Check, Question, Warning } from "@phosphor-icons/react"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import useToken from "hooks/useToken"
 import useVault from "requirements/Payment/hooks/useVault"

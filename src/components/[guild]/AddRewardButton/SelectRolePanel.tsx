@@ -1,3 +1,4 @@
+import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import {
   HStack,
   IconButton,
@@ -13,7 +14,6 @@ import {
 } from "@chakra-ui/react"
 import { Visibility } from "@guildxyz/types"
 import { ArrowLeft, Info } from "@phosphor-icons/react"
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import useCreateRRR, { SubmitData } from "hooks/useCreateRRR"
 import { useState } from "react"

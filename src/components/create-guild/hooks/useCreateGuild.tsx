@@ -1,6 +1,6 @@
+import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import { Schemas } from "@guildxyz/types"
 import processConnectorError from "components/[guild]/JoinModal/utils/processConnectorError"
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import { useYourGuilds } from "components/explorer/YourGuilds"
 import useMatchMutate from "hooks/useMatchMutate"
