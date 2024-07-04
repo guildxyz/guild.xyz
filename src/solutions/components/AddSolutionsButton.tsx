@@ -17,7 +17,6 @@ const AddSolutionsButton = () => {
   return (
     <>
       <Button
-        data-test="add-reward-button"
         leftIcon={<Plus />}
         onClick={onOpen}
         variant="ghost"
