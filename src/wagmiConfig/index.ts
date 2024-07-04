@@ -5,6 +5,7 @@ import {
   exosama,
   formTestnet,
   metisSepolia,
+  mint,
   neonEVM,
   oasisSapphire,
   ontology,
@@ -128,6 +129,7 @@ export const wagmiConfig = createConfig({
     cyber,
     taiko,
     klaytn,
+    mint,
   ],
   transports: {
     [mainnet.id]: http(),
@@ -186,6 +188,7 @@ export const wagmiConfig = createConfig({
     [cyber.id]: http(),
     [taiko.id]: http(),
     [klaytn.id]: http(),
+    [mint.id]: http(),
   },
   ssr: true,
   connectors: process.env.NEXT_PUBLIC_MOCK_CONNECTOR
