@@ -11,6 +11,7 @@ import rewards, { CardPropsHook } from "rewards"
 import { GuildPlatformWithOptionalId, PlatformName } from "types"
 import pluralize from "utils/pluralize"
 import { useUserFormSubmission } from "./hooks/useFormSubmissions"
+import { formData } from "./data"
 
 const useFormCardProps: CardPropsHook = (
   guildPlatform: GuildPlatformWithOptionalId
@@ -20,9 +21,7 @@ const useFormCardProps: CardPropsHook = (
 
   const { form, isSigned } = useGuildForm(guildPlatform?.platformGuildData?.formId)
   const { userSubmission } = useUserFormSubmission(form ?? null)
-  const name = form?.name ?? rewards.FORM?.name
 
-  if (!name) return
   return {
     type: "FORM" as PlatformName,
     image: (
@@ -30,7 +29,7 @@ const useFormCardProps: CardPropsHook = (
         <Icon as={rewards.FORM?.icon} color="white" />
       </Circle>
     ),
-    name,
+    name: form?.name || rewards.FORM?.name || formData.name,
     info:
       isSigned && isAdmin ? (
         <SubmissionCount submissionCount={form?.submissionCount ?? 0} />

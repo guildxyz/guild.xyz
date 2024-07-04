@@ -1,39 +1,39 @@
-import contractCallReward from "rewards/ContractCall"
-import discordReward from "rewards/Discord"
-import emailReward from "rewards/Email"
-import farcasterReward from "rewards/Farcaster"
-import formReward from "rewards/Forms"
-import gatherTownReward from "rewards/Gather"
-import githubReward from "rewards/Github"
-import googleReward from "rewards/Google"
-import poapReward from "rewards/Poap"
-import pointsReward from "rewards/Points"
-import polygonIdReward from "rewards/PolygonID"
-import textReward from "rewards/SecretText"
-import telegramReward from "rewards/Telegram"
-import tokenReward from "rewards/Token"
-import twitterRewardV1, { twitterReward } from "rewards/Twitter"
-import uniqueTextReward from "rewards/UniqueText"
+import { contractCallData } from "rewards/ContractCall/data"
+import { discordData } from "rewards/Discord/data"
+import { emailData } from "rewards/Email/data"
+import { farcasterData } from "rewards/Farcaster/data"
+import { formData } from "rewards/Forms/data"
+import { gatherData } from "rewards/Gather/data"
+import { githubData } from "rewards/Github/data"
+import { googleData } from "rewards/Google/data"
+import { poapData } from "rewards/Poap/data"
+import { pointsData } from "rewards/Points/data"
+import { polygonIdData } from "rewards/PolygonID/data"
+import { secretTextData } from "rewards/SecretText/data"
+import { telegramData } from "rewards/Telegram/data"
+import { tokenData } from "rewards/Token/data"
+import { twitterData, twitterV1Data } from "rewards/Twitter/data"
+import { uniqueTextData } from "rewards/UniqueText/data"
 import { Rewards } from "./types"
 
 const rewards: Rewards = {
-  TWITTER_V1: twitterRewardV1,
-  TWITTER: twitterReward,
-  EMAIL: emailReward,
-  TELEGRAM: telegramReward,
-  ERC20: tokenReward,
-  GATHER_TOWN: gatherTownReward,
-  FORM: formReward,
-  POINTS: pointsReward,
-  POLYGON_ID: polygonIdReward,
-  UNIQUE_TEXT: uniqueTextReward,
-  TEXT: textReward,
-  CONTRACT_CALL: contractCallReward,
-  GOOGLE: googleReward,
-  DISCORD: discordReward,
-  GITHUB: githubReward,
-  POAP: poapReward,
-  FARCASTER: farcasterReward,
+  TWITTER_V1: twitterV1Data,
+  TWITTER: twitterData,
+  EMAIL: emailData,
+  TELEGRAM: telegramData,
+  ERC20: tokenData,
+  GATHER_TOWN: gatherData,
+  FORM: formData,
+  POINTS: pointsData,
+  POLYGON_ID: polygonIdData,
+  UNIQUE_TEXT: uniqueTextData,
+  TEXT: secretTextData,
+  CONTRACT_CALL: contractCallData,
+  GOOGLE: googleData,
+  DISCORD: discordData,
+  GITHUB: githubData,
+  POAP: poapData,
+  FARCASTER: farcasterData,
 } as const
 
 export default rewards

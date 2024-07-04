@@ -2,6 +2,7 @@ import { Circle, Img, useColorModeValue } from "@chakra-ui/react"
 import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
 import { CardPropsHook } from "rewards/types"
 import { GuildPlatformWithOptionalId, PlatformName } from "types"
+import { googleData } from "./data"
 
 const fileTypeNames = {
   "application/vnd.google-apps.audio": "Audio",
@@ -26,7 +27,10 @@ const fileTypeNames = {
 }
 
 const getFileTypeName = (fileType: string) => {
-  const staticFileType = fileTypeNames[fileType]
+  const staticFileType =
+    fileType in fileTypeNames
+      ? fileTypeNames[fileType as keyof typeof fileTypeNames]
+      : undefined
   if (!staticFileType && fileType?.includes("video")) return "Video"
   return staticFileType
 }
@@ -41,7 +45,6 @@ const useGoogleCardProps: CardPropsHook = (
     ? `, ${rolePlatform.platformRoleId || "reader"} access`
     : ""
 
-  if (!guildPlatform.platformGuildName) return
   return {
     type: "GOOGLE" as PlatformName,
     image: guildPlatform.platformGuildData?.iconLink ? (
@@ -59,7 +62,7 @@ const useGoogleCardProps: CardPropsHook = (
     ) : (
       "/platforms/google.png"
     ),
-    name: guildPlatform.platformGuildName,
+    name: guildPlatform.platformGuildName || googleData.name,
     info: `${
       guildPlatform.platformGuildData?.mimeType
         ? getFileTypeName(guildPlatform.platformGuildData.mimeType)

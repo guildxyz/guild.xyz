@@ -74,13 +74,11 @@ export type AddRewardPanelProps = {
   skipSettings?: boolean
 }
 
-export type CardPropsHook = (guildPlatform: GuildPlatformWithOptionalId) =>
-  | {
-      type: PlatformName
-      name: string
-      image?: string | JSX.Element
-      info?: string | JSX.Element
-      link?: string
-      shouldHide?: boolean
-    }
-  | undefined
+export type CardPropsHook = (guildPlatform: GuildPlatformWithOptionalId) => {
+  type: PlatformName
+  name: string
+  image?: string | JSX.Element
+  info?: string | JSX.Element
+  link?: string
+  shouldHide?: boolean
+}

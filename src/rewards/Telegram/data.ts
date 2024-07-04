@@ -1,7 +1,7 @@
 import { TelegramLogo } from "@phosphor-icons/react"
 import { PlatformAsRewardRestrictions, RewardData } from "rewards/types"
 
-export default {
+export const telegramData = {
   icon: TelegramLogo,
   imageUrl: "/platforms/telegram.png",
   name: "Telegram",
@@ -10,4 +10,4 @@ export default {
   autoRewardSetup: false,
   isPlatform: true,
   asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
-} satisfies RewardData
+} as const satisfies RewardData

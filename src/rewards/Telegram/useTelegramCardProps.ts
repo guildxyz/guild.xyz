@@ -1,15 +1,17 @@
 import useIsTGBotIn from "components/create-guild/TelegramGroup/hooks/useIsTGBotIn"
-import { GuildPlatformWithOptionalId, PlatformName } from "types"
+import { CardPropsHook } from "rewards/types"
+import { GuildPlatformWithOptionalId } from "types"
+import { telegramData } from "./data"
 
-const useTelegramCardProps = (guildPlatform: GuildPlatformWithOptionalId) => {
-  const {
-    data: { groupIcon, groupName },
-  } = useIsTGBotIn(guildPlatform.platformGuildId)
+const useTelegramCardProps: CardPropsHook = (
+  guildPlatform: GuildPlatformWithOptionalId
+) => {
+  const { data } = useIsTGBotIn(guildPlatform.platformGuildId)
 
   return {
-    type: "TELEGRAM" as PlatformName,
-    name: (groupName as string) || "",
-    image: (groupIcon as string) || "/default_telegram_icon.png",
+    type: "TELEGRAM",
+    name: data?.groupName || telegramData.name,
+    image: data?.groupIcon || telegramData.imageUrl,
   }
 }
 

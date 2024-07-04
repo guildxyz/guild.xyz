@@ -1,12 +1,11 @@
-import { Buildings } from "@phosphor-icons/react"
+import { Star } from "@phosphor-icons/react"
 import { PlatformAsRewardRestrictions, RewardData } from "rewards/types"
 
-export default {
-  icon: Buildings,
-  imageUrl: "/platforms/gather.png",
-  name: "Gather",
-  colorScheme: "GATHER_TOWN",
-  gatedEntity: "space",
+export const pointsData = {
+  icon: Star,
+  name: "Points",
+  colorScheme: "gray",
+  gatedEntity: "",
   autoRewardSetup: false,
   isPlatform: false,
   asRewardRestriction: PlatformAsRewardRestrictions.MULTIPLE_ROLES,

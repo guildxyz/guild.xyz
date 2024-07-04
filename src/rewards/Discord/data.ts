@@ -1,7 +1,7 @@
 import { DiscordLogo } from "@phosphor-icons/react"
 import { PlatformAsRewardRestrictions, RewardData } from "rewards/types"
 
-export default {
+export const discordData = {
   icon: DiscordLogo,
   imageUrl: "/platforms/discord.png",
   name: "Discord",

@@ -1,10 +1,10 @@
-import { PencilSimpleLine } from "@phosphor-icons/react"
 import { PlatformAsRewardRestrictions, RewardData } from "rewards/types"
+import Box from "static/icons/box.svg"
 
-export default {
-  icon: PencilSimpleLine,
-  name: "Form",
-  colorScheme: "primary",
+export const secretTextData = {
+  icon: Box,
+  name: "Secret",
+  colorScheme: "gray",
   gatedEntity: "",
   autoRewardSetup: false,
   isPlatform: false,

@@ -1,7 +1,7 @@
 import { GithubLogo } from "@phosphor-icons/react"
 import { PlatformAsRewardRestrictions, RewardData } from "rewards/types"
 
-export default {
+export const githubData = {
   icon: GithubLogo,
   imageUrl: "/platforms/github.png",
   name: "GitHub",
@@ -10,4 +10,4 @@ export default {
   autoRewardSetup: false,
   isPlatform: true,
   asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
-} satisfies RewardData
+} as const satisfies RewardData

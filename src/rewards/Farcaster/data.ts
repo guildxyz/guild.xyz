@@ -1,7 +1,7 @@
 import { PlatformAsRewardRestrictions, RewardData } from "rewards/types"
 import FarcasterIcon from "static/socialIcons/farcaster.svg"
 
-export default {
+export const farcasterData = {
   icon: FarcasterIcon,
   imageUrl: "/requirementLogos/farcaster.png",
   name: "Farcaster",

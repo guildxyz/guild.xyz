@@ -1,7 +1,7 @@
 import { EnvelopeSimple } from "@phosphor-icons/react"
 import { PlatformAsRewardRestrictions, RewardData } from "rewards/types"
 
-export default {
+export const emailData = {
   icon: EnvelopeSimple,
   name: "Email",
   colorScheme: "blue",

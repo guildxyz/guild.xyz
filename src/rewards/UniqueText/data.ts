@@ -1,10 +1,10 @@
+import { Key } from "@phosphor-icons/react"
 import { PlatformAsRewardRestrictions, RewardData } from "rewards/types"
-import Photo from "static/icons/photo.svg"
 
-export default {
-  icon: Photo,
-  name: "NFT",
-  colorScheme: "cyan",
+export const uniqueTextData = {
+  icon: Key,
+  name: "Unique secret",
+  colorScheme: "gray",
   gatedEntity: "",
   autoRewardSetup: false,
   isPlatform: false,
