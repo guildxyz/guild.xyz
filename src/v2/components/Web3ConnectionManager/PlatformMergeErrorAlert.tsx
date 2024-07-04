@@ -18,17 +18,13 @@ import Button from "components/common/Button"
 import CopyableAddress from "components/common/CopyableAddress"
 import { Alert } from "components/common/Modal"
 import useToast from "hooks/useToast"
-import { atom, useAtom } from "jotai"
+import { useAtom } from "jotai"
 import { useRef } from "react"
 import rewards from "rewards"
-import { PlatformName } from "types"
 import capitalize from "utils/capitalize"
 import shortenHex from "utils/shortenHex"
+import { platformMergeAlertAtom } from "../Providers/atoms"
 import { useWeb3ConnectionManager } from "./hooks/useWeb3ConnectionManager"
-
-export const platformMergeAlertAtom = atom<
-  false | { addressOrDomain: string; platformName: PlatformName }
->(false)
 
 const PlatformMergeErrorAlert = () => {
   const { address } = useWeb3ConnectionManager()
