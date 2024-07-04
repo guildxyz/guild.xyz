@@ -1,15 +1,12 @@
 import {
   Box,
   Collapse,
-  HStack,
   Heading,
   ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  SimpleGrid,
-  Text,
   useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react"
@@ -30,7 +27,6 @@ import { useThemeContext } from "components/[guild]/ThemeContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
-import CardMotionWrapper from "components/common/CardMotionWrapper"
 import ControlledSelect from "components/common/ControlledSelect"
 import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
@@ -43,15 +39,8 @@ import { FormProvider, useController, useForm, useWatch } from "react-hook-form"
 import rewards, { modalSizeForPlatform } from "rewards"
 import { AddRewardPanelLoadingSpinner } from "rewards/components/AddRewardPanelLoadingSpinner"
 import { PlatformName, PlatformType } from "types"
-import pluralize from "utils/pluralize"
-import SolutionCard from "./SolutionCard"
-import {
-  SolutionCardData,
-  engagement,
-  memberships,
-  sybil,
-  tokens,
-} from "./SolutionCardData"
+import Category from "./Category"
+import { engagement, memberships, sybil, tokens } from "./SolutionCardData"
 
 export const solutions = {
   LIQUIDITY: dynamic(
@@ -342,66 +331,5 @@ const AddSolutionsButtonWrapper = (): JSX.Element => (
     <AddSolutionsButton />
   </AddRewardProvider>
 )
-
-const Category = ({
-  heading,
-  items,
-  onSelectReward,
-  onSelectSolution,
-  searchQuery,
-}: {
-  heading: string
-  items: SolutionCardData[]
-  onSelectReward: (reward: PlatformName) => void
-  onSelectSolution: (solution: Solutions) => void
-  searchQuery?: string
-}) => {
-  const filteredItems = items.filter((item) =>
-    !!searchQuery
-      ? item.title.toLowerCase().includes(searchQuery.toLowerCase())
-      : item
-  )
-
-  return (
-    <>
-      <section>
-        <HStack mb={3}>
-          <Heading
-            as="h2"
-            color={"GrayText"}
-            fontSize={"xs"}
-            fontWeight={"bold"}
-            textTransform={"uppercase"}
-          >
-            {heading}
-          </Heading>
-          {!!searchQuery && (
-            <Text colorScheme="gray" fontWeight={"normal"} fontSize={"xs"}>
-              ({pluralize(filteredItems.length, "result", true)})
-            </Text>
-          )}
-        </HStack>
-        <SimpleGrid
-          columns={{ base: 1, md: 2 }}
-          gap={{ base: 2, md: 3 }}
-          mb={filteredItems.length === 0 ? 2 : 8}
-        >
-          {filteredItems.map((item, index) => (
-            <CardMotionWrapper key={item.title}>
-              <SolutionCard
-                {...item}
-                onClick={
-                  item.handlerType === "reward"
-                    ? () => onSelectReward(item.handlerParam as PlatformName)
-                    : () => onSelectSolution(item.handlerParam as Solutions)
-                }
-              />
-            </CardMotionWrapper>
-          ))}
-        </SimpleGrid>
-      </section>
-    </>
-  )
-}
 
 export default AddSolutionsButtonWrapper
