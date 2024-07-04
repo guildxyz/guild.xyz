@@ -77,7 +77,6 @@ const PlatformSelectButton = ({
     )
 
   const circleBgColor = useColorModeValue("gray.100", "gray.600")
-  const iconColor = useColorModeValue("black", "white")
 
   const DynamicCtaIcon = useMemo(
     () => dynamic(async () => (!isPlatformConnected ? ArrowSquareIn : CaretRight)),
@@ -121,7 +120,7 @@ const PlatformSelectButton = ({
               pos="relative"
               overflow="hidden"
             >
-              <Icon as={icon} boxSize={5} weight="regular" color={iconColor} />
+              <Icon as={icon} boxSize={5} weight="regular" />
             </Circle>
           )}
           <VStack
