@@ -1,6 +1,6 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
-import { FeedbackConfig, RequirementIdMap } from "hooks/useCreateRRR"
+import { RequirementIdMap } from "hooks/useCreateRRR"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import {
   RequirementCreateResponseOutput,
@@ -10,17 +10,7 @@ import {
 import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import preprocessRequirement from "utils/preprocessRequirement"
 
-const useCreateRequirements = ({
-  feedbackConfig = {
-    showConfetti: true,
-    showToast: {
-      onSuccess: true,
-      onError: true,
-    },
-  },
-}: {
-  feedbackConfig?: FeedbackConfig
-}) => {
+const useCreateRequirements = () => {
   const { id: guildId } = useGuild()
   const showErrorToast = useShowErrorToast()
   const fetcherWithSign = useFetcherWithSign()
@@ -51,8 +41,7 @@ const useCreateRequirements = ({
             return { status: "fulfilled", result: res }
           })
           .catch((error) => {
-            if (feedbackConfig.showToast.onError)
-              showErrorToast(`Failed to create a requirement (${req.type})`)
+            showErrorToast(`Failed to create a requirement (${req.type})`)
             captureEvent("Failed to create requirement", {
               ...postHogOptions,
               requirement: req,

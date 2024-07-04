@@ -17,10 +17,11 @@ import DiscardAlert from "components/common/DiscardAlert"
 import Section from "components/common/Section"
 import Description from "components/create-guild/Description"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
+import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
 import SetRequirements from "components/create-guild/Requirements"
-import useCreateRRR, { defaultFeedbackConfigRRR } from "hooks/useCreateRRR"
+import useCreateRRR from "hooks/useCreateRRR"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useToast from "hooks/useToast"
@@ -61,25 +62,17 @@ const AddRoleDrawer = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
 
   const drawerBodyRef = useRef<HTMLDivElement>()
   const toast = useToast()
+  const triggerConfetti = useJsConfetti()
 
   const { onSubmit, isLoading, loadingText } = useCreateRRR({
     onSuccess: () => {
+      triggerConfetti()
       toast({
         title: "Role successfully created!",
         status: "success",
       })
       methods.reset(methods.defaultValues)
       onClose()
-    },
-    feedbackConfig: {
-      ...defaultFeedbackConfigRRR,
-      createRRR: {
-        showConfetti: true,
-        showToast: {
-          onError: true,
-          onSuccess: false,
-        },
-      },
     },
   })
 

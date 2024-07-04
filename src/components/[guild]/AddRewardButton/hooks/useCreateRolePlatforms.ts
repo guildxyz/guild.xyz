@@ -1,7 +1,6 @@
 import { Schemas } from "@guildxyz/types"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
-import { FeedbackConfig } from "hooks/useCreateRRR"
 import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { RolePlatform } from "types"
@@ -12,17 +11,7 @@ export type CreateRolePlatformResponse = RolePlatform & {
   createdGuildPlatform: Schemas["GuildReward"]
 }
 
-const useCreateRolePlatforms = ({
-  feedbackConfig = {
-    showConfetti: true,
-    showToast: {
-      onSuccess: true,
-      onError: true,
-    },
-  },
-}: {
-  feedbackConfig?: FeedbackConfig
-}) => {
+const useCreateRolePlatforms = () => {
   const { id: guildId } = useGuild()
   const showErrorToast = useShowErrorToast()
   const fetcherWithSign = useFetcherWithSign()
@@ -48,8 +37,7 @@ const useCreateRolePlatforms = ({
           } as CreateRolePlatformResponse,
         }))
         .catch((error) => {
-          if (feedbackConfig.showToast.onError)
-            showErrorToast("Failed to create a reward")
+          showErrorToast("Failed to create a reward")
           captureEvent("Failed to create role platform", {
             ...postHogOptions,
             rolePlatform,

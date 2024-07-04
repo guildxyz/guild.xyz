@@ -2,9 +2,7 @@ import processConnectorError from "components/[guild]/JoinModal/utils/processCon
 import useGuild from "components/[guild]/hooks/useGuild"
 import useRoleGroup from "components/[guild]/hooks/useRoleGroup"
 import { usePostHogContext } from "components/_app/PostHogProvider"
-import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import { useYourGuilds } from "components/explorer/YourGuilds"
-import { FeedbackConfig } from "hooks/useCreateRRR"
 import useCustomPosthogEvents from "hooks/useCustomPosthogEvents"
 import useMatchMutate from "hooks/useMatchMutate"
 import useShowErrorToast from "hooks/useShowErrorToast"
@@ -38,18 +36,10 @@ const useCreateRole = ({
   onSuccess,
   onError,
   skipMutate,
-  feedbackConfig = {
-    showConfetti: true,
-    showToast: {
-      onSuccess: true,
-      onError: true,
-    },
-  },
 }: {
   onSuccess?: (res?: CreateRoleResponse) => void
   onError?: (error: any) => void
   skipMutate?: boolean
-  feedbackConfig?: FeedbackConfig
 }) => {
   const { id, mutateGuild } = useGuild()
   const group = useRoleGroup()
@@ -59,7 +49,6 @@ const useCreateRole = ({
   const { rewardCreated } = useCustomPosthogEvents()
 
   const showErrorToast = useShowErrorToast()
-  const triggerConfetti = useJsConfetti()
 
   const { captureEvent } = usePostHogContext()
   const postHogOptions = {
@@ -73,17 +62,14 @@ const useCreateRole = ({
 
   const useSubmitResponse = useSubmitWithSign<CreateRoleResponse>(fetchData, {
     onError: (error_) => {
-      if (feedbackConfig.showToast.onError)
-        showErrorToast({
-          error: processConnectorError(error_.error) ?? error_.error,
-          correlationId: error_.correlationId,
-        })
+      showErrorToast({
+        error: processConnectorError(error_.error) ?? error_.error,
+        correlationId: error_.correlationId,
+      })
       captureEvent("Failed to create role", { ...postHogOptions, error_ })
       onError?.(error_)
     },
     onSuccess: async (response_) => {
-      if (feedbackConfig.showConfetti) triggerConfetti()
-
       if (response_?.createdGuildPlatforms?.length > 0) {
         response_.createdGuildPlatforms.forEach((guildPlatform) => {
           rewardCreated(guildPlatform.platformId)

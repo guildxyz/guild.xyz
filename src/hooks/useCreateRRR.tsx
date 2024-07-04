@@ -6,7 +6,6 @@ import { usePostHogContext } from "components/_app/PostHogProvider"
 import useCreateRole, {
   RoleToCreate,
 } from "components/create-guild/hooks/useCreateRole"
-import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
@@ -68,13 +67,7 @@ export type RequirementIdMap = {
   }
 }
 
-const useCreateRRR = ({
-  onSuccess,
-  feedbackConfig = defaultFeedbackConfigRRR,
-}: {
-  onSuccess?: (res) => void
-  feedbackConfig?: FeedbackConfigRRR
-}) => {
+const useCreateRRR = ({ onSuccess }: { onSuccess?: (res) => void }) => {
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
   const { captureEvent } = usePostHogContext()
@@ -91,15 +84,9 @@ const useCreateRRR = ({
     signLoadingText,
   } = useCreateRole({
     skipMutate: true,
-    feedbackConfig: feedbackConfig.createRole,
   })
-  const { createRequirements } = useCreateRequirements({
-    feedbackConfig: feedbackConfig.createRequirements,
-  })
-  const { createRolePlatforms } = useCreateRolePlatforms({
-    feedbackConfig: feedbackConfig.createRolePlatforms,
-  })
-  const triggerConfetti = useJsConfetti()
+  const { createRequirements } = useCreateRequirements()
+  const { createRolePlatforms } = useCreateRolePlatforms()
 
   const submit = async (data: SubmitData) => {
     const { requirements, rolePlatforms, roleIds: rawRoleIds = [], ...role } = data
@@ -149,15 +136,6 @@ const useCreateRRR = ({
     onSuccess: (res) => {
       const { roleIds, createdRole, createdRequirements, createdRolePlatforms } = res
 
-      if (feedbackConfig.createRRR.showToast.onSuccess) {
-        toast({
-          title: "Creation successful!",
-          status: "success",
-        })
-      }
-
-      if (feedbackConfig.createRRR.showConfetti) triggerConfetti()
-
       if (!!createdRole)
         mutateCreatedRole(createdRole, createdRequirements, createdRolePlatforms)
       if (!createdRole)
@@ -166,8 +144,7 @@ const useCreateRRR = ({
       onSuccess?.(res)
     },
     onError: (error) => {
-      if (feedbackConfig.createRRR.showToast.onError)
-        showErrorToast("An unexpected error happened while saving your changes")
+      showErrorToast("An unexpected error happened while saving your changes")
       captureEvent("Failed to create RRR", { ...postHogOptions, error })
       console.error(error)
     },
@@ -180,52 +157,6 @@ const useCreateRRR = ({
     loadingText,
     isLoading: isLoading || isSigning,
   }
-}
-
-export type FeedbackConfig = {
-  showConfetti: boolean
-  showToast: {
-    onSuccess: boolean
-    onError: boolean
-  }
-}
-
-type FeedbackConfigRRR = {
-  createRole: FeedbackConfig
-  createRequirements: FeedbackConfig
-  createRolePlatforms: FeedbackConfig
-  createRRR: FeedbackConfig
-}
-
-export const defaultFeedbackConfigRRR: FeedbackConfigRRR = {
-  createRole: {
-    showConfetti: false,
-    showToast: {
-      onSuccess: false,
-      onError: true,
-    },
-  },
-  createRequirements: {
-    showConfetti: false,
-    showToast: {
-      onSuccess: false,
-      onError: true,
-    },
-  },
-  createRolePlatforms: {
-    showConfetti: false,
-    showToast: {
-      onSuccess: false,
-      onError: true,
-    },
-  },
-  createRRR: {
-    showConfetti: true,
-    showToast: {
-      onSuccess: true,
-      onError: true,
-    },
-  },
 }
 
 export default useCreateRRR
