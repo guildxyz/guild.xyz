@@ -48,7 +48,7 @@ const Category = ({
           gap={{ base: 2, md: 3 }}
           mb={filteredItems.length === 0 ? 2 : 8}
         >
-          {filteredItems.map((item, index) => (
+          {filteredItems.map((item) => (
             <CardMotionWrapper key={item.title}>
               <SolutionCard
                 {...item}

@@ -14,10 +14,6 @@ export const solutions = {
 
 export const categories = [
   {
-    label: "All",
-    value: "all",
-  },
-  {
     label: "Memberships",
     value: "memberships",
   },
@@ -33,7 +29,7 @@ export const categories = [
     label: "Sybil Protection",
     value: "sybil",
   },
-]
+] as const
 
 export const memberships: SolutionCardData[] = [
   {

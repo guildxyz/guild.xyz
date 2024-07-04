@@ -1,5 +1,5 @@
 import { PlatformName } from "@guildxyz/types"
-import { solutions } from "solutions"
+import { categories, solutions } from "solutions"
 
 export type SolutionName = keyof typeof solutions
 
@@ -11,3 +11,5 @@ export type SolutionCardData = {
   handlerType: "reward" | "solution"
   handlerParam: PlatformName | SolutionName
 }
+
+export type CategoryValue = (typeof categories)[number]["value"]
