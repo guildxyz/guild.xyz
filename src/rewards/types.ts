@@ -40,12 +40,17 @@ export type RewardData = {
   name: string
   colorScheme: ThemingProps["colorScheme"]
   gatedEntity: string
-  cardPropsHook?: CardPropsHook
   /**
    * True when the AddRewardPanel just automatically adds the platform without any
    * user input
    */
-  autoRewardSetup?: boolean
+  autoRewardSetup: boolean
+  isPlatform: boolean
+  asRewardRestriction: PlatformAsRewardRestrictions
+}
+
+export type RewardComponentsData = {
+  cardPropsHook?: CardPropsHook
   cardSettingsComponent?: CardSettingsComponent
   cardMenuComponent?: (props: any) => JSX.Element
   cardWarningComponent?: (props: any) => JSX.Element
@@ -53,11 +58,10 @@ export type RewardData = {
   AddRewardPanel?: ComponentType<AddRewardPanelProps>
   RewardPreview?: ComponentType<PropsWithChildren>
   RoleCardComponent?: ComponentType<RewardProps>
-  isPlatform?: boolean
-  asRewardRestriction: PlatformAsRewardRestrictions
 }
 
 export type Rewards = Readonly<Record<PlatformName, RewardData>>
+export type RewardComponents = Readonly<Record<PlatformName, RewardComponentsData>>
 
 export type AddRewardPanelProps = {
   onAdd: (

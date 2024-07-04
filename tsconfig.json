@@ -31,7 +31,8 @@
     "api/**/*.ts",
     "cypress.config.ts",
     "cypress/**/*.ts",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "scripts/detectCircularDependencies.ts"
   ],
   "exclude": ["node_modules", ".next", "out"]
 }

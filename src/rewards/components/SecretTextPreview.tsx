@@ -1,6 +1,6 @@
 import { Circle, Icon, useColorModeValue } from "@chakra-ui/react"
-import rewards from "rewards"
 import { useWatch } from "react-hook-form"
+import rewards from "rewards"
 import RewardPreview from "./RewardPreview"
 import { PropsWithChildren } from "react"
 

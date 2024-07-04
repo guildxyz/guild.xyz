@@ -1,8 +1,8 @@
+import { useWatch } from "react-hook-form"
 import {
   TokenRewardProvider,
   useTokenRewardContext,
 } from "rewards/Token/TokenRewardContext"
-import { useWatch } from "react-hook-form"
 import { GuildPlatform } from "types"
 import RewardPreview from "./RewardPreview"
 import { PropsWithChildren } from "react"

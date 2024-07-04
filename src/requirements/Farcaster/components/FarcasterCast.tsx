@@ -19,18 +19,7 @@ import {
 } from "@phosphor-icons/react"
 import { PropsWithChildren } from "react"
 import FarcasterCastSmall from "./FarcasterCastSmall"
-
-export type FarcasterCastData = {
-  hash: string
-  username: string
-  display_name: string
-  profile_pic: string
-  text: string
-  timestamp: string
-  likes: number
-  recasts: number
-  replies: number
-}
+import { FarcasterCastData } from "../types"
 
 const FarcasterCast = ({
   cast,

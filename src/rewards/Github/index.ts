@@ -1,10 +1,5 @@
 import { GithubLogo } from "@phosphor-icons/react"
-import dynamic from "next/dynamic"
-import { AddRewardPanelLoadingSpinner } from "rewards/components/AddRewardPanelLoadingSpinner"
-import LoadingRewardPreview from "rewards/components/LoadingRewardPreview"
 import { PlatformAsRewardRestrictions, RewardData } from "rewards/types"
-import GithubCardMenu from "./GithubCardMenu"
-import useGithubCardProps from "./useGithubCardProps"
 
 export default {
   icon: GithubLogo,
@@ -12,22 +7,7 @@ export default {
   name: "GitHub",
   colorScheme: "GITHUB",
   gatedEntity: "repo",
-  cardPropsHook: useGithubCardProps,
-  cardMenuComponent: GithubCardMenu,
-  asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
+  autoRewardSetup: false,
   isPlatform: true,
-  AddRewardPanel: dynamic(
-    () =>
-      import(
-        "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddGithubPanel"
-      ),
-    {
-      ssr: false,
-      loading: AddRewardPanelLoadingSpinner,
-    }
-  ),
-  RewardPreview: dynamic(() => import("rewards/components/GitHubPreview"), {
-    ssr: false,
-    loading: LoadingRewardPreview,
-  }),
-} as const satisfies RewardData
+  asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
+} satisfies RewardData
