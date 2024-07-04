@@ -1,4 +1,3 @@
-import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import { walletSelectorModalAtom } from "@/components/Providers/atoms"
 import { useToast } from "@/components/ui/hooks/useToast"
 import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
@@ -33,7 +32,6 @@ export function useUserPublic(userIdOrAddress?: number | string): PublicUser & {
 } {
   const { address } = useWeb3ConnectionManager()
   const setIsWalletSelectorModalOpen = useSetAtom(walletSelectorModalAtom)
-  const { captureEvent } = usePostHogContext()
   const { toast } = useToast()
 
   const idToUseRaw = userIdOrAddress ?? address
@@ -53,11 +51,12 @@ export function useUserPublic(userIdOrAddress?: number | string): PublicUser & {
         } else {
           await deleteKeyPairFromIdb(user.id)
 
-          captureEvent("Invalid keypair", {
-            userId: user.id,
-            pubKey: keys.pubKey,
-            savedPubKey: user.publicKey,
-          })
+          // TODO: we can't really use PostHog here because it causes circular imports
+          // captureEvent("Invalid keypair", {
+          //   userId: user.id,
+          //   pubKey: keys.pubKey,
+          //   savedPubKey: user.publicKey,
+          // })
 
           toast({
             variant: "warning",
