@@ -38,7 +38,7 @@ export const categories = [
 export const memberships: SolutionCardData[] = [
   {
     title: "Discord membership",
-    description: "Exclusive Discord roles for accessing your server and channels.",
+    description: "Exclusive Discord roles for accessing your server and channels",
     imageUrl: "/platforms/discord.png",
     bgImageUrl: "/solutions/discord-bg.jpg",
     handlerType: "reward",
@@ -46,7 +46,7 @@ export const memberships: SolutionCardData[] = [
   },
   {
     title: "Telegram group gating",
-    description: "Start your exclusive token-gated Telegram group.",
+    description: "Start your exclusive token-gated Telegram group",
     imageUrl: "/platforms/telegram.png",
     bgImageUrl: "/solutions/telegram-bg.jpg",
     handlerType: "reward",
@@ -55,7 +55,7 @@ export const memberships: SolutionCardData[] = [
   {
     title: "Gather Town gating",
     description:
-      "Gather brings the best of in-person collaboration to distributed teams.",
+      "Gather brings the best of in-person collaboration to distributed teams",
     imageUrl: "/platforms/gather.png",
     bgImageUrl: "/solutions/gather-bg.jpg",
     handlerType: "reward",
@@ -64,7 +64,7 @@ export const memberships: SolutionCardData[] = [
   {
     title: "Google Docs gating",
     description:
-      "Provide exclusive access to Google files for users who meet specific requirements.",
+      "Provide exclusive access to Google files for users who meet specific requirements",
     imageUrl: "/platforms/google.png",
     bgImageUrl: "/solutions/google-bg.jpg",
     handlerType: "reward",
@@ -72,7 +72,7 @@ export const memberships: SolutionCardData[] = [
   },
   {
     title: "GitHub repository gating",
-    description: "Grant access to a private codebase for qualifying contributors.",
+    description: "Grant access to a private codebase for qualifying contributors",
     imageUrl: "/platforms/github.png",
     bgImageUrl: "/solutions/github-bg.jpg",
     handlerType: "reward",
@@ -84,7 +84,7 @@ export const tokens: SolutionCardData[] = [
   {
     title: "NFT Drop",
     description:
-      "Launch NFT sales or open editions with specific collection requirements.",
+      "Launch NFT sales or open editions with specific collection requirements",
     imageUrl: "/platforms/nft.png",
     bgImageUrl: "/solutions/nft-bg.jpg",
     handlerType: "reward",
@@ -92,7 +92,7 @@ export const tokens: SolutionCardData[] = [
   },
   {
     title: "Token liquidity program",
-    description: "Reward users with points for providing liquidity to your token.",
+    description: "Reward users with points for providing liquidity to your token",
     imageUrl: "/solutions/liquidity.png",
     bgImageUrl: "/solutions/liquidity-bg.jpg",
     handlerType: "solution",
@@ -111,7 +111,7 @@ export const engagement: SolutionCardData[] = [
   },
   {
     title: "Points and Leaderboard",
-    description: "Launch XP, Stars, Keys, Gems, or any other rewards you need.",
+    description: "Launch XP, Stars, Keys, Gems, or any other rewards you need",
     imageUrl: "/platforms/points.png",
     bgImageUrl: "/solutions/points-bg.jpg",
     handlerType: "reward",
@@ -120,7 +120,7 @@ export const engagement: SolutionCardData[] = [
   {
     title: "Forms & Surveys",
     description:
-      "Collect verified information, feedback, and applications, and reward your community.",
+      "Collect verified information, feedback, and applications, and reward your community",
     imageUrl: "/platforms/form.png",
     bgImageUrl: "/solutions/form-bg.jpg",
     handlerType: "reward",
@@ -128,7 +128,7 @@ export const engagement: SolutionCardData[] = [
   },
   {
     title: "Text or link distribution",
-    description: "Distribute secret messages or promotion codes.",
+    description: "Distribute secret messages or promotion codes",
     imageUrl: "/platforms/text.png",
     bgImageUrl: "/solutions/text-bg.jpg",
     handlerType: "reward",
@@ -139,7 +139,7 @@ export const engagement: SolutionCardData[] = [
 export const sybil: SolutionCardData[] = [
   {
     title: "PolygonID credentials",
-    description: "Self-Sovereign Identity Solution with Zero-Knowledge Proofs.",
+    description: "Self-Sovereign Identity Solution with Zero-Knowledge Proofs",
     imageUrl: "/requirementLogos/polygonId.svg",
     bgImageUrl: "/solutions/polygon-bg.jpg",
     handlerType: "reward",
