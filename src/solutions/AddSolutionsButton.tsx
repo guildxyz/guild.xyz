@@ -303,7 +303,10 @@ const AddSolutionsButton = () => {
                   >
                     <Category
                       heading="Sybil Protection"
-                      items={sybil}
+                      items={sybil.filter(
+                        (solution) =>
+                          showPolygonId || solution.handlerParam !== "POLYGON_ID"
+                      )}
                       onSelectReward={onSelectReward}
                       onSelectSolution={onSelectSolution}
                       searchQuery={search}
