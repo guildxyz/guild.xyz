@@ -2,7 +2,7 @@ import { useRolePlatform } from "components/[guild]/RolePlatforms/components/Rol
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useMemo } from "react"
 import { CardPropsHook } from "rewards/types"
-import { GuildPlatformWithOptionalId, PlatformName } from "types"
+import { GuildPlatformWithOptionalId } from "types"
 import { discordData } from "./data"
 
 const useDiscordCardProps: CardPropsHook = (
@@ -17,7 +17,7 @@ const useDiscordCardProps: CardPropsHook = (
   }, [rolePlatform])
 
   return {
-    type: "DISCORD" as PlatformName,
+    type: "DISCORD",
     image: imageUrl,
     name:
       guildPlatform.platformGuildName ||

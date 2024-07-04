@@ -7,11 +7,11 @@ import {
 } from "@chakra-ui/react"
 import { useGuildForm } from "components/[guild]/hooks/useGuildForms"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
-import rewards, { CardPropsHook } from "rewards"
 import { GuildPlatformWithOptionalId, PlatformName } from "types"
 import pluralize from "utils/pluralize"
 import { useUserFormSubmission } from "./hooks/useFormSubmissions"
 import { formData } from "./data"
+import { CardPropsHook } from "rewards/types"
 
 const useFormCardProps: CardPropsHook = (
   guildPlatform: GuildPlatformWithOptionalId
@@ -26,10 +26,10 @@ const useFormCardProps: CardPropsHook = (
     type: "FORM" as PlatformName,
     image: (
       <Circle size={10} bgColor={circleBgColor}>
-        <Icon as={rewards.FORM?.icon} color="white" />
+        <Icon as={formData?.icon} color="white" />
       </Circle>
     ),
-    name: form?.name || rewards.FORM?.name || formData.name,
+    name: form?.name || formData.name,
     info:
       isSigned && isAdmin ? (
         <SubmissionCount submissionCount={form?.submissionCount ?? 0} />
@@ -40,7 +40,6 @@ const useFormCardProps: CardPropsHook = (
 
 const SubmissionCount = ({ submissionCount }: { submissionCount: number }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-
   return (
     <Text
       colorScheme="gray"
@@ -57,5 +56,4 @@ const SubmissionCount = ({ submissionCount }: { submissionCount: number }) => {
     </Text>
   )
 }
-
 export default useFormCardProps
