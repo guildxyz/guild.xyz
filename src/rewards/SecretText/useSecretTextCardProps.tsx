@@ -3,28 +3,31 @@ import AvailabilityTags from "components/[guild]/RolePlatforms/components/Platfo
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import { useClaimedReward } from "hooks/useClaimedReward"
-import rewards from "rewards"
+import { CardPropsHook } from "rewards/types"
 import { GuildPlatformWithOptionalId, PlatformName } from "types"
+import { secretTextData } from "./data"
 
-const useSecretTextCardProps = (guildPlatform: GuildPlatformWithOptionalId) => {
+const useSecretTextCardProps: CardPropsHook = (
+  guildPlatform: GuildPlatformWithOptionalId
+) => {
   const bgColor = useColorModeValue("gray.700", "gray.600")
 
   const { roles } = useGuild()
   const platformGuildData = guildPlatform.platformGuildData
 
   const rolePlatform = roles
-    .flatMap((role) => role.rolePlatforms)
+    ?.flatMap((role) => role.rolePlatforms)
     .find((rp) => rp.guildPlatformId === guildPlatform.id)
 
   const { isAdmin } = useGuildPermission()
   const { claimed } = useClaimedReward(rolePlatform?.id)
 
   return {
-    name: platformGuildData.name ?? "Secret",
+    name: platformGuildData?.name || secretTextData.name,
     type: "TEXT" as PlatformName,
-    image: platformGuildData.imageUrl ?? (
+    image: platformGuildData?.imageUrl ?? (
       <Circle size={10} bgColor={bgColor}>
-        <Icon as={rewards.TEXT.icon} boxSize={5} color="white" />
+        <Icon as={secretTextData.icon} boxSize={5} color="white" />
       </Circle>
     ),
     info: rolePlatform && <AvailabilityTags rolePlatform={rolePlatform} mt={1} />,
