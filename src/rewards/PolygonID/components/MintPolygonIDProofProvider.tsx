@@ -9,14 +9,18 @@ const DynamicMintPolygonIDProofModal = dynamic(
   () => import("./MintPolygonIDProofModal")
 )
 
-const MintPolygonIDProofContext = createContext<{
+interface MintPolygonIDProofContextType {
   isConnectDIDModalOpen: boolean
   onConnectDIDModalOpen: () => void
   onConnectDIDModalClose: () => void
   isMintPolygonIDProofModalOpen: boolean
   onMintPolygonIDProofModalOpen: () => void
   onMintPolygonIDProofModalClose: () => void
-}>(undefined)
+}
+
+const MintPolygonIDProofContext = createContext<MintPolygonIDProofContextType>(
+  {} as MintPolygonIDProofContextType
+)
 
 const MintPolygonIDProofProvider = ({ children }: PropsWithChildren<unknown>) => {
   const { guildPlatforms } = useGuild()
@@ -44,11 +48,12 @@ const MintPolygonIDProofProvider = ({ children }: PropsWithChildren<unknown>) =>
     >
       {children}
 
-      {guildPlatforms.find((gp) => gp.platformId === PlatformType.POLYGON_ID) && (
+      {guildPlatforms?.find((gp) => gp.platformId === PlatformType.POLYGON_ID) && (
         <>
           <DynamicConnectDIDModal
             isOpen={isConnectDIDModalOpen}
             onClose={onConnectDIDModalClose}
+            onMintPolygonIDProofModalOpen={onMintPolygonIDProofModalOpen}
           />
           <DynamicMintPolygonIDProofModal
             isOpen={isMintPolygonIDProofModalOpen}

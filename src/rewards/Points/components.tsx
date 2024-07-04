@@ -1,20 +1,10 @@
-import { Star } from "@phosphor-icons/react"
 import dynamic from "next/dynamic"
 import { AddRewardPanelLoadingSpinner } from "rewards/components/AddRewardPanelLoadingSpinner"
 import LoadingRewardPreview from "rewards/components/LoadingRewardPreview"
-import {
-  CardSettingsComponent,
-  PlatformAsRewardRestrictions,
-  RewardData,
-} from "rewards/types"
+import { CardSettingsComponent, RewardComponentsData } from "rewards/types"
 import usePointsCardProps from "./usePointsCardProps"
 
 export default {
-  icon: Star,
-  name: "Points",
-  colorScheme: "gray",
-  gatedEntity: "",
-  asRewardRestriction: PlatformAsRewardRestrictions.MULTIPLE_ROLES,
   cardPropsHook: usePointsCardProps,
   cardSettingsComponent: dynamic(() => import("rewards/Points/PointsCardSettings"), {
     ssr: false,
@@ -37,4 +27,4 @@ export default {
   RoleCardComponent: dynamic(() => import("rewards/components/PointsReward"), {
     ssr: false,
   }),
-} as const satisfies RewardData
+} satisfies RewardComponentsData

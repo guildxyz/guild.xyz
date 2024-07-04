@@ -1,20 +1,14 @@
-import { PlatformAsRewardRestrictions, RewardData } from "rewards/types"
-import usePoapCardProps from "./usePoapCardProps"
-import PoapCardButton from "./PoapCardButton"
-import PoapCardMenu from "./PoapCardMenu"
 import dynamic from "next/dynamic"
 import LoadingRewardPreview from "rewards/components/LoadingRewardPreview"
+import { RewardComponentsData } from "rewards/types"
+import PoapCardButton from "./PoapCardButton"
+import PoapCardMenu from "./PoapCardMenu"
+import usePoapCardProps from "./usePoapCardProps"
 
 export default {
-  icon: null,
-  imageUrl: "/platforms/poap.png",
-  name: "POAP",
-  colorScheme: "purple",
-  gatedEntity: "POAP",
   cardPropsHook: usePoapCardProps,
   cardButton: PoapCardButton,
   cardMenuComponent: PoapCardMenu,
-  asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
   AddRewardPanel: dynamic(
     () =>
       import(
@@ -31,4 +25,4 @@ export default {
   RoleCardComponent: dynamic(() => import("rewards/components/PoapReward"), {
     ssr: false,
   }),
-} as const satisfies RewardData
+} satisfies RewardComponentsData

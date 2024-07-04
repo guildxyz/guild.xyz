@@ -23,6 +23,7 @@ import {
   useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react"
+import { FarcasterProfile as FarcasterProfileType } from "@guildxyz/types"
 import { ArrowCounterClockwise, DeviceMobileCamera } from "@phosphor-icons/react"
 import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
@@ -86,8 +87,10 @@ const ConnectFarcasterButton = ({
 
   const submitSignedKeyRequest = (
     signedPayload: SignedValidation
-  ): Promise<{ url: string; deadline: number; deadlineRelative: number }> =>
-    fetcher(`/v2/users/${userId}/farcaster-signed-keys`, signedPayload)
+  ): Promise<
+    | { url: string; deadline: number; deadlineRelative: number }
+    | ({ usedExistingKey: true } & FarcasterProfileType)
+  > => fetcher(`/v2/users/${userId}/farcaster-signed-keys`, signedPayload)
 
   const [seconds, { startCountdown, resetCountdown }] = useCountdown({
     countStart: 11 * 60 - 1, // -1 Just so we don't show "11 minutes" for a second at start
@@ -96,7 +99,20 @@ const ConnectFarcasterButton = ({
   const shouldEnableRegenerateButton = seconds < ENABLE_REGENERATE_BUTTON_AT_SEC
 
   const signedKeyRequest = useSubmitWithSign(submitSignedKeyRequest, {
-    onSuccess: ({ deadlineRelative }) => {
+    onSuccess: (response) => {
+      if ("usedExistingKey" in response) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { usedExistingKey, ...profile } = response
+        mutate((prev) => (prev ? { ...prev, farcasterProfiles: [profile] } : prev), {
+          revalidate: false,
+        }).then(() => {
+          onApprove()
+        })
+        return
+      }
+
+      const { deadlineRelative } = response
+
       const deadline = Date.now() + deadlineRelative
       startCountdown()
 
@@ -159,6 +175,10 @@ const ConnectFarcasterButton = ({
     onClose()
   }
 
+  const url =
+    signedKeyRequest.response && "url" in signedKeyRequest.response
+      ? signedKeyRequest.response.url
+      : null
   const qrSize = useBreakpointValue({ base: 300, md: 400 })
 
   return (
@@ -194,10 +214,10 @@ const ConnectFarcasterButton = ({
           <ModalBody pt={8}>
             <VStack justifyContent="center">
               <Skeleton isLoaded={!signedKeyRequest.isLoading} borderRadius={"md"}>
-                {!isMobile && signedKeyRequest.response?.url && (
+                {!isMobile && url && (
                   <Box borderRadius="md" borderWidth={3} overflow="hidden">
                     <QRCodeSVG
-                      value={signedKeyRequest.response.url}
+                      value={url}
                       size={qrSize}
                       style={{ maxWidth: "100%" }}
                     />
@@ -257,12 +277,12 @@ const ConnectFarcasterButton = ({
               </Accordion>
             </VStack>
           </ModalBody>
-          {isMobile && (
+          {isMobile && url && (
             <ModalFooter>
               <Button
                 w="full"
                 as="a"
-                href={signedKeyRequest.response?.url}
+                href={url}
                 target="_blank"
                 colorScheme="FARCASTER"
               >

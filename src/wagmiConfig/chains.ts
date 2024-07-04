@@ -5,6 +5,7 @@ import {
   exosama,
   formTestnet,
   metisSepolia,
+  mint,
   neonEVM,
   oasisSapphire,
   ontology,
@@ -650,6 +651,14 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/networkLogos/klaytn.svg",
     },
   },
+  MINT: {
+    ...generateChainConfig(mint as ViemChain, ETH_ICON),
+    iconUrl: "/networkLogos/mint.svg",
+    blockExplorerIconUrl: {
+      light: "/networkLogos/mint.svg",
+      dark: "/networkLogos/mint.svg",
+    },
+  },
 }
 
 enum Chains {
@@ -713,6 +722,7 @@ enum Chains {
   CYBER = cyber.id,
   TAIKO = taiko.id,
   KLAYTN = klaytn.id,
+  MINT = mint.id,
 }
 
 export type Chain = keyof typeof Chains

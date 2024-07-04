@@ -11,9 +11,8 @@ import { Modal } from "components/common/Modal"
 import useToast from "hooks/useToast"
 import { FormProvider, useForm } from "react-hook-form"
 import { GuildPlatform } from "types"
-import SecretTextDataForm, {
-  SecretTextRewardForm,
-} from "./SecretTextDataForm/SecretTextDataForm"
+import SecretTextDataForm from "./SecretTextDataForm/SecretTextDataForm"
+import { SecretTextRewardForm } from "./SecretTextDataForm/types"
 
 type Props = {
   isOpen: boolean

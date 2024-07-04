@@ -4,21 +4,21 @@
 /* eslint-disable */
 
 /*
-  Fuels version: 0.60.0
-  Forc version: 0.44.0
-  Fuel-Core version: 0.20.5
+  Fuels version: 0.90.0
+  Forc version: 0.60.0
+  Fuel-Core version: 0.30.0
 */
 
 import type {
   BigNumberish,
   BN,
-  BytesLike,
+  Bytes,
   Contract,
-  DecodedValue,
   EvmAddress,
   FunctionFragment,
   Interface,
   InvokeFunction,
+  StdString,
 } from "fuels"
 
 import type { Enum, Option } from "./common"
@@ -55,6 +55,24 @@ export enum InitErrorOutput {
   AlreadyInitialized = "AlreadyInitialized",
   NotInitialized = "NotInitialized",
 }
+export enum InitializationErrorInput {
+  CannotReinitialized = "CannotReinitialized",
+}
+export enum InitializationErrorOutput {
+  CannotReinitialized = "CannotReinitialized",
+}
+export type MetadataInput = Enum<{
+  B256: string
+  Bytes: Bytes
+  Int: BigNumberish
+  String: StdString
+}>
+export type MetadataOutput = Enum<{
+  B256: string
+  Bytes: Bytes
+  Int: BN
+  String: StdString
+}>
 export type StateInput = Enum<{
   Uninitialized: []
   Initialized: IdentityInput
@@ -90,12 +108,10 @@ export enum TokenErrorOutput {
   CouldNotRemoveEntry = "CouldNotRemoveEntry",
 }
 
-export type AddressInput = { value: string }
+export type AddressInput = { bits: string }
 export type AddressOutput = AddressInput
-export type AssetIdInput = { value: string }
+export type AssetIdInput = { bits: string }
 export type AssetIdOutput = AssetIdInput
-export type BytesInput = { buf: RawBytesInput; len: BigNumberish }
-export type BytesOutput = { buf: RawBytesOutput; len: BN }
 export type ClaimParametersInput = {
   recipient: AddressInput
   action: GuildActionInput
@@ -124,7 +140,7 @@ export type ClaimParametersOutput = {
   admin_fee: BN
   contract_id: ContractIdOutput
 }
-export type ContractIdInput = { value: string }
+export type ContractIdInput = { bits: string }
 export type ContractIdOutput = ContractIdInput
 export type ContractInitializedInput = {
   owner: IdentityInput
@@ -140,18 +156,22 @@ export type ContractInitializedOutput = {
 }
 export type FeeChangedInput = { old: BigNumberish; new: BigNumberish }
 export type FeeChangedOutput = { old: BN; new: BN }
-export type OwnerChangedInput = { old: IdentityInput; new: IdentityInput }
-export type OwnerChangedOutput = { old: IdentityOutput; new: IdentityOutput }
+export type OwnershipSetInput = { new_owner: IdentityInput }
+export type OwnershipSetOutput = { new_owner: IdentityOutput }
+export type OwnershipTransferredInput = {
+  new_owner: IdentityInput
+  previous_owner: IdentityInput
+}
+export type OwnershipTransferredOutput = {
+  new_owner: IdentityOutput
+  previous_owner: IdentityOutput
+}
 export type PinBurnedInput = { pin_owner: AddressInput; pin_id: BigNumberish }
 export type PinBurnedOutput = { pin_owner: AddressOutput; pin_id: BN }
 export type PinMintedInput = { recipient: AddressInput; pin_id: BigNumberish }
 export type PinMintedOutput = { recipient: AddressOutput; pin_id: BN }
-export type RawBytesInput = { ptr: BigNumberish; cap: BigNumberish }
-export type RawBytesOutput = { ptr: BN; cap: BN }
 export type SignerChangedInput = { old: EvmAddress; new: EvmAddress }
 export type SignerChangedOutput = SignerChangedInput
-export type StringInput = { bytes: BytesInput }
-export type StringOutput = { bytes: BytesOutput }
 export type TreasuryChangedInput = { old: IdentityInput; new: IdentityInput }
 export type TreasuryChangedOutput = { old: IdentityOutput; new: IdentityOutput }
 
@@ -189,110 +209,10 @@ interface GuildPinContractAbiInterface extends Interface {
     symbol: FunctionFragment
     total_assets: FunctionFragment
     total_supply: FunctionFragment
-    encoded_metadata: FunctionFragment
     metadata: FunctionFragment
+    encoded_metadata: FunctionFragment
+    pin_metadata: FunctionFragment
   }
-
-  encodeFunctionData(functionFragment: "initialize", values: []): Uint8Array
-  encodeFunctionData(functionFragment: "set_fee", values: [BigNumberish]): Uint8Array
-  encodeFunctionData(
-    functionFragment: "set_owner",
-    values: [IdentityInput]
-  ): Uint8Array
-  encodeFunctionData(
-    functionFragment: "set_signer",
-    values: [EvmAddress]
-  ): Uint8Array
-  encodeFunctionData(
-    functionFragment: "set_treasury",
-    values: [IdentityInput]
-  ): Uint8Array
-  encodeFunctionData(functionFragment: "fee", values: []): Uint8Array
-  encodeFunctionData(functionFragment: "signer", values: []): Uint8Array
-  encodeFunctionData(functionFragment: "treasury", values: []): Uint8Array
-  encodeFunctionData(functionFragment: "burn", values: [BigNumberish]): Uint8Array
-  encodeFunctionData(
-    functionFragment: "claim",
-    values: [ClaimParametersInput, string]
-  ): Uint8Array
-  encodeFunctionData(
-    functionFragment: "balance_of",
-    values: [AddressInput]
-  ): Uint8Array
-  encodeFunctionData(
-    functionFragment: "pin_id_by_address",
-    values: [AddressInput, BigNumberish, GuildActionInput]
-  ): Uint8Array
-  encodeFunctionData(
-    functionFragment: "pin_id_by_user_id",
-    values: [BigNumberish, BigNumberish, GuildActionInput]
-  ): Uint8Array
-  encodeFunctionData(
-    functionFragment: "pin_owner",
-    values: [BigNumberish]
-  ): Uint8Array
-  encodeFunctionData(functionFragment: "total_minted", values: []): Uint8Array
-  encodeFunctionData(
-    functionFragment: "total_minted_per_guild",
-    values: [BigNumberish]
-  ): Uint8Array
-  encodeFunctionData(functionFragment: "owner", values: []): Uint8Array
-  encodeFunctionData(
-    functionFragment: "decimals",
-    values: [AssetIdInput]
-  ): Uint8Array
-  encodeFunctionData(functionFragment: "name", values: [AssetIdInput]): Uint8Array
-  encodeFunctionData(functionFragment: "symbol", values: [AssetIdInput]): Uint8Array
-  encodeFunctionData(functionFragment: "total_assets", values: []): Uint8Array
-  encodeFunctionData(
-    functionFragment: "total_supply",
-    values: [AssetIdInput]
-  ): Uint8Array
-  encodeFunctionData(
-    functionFragment: "encoded_metadata",
-    values: [BigNumberish]
-  ): Uint8Array
-  encodeFunctionData(
-    functionFragment: "metadata",
-    values: [BigNumberish]
-  ): Uint8Array
-
-  decodeFunctionData(functionFragment: "initialize", data: BytesLike): DecodedValue
-  decodeFunctionData(functionFragment: "set_fee", data: BytesLike): DecodedValue
-  decodeFunctionData(functionFragment: "set_owner", data: BytesLike): DecodedValue
-  decodeFunctionData(functionFragment: "set_signer", data: BytesLike): DecodedValue
-  decodeFunctionData(functionFragment: "set_treasury", data: BytesLike): DecodedValue
-  decodeFunctionData(functionFragment: "fee", data: BytesLike): DecodedValue
-  decodeFunctionData(functionFragment: "signer", data: BytesLike): DecodedValue
-  decodeFunctionData(functionFragment: "treasury", data: BytesLike): DecodedValue
-  decodeFunctionData(functionFragment: "burn", data: BytesLike): DecodedValue
-  decodeFunctionData(functionFragment: "claim", data: BytesLike): DecodedValue
-  decodeFunctionData(functionFragment: "balance_of", data: BytesLike): DecodedValue
-  decodeFunctionData(
-    functionFragment: "pin_id_by_address",
-    data: BytesLike
-  ): DecodedValue
-  decodeFunctionData(
-    functionFragment: "pin_id_by_user_id",
-    data: BytesLike
-  ): DecodedValue
-  decodeFunctionData(functionFragment: "pin_owner", data: BytesLike): DecodedValue
-  decodeFunctionData(functionFragment: "total_minted", data: BytesLike): DecodedValue
-  decodeFunctionData(
-    functionFragment: "total_minted_per_guild",
-    data: BytesLike
-  ): DecodedValue
-  decodeFunctionData(functionFragment: "owner", data: BytesLike): DecodedValue
-  decodeFunctionData(functionFragment: "decimals", data: BytesLike): DecodedValue
-  decodeFunctionData(functionFragment: "name", data: BytesLike): DecodedValue
-  decodeFunctionData(functionFragment: "symbol", data: BytesLike): DecodedValue
-  decodeFunctionData(functionFragment: "total_assets", data: BytesLike): DecodedValue
-  decodeFunctionData(functionFragment: "total_supply", data: BytesLike): DecodedValue
-  decodeFunctionData(
-    functionFragment: "encoded_metadata",
-    data: BytesLike
-  ): DecodedValue
-  decodeFunctionData(functionFragment: "metadata", data: BytesLike): DecodedValue
 }
 
 export class GuildPinContractAbi extends Contract {
@@ -322,11 +242,15 @@ export class GuildPinContractAbi extends Contract {
     total_minted_per_guild: InvokeFunction<[guild_id: BigNumberish], BN>
     owner: InvokeFunction<[], StateOutput>
     decimals: InvokeFunction<[asset: AssetIdInput], Option<number>>
-    name: InvokeFunction<[asset: AssetIdInput], Option<StringOutput>>
-    symbol: InvokeFunction<[asset: AssetIdInput], Option<StringOutput>>
+    name: InvokeFunction<[asset: AssetIdInput], Option<StdString>>
+    symbol: InvokeFunction<[asset: AssetIdInput], Option<StdString>>
     total_assets: InvokeFunction<[], BN>
     total_supply: InvokeFunction<[asset: AssetIdInput], Option<BN>>
-    encoded_metadata: InvokeFunction<[pin_id: BigNumberish], StringOutput>
-    metadata: InvokeFunction<[pin_id: BigNumberish], StringOutput>
+    metadata: InvokeFunction<
+      [asset_id: AssetIdInput, key: StdString],
+      Option<MetadataOutput>
+    >
+    encoded_metadata: InvokeFunction<[pin_id: BigNumberish], StdString>
+    pin_metadata: InvokeFunction<[pin_id: BigNumberish], StdString>
   }
 }
