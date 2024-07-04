@@ -42,14 +42,8 @@ const SegmentedControl = <TOption extends SegmentedControlOption>({
   const uid = useId()
 
   const height = useMemo(() => {
-    switch (size) {
-      case "md":
-        return { base: "fit", md: 10 }
-      case "sm":
-        return { base: "fit", md: 9 }
-      default:
-        return { base: "fit", md: 10 }
-    }
+    if (size === "md") return { base: "fit", md: 9 }
+    return { base: "fit", md: 10 }
   }, [size])
 
   return (
