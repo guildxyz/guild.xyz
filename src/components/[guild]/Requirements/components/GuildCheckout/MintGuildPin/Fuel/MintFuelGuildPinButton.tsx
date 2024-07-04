@@ -17,8 +17,9 @@ const MintFuelGuildPinButton = () => {
 
   const { data: fee, isValidating: isFeeValidating } = useFuelGuildPinFee()
   const { provider } = useProvider()
+
   const { balance, isLoading: isBalanceValidating } = useBalance({
-    address: provider.getBaseAssetId(),
+    address: provider?.getBaseAssetId(),
   })
 
   const { data: alreadyMinted, isValidating: isAlreadyMintedValidating } =
@@ -53,10 +54,10 @@ const MintFuelGuildPinButton = () => {
       {type === "EVM"
         ? "Connect Fuel address"
         : alreadyMinted
-        ? "Already minted"
-        : !isSufficientBalance
-        ? "Insufficient balance"
-        : "Mint NFT"}
+          ? "Already minted"
+          : !isSufficientBalance
+            ? "Insufficient balance"
+            : "Mint NFT"}
     </Button>
   )
 }

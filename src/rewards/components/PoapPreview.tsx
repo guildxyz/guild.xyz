@@ -1,8 +1,9 @@
 import rewards from "rewards"
 import { useWatch } from "react-hook-form"
 import RewardPreview from "./RewardPreview"
+import { PropsWithChildren } from "react"
 
-const PoapPreview = ({ children }): JSX.Element => {
+const PoapPreview = ({ children }: PropsWithChildren): JSX.Element => {
   const name = useWatch({
     name: "rolePlatforms.0.guildPlatform.platformGuildData.name",
   })

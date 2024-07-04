@@ -5,12 +5,7 @@ import { PropsWithChildren } from "react"
 import { useController, useFormContext, useWatch } from "react-hook-form"
 import BoxIcon from "static/icons/box.svg"
 import PublicRewardDataForm from "./components/PublicRewardDataForm"
-
-export type SecretTextRewardForm = {
-  name: string
-  imageUrl?: string
-  text: string
-}
+import { SecretTextRewardForm } from "./types"
 
 type Props = {
   shouldValidate?: boolean
