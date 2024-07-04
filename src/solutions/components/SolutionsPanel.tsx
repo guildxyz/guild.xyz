@@ -31,13 +31,11 @@ import { PlatformName, PlatformType } from "types"
 import Category from "./Category"
 
 const SolutionsPanel = ({
-  addReward,
   setSolution,
 }: {
-  addReward: (rp: any) => void
   setSolution: (name: SolutionName) => void
 }) => {
-  const { setStep, setSelection, onClose } = useAddRewardContext()
+  const { setStep, setSelection } = useAddRewardContext()
   const { guildPlatforms } = useGuild()
 
   const [search, setSearch] = useState("")
@@ -119,6 +117,7 @@ const SolutionsPanel = ({
           <Box>
             {categories.map((category) => (
               <Collapse
+                key={category.value}
                 in={
                   categoryField.value === "all" ||
                   categoryField.value === category.value

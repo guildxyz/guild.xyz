@@ -93,9 +93,7 @@ const AddSolutionsModal = () => {
     >
       <ModalOverlay />
 
-      {step === "HOME" && (
-        <SolutionsPanel addReward={handleAddReward} setSolution={setSolution} />
-      )}
+      {step === "HOME" && <SolutionsPanel setSolution={setSolution} />}
 
       <FormProvider {...methods}>
         <ClientStateRequirementHandlerProvider methods={methods}>
