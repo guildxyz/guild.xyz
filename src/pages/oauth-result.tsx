@@ -4,7 +4,7 @@ import { Center, Heading, Text } from "@chakra-ui/react"
 import { PlatformName } from "@guildxyz/types"
 import { GetServerSideProps, NextPage } from "next"
 import { useRouter } from "next/router"
-import rewards from "platforms/rewards"
+import rewards from "rewards"
 import { useEffect, useState } from "react"
 
 export type OAuthResultParams =

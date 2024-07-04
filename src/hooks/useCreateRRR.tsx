@@ -8,7 +8,6 @@ import useCreateRole, {
 } from "components/create-guild/hooks/useCreateRole"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
-import useToast from "hooks/useToast"
 import { Requirement } from "types"
 import { mapRealRequirementIdsToRolePlatforms } from "utils/mapRealRequirementIdToRolePlatform"
 
@@ -27,9 +26,9 @@ export type SubmitData =
 
     /**
      * Array of requirements. If referenced in a rolePlatform, the requirement should
-     * have a temporal `id` generated with Date.now() A requirementIdMap will be
-     * created to match each temporalId-roleId pair with the actual backend-created
-     * ID after creation.
+     * have a temporal `id` generated using uuid. A requirementIdMap will be created
+     * to match each temporalId-roleId pair with the actual backend-created ID after
+     * creation.
      */
     requirements: RoleToCreate["requirements"]
 
@@ -62,13 +61,12 @@ export type SubmitData =
  *   backend.
  */
 export type RequirementIdMap = {
-  [tempRequirementId: number]: {
+  [tempRequirementId: string]: {
     [roleId: number]: number // real requirement ID assigned by the backend
   }
 }
 
 const useCreateRRR = ({ onSuccess }: { onSuccess?: (res) => void }) => {
-  const toast = useToast()
   const showErrorToast = useShowErrorToast()
   const { captureEvent } = usePostHogContext()
   const postHogOptions = {

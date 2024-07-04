@@ -1,7 +1,7 @@
 import { IconButton, theme, useColorModeValue } from "@chakra-ui/react"
 import { transparentize } from "@chakra-ui/theme-tools"
+import { Check, Copy } from "@phosphor-icons/react"
 import { GroupBase, IndicatorsContainerProps, components } from "chakra-react-select"
-import { Check, Copy } from "phosphor-react"
 import { useState } from "react"
 import parseFromObject from "utils/parseFromObject"
 import { StyledSelectProps } from "../StyledSelect"

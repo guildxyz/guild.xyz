@@ -1,7 +1,7 @@
 import PlatformCard from "components/[guild]/RolePlatforms/components/PlatformCard"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
-import rewards from "platforms/rewards"
+import rewards from "rewards"
 import { GuildPlatform, PlatformName, PlatformType } from "types"
 import PlatformAccessButton from "./PlatformAccessButton"
 

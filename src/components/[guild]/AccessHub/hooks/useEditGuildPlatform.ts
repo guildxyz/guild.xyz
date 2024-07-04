@@ -4,7 +4,7 @@ import useGuildPlatform from "components/[guild]/hooks/useGuildPlatform"
 import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
-import { CAPACITY_TIME_PLATFORMS } from "platforms/rewards"
+import { CAPACITY_TIME_PLATFORMS } from "rewards"
 import { GuildPlatform, PlatformName, PlatformType } from "types"
 
 type PartialGuildPlatform = Partial<
