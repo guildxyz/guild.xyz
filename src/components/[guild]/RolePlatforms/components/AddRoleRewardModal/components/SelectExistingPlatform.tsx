@@ -3,9 +3,10 @@ import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import LogicDivider from "components/[guild]/LogicDivider"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { DISPLAY_CARD_INTERACTIVITY_STYLES } from "components/common/DisplayCard"
-import rewards, { PlatformAsRewardRestrictions } from "platforms/rewards"
 import { useState } from "react"
 import { useWatch } from "react-hook-form"
+import rewards, { PlatformAsRewardRestrictions } from "rewards"
+import rewardComponents from "rewards/components"
 import { PlatformType, Requirement, RoleFormType, RolePlatform } from "types"
 import EditRolePlatformModal from "../../EditRolePlatformModal"
 import PlatformCard from "../../PlatformCard"
@@ -56,7 +57,7 @@ const SelectExistingPlatform = ({ onClose, onSelect }: Props) => {
   const handleClick = (rolePlatformData?: Partial<RolePlatform>) => {
     const platformId = rolePlatformData?.guildPlatform?.platformId
     const { cardSettingsComponent = null } = platformId
-      ? rewards[PlatformType[platformId]]
+      ? rewardComponents[PlatformType[platformId]]
       : {}
 
     if (cardSettingsComponent) {
@@ -78,10 +79,11 @@ const SelectExistingPlatform = ({ onClose, onSelect }: Props) => {
 
       <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} gap={4}>
         {filteredPlatforms?.map((platform) => {
-          const platformData = rewards[PlatformType[platform.platformId]]
-          if (!platformData) return null
+          const platformComponents =
+            rewardComponents[PlatformType[platform.platformId]]
+          if (!platformComponents) return null
 
-          const { cardPropsHook } = platformData
+          const { cardPropsHook } = platformComponents
 
           const isGoogleReward = platform.platformId === PlatformType.GOOGLE
           const isForm =

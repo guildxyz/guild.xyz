@@ -35,7 +35,8 @@
     "cypress.config.ts",
     "cypress/**/*.ts",
     ".next/types/**/*.ts",
-    "tailwind.config.ts"
+    "tailwind.config.ts",
+    "scripts/detectCircularDependencies.ts"
   ],
   "exclude": ["node_modules", ".next", "out"]
 }

@@ -1,14 +1,14 @@
 import { ModalOverlay, useDisclosure } from "@chakra-ui/react"
 import { Schemas, Visibility } from "@guildxyz/types"
+import { Plus } from "@phosphor-icons/react"
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { atom, useAtomValue } from "jotai"
-import { Plus } from "phosphor-react"
-import rewards, { modalSizeForPlatform } from "platforms/rewards"
-import { RewardData } from "platforms/types"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
+import { modalSizeForPlatform } from "rewards"
+import rewardComponents from "rewards/components"
 import { RoleFormType } from "types"
 import { AddRewardProvider, useAddRewardContext } from "../AddRewardContext"
 import { ClientStateRequirementHandlerProvider } from "../RequirementHandlerContext"
@@ -67,8 +67,8 @@ const AddRewardButton = () => {
   const { textColor, buttonColorScheme } = useThemeContext()
 
   // TODO: once we separate rewards from platforms, we should be able to use this without ??, and it should properly infer types too.
-  const rewardConfig = rewards[selection] ?? {}
-  const AddRewardPanel = rewardConfig.AddRewardPanel as RewardData["AddRewardPanel"]
+  const { AddRewardPanel } = rewardComponents[selection] ?? {}
+
   const showErrorToast = useShowErrorToast()
 
   const isRewardSetupStep = selection && step !== "HOME" && step !== "SELECT_ROLE"
@@ -115,8 +115,8 @@ const AddRewardButton = () => {
             step === "SELECT_ROLE"
               ? "2xl"
               : isRewardSetupStep
-              ? modalSizeForPlatform(selection)
-              : "4xl"
+                ? modalSizeForPlatform(selection)
+                : "4xl"
           }
           scrollBehavior="inside"
           colorScheme="dark"

@@ -1,6 +1,7 @@
 // @ts-check
 
 const { BugsnagSourceMapUploaderPlugin } = require("webpack-bugsnag-plugins")
+const CircularDependencyPlugin = require("circular-dependency-plugin")
 
 /** @type {import("next").NextConfig} */
 const nextConfig = {
@@ -21,8 +22,8 @@ const nextConfig = {
       ],
     })
 
+    if (!config.plugins) config.plugins = []
     if (process.env.VERCEL_ENV === "production") {
-      if (!config.plugins) config.plugins = []
       config.plugins.push(
         new BugsnagSourceMapUploaderPlugin({
           apiKey: process.env.NEXT_PUBLIC_BUGSNAG_KEY ?? "",
@@ -31,6 +32,16 @@ const nextConfig = {
         })
       )
     }
+
+    config.plugins.push(
+      new CircularDependencyPlugin({
+        exclude: /.next|node_modules/,
+        include: /src/,
+        // TODO: if all circular dependencies are resolved, set this argument to true
+        failOnError: false,
+        allowAsyncCycles: false,
+      })
+    )
 
     return config
   },
@@ -80,6 +91,7 @@ const nextConfig = {
   },
   experimental: {
     scrollRestoration: true,
+    optimizePackageImports: ["@phosphor-icons/react"],
   },
   async rewrites() {
     return {

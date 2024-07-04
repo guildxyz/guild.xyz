@@ -16,7 +16,6 @@ import useSetKeyPair from "hooks/useSetKeyPair"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useAtom, useSetAtom } from "jotai"
 import Link from "next/link"
-import { ArrowSquareOut } from "phosphor-react"
 import { useEffect } from "react"
 import { useAccount, useConnect, type Connector } from "wagmi"
 import useWeb3ConnectionManager from "../../hooks/useWeb3ConnectionManager"
@@ -28,6 +27,7 @@ import useIsWalletConnectModalActive from "./hooks/useIsWalletConnectModalActive
 import useLinkAddress from "./hooks/useLinkAddress"
 import processConnectionError from "./utils/processConnectionError"
 import { COINBASE_WALLET_SDK_ID, COINBASE_INJECTED_WALLET_ID } from "./constants"
+import { ArrowSquareOut } from "@phosphor-icons/react"
 
 type Props = {
   isOpen: boolean
@@ -146,7 +146,6 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
                 processError: (err: any) => {
                   if (err?.code === "ACTION_REJECTED") {
                     return {
-<<<<<<< HEAD
                       title: "Error",
                       description:
                         err?.message ??
@@ -155,7 +154,6 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
                           : typeof err === "string"
                             ? err
                             : err?.errors?.[0]?.msg),
-=======
                       title: "Rejected",
                       description: "Signature request has been rejected",
                     }
@@ -196,7 +194,6 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
                     connect={connect}
                     pendingConnector={
                       isPending ? (variables?.connector as Connector) : undefined
->>>>>>> 7deb36d6b803763fdc923e153a47905754608356
                     }
                     error={error}
                   />

@@ -9,8 +9,8 @@ import useSubmit, { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
 import { useSetAtom } from "jotai"
 import { OAuthResultParams } from "pages/oauth-result"
-import rewards from "platforms/rewards"
 import { useCallback, useMemo } from "react"
+import rewards from "rewards"
 import useSWR from "swr"
 import { PlatformName, PlatformType } from "types"
 import fetcher from "utils/fetcher"
@@ -23,9 +23,9 @@ const parseConnectError = (
 ):
   | string
   | {
-    params: Record<string, string>
-    errors: { msg: string }[]
-  } => {
+      params: Record<string, string>
+      errors: { msg: string }[]
+    } => {
   const regex = /^"(\d+)".*params: ({.*}), error: (\[.*\])/
 
   try {
@@ -310,7 +310,6 @@ const useConnect = (useSubmitOptions?: UseSubmitOptions, isAutoConnect = false) 
         )
         showPlatformMergeAlert({ addressOrDomain, platformName })
       } else {
-<<<<<<< HEAD
         // TODO: migrate the useShowErrorToast hook
         // showErrorToast(
         //   toastError
@@ -323,19 +322,6 @@ const useConnect = (useSubmitOptions?: UseSubmitOptions, isAutoConnect = false) 
         //         }
         //       : rawError
         // )
-=======
-        showErrorToast(
-          toastError
-            ? { error: toastError, correlationId: rawError.correlationId }
-            : // temporary until we solve the X rate limit
-              platformName === "TWITTER"
-              ? {
-                  error:
-                    "There're a lot of users connecting now, and X is rate limiting us, so your request timed out. Please try again later!",
-                }
-              : rawError
-        )
->>>>>>> shadcn-ui
       }
     },
   })

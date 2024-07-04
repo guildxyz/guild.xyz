@@ -1,10 +1,10 @@
 import { cn } from "@/lib/utils"
 import useUser from "components/[guild]/hooks/useUser"
 import useDelegateVaults from "components/common/Layout/components/Account/components/delegate/useDelegateVaults"
-import rewards from "platforms/rewards"
 import { ReactNode, useMemo } from "react"
 import { PlatformName } from "types"
 import { SocialAccount } from "./SocialAccount"
+import rewards from "rewards"
 
 const AccountConnections = () => {
   const { isLoading, addresses, platformUsers, sharedSocials } = useUser()

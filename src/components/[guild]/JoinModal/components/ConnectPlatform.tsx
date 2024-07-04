@@ -3,7 +3,7 @@ import usePlatformsToReconnect from "components/[guild]/hooks/usePlatformsToReco
 import useUser from "components/[guild]/hooks/useUser"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Script from "next/script"
-import rewards from "platforms/rewards"
+import rewards from "rewards"
 import { useEffect } from "react"
 import { useFormContext } from "react-hook-form"
 import { PlatformName } from "types"

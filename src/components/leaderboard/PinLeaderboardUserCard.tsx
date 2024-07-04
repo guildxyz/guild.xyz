@@ -1,4 +1,3 @@
-import { env } from "env"
 import { Link } from "@chakra-ui/next-js"
 import {
   Center,
@@ -21,12 +20,13 @@ import {
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
+import { CaretDown, Trophy } from "@phosphor-icons/react"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import GuildAvatar from "components/common/GuildAvatar"
+import { env } from "env"
 import useResolveAddress from "hooks/useResolveAddress"
 import dynamic from "next/dynamic"
-import { CaretDown, Trophy } from "phosphor-react"
 import { GuildPinMetadata } from "types"
 import base64ToObject from "utils/base64ToObject"
 import shortenHex from "utils/shortenHex"
@@ -112,10 +112,10 @@ const PinLeaderboardUserCard = ({
                 position <= 3
                   ? { base: "sm", sm: "md" }
                   : position < 1000
-                  ? { base: "lg", sm: "xl" }
-                  : position < 10000
-                  ? { base: "md", sm: "lg" }
-                  : { base: "xs", sm: "sm" }
+                    ? { base: "lg", sm: "xl" }
+                    : position < 10000
+                      ? { base: "md", sm: "lg" }
+                      : { base: "xs", sm: "sm" }
               }
               fontWeight="bold"
               letterSpacing="wide"

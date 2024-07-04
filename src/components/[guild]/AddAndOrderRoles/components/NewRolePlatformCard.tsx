@@ -9,9 +9,10 @@ import SetVisibility from "components/[guild]/SetVisibility"
 import useVisibilityModalProps from "components/[guild]/SetVisibility/hooks/useVisibilityModalProps"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
-import NftAvailabilityTags from "platforms/ContractCall/components/NftAvailabilityTags"
-import rewards, { CAPACITY_TIME_PLATFORMS } from "platforms/rewards"
 import { useFormContext, useWatch } from "react-hook-form"
+import { CAPACITY_TIME_PLATFORMS } from "rewards"
+import NftAvailabilityTags from "rewards/ContractCall/components/NftAvailabilityTags"
+import rewardComponents from "rewards/components"
 import {
   GuildPlatformWithOptionalId,
   PlatformName,
@@ -57,7 +58,8 @@ const NewRolePlatformCard = ({ rolePlatform, remove }: Props) => {
     guildPlatform.platformGuildData.function ===
       ContractCallFunction.DEPRECATED_SIMPLE_CLAIM
 
-  const { cardPropsHook: useCardProps, cardSettingsComponent } = rewards[type]
+  const { cardPropsHook: useCardProps, cardSettingsComponent } =
+    rewardComponents[type]
 
   return (
     <RolePlatformProvider

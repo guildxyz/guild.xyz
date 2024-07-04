@@ -1,4 +1,3 @@
-import { env } from "env"
 import {
   Box,
   Center,
@@ -17,6 +16,7 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
+import { ArrowRight, ArrowSquareOut } from "@phosphor-icons/react"
 import {
   initWeb3InboxClient,
   useNotifications,
@@ -29,10 +29,10 @@ import {
 } from "@web3inbox/react"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
+import { env } from "env"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
 import dynamic from "next/dynamic"
-import { ArrowRight, ArrowSquareOut } from "phosphor-react"
 import { useRef, useState } from "react"
 import { useAccount, useSignMessage } from "wagmi"
 import WebInboxSkeleton from "./WebInboxSkeleton"

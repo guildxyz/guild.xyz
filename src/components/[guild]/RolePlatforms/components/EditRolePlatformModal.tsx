@@ -8,9 +8,10 @@ import {
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
-import rewards from "platforms/rewards"
 import { createContext, useContext, useRef, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
+import rewards from "rewards"
+import rewardComponents from "rewards/components"
 import { PlatformType, RoleFormType, RolePlatform } from "types"
 import { RolePlatformProvider } from "./RolePlatformProvider"
 
@@ -43,7 +44,7 @@ const EditRolePlatformModal = ({
     rewards[PlatformType[rolePlatform.guildPlatform.platformId]].name
 
   const { cardSettingsComponent: SettingsComponent } =
-    rewards[PlatformType[rolePlatform?.guildPlatform?.platformId]]
+    rewardComponents[PlatformType[rolePlatform?.guildPlatform?.platformId]]
 
   return (
     <Modal

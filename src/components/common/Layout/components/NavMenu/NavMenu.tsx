@@ -11,9 +11,6 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
-import Button from "components/common/Button"
-import dynamic from "next/dynamic"
-import { useRouter } from "next/router"
 import {
   Book,
   CircleWavyCheck,
@@ -28,7 +25,9 @@ import {
   Plus,
   Shield,
   UsersThree,
-} from "phosphor-react"
+} from "@phosphor-icons/react"
+import Button from "components/common/Button"
+import dynamic from "next/dynamic"
 import XLogo from "static/icons/x.svg"
 import NavButton from "./components/NavButton"
 import NavGroup from "./components/NavGroup"
@@ -41,7 +40,6 @@ const AnimatedLogo = dynamic(() => import("components/explorer/AnimatedLogo"), {
 
 const NavMenu = (): JSX.Element => {
   const darkBgColor = useColorModeValue("gray.50", "blackAlpha.300")
-  const router = useRouter()
 
   return (
     <Popover placement="bottom-start">

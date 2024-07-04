@@ -3,7 +3,7 @@ import { useConnect } from "components/[guild]/JoinModal/hooks/useConnectPlatfor
 import { Message } from "components/[guild]/JoinModal/hooks/useOauthPopupWindow"
 import useUser, { useUserPublic } from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
-import rewards from "platforms/rewards"
+import rewards from "rewards"
 import { useEffect } from "react"
 
 const useConnectFromLocalStorage = () => {

@@ -11,20 +11,21 @@ import {
   Wrap,
   useColorModeValue,
 } from "@chakra-ui/react"
+import { ArrowSquareOut, LockSimple } from "@phosphor-icons/react"
 import usePlatformAccessButton from "components/[guild]/AccessHub/components/usePlatformAccessButton"
+import useGuild from "components/[guild]/hooks/useGuild"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import { ApiRequirementHandlerProvider } from "components/[guild]/RequirementHandlerContext"
 import Visibility from "components/[guild]/Visibility"
-import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import useMembership, {
   useRoleMembership,
 } from "components/explorer/hooks/useMembership"
 import { Transition, motion } from "framer-motion"
-import { ArrowSquareOut, LockSimple } from "phosphor-react"
-import GoogleCardWarning from "platforms/Google/GoogleCardWarning"
-import rewards from "platforms/rewards"
 import { PropsWithChildren, ReactNode, useMemo, useState } from "react"
+import rewards from "rewards"
+import rewardComponents from "rewards/components"
+import GoogleCardWarning from "rewards/Google/GoogleCardWarning"
 import { GuildPlatform, PlatformType, Role, RolePlatform } from "types"
 import capitalize from "utils/capitalize"
 
@@ -270,7 +271,8 @@ const RewardWrapper = ({ platform, ...props }: RewardProps) => {
   const platformWithGuildPlatform = { ...platform, guildPlatform }
 
   const Component =
-    rewards[PlatformType[guildPlatform?.platformId]].RoleCardComponent ?? Reward
+    rewardComponents[PlatformType[guildPlatform?.platformId]].RoleCardComponent ??
+    Reward
 
   return (
     <ApiRequirementHandlerProvider roleId={platformWithGuildPlatform.roleId}>

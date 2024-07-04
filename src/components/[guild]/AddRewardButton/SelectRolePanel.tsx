@@ -12,24 +12,24 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import { Visibility } from "@guildxyz/types"
+import { ArrowLeft, Info } from "@phosphor-icons/react"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import useCreateRRR, { SubmitData } from "hooks/useCreateRRR"
-import { ArrowLeft, Info } from "phosphor-react"
-import SelectRoleOrSetRequirements from "platforms/components/SelectRoleOrSetRequirements"
-import rewards, { CAPACITY_TIME_PLATFORMS } from "platforms/rewards"
 import { useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
+import rewards, { CAPACITY_TIME_PLATFORMS } from "rewards"
+import rewardComponents from "rewards/components"
+import SelectRoleOrSetRequirements from "rewards/components/SelectRoleOrSetRequirements"
 import { RoleTypeToAddTo, useAddRewardContext } from "../AddRewardContext"
 import useGuild from "../hooks/useGuild"
 import { defaultValues } from "./AddRewardButton"
 import AvailabilitySetup from "./components/AvailabilitySetup"
-import useSubmitAddReward from "./hooks/useSubmitAddReward"
 
 const SelectRolePanel = ({
   onSuccess,
 }: {
-  onSuccess?: Parameters<typeof useSubmitAddReward>[0]["onSuccess"]
+  onSuccess?: Parameters<typeof useCreateRRR>[0]["onSuccess"]
 }) => {
   const { modalRef, selection, activeTab, setStep, isBackButtonDisabled } =
     useAddRewardContext()
@@ -64,7 +64,7 @@ const SelectRolePanel = ({
   const isAddRewardButtonDisabled =
     activeTab === RoleTypeToAddTo.NEW_ROLE ? !requirements?.length : !roleIds?.length
 
-  const { RewardPreview } = rewards[selection] ?? {}
+  const { RewardPreview } = rewardComponents[selection] ?? {}
 
   const goBack = () => {
     if (!rewards[selection].autoRewardSetup) methods.reset(defaultValues)

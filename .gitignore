@@ -35,3 +35,5 @@ cypress/videos
 .idea
 *storybook.log
 storybook-static
+
+*.tsbuildinfo

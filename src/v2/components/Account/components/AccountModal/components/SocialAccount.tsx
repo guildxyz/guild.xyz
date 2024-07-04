@@ -8,10 +8,10 @@ import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershi
 import useDisconnect from "components/common/Layout/components/Account/components/AccountModal/hooks/useDisconnect"
 import useMembership from "components/explorer/hooks/useMembership"
 import { motion } from "framer-motion"
-import rewards from "platforms/rewards"
 import { ReactNode } from "react"
 import { PlatformName } from "types"
 import { DisconnectAccountButton } from "./DisconnectAccountButton"
+import rewards from "rewards"
 
 const SocialAccount = ({ type }: { type: PlatformName }): JSX.Element => {
   const { platformUsers } = useUser()

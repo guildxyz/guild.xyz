@@ -1,7 +1,7 @@
 import { Icon, useDisclosure } from "@chakra-ui/react"
+import { Robot } from "@phosphor-icons/react"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
-import { Robot } from "phosphor-react"
 import { CompleteCaptchaModal } from "requirements/Captcha/components/CompleteCaptcha"
 import JoinStep from "./JoinStep"
 

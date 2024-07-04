@@ -2,17 +2,16 @@ import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react"
 import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hooks/useAddRewardDiscardAlert"
 import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
-import SecretTextDataForm, {
-  SecretTextRewardForm,
-} from "platforms/SecretText/SecretTextDataForm/SecretTextDataForm"
+import SecretTextDataForm from "rewards/SecretText/SecretTextDataForm/SecretTextDataForm"
 import UniqueTextDataForm, {
   UniqueTextRewardForm,
-} from "platforms/UniqueText/UniqueTextDataForm"
-import { AddRewardPanelProps } from "platforms/rewards"
+} from "rewards/UniqueText/UniqueTextDataForm"
+import { AddRewardPanelProps } from "rewards"
 import { useState } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { PlatformGuildData, PlatformName, PlatformType } from "types"
 import DefaultAddRewardPanelWrapper from "../DefaultAddRewardPanelWrapper"
+import { SecretTextRewardForm } from "rewards/SecretText/SecretTextDataForm/types"
 
 enum TextPlatformName {
   TEXT,

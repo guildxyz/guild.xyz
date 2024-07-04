@@ -11,11 +11,11 @@ import {
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
+import { Trophy } from "@phosphor-icons/react"
 import Card from "components/common/Card"
 import GuildAvatar from "components/common/GuildAvatar"
 import useResolveAddress from "hooks/useResolveAddress"
 import { useRouter } from "next/router"
-import { Trophy } from "phosphor-react"
 import shortenHex from "utils/shortenHex"
 import useGuildPlatform from "../hooks/useGuildPlatform"
 
@@ -89,10 +89,10 @@ const LeaderboardUserCard = ({
                 position <= 3
                   ? { base: "sm", sm: "md" }
                   : position < 1000
-                  ? { base: "lg", sm: "xl" }
-                  : position < 10000
-                  ? { base: "md", sm: "lg" }
-                  : { base: "xs", sm: "sm" }
+                    ? { base: "lg", sm: "xl" }
+                    : position < 10000
+                      ? { base: "md", sm: "lg" }
+                      : { base: "xs", sm: "sm" }
               }
               fontWeight="bold"
               letterSpacing="wide"

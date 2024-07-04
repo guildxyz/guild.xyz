@@ -1,6 +1,6 @@
 import { Link } from "@chakra-ui/next-js"
 import { Box, Icon, Text } from "@chakra-ui/react"
-import { ArrowSquareOut } from "phosphor-react"
+import { ArrowSquareOut } from "@phosphor-icons/react"
 
 const Footer = (): JSX.Element => (
   <Box as="footer" mt="auto" py="6" pt={24}>
