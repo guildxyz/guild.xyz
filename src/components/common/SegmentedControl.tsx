@@ -1,17 +1,17 @@
 import {
   Box,
   Flex,
-  HStack,
   RadioProps,
   Text,
   UseRadioGroupProps,
   chakra,
+  useBreakpointValue,
   useColorModeValue,
   useRadio,
   useRadioGroup,
 } from "@chakra-ui/react"
 import { motion } from "framer-motion"
-import { useId } from "react"
+import { useId, useMemo } from "react"
 
 type SegmentedControlOption = {
   label: string
@@ -19,6 +19,7 @@ type SegmentedControlOption = {
 }
 type Props<TOption extends SegmentedControlOption> = {
   options: TOption[]
+  size?: "md" | "sm"
   onChange?: (nextValue: TOption["value"]) => void
   value?: TOption["value"]
   defaultValue?: TOption["value"]
@@ -26,6 +27,7 @@ type Props<TOption extends SegmentedControlOption> = {
 
 const SegmentedControl = <TOption extends SegmentedControlOption>({
   options,
+  size = "md",
   ...useRadioGroupProps
 }: Props<TOption>) => {
   const bgColor = useColorModeValue("white", "blackAlpha.300")
@@ -39,15 +41,27 @@ const SegmentedControl = <TOption extends SegmentedControlOption>({
 
   const uid = useId()
 
+  const height = useMemo(() => {
+    switch (size) {
+      case "md":
+        return { base: "fit", md: 10 }
+      case "sm":
+        return { base: "fit", md: 9 }
+      default:
+        return { base: "fit", md: 10 }
+    }
+  }, [size])
+
   return (
-    <HStack
+    <Flex
       width="full"
+      flexDirection={{ base: "column", md: "row" }}
       borderWidth={borderWidth}
       bgColor={bgColor}
       borderRadius="lg"
-      height={10}
+      height={height}
       padding={1}
-      spacing={1}
+      gap={1}
       {...getRootProps()}
     >
       {options.map((option) => (
@@ -57,9 +71,10 @@ const SegmentedControl = <TOption extends SegmentedControlOption>({
           {...getRadioProps({ value: option.value })}
           label={option.label}
           value={option.value as any}
+          size={size}
         />
       ))}
-    </HStack>
+    </Flex>
   )
 }
 
@@ -68,16 +83,25 @@ const MotionBox = motion(Box)
 const SegmentedControlButton = ({
   uid,
   label,
+  size = "md",
   ...useRadioProps
-}: SegmentedControlOption & RadioProps & { uid: string }) => {
+}: SegmentedControlOption & RadioProps & { uid: string; size?: "md" | "sm" }) => {
   const { state, getInputProps, getRadioProps, htmlProps } = useRadio(useRadioProps)
 
   const inputProps = getInputProps({})
 
   const activeBgColor = useColorModeValue("blackAlpha.100", "whiteAlpha.200")
 
+  const isMobile = useBreakpointValue({ base: true, md: false })
+
   return (
-    <chakra.label {...htmlProps} cursor="pointer" position="relative" h={8} w="full">
+    <chakra.label
+      {...htmlProps}
+      cursor="pointer"
+      position="relative"
+      h={size === "sm" ? 7 : 8}
+      w="full"
+    >
       <input {...inputProps} hidden />
 
       {state.isChecked && (
@@ -91,13 +115,13 @@ const SegmentedControlButton = ({
             duration: 0.2,
           }}
           // Don't animate on the Y axis
-          style={{ originY: "0px" }}
+          style={isMobile ? {} : { originY: "0px" }}
         />
       )}
       <Flex
         alignItems="center"
         justifyContent="center"
-        h={8}
+        h={size === "sm" ? 7 : 8}
         borderRadius="md"
         w="full"
         fontWeight="medium"
@@ -106,7 +130,6 @@ const SegmentedControlButton = ({
           outline: "none",
           boxShadow: "outline",
         }}
-        color={!state.isChecked ? "GrayText" : ""}
         {...getRadioProps()}
         onKeyDown={(e) => {
           if (e.code === "Enter" || e.code === "Space") {
@@ -122,7 +145,12 @@ const SegmentedControlButton = ({
         textAlign="center"
         px={2}
       >
-        <Text as="span" noOfLines={1}>
+        <Text
+          as="span"
+          noOfLines={1}
+          fontSize={size}
+          colorScheme={!state.isChecked ? "gray" : ""}
+        >
           {label}
         </Text>
       </Flex>

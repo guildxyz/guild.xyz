@@ -91,7 +91,7 @@ const DynamicRewardModal = ({
     onClose: editOnClose,
     onOpen: editOnOpen,
   } = useDisclosure()
-  const footerBg = useColorModeValue("blackAlpha.100", "blackAlpha.600")
+  const footerBg = useColorModeValue("blackAlpha.100", "blackAlpha.400")
 
   return (
     <>

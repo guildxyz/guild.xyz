@@ -10,6 +10,7 @@ import {
   ModalOverlay,
   SimpleGrid,
   Text,
+  useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react"
 import { Plus } from "@phosphor-icons/react"
@@ -30,6 +31,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
+import ControlledSelect from "components/common/ControlledSelect"
 import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
 import SegmentedControl from "components/common/SegmentedControl"
@@ -41,6 +43,7 @@ import { FormProvider, useController, useForm, useWatch } from "react-hook-form"
 import rewards, { modalSizeForPlatform } from "rewards"
 import { AddRewardPanelLoadingSpinner } from "rewards/components/AddRewardPanelLoadingSpinner"
 import { PlatformName, PlatformType } from "types"
+import pluralize from "utils/pluralize"
 import SolutionCard from "./SolutionCard"
 import {
   SolutionCardData,
@@ -141,6 +144,8 @@ const AddSolutionsButton = () => {
 
   const { startSessionRecording } = usePostHogContext()
 
+  const isMobile = useBreakpointValue({ base: true, md: false })
+
   const [AddPanel, setAddPanel] = useState<JSX.Element>()
 
   const onSelectReward = (platform: PlatformName) => {
@@ -212,10 +217,14 @@ const AddSolutionsButton = () => {
         {step === "HOME" && (
           <ModalContent>
             <ModalCloseButton />
-            <ModalHeader fontFamily={"inherit"} fontSize={"inherit"}>
+            <ModalHeader
+              fontFamily={"inherit"}
+              fontSize={"inherit"}
+              pr={{ base: 8, sm: 12 }}
+            >
               <Heading
                 as="h1"
-                mb={3}
+                mb={4}
                 fontSize={{ base: "2xl", md: "3xl", lg: "4xl" }}
                 fontFamily="display"
                 textAlign={"center"}
@@ -224,18 +233,17 @@ const AddSolutionsButton = () => {
                 Guild Solutions
               </Heading>
 
-              <Text
-                colorScheme="gray"
-                fontWeight="semibold"
-                mb="8"
-                textAlign={"center"}
-              >
-                Short description if needed.
-              </Text>
-
-              <SearchBar {...{ search, setSearch }} mb={3} />
+              <SearchBar {...{ search, setSearch }} mb={{ base: 2, md: 3 }} />
               <FormProvider {...categoryFormMethods}>
-                <SegmentedControl options={categories} {...categoryField} />
+                {isMobile ? (
+                  <ControlledSelect name="category" options={categories} />
+                ) : (
+                  <SegmentedControl
+                    options={categories}
+                    {...categoryField}
+                    size="sm"
+                  />
+                )}
               </FormProvider>
             </ModalHeader>
 
@@ -355,18 +363,24 @@ const Category = ({
     <>
       <section>
         <HStack mb={3}>
-          <Heading textColor={"GrayText"} fontSize={"large"} fontWeight={"medium"}>
+          <Heading
+            as="h2"
+            color={"GrayText"}
+            fontSize={"xs"}
+            fontWeight={"bold"}
+            textTransform={"uppercase"}
+          >
             {heading}
           </Heading>
           {!!searchQuery && (
-            <Text color={"GrayText"} fontWeight={"normal"}>
-              ({filteredItems.length} results)
+            <Text colorScheme="gray" fontWeight={"normal"} fontSize={"xs"}>
+              ({pluralize(filteredItems.length, "result", true)})
             </Text>
           )}
         </HStack>
         <SimpleGrid
           columns={{ base: 1, md: 2 }}
-          gap={{ base: 4, md: 5 }}
+          gap={{ base: 2, md: 3 }}
           mb={filteredItems.length === 0 ? 2 : 8}
         >
           {filteredItems.map((item, index) => (
