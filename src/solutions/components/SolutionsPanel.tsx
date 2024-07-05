@@ -6,7 +6,9 @@ import {
   ModalCloseButton,
   ModalContent,
   ModalHeader,
+  Stack,
   useBreakpointValue,
+  useColorMode,
 } from "@chakra-ui/react"
 import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -79,6 +81,8 @@ const SolutionsPanel = ({
     tokens: tokens,
   }
 
+  const { colorMode } = useColorMode()
+
   return (
     <ModalContent>
       <ModalCloseButton />
@@ -86,33 +90,54 @@ const SolutionsPanel = ({
         fontFamily={"inherit"}
         fontSize={"inherit"}
         pr={{ base: 8, sm: 12 }}
+        pb={{ base: 7, md: 3.5 }}
+        {...(colorMode === "light"
+          ? { borderBottomWidth: "1px" }
+          : {
+              bg: "whiteAlpha.50",
+              boxShadow:
+                "2px 3px 4px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+              zIndex: "1",
+            })}
       >
         <Heading
           as="h1"
-          mb={4}
-          fontSize={{ base: "2xl", md: "3xl", lg: "4xl" }}
+          mb={{ base: 6, md: 8 }}
+          fontSize={{ base: "xl", md: "3xl" }}
           fontFamily="display"
-          textAlign={"center"}
+          textAlign={{ md: "center" }}
           wordBreak={"break-word"}
         >
           Guild Solutions
         </Heading>
 
-        <SearchBar {...{ search, setSearch }} mb={{ base: 2, md: 3 }} />
-        <FormProvider {...categoryFormMethods}>
-          {isMobile ? (
-            <ControlledSelect name="category" options={categoryOptions} />
-          ) : (
-            <SegmentedControl
-              options={categoryOptions}
-              {...categoryField}
-              size="sm"
-            />
-          )}
-        </FormProvider>
+        <Stack direction={{ base: "column", md: "row" }} alignItems="center">
+          <FormProvider {...categoryFormMethods}>
+            {isMobile ? (
+              <ControlledSelect name="category" options={categoryOptions} />
+            ) : (
+              <SegmentedControl
+                options={categoryOptions}
+                {...categoryField}
+                size="sm"
+                isFullWidth={false}
+                styleProps={{
+                  borderWidth: 0,
+                  bgColor: "none",
+                  padding: "0 !important",
+                }}
+              />
+            )}
+          </FormProvider>
+          <SearchBar
+            {...{ search, setSearch }}
+            w={{ base: "full", md: "sm" }}
+            size={{ base: "md", md: "sm" }}
+          />
+        </Stack>
       </ModalHeader>
 
-      <ModalBody className="custom-scrollbar">
+      <ModalBody className="custom-scrollbar" pt="8">
         <AnimatePresence>
           <Box>
             {categories.map((category) => (
