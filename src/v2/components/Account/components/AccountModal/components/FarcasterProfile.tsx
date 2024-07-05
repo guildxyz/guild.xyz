@@ -298,11 +298,13 @@ const ConnectFarcasterButton = ({
 
           {isMobile && (
             <DialogFooter>
-              {/* // TODO: // colorScheme="FARCASTER" */}
               <a
                 href={url}
                 target="_blank"
-                className={cn(buttonVariants(), "w-full")}
+                className={cn(
+                  buttonVariants(),
+                  "w-full bg-farcaster hover:bg-farcaster-hover active:bg-farcaster-active"
+                )}
               >
                 Connect Farcaster
               </a>
