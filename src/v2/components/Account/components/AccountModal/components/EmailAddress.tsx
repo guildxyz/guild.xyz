@@ -24,6 +24,7 @@ import useUser from "components/[guild]/hooks/useUser"
 import { useConnectEmail } from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import Button from "components/common/Button"
 import { Error } from "components/common/Error"
+import { useDisconnectEmail } from "components/common/Layout/components/Account/components/AccountModal/hooks/useDisconnect"
 import { Modal } from "components/common/Modal"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
@@ -31,9 +32,8 @@ import { useEffect, useRef, useState } from "react"
 import { useController, useForm, useWatch } from "react-hook-form"
 import rewards from "rewards"
 import fetcher from "utils/fetcher"
-import { useDisconnectEmail } from "../../hooks/useDisconnect"
-import DisconnectAccountButton from "./components/DisconnectAccountButton"
-import SocialAccountUI from "./components/SocialAccountUI"
+import { DisconnectAccountButton } from "./DisconnectAccountButton"
+import { SocialAccountUI } from "./SocialAccount"
 import processEmailError from "./utils/processEmailError"
 
 const TOO_MANY_ATTEMPTS_ERROR =
@@ -287,7 +287,7 @@ const DisconnectEmailButton = () => {
   return (
     <DisconnectAccountButton
       name={rewards.EMAIL.name}
-      {...{ disclosure, isLoading, loadingText, onConfirm }}
+      {...{ state: disclosure, isLoading, loadingText, onConfirm }}
     />
   )
 }

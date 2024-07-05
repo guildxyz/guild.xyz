@@ -62,6 +62,8 @@
     --twitter: 0 0% 0%;
     --github: 0 0% 20%;
     --farcaster: 238 76% 69%;
+    --farcaster-hover: 239 75% 64%;
+    --farcaster-active: 239 75% 58%;
     --polygonid: 259 59% 59%;
 
     --sm: 640px;
@@ -122,6 +124,9 @@
     --toast-error: 317 4% 35%;
     --toast-warning: 30 6% 34%;
     --toast-info: 226 7% 36%;
+
+    --farcaster-hover: 239 75% 75%;
+    --farcaster-active: 238 76% 81%;
   }
 }
 

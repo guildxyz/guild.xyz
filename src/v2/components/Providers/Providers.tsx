@@ -4,6 +4,7 @@ import { FuelProvider } from "@fuels/react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { fuelConfig } from "fuelConfig"
 import { ThemeProvider } from "next-themes"
+import { Suspense } from "react"
 import { SWRConfig } from "swr"
 import { fetcherForSWR } from "utils/fetcher"
 import { WagmiProvider } from "wagmi"
@@ -12,7 +13,6 @@ import { AccountModal } from "../Account/components/AccountModal"
 import { Toaster } from "../ui/Toaster"
 import { Web3ConnectionManager } from "../Web3ConnectionManager"
 import { PostHogProvider } from "./PostHogProvider"
-import { Suspense } from "react"
 
 const queryClient = new QueryClient()
 

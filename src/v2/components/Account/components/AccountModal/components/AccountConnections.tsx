@@ -1,9 +1,10 @@
-import { cn } from "@/lib/utils"
 import useUser from "components/[guild]/hooks/useUser"
-import useDelegateVaults from "components/common/Layout/components/Account/components/delegate/useDelegateVaults"
-import { ReactNode, useMemo } from "react"
+import { useMemo } from "react"
 import rewards from "rewards"
 import { PlatformName } from "types"
+import useDelegateVaults from "../hooks/useDelegateVaults"
+import { AccountSection, AccountSectionTitle } from "./AccountSection"
+import FarcasterProfile from "./FarcasterProfile"
 import { SocialAccount } from "./SocialAccount"
 
 const AccountConnections = () => {
@@ -31,11 +32,10 @@ const AccountConnections = () => {
           <>
             {platform === "EMAIL" ? (
               <></>
-            ) : // <EmailAddress key={"EMAIL"} />
+            ) : // <EmailAddress key="EMAIL" />
             platform === "FARCASTER" ? (
-              <></>
+              <FarcasterProfile key="FARCASTER" />
             ) : (
-              // <FarcasterProfile key={"FARCASTER"} />
               <SocialAccount key={platform} type={platform} />
             )}
             {i < orderedSocials.length - 1 && (
@@ -45,40 +45,66 @@ const AccountConnections = () => {
         ))}
       </AccountSection>
 
-      <AccountSectionTitle title="Linked addresses" />
-      <AccountSection>TODO</AccountSection>
+      <AccountSectionTitle
+        title="Linked addresses"
+        // className="gap-3 pt-4"
+        // TODO:
+        // titleRightElement={
+        //   addresses?.length > 1 ? (
+        //     <>
+        //       <Popover placement="top" trigger="hover">
+        //         <PopoverTrigger>
+        //           <Question />
+        //         </PopoverTrigger>
+        //         <PopoverContent>
+        //           <PopoverArrow />
+        //           <PopoverBody>
+        //             Each of your addresses will be used for requirement checks
+        //           </PopoverBody>
+        //         </PopoverContent>
+        //       </Popover>
+        //       <Spacer />
+        //       <LinkAddressButton variant="ghost" my="-1 !important" />
+        //     </>
+        //   ) : undefined
+        // }
+      />
+
+      {/* <AccountSection divider={<Divider />}>
+        {isLoading ? (
+          <LinkedAddressSkeleton />
+        ) : !(addresses?.length > 1) ? (
+          <Stack
+            {...(!vaults?.length && {
+              direction: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+            })}
+          >
+            <Text fontSize={"sm"} fontWeight={"medium"}>
+              No linked addresses yet
+            </Text>
+            {vaults?.length ? (
+              <ButtonGroup w="full">
+                <LinkAddressButton />
+                <LinkDelegateVaultButton vaults={vaults} />
+              </ButtonGroup>
+            ) : (
+              <LinkAddressButton />
+            )}
+          </Stack>
+        ) : (
+          addresses
+            .map((addressData) => (
+              <LinkedAddress key={addressData?.address} addressData={addressData} />
+            ))
+            .concat(
+              vaults?.length > 0 ? <LinkDelegateVaultButton vaults={vaults} /> : []
+            )
+        )}
+      </AccountSection> */}
     </div>
   )
 }
-
-const AccountSectionTitle = ({
-  title,
-  titleRightElement,
-}: {
-  title: string
-  titleRightElement?: ReactNode
-}) => (
-  <div className="mb-3 flex w-full items-center">
-    <span className="text-sm font-bold text-muted-foreground">{title}</span>
-    {titleRightElement}
-  </div>
-)
-
-const AccountSection = ({
-  className,
-  children,
-}: {
-  children: ReactNode
-  className?: string
-}) => (
-  <div
-    className={cn(
-      "flex flex-col gap-3 rounded-xl border bg-card-secondary px-4 py-3.5",
-      className
-    )}
-  >
-    {children}
-  </div>
-)
 
 export { AccountConnections }

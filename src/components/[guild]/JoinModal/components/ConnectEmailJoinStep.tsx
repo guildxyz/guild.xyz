@@ -1,7 +1,6 @@
+import { ConnectEmailButton } from "@/components/Account/components/AccountModal/components/EmailAddress"
 import { Tooltip } from "@chakra-ui/react"
-import { EnvelopeSimple } from "@phosphor-icons/react"
 import useUser from "components/[guild]/hooks/useUser"
-import { ConnectEmailButton } from "components/common/Layout/components/Account/components/AccountModal/components/SocialAccount/EmailAddress"
 import { useAccount } from "wagmi"
 import { JoinStepUI } from "./JoinStep"
 
@@ -9,7 +8,7 @@ const ConnectEmailJoinStep = (): JSX.Element => {
   const { isConnected } = useAccount()
   const { emails } = useUser()
 
-  const isDone = emails?.emailAddress && !emails.pending
+  const isDone = Boolean(emails?.emailAddress && !emails.pending)
 
   return (
     <JoinStepUI isDone={isDone} title="Connect email">
@@ -19,12 +18,13 @@ const ConnectEmailJoinStep = (): JSX.Element => {
         shouldWrapChildren
       >
         <ConnectEmailButton
-          isDisabled={!isConnected || isDone}
+          disabled={!isConnected || isDone}
           size="md"
-          leftIcon={<EnvelopeSimple />}
-          flexShrink="0"
-          minW="max-content"
-          maxW={isDone && "40"}
+          // TODO
+          // leftIcon={<EnvelopeSimple />}
+          // flexShrink="0"
+          // minW="max-content"
+          // maxW={isDone && "40"}
         />
       </Tooltip>
     </JoinStepUI>

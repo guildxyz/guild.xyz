@@ -1,44 +1,45 @@
 import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import {
   Accordion,
-  AccordionButton,
-  AccordionIcon,
+  AccordionContent,
   AccordionItem,
-  AccordionPanel,
-  Box,
-  ButtonProps,
-  HStack,
-  Icon,
-  IconButton,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  Skeleton,
-  Text,
+  AccordionTrigger,
+} from "@/components/ui/Accordion"
+import { Button, ButtonProps, buttonVariants } from "@/components/ui/Button"
+import {
+  Dialog,
+  DialogCloseButton,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/Dialog"
+import { Skeleton } from "@/components/ui/Skeleton"
+import {
   Tooltip,
-  VStack,
-  useBreakpointValue,
-  useDisclosure,
-} from "@chakra-ui/react"
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/Tooltip"
+import { useDisclosure } from "@/hooks/useDisclosure"
+import { cn } from "@/lib/utils"
 import { FarcasterProfile as FarcasterProfileType } from "@guildxyz/types"
-import { ArrowCounterClockwise, DeviceMobileCamera } from "@phosphor-icons/react"
+import {
+  ArrowCounterClockwise,
+  DeviceMobileCamera,
+} from "@phosphor-icons/react/dist/ssr"
 import useUser from "components/[guild]/hooks/useUser"
-import Button from "components/common/Button"
-import { Modal } from "components/common/Modal"
 import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import useSubmit, { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { QRCodeSVG } from "qrcode.react"
 import { useCallback, useEffect, useState } from "react"
 import { isMobile } from "react-device-detect"
-import rewards from "rewards"
+import { farcasterData } from "rewards/Farcaster/data"
 import { useCountdown } from "usehooks-ts"
 import fetcher from "utils/fetcher"
-import DisconnectAccountButton from "./components/DisconnectAccountButton"
-import SocialAccountUI from "./components/SocialAccountUI"
+import { DisconnectAccountButton } from "./DisconnectAccountButton"
+import { SocialAccountUI } from "./SocialAccount"
 
 // Polling will only start after this much time
 const APPROVAL_POLL_INITIAL_DELAY_MS = 15_000
@@ -53,7 +54,7 @@ const FarcasterProfile = () => {
 
   return (
     <SocialAccountUI
-      type={"FARCASTER"}
+      type="FARCASTER"
       username={farcasterProfiles?.[0]?.username}
       avatarUrl={farcasterProfiles?.[0]?.avatar}
       isConnected={isConnected}
@@ -179,7 +180,6 @@ const ConnectFarcasterButton = ({
     signedKeyRequest.response && "url" in signedKeyRequest.response
       ? signedKeyRequest.response.url
       : null
-  const qrSize = useBreakpointValue({ base: 300, md: 400 })
 
   return (
     <>
@@ -188,110 +188,128 @@ const ConnectFarcasterButton = ({
           captureEvent("[farcaster] connect button clicked")
           signedKeyRequest.onSubmit()
         }}
-        colorScheme={rewards.FARCASTER.colorScheme}
-        variant={"solid"}
         size="sm"
-        isDisabled={farcasterProfiles?.length > 0}
+        disabled={farcasterProfiles?.length > 0}
         isLoading={signedKeyRequest.isLoading}
+        className="ml-auto bg-farcaster hover:bg-farcaster-hover active:bg-farcaster-active"
         {...props}
       >
         Connect
       </Button>
-      <Modal isOpen={isOpen} onClose={handleOnClose} size="lg">
-        <ModalOverlay />
-        <ModalContent>
-          <ModalCloseButton />
-          <ModalHeader pb={0} pr={16} display={"flex"} gap={1} alignItems={"center"}>
-            {isMobile ? (
-              "Connect Farcaster"
+
+      <Dialog open={isOpen}>
+        <DialogContent
+          onEscapeKeyDown={handleOnClose}
+          onPointerDownOutside={handleOnClose}
+        >
+          <DialogCloseButton onClick={handleOnClose} />
+
+          <DialogHeader>
+            <DialogTitle className="flex gap-1">
+              {isMobile ? (
+                "Connect Farcaster"
+              ) : (
+                <>
+                  <DeviceMobileCamera className="size-6" />
+                  <span>Scan With your phone</span>
+                </>
+              )}
+            </DialogTitle>
+          </DialogHeader>
+
+          <div className="flex flex-col justify-center">
+            {signedKeyRequest.isLoading ? (
+              <Skeleton className="aspect-square w-full" />
             ) : (
-              <>
-                <Icon boxSize={6} as={DeviceMobileCamera} />
-                <Text>Scan With your phone</Text>
-              </>
-            )}
-          </ModalHeader>
-          <ModalBody pt={8}>
-            <VStack justifyContent="center">
-              <Skeleton isLoaded={!signedKeyRequest.isLoading} borderRadius={"md"}>
-                {!isMobile && url && (
-                  <Box borderRadius="md" borderWidth={3} overflow="hidden">
-                    <QRCodeSVG
-                      value={url}
-                      size={qrSize}
-                      style={{ maxWidth: "100%" }}
-                    />
-                  </Box>
-                )}
-              </Skeleton>
-              <HStack alignItems="center">
-                <Text color={"gray"} fontSize="sm">
-                  {isMobile
-                    ? "The link is active for "
-                    : "The QR code will be regenerated in "}
-                  {seconds > 60
-                    ? `${Math.floor(seconds / 60)} minutes`
-                    : `${seconds} seconds`}
-                </Text>
-
-                <Tooltip label="Regenerate now">
-                  <IconButton
-                    isDisabled={!shouldEnableRegenerateButton}
-                    size="xs"
-                    variant="ghost"
-                    color="gray"
-                    icon={<ArrowCounterClockwise />}
-                    isLoading={signedKeyRequest.isLoading}
-                    aria-label="Regenerate Farcaster QR code"
-                    onClick={() => {
-                      captureEvent("[farcaster] manual qr regeneration")
-                      onRegenerate()
-                    }}
+              !isMobile &&
+              url && (
+                <div className="overflow-hidden rounded-md border-2">
+                  <QRCodeSVG
+                    value={url}
+                    size={300}
+                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
                   />
+                </div>
+              )
+            )}
+
+            <div className="mt-2 flex justify-center">
+              <p className="text-sm text-muted-foreground">
+                {isMobile
+                  ? "The link is active for "
+                  : "The QR code will be regenerated in "}
+                {seconds > 60
+                  ? `${Math.floor(seconds / 60)} minutes`
+                  : `${seconds} seconds`}
+              </p>
+
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      size="xs"
+                      variant="ghost"
+                      className="w-6 px-0 text-muted-foreground"
+                      disabled={!shouldEnableRegenerateButton}
+                      isLoading={signedKeyRequest.isLoading}
+                      aria-label="Regenerate Farcaster QR code"
+                      onClick={() => {
+                        captureEvent("[farcaster] manual qr regeneration")
+                        onRegenerate()
+                      }}
+                    >
+                      <ArrowCounterClockwise />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <span>Regenerate now</span>
+                  </TooltipContent>
                 </Tooltip>
-              </HStack>
+              </TooltipProvider>
+            </div>
 
-              <Text color={"gray"} textAlign={"center"} fontSize="sm">
-                One Farcaster account can only be connected to{" "}
-                <strong>one Guild account</strong> at a time
-              </Text>
+            <p className="text-center text-sm text-muted-foreground">
+              One Farcaster account can only be connected to{" "}
+              <strong>one Guild account</strong> at a time
+            </p>
 
-              <Accordion w="full" color="gray" allowToggle borderWidth={0}>
-                <AccordionItem borderWidth={"0 !important"}>
-                  <AccordionButton>
-                    <HStack justifyContent={"center"} w="full">
-                      <Box as="span" textAlign="center" fontSize="sm">
-                        Why does Guild request write access?
-                      </Box>
-                      <AccordionIcon />
-                    </HStack>
-                  </AccordionButton>
-                  <AccordionPanel pb={4} fontSize="sm">
+            <hr className="mt-4" />
+
+            <Accordion type="single" collapsible>
+              <AccordionItem
+                value="write-access"
+                className="text-sm text-muted-foreground"
+              >
+                <AccordionTrigger>
+                  Why does Guild request write access?
+                </AccordionTrigger>
+                <AccordionContent>
+                  <p>
                     Guild is a Farcaster client. You can perform Farcaster actions,
                     like follow, or recast to satisfy requirements. You can also
                     perform these actions in external Farcaster clients, like
                     Warpcast, but it will take some time for Guild to grant access
                     based on actions in external clients
-                  </AccordionPanel>
-                </AccordionItem>
-              </Accordion>
-            </VStack>
-          </ModalBody>
-          {isMobile && url && (
-            <ModalFooter>
-              <Button
-                w="full"
-                as="a"
+                  </p>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          </div>
+
+          {isMobile && (
+            <DialogFooter>
+              {/* // TODO: // colorScheme="FARCASTER" */}
+              <a
                 href={url}
                 target="_blank"
-                colorScheme="FARCASTER"
+                className={cn(buttonVariants(), "w-full")}
               >
                 Connect Farcaster
-              </Button>
-            </ModalFooter>
+              </a>
+            </DialogFooter>
           )}
-        </ModalContent>
-      </Modal>
+        </DialogContent>
+      </Dialog>
     </>
   )
 }
@@ -335,9 +353,10 @@ const DisconnectFarcasterButton = () => {
 
   return (
     <DisconnectAccountButton
-      name={rewards.FARCASTER.name}
+      name={farcasterData.name}
       loadingText="Removing"
-      {...{ disclosure, isLoading, onConfirm }}
+      className="ml-auto"
+      {...{ state: disclosure, isLoading, onConfirm }}
     />
   )
 }

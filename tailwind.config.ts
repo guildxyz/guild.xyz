@@ -100,6 +100,8 @@ const config = {
         },
         farcaster: {
           DEFAULT: "hsl(var(--farcaster))",
+          hover: "hsl(var(--farcaster-hover))",
+          active: "hsl(var(--farcaster-active))",
         },
         polygonid: {
           DEFAULT: "hsl(var(--polygonid))",

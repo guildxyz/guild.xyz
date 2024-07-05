@@ -50,7 +50,7 @@ const SocialAccount = ({ type }: { type: PlatformName }): JSX.Element => {
   )
 }
 
-const SocialAccountUI = ({
+export const SocialAccountUI = ({
   type,
   avatarUrl,
   username,

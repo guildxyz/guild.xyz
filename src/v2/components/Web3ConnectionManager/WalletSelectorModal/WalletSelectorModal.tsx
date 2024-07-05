@@ -179,7 +179,7 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
         {isWeb3Connected ? (
           <AccountButton />
         ) : (
-          <div className="flex flex-col gap-0">
+          <div className="flex w-full flex-col">
             {!connector && !addressLinkParams?.userId && (
               <>
                 <CardMotionWrapper key={COINBASE_WALLET_SDK_ID}>
@@ -246,7 +246,7 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
               linkAddress.isLoading || set.isLoading || (!id && !publicUserError)
             }
             loadingText={!id ? "Looking for keypairs" : "Check your wallet"}
-            className="mb-4 animate-fade-in"
+            className="mb-4 w-full animate-fade-in"
           >
             {isAddressLink ? "Link address" : "Verify address"}{" "}
           </Button>
