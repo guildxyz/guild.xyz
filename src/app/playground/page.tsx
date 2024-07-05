@@ -3,6 +3,7 @@ import { Metadata } from "next"
 import { PropsWithChildren } from "react"
 import { ThemeToggle } from "../../v2/components/ThemeToggle"
 import { DialogExample } from "./_components/DialogExample"
+import { FormExample } from "./_components/FormExample"
 
 export const metadata: Metadata = {
   title: "Playground",
@@ -32,6 +33,10 @@ export default function Page() {
 
         <Section title="Modal">
           <DialogExample />
+        </Section>
+
+        <Section title="Form">
+          <FormExample />
         </Section>
       </div>
     </div>
