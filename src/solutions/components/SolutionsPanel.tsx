@@ -32,6 +32,8 @@ import {
 import { PlatformName, PlatformType } from "types"
 import Category from "./Category"
 
+const categoryOptions = [{ label: "All", value: "all" }, ...categories]
+
 const SolutionsPanel = ({
   setSolution,
 }: {
@@ -70,15 +72,13 @@ const SolutionsPanel = ({
     (gp) => gp.platformId === PlatformType.POLYGON_ID
   )
 
-  const categoryOptions = [{ label: "All", value: "all" }, ...categories]
-
   const categoryItems: Record<CategoryValue, SolutionCardData[]> = {
-    engagement: engagement,
-    memberships: memberships,
+    engagement,
+    memberships,
     sybil: sybil.filter(
       (solution) => showPolygonId || solution.handlerParam !== "POLYGON_ID"
     ),
-    tokens: tokens,
+    tokens,
   }
 
   const { colorMode } = useColorMode()
