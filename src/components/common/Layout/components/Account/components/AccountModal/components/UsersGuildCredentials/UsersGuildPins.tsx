@@ -1,8 +1,8 @@
+import { AccountSectionTitle } from "@/components/Account/components/AccountModal/components/AccountSection"
 import { accountModalAtom } from "@/components/Providers/atoms"
 import { Alert, AlertIcon, Box, Flex, Text } from "@chakra-ui/react"
 import useUsersGuildPins from "hooks/useUsersGuildPins"
 import { useAtomValue } from "jotai"
-import { AccountSectionTitle } from "../AccountConnections"
 import GuildPin from "./GuildPin"
 import GuildPinSkeleton from "./GuildPinSkeleton"
 

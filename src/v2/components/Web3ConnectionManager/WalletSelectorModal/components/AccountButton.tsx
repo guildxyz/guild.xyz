@@ -9,7 +9,12 @@ const AccountButton = () => {
   if (!address) return null
 
   return (
-    <Button variant="secondary" className="mb-4 justify-between" disabled size="xl">
+    <Button
+      variant="secondary"
+      className="mb-4 w-full justify-between"
+      disabled
+      size="xl"
+    >
       {shortenHex(address)}
       <GuildAvatar address={address} />
     </Button>

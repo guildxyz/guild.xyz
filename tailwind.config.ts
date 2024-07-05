@@ -88,21 +88,43 @@ const config = {
         // Platforms
         discord: {
           DEFAULT: "hsl(var(--discord))",
+          hover: "hsl(var(--discord-hover))",
+          active: "hsl(var(--discord-active))",
         },
         telegram: {
           DEFAULT: "hsl(var(--telegram))",
+          hover: "hsl(var(--telegram-hover))",
+          active: "hsl(var(--telegram-active))",
+        },
+        email: {
+          DEFAULT: "hsl(var(--email))",
+          hover: "hsl(var(--email-hover))",
+          active: "hsl(var(--email-active))",
+        },
+        google: {
+          DEFAULT: "hsl(var(--google))",
+          hover: "hsl(var(--google-hover))",
+          active: "hsl(var(--google-active))",
         },
         twitter: {
           DEFAULT: "hsl(var(--twitter))",
+          hover: "hsl(var(--twitter-hover))",
+          active: "hsl(var(--twitter-active))",
         },
         github: {
           DEFAULT: "hsl(var(--github))",
-        },
-        farcaster: {
-          DEFAULT: "hsl(var(--farcaster))",
+          hover: "hsl(var(--github-hover))",
+          active: "hsl(var(--github-active))",
         },
         polygonid: {
           DEFAULT: "hsl(var(--polygonid))",
+          hover: "hsl(var(--polygonid-hover))",
+          active: "hsl(var(--polygonid-active))",
+        },
+        farcaster: {
+          DEFAULT: "hsl(var(--farcaster))",
+          hover: "hsl(var(--farcaster-hover))",
+          active: "hsl(var(--farcaster-active))",
         },
       },
       keyframes: {

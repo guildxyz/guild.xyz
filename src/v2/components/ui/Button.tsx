@@ -7,7 +7,7 @@ import { CircleNotch } from "@phosphor-icons/react/dist/ssr"
 import clsx from "clsx"
 
 const buttonVariants = cva(
-  "font-medium inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm ring-offset-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:!opacity-50 rounded-xl text-base",
+  "font-medium inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:!opacity-50 rounded-xl text-base",
   {
     variants: {
       variant: {
@@ -30,7 +30,7 @@ const buttonVariants = cva(
       size: {
         xs: "h-6 px-2 text-xs",
         sm: "h-8 px-3 text-sm",
-        default: "h-11 px-4 py-2",
+        md: "h-11 px-4 py-2",
         lg: "h-12 px-6 py-4 text-lg",
         xl: "h-14 px-6 py-4 text-lg",
         icon: "h-10 w-10",
@@ -38,14 +38,14 @@ const buttonVariants = cva(
     },
     defaultVariants: {
       variant: "default",
-      size: "default",
+      size: "md",
     },
   }
 )
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-  VariantProps<typeof buttonVariants> {
+    VariantProps<typeof buttonVariants> {
   isLoading?: boolean
   loadingText?: string
   asChild?: boolean

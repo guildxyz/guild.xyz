@@ -14,7 +14,7 @@ type Story = StoryObj<typeof Button>
 export const Primary: Story = {
   args: {
     children: "Primary",
-    size: "default",
+    size: "md",
     disabled: false,
     variant: "default",
   },
@@ -22,7 +22,7 @@ export const Primary: Story = {
     size: {
       type: "string",
       control: "radio",
-      options: ["xs", "sm", "default", "lg", "xl"] satisfies ButtonProps["size"][],
+      options: ["xs", "sm", "md", "lg", "xl"] satisfies ButtonProps["size"][],
     },
     disabled: {
       type: "boolean",

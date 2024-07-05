@@ -21,7 +21,6 @@ import { useDisclosure } from "@/hooks/useDisclosure"
 import { useUserPublic } from "@/hooks/useUserPublic"
 import { LinkBreak, SignOut } from "@phosphor-icons/react/dist/ssr"
 import useUser from "components/[guild]/hooks/useUser"
-import useResolveAddress from "hooks/useResolveAddress"
 import { useAtom } from "jotai"
 import { deleteKeyPairFromIdb } from "utils/keyPair"
 import { useAccount } from "wagmi"
@@ -40,7 +39,8 @@ const AccountModal = () => {
   const { deleteKeys } = useUserPublic()
 
   const { address: evmAddress, chainId } = useAccount()
-  const domain = useResolveAddress(evmAddress)
+  const domain = "" // TODO
+  // const domain = useResolveAddress(evmAddress)
 
   const {
     isOpen: isNetworkModalOpen,
