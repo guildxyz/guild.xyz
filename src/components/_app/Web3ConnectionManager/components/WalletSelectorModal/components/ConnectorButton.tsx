@@ -5,6 +5,7 @@ import useConnectorNameAndIcon from "components/_app/Web3ConnectionManager/hooks
 import Button from "components/common/Button"
 import { addressLinkParamsAtom } from "components/common/Layout/components/Account/components/AccountModal/components/LinkAddressButton"
 import { useAtomValue, useSetAtom } from "jotai"
+import { isIOS } from "react-device-detect"
 import { useAccount, type Connector } from "wagmi"
 import { walletLinkHelperModalAtom } from "../../WalletLinkHelperModal"
 import { COINBASE_WALLET_SDK_ID } from "../WalletSelectorModal"
@@ -50,6 +51,12 @@ const ConnectorButton = ({
       data-wagmi-connector-id={connector.id}
       onClick={() => {
         if (addressLinkParams?.userId) setIsWalletLinkHelperModalOpen(true)
+
+        // Note: This is needed to ensure, the Smart Wallet popup opens on iOS
+        // Because the window.open call within the CB SDK gets blocked
+        if (isIOS && connector?.id === "coinbaseWalletSDK") {
+          window.open("", "Smart Wallet")
+        }
         connect({ connector })
       }}
       leftIcon={
