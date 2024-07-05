@@ -3,9 +3,9 @@ import { Button } from "@/components/ui/Button"
 import {
   Form,
   FormControl,
+  FormDescription,
   FormErrorMessage,
   FormField,
-  FormHelperText,
   FormItem,
   FormLabel,
 } from "@/components/ui/Form"
@@ -46,7 +46,7 @@ export function FormExample() {
               <FormControl>
                 <Input placeholder="shadcn" {...field} />
               </FormControl>
-              <FormHelperText>This is your public display name.</FormHelperText>
+              <FormDescription>This is your public display name.</FormDescription>
               <FormErrorMessage />
             </FormItem>
           )}

@@ -119,7 +119,7 @@ const FormControl = forwardRef<
 })
 FormControl.displayName = "FormControl"
 
-const FormHelperText = forwardRef<
+const FormDescription = forwardRef<
   HTMLParagraphElement,
   HTMLAttributes<HTMLParagraphElement>
 >(({ className, ...props }, ref) => {
@@ -134,7 +134,7 @@ const FormHelperText = forwardRef<
     />
   )
 })
-FormHelperText.displayName = "FormHelperText"
+FormDescription.displayName = "FormDescription"
 
 const FormErrorMessage = forwardRef<
   HTMLParagraphElement,
@@ -167,9 +167,9 @@ FormErrorMessage.displayName = "FormErrorMessage"
 export {
   Form,
   FormControl,
+  FormDescription,
   FormErrorMessage,
   FormField,
-  FormHelperText,
   FormItem,
   FormLabel,
   useFormField,
