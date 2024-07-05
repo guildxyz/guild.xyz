@@ -7,7 +7,7 @@ import { CircleNotch } from "@phosphor-icons/react/dist/ssr"
 import clsx from "clsx"
 
 const buttonVariants = cva(
-  "font-medium inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm ring-offset-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:!opacity-50 rounded-xl text-base",
+  "font-medium inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:!opacity-50 rounded-xl text-base",
   {
     variants: {
       variant: {
