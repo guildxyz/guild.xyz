@@ -49,7 +49,7 @@
     --border: 240 6% 90%;
     --border-secondary: 240 6% 94%;
     --input: var(--border);
-    --ring: 224 71.4% 4.1%;
+    --ring: 240, 0%, 45%, 25%;
 
     --toast-success: 137 64% 98%;
     --toast-error: 0 78% 98%;
