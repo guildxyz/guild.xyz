@@ -56,15 +56,31 @@
     --toast-warning: 40 79% 96%;
     --toast-info: 218 80% 98%;
 
-    /* TODO: hover/active colors */
     --discord: 233 78% 63%;
+    --discord-hover: 243 75% 59%;
+    --discord-active: 245 58% 51%;
     --telegram: 200 73% 50%;
+    --telegram-hover: 200 98% 39%;
+    --telegram-active: 201 96% 32%;
+    --email: 217 91% 60%;
+    --email-hover: 221 83% 53%;
+    --email-active: 224 76% 48%;
+    --google: 217 91% 60%;
+    --google-hover: 221 83% 53%;
+    --google-active: 224 76% 48%;
+    /* TODO: proper hover/active colors for Twitter */
     --twitter: 0 0% 0%;
+    --twitter-hover: 0 0% 0%;
+    --twitter-active: 0 0% 0%;
     --github: 0 0% 20%;
+    --github-hover: 0 0% 18%;
+    --github-active: 0 0% 15%;
+    --polygonid: 259 59% 59%;
+    --polygonid-hover: 258 50% 52%;
+    --polygonid-active: 256 44% 42%;
     --farcaster: 238 76% 69%;
     --farcaster-hover: 239 75% 64%;
     --farcaster-active: 239 75% 58%;
-    --polygonid: 259 59% 59%;
 
     --sm: 640px;
     --md: 768px;
@@ -125,6 +141,18 @@
     --toast-warning: 30 6% 34%;
     --toast-info: 226 7% 36%;
 
+    --discord-hover: 234 89% 74%;
+    --discord-active: 230 94% 82%;
+    --telegram-hover: 198 93% 60%;
+    --telegram-active: 199 95% 74%;
+    --email-hover: 213 94% 68%;
+    --email-active: 212 96% 78%;
+    --google-hover: 213 94% 68%;
+    --google-active: 212 96% 78%;
+    --github-hover: 0 0% 44%;
+    --github-active: 0 0% 68%;
+    --polygonid-hover: 260 73% 70%;
+    --polygonid-active: 262 81% 77%;
     --farcaster-hover: 239 75% 75%;
     --farcaster-active: 238 76% 81%;
   }
