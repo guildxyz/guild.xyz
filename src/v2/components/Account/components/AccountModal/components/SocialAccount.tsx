@@ -106,15 +106,15 @@ export const SocialAccountUI = ({
 
 // TODO: we should move these to `rewards.ts` eventually
 const PLATFORM_COLORS = {
-  DISCORD: "bg-discord",
-  TELEGRAM: "bg-telegram",
-  EMAIL: "bg-blue-500",
-  GOOGLE: "bg-blue-500",
-  TWITTER_V1: "bg-twitter",
-  TWITTER: "bg-twitter",
-  GITHUB: "bg-github",
-  POLYGON_ID: "bg-polygonid",
-  FARCASTER: "bg-farcaster",
+  DISCORD: "bg-discord hover:bg-discord-hover active:bg-discord-active",
+  TELEGRAM: "bg-telegram hover:bg-telegram-hover active:bg-telegram-active",
+  EMAIL: "bg-email hover:bg-email-hover active:bg-email-active",
+  GOOGLE: "bg-google hover:bg-google-hover active:bg-google-active",
+  TWITTER_V1: "bg-twitter hover:bg-twitter-hover active:bg-twitter-active",
+  TWITTER: "bg-twitter hover:bg-twitter-hover active:bg-twitter-active",
+  GITHUB: "bg-github hover:bg-github-hover active:bg-github-active",
+  POLYGON_ID: "bg-polygonid hover:bg-polygonid-hover active:bg-polygonid-active",
+  FARCASTER: "bg-farcaster hover:bg-farcaster-hover active:bg-farcaster-active",
 } satisfies Partial<Record<PlatformName, string>>
 
 const ConnectPlatformButton = ({
