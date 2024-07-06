@@ -3,8 +3,7 @@
 import { MagnifyingGlass, PushPin, Sparkle } from "@phosphor-icons/react"
 import { Input } from "./ui/Input"
 import { ToggleGroup, ToggleGroupItem } from "./ui/ToggleGroup"
-import { useSetAtom } from "jotai"
-import { guildQueryAtom } from "./GuildInfiniteScroll"
+import { PrimitiveAtom, useSetAtom } from "jotai"
 import React, { useEffect, useState } from "react"
 import { useSearchParams, usePathname } from "next/navigation"
 import { ActiveSection } from "app/explorer/types"
@@ -15,8 +14,12 @@ enum Order {
   Newest = "NEWEST",
 }
 
-export const GuildSearchBar = () => {
-  const setGuildQuery = useSetAtom(guildQueryAtom)
+export const GuildSearchBar = ({
+  queryAtom,
+}: {
+  queryAtom: PrimitiveAtom<string>
+}) => {
+  const setGuildQuery = useSetAtom(queryAtom)
   const searchParams = useSearchParams()
   const pathName = usePathname()
   const [order, setOrder] = useState<Order>(
@@ -32,11 +35,11 @@ export const GuildSearchBar = () => {
         ([_, value]) => value
       )
     )
-    // history.replaceState(
-    //   null,
-    //   "",
-    //   `${pathName}${window.location.hash}?${newSearchParams.toString()}`
-    // )
+    history.replaceState(
+      null,
+      "",
+      `${pathName}${window.location.hash}?${newSearchParams.toString()}`
+    )
     setGuildQuery(newSearchParams.toString())
   }, [debouncedSearch, order, setGuildQuery, pathName])
 

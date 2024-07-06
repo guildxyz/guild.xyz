@@ -1,5 +1,5 @@
 import { GuildCardSkeleton, GuildCardWithLink } from "./GuildCard"
-import { atom, useAtomValue } from "jotai"
+import { PrimitiveAtom, useAtomValue } from "jotai"
 import { env } from "env"
 import useUser from "components/[guild]/hooks/useUser"
 import { memo, useRef } from "react"
@@ -10,7 +10,6 @@ import { useScrollBatchedRendering } from "hooks/useScrollBatchedRendering"
 import { Spinner } from "@phosphor-icons/react"
 import { SWRConfiguration } from "swr"
 
-export const guildQueryAtom = atom("")
 const BATCH_SIZE = 24
 
 const GuildCardMemo = memo(GuildCardWithLink)
@@ -57,8 +56,12 @@ const useExploreGuilds = (
   )
 }
 
-export const GuildInfiniteScroll = () => {
-  const searchParams = new URLSearchParams(useAtomValue(guildQueryAtom))
+export const GuildInfiniteScroll = ({
+  queryAtom,
+}: {
+  queryAtom: PrimitiveAtom<string>
+}) => {
+  const searchParams = new URLSearchParams(useAtomValue(queryAtom))
   const search = searchParams.get("search")
   const ref = useRef<HTMLElement>(null)
   const {

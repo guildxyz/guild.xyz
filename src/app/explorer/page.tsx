@@ -14,7 +14,12 @@ import { GuildSearchBar } from "@/components/GuildSeachBar"
 import { ActiveSection } from "./types"
 import { Anchor } from "@/components/ui/Anchor"
 import { Layout } from "@/components/Layout"
-import { isNavStuckAtom, isSeachStuckAtom, activeSectionAtom } from "./atoms"
+import {
+  isNavStuckAtom,
+  isSeachStuckAtom,
+  activeSectionAtom,
+  guildQueryAtom,
+} from "./atoms"
 import { useAtom, useAtomValue, useSetAtom } from "jotai"
 
 const HeaderBackground = () => {
@@ -104,9 +109,9 @@ const Page = () => {
               Explore verified guilds
             </h2>
             <div className="sticky top-10 z-10" ref={searchRef}>
-              <GuildSearchBar />
+              <GuildSearchBar queryAtom={guildQueryAtom} />
             </div>
-            <GuildInfiniteScroll />
+            <GuildInfiniteScroll queryAtom={guildQueryAtom} />
           </section>
         </Layout.Main>
         <Layout.Footer>
