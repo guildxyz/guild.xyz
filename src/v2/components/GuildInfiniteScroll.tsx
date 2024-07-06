@@ -8,6 +8,7 @@ import { GuildBase } from "types"
 import { fetcherWithSign } from "utils/fetcher"
 import { useScrollBatchedRendering } from "hooks/useScrollBatchedRendering"
 import { Spinner } from "@phosphor-icons/react"
+import { SWRConfiguration } from "swr"
 
 export const guildQueryAtom = atom("")
 const BATCH_SIZE = 24
@@ -26,10 +27,9 @@ const useExploreGuilds = (
   guildsInitial: GuildBase[]
 ) => {
   const { isSuperAdmin } = useUser()
-  const options = {
+  const options: SWRConfiguration = {
     fallbackData: guildsInitial,
     dedupingInterval: 60000, // one minute
-    revalidateFirstPage: false,
   }
 
   // sending authed request for superAdmins, so they can see unverified & hideFromExplorer guilds too
@@ -60,7 +60,6 @@ const useExploreGuilds = (
 export const GuildInfiniteScroll = () => {
   const searchParams = new URLSearchParams(useAtomValue(guildQueryAtom))
   const search = searchParams.get("search")
-  // const prevSearch = useRef<string | null>();
   const ref = useRef<HTMLElement>(null)
   const {
     data: filteredGuilds,
@@ -69,12 +68,6 @@ export const GuildInfiniteScroll = () => {
     isLoading,
   } = useExploreGuilds(searchParams, [])
   const renderedGuilds = filteredGuilds?.flat()
-
-  // useEffect(() => {
-  //   if (prevSearch.current === search || prevSearch.current === undefined) return
-  //   setSize(1)
-  //   return () => { prevSearch.current = search }
-  // }, [search, setSize])
 
   useScrollBatchedRendering({
     batchSize: 1,

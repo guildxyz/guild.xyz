@@ -1,12 +1,22 @@
-import { useEffect, useRef, useState } from "react"
+import {
+  Dispatch,
+  MutableRefObject,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react"
 
 /**
  * The IntersectionObserver triggers if the element is off the viewport, so we have
  * to set top="-1px" or bottom="-1px" on the sticky element instead of 0
  */
-const useIsStuck = () => {
+const useIsStuck = (
+  setIsStuck?: Dispatch<SetStateAction<boolean>>
+): { ref: MutableRefObject<null>; isStuck?: boolean } => {
   const ref = useRef(null)
-  const [isStuck, setIsStuck] = useState(false)
+  const [isStuck, setIsStuckLocal] = useState(false)
+  const setIsStuckActive = setIsStuck ?? setIsStuckLocal
 
   useEffect(() => {
     if (!ref.current) return
@@ -16,7 +26,7 @@ const useIsStuck = () => {
 
     const observer = new IntersectionObserver(
       ([e]) => {
-        setIsStuck(
+        setIsStuckActive(
           !e.isIntersecting &&
             (e.boundingClientRect.top < topOffsetPx ||
               e.boundingClientRect.bottom > bottomOffsetPx)
@@ -31,7 +41,7 @@ const useIsStuck = () => {
     return () => observer.unobserve(cachedRef)
   }, [ref])
 
-  return { ref, isStuck }
+  return { ref, isStuck: setIsStuck ? undefined : isStuck }
 }
 
 export default useIsStuck
