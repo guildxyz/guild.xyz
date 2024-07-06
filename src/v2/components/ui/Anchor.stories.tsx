@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from "@storybook/react"
-
 import { Anchor } from "./Anchor"
 
 const meta: Meta<typeof Anchor> = {
@@ -14,6 +13,7 @@ type Story = StoryObj<typeof Anchor>
 export const Default: Story = {
   args: {
     children: "Default",
+    href: "#",
     variant: "default",
   },
   argTypes: {
@@ -21,6 +21,10 @@ export const Default: Story = {
       control: {
         disable: true,
       },
+    },
+    showExternal: {
+      type: "boolean",
+      control: "boolean",
     },
     asChild: {
       control: {
@@ -34,7 +38,18 @@ export const Muted: Story = {
   args: {
     ...Default.args,
     variant: "muted",
-    children: "Muted"
+    children: "Muted",
+  },
+  argTypes: {
+    ...Default.argTypes,
+  },
+}
+
+export const Highlighted: Story = {
+  args: {
+    ...Default.args,
+    variant: "highlighted",
+    children: "Highlighted",
   },
   argTypes: {
     ...Default.argTypes,
@@ -45,10 +60,9 @@ export const Silent: Story = {
   args: {
     ...Default.args,
     variant: "silent",
-    children: "Silent"
+    children: "Silent",
   },
   argTypes: {
     ...Default.argTypes,
   },
 }
-

@@ -12,9 +12,9 @@ import { Card } from "@/components/ui/Card"
 import { useEffect, useState } from "react"
 import useScrollspy from "hooks/useScrollSpy"
 import { GuildInfiniteScroll } from "@/components/GuildInfiniteScroll"
-import Link from "next/link"
 import { GuildSearchBar } from "@/components/GuildSeachBar"
 import { ActiveSection } from "./types"
+import { Anchor } from "@/components/ui/Anchor"
 
 const Page = () => {
   const isAuthenticated = false
@@ -109,13 +109,21 @@ const Page = () => {
         <PageBoundary>
           <p className="my-8 text-center text-sm text-muted-foreground">
             This website is{" "}
-            <Link href="https://github.com/guildxyz/guild.xyz" target="_blank">
+            <Anchor
+              href="https://github.com/guildxyz/guild.xyz"
+              target="_blank"
+              showExternal
+            >
               open source
-            </Link>
+            </Anchor>
             , and built on the{" "}
-            <Link target="_blank" href="https://www.npmjs.com/package/@guildxyz/sdk">
+            <Anchor
+              target="_blank"
+              href="https://www.npmjs.com/package/@guildxyz/sdk"
+              showExternal
+            >
               Guild SDK
-            </Link>
+            </Anchor>
           </p>
         </PageBoundary>
       </footer>

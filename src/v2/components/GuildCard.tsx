@@ -67,7 +67,7 @@ export const GuildCard: React.FC<Props> = ({ guildData }) => (
 )
 
 export const GuildCardWithLink: typeof GuildCard = ({ guildData }) => (
-  <Anchor href={guildData.urlName} className="rounded-2xl">
+  <Anchor href={guildData.urlName} className="rounded-2xl" variant="silent">
     <GuildCard guildData={guildData} />
   </Anchor>
 )
