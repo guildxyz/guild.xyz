@@ -2,7 +2,7 @@
 
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/ToggleGroup"
 import { Button } from "@/components/ui/Button"
-import { Plus, SignIn, } from "@phosphor-icons/react"
+import { Plus, SignIn } from "@phosphor-icons/react"
 import Robot from "/public/landing/robot.svg"
 import { Header } from "@/components/Header"
 import { Separator } from "@/components/ui/Separator"
@@ -30,9 +30,9 @@ const Page = () => {
   }, [spyActiveSection])
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="flex min-h-screen flex-col">
       <div
-        className="fixed inset-x-0 top-0 h-40 -translate-y-40 border-b border-border bg-gradient-to-b from-background to-card/30 backdrop-blur backdrop-saturate-150 duration-75 data-[nav-stuck='true']:-translate-y-24 data-[nav-stuck='true']:data-[search-stuck='true']:translate-y-0 motion-safe:transition-transform sm:h-28 sm:-translate-y-28 sm:data-[nav-stuck='true']:-translate-y-12"
+        className="fixed inset-x-0 top-0 z-10 h-40 -translate-y-40 border-b border-border bg-gradient-to-b from-background to-card/30 backdrop-blur backdrop-saturate-150 duration-75 data-[nav-stuck='true']:-translate-y-24 data-[nav-stuck='true']:data-[search-stuck='true']:translate-y-0 motion-safe:transition-transform sm:h-28 sm:-translate-y-28 sm:data-[nav-stuck='true']:-translate-y-12"
         data-nav-stuck={isNavStuck}
         data-search-stuck={isSearchStuck}
       />
@@ -55,7 +55,7 @@ const Page = () => {
       <div>
         <main>
           <PageBoundary>
-            <div className="sticky top-0 my-1 py-2" ref={navToggleRef}>
+            <div className="sticky top-0 z-10 my-1 py-2" ref={navToggleRef}>
               <div className="relative flex items-start justify-between">
                 <ToggleGroup
                   type="single"
@@ -97,10 +97,7 @@ const Page = () => {
               <h2 className="text-lg font-bold tracking-tight">
                 Explore verified guilds
               </h2>
-              <div
-                className="sticky top-10"
-                ref={searchRef}
-              >
+              <div className="sticky top-10 z-10" ref={searchRef}>
                 <GuildSearchBar />
               </div>
               <GuildInfiniteScroll />

@@ -11,8 +11,8 @@ import {
 } from "./ui/Tooltip"
 import { Skeleton } from "./ui/Skeleton"
 import { Card } from "./ui/Card"
-import Link from "next/link"
 import Image from "next/image"
+import { Anchor } from "./ui/Anchor"
 
 type Props = {
   guildData: GuildBase
@@ -21,11 +21,7 @@ type Props = {
 export const GuildCard: React.FC<Props> = ({ guildData }) => (
   <Card className="-z-10 grid grid-cols-[auto,1fr] grid-rows-2 items-center gap-x-4 gap-y-1 px-6 py-7">
     <Avatar className="row-span-2 size-12">
-      <AvatarImage
-        src={guildData.imageUrl}
-        className="bg-black/50"
-        asChild
-      >
+      <AvatarImage src={guildData.imageUrl} className="bg-black/50" asChild>
         <Image height={40} width={40} src={guildData.imageUrl} alt="guild emblem" />
       </AvatarImage>
       <AvatarFallback className="bg-transparent">
@@ -33,7 +29,7 @@ export const GuildCard: React.FC<Props> = ({ guildData }) => (
       </AvatarFallback>
     </Avatar>
     <div className="flex items-center gap-1">
-      <h3 className="max-w-36 truncate text-lg font-bold tracking-tight text-foreground font-display">
+      <h3 className="max-w-36 truncate font-display text-lg font-bold tracking-tight text-foreground">
         {guildData.name}
       </h3>
       {guildData.tags.includes("VERIFIED") && (
@@ -67,10 +63,14 @@ export const GuildCard: React.FC<Props> = ({ guildData }) => (
       </Badge>
       <Badge>{pluralize(guildData.rolesCount, "role")}</Badge>
     </div>
-  </Card >
+  </Card>
 )
 
-export const GuildCardWithLink: typeof GuildCard = ({ guildData }) => <Link href={guildData.urlName}><GuildCard guildData={guildData} /></Link>
+export const GuildCardWithLink: typeof GuildCard = ({ guildData }) => (
+  <Anchor href={guildData.urlName} className="rounded-2xl">
+    <GuildCard guildData={guildData} />
+  </Anchor>
+)
 
 export const GuildCardSkeleton = () => (
   <Card className="-z-10 grid grid-cols-[auto,1fr] grid-rows-2 items-center gap-x-4 gap-y-1 px-6 py-7">

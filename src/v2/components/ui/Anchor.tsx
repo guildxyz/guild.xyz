@@ -6,14 +6,13 @@ import { cn } from "@/lib/utils"
 import Link from "next/link"
 
 const anchorVariants = cva(
-  "underline-offset-4 focus-visible:ring-ring focus-visible:ring-4",
+  "underline-offset-4 focus-visible:ring-ring focus-visible:ring-4 outline-none",
   {
     variants: {
       variant: {
-        default:
-          "text-link hover:underline",
+        default: "text-link hover:underline",
         muted: "text-muted-foreground font-bold hover:underline",
-        silent: ""
+        silent: "",
       },
     },
     defaultVariants: {
@@ -24,21 +23,12 @@ const anchorVariants = cva(
 
 export interface AnchorProps
   extends React.ComponentProps<typeof Link>,
-  VariantProps<typeof anchorVariants> {
+    VariantProps<typeof anchorVariants> {
   asChild?: boolean
 }
 
 const Anchor = React.forwardRef<HTMLAnchorElement, AnchorProps>(
-  (
-    {
-      className,
-      variant,
-      asChild = false,
-      children,
-      ...props
-    },
-    ref
-  ) => {
+  ({ className, variant, asChild = false, children, ...props }, ref) => {
     const Comp = asChild ? Slot : Link
 
     return (
