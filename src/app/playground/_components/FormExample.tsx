@@ -1,7 +1,6 @@
 "use client"
 import { Button } from "@/components/ui/Button"
 import {
-  Form,
   FormControl,
   FormDescription,
   FormErrorMessage,
@@ -11,7 +10,7 @@ import {
 } from "@/components/ui/Form"
 import { Input } from "@/components/ui/Input"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
+import { FormProvider, useForm } from "react-hook-form"
 import { z } from "zod"
 
 const formSchema = z.object({
@@ -35,7 +34,7 @@ export function FormExample() {
   }
 
   return (
-    <Form {...form}>
+    <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
@@ -53,6 +52,6 @@ export function FormExample() {
         />
         <Button type="submit">Submit</Button>
       </form>
-    </Form>
+    </FormProvider>
   )
 }

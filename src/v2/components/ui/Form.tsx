@@ -5,7 +5,6 @@ import {
   ControllerProps,
   FieldPath,
   FieldValues,
-  FormProvider,
   useFormContext,
 } from "react-hook-form"
 
@@ -20,8 +19,6 @@ import {
   useContext,
   useId,
 } from "react"
-
-const Form = FormProvider
 
 type FormFieldContextValue<
   TFieldValues extends FieldValues = FieldValues,
@@ -165,7 +162,6 @@ const FormErrorMessage = forwardRef<
 FormErrorMessage.displayName = "FormErrorMessage"
 
 export {
-  Form,
   FormControl,
   FormDescription,
   FormErrorMessage,
