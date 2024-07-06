@@ -2,10 +2,7 @@
 
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/ToggleGroup"
 import { Button } from "@/components/ui/Button"
-import { Plus, SignIn } from "@phosphor-icons/react"
-import Robot from "/public/landing/robot.svg"
-import { Separator } from "@/components/ui/Separator"
-import { Card } from "@/components/ui/Card"
+import { Plus } from "@phosphor-icons/react"
 import useIsStuck from "hooks/useIsStuck"
 import { useEffect } from "react"
 import useScrollspy from "hooks/useScrollSpy"
@@ -21,6 +18,7 @@ import {
   guildQueryAtom,
 } from "./atoms"
 import { useAtom, useAtomValue, useSetAtom } from "jotai"
+import { YourGuilds } from "@/components/YourGuilds"
 
 const HeaderBackground = () => {
   const isNavStuck = useAtomValue(isNavStuckAtom)
@@ -93,17 +91,7 @@ const Page = () => {
               )}
             </div>
           </div>
-          <Card className="my-2 mb-12 flex flex-col items-stretch justify-between gap-8 p-6 font-semibold sm:flex-row sm:items-center">
-            <div className="flex items-center gap-4">
-              <Robot className="size-8 min-w-8 text-white" />
-              <span>Sign in to view your guilds / create new ones</span>
-            </div>
-            <Button className="space-x-2">
-              <SignIn />
-              <span className="text-md">Sign in</span>
-            </Button>
-          </Card>
-          {isAuthenticated && <Separator className="mb-10" />}
+          <YourGuilds />
           <section id={ActiveSection.ExploreGuilds}>
             <h2 className="text-lg font-bold tracking-tight">
               Explore verified guilds

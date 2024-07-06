@@ -35,11 +35,11 @@ export const GuildSearchBar = ({
         ([_, value]) => value
       )
     )
-    history.replaceState(
-      null,
-      "",
-      `${pathName}${window.location.hash}?${newSearchParams.toString()}`
-    )
+    // history.replaceState(
+    //   null,
+    //   "",
+    //   `${pathName}${window.location.hash}?${newSearchParams.toString()}`
+    // )
     setGuildQuery(newSearchParams.toString())
   }, [debouncedSearch, order, setGuildQuery, pathName])
 
