@@ -27,25 +27,25 @@ const SolutionCard = ({
   children,
 }: Props) => {
   const circleBgColor = useColorModeValue("whiteAlpha.300", "blackAlpha.300")
-  const outlineColor = useColorModeValue("blackAlpha.300", "whiteAlpha.300")
-  const cardBg = useColorModeValue("white", "gray.800")
+  const borderColor = useColorModeValue("blackAlpha.300", "whiteAlpha.200")
+  const cardBg = useColorModeValue("white", "var(--chakra-colors-gray-800)")
+  const boxShadow = useColorModeValue("sm", "md")
+  const bgOpacity = useColorModeValue(0.2, 0.15)
+  const gradientBg = useColorModeValue(
+    "var(--chakra-colors-gray-300)",
+    "var(--chakra-colors-gray-800)"
+  )
 
   return (
     <DisplayCard
       as="button"
-      _focus={{
-        outlineWidth: "4px",
-        outlineOffset: "-4px",
-      }}
       textAlign="left"
-      boxShadow={"none"}
+      boxShadow={boxShadow}
       bg={cardBg}
-      outline="1px solid"
-      outlineColor={outlineColor}
-      outlineOffset="-1px"
+      borderWidth="1px"
+      borderColor={borderColor}
       px={4}
       py={4}
-      position="relative"
       onClick={onClick}
       zIndex={2}
       _before={{
@@ -53,13 +53,13 @@ const SolutionCard = ({
         position: "absolute",
         top: 0,
         left: 0,
-        bg: `url('${bgImageUrl}')`,
+        bg: `linear-gradient(to bottom left, transparent, ${gradientBg} 100%), url('${bgImageUrl}')`,
         bgRepeat: "no-repeat",
         bgPosition: "center",
         bgSize: "cover",
         width: "100%",
         height: "100%",
-        opacity: 0.15,
+        opacity: bgOpacity,
         transition: "0.3s",
         filter: `blur(2px) saturate(70%)`,
       }}
@@ -76,13 +76,7 @@ const SolutionCard = ({
           <Circle size="12" pos="relative" overflow="hidden" bgColor={circleBgColor}>
             <Image src={imageUrl} alt="Guild logo" fill sizes="3rem" />
           </Circle>
-          <Heading
-            fontSize={"normal"}
-            fontWeight="bold"
-            letterSpacing="wide"
-            maxW="full"
-            noOfLines={1}
-          >
+          <Heading fontSize={"normal"} fontWeight="bold" maxW="full" noOfLines={1}>
             {title}
           </Heading>
         </HStack>
