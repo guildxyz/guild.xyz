@@ -17,7 +17,7 @@ export const config = {
 export function middleware(request: NextRequest) {
   if (
     request.nextUrl.pathname === request.nextUrl.pathname.toLowerCase() ||
-    request.nextUrl.pathname.includes("/lego")
+    request.nextUrl.pathname.includes("lego")
   ) {
     return NextResponse.next()
   }
