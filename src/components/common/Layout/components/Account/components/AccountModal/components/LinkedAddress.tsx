@@ -1,3 +1,4 @@
+import { useDisconnectAddress } from "@/components/Account/components/AccountModal/hooks/useDisconnect"
 import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import {
   AlertDialogBody,
@@ -31,7 +32,6 @@ import Image from "next/image"
 import { useRef } from "react"
 import { User } from "types"
 import shortenHex from "utils/shortenHex"
-import { useDisconnectAddress } from "../hooks/useDisconnect"
 import useEditPrimaryAddress from "../hooks/useEditPrimaryAddress"
 import AddressTypeTag from "./AddressTypeTag"
 import PrimaryAddressTag from "./PrimaryAddressTag"

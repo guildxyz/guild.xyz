@@ -1,14 +1,14 @@
+import { useToast } from "@/components/ui/hooks/useToast"
 import useUser from "components/[guild]/hooks/useUser"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
-import useToast from "hooks/useToast"
 import { PlatformType } from "types"
 import fetcher from "utils/fetcher"
 
 const useDisconnect = (onSuccess?: () => void) => {
   const showErrorToast = useShowErrorToast()
   const { mutate: mutateUser, id: userId } = useUser()
-  const toast = useToast()
+  const { toast } = useToast()
 
   const submit = async (signedValidation: SignedValidation) => {
     const { platformName } = JSON.parse(signedValidation.signedPayload)
@@ -36,7 +36,7 @@ const useDisconnect = (onSuccess?: () => void) => {
 
       toast({
         title: `Account disconnected!`,
-        status: "success",
+        variant: "success",
       })
 
       onSuccess?.()
@@ -48,7 +48,7 @@ const useDisconnect = (onSuccess?: () => void) => {
 const useDisconnectAddress = (onSuccess?: () => void) => {
   const showErrorToast = useShowErrorToast()
   const { mutate: mutateUser, id: userId } = useUser()
-  const toast = useToast()
+  const { toast } = useToast()
 
   const submit = async (signedValidation: SignedValidation) => {
     const { address: addressFromValidation } = JSON.parse(
@@ -74,7 +74,7 @@ const useDisconnectAddress = (onSuccess?: () => void) => {
 
       toast({
         title: `Account disconnected!`,
-        status: "success",
+        variant: "success",
       })
 
       onSuccess?.()
@@ -86,7 +86,7 @@ const useDisconnectAddress = (onSuccess?: () => void) => {
 const useDisconnectEmail = (onSuccess?: () => void) => {
   const showErrorToast = useShowErrorToast()
   const { mutate: mutateUser, id: userId } = useUser()
-  const toast = useToast()
+  const { toast } = useToast()
 
   const submit = async (signedValidation: SignedValidation) => {
     const { emailAddress } = JSON.parse(signedValidation.signedPayload)
@@ -112,7 +112,7 @@ const useDisconnectEmail = (onSuccess?: () => void) => {
 
       toast({
         title: `Email address disconnected!`,
-        status: "success",
+        variant: "success",
       })
 
       onSuccess?.()

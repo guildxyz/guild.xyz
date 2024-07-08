@@ -5,12 +5,12 @@ import { cn } from "@/lib/utils"
 import useUser from "components/[guild]/hooks/useUser"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
-import useDisconnect from "components/common/Layout/components/Account/components/AccountModal/hooks/useDisconnect"
 import useMembership from "components/explorer/hooks/useMembership"
 import { motion } from "framer-motion"
 import { ReactNode } from "react"
 import rewards from "rewards"
 import { PlatformName } from "types"
+import useDisconnect from "../hooks/useDisconnect"
 import { DisconnectAccountButton } from "./DisconnectAccountButton"
 
 const SocialAccount = ({ type }: { type: PlatformName }): JSX.Element => {
