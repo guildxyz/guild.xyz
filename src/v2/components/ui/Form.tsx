@@ -19,6 +19,8 @@ import {
   useContext,
   useId,
 } from "react"
+import { useDebounceValue } from "usehooks-ts"
+import { Collapse } from "./Collapse"
 
 type FormFieldContextValue<
   TFieldValues extends FieldValues = FieldValues,
@@ -139,24 +141,23 @@ const FormErrorMessage = forwardRef<
 >(({ className, children, ...props }, ref) => {
   const { error, formMessageId } = useFormField()
   const body = error ? String(error?.message) : children
-
-  if (!body) {
-    return null
-  }
+  const [debounceBody] = useDebounceValue(body, 200)
 
   return (
-    <p
-      ref={ref}
-      id={formMessageId}
-      // TODO: not sure if it is a good idea to use "destructive-ghost-foreground" here? Should we add a completely new CSS variable instead?
-      className={cn(
-        "text-[0.8rem] font-medium text-destructive-ghost-foreground",
-        className
-      )}
-      {...props}
-    >
-      {body}
-    </p>
+    <Collapse open={!!error} animateOpacity>
+      <p
+        ref={ref}
+        id={formMessageId}
+        // TODO: not sure if it is a good idea to use "destructive-ghost-foreground" here? Should we add a completely new CSS variable instead?
+        className={cn(
+          "text-[0.8rem] font-medium text-destructive-ghost-foreground",
+          className
+        )}
+        {...props}
+      >
+        {body ?? debounceBody}
+      </p>
+    </Collapse>
   )
 })
 FormErrorMessage.displayName = "FormErrorMessage"
