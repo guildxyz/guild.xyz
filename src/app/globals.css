@@ -46,7 +46,7 @@
     --success-foreground: 0 0% 100%;
 
     --border: 240 6% 90%;
-    --border-secondary: 240 6% 94%;
+    --border-muted: 240 6% 94%;
     --input: var(--border);
     --ring: 224 71.4% 4.1%;
 
@@ -104,7 +104,7 @@
     --success-foreground: 0 0% 100%;
 
     --border: 240 3% 38%;
-    --border-secondary: 240 3% 28%;
+    --border-muted: 240 3% 28%;
     --input: var(--border);
     --ring: 240 0% 45%;
 

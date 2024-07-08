@@ -164,7 +164,7 @@ const DropdownMenuSeparator = forwardRef<
 >(({ className, ...props }, ref) => (
   <DropdownMenuPrimitive.Separator
     ref={ref}
-    className={cn("h-px bg-border-secondary", className)}
+    className={cn("h-px bg-border-muted", className)}
     {...props}
   />
 ))
