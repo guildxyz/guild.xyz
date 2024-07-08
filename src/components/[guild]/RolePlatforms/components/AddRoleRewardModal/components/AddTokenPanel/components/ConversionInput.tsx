@@ -1,6 +1,5 @@
 import {
   Circle,
-  FormControl,
   FormLabel,
   HStack,
   IconButton,
@@ -110,67 +109,63 @@ const ConversionInput = ({
       </HStack>
 
       <HStack w={"full"}>
-        <FormControl>
-          <InputGroup>
-            {fromImage && <InputLeftElement>{fromImage}</InputLeftElement>}
+        <InputGroup>
+          {fromImage && <InputLeftElement>{fromImage}</InputLeftElement>}
 
-            {conversionLocked ? (
-              <ControlledNumberInput
-                numberFormat="FLOAT"
-                onChange={tokenPreviewChange}
-                name={"tokenPreview"}
-                adaptiveStepSize
-                numberInputFieldProps={{ pr: 7, pl: fromImage ? 9 : 4 }}
-                min={MIN_TOKEN_AMOUNT}
-                w="full"
-              />
-            ) : (
-              <ControlledNumberInput
-                numberFormat="FLOAT"
-                onChange={(valString) => updateConversionRate(valString, "token")}
-                name={"tokenAmount"}
-                adaptiveStepSize
-                numberInputFieldProps={{ pr: 7, pl: fromImage ? 9 : 4 }}
-                min={MIN_TOKEN_AMOUNT}
-                w="full"
-              />
-            )}
-            {fromText && <InputUnitElement>{fromText}</InputUnitElement>}
-          </InputGroup>
-        </FormControl>
+          {conversionLocked ? (
+            <ControlledNumberInput
+              numberFormat="FLOAT"
+              onChange={tokenPreviewChange}
+              name={"tokenPreview"}
+              adaptiveStepSize
+              numberInputFieldProps={{ pr: 7, pl: fromImage ? 9 : 4 }}
+              min={MIN_TOKEN_AMOUNT}
+              w="full"
+            />
+          ) : (
+            <ControlledNumberInput
+              numberFormat="FLOAT"
+              onChange={(valString) => updateConversionRate(valString, "token")}
+              name={"tokenAmount"}
+              adaptiveStepSize
+              numberInputFieldProps={{ pr: 7, pl: fromImage ? 9 : 4 }}
+              min={MIN_TOKEN_AMOUNT}
+              w="full"
+            />
+          )}
+          {fromText && <InputUnitElement>{fromText}</InputUnitElement>}
+        </InputGroup>
 
         <Circle background={"whiteAlpha.200"} p="1">
           <ArrowRight size={12} color="grayText" />
         </Circle>
 
-        <FormControl>
-          <InputGroup>
-            {toImage && <InputLeftElement>{toImage}</InputLeftElement>}
+        <InputGroup>
+          {toImage && <InputLeftElement>{toImage}</InputLeftElement>}
 
-            {conversionLocked ? (
-              <ControlledNumberInput
-                numberFormat="FLOAT"
-                name={"pointPreview"}
-                adaptiveStepSize
-                numberInputFieldProps={{ pr: 7, pl: toImage ? 9 : 4 }}
-                min={MIN_TOKEN_AMOUNT}
-                isReadOnly
-                w="full"
-              />
-            ) : (
-              <ControlledNumberInput
-                numberFormat="FLOAT"
-                onChange={(valString) => updateConversionRate(valString, "point")}
-                name={"pointAmount"}
-                adaptiveStepSize
-                numberInputFieldProps={{ pr: 7, pl: toImage ? 9 : 4 }}
-                min={MIN_TOKEN_AMOUNT}
-                w="full"
-              />
-            )}
-            {toText && <InputUnitElement>{toText}</InputUnitElement>}
-          </InputGroup>
-        </FormControl>
+          {conversionLocked ? (
+            <ControlledNumberInput
+              numberFormat="FLOAT"
+              name={"pointPreview"}
+              adaptiveStepSize
+              numberInputFieldProps={{ pr: 7, pl: toImage ? 9 : 4 }}
+              min={MIN_TOKEN_AMOUNT}
+              isReadOnly
+              w="full"
+            />
+          ) : (
+            <ControlledNumberInput
+              numberFormat="FLOAT"
+              onChange={(valString) => updateConversionRate(valString, "point")}
+              name={"pointAmount"}
+              adaptiveStepSize
+              numberInputFieldProps={{ pr: 7, pl: toImage ? 9 : 4 }}
+              min={MIN_TOKEN_AMOUNT}
+              w="full"
+            />
+          )}
+          {toText && <InputUnitElement>{toText}</InputUnitElement>}
+        </InputGroup>
       </HStack>
     </FormProvider>
   )

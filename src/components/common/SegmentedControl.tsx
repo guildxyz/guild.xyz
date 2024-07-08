@@ -6,7 +6,6 @@ import {
   Text,
   UseRadioGroupProps,
   chakra,
-  useBreakpointValue,
   useColorModeValue,
   useRadio,
   useRadioGroup,
@@ -95,8 +94,6 @@ const SegmentedControlButton = ({
 
   const activeBgColor = useColorModeValue("white", "whiteAlpha.200")
 
-  const isMobile = useBreakpointValue({ base: true, md: false })
-
   return (
     <chakra.label
       {...htmlProps}
@@ -119,7 +116,7 @@ const SegmentedControlButton = ({
             duration: 0.2,
           }}
           // Don't animate on the Y axis
-          style={isMobile ? {} : { originY: "0px" }}
+          style={{ originY: "0px" }}
         />
       )}
       <Flex
