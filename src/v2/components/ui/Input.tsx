@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils"
 import { cva, VariantProps } from "class-variance-authority"
 import { forwardRef, InputHTMLAttributes } from "react"
 
@@ -26,7 +27,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, size, ...props }, ref) => (
     <input
       type={type}
-      className={inputVariants({ size, className })}
+      className={cn(inputVariants({ size, className }))}
       ref={ref}
       {...props}
     />
