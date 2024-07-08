@@ -3,13 +3,21 @@ import {
   FormErrorMessage,
   FormHelperText,
   FormLabel,
+  Icon,
   Input,
   Link,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverContent,
+  PopoverTrigger,
   Skeleton,
   Stack,
   Text,
 } from "@chakra-ui/react"
 import { consts } from "@guildxyz/types"
+import { Info } from "@phosphor-icons/react/dist/ssr"
+import { triggerChat } from "components/_app/IntercomProvider"
 import Button from "components/common/Button"
 import { useCallback } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
@@ -90,15 +98,11 @@ const SelectLiquidityPoolStep = ({ onContinue }: { onContinue: () => void }) => 
   return (
     <Stack gap={5}>
       <Text colorScheme="gray">
-        Enter the URL or contract address of the liquidity pool from{" "}
-        <Link
-          href="https://app.uniswap.org/pools"
-          textDecoration="underline"
-          isExternal
-        >
-          Uniswap Pools
+        {"from "}
+        <Link href="https://app.uniswap.org/pools" fontWeight={"medium"} isExternal>
+          Uniswap Pools V3
         </Link>
-        .
+        <LiquidityPoolInfoTooltip />
       </Text>
 
       <FormControl
@@ -168,5 +172,36 @@ const SelectLiquidityPoolStep = ({ onContinue }: { onContinue: () => void }) => 
     </Stack>
   )
 }
+
+const LiquidityPoolInfoTooltip = () => (
+  <Popover trigger="hover">
+    <PopoverTrigger>
+      <Icon as={Info} weight="regular" ml={2} mb="-1.5px" />
+    </PopoverTrigger>
+    <PopoverContent>
+      <PopoverArrow />
+      <PopoverBody>
+        <Text
+          color="var(--chakra-colors-chakra-body-text)"
+          fontSize={"sm"}
+          fontWeight={"medium"}
+        >
+          Please note that our liquidity incentive setup flow only supports Uniswap
+          V3 currently. If you require assistance with other liquidity protocols or
+          platforms, please{" "}
+          <Button
+            variant="link"
+            textDecoration={"underline"}
+            fontSize="sm"
+            onClick={() => triggerChat()}
+          >
+            contact our support team
+          </Button>{" "}
+          for further assistance!
+        </Text>
+      </PopoverBody>
+    </PopoverContent>
+  </Popover>
+)
 
 export default SelectLiquidityPoolStep
