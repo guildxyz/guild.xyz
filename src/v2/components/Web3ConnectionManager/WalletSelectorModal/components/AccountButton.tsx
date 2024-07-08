@@ -20,4 +20,5 @@ const AccountButton = () => {
     </Button>
   )
 }
+
 export default AccountButton
