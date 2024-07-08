@@ -111,11 +111,7 @@ const AccountModal = () => {
                       )}
                     </Button>
                   ) : (
-                    <img
-                      src="/walletLogos/fuel.svg"
-                      alt={CHAIN_CONFIG[Chains[chainId]].name}
-                      className="size-4"
-                    />
+                    <img src="/walletLogos/fuel.svg" alt="Fuel" className="size-4" />
                   )}
                 </div>
                 <NetworkModal

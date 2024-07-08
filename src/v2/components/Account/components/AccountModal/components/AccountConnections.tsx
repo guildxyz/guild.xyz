@@ -62,7 +62,7 @@ const AccountConnections = () => {
         title="Linked addresses"
         className="gap-3 pt-4"
         titleRightElement={
-          addresses.length > 1 ? (
+          addresses?.length > 1 ? (
             <div className="flex w-full items-center justify-between">
               <TooltipProvider>
                 <Tooltip>
@@ -83,7 +83,7 @@ const AccountConnections = () => {
       <AccountSection>
         {isLoading ? (
           <LinkedAddressSkeleton />
-        ) : !(addresses.length > 1) ? (
+        ) : !(addresses?.length > 1) ? (
           <div
             className={cn("flex flex-col gap-2", {
               "flex-row items-center justify-between": !vaults?.length,
