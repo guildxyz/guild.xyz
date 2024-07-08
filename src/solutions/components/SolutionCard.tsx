@@ -73,7 +73,12 @@ const SolutionCard = ({
     >
       <Stack spacing={3} zIndex={1} justifyContent={"space-between"} h={"100%"}>
         <HStack gap={3}>
-          <Circle size="12" pos="relative" overflow="hidden" bgColor={circleBgColor}>
+          <Circle
+            size={{ base: 10, md: 12 }}
+            pos="relative"
+            overflow="hidden"
+            bgColor={circleBgColor}
+          >
             <Image src={imageUrl} alt="Guild logo" fill sizes="3rem" />
           </Circle>
           <Heading fontSize={"normal"} fontWeight="bold" maxW="full" noOfLines={1}>

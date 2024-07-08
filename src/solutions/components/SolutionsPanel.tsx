@@ -151,7 +151,7 @@ const SolutionsPanel = ({
         </Stack>
       </ModalHeader>
 
-      <ModalBody className="custom-scrollbar" pt="8">
+      <ModalBody className="custom-scrollbar" pt={{ base: 6, md: 8 }}>
         <AnimatePresence>
           <Box>
             {categories.map((category) => (
