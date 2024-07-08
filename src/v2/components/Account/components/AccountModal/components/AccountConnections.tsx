@@ -1,11 +1,22 @@
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/Tooltip"
+import { cn } from "@/lib/utils"
+import { Question } from "@phosphor-icons/react/dist/ssr"
 import useUser from "components/[guild]/hooks/useUser"
-import { useMemo } from "react"
+import { Fragment, useMemo } from "react"
 import rewards from "rewards"
 import { PlatformName } from "types"
 import useDelegateVaults from "../hooks/useDelegateVaults"
 import { AccountSection, AccountSectionTitle } from "./AccountSection"
 import EmailAddress from "./EmailAddress"
 import FarcasterProfile from "./FarcasterProfile"
+import LinkAddressButton from "./LinkAddressButton"
+import LinkDelegateVaultButton from "./LinkDelegateVaultButton"
+import LinkedAddress, { LinkedAddressSkeleton } from "./LinkedAddress"
 import SharedSocials from "./SharedSocials"
 import { SocialAccount } from "./SocialAccount"
 
@@ -49,62 +60,58 @@ const AccountConnections = () => {
 
       <AccountSectionTitle
         title="Linked addresses"
-        // className="gap-3 pt-4"
-        // TODO:
-        // titleRightElement={
-        //   addresses?.length > 1 ? (
-        //     <>
-        //       <Popover placement="top" trigger="hover">
-        //         <PopoverTrigger>
-        //           <Question />
-        //         </PopoverTrigger>
-        //         <PopoverContent>
-        //           <PopoverArrow />
-        //           <PopoverBody>
-        //             Each of your addresses will be used for requirement checks
-        //           </PopoverBody>
-        //         </PopoverContent>
-        //       </Popover>
-        //       <Spacer />
-        //       <LinkAddressButton variant="ghost" my="-1 !important" />
-        //     </>
-        //   ) : undefined
-        // }
+        className="gap-3 pt-4"
+        titleRightElement={
+          addresses.length > 1 ? (
+            <div className="flex w-full items-center justify-between">
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Question weight="bold" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Each of your addresses will be used for requirement checks</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+              <LinkAddressButton variant="ghost" className="-my-1" />
+            </div>
+          ) : undefined
+        }
       />
 
-      {/* <AccountSection divider={<Divider />}>
+      <AccountSection>
         {isLoading ? (
           <LinkedAddressSkeleton />
-        ) : !(addresses?.length > 1) ? (
-          <Stack
-            {...(!vaults?.length && {
-              direction: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
+        ) : !(addresses.length > 1) ? (
+          <div
+            className={cn("flex flex-col gap-2", {
+              "flex-row items-center justify-between": !vaults?.length,
             })}
           >
-            <Text fontSize={"sm"} fontWeight={"medium"}>
-              No linked addresses yet
-            </Text>
+            <p className="text-sm font-medium">No linked addresses yet</p>
             {vaults?.length ? (
-              <ButtonGroup w="full">
+              <div className="flex gap-1">
                 <LinkAddressButton />
                 <LinkDelegateVaultButton vaults={vaults} />
-              </ButtonGroup>
+              </div>
             ) : (
               <LinkAddressButton />
             )}
-          </Stack>
+          </div>
         ) : (
           addresses
-            .map((addressData) => (
-              <LinkedAddress key={addressData?.address} addressData={addressData} />
+            .map((addressData, i) => (
+              <Fragment key={addressData.address}>
+                <LinkedAddress addressData={addressData} />
+                {i < addresses.length - 1 && <hr className="border-border-muted" />}
+              </Fragment>
             ))
             .concat(
               vaults?.length > 0 ? <LinkDelegateVaultButton vaults={vaults} /> : []
             )
         )}
-      </AccountSection> */}
+      </AccountSection>
     </div>
   )
 }

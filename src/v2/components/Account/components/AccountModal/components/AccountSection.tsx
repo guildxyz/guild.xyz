@@ -11,7 +11,9 @@ export const AccountSectionTitle = ({
   className?: string
 }) => (
   <div className={cn("mb-3 flex w-full items-center", className)}>
-    <span className="text-sm font-bold text-muted-foreground">{title}</span>
+    <span className="min-w-max text-sm font-bold text-muted-foreground">
+      {title}
+    </span>
     {titleRightElement}
   </div>
 )

@@ -1,11 +1,11 @@
+import { useToast } from "@/components/ui/hooks/useToast"
 import useUser from "components/[guild]/hooks/useUser"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
-import useToast from "hooks/useToast"
 import fetcher from "utils/fetcher"
 
 const useLinkVaults = () => {
   const { id, mutate } = useUser()
-  const toast = useToast()
+  const { toast } = useToast()
 
   return useSubmitWithSign(
     (signedPayload: SignedValidation) =>
@@ -13,7 +13,7 @@ const useLinkVaults = () => {
     {
       onSuccess: (newAddresses) => {
         toast({
-          status: "success",
+          variant: "success",
           description: "Successfully linked Delegate.cash vaults!",
         })
         mutate(

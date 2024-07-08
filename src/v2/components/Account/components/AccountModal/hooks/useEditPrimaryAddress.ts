@@ -1,8 +1,8 @@
+import { useErrorToast } from "@/components/ui/hooks/useErrorToast"
+import { useToast } from "@/components/ui/hooks/useToast"
 import useUser from "components/[guild]/hooks/useUser"
 import { useFetcherWithSign } from "hooks/useFetcherWithSign"
-import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
-import useToast from "hooks/useToast"
 import { UserAddress } from "types"
 
 type EditPrimaryAddressData = {
@@ -11,8 +11,8 @@ type EditPrimaryAddressData = {
 }
 
 const useEditPrimaryAddress = () => {
-  const showErrorToast = useShowErrorToast()
-  const toast = useToast()
+  const { toast } = useToast()
+  const showErrorToast = useErrorToast()
   const { mutate: mutateUser, id: userId } = useUser()
 
   const fetcherWithSign = useFetcherWithSign()
@@ -47,7 +47,7 @@ const useEditPrimaryAddress = () => {
 
       toast({
         title: "Primary address updated!",
-        status: "success",
+        variant: "success",
       })
     },
     onError: (error) => showErrorToast(error),
