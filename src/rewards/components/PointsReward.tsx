@@ -2,11 +2,9 @@ import { Link } from "@chakra-ui/next-js"
 import { Icon, Tooltip, useColorModeValue } from "@chakra-ui/react"
 import { ArrowRight, Check } from "@phosphor-icons/react"
 import DynamicTag from "components/[guild]/RoleCard/components/DynamicReward/DynamicTag"
-import {
-  RewardDisplay,
-  RewardIcon,
-  RewardProps,
-} from "components/[guild]/RoleCard/components/Reward"
+import { RewardIcon } from "components/[guild]/RoleCard/components/Reward"
+import { RewardDisplay } from "components/[guild]/RoleCard/components/RewardDisplay"
+import { RewardProps } from "components/[guild]/RoleCard/components/types"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import useDynamicRewardUserAmount from "rewards/Token/hooks/useDynamicRewardUserAmount"

@@ -5,15 +5,14 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import { motion } from "framer-motion"
 import {
-  RewardDisplay,
   RewardIconProps,
   RewardProps,
-} from "../../components/[guild]/RoleCard/components/Reward"
-
+} from "../../components/[guild]/RoleCard/components/types"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Link from "next/link"
 import { forwardRef } from "react"
 import NftAvailabilityTags from "./components/NftAvailabilityTags"
+import { RewardDisplay } from "components/[guild]/RoleCard/components/RewardDisplay"
 
 const ContractCallReward = ({
   platform,

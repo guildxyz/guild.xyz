@@ -9,11 +9,6 @@ import DynamicTypeForm from "rewards/Token/DynamicTypeForm"
 import Token from "static/icons/token.svg"
 import ConversionInput from "./ConversionInput"
 
-export enum SnapshotOption {
-  GUILD_POINTS = "GUILD_POINTS",
-  CUSTOM = "CUSTOM",
-}
-
 const DynamicAmount = () => {
   const pointsPlatformId = useWatch({ name: "data.guildPlatformId" })
   const chain = useWatch({ name: `chain` })
