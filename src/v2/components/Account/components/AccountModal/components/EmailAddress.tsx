@@ -1,40 +1,57 @@
-import {
-  ButtonProps,
-  Collapse,
-  FormControl,
-  FormLabel,
-  HStack,
-  IconButton,
-  Input,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  PinInput,
-  PinInputField,
-  Text,
-  Tooltip,
-  useDisclosure,
-  VStack,
-} from "@chakra-ui/react"
-import { PencilSimple } from "@phosphor-icons/react"
 import useUser from "components/[guild]/hooks/useUser"
 import { useConnectEmail } from "components/[guild]/JoinModal/hooks/useConnectPlatform"
-import Button from "components/common/Button"
-import { Error } from "components/common/Error"
+// import { Error } from "components/common/Error"
+import { Button, ButtonProps } from "@/components/ui/Button"
+import { Collapse } from "@/components/ui/Collapse"
+import {
+  Dialog,
+  DialogCloseButton,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/Dialog"
+import {
+  FormControl,
+  FormErrorMessage,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "@/components/ui/Form"
+import { Input } from "@/components/ui/Input"
+import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/InputOTP"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/Tooltip"
+import { useDisclosure } from "@/hooks/useDisclosure"
+import { cn } from "@/lib/utils"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { PencilSimple } from "@phosphor-icons/react/dist/ssr"
 import { useDisconnectEmail } from "components/common/Layout/components/Account/components/AccountModal/hooks/useDisconnect"
-import { Modal } from "components/common/Modal"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
-import { useEffect, useRef, useState } from "react"
-import { useController, useForm, useWatch } from "react-hook-form"
-import rewards from "rewards"
+import { useEffect, useState } from "react"
+import { FormProvider, useForm, useWatch } from "react-hook-form"
+import { emailData } from "rewards/Email/data"
 import fetcher from "utils/fetcher"
+import { z } from "zod"
 import { DisconnectAccountButton } from "./DisconnectAccountButton"
 import { SocialAccountUI } from "./SocialAccount"
-import processEmailError from "./utils/processEmailError"
+
+const PIN_LENGTH = 6
+const TIMEOUT = 10_000
+const emailFormSchema = z.object({
+  email: z.string().email("Invalid E-mail address"),
+  code: z
+    .string()
+    .refine((value) => (!!value ? value.length === PIN_LENGTH : true), {
+      message: "Invalid code",
+    })
+    .optional(),
+})
 
 const TOO_MANY_ATTEMPTS_ERROR =
   "The code has been invalidated due to too many attempts"
@@ -54,12 +71,10 @@ const EmailAddress = () => {
   )
 }
 
-const PIN_LENGTH = 6
-const TIMEOUT = 10_000
-
 const ConnectEmailButton = ({
   onSuccess,
   isReconnection: _,
+  className,
   ...props
 }: ButtonProps & { onSuccess?: () => void; isReconnection?: boolean }) => {
   const { emails } = useUser()
@@ -68,13 +83,12 @@ const ConnectEmailButton = ({
     emails?.pending ? emails?.emailAddress : null
   )
 
-  const { register, handleSubmit, control, setValue, reset } = useForm<{
-    email: string
-    code: string
-  }>({
+  const methods = useForm<z.infer<typeof emailFormSchema>>({
+    resolver: zodResolver(emailFormSchema),
     defaultValues: { email: "", code: "" },
   })
-  const { field } = useController({ control, name: "code" })
+
+  const { handleSubmit, control, setValue, setError, reset } = methods
   const email = useWatch({ control, name: "email" })
   const { id: userId } = useUser()
   const toast = useToast()
@@ -107,8 +121,6 @@ const ConnectEmailButton = ({
     verificationRequest.onSubmit({ emailAddress: formValues.email })
   )
 
-  const pinInputRef = useRef<HTMLInputElement>()
-
   const differentEmail = () => {
     setPendingEmailAddress(null)
     setValue("code", "")
@@ -131,8 +143,11 @@ const ConnectEmailButton = ({
         differentEmail()
         return
       }
+      setError("code", {
+        type: "validate",
+        message: "Invalid code",
+      })
       setValue("code", "")
-      pinInputRef.current?.focus()
     },
   })
 
@@ -154,122 +169,138 @@ const ConnectEmailButton = ({
 
   return (
     <>
-      <Button
-        onClick={onOpen}
-        colorScheme={emails?.pending ? "orange" : rewards.EMAIL.colorScheme}
-        variant={"solid"}
-        size="sm"
-        isDisabled={emails?.emailAddress}
-        {...props}
-      >
-        {emails?.emailAddress || (emails?.pending ? "Verify" : "Connect")}
-      </Button>
-      <Modal isOpen={isOpen} onClose={handleOnClose} size="sm">
-        <ModalOverlay />
-        <ModalContent>
-          <form onSubmit={submit}>
-            <ModalHeader>Connect email</ModalHeader>
-            <ModalCloseButton />
-            <ModalBody display={"flex"} flexDir="column" pb="8" pt="1">
-              <Error
+      <Dialog open={isOpen}>
+        <FormProvider {...methods}>
+          <DialogContent size="sm">
+            <DialogHeader>
+              <DialogTitle>Connect email</DialogTitle>
+            </DialogHeader>
+            <DialogCloseButton />
+
+            {/* TODO: Error component */}
+            {/* <Error
                 error={verificationRequest.error ?? connect.error}
                 processError={processEmailError}
-              />
+              /> */}
 
-              <Collapse
-                in={!shouldShowPinEntry}
-                unmountOnExit
-                style={{ padding: "1px" }}
-              >
-                <FormControl>
-                  <FormLabel>Email address</FormLabel>
-                  <Input
-                    autoFocus
-                    type="email"
-                    placeholder="me@example.com"
-                    {...register("email", {
-                      required: true,
-                      // We should get native validation
-                      // pattern: { value: EMAIL_REGEX, message: "Invalid E-Mail address" },
-                    })}
-                  />
-                </FormControl>
-              </Collapse>
-              <Collapse
-                in={shouldShowPinEntry}
-                unmountOnExit
-                style={{ padding: "1px" }}
-              >
-                <VStack spacing={4}>
-                  <Text textAlign={"center"}>
-                    Enter the code we've sent to {email}{" "}
-                    <IconButton
-                      size={"xs"}
-                      icon={<PencilSimple />}
-                      aria-label="Use different email address"
-                      onClick={differentEmail}
-                    />
-                  </Text>
-                  <HStack justifyContent={"center"}>
-                    <PinInput
-                      isInvalid={connect.error}
-                      value={field.value}
-                      onChange={(value) => {
-                        field.onChange(value)
-                        if (value.length === PIN_LENGTH) {
-                          connect.onSubmit({
-                            authData: { code: value },
-                            emailAddress: email,
-                          })
-                        }
-                      }}
-                    >
-                      <PinInputField autoFocus ref={pinInputRef} />
-                      <PinInputField />
-                      <PinInputField />
-                      <PinInputField />
-                      <PinInputField />
-                      <PinInputField />
-                    </PinInput>
-                  </HStack>
-                </VStack>
-              </Collapse>
-            </ModalBody>
-            <ModalFooter>
-              {shouldShowPinEntry ? (
-                <Tooltip
-                  label={
-                    "Check if you received the first code before requesting a new one (check in the spam as well)"
-                  }
-                  hasArrow
-                  isDisabled={!isResendButtonDisabled}
-                >
+            <Collapse open={!shouldShowPinEntry} className="p-[2px]">
+              <FormField
+                control={control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email address</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder="me@example.com" autoFocus />
+                    </FormControl>
+                    <FormErrorMessage />
+                  </FormItem>
+                )}
+              />
+            </Collapse>
+
+            <Collapse open={shouldShowPinEntry} className="p-[2px]">
+              <div className="flex w-full flex-col items-center gap-4">
+                <p className="text-center">
+                  {`Enter the code we've sent to ${email} `}
                   <Button
-                    w="full"
-                    isLoading={connect.isLoading || connect.isSigning}
-                    size={"sm"}
-                    borderRadius="lg"
-                    variant={"ghost"}
-                    type={"submit"}
-                    isDisabled={isResendButtonDisabled}
+                    variant="secondary"
+                    className="relative top-0.5 size-5 rounded-full"
+                    size="icon"
+                    aria-label="Use different email address"
+                    onClick={differentEmail}
                   >
-                    Resend code
+                    <PencilSimple />
                   </Button>
-                </Tooltip>
+                </p>
+
+                <FormField
+                  control={control}
+                  name="code"
+                  render={({ field: { onChange, ...field } }) => (
+                    <FormItem>
+                      <FormControl>
+                        <InputOTP
+                          maxLength={PIN_LENGTH}
+                          {...field}
+                          onChange={(value) => {
+                            onChange(value)
+                            if (value.length === PIN_LENGTH) {
+                              connect.onSubmit({
+                                authData: { code: value },
+                                emailAddress: email,
+                              })
+                            }
+                          }}
+                          autoFocus
+                        >
+                          <InputOTPGroup>
+                            {[...Array(PIN_LENGTH)].map((_, i) => (
+                              <InputOTPSlot key={`input-otp-${i}`} index={i} />
+                            ))}
+                          </InputOTPGroup>
+                        </InputOTP>
+                      </FormControl>
+                      <FormErrorMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </Collapse>
+
+            <DialogFooter className="pt-2">
+              {shouldShowPinEntry ? (
+                <TooltipProvider>
+                  <Tooltip open={!isResendButtonDisabled ? false : undefined}>
+                    <TooltipTrigger asChild>
+                      <Button
+                        onClick={submit}
+                        isLoading={connect.isLoading || connect.isSigning}
+                        variant="ghost"
+                        size="sm"
+                        disabled={isResendButtonDisabled}
+                        className="w-full rounded-lg"
+                      >
+                        Resend code
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>
+                        Check if you received the first code before requesting a new
+                        one (check in the spam as well)
+                      </p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               ) : (
                 <Button
-                  w="full"
+                  onClick={submit}
                   isLoading={verificationRequest.isLoading}
-                  colorScheme={"green"}
-                  type={"submit"}
+                  variant="success"
+                  className="w-full"
                 >
                   Send code
                 </Button>
               )}
-            </ModalFooter>
-          </form>
-        </ModalContent>
-      </Modal>
+            </DialogFooter>
+          </DialogContent>
+        </FormProvider>
+      </Dialog>
+
+      <Button
+        onClick={onOpen}
+        // TODO: color scheme
+        // colorScheme={emails?.pending ? "orange" : rewards.EMAIL.colorScheme}
+        size="sm"
+        disabled={!!emails?.emailAddress}
+        className={cn(
+          "ml-auto bg-email hover:bg-email-hover active:bg-email-active",
+          className
+        )}
+        {...props}
+      >
+        {emails?.emailAddress || (emails?.pending ? "Verify" : "Connect")}
+      </Button>
     </>
   )
 }
@@ -286,7 +317,8 @@ const DisconnectEmailButton = () => {
 
   return (
     <DisconnectAccountButton
-      name={rewards.EMAIL.name}
+      name={emailData.name}
+      className="ml-auto"
       {...{ state: disclosure, isLoading, loadingText, onConfirm }}
     />
   )

@@ -4,6 +4,7 @@ import rewards from "rewards"
 import { PlatformName } from "types"
 import useDelegateVaults from "../hooks/useDelegateVaults"
 import { AccountSection, AccountSectionTitle } from "./AccountSection"
+import EmailAddress from "./EmailAddress"
 import FarcasterProfile from "./FarcasterProfile"
 import { SocialAccount } from "./SocialAccount"
 
@@ -31,9 +32,8 @@ const AccountConnections = () => {
         {orderedSocials.map((platform, i) => (
           <>
             {platform === "EMAIL" ? (
-              <></>
-            ) : // <EmailAddress key="EMAIL" />
-            platform === "FARCASTER" ? (
+              <EmailAddress key="EMAIL" />
+            ) : platform === "FARCASTER" ? (
               <FarcasterProfile key="FARCASTER" />
             ) : (
               <SocialAccount key={platform} type={platform} />

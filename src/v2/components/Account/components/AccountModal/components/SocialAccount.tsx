@@ -70,7 +70,7 @@ export const SocialAccountUI = ({
     <motion.div layout className="flex w-full items-center gap-3">
       <div
         className={cn(
-          "relative flex size-7 items-center justify-center rounded-full bg-card text-white",
+          "relative flex size-7 shrink-0 items-center justify-center rounded-full bg-card text-white",
           bgClassName
         )}
       >
@@ -95,7 +95,7 @@ export const SocialAccountUI = ({
         )}
       </div>
 
-      <span className="line-clamp-1 text-sm font-bold">
+      <span className="overflow-hidden text-ellipsis text-sm font-bold">
         {username ?? `${platformName} ${isConnected ? "connected" : ""}`}
       </span>
 
