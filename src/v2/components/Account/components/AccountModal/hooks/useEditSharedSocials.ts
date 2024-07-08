@@ -1,13 +1,13 @@
+import { useToast } from "@/components/ui/hooks/useToast"
 import useUser from "components/[guild]/hooks/useUser"
 import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit/useSubmit"
-import useToast from "hooks/useToast"
 
 const useEditSharedSocials = (guildId) => {
   const { id, mutate } = useUser()
   const showErrorToast = useShowErrorToast()
-  const toast = useToast()
+  const { toast } = useToast()
   const fetcherWithSign = useFetcherWithSign()
 
   const submit = (shareSocials) =>
@@ -24,7 +24,7 @@ const useEditSharedSocials = (guildId) => {
   const useSubmitProps = useSubmit(submit, {
     onSuccess: (response) => {
       toast({
-        status: "success",
+        variant: "success",
         title: "Sharing status successfully updated",
       })
       mutate(

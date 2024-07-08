@@ -15,7 +15,7 @@ import {
 import { Skeleton } from "@/components/ui/Skeleton"
 import { useEffect } from "react"
 import pluralize from "utils/pluralize"
-import useEditSharedSocials from "../../../../../../components/common/Layout/components/Account/components/AccountModal/hooks/useEditSharedSocials"
+import useEditSharedSocials from "../hooks/useEditSharedSocials"
 
 const SharedSocials = () => {
   const { id } = useGuild()
