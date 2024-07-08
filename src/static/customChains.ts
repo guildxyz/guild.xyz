@@ -376,3 +376,29 @@ export const metisSepolia = {
   },
   testnet: true,
 } as const satisfies Chain
+
+export const mint = {
+  id: 185,
+  name: "Mint",
+  nativeCurrency: {
+    decimals: 18,
+    name: "Ether",
+    symbol: "ETH",
+  },
+  rpcUrls: {
+    default: { http: ["https://rpc.mintchain.io"] },
+  },
+  blockExplorers: {
+    default: {
+      name: "Blockscout",
+      url: "https://explorer.mintchain.io/",
+    },
+  },
+  contracts: {
+    multicall3: {
+      address: "0xca11bde05977b3631167028862be2a173976ca11",
+      blockCreated: 2239893,
+    },
+  },
+  testnet: false,
+} as const satisfies Chain

@@ -36,7 +36,7 @@ const AccountConnections = () => {
   const orderedSocials = useMemo(() => {
     const connectedPlatforms =
       platformUsers
-        ?.filter((platformUser) => rewards[platformUser.platformName]?.isPlatform)
+        ?.filter((platformUser) => rewards[platformUser.platformName].isPlatform)
         ?.map((platformUser) => platformUser.platformName as string) ?? []
     const notConnectedPlatforms = Object.keys(rewards).filter(
       (platform) =>

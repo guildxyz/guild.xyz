@@ -1,38 +1,30 @@
 import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useMemo } from "react"
-import { GuildPlatformWithOptionalId, PlatformName } from "types"
+import { CardPropsHook } from "rewards/types"
+import { GuildPlatformWithOptionalId } from "types"
+import { discordData } from "./data"
 
-const useDiscordCardProps = (guildPlatform: GuildPlatformWithOptionalId) => {
+const useDiscordCardProps: CardPropsHook = (
+  guildPlatform: GuildPlatformWithOptionalId
+) => {
   const { name: guildName, imageUrl } = useGuild()
   const rolePlatform = useRolePlatform()
-  // const { data } = useServerData(guildPlatform.platformGuildId, {
-  //   swrOptions: {
-  //     revalidateOnFocus: false,
-  //   },
-  // })
-
   const roleName = useMemo(() => {
     if (!rolePlatform || !rolePlatform?.isNew) return null
     if (!rolePlatform.platformRoleId) return "Create a new Discord role"
     return "Manage existing role"
-    // const discordRole = data?.roles?.find(
-    //   (role) => role.id === rolePlatform.platformRoleId
-    // )
-    // if (!discordRole) return "Deleted role"
-    // return `${discordRole.name} role`
-  }, [rolePlatform /* , data */])
+  }, [rolePlatform])
 
   return {
-    type: "DISCORD" as PlatformName,
-    // image: data?.serverIcon || "/default_discord_icon.png",
-    // name: data?.serverName || "",
+    type: "DISCORD",
     image: imageUrl,
     name:
       guildPlatform.platformGuildName ||
       guildPlatform.platformGuildData?.name ||
-      guildName,
-    info: roleName,
+      guildName ||
+      discordData.name,
+    info: roleName ?? undefined,
   }
 }
 

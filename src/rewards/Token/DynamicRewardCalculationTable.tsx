@@ -3,7 +3,7 @@ import { LockSimple, X } from "@phosphor-icons/react"
 import FeesTable from "components/[guild]/Requirements/components/GuildCheckout/components/FeesTable"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import { REQUIREMENT_PROVIDED_VALUES } from "requirements/requirements"
-import rewards from "rewards"
+import rewardComponents from "rewards/components"
 import { PlatformType, Requirement, RolePlatform } from "types"
 import useDynamicRewardUserAmount from "./hooks/useDynamicRewardUserAmount"
 
@@ -19,7 +19,8 @@ const DynamicRewardCalculationTable = ({ requirement, rolePlatform }: Props) => 
   const rewardName = rolePlatform.guildPlatform.platformGuildData.name
 
   const propsHook =
-    rewards[PlatformType[rolePlatform.guildPlatform.platformId]]?.cardPropsHook
+    rewardComponents[PlatformType[rolePlatform.guildPlatform.platformId]]
+      ?.cardPropsHook
 
   const { image = null } = propsHook ? propsHook(rolePlatform.guildPlatform) : {}
   const ImageComponent =

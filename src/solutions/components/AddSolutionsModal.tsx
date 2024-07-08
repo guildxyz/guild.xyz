@@ -11,7 +11,8 @@ import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
 import { useMemo, useState } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
-import rewards, { modalSizeForPlatform } from "rewards"
+import { modalSizeForPlatform } from "rewards"
+import rewardsComponents from "rewards/components"
 import { SolutionName, solutions } from "solutions"
 import SolutionsPanel from "./SolutionsPanel"
 
@@ -69,7 +70,7 @@ const AddSolutionsModal = () => {
 
   const RewardPanel = useMemo(() => {
     if (selection) {
-      const { AddRewardPanel } = rewards[selection] ?? {}
+      const { AddRewardPanel } = rewardsComponents[selection] ?? {}
       return AddRewardPanel
     }
     return null

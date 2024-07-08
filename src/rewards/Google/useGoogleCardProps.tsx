@@ -1,6 +1,8 @@
 import { Circle, Img, useColorModeValue } from "@chakra-ui/react"
 import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
+import { CardPropsHook } from "rewards/types"
 import { GuildPlatformWithOptionalId, PlatformName } from "types"
+import { googleData } from "./data"
 
 const fileTypeNames = {
   "application/vnd.google-apps.audio": "Audio",
@@ -25,12 +27,17 @@ const fileTypeNames = {
 }
 
 const getFileTypeName = (fileType: string) => {
-  const staticFileType = fileTypeNames[fileType]
+  const staticFileType =
+    fileType in fileTypeNames
+      ? fileTypeNames[fileType as keyof typeof fileTypeNames]
+      : undefined
   if (!staticFileType && fileType?.includes("video")) return "Video"
   return staticFileType
 }
 
-const useGoogleCardProps = (guildPlatform: GuildPlatformWithOptionalId) => {
+const useGoogleCardProps: CardPropsHook = (
+  guildPlatform: GuildPlatformWithOptionalId
+) => {
   const rolePlatform = useRolePlatform()
   const imageBgColor = useColorModeValue("gray.100", "gray.800")
 
@@ -44,16 +51,23 @@ const useGoogleCardProps = (guildPlatform: GuildPlatformWithOptionalId) => {
       <Circle size={10} bgColor={imageBgColor}>
         <Img
           src={guildPlatform.platformGuildData?.iconLink}
-          alt={fileTypeNames[guildPlatform.platformGuildData?.mimeType]}
+          alt={
+            guildPlatform.platformGuildData?.mimeType &&
+            fileTypeNames[
+              guildPlatform.platformGuildData.mimeType as keyof typeof fileTypeNames
+            ]
+          }
         />
       </Circle>
     ) : (
       "/platforms/google.png"
     ),
-    name: guildPlatform.platformGuildName,
-    info: `${getFileTypeName(
+    name: guildPlatform.platformGuildName || googleData.name,
+    info: `${
       guildPlatform.platformGuildData?.mimeType
-    )}${accessInfo}`,
+        ? getFileTypeName(guildPlatform.platformGuildData.mimeType)
+        : ""
+    }${accessInfo}`,
   }
 }
 
