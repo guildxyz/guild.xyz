@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/Dialog"
 import { usePrevious } from "@/hooks/usePrevious"
 import { useUserPublic } from "@/hooks/useUserPublic"
-import CardMotionWrapper from "components/common/CardMotionWrapper"
 import useSetKeyPair from "hooks/useSetKeyPair"
 // import useShowErrorToast from "hooks/useShowErrorToast"
 import { usePostHogContext } from "@/components/Providers/PostHogProvider"
@@ -182,18 +181,17 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
           <div className="flex w-full flex-col">
             {!connector && !addressLinkParams?.userId && (
               <>
-                <CardMotionWrapper key={COINBASE_WALLET_SDK_ID}>
-                  <ConnectorButton
-                    connector={connectors.find(
-                      (conn) => conn.id === COINBASE_WALLET_SDK_ID
-                    )}
-                    connect={connect}
-                    pendingConnector={
-                      isPending ? (variables?.connector as Connector) : undefined
-                    }
-                    error={error}
-                  />
-                </CardMotionWrapper>
+                <ConnectorButton
+                  key={COINBASE_WALLET_SDK_ID}
+                  connector={connectors.find(
+                    (conn) => conn.id === COINBASE_WALLET_SDK_ID
+                  )}
+                  connect={connect}
+                  pendingConnector={
+                    isPending ? (variables?.connector as Connector) : undefined
+                  }
+                  error={error}
+                />
 
                 <p className="mb-2 mt-6 text-xs font-bold uppercase text-muted-foreground">
                   Or connect with wallet
@@ -213,16 +211,15 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
                 )
                 .sort((conn, _) => (conn.type === "injected" ? -1 : 0))
                 .map((conn) => (
-                  <CardMotionWrapper key={conn.id}>
-                    <ConnectorButton
-                      connector={conn}
-                      connect={connect}
-                      pendingConnector={
-                        isPending ? (variables?.connector as Connector) : undefined
-                      }
-                      error={error}
-                    />
-                  </CardMotionWrapper>
+                  <ConnectorButton
+                    key={conn.id}
+                    connector={conn}
+                    connect={connect}
+                    pendingConnector={
+                      isPending ? (variables?.connector as Connector) : undefined
+                    }
+                    error={error}
+                  />
                 ))}
               {/* TODO: migrate these components too */}
               {/* <GoogleLoginButton />*/}
