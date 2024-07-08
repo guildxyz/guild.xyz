@@ -28,7 +28,7 @@ export const GuildCard: React.FC<Props> = ({ guildData }) => (
         <Skeleton className="size-full" />
       </AvatarFallback>
     </Avatar>
-    <div className="flex items-center gap-1">
+    <div className="flex items-center">
       <h3 className="max-w-36 truncate font-display text-lg font-bold tracking-tight text-foreground">
         {guildData.name}
       </h3>
@@ -36,7 +36,7 @@ export const GuildCard: React.FC<Props> = ({ guildData }) => (
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger
-              className="relative rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="relative rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring p-1"
               aria-label="verified"
             >
               <div

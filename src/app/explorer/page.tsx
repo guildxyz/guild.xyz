@@ -20,6 +20,13 @@ import {
 import { useAtom, useAtomValue, useSetAtom } from "jotai"
 import { YourGuilds } from "@/components/YourGuilds"
 import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import { Button } from "@/components/ui/Button"
+import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import { SignIn } from "@phosphor-icons/react"
+import Robot from "/public/landing/robot.svg"
+import { Card } from "@/components/ui/Card"
+import { walletSelectorModalAtom } from "@/components/Providers/atoms"
+
 
 const HeaderBackground = () => {
   const isNavStuck = useAtomValue(isNavStuckAtom)
@@ -67,6 +74,7 @@ const Page = () => {
   const { isWeb3Connected } = useWeb3ConnectionManager()
   const setIsNavStuck = useSetAtom(isNavStuckAtom)
   const setIsSearchStuck = useSetAtom(isSeachStuckAtom)
+  const setIsWalletSelectorModalOpen = useSetAtom(walletSelectorModalAtom)
   const { ref: navToggleRef } = useIsStuck(setIsNavStuck)
   const { ref: searchRef } = useIsStuck(setIsSearchStuck)
 
@@ -92,7 +100,22 @@ const Page = () => {
               )}
             </div>
           </div>
-          <YourGuilds />
+          {isWeb3Connected ?
+            <YourGuilds /> :
+            <Card className="my-2 mb-12 flex flex-col items-stretch justify-between gap-8 p-6 font-semibold sm:flex-row sm:items-center">
+              <div className="flex items-center gap-4">
+                <Robot className="size-8 min-w-8 text-white" />
+                <span>Sign in to view your guilds / create new ones</span>
+              </div>
+              <Button
+                className="space-x-2"
+                onClick={() => setIsWalletSelectorModalOpen(true)}
+              >
+                <SignIn />
+                <span className="text-md">Sign in</span>
+              </Button>
+            </Card>
+          }
           <section id={ActiveSection.ExploreGuilds}>
             <h2 className="text-lg font-bold tracking-tight">
               Explore verified guilds
