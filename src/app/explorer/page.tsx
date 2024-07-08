@@ -19,6 +19,7 @@ import {
 } from "./atoms"
 import { useAtom, useAtomValue, useSetAtom } from "jotai"
 import { YourGuilds } from "@/components/YourGuilds"
+import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 
 const HeaderBackground = () => {
   const isNavStuck = useAtomValue(isNavStuckAtom)
@@ -63,7 +64,7 @@ const Nav = () => {
 }
 
 const Page = () => {
-  const isAuthenticated = false
+  const { isWeb3Connected } = useWeb3ConnectionManager()
   const setIsNavStuck = useSetAtom(isNavStuckAtom)
   const setIsSearchStuck = useSetAtom(isSeachStuckAtom)
   const { ref: navToggleRef } = useIsStuck(setIsNavStuck)
@@ -83,7 +84,7 @@ const Page = () => {
           <div className="sticky top-0 z-10 my-1 py-2" ref={navToggleRef}>
             <div className="relative flex items-start justify-between">
               <Nav />
-              {isAuthenticated && (
+              {isWeb3Connected && (
                 <Button variant="ghost" className="space-x-2">
                   <Plus />
                   <span>Create guild</span>
