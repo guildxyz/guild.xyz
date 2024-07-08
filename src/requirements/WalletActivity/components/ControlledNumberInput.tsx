@@ -151,6 +151,7 @@ const ControlledNumberInput = ({
       />
       <NumberInputStepper
         padding={"0 !important"}
+        display={{ base: "none", md: "flex" }}
         visibility={props.isReadOnly ? "hidden" : "visible"}
       >
         <NumberIncrementStepper />
