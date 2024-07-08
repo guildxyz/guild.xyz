@@ -109,7 +109,7 @@ const LiquidityIncentiveSetupModal = ({
       <FormProvider {...methods}>
         <ModalCloseButton />
 
-        <ModalHeader>
+        <ModalHeader pb="5">
           <HStack>
             <IconButton
               rounded="full"
@@ -125,7 +125,7 @@ const LiquidityIncentiveSetupModal = ({
         </ModalHeader>
 
         <ModalBody className="custom-scrollbar">
-          <Text colorScheme="gray" fontWeight="semibold" mb="8">
+          <Text colorScheme="gray" fontWeight="semibold" mb="9">
             Create a point-based incentive for liquidity providers. More liquidity
             means more points. Set a custom conversion rate to fine-tune the rewards.
           </Text>
