@@ -33,7 +33,6 @@ const AccountModal = () => {
   const { connectorName } = useConnectorNameAndIcon()
 
   const [isOpen, setIsOpen] = useAtom(accountModalAtom)
-  const onClose = () => setIsOpen(false)
 
   const { id } = useUser()
   const { deleteKeys } = useUserPublic()
@@ -67,9 +66,9 @@ const AccountModal = () => {
   }
 
   return (
-    <Dialog open={isOpen}>
-      <DialogContent onPointerDownOutside={onClose} onEscapeKeyDown={onClose}>
-        <DialogCloseButton onClick={onClose} />
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogContent>
+        <DialogCloseButton />
 
         <DialogHeader>
           <DialogTitle>Account</DialogTitle>
