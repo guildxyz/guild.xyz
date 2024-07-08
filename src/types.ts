@@ -3,6 +3,7 @@ import {
   Logic,
   schemas,
   Schemas,
+  UserProfile,
   Visibility,
 } from "@guildxyz/types"
 import { FeatureFlag } from "components/[guild]/EditGuild/components/FeatureFlags"
@@ -119,11 +120,6 @@ type PlatformAccountDetails = {
   username?: string
 }
 
-type SharedSocial = {
-  guildId: number
-  isShared: boolean
-}
-
 type UserAddress = {
   address: `0x${string}`
   userId: number
@@ -137,7 +133,7 @@ type User = {
   id: number
   addresses: UserAddress[]
   platformUsers: PlatformAccountDetails[]
-  sharedSocials: SharedSocial[]
+  sharedSocials: UserProfile["sharedSocials"]
   publicKey?: string
   isSuperAdmin: boolean
 

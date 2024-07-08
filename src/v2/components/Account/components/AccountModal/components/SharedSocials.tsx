@@ -1,4 +1,11 @@
-import { ArrowSquareOut, Shield, ShieldCheck } from "@phosphor-icons/react/dist/ssr"
+import { type Icon } from "@phosphor-icons/react"
+import {
+  ArrowSquareOut,
+  CaretDown,
+  Check,
+  Shield,
+  ShieldCheck,
+} from "@phosphor-icons/react/dist/ssr"
 import useGuild, { useSimpleGuild } from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
 import GuildLogo from "components/common/GuildLogo"
@@ -12,7 +19,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/Dialog"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/DropdownMenu"
 import { Skeleton } from "@/components/ui/Skeleton"
+import { cn } from "@/lib/utils"
+import { UserProfile } from "@guildxyz/types"
 import { useEffect } from "react"
 import pluralize from "utils/pluralize"
 import useEditSharedSocials from "../hooks/useEditSharedSocials"
@@ -106,13 +122,19 @@ const SharedSocials = () => {
  * Passing sharedSocials as prop instead of just isShared, because it doesn't change
  * on edit success that way for some reason, regardless of the mutate
  */
-const ShareSocialsWithGuildSelect = ({ guildId, sharedSocials }) => {
+const ShareSocialsWithGuildSelect = ({
+  guildId,
+  sharedSocials,
+}: {
+  guildId: number
+  sharedSocials: UserProfile["sharedSocials"]
+}) => {
   const { imageUrl, name } = useSimpleGuild(guildId)
-  const { onSubmit, isLoading, submit } = useEditSharedSocials(guildId)
+  const { onSubmit, submit } = useEditSharedSocials(guildId)
 
   const isShared = sharedSocials?.find(
     (sharedSocial) => sharedSocial.guildId === guildId
-  ).isShared
+  )?.isShared
 
   /**
    * Change null to true on mount (without toast), indicating that the user has seen
@@ -142,28 +164,26 @@ const ShareSocialsWithGuildSelect = ({ guildId, sharedSocials }) => {
         <Skeleton className="h-7 w-[80%]" />
       )}
 
-      {/* <Menu placement="bottom-end" size={"sm"} strategy="fixed" autoSelect={false}>
-        <MenuButton
-          as={Button}
-          leftIcon={isSharedBoolean ? <ShieldCheck /> : <Shield />}
-          color={
-            isSharedBoolean ? "green.500" : "var(--chakra-colors-chakra-body-text)"
-          }
-          variant="ghost"
-          size="sm"
-          rightIcon={<CaretDown />}
-          isLoading={isLoading}
-          flexShrink="0"
-        >
-          {isSharedBoolean ? "Shared" : "Hidden"}
-        </MenuButton>
-        <MenuList
-          py="0"
-          overflow={"hidden"}
-          borderRadius={"lg"}
-          w="370px"
-          maxW="100vw"
-        >
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="ghost"
+            size="sm"
+            className={cn("ml-auto gap-1.5", {
+              "text-success": isSharedBoolean,
+            })}
+          >
+            {isSharedBoolean ? (
+              <ShieldCheck weight="bold" />
+            ) : (
+              <Shield weight="bold" />
+            )}
+            {isSharedBoolean ? "Shared" : "Hidden"}
+            <CaretDown weight="bold" />
+          </Button>
+        </DropdownMenuTrigger>
+
+        <DropdownMenuContent className="w-96 max-w-full py-0">
           <MenuItemOption
             title="Shared"
             description="The guild owner can see your profile"
@@ -171,7 +191,7 @@ const ShareSocialsWithGuildSelect = ({ guildId, sharedSocials }) => {
             onClick={() => onSubmit(true)}
             selected={isSharedBoolean}
           />
-          <Divider />
+          <DropdownMenuSeparator />
           <MenuItemOption
             title="Hidden"
             description="Your profile is kept private"
@@ -179,23 +199,38 @@ const ShareSocialsWithGuildSelect = ({ guildId, sharedSocials }) => {
             onClick={() => onSubmit(false)}
             selected={!isSharedBoolean}
           />
-        </MenuList>
-      </Menu> */}
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   )
 }
 
-// const MenuItemOption = ({ title, description, icon, onClick, selected }) => (
-//   <MenuItem onClick={!selected ? onClick : null} p="4">
-//     <HStack spacing={4} w="full">
-//       <Center boxSize="3">{selected && <Icon as={Check} />}</Center>
-//       <Box w="full">
-//         <Text fontWeight={"bold"}>{title}</Text>
-//         <Text colorScheme="gray">{description}</Text>
-//       </Box>
-//       <Icon as={icon} />
-//     </HStack>
-//   </MenuItem>
-// )
+const MenuItemOption = ({
+  title,
+  description,
+  icon: Icon,
+  onClick,
+  selected,
+}: {
+  title: string
+  description: string
+  icon: Icon
+  onClick: () => void
+  selected: boolean
+}) => (
+  <DropdownMenuItem
+    onClick={!selected ? onClick : () => {}}
+    className="flex h-auto w-full items-center gap-4 p-4 text-base"
+  >
+    <div className="flex size-3 items-center justify-center">
+      {selected && <Check weight="bold" />}
+    </div>
+    <div className="flex flex-col">
+      <span className="font-semibold">{title}</span>
+      <p className="text-muted-foreground">{description}</p>
+    </div>
+    <Icon weight="bold" className="ml-auto" />
+  </DropdownMenuItem>
+)
 
 export default SharedSocials
