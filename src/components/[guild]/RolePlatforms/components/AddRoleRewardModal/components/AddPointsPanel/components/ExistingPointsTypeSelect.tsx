@@ -56,7 +56,11 @@ const ExistingPointsTypeSelect = ({
     (option) => option.value === selectedExistingId
   )?.img
 
-  const methods = useForm<{ selectedId?: number }>()
+  const methods = useForm<{ selectedId?: number | null }>({
+    defaultValues: {
+      selectedId: options?.[0]?.value || null,
+    },
+  })
   const {
     formState: { errors },
     control,

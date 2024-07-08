@@ -9,13 +9,11 @@ import {
   HStack,
   Icon,
   IconButton,
-  Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalFooter,
   ModalHeader,
-  ModalOverlay,
   Step,
   StepIcon,
   StepIndicator,
@@ -89,11 +87,9 @@ const steps = [
 ]
 
 const LiquidityIncentiveSetupModal = ({
-  isOpen,
   onClose,
 }: {
-  isOpen: boolean
-  onClose: () => void
+  onClose: (closeAll?: boolean) => void
 }) => {
   const methods = useForm<LiquidityIncentiveForm>({
     mode: "all",
@@ -101,7 +97,7 @@ const LiquidityIncentiveSetupModal = ({
   })
 
   const handleClose = () => {
-    onClose()
+    onClose(true)
     methods.reset(defaultValues)
     setActiveStep(0)
   }
@@ -118,125 +114,116 @@ const LiquidityIncentiveSetupModal = ({
     count: steps.length,
   })
 
-  const footerBg = useColorModeValue("blackAlpha.100", "blackAlpha.600")
+  const footerBg = useColorModeValue("blackAlpha.100", "blackAlpha.400")
 
   return (
-    <>
-      <Modal isOpen={isOpen} onClose={handleClose} size="xl" colorScheme="dark">
-        <ModalOverlay />
+    <ModalContent>
+      <FormProvider {...methods}>
+        <ModalCloseButton />
 
-        <ModalContent>
-          <FormProvider {...methods}>
-            <ModalCloseButton />
+        <ModalHeader>
+          <HStack>
+            <IconButton
+              rounded="full"
+              aria-label="Back"
+              size="sm"
+              mb="-3px"
+              icon={<ArrowLeft size={20} />}
+              variant="ghost"
+              onClick={() => onClose(false)}
+            />
+            <Text>Liquidity incentive program</Text>
+          </HStack>
+        </ModalHeader>
 
-            <ModalHeader>
-              <HStack>
-                <IconButton
-                  rounded="full"
-                  aria-label="Back"
-                  size="sm"
-                  mb="-3px"
-                  icon={<ArrowLeft size={20} />}
-                  variant="ghost"
-                  onClick={onClose}
-                />
-                <Text>Liquidity incentive program</Text>
-              </HStack>
-            </ModalHeader>
+        <ModalBody className="custom-scrollbar">
+          <Text colorScheme="gray" fontWeight="semibold" mb="8">
+            Create a point-based incentive for liquidity providers. More liquidity
+            means more points. Set a custom conversion rate to fine-tune the rewards.
+          </Text>
 
-            <ModalBody className="custom-scrollbar">
-              <Text colorScheme="gray" fontWeight="semibold" mb="8">
-                Create a point-based incentive for liquidity providers. More
-                liquidity means more points. Set a custom conversion rate to
-                fine-tune the rewards.
-              </Text>
-
-              <Stepper
-                colorScheme="indigo"
-                index={activeStep}
-                orientation="vertical"
-                gap="0"
-                w="full"
-                height="100%"
+          <Stepper
+            colorScheme="indigo"
+            index={activeStep}
+            orientation="vertical"
+            gap="0"
+            w="full"
+            height="100%"
+          >
+            {steps.map((step, index) => (
+              <Step
+                key={index}
+                style={{ width: "100%", height: "100%" }}
+                onClick={activeStep > index ? () => setActiveStep(index) : undefined}
               >
-                {steps.map((step, index) => (
-                  <Step
-                    key={index}
-                    style={{ width: "100%", height: "100%" }}
-                    onClick={
-                      activeStep > index ? () => setActiveStep(index) : undefined
-                    }
-                  >
-                    <StepIndicator>
-                      <StepStatus
-                        complete={<StepIcon />}
-                        incomplete={<StepNumber />}
-                        active={<StepNumber />}
-                      />
-                    </StepIndicator>
+                <StepIndicator>
+                  <StepStatus
+                    complete={<StepIcon />}
+                    incomplete={<StepNumber />}
+                    active={<StepNumber />}
+                  />
+                </StepIndicator>
 
-                    <Box
-                      w="full"
-                      mt={1}
-                      minH={index === steps.length - 1 ? 0 : 12}
-                      _hover={activeStep > index ? { cursor: "pointer" } : undefined}
-                    >
-                      <StepTitle>{step.title}</StepTitle>
-                      <Collapse
-                        in={activeStep === index}
-                        animateOpacity
-                        style={{ padding: "2px", margin: "-2px" }}
-                      >
-                        <step.content
-                          onContinue={goToNext}
-                          isLoading={isLoading}
-                          onSubmit={methods.handleSubmit(onSubmit)}
-                        />
-                      </Collapse>
-                    </Box>
-
-                    <StepSeparator />
-                  </Step>
-                ))}
-              </Stepper>
-            </ModalBody>
-          </FormProvider>
-          <ModalFooter py={4} bg={footerBg} borderTopWidth="1px">
-            <Accordion allowToggle w="full">
-              <AccordionItem border={"none"}>
-                <AccordionButton
-                  display={"flex"}
-                  rounded={"lg"}
-                  fontWeight={"semibold"}
-                  px={0}
-                  opacity={0.5}
-                  _hover={{ opacity: 1 }}
+                <Box
+                  w="full"
+                  mt={1}
+                  minH={index === steps.length - 1 ? 0 : 12}
+                  _hover={activeStep > index ? { cursor: "pointer" } : undefined}
                 >
-                  <Icon as={Info} mr={2} />
-                  This solution uses Uniswap v3
-                  <AccordionIcon ml={"auto"} />
-                </AccordionButton>
-                <AccordionPanel>
-                  <Text color={"GrayText"}>
-                    Please note that our liquidity incentive setup flow currently
-                    supports only Uniswap V3. If you require assistance with other
-                    liquidity protocols or platforms, please{" "}
-                    <chakra.span
-                      textDecoration={"underline"}
-                      _hover={{ cursor: "pointer" }}
-                      onClick={() => triggerChat()}
-                    >
-                      contact our support team
-                    </chakra.span>{" "}
-                    for further assistance.
-                  </Text>
-                </AccordionPanel>
-              </AccordionItem>
-            </Accordion>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-    </>
+                  <StepTitle>{step.title}</StepTitle>
+                  <Collapse
+                    in={activeStep === index}
+                    animateOpacity
+                    style={{ padding: "2px", margin: "-2px" }}
+                  >
+                    <step.content
+                      onContinue={goToNext}
+                      isLoading={isLoading}
+                      onSubmit={methods.handleSubmit(onSubmit)}
+                    />
+                  </Collapse>
+                </Box>
+
+                <StepSeparator />
+              </Step>
+            ))}
+          </Stepper>
+        </ModalBody>
+      </FormProvider>
+      <ModalFooter py={4} bg={footerBg} borderTopWidth="1px">
+        <Accordion allowToggle w="full">
+          <AccordionItem border={"none"}>
+            <AccordionButton
+              display={"flex"}
+              rounded={"lg"}
+              fontWeight={"semibold"}
+              px={0}
+              opacity={0.5}
+              _hover={{ opacity: 1 }}
+            >
+              <Icon as={Info} mr={2} />
+              This solution uses Uniswap v3
+              <AccordionIcon ml={"auto"} />
+            </AccordionButton>
+            <AccordionPanel>
+              <Text color={"GrayText"}>
+                Please note that our liquidity incentive setup flow currently
+                supports only Uniswap V3. If you require assistance with other
+                liquidity protocols or platforms, please{" "}
+                <chakra.span
+                  textDecoration={"underline"}
+                  _hover={{ cursor: "pointer" }}
+                  onClick={() => triggerChat()}
+                >
+                  contact our support team
+                </chakra.span>{" "}
+                for further assistance.
+              </Text>
+            </AccordionPanel>
+          </AccordionItem>
+        </Accordion>
+      </ModalFooter>
+    </ModalContent>
   )
 }
 
