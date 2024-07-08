@@ -170,7 +170,7 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
         /> */}
 
         {shouldShowVerify && (
-          <p className="mb-6 animate-fade-in">
+          <p className="mb-6">
             Sign message to verify that you're the owner of this address.
           </p>
         )}
@@ -243,7 +243,7 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
               linkAddress.isLoading || set.isLoading || (!id && !publicUserError)
             }
             loadingText={!id ? "Looking for keypairs" : "Check your wallet"}
-            className="mb-4 w-full animate-fade-in"
+            className="mb-4 w-full"
           >
             {isAddressLink ? "Link address" : "Verify address"}{" "}
           </Button>
