@@ -111,7 +111,6 @@ const ControlledNumberInput = ({
     if (newValue < props.min || newValue === "") {
       const inputPrecision = getNumOfDecimals(newValue)
       const minPrecision = getNumOfDecimals(props.min)
-      console.log("ret min prop")
       return props.min.toFixed(Math.max(minPrecision, inputPrecision))
     }
     return newValue

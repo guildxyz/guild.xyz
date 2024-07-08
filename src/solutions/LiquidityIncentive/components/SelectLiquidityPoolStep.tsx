@@ -161,7 +161,7 @@ const SelectLiquidityPoolStep = ({ onContinue }: { onContinue: () => void }) => 
         }
         onClick={onContinue}
         mb={5}
-        mt={3}
+        mt={2}
       >
         Continue
       </Button>
