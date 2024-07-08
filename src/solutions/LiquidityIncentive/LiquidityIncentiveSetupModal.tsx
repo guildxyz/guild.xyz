@@ -122,13 +122,7 @@ const LiquidityIncentiveSetupModal = ({
 
   return (
     <>
-      <Modal
-        isOpen={isOpen}
-        onClose={handleClose}
-        size="xl"
-        scrollBehavior="inside"
-        colorScheme="dark"
-      >
+      <Modal isOpen={isOpen} onClose={handleClose} size="xl" colorScheme="dark">
         <ModalOverlay />
 
         <ModalContent>
@@ -207,7 +201,7 @@ const LiquidityIncentiveSetupModal = ({
               </Stepper>
             </ModalBody>
           </FormProvider>
-          <ModalFooter pt={6} pb={6} bg={footerBg} border={"none"}>
+          <ModalFooter py={4} bg={footerBg} borderTopWidth="1px">
             <Accordion allowToggle w="full">
               <AccordionItem border={"none"}>
                 <AccordionButton

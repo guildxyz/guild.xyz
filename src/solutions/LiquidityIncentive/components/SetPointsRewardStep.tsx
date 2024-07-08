@@ -97,7 +97,7 @@ const SetPointsReward = ({
       </Box>
 
       <Button
-        colorScheme={"indigo"}
+        colorScheme={"green"}
         onClick={onSubmit}
         mb={5}
         mt={3}
