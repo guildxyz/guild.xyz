@@ -47,8 +47,8 @@ const SegmentedControl = <TOption extends SegmentedControlOption>({
   const uid = useId()
 
   const height = useMemo(() => {
-    if (size === "md") return { base: "fit", md: 10 }
-    return { base: "fit", md: 9 }
+    if (size === "md") return 10
+    return 9
   }, [size])
 
   return (
@@ -101,6 +101,7 @@ const SegmentedControlButton = ({
       position="relative"
       h="full"
       w={isFullWidth ? "full" : "auto"}
+      flexShrink={!isFullWidth ? 0 : "auto"}
     >
       <input {...inputProps} hidden />
 
