@@ -4,11 +4,13 @@ import { ReactNode } from "react"
 export const AccountSectionTitle = ({
   title,
   titleRightElement,
+  className,
 }: {
   title: string
   titleRightElement?: ReactNode
+  className?: string
 }) => (
-  <div className="mb-3 flex w-full items-center">
+  <div className={cn("mb-3 flex w-full items-center", className)}>
     <span className="text-sm font-bold text-muted-foreground">{title}</span>
     {titleRightElement}
   </div>

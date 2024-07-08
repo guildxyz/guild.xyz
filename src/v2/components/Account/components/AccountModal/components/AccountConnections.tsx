@@ -6,6 +6,7 @@ import useDelegateVaults from "../hooks/useDelegateVaults"
 import { AccountSection, AccountSectionTitle } from "./AccountSection"
 import EmailAddress from "./EmailAddress"
 import FarcasterProfile from "./FarcasterProfile"
+import SharedSocials from "./SharedSocials"
 import { SocialAccount } from "./SocialAccount"
 
 const AccountConnections = () => {
@@ -26,8 +27,11 @@ const AccountConnections = () => {
 
   return (
     <div className="flex flex-col gap-1">
-      {/* TODO: rightElement */}
-      <AccountSectionTitle title="Social accounts" />
+      <AccountSectionTitle
+        title="Social accounts"
+        titleRightElement={sharedSocials?.length > 0 ? <SharedSocials /> : undefined}
+        className="justify-between"
+      />
       <AccountSection className="mb-6">
         {orderedSocials.map((platform, i) => (
           <>
