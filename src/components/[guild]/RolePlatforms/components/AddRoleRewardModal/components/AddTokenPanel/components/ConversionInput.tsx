@@ -182,7 +182,7 @@ const InputUnitElement = ({ children }: PropsWithChildren<any>) => {
       right={{ base: "8px", md: "35px" }}
       bg={inputBg}
       width="auto"
-      maxWidth={"50px"}
+      maxWidth={{ base: "50px", md: "70px" }}
     >
       <Text colorScheme={"gray"} fontSize={"xs"} fontWeight={"bold"} noOfLines={2}>
         {children}

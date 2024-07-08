@@ -1,6 +1,5 @@
 import {
   Box,
-  Divider,
   FormControl,
   FormLabel,
   HStack,
@@ -59,9 +58,9 @@ const SetLiquidityPointsRewardStep = ({
   const { symbol0, symbol1 } = useSymbolsOfPair(Chains[chain], token0, token1)
 
   return (
-    <Stack gap={5}>
+    <Stack gap={4}>
       <Text colorScheme="gray">
-        Configure the reward users will earn for providing liquidity.
+        Configure the reward users will earn for providing liquidity
       </Text>
 
       <FormControl>
@@ -69,7 +68,7 @@ const SetLiquidityPointsRewardStep = ({
           <HStack gap={0} mb={2}>
             <FormLabel mb={0}>Base currency</FormLabel>
             <Tooltip
-              label="The reward will be calculated based on the amount of liquidity provided in the currency you select."
+              label="The reward will be calculated based on the amount of liquidity provided in the currency you select"
               hasArrow
             >
               <Icon as={Question} color="GrayText" />
@@ -89,7 +88,6 @@ const SetLiquidityPointsRewardStep = ({
         </Stack>
       </FormControl>
 
-      <Divider />
       <SelectPointType />
 
       <Box opacity={isConversionDisabled ? 0.5 : 1}>
