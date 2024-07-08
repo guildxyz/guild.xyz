@@ -2,15 +2,19 @@ import useSWRWithOptionalAuth, {
   mutateOptionalAuthSWRKey,
 } from "hooks/useSWRWithOptionalAuth"
 import { usePathname } from "next/navigation"
-import { useRouter } from "next/router"
 import { mutate as swrMutate, unstable_serialize, useSWRConfig } from "swr"
 import useSWRImmutable from "swr/immutable"
 import { Guild, SimpleGuild } from "types"
 
-const useGuild = (guildId?: string | number) => {
+const useGuildUrlNameFromPathname = (guildId?: string | number) => {
   const pathname = usePathname()
   const guildFromPathname = pathname?.split("/").at(1)
-  const id = guildId ?? guildFromPathname
+
+  return guildId ?? guildFromPathname
+}
+
+const useGuild = (guildId?: string | number) => {
+  const id = useGuildUrlNameFromPathname(guildId)
 
   const publicSWRKey = `/v2/guilds/guild-page/${id}`
 
@@ -61,8 +65,7 @@ const useGuild = (guildId?: string | number) => {
 }
 
 const useSimpleGuild = (guildId?: string | number) => {
-  const router = useRouter()
-  const id = guildId ?? router.query.guild
+  const id = useGuildUrlNameFromPathname(guildId)
 
   const { cache } = useSWRConfig()
   const guildPageFromCache = cache.get(
