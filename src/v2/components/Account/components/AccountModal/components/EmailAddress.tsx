@@ -29,8 +29,7 @@ import {
 import { useDisclosure } from "@/hooks/useDisclosure"
 import { cn } from "@/lib/utils"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { PencilSimple } from "@phosphor-icons/react/dist/ssr"
-import { useDisconnectEmail } from "components/common/Layout/components/Account/components/AccountModal/hooks/useDisconnect"
+import { PencilSimple, Warning } from "@phosphor-icons/react/dist/ssr"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useEffect, useState } from "react"
@@ -38,6 +37,7 @@ import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { emailData } from "rewards/Email/data"
 import fetcher from "utils/fetcher"
 import { z } from "zod"
+import { useDisconnectEmail } from "../hooks/useDisconnect"
 import { DisconnectAccountButton } from "./DisconnectAccountButton"
 import { SocialAccountUI } from "./SocialAccount"
 
@@ -171,11 +171,15 @@ const ConnectEmailButton = ({
     <>
       <Dialog open={isOpen}>
         <FormProvider {...methods}>
-          <DialogContent size="sm">
+          <DialogContent
+            size="sm"
+            onEscapeKeyDown={handleOnClose}
+            onPointerDownOutside={handleOnClose}
+          >
             <DialogHeader>
               <DialogTitle>Connect email</DialogTitle>
             </DialogHeader>
-            <DialogCloseButton />
+            <DialogCloseButton onClick={handleOnClose} />
 
             {/* TODO: Error component */}
             {/* <Error
@@ -255,7 +259,11 @@ const ConnectEmailButton = ({
                     <TooltipTrigger asChild>
                       <Button
                         onClick={submit}
-                        isLoading={connect.isLoading || connect.isSigning}
+                        isLoading={
+                          verificationRequest.isLoading ||
+                          connect.isLoading ||
+                          connect.isSigning
+                        }
                         variant="ghost"
                         size="sm"
                         disabled={isResendButtonDisabled}
@@ -289,17 +297,27 @@ const ConnectEmailButton = ({
 
       <Button
         onClick={onOpen}
-        // TODO: color scheme
-        // colorScheme={emails?.pending ? "orange" : rewards.EMAIL.colorScheme}
+        variant={emails?.pending ? "secondary" : "default"}
         size="sm"
-        disabled={!!emails?.emailAddress}
+        disabled={!!emails?.emailAddress && !emails?.pending}
         className={cn(
-          "ml-auto bg-email hover:bg-email-hover active:bg-email-active",
+          "ml-auto",
+          {
+            "bg-email hover:bg-email-hover active:bg-email-active": !emails?.pending,
+          },
           className
         )}
         {...props}
       >
-        {emails?.emailAddress || (emails?.pending ? "Verify" : "Connect")}
+        {emails?.pending ? (
+          <>
+            {/* TODO: maybe move this out to a CSS variable? */}
+            <Warning className="mr-1 text-orange-400 data-[theme=dark]:text-orange-200" />
+            Verify
+          </>
+        ) : (
+          emails?.emailAddress || "Connect"
+        )}
       </Button>
     </>
   )
