@@ -127,7 +127,7 @@ const LiquidityIncentiveSetupModal = ({
         <ModalBody className="custom-scrollbar">
           <Text colorScheme="gray" fontWeight="semibold" mb="9">
             Create a point-based incentive for liquidity providers. More liquidity
-            means more points. Set a custom conversion rate to fine-tune the rewards.
+            means more points. Set a custom conversion rate to fine-tune the rewards
           </Text>
 
           <Stepper

@@ -99,12 +99,12 @@ const SetLiquidityPointsRewardStep = ({
       <Button
         colorScheme={"green"}
         onClick={onSubmit}
-        mb={5}
-        mt={3}
+        ml="auto"
+        mt={5}
         isDisabled={isSubmitDisabled}
         isLoading={isLoading}
       >
-        Save
+        Create Liquidity Incentive role
       </Button>
     </Stack>
   )

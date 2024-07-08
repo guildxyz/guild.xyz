@@ -161,6 +161,9 @@ const SelectLiquidityPoolStep = ({ onContinue }: { onContinue: () => void }) => 
       />
 
       <Button
+        mt={3}
+        mb={5}
+        ml="auto"
         colorScheme={"indigo"}
         isDisabled={
           !!errors?.pool ||
@@ -171,8 +174,6 @@ const SelectLiquidityPoolStep = ({ onContinue }: { onContinue: () => void }) => 
           isFetchingFromTokenId
         }
         onClick={onContinue}
-        mb={5}
-        mt={3}
       >
         Continue
       </Button>
