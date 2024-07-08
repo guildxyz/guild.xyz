@@ -1,12 +1,12 @@
+import { useErrorToast } from "@/components/ui/hooks/useErrorToast"
 import { useToast } from "@/components/ui/hooks/useToast"
 import useUser from "components/[guild]/hooks/useUser"
 import { useFetcherWithSign } from "hooks/useFetcherWithSign"
-import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit/useSubmit"
 
 const useEditSharedSocials = (guildId) => {
   const { id, mutate } = useUser()
-  const showErrorToast = useShowErrorToast()
+  const showErrorToast = useErrorToast()
   const { toast } = useToast()
   const fetcherWithSign = useFetcherWithSign()
 

@@ -1,12 +1,12 @@
+import { useErrorToast } from "@/components/ui/hooks/useErrorToast"
 import { useToast } from "@/components/ui/hooks/useToast"
 import useUser from "components/[guild]/hooks/useUser"
-import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import { PlatformType } from "types"
 import fetcher from "utils/fetcher"
 
 const useDisconnect = (onSuccess?: () => void) => {
-  const showErrorToast = useShowErrorToast()
+  const showErrorToast = useErrorToast()
   const { mutate: mutateUser, id: userId } = useUser()
   const { toast } = useToast()
 
@@ -46,7 +46,7 @@ const useDisconnect = (onSuccess?: () => void) => {
 }
 
 const useDisconnectAddress = (onSuccess?: () => void) => {
-  const showErrorToast = useShowErrorToast()
+  const showErrorToast = useErrorToast()
   const { mutate: mutateUser, id: userId } = useUser()
   const { toast } = useToast()
 
@@ -84,7 +84,7 @@ const useDisconnectAddress = (onSuccess?: () => void) => {
 }
 
 const useDisconnectEmail = (onSuccess?: () => void) => {
-  const showErrorToast = useShowErrorToast()
+  const showErrorToast = useErrorToast()
   const { mutate: mutateUser, id: userId } = useUser()
   const { toast } = useToast()
 

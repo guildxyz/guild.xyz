@@ -18,6 +18,7 @@ import {
   walletLinkHelperModalAtom,
 } from "@/components/Providers/atoms"
 import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import { useErrorToast } from "@/components/ui/hooks/useErrorToast"
 import { ArrowSquareOut } from "@phosphor-icons/react/dist/ssr"
 import { useAtom, useSetAtom } from "jotai"
 import Link from "next/link"
@@ -105,17 +106,16 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
     !prevAddress &&
     address === addressLinkParams.address
 
-  // TODO
-  // const showErrorToast = useShowErrorToast()
+  const showErrorToast = useErrorToast()
 
   useEffect(() => {
     if (!triesToLinkCurrentAddress) return
     setAddressLinkParams({ userId: undefined, address: undefined })
 
-    // showErrorToast(
-    //   "You cannot link an address to itself. Please choose a different address."
-    // )
-  }, [triesToLinkCurrentAddress, setAddressLinkParams /*, showErrorToast*/])
+    showErrorToast(
+      "You cannot link an address to itself. Please choose a different address."
+    )
+  }, [triesToLinkCurrentAddress, setAddressLinkParams, showErrorToast])
 
   const conditionalOnClose = () => {
     if (!isWeb3Connected || !!keyPair) onClose()
