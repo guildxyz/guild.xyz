@@ -4,7 +4,7 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/ToggleGroup"
 import { Button } from "@/components/ui/Button"
 import { Plus } from "@phosphor-icons/react"
 import useIsStuck from "hooks/useIsStuck"
-import { useEffect } from "react"
+import { Suspense, useEffect } from "react"
 import useScrollspy from "hooks/useScrollSpy"
 import { GuildInfiniteScroll } from "@/components/GuildInfiniteScroll"
 import { GuildSearchBar } from "@/components/GuildSeachBar"
@@ -98,7 +98,9 @@ const Page = () => {
               Explore verified guilds
             </h2>
             <div className="sticky top-10 z-10" ref={searchRef}>
-              <GuildSearchBar queryAtom={guildQueryAtom} />
+              <Suspense>
+                <GuildSearchBar queryAtom={guildQueryAtom} />
+              </Suspense>
             </div>
             <GuildInfiniteScroll queryAtom={guildQueryAtom} />
           </section>
