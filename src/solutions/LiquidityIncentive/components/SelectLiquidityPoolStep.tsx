@@ -1,6 +1,6 @@
 import {
+  Collapse,
   FormControl,
-  FormErrorMessage,
   FormHelperText,
   FormLabel,
   Icon,
@@ -19,6 +19,7 @@ import { consts } from "@guildxyz/types"
 import { Info } from "@phosphor-icons/react/dist/ssr"
 import { triggerChat } from "components/_app/IntercomProvider"
 import Button from "components/common/Button"
+import FormErrorMessage from "components/common/FormErrorMessage"
 import { useCallback } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { usePairOfTokenId } from "requirements/Uniswap/hooks/usePairOfTokenId"
@@ -96,7 +97,7 @@ const SelectLiquidityPoolStep = ({ onContinue }: { onContinue: () => void }) => 
   const { symbol0, symbol1 } = useSymbolsOfPair(Chains[chain], token0, token1)
 
   return (
-    <Stack gap={5}>
+    <Stack gap={4}>
       <Text colorScheme="gray">
         {"from "}
         <Link href="https://app.uniswap.org/pools" fontWeight={"medium"} isExternal>
@@ -125,18 +126,24 @@ const SelectLiquidityPoolStep = ({ onContinue }: { onContinue: () => void }) => 
           placeholder="https://app.uniswap.org/pools/606400?chain=base"
         />
 
-        {(isFetchingFromTokenId || (symbol0 && symbol1) || isFetchingFromTokenId) &&
-          !!rawAddressInput && (
-            <FormHelperText>
-              <Skeleton isLoaded={!!symbol0 && !!symbol1} display="inline">
-                <strong>
-                  {symbol0 ?? "___"}/{symbol1 ?? "___"}
-                </strong>{" "}
-                pair detected on <strong>{CHAIN_CONFIG[chain]?.name}</strong>. If
-                this is not correct, ensure the correct chain is selected
-              </Skeleton>
-            </FormHelperText>
-          )}
+        <Collapse
+          in={
+            (isFetchingFromTokenId ||
+              !!(symbol0 && symbol1) ||
+              isFetchingFromTokenId) &&
+            !!rawAddressInput
+          }
+        >
+          <FormHelperText>
+            <Skeleton isLoaded={!!symbol0 && !!symbol1} display="inline">
+              <strong>
+                {symbol0 ?? "___"}/{symbol1 ?? "___"}
+              </strong>{" "}
+              pair detected on <strong>{CHAIN_CONFIG[chain]?.name}</strong>. If this
+              is not correct, ensure the correct chain is selected
+            </Skeleton>
+          </FormHelperText>
+        </Collapse>
 
         <FormErrorMessage>
           {parseFromObject(errors, "pool")?.data?.lpVault?.message ??
@@ -165,7 +172,7 @@ const SelectLiquidityPoolStep = ({ onContinue }: { onContinue: () => void }) => 
         }
         onClick={onContinue}
         mb={5}
-        mt={2}
+        mt={3}
       >
         Continue
       </Button>
