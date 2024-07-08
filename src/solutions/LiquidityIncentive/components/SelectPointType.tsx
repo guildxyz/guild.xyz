@@ -40,10 +40,10 @@ const SelectPointType = () => {
     <Stack gap={3}>
       {!!existingPointsRewards.length && (
         <ExistingPointsTypeSelect
+          fieldName="pointsId"
           existingPointsRewards={existingPointsRewards}
           selectedExistingId={selectedExistingId ?? undefined}
           showCreateNew
-          onDone={(id) => setValue("pointsId", id)}
         />
       )}
 

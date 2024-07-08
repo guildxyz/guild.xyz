@@ -90,7 +90,9 @@ const SetLiquidityPointsRewardStep = ({
 
       <SelectPointType />
 
-      <Box opacity={isConversionDisabled ? 0.5 : 1}>
+      <Box
+        {...(isConversionDisabled ? { opacity: 0.5, pointerEvents: "none" } : {})}
+      >
         <LiquidityConversion />
       </Box>
 

@@ -117,9 +117,6 @@ const AddPointsPanel = ({ onAdd, onCancel }: AddRewardPanelProps) => {
             selectedExistingId={selectedExistingId}
             showCreateNew
             mb="5"
-            onDone={(selectionId) => {
-              setValue("data.guildPlatformId", selectionId)
-            }}
           />
         )}
         <Collapse

@@ -29,9 +29,6 @@ const PointsRank = ({ baseFieldPath, field }: Props): JSX.Element => {
         existingPointsRewards={existingPointsRewards}
         selectedExistingId={guildPlatformId}
         isLoading={isLoading}
-        onDone={(id) => {
-          setValue("data.guildPlatformId", id)
-        }}
       />
 
       <MaxMinAmount baseFieldPath={baseFieldPath} field={field} label="rank" />
