@@ -42,9 +42,7 @@ const AccountConnections = () => {
             ) : (
               <SocialAccount key={platform} type={platform} />
             )}
-            {i < orderedSocials.length - 1 && (
-              <hr className="border-border-secondary" />
-            )}
+            {i < orderedSocials.length - 1 && <hr className="border-border-muted" />}
           </>
         ))}
       </AccountSection>
