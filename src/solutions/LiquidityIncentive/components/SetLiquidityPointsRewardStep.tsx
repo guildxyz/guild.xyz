@@ -21,7 +21,7 @@ import { LiquidityIncentiveForm } from "../LiquidityIncentiveSetupModal"
 import LiquidityConversion from "./LiquidityConversion"
 import SelectPointType from "./SelectPointType"
 
-const SetPointsReward = ({
+const SetLiquidityPointsRewardStep = ({
   onSubmit,
   isLoading,
 }: {
@@ -110,4 +110,4 @@ const SetPointsReward = ({
   )
 }
 
-export default SetPointsReward
+export default SetLiquidityPointsRewardStep

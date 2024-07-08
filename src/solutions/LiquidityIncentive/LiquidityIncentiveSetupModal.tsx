@@ -35,7 +35,7 @@ import { triggerChat } from "components/_app/IntercomProvider"
 import { FormProvider, useForm } from "react-hook-form"
 import { UniswapChains } from "requirements/Uniswap/hooks/useParsePoolChain"
 import SelectLiquidityPoolStep from "./components/SelectLiquidityPoolStep"
-import SetPointsReward from "./components/SetPointsRewardStep"
+import SetLiquidityPointsRewardStep from "./components/SetLiquidityPointsRewardStep"
 import useCreateLiquidityIncentive from "./hooks/useCreateLiquidityIncentive"
 
 export type LiquidityIncentiveForm = {
@@ -85,7 +85,7 @@ const defaultValues = {
 
 const steps = [
   { title: "Choose your liquidity pool", content: SelectLiquidityPoolStep },
-  { title: "Set points reward", content: SetPointsReward },
+  { title: "Set points reward", content: SetLiquidityPointsRewardStep },
 ]
 
 const LiquidityIncentiveSetupModal = ({
