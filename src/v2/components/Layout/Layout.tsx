@@ -1,7 +1,8 @@
 import { ReactNode } from "react"
 import { PropsWithChildren } from "react"
 import { PageBoundary } from "@/components/PageBoundary"
-import { Header as NavHeader } from "@/components/Header"
+// import { Header as NavHeader } from "@/components/Header"
+const NavHeader = () => <div className="h-16 border-border border-b">mocked header</div>
 
 /* -------------------------------------------------------------------------------------------------
  * Root
