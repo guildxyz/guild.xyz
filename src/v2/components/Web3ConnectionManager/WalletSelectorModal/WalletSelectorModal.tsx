@@ -222,8 +222,8 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
                     error={error}
                   />
                 ))}
-              <ExportCWaaSLink />
               <FuelConnectorButtons key="fuel" />
+              <ExportCWaaSLink />
             </div>
           </div>
         )}
