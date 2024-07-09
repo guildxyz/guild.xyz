@@ -1,5 +1,4 @@
 import { Header } from "@/components/Header"
-import Section from "components/common/Section"
 import { Metadata } from "next"
 import { FormExample } from "./_components/FormExample"
 
@@ -16,9 +15,7 @@ export default function Page() {
         <Header />
       </div>
 
-      <Section title="Form">
-        <FormExample />
-      </Section>
+      <FormExample />
     </div>
   )
 }
