@@ -127,15 +127,15 @@ const NavButton = ({ href, children }: { href: string; children: ReactNode }) =>
   const isExternal = href.startsWith("http")
   const wrapperProps = {
     href,
-    ...(!isExternal
+    ...(isExternal
       ? ({
-          passHref: true,
-          legacyBehavior: true,
-        } satisfies Partial<LinkProps>)
-      : ({
           target: "_blank",
           rel: "noopener",
-        } satisfies AnchorHTMLAttributes<HTMLAnchorElement>)),
+        } satisfies AnchorHTMLAttributes<HTMLAnchorElement>)
+      : ({
+          passHref: true,
+          legacyBehavior: true,
+        } satisfies Partial<LinkProps>)),
   }
 
   const Wrapper = isExternal ? "a" : Link
