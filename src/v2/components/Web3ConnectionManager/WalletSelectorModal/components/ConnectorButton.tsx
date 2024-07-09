@@ -36,6 +36,10 @@ const ConnectorButton = ({ connector, pendingConnector, connect, error }: Props)
 
   if (!connector) return null
 
+  const isCurrentConnectorPending = pendingConnector?.id === connector.id
+  const isCurrentConnectorActive =
+    isConnected && activeConnector?.id === connector.id
+
   return (
     <Button
       {...connectorButtonBaseProps}
@@ -45,8 +49,7 @@ const ConnectorButton = ({ connector, pendingConnector, connect, error }: Props)
       }}
       disabled={activeConnector?.id === connector.id}
       isLoading={
-        (pendingConnector?.id === connector.id ||
-          (isConnected && activeConnector?.id === connector.id && !keyPair)) &&
+        (isCurrentConnectorPending || (isCurrentConnectorActive && !keyPair)) &&
         !error
       }
       loadingText={`${connectorName} - connecting...`}
