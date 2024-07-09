@@ -88,7 +88,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
       >
         <DrawerOverlay />
         <DrawerContent>
-          <DrawerBody ref={drawerBodyRef} className="custom-scrollbar" pb={24}>
+          <DrawerBody ref={drawerBodyRef} className="custom-scrollbar" pb={28}>
             <FormProvider {...methods}>
               <ApiRequirementHandlerProvider roleId={roleId}>
                 <EditRoleHeader onClose={onCloseAndClear} roleId={roleId} />

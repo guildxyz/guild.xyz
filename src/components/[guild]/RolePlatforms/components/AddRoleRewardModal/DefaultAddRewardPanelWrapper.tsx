@@ -24,7 +24,7 @@ export const DefaultAddRewardPanelWrapper = ({
   return (
     <ModalContent>
       <ModalCloseButton />
-      <ModalHeader>
+      <ModalHeader pb="5">
         <HStack>
           <IconButton
             rounded="full"

@@ -5,9 +5,12 @@ import {
   IconButton,
   InputGroup,
   InputLeftElement,
+  InputRightElement,
+  Text,
+  useColorModeValue,
 } from "@chakra-ui/react"
 import { ArrowRight, Lock, LockOpen } from "@phosphor-icons/react"
-import { ReactNode, useEffect, useState } from "react"
+import { PropsWithChildren, ReactNode, useEffect, useState } from "react"
 import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
 import ControlledNumberInput from "requirements/WalletActivity/components/ControlledNumberInput"
 import { MIN_TOKEN_AMOUNT } from "utils/guildCheckout/constants"
@@ -22,14 +25,18 @@ type ConversionForm = {
 type Props = {
   name: string
   fromImage: ReactNode
+  fromText?: string
   toImage: ReactNode
+  toText?: string
   defaultMultiplier?: number
 }
 
 const ConversionInput = ({
   name,
   fromImage,
+  fromText,
   toImage,
+  toText,
   defaultMultiplier = 1,
 }: Props) => {
   const { control, setValue } = useFormContext()
@@ -103,7 +110,7 @@ const ConversionInput = ({
 
       <HStack w={"full"}>
         <InputGroup>
-          <InputLeftElement>{fromImage}</InputLeftElement>
+          {fromImage && <InputLeftElement>{fromImage}</InputLeftElement>}
 
           {conversionLocked ? (
             <ControlledNumberInput
@@ -111,7 +118,7 @@ const ConversionInput = ({
               onChange={tokenPreviewChange}
               name={"tokenPreview"}
               adaptiveStepSize
-              numberInputFieldProps={{ pr: 7, pl: 10 }}
+              numberInputFieldProps={{ pr: 7, pl: fromImage ? 9 : 4 }}
               min={MIN_TOKEN_AMOUNT}
               w="full"
             />
@@ -121,11 +128,12 @@ const ConversionInput = ({
               onChange={(valString) => updateConversionRate(valString, "token")}
               name={"tokenAmount"}
               adaptiveStepSize
-              numberInputFieldProps={{ pr: 7, pl: 10 }}
+              numberInputFieldProps={{ pr: 7, pl: fromImage ? 9 : 4 }}
               min={MIN_TOKEN_AMOUNT}
               w="full"
             />
           )}
+          {fromText && <InputUnitElement>{fromText}</InputUnitElement>}
         </InputGroup>
 
         <Circle background={"whiteAlpha.200"} p="1">
@@ -133,13 +141,14 @@ const ConversionInput = ({
         </Circle>
 
         <InputGroup>
-          <InputLeftElement>{toImage}</InputLeftElement>
+          {toImage && <InputLeftElement>{toImage}</InputLeftElement>}
+
           {conversionLocked ? (
             <ControlledNumberInput
               numberFormat="FLOAT"
               name={"pointPreview"}
               adaptiveStepSize
-              numberInputFieldProps={{ pr: 7, pl: 10 }}
+              numberInputFieldProps={{ pr: 7, pl: toImage ? 9 : 4 }}
               min={MIN_TOKEN_AMOUNT}
               isReadOnly
               w="full"
@@ -150,14 +159,35 @@ const ConversionInput = ({
               onChange={(valString) => updateConversionRate(valString, "point")}
               name={"pointAmount"}
               adaptiveStepSize
-              numberInputFieldProps={{ pr: 7, pl: 10 }}
+              numberInputFieldProps={{ pr: 7, pl: toImage ? 9 : 4 }}
               min={MIN_TOKEN_AMOUNT}
               w="full"
             />
           )}
+          {toText && <InputUnitElement>{toText}</InputUnitElement>}
         </InputGroup>
       </HStack>
     </FormProvider>
+  )
+}
+
+const InputUnitElement = ({ children }: PropsWithChildren<any>) => {
+  // adding a bg so it doesn't overlay in case of huge numbers, especially on mobile
+  const inputBg = useColorModeValue("white", "#212123")
+
+  return (
+    <InputRightElement
+      h={`calc(var(--input-height) - 2px)`}
+      top="1px"
+      right={{ base: "8px", md: "35px" }}
+      bg={inputBg}
+      width="auto"
+      maxWidth={{ base: "50px", md: "70px" }}
+    >
+      <Text colorScheme={"gray"} fontSize={"xs"} fontWeight={"bold"} noOfLines={2}>
+        {children}
+      </Text>
+    </InputRightElement>
   )
 }
 

@@ -1,14 +1,10 @@
 import {
-  ChakraProps,
   Circle,
-  HStack,
   Icon,
   Img,
   Spinner,
-  Stack,
   Text,
   Tooltip,
-  Wrap,
   useColorModeValue,
 } from "@chakra-ui/react"
 import { ArrowSquareOut, LockSimple } from "@phosphor-icons/react"
@@ -21,21 +17,15 @@ import Button from "components/common/Button"
 import useMembership, {
   useRoleMembership,
 } from "components/explorer/hooks/useMembership"
-import { Transition, motion } from "framer-motion"
-import { PropsWithChildren, ReactNode, useMemo, useState } from "react"
+import { motion } from "framer-motion"
+import { useMemo, useState } from "react"
 import rewards from "rewards"
 import rewardComponents from "rewards/components"
 import GoogleCardWarning from "rewards/Google/GoogleCardWarning"
-import { GuildPlatform, PlatformType, Role, RolePlatform } from "types"
+import { PlatformType, RolePlatform } from "types"
 import capitalize from "utils/capitalize"
-
-export type RewardProps = {
-  role: Role // should change to just roleId when we won't need memberCount anymore
-  platform: RolePlatform
-  withLink?: boolean
-  withMotionImg?: boolean
-  isLinkColorful?: boolean
-}
+import { RewardDisplay } from "./RewardDisplay"
+import { RewardIconProps, RewardProps } from "./types"
 
 const getRewardLabel = (platform: RolePlatform) => {
   switch (platform.guildPlatform.platformId) {
@@ -158,40 +148,6 @@ const Reward = ({
   )
 }
 
-const RewardDisplay = ({
-  icon,
-  label,
-  rightElement,
-  children,
-  ...chakraProps
-}: PropsWithChildren<
-  {
-    icon?: ReactNode
-    label: ReactNode
-    rightElement?: ReactNode
-  } & ChakraProps
->) => (
-  <HStack pt="3" spacing={2} alignItems={"flex-start"} {...chakraProps}>
-    {icon}
-
-    <Stack w="full" spacing={0.5}>
-      <Wrap spacingY={0.5}>
-        <Text maxW="calc(100% - var(--chakra-sizes-12))">{label}</Text>
-        {rightElement}
-      </Wrap>
-
-      {children}
-    </Stack>
-  </HStack>
-)
-
-export type RewardIconProps = {
-  rolePlatformId: number
-  guildPlatform: GuildPlatform
-  withMotionImg?: boolean
-  transition?: Transition
-}
-
 const MotionImg = motion(Img)
 const MotionCircle = motion(Circle)
 
@@ -281,5 +237,5 @@ const RewardWrapper = ({ platform, ...props }: RewardProps) => {
   )
 }
 
-export { Reward, RewardDisplay, RewardIcon, getRewardLabel }
+export { Reward, RewardIcon, getRewardLabel }
 export default RewardWrapper
