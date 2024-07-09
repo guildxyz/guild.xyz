@@ -14,9 +14,9 @@ export default function useOAuthResultToast() {
   useEffect(() => {
     if (query["oauth-status"]) {
       const {
-        ["oauth-platform"]: oauthPlatform,
-        ["oauth-status"]: oauthStatus,
-        ["oauth-message"]: oauthMessage,
+        "oauth-platform": oauthPlatform,
+        "oauth-status": oauthStatus,
+        "oauth-message": oauthMessage,
         ...newQuery
       } = query
 
