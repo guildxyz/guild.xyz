@@ -109,48 +109,6 @@ const LinkedAddress = ({ addressData }: Props) => {
           {isPrimary && <PrimaryAddressTag size="sm" />}
         </div>
 
-        {/* Using a custom key here so the menu closes when we successfully set a new primary address */}
-        {/* <Menu key={`${address}${isPrimary ? "-primary" : ""}`} closeOnSelect={false}>
-          <MenuButton
-            as={IconButton}
-            icon={<DotsThree />}
-            aria-label="Options"
-            rounded="full"
-            variant="ghost"
-            size="sm"
-            ml="auto !important"
-          />
-          <MenuList minW="none">
-            {!isPrimary && (
-              <MenuItem
-                isDisabled={isEditPrimaryAddressLoading}
-                icon={
-                  isEditPrimaryAddressLoading ? (
-                    <Spinner size="xs" />
-                  ) : (
-                    <UserSwitch />
-                  )
-                }
-                onClick={() =>
-                  onEditPrimaryAddressSubmit({
-                    address,
-                    isPrimary: true,
-                  })
-                }
-              >
-                Set as primary
-              </MenuItem>
-            )}
-            <MenuItem
-              icon={<LinkBreak />}
-              color={removeMenuItemColor}
-              onClick={onOpen}
-            >
-              Disconnect
-            </MenuItem>
-          </MenuList>
-        </Menu> */}
-
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
