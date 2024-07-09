@@ -12,6 +12,7 @@ import { wagmiConfig } from "wagmiConfig"
 import { AccountModal } from "../Account/components/AccountModal"
 import { Toaster } from "../ui/Toaster"
 import { Web3ConnectionManager } from "../Web3ConnectionManager"
+import { IntercomProvider } from "./IntercomProvider"
 import { PostHogProvider } from "./PostHogProvider"
 
 const queryClient = new QueryClient()
@@ -31,13 +32,13 @@ export function Providers({ children }: { children: React.ReactNode }) {
           <QueryClientProvider client={queryClient}>
             <FuelProvider ui={false} fuelConfig={fuelConfig}>
               <PostHogProvider>
-                {/* TODO: <IntercomProvider> */}
-                {children}
-                <AccountModal />
-                <Suspense>
-                  <Web3ConnectionManager />
-                </Suspense>
-                {/* </IntercomProvider> */}
+                <IntercomProvider>
+                  {children}
+                  <AccountModal />
+                  <Suspense>
+                    <Web3ConnectionManager />
+                  </Suspense>
+                </IntercomProvider>
               </PostHogProvider>
             </FuelProvider>
           </QueryClientProvider>

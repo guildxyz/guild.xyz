@@ -1,7 +1,7 @@
 import useConnectorNameAndIcon from "@/components/Web3ConnectionManager/hooks/useConnectorNameAndIcon"
 import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import { useYourGuilds } from "@/hooks/useYourGuilds"
 import useUser from "components/[guild]/hooks/useUser"
-import { useYourGuilds } from "components/explorer/YourGuilds"
 import { PropsWithChildren, useEffect, useRef, useState } from "react"
 import { Intercom, LiveChatLoaderProvider, useChat } from "react-live-chat-loader"
 import { addIntercomSettings } from "utils/intercom"
@@ -90,5 +90,4 @@ const IntercomTrigger = (props: PropsWithChildren<IntercomTriggerProps>) => {
   return <div ref={ref} onClick={onClick} {...props} />
 }
 
-export default IntercomProvider
-export { IntercomTrigger }
+export { IntercomProvider, IntercomTrigger }
