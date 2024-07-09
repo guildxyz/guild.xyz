@@ -31,7 +31,7 @@ const AddressTypeBadge = ({ type, size }: Props) => (
         </Badge>
       </TooltipTrigger>
       <TooltipContent>
-        <span>TYPE_NAMES[type]</span>
+        <span>{TYPE_NAMES[type]}</span>
       </TooltipContent>
     </Tooltip>
   </TooltipProvider>
