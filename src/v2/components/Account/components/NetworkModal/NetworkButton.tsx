@@ -33,6 +33,8 @@ const NetworkButton = ({ chain, requestNetworkChange }: Props) => {
               "border-2": isCurrentChain,
             })}
           >
+            {/* Most of these icons are SVGs or small PNGs, so we don't need to optimize them */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={CHAIN_CONFIG[chain].iconUrl}
               alt={`${CHAIN_CONFIG[chain].name} logo`}
