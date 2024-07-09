@@ -1,10 +1,8 @@
 import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import { useToast } from "@/components/ui/hooks/useToast"
+import type { Message } from "@/hooks/useOauthPopupWindow"
 import { useUserPublic } from "@/hooks/useUserPublic"
-// TODO: move this hook inside its own file
 import { useConnect } from "components/[guild]/JoinModal/hooks/useConnectPlatform"
-// TODO: move this out to a constants folder maybe?
-import { Message } from "components/[guild]/JoinModal/hooks/useOauthPopupWindow"
 import useUser from "components/[guild]/hooks/useUser"
 import { useEffect } from "react"
 import rewards from "rewards"

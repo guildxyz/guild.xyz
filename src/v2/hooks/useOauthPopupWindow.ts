@@ -1,5 +1,5 @@
+import { useToast } from "@/components/ui/hooks/useToast"
 import usePopupWindow from "hooks/usePopupWindow"
-import useToast from "hooks/useToast"
 import randomBytes from "randombytes"
 import { useEffect, useState } from "react"
 import { OneOf, PlatformName } from "types"
@@ -11,6 +11,7 @@ type OAuthData<Data> = {
 
 type OAuthError = { error: string; errorDescription: string }
 
+// TODO: move this out to its own file?
 export type Message = OneOf<
   { type: "OAUTH_ERROR"; data: OAuthError },
   { type: "OAUTH_SUCCESS"; data: any }
@@ -29,7 +30,7 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
 ): OAuthState<OAuthResponse> & {
   onOpen: () => Promise<OAuthState<OAuthResponse>>
 } => {
-  const toast = useToast()
+  const { toast } = useToast()
 
   const redirectUri =
     typeof window !== "undefined" &&
@@ -121,7 +122,7 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
     const title = oauthState.error.error ?? "Unknown error"
     const errorDescription = oauthState.error.errorDescription ?? ""
 
-    toast({ status: "error", title, description: errorDescription })
+    toast({ variant: "error", title, description: errorDescription })
 
     // toast is left out on purpose, it causes the toast to be shown twice
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -1,6 +1,7 @@
 import useAutoReconnect from "@/hooks/useAutoReconnect"
 import { useAtom } from "jotai"
 import { walletSelectorModalAtom } from "../Providers/atoms"
+import useConnectFromLocalStorage from "./hooks/useConnectFromLocalStorage"
 import { useTriggerWalletSelectorModal } from "./hooks/useTriggerWalletSelectorModal"
 import { PlatformMergeErrorAlert } from "./PlatformMergeErrorAlert"
 import WalletLinkHelperModal from "./WalletLinkHelperModal"
@@ -12,8 +13,7 @@ export function Web3ConnectionManagerBase() {
   )
 
   useAutoReconnect()
-  // TODO
-  // useConnectFromLocalStorage()
+  useConnectFromLocalStorage()
 
   return (
     <>
