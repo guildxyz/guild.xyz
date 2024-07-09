@@ -7,5 +7,5 @@ export function usePrevious<T>(value: T) {
     ref.current = value
   }, [value])
 
-  return ref.current as T
+  return ref.current
 }
