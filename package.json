@@ -10,7 +10,7 @@
     "type-check": "tsc --pretty --noEmit --incremental false --project './tsconfig.build.json'",
     "format": "prettier --write .",
     "lint": "next lint",
-    "lint-fix": "biome --fix . --ext .ts,.tsx,.js,.jsx",
+    "lint-fix": "biome lint --fix .",
     "cypress:open": "cypress open",
     "cypress:open:mobile": "cypress open --config viewportWidth=375,viewportHeight=667",
     "test": "cypress run",
