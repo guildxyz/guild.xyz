@@ -32,6 +32,8 @@
     --accent: 240 7% 90%;
     --accent-foreground: 240 4% 16%;
 
+    --anchor-foreground: 221 83% 53%;
+
     --destructive: 0 84% 60%;
     --destructive-hover: 0 72% 51%;
     --destructive-active: 0 74% 42%;
@@ -89,6 +91,8 @@
 
     --accent: 240 2% 35%;
     --accent-foreground: 0 0% 92%;
+
+    --anchor-foreground: 213 94% 68%;
 
     --destructive: 0 84% 60%;
     --destructive-hover: 0 91% 71%;
