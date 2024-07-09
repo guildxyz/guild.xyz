@@ -151,9 +151,6 @@ const config = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "caret-blink": "caret-blink 1.25s ease-out infinite",
-        // Copied from where we used these animations
-        "fade-in": "fade-in .3s .1s both",
-        "slide-fade-in": "fade-in .2s",
       },
     },
   },
