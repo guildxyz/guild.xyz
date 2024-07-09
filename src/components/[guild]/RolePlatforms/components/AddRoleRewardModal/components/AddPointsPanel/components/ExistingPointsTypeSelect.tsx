@@ -13,16 +13,21 @@ import { useMemo } from "react"
 import { useFormContext } from "react-hook-form"
 import Star from "static/icons/star.svg"
 import { GuildPlatform } from "types"
+import parseFromObject from "utils/parseFromObject"
 import { AddPointsFormType } from "../AddPointsPanel"
 
 type Props = {
+  fieldName?: string
   existingPointsRewards: GuildPlatform[]
-  selectedExistingId: number
+  selectedExistingId: number | undefined
   isLoading?: boolean
   showCreateNew?: boolean
 } & FormControlProps
 
+export const CREATE_NEW_OPTION = -1
+
 const ExistingPointsTypeSelect = ({
+  fieldName = "data.guildPlatformId",
   existingPointsRewards,
   selectedExistingId,
   isLoading,
@@ -34,12 +39,11 @@ const ExistingPointsTypeSelect = ({
     setValue,
     formState: { errors },
   } = useFormContext<AddPointsFormType>()
-
   const options = useMemo(() => {
     const result = existingPointsRewards?.map((gp) => ({
-      label: gp.platformGuildData.name || "points",
+      label: gp?.platformGuildData?.name || "points",
       value: gp.id,
-      img: gp.platformGuildData.imageUrl ?? (
+      img: gp?.platformGuildData?.imageUrl ?? (
         <Center boxSize={5}>
           <Star />
         </Center>
@@ -50,8 +54,8 @@ const ExistingPointsTypeSelect = ({
 
     return result.concat({
       label: "Create new",
-      value: null,
-      img: null,
+      value: CREATE_NEW_OPTION,
+      img: "",
     })
   }, [existingPointsRewards, showCreateNew])
 
@@ -60,7 +64,7 @@ const ExistingPointsTypeSelect = ({
   )?.img
 
   return (
-    <FormControl isInvalid={!!errors?.data?.guildPlatformId} {...rest}>
+    <FormControl isInvalid={!!parseFromObject(errors, fieldName)} {...rest}>
       <FormLabel>Points type</FormLabel>
       <InputGroup>
         {selectedPointsImage && (
@@ -73,18 +77,20 @@ const ExistingPointsTypeSelect = ({
           </InputLeftElement>
         )}
         <ControlledSelect
-          name={`data.guildPlatformId`}
+          name={fieldName}
           control={control as any}
           options={options}
           beforeOnChange={(newValue) => {
-            setValue("data.guildPlatformId", newValue?.id, {
+            setValue(fieldName as any, newValue?.id, {
               shouldDirty: false,
             })
           }}
           isLoading={isLoading}
         />
       </InputGroup>
-      <FormErrorMessage>{errors?.data?.guildPlatformId?.message}</FormErrorMessage>
+      <FormErrorMessage>
+        {parseFromObject(errors, fieldName)?.message}
+      </FormErrorMessage>
     </FormControl>
   )
 }

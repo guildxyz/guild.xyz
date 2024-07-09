@@ -107,8 +107,8 @@ const ControlledNumberInput = ({
    *   original value if within the acceptable range.
    */
   const replaceWithMin = (newValue) => {
-    if (!props?.min) return newValue
-    if (newValue < props.min) {
+    if (props?.min === undefined) return newValue
+    if (newValue < props.min || newValue === "") {
       const inputPrecision = getNumOfDecimals(newValue)
       const minPrecision = getNumOfDecimals(props.min)
       return props.min.toFixed(Math.max(minPrecision, inputPrecision))
@@ -118,7 +118,7 @@ const ControlledNumberInput = ({
 
   /** See the comment for `replaceWithMin` */
   const replaceWithMax = (newValue) => {
-    if (!props?.max) return newValue
+    if (props?.max === undefined) return newValue
     if (newValue > props.max) {
       const inputPrecision = getNumOfDecimals(newValue)
       const maxPrecision = getNumOfDecimals(props.max)
@@ -150,6 +150,7 @@ const ControlledNumberInput = ({
       />
       <NumberInputStepper
         padding={"0 !important"}
+        display={{ base: "none", md: "flex" }}
         visibility={props.isReadOnly ? "hidden" : "visible"}
       >
         <NumberIncrementStepper />

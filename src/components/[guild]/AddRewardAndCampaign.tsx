@@ -14,19 +14,19 @@ import {
 } from "@chakra-ui/react"
 import { CaretDown, Plus } from "@phosphor-icons/react"
 import CreateCampaignModal from "components/[guild]/CreateCampaignModal"
-import AddRewardButton from "./AddRewardButton"
+import AddSolutionsButton from "solutions/components/AddSolutionsButton"
 import { useIsTabsStuck } from "./Tabs"
 import { useThemeContext } from "./ThemeContext"
 
 const AddRewardAndCampaign = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { isStuck } = useIsTabsStuck()
-  const { textColor, buttonColorScheme } = useThemeContext()
+  const { textColor = null, buttonColorScheme = null } = useThemeContext() || {}
 
   return (
     <>
       <ButtonGroup isAttached>
-        <AddRewardButton />
+        <AddSolutionsButton />
         <Divider orientation="vertical" h="8" />
         <Menu placement="bottom-end" autoSelect={false}>
           <MenuButton
@@ -37,8 +37,8 @@ const AddRewardAndCampaign = () => {
             borderTopLeftRadius="0"
             borderBottomLeftRadius="0"
             {...(!isStuck && {
-              color: textColor,
-              colorScheme: buttonColorScheme,
+              ...(textColor && { color: textColor }),
+              ...(buttonColorScheme && { colorScheme: buttonColorScheme }),
             })}
           />
           <Portal>
