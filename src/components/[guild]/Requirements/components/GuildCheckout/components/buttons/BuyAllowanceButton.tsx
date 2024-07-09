@@ -83,8 +83,8 @@ const BuyAllowanceButton = (): JSX.Element => {
           isVaultLoading || isAllowanceLoading
             ? "Checking allowance"
             : isAllowing
-            ? "Allowing"
-            : "Check your wallet"
+              ? "Allowing"
+              : "Check your wallet"
         }
         onClick={onClick}
         w="full"

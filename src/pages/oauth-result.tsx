@@ -64,8 +64,8 @@ const OAuth: NextPage<OAuthResultParams> = (query) => {
         {query.status === "success"
           ? `${rewards[query.platform]?.name} successfully conneted!`
           : query.platform
-          ? `${rewards[query.platform]?.name} connection failed`
-          : "Connection unsuccessful"}
+            ? `${rewards[query.platform]?.name} connection failed`
+            : "Connection unsuccessful"}
       </Heading>
       <Text>
         {query.status === "success"

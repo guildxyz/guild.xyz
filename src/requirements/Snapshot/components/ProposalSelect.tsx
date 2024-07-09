@@ -64,8 +64,8 @@ const ProposalSelect = ({ baseFieldPath, onChange }: Props): JSX.Element => {
                 !spaceId && debouncedSearch?.length < 3
                   ? "Start typing..."
                   : isProposalsLoading
-                  ? "Loading"
-                  : "No results"
+                    ? "Loading"
+                    : "No results"
               }
             />
           ),

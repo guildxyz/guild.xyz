@@ -90,7 +90,7 @@ const UniswapForm = ({
   const setTokensAndFee = ([t0, t1, fee]: [
     `0x${string}`,
     `0x${string}`,
-    number
+    number,
   ]) => {
     setValue(`${baseFieldPath}.data.token0`, t0, { shouldDirty: true })
     setValue(`${baseFieldPath}.data.token1`, t1, { shouldDirty: true })

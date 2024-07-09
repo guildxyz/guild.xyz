@@ -46,9 +46,9 @@ const BuyTotal = (): JSX.Element => {
           formatUnits(fee, CHAIN_CONFIG[requirementChain].nativeCurrency.decimals)
         )
       : tokenData?.decimals
-      ? Number(formatUnits(fee, tokenData.decimals)) +
-        (isNativeCurrency ? estimatedGasInFloat ?? 0 : 0)
-      : 0
+        ? Number(formatUnits(fee, tokenData.decimals)) +
+          (isNativeCurrency ? estimatedGasInFloat ?? 0 : 0)
+        : 0
     : 0
 
   const isTooSmallPrice = priceInSellToken < 0.001

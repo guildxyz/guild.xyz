@@ -147,8 +147,8 @@ const AddRequirement = ({
                 {selectedType
                   ? `Add ${REQUIREMENTS[selectedType]?.name} requirement`
                   : providerTypesOnly
-                  ? "Add provider requirement"
-                  : "Add requirement"}
+                    ? "Add provider requirement"
+                    : "Add requirement"}
               </Text>
             </HStack>
           </ModalHeader>

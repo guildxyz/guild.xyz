@@ -74,8 +74,8 @@ const TokenInfo = ({
       tokenAddress === NULL_ADDRESS && coinBalanceData?.value
         ? formatUnits(coinBalanceData.value, coinBalanceData.decimals)
         : tokenBalanceData?.value
-        ? formatUnits(tokenBalanceData.value, tokenBalanceData.decimals)
-        : 0
+          ? formatUnits(tokenBalanceData.value, tokenBalanceData.decimals)
+          : 0
     ).toFixed(3)
   )
 
@@ -119,12 +119,12 @@ const TokenInfo = ({
               {isTokenBalanceError
                 ? "Couldn't fetch token data"
                 : error
-                ? `[?] ${symbol}`
-                : `${
-                    isTooSmallRequiredAmount
-                      ? "< 0.001"
-                      : Number(requiredAmount?.toFixed(3))
-                  } ${symbol}`}
+                  ? `[?] ${symbol}`
+                  : `${
+                      isTooSmallRequiredAmount
+                        ? "< 0.001"
+                        : Number(requiredAmount?.toFixed(3))
+                    } ${symbol}`}
               <Text as="span" colorScheme="gray">
                 {` (${CHAIN_CONFIG[Chains[chainId]].name})`}
               </Text>

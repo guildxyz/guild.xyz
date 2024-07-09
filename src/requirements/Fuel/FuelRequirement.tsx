@@ -47,8 +47,8 @@ const FuelRequirement = (props: RequirementProps) => {
                   data?.maxAmount
                     ? `${data.minAmount} - ${data.maxAmount}`
                     : data?.minAmount > 0
-                    ? `at least ${data?.minAmount}`
-                    : "any amount of"
+                      ? `at least ${data?.minAmount}`
+                      : "any amount of"
                 } `}
                 {address === NULL_FUEL_ADDRESS ? (
                   "ETH"
@@ -68,12 +68,12 @@ const FuelRequirement = (props: RequirementProps) => {
                   !!data.id ? ` ${data.id}` : ""
                 } transaction${data.minAmount > 1 ? "s" : ""}`
               : typeof data.maxAmount === "number" && !data.minAmount
-              ? `Have at most ${data.maxAmount}${
-                  !!data.id ? ` ${data.id}` : ""
-                } transaction${data.minAmount > 1 ? "s" : ""}`
-              : `Have ${data.minAmount} - ${data.maxAmount}${
-                  !!data.id ? ` ${data.id}` : ""
-                } transaction${data.minAmount > 1 ? "s" : ""}`
+                ? `Have at most ${data.maxAmount}${
+                    !!data.id ? ` ${data.id}` : ""
+                  } transaction${data.minAmount > 1 ? "s" : ""}`
+                : `Have ${data.minAmount} - ${data.maxAmount}${
+                    !!data.id ? ` ${data.id}` : ""
+                  } transaction${data.minAmount > 1 ? "s" : ""}`
         }
       })()}
     </Requirement>

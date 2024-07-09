@@ -173,8 +173,8 @@ export default function AllowlistFormInputs({
               {uploadFileToGcs.response
                 ? "File uploaded"
                 : isDragActive
-                ? "Drop the file here"
-                : "Choose .csv"}
+                  ? "Drop the file here"
+                  : "Choose .csv"}
             </Text>
           </Button>
         </Tooltip>

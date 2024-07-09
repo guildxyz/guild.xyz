@@ -113,8 +113,8 @@ const HiddenRequirementAccessIndicator = ({ roleId }: Props) => {
     role.logic === "AND"
       ? count.accessed === hiddenReqsAccessData.length
       : role.logic === "ANY_OF"
-      ? count.accessed >= role.anyOfNum
-      : count.accessed > 0
+        ? count.accessed >= role.anyOfNum
+        : count.accessed > 0
   )
     return (
       <RequirementAccessIndicatorUI

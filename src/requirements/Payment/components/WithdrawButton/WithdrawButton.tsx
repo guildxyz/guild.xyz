@@ -41,8 +41,8 @@ const WithdrawButton = (): JSX.Element => {
     balance === BigInt(0)
       ? "Withdrawable amount is 0"
       : owner && owner !== address
-      ? `Only the requirement's original creator can withdraw (${shortenHex(owner)})`
-      : isOnVaultsChain && error
+        ? `Only the requirement's original creator can withdraw (${shortenHex(owner)})`
+        : isOnVaultsChain && error
 
   return (
     <Tooltip
@@ -72,14 +72,14 @@ const WithdrawButton = (): JSX.Element => {
         {isLoading
           ? "Withdrawing"
           : isDisabledLabel || !formattedWithdrawableAmount
-          ? "Withdraw"
-          : isOnVaultsChain
-          ? `Withdraw ${
-              formattedWithdrawableAmount < 0.001
-                ? "< 0.001"
-                : formattedWithdrawableAmount.toFixed(3)
-            } ${symbol}`
-          : `Switch to ${CHAIN_CONFIG[chain].name} to withdraw`}
+            ? "Withdraw"
+            : isOnVaultsChain
+              ? `Withdraw ${
+                  formattedWithdrawableAmount < 0.001
+                    ? "< 0.001"
+                    : formattedWithdrawableAmount.toFixed(3)
+                } ${symbol}`
+              : `Switch to ${CHAIN_CONFIG[chain].name} to withdraw`}
       </Button>
     </Tooltip>
   )

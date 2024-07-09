@@ -110,10 +110,10 @@ const CustomPostHogProvider = ({
             typeof options?.error?.message === "string"
               ? options.error.message
               : typeof options?.error === "string"
-              ? options.error
-              : typeof options?.errorMessage === "string"
-              ? options.errorMessage
-              : undefined
+                ? options.error
+                : typeof options?.errorMessage === "string"
+                  ? options.errorMessage
+                  : undefined
 
           if (
             /**

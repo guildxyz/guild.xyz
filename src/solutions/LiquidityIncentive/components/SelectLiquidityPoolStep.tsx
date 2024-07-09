@@ -59,7 +59,7 @@ const SelectLiquidityPoolStep = ({ onContinue }: { onContinue: () => void }) => 
   const setTokensAndFee = ([t0, t1, fee]: [
     `0x${string}`,
     `0x${string}`,
-    number
+    number,
   ]) => {
     setValue(`pool.data.token0`, t0, { shouldDirty: true })
     setValue(`pool.data.token1`, t1, { shouldDirty: true })

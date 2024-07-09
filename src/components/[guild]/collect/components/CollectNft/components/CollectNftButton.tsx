@@ -77,8 +77,8 @@ const CollectNftButton = ({
   const loadingText = isNftBalanceLoading
     ? "Checking your balance"
     : isMinting
-    ? mintLoadingText
-    : "Checking eligibility"
+      ? mintLoadingText
+      : "Checking eligibility"
 
   const isDisabled =
     !isConnected || shouldSwitchNetwork || alreadyCollected || !isSufficientBalance
@@ -111,10 +111,10 @@ const CollectNftButton = ({
       {alreadyCollected
         ? "Already collected"
         : typeof isSufficientBalance === "boolean" && !isSufficientBalance
-        ? "Insufficient balance"
-        : !hasRoleAccess
-        ? "Check access & collect"
-        : label}
+          ? "Insufficient balance"
+          : !hasRoleAccess
+            ? "Check access & collect"
+            : label}
     </Button>
   )
 }

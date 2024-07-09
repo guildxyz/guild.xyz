@@ -26,128 +26,126 @@ const handler = async (req, _) => {
     ])
 
     return new ImageResponse(
-      (
+      <div
+        style={{
+          display: "flex",
+          position: "relative",
+          backgroundColor: "#27272a",
+          width: "800px",
+          height: "450px",
+          fontFamily: "Inter var, Inter, sans-serif",
+          overflow: "hidden",
+        }}
+      >
         <div
           style={{
             display: "flex",
+            flexWrap: "wrap",
+            position: "absolute",
+            top: 0,
+            right: "-64px",
+            paddingTop: "20px",
+            width: "400px",
+            transform: "scale(1.5)",
+            transformOrigin: "top",
+          }}
+        >
+          {guilds?.slice(0, 8).map((guild) => (
+            <GuildCard key={guild.urlName} guild={guild} baseUrl={baseUrl} />
+          ))}
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            position: "absolute",
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            backgroundColor: "transparent",
+            backgroundImage:
+              "linear-gradient(to right, rgba(39, 39, 42, 1) 0%, rgba(39, 39, 42, 1) 45%, rgba(39, 39, 42, 0) 65%, rgba(39, 39, 42, 0))",
+          }}
+        />
+
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
             position: "relative",
-            backgroundColor: "#27272a",
-            width: "800px",
-            height: "450px",
-            fontFamily: "Inter var, Inter, sans-serif",
-            overflow: "hidden",
+            paddingTop: "56px",
+            paddingLeft: "56px",
+            width: "400px",
+            height: "386px",
           }}
         >
           <div
             style={{
               display: "flex",
-              flexWrap: "wrap",
-              position: "absolute",
-              top: 0,
-              right: "-64px",
-              paddingTop: "20px",
-              width: "400px",
-              transform: "scale(1.5)",
-              transformOrigin: "top",
+              alignItems: "center",
+              marginBottom: "24px",
+              width: "100%",
             }}
           >
-            {guilds?.slice(0, 8).map((guild) => (
-              <GuildCard key={guild.urlName} guild={guild} baseUrl={baseUrl} />
-            ))}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              style={{
+                width: "40px",
+                height: "40px",
+                marginTop: "4px",
+                marginRight: "16px",
+              }}
+              src={`${baseUrl}/guildLogos/logo.svg`}
+              alt="Guild.xyz"
+            />
+            <h1
+              style={{
+                fontFamily: "Dystopian, sans-serif",
+                fontSize: "48px",
+                color: "white",
+              }}
+            >
+              Guild
+            </h1>
           </div>
 
           <div
             style={{
-              display: "flex",
-              position: "absolute",
-              top: 0,
-              bottom: 0,
-              left: 0,
-              right: 0,
-              backgroundColor: "transparent",
-              backgroundImage:
-                "linear-gradient(to right, rgba(39, 39, 42, 1) 0%, rgba(39, 39, 42, 1) 45%, rgba(39, 39, 42, 0) 65%, rgba(39, 39, 42, 0))",
-            }}
-          />
-
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              position: "relative",
-              paddingTop: "56px",
-              paddingLeft: "56px",
-              width: "400px",
-              height: "386px",
+              marginTop: "auto",
+              fontFamily: "Dystopian, sans-serif",
+              fontSize: "24px",
+              fontWeight: "bold",
+              color: "white",
+              lineHeight: 1.2,
             }}
           >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                marginBottom: "24px",
-                width: "100%",
-              }}
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                style={{
-                  width: "40px",
-                  height: "40px",
-                  marginTop: "4px",
-                  marginRight: "16px",
-                }}
-                src={`${baseUrl}/guildLogos/logo.svg`}
-                alt="Guild.xyz"
-              />
-              <h1
-                style={{
-                  fontFamily: "Dystopian, sans-serif",
-                  fontSize: "48px",
-                  color: "white",
-                }}
-              >
-                Guild
-              </h1>
-            </div>
-
-            <div
-              style={{
-                marginTop: "auto",
-                fontFamily: "Dystopian, sans-serif",
-                fontSize: "24px",
-                fontWeight: "bold",
-                color: "white",
-                lineHeight: 1.2,
-              }}
-            >
-              Manage roles
-            </div>
-            <div
-              style={{
-                fontFamily: "Dystopian, sans-serif",
-                fontSize: "24px",
-                fontWeight: "bold",
-                color: "white",
-                lineHeight: 1.2,
-              }}
-            >
-              in your community
-            </div>
-            <div
-              style={{
-                fontFamily: "Dystopian, sans-serif",
-                fontSize: "24px",
-                fontWeight: "bold",
-                color: "white",
-                lineHeight: 1.2,
-              }}
-            >
-              based on tokens &amp; NFTs
-            </div>
+            Manage roles
+          </div>
+          <div
+            style={{
+              fontFamily: "Dystopian, sans-serif",
+              fontSize: "24px",
+              fontWeight: "bold",
+              color: "white",
+              lineHeight: 1.2,
+            }}
+          >
+            in your community
+          </div>
+          <div
+            style={{
+              fontFamily: "Dystopian, sans-serif",
+              fontSize: "24px",
+              fontWeight: "bold",
+              color: "white",
+              lineHeight: 1.2,
+            }}
+          >
+            based on tokens &amp; NFTs
           </div>
         </div>
-      ),
+      </div>,
       {
         width: 800,
         height: 450,

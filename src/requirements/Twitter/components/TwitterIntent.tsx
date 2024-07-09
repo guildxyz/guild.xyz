@@ -74,8 +74,8 @@ const TwitterIntent = ({
       ? isTwitterConnected && !hasAccess && !isIOS
         ? `${TWITTER_INTENT_BASE_URL}/${action}?${intentQueryParam[action]}=${id}`
         : requirementType === "TWITTER_FOLLOW_V2"
-        ? `https://x.com/${id}`
-        : `https://x.com/twitter/status/${id}`
+          ? `https://x.com/${id}`
+          : `https://x.com/twitter/status/${id}`
       : undefined
 
   const completeAction = (signedValidation: SignedValidation) =>

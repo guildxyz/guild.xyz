@@ -76,8 +76,8 @@ const TokenRewardCard = () => {
               {alreadyClaimed === 0
                 ? ``
                 : claimableAmount > 0
-                ? `Already claimed: ${alreadyClaimed} ${token.data.symbol}`
-                : `You have claimed all of your ${token.data.symbol} rewards`}
+                  ? `Already claimed: ${alreadyClaimed} ${token.data.symbol}`
+                  : `You have claimed all of your ${token.data.symbol} rewards`}
             </Text>
             {/* TODO: This will not work if multiple rewards are set */}
             <AvailabilityTags

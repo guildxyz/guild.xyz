@@ -54,10 +54,10 @@ const MintFuelGuildPinButton = () => {
       {type === "EVM"
         ? "Connect Fuel address"
         : alreadyMinted
-        ? "Already minted"
-        : !isSufficientBalance
-        ? "Insufficient balance"
-        : "Mint NFT"}
+          ? "Already minted"
+          : !isSufficientBalance
+            ? "Insufficient balance"
+            : "Mint NFT"}
     </Button>
   )
 }

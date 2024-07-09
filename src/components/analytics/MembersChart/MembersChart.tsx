@@ -179,8 +179,8 @@ const MembersChart = () => {
                   index === 0
                     ? "start"
                     : index === ticks[ticks.length - 1].index
-                    ? "end"
-                    : "middle",
+                      ? "end"
+                      : "middle",
               })}
               numTicks={numberOfDateMarkers}
             />

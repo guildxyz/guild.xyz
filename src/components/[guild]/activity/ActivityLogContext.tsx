@@ -161,12 +161,12 @@ const ActivityLogProvider = ({
       actionGroup === ActivityLogActionGroup.AdminAction
         ? ADMIN_ACTIONS
         : actionGroup === ActivityLogActionGroup.UserAction
-        ? USER_ACTIONS
-        : /**
-           * Adding all actions to the query by default in order to make sure we don't fetch
-           * unsupported ones (e.g. the "click join on web" action)
-           */
-          [...USER_ACTIONS, ...ADMIN_ACTIONS]
+          ? USER_ACTIONS
+          : /**
+             * Adding all actions to the query by default in order to make sure we don't fetch
+             * unsupported ones (e.g. the "click join on web" action)
+             */
+            [...USER_ACTIONS, ...ADMIN_ACTIONS]
 
     actions.forEach((action) => {
       searchParams.append("action", action.toString())
@@ -196,8 +196,8 @@ const ActivityLogProvider = ({
   const activityLogType: ActivityLogType = isSuperadminActivityLog
     ? "all"
     : !!userId
-    ? "user"
-    : "guild"
+      ? "user"
+      : "guild"
 
   const value = {
     ...ogSWRInfiniteResponse,

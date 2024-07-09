@@ -53,8 +53,8 @@ const usePinata = <TFieldValues, TContext>({
         typeof error === "string"
           ? error
           : error instanceof Error
-          ? error.message
-          : undefined
+            ? error.message
+            : undefined
 
       toast({
         status: "error",

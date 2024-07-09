@@ -8,7 +8,7 @@ import { CHAIN_CONFIG, Chain, Chains } from "wagmiConfig/chains"
 const convertGasFeeToUSD = async ([_, chainId, estimatedGas]: [
   string,
   number,
-  bigint
+  bigint,
 ]) => {
   const nativeCurrencyPriceInUSD = await fetchNativeCurrencyPriceInUSD(
     Chains[chainId] as Chain

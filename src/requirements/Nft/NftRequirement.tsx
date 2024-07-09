@@ -36,9 +36,9 @@ const getNounsRequirementType = (trait: Trait) =>
   !trait
     ? undefined
     : trait.trait_type === "background"
-    ? NOUNS_BACKGROUNDS?.[trait.value]
-    : ImageData.images?.[imageDataTypeMap[trait.trait_type]]?.[+trait.value]
-        ?.filename
+      ? NOUNS_BACKGROUNDS?.[trait.value]
+      : ImageData.images?.[imageDataTypeMap[trait.trait_type]]?.[+trait.value]
+          ?.filename
 
 const NftRequirement = (props: RequirementProps) => {
   const requirement = useRequirementContext()
@@ -124,12 +124,12 @@ const NftRequirement = (props: RequirementProps) => {
           ? "a(n) "
           : "the "
         : requirement.data?.ids?.length > 0
-        ? "a(n) "
-        : requirement.data?.maxAmount > 0
-        ? `${requirement.data?.minAmount}-${requirement.data?.maxAmount} `
-        : requirement.data?.minAmount > 1
-        ? `at least ${requirement.data?.minAmount} `
-        : "a(n) "}
+          ? "a(n) "
+          : requirement.data?.maxAmount > 0
+            ? `${requirement.data?.minAmount}-${requirement.data?.maxAmount} `
+            : requirement.data?.minAmount > 1
+              ? `at least ${requirement.data?.minAmount} `
+              : "a(n) "}
 
       {nftName ||
         (!requirement.name || requirement.name === "-"
@@ -158,12 +158,12 @@ const NftRequirement = (props: RequirementProps) => {
                       index < requirement.data.attributes.length - 1 ? ", " : ""
                     }`
                   : trait.minValue && trait.maxValue
-                  ? `${trait.minValue}-${trait.maxValue} ${trait.trait_type}`
-                  : trait.minValue
-                  ? `at least ${trait.minValue} ${trait.trait_type}`
-                  : trait.maxValue
-                  ? `at most ${trait.maxValue} ${trait.trait_type}`
-                  : ""}
+                    ? `${trait.minValue}-${trait.maxValue} ${trait.trait_type}`
+                    : trait.minValue
+                      ? `at least ${trait.minValue} ${trait.trait_type}`
+                      : trait.maxValue
+                        ? `at most ${trait.maxValue} ${trait.trait_type}`
+                        : ""}
               </Fragment>
             )
           })}

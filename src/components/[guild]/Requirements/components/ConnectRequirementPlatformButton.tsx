@@ -40,8 +40,8 @@ const RequirementConnectButton = (props: ButtonProps) => {
     platform === "EMAIL"
       ? !emails?.pending && emails?.emailAddress
       : platform === "FARCASTER"
-      ? !farcasterProfiles || !!farcasterProfiles?.[0]
-      : !isReconnection && (!platformUsers || platformFromDb)
+        ? !farcasterProfiles || !!farcasterProfiles?.[0]
+        : !isReconnection && (!platformUsers || platformFromDb)
   )
     return null
 
@@ -58,8 +58,8 @@ const RequirementConnectButton = (props: ButtonProps) => {
     platform === "EMAIL"
       ? ConnectEmailButton
       : platform === "FARCASTER"
-      ? ConnectFarcasterButton
-      : ConnectRequirementPlatformButton
+        ? ConnectFarcasterButton
+        : ConnectRequirementPlatformButton
 
   return (
     <ButtonComponent

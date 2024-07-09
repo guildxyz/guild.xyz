@@ -84,8 +84,8 @@ const NftForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element =>
     field?.data?.attributes?.length
       ? "ATTRIBUTE"
       : field?.data?.ids?.length > 0
-      ? "CUSTOM_ID"
-      : "AMOUNT"
+        ? "CUSTOM_ID"
+        : "AMOUNT"
   )
 
   const {

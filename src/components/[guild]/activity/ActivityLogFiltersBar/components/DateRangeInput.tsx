@@ -83,13 +83,13 @@ const DateRangeInput = ({ ...chakraStyles }) => {
     beforeInputValue && afterInputValue
       ? `${afterInputValue} - ${beforeInputValue}`
       : beforeInputValue
-      ? `Before ${beforeInputValue}`
-      : afterInputValue
-      ? `After ${afterInputValue}`
-      : // TODO: if CRM is enabled, we should display "Last 30 days"
-      activityLogType === "user"
-      ? "Last 30 days"
-      : "Last 24 hours"
+        ? `Before ${beforeInputValue}`
+        : afterInputValue
+          ? `After ${afterInputValue}`
+          : // TODO: if CRM is enabled, we should display "Last 30 days"
+            activityLogType === "user"
+            ? "Last 30 days"
+            : "Last 24 hours"
 
   return (
     <Popover placement="bottom-end">

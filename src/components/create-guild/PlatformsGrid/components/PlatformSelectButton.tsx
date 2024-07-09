@@ -91,10 +91,10 @@ const PlatformSelectButton = ({
           !!disabledText
             ? undefined
             : !isWeb3Connected
-            ? () => setIsWalletSelectorModalOpen(true)
-            : isPlatformConnected
-            ? selectPlatform
-            : onConnect
+              ? () => setIsWalletSelectorModalOpen(true)
+              : isPlatformConnected
+                ? selectPlatform
+                : onConnect
         }
         h="auto"
         {...rest}

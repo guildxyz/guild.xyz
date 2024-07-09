@@ -186,8 +186,8 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
                 joinProgress?.state === "FINISHED"
                   ? "Finalizing results"
                   : !!joinProgress
-                  ? "See status above"
-                  : "Checking access"
+                    ? "See status above"
+                    : "Checking access"
               }
               isDisabled={!isWeb3Connected}
             >
