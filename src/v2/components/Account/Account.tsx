@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils"
 import { SignIn } from "@phosphor-icons/react/dist/ssr"
 import clsx from "clsx"
 import useUser from "components/[guild]/hooks/useUser"
+import useResolveAddress from "hooks/useResolveAddress"
 import { useSetAtom } from "jotai"
 import shortenHex from "utils/shortenHex"
 import { GuildAvatar } from "../GuildAvatar"
@@ -17,9 +18,7 @@ export const Account = () => {
   const setIsAccountModalOpen = useSetAtom(accountModalAtom)
   const setIsWalletSelectorModalOpen = useSetAtom(walletSelectorModalAtom)
 
-  // const domainName = useResolveAddress(address)
-  // TODO
-  const domainName = ""
+  const domainName = useResolveAddress(address)
   const { addresses } = useUser()
   const linkedAddressesCount = (addresses?.length ?? 1) - 1
 

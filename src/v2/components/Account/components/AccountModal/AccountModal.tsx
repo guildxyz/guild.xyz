@@ -28,6 +28,7 @@ import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
 import NetworkModal from "../NetworkModal"
 import { AccountConnections } from "./components/AccountConnections"
 import { UsersGuildPins } from "./components/UsersGuildPins"
+import useResolveAddress from "hooks/useResolveAddress"
 
 const AccountModal = () => {
   const { address, disconnect, type } = useWeb3ConnectionManager()
@@ -39,8 +40,7 @@ const AccountModal = () => {
   const { deleteKeys } = useUserPublic()
 
   const { address: evmAddress, chainId } = useAccount()
-  const domain = "" // TODO
-  // const domain = useResolveAddress(evmAddress)
+  const domain = useResolveAddress(evmAddress)
 
   const {
     isOpen: isNetworkModalOpen,
