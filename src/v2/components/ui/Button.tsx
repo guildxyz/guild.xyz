@@ -4,7 +4,6 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 import { CircleNotch } from "@phosphor-icons/react/dist/ssr"
-import clsx from "clsx"
 
 const buttonVariants = cva(
   "font-medium inline-flex items-center justify-center whitespace-nowrap rounded-xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 rounded-xl text-base min-w-max",
@@ -78,12 +77,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {isLoading ? (
           <CircleNotch
             weight="bold"
-            className={cn(
-              "animate-spin",
-              clsx({
-                "mr-1.5": !!loadingText,
-              })
-            )}
+            className={cn("animate-spin", {
+              "mr-1.5": !!loadingText,
+            })}
           />
         ) : null}
         {isLoading ? loadingText : children}

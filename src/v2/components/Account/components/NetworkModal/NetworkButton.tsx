@@ -6,7 +6,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/Tooltip"
 import { cn } from "@/lib/utils"
-import clsx from "clsx"
 import { useChainId } from "wagmi"
 import { CHAIN_CONFIG, Chain, Chains } from "wagmiConfig/chains"
 
@@ -30,12 +29,9 @@ const NetworkButton = ({ chain, requestNetworkChange }: Props) => {
             onClick={requestNetworkChange}
             size="xl"
             variant="secondary"
-            className={cn(
-              "w-full justify-start gap-2",
-              clsx({
-                "border-2": isCurrentChain,
-              })
-            )}
+            className={cn("w-full justify-start gap-2", {
+              "border-2": isCurrentChain,
+            })}
           >
             <img
               src={CHAIN_CONFIG[chain].iconUrl}
