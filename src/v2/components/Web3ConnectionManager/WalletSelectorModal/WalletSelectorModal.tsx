@@ -1,3 +1,10 @@
+import { Error as ErrorComponent } from "@/components/Error"
+import { usePostHogContext } from "@/components/Providers/PostHogProvider"
+import {
+  addressLinkParamsAtom,
+  walletLinkHelperModalAtom,
+} from "@/components/Providers/atoms"
+import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { Button } from "@/components/ui/Button"
 import {
   Dialog,
@@ -7,18 +14,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/Dialog"
+import { useErrorToast } from "@/components/ui/hooks/useErrorToast"
 import { usePrevious } from "@/hooks/usePrevious"
 import { useUserPublic } from "@/hooks/useUserPublic"
-import useSetKeyPair from "hooks/useSetKeyPair"
-// import useShowErrorToast from "hooks/useShowErrorToast"
-import { usePostHogContext } from "@/components/Providers/PostHogProvider"
-import {
-  addressLinkParamsAtom,
-  walletLinkHelperModalAtom,
-} from "@/components/Providers/atoms"
-import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
-import { useErrorToast } from "@/components/ui/hooks/useErrorToast"
 import { ArrowSquareOut } from "@phosphor-icons/react/dist/ssr"
+import useSetKeyPair from "hooks/useSetKeyPair"
 import { useAtom, useSetAtom } from "jotai"
 import Link from "next/link"
 import { useEffect } from "react"
@@ -29,6 +29,7 @@ import ConnectorButton from "./components/ConnectorButton"
 import FuelConnectorButtons from "./components/FuelConnectorButtons"
 import useIsWalletConnectModalActive from "./hooks/useIsWalletConnectModalActive"
 import useLinkAddress from "./hooks/useLinkAddress"
+import processConnectionError from "./utils/processConnectionError"
 
 type Props = {
   isOpen: boolean
@@ -141,8 +142,7 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
           </DialogTitle>
         </DialogHeader>
 
-        {/* TODO: generate & customize an Alert component & use it in the Error component */}
-        {/* <ErrorComponent
+        <ErrorComponent
           {...(set.error || linkAddress.error
             ? {
                 error: set.error ?? linkAddress.error,
@@ -167,7 +167,7 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
                 },
               }
             : { error, processError: processConnectionError })}
-        /> */}
+        />
 
         {shouldShowVerify && (
           <p className="mb-6">

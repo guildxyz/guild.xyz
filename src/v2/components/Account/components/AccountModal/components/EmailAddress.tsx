@@ -1,6 +1,4 @@
-import useUser from "components/[guild]/hooks/useUser"
-import { useConnectEmail } from "components/[guild]/JoinModal/hooks/useConnectPlatform"
-// import { Error } from "components/common/Error"
+import { Error } from "@/components/Error"
 import { Button, ButtonProps } from "@/components/ui/Button"
 import { Collapse } from "@/components/ui/Collapse"
 import {
@@ -30,6 +28,8 @@ import { useDisclosure } from "@/hooks/useDisclosure"
 import { cn } from "@/lib/utils"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { PencilSimple, Warning } from "@phosphor-icons/react/dist/ssr"
+import useUser from "components/[guild]/hooks/useUser"
+import { useConnectEmail } from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useEffect, useState } from "react"
@@ -38,6 +38,7 @@ import { emailData } from "rewards/Email/data"
 import fetcher from "utils/fetcher"
 import { z } from "zod"
 import { useDisconnectEmail } from "../hooks/useDisconnect"
+import processEmailError from "../utils/processEmailError"
 import { DisconnectAccountButton } from "./DisconnectAccountButton"
 import { SocialAccountUI } from "./SocialAccount"
 
@@ -181,11 +182,10 @@ const ConnectEmailButton = ({
             </DialogHeader>
             <DialogCloseButton onClick={handleOnClose} />
 
-            {/* TODO: Error component */}
-            {/* <Error
-                error={verificationRequest.error ?? connect.error}
-                processError={processEmailError}
-              /> */}
+            <Error
+              error={verificationRequest.error ?? connect.error}
+              processError={processEmailError}
+            />
 
             <Collapse open={!shouldShowPinEntry} className="p-[2px]">
               <FormField

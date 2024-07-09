@@ -1,4 +1,4 @@
-import { ErrorInfo } from "components/common/Error"
+import { ErrorInfo } from "@/components/Error"
 
 const EMAIL_RESTRICTION = "You will be able to perform this action at: "
 

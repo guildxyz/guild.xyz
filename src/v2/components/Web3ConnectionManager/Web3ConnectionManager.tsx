@@ -14,7 +14,6 @@ export function Web3ConnectionManagerBase() {
   // TODO
   // useConnectFromLocalStorage()
 
-  // TODO
   return (
     <>
       <WalletSelectorModal

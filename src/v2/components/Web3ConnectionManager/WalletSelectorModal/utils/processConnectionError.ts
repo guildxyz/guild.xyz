@@ -1,5 +1,5 @@
+import { ErrorInfo } from "@/components/Error"
 import Bugsnag from "@bugsnag/js"
-import { ErrorInfo } from "components/common/Error"
 import { WalletError } from "types"
 
 const processConnectionError = (error: WalletError & Error): ErrorInfo => {
