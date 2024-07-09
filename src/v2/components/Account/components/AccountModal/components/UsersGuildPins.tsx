@@ -32,7 +32,7 @@ const UsersGuildPins = () => {
         }}
       >
         <div className="flex min-w-full px-4">
-          {!isValidating ? (
+          {isValidating ? (
             [...Array(3)].map((_, i) => <GuildPinSkeleton key={i} />)
           ) : data?.length ? (
             data.map((pin) => (
