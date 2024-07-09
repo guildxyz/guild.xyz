@@ -1,117 +1,109 @@
-import { Link } from "@chakra-ui/next-js"
-import {
-  AlertDialogBody,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogOverlay,
-  Heading,
-  Icon,
-  ListItem,
-  Text,
-  UnorderedList,
-  chakra,
-} from "@chakra-ui/react"
 import { ArrowSquareOut } from "@phosphor-icons/react/dist/ssr"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
-import Button from "components/common/Button"
-import CopyableAddress from "components/common/CopyableAddress"
-import { Alert } from "components/common/Modal"
-import useToast from "hooks/useToast"
 import { useAtom } from "jotai"
-import { useRef } from "react"
 import rewards from "rewards"
 import capitalize from "utils/capitalize"
 import shortenHex from "utils/shortenHex"
+import { CopyableAddress } from "../CopyableAddress"
 import { platformMergeAlertAtom } from "../Providers/atoms"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "../ui/AlertDialog"
+import { useToast } from "../ui/hooks/useToast"
 import { useWeb3ConnectionManager } from "./hooks/useWeb3ConnectionManager"
 
 const PlatformMergeErrorAlert = () => {
   const { address } = useWeb3ConnectionManager()
-  const toast = useToast()
+  const { toast } = useToast()
   const [state, setState] = useAtom(platformMergeAlertAtom)
   const { addressOrDomain, platformName } = state || {}
-  const onClose = () => setState(false)
 
   const socialAccountName = rewards[platformName]?.name ?? "social"
   const { onConnect, isLoading } = useConnectPlatform(
     platformName ?? "DISCORD",
     () => {
       toast({
-        status: "success",
+        variant: "success",
         title: "Successful connect",
         description: `${capitalize(
           socialAccountName
         )} account successfully disconnected from old address, and connected to this one`,
       })
-      onClose()
+      setState(false)
     },
     undefined,
     undefined,
     true
   )
 
-  const cancelRef = useRef(null)
-
   return (
-    <Alert isOpen={!!state} onClose={onClose} leastDestructiveRef={cancelRef}>
-      <AlertDialogOverlay />
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          {capitalize(socialAccountName)} account already connected
-        </AlertDialogHeader>
-        <AlertDialogBody>
-          <Text>
-            This {socialAccountName} account is already connected to this address:{" "}
-            {addressOrDomain?.startsWith("0x") ? (
-              <CopyableAddress address={addressOrDomain} decimals={4} />
-            ) : (
-              <chakra.span fontWeight={"semibold"}>{addressOrDomain}</chakra.span>
-            )}
-          </Text>
-          <Heading mt="8" mb="3" size="sm">
-            You have two options to choose from:
-          </Heading>
-          <UnorderedList>
-            <ListItem mb="2">
-              <Text>
+    <>
+      <AlertDialog
+        open={!!state}
+        onOpenChange={(open) => {
+          if (!open) setState(false)
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{`${capitalize(socialAccountName)} account already connected`}</AlertDialogTitle>
+          </AlertDialogHeader>
+
+          <div className="flex flex-col gap-4">
+            <p>
+              This {socialAccountName} account is already connected to this address:{" "}
+              {addressOrDomain?.startsWith("0x") ? (
+                <CopyableAddress address={addressOrDomain} decimals={4} />
+              ) : (
+                <span className="font-semibold">{addressOrDomain}</span>
+              )}
+            </p>
+
+            <p className="font-bold">You have two options to choose from:</p>
+
+            <ul>
+              <li className="mb-2">
                 Switch to the address above and link your current address (
-                <chakra.span fontWeight={"semibold"}>
+                <span className="font-semibold">
                   {address ? shortenHex(address) : ""}
-                </chakra.span>
-                ) to it by following{" "}
-                <Link
-                  colorScheme="blue"
+                </span>
+                ) to it by following {/* TODO: blue link color */}
+                <a
                   target="_blank"
                   href={
                     "https://help.guild.xyz/en/articles/6947559-how-to-un-link-wallet-addresses"
                   }
                 >
                   this guide
-                  <Icon ml="1" as={ArrowSquareOut} />
-                </Link>
-              </Text>
-            </ListItem>
-            <ListItem>
-              <Text>
+                  <ArrowSquareOut className="ml-1 inline" weight="bold" />
+                </a>
+              </li>
+
+              <li>
                 Continue connecting the account to the current address (it'll
                 disconnect it from the above one, losing any accesses you had with
                 that)
-              </Text>
-            </ListItem>
-          </UnorderedList>
-        </AlertDialogBody>
-        <AlertDialogFooter display={"flex"} gap={2} mt="-4">
-          <Button ref={cancelRef} onClick={onClose} variant="outline">
-            Cancel
-          </Button>
-          <Button onClick={onConnect} isLoading={isLoading} colorScheme="red">
-            Connect anyway
-          </Button>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </Alert>
+              </li>
+            </ul>
+          </div>
+
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            {/* TODO: loading state */}
+            <AlertDialogAction /* isLoading={isLoading} */ onClick={onConnect}>
+              Connect anyway
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   )
 }
 
-export default PlatformMergeErrorAlert
+export { PlatformMergeErrorAlert }

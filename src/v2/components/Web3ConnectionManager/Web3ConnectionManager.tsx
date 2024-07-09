@@ -2,6 +2,7 @@ import useAutoReconnect from "@/hooks/useAutoReconnect"
 import { useAtom } from "jotai"
 import { walletSelectorModalAtom } from "../Providers/atoms"
 import { useTriggerWalletSelectorModal } from "./hooks/useTriggerWalletSelectorModal"
+import { PlatformMergeErrorAlert } from "./PlatformMergeErrorAlert"
 import WalletLinkHelperModal from "./WalletLinkHelperModal"
 import WalletSelectorModal from "./WalletSelectorModal"
 
@@ -22,8 +23,7 @@ export function Web3ConnectionManagerBase() {
         onClose={() => setIsWalletSelectorModalOpen(false)}
       />
       <WalletLinkHelperModal />
-      {/*
-      <PlatformMergeErrorAlert /> */}
+      <PlatformMergeErrorAlert />
     </>
   )
 }
