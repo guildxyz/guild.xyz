@@ -40,7 +40,7 @@ const CopyableAddress = ({
               })
             }
             variant="unstyled"
-            className={cn("h-max !px-0 !py-0", className)}
+            className={cn("h-max p-0", className)}
             {...props}
           >
             {domain || shortenHex(address, decimals)}
