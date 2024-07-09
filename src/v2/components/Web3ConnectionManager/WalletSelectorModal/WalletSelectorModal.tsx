@@ -26,6 +26,7 @@ import { useAccount, useConnect, type Connector } from "wagmi"
 import { COINBASE_INJECTED_WALLET_ID, COINBASE_WALLET_SDK_ID } from "wagmiConfig"
 import AccountButton from "./components/AccountButton"
 import ConnectorButton from "./components/ConnectorButton"
+import { ExportCWaaSLink } from "./components/ExportCWaaSLink"
 import FuelConnectorButtons from "./components/FuelConnectorButtons"
 import useIsWalletConnectModalActive from "./hooks/useIsWalletConnectModalActive"
 import useLinkAddress from "./hooks/useLinkAddress"
@@ -221,8 +222,7 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
                     error={error}
                   />
                 ))}
-              {/* TODO: migrate these components too */}
-              {/* <GoogleLoginButton />*/}
+              <ExportCWaaSLink />
               <FuelConnectorButtons key="fuel" />
             </div>
           </div>
