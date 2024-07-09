@@ -1,6 +1,6 @@
 import { Error } from "@/components/Error"
 import { Button, ButtonProps } from "@/components/ui/Button"
-import { Collapse } from "@/components/ui/Collapse"
+import { Collapsible, CollapsibleContent } from "@/components/ui/Collapsible"
 import {
   Dialog,
   DialogCloseButton,
@@ -187,70 +187,74 @@ const ConnectEmailButton = ({
               processError={processEmailError}
             />
 
-            <Collapse open={!shouldShowPinEntry} className="p-[2px]">
-              <FormField
-                control={control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email address</FormLabel>
-                    <FormControl>
-                      <Input {...field} placeholder="me@example.com" autoFocus />
-                    </FormControl>
-                    <FormErrorMessage />
-                  </FormItem>
-                )}
-              />
-            </Collapse>
-
-            <Collapse open={shouldShowPinEntry} className="p-[2px]">
-              <div className="flex w-full flex-col items-center gap-4">
-                <p className="text-center">
-                  {`Enter the code we've sent to ${email} `}
-                  <Button
-                    variant="secondary"
-                    className="relative top-0.5 size-5 rounded-full"
-                    size="icon"
-                    aria-label="Use different email address"
-                    onClick={differentEmail}
-                  >
-                    <PencilSimple weight="bold" />
-                  </Button>
-                </p>
-
+            <Collapsible open={!shouldShowPinEntry}>
+              <CollapsibleContent className="p-[2px]">
                 <FormField
                   control={control}
-                  name="code"
-                  render={({ field: { onChange, ...field } }) => (
+                  name="email"
+                  render={({ field }) => (
                     <FormItem>
+                      <FormLabel>Email address</FormLabel>
                       <FormControl>
-                        <InputOTP
-                          maxLength={PIN_LENGTH}
-                          {...field}
-                          onChange={(value) => {
-                            onChange(value)
-                            if (value.length === PIN_LENGTH) {
-                              connect.onSubmit({
-                                authData: { code: value },
-                                emailAddress: email,
-                              })
-                            }
-                          }}
-                          autoFocus
-                        >
-                          <InputOTPGroup>
-                            {[...Array(PIN_LENGTH)].map((_, i) => (
-                              <InputOTPSlot key={`input-otp-${i}`} index={i} />
-                            ))}
-                          </InputOTPGroup>
-                        </InputOTP>
+                        <Input {...field} placeholder="me@example.com" autoFocus />
                       </FormControl>
                       <FormErrorMessage />
                     </FormItem>
                   )}
                 />
-              </div>
-            </Collapse>
+              </CollapsibleContent>
+            </Collapsible>
+
+            <Collapsible open={shouldShowPinEntry}>
+              <CollapsibleContent className="p-[2px]">
+                <div className="flex w-full flex-col items-center gap-4">
+                  <p className="text-center">
+                    {`Enter the code we've sent to ${email} `}
+                    <Button
+                      variant="secondary"
+                      className="relative top-0.5 size-5 rounded-full"
+                      size="icon"
+                      aria-label="Use different email address"
+                      onClick={differentEmail}
+                    >
+                      <PencilSimple weight="bold" />
+                    </Button>
+                  </p>
+
+                  <FormField
+                    control={control}
+                    name="code"
+                    render={({ field: { onChange, ...field } }) => (
+                      <FormItem>
+                        <FormControl>
+                          <InputOTP
+                            maxLength={PIN_LENGTH}
+                            {...field}
+                            onChange={(value) => {
+                              onChange(value)
+                              if (value.length === PIN_LENGTH) {
+                                connect.onSubmit({
+                                  authData: { code: value },
+                                  emailAddress: email,
+                                })
+                              }
+                            }}
+                            autoFocus
+                          >
+                            <InputOTPGroup>
+                              {[...Array(PIN_LENGTH)].map((_, i) => (
+                                <InputOTPSlot key={`input-otp-${i}`} index={i} />
+                              ))}
+                            </InputOTPGroup>
+                          </InputOTP>
+                        </FormControl>
+                        <FormErrorMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </CollapsibleContent>
+            </Collapsible>
 
             <DialogFooter className="pt-2">
               {shouldShowPinEntry ? (

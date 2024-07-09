@@ -1,15 +1,7 @@
-import * as LabelPrimitive from "@radix-ui/react-label"
-import { Slot } from "@radix-ui/react-slot"
-import {
-  Controller,
-  ControllerProps,
-  FieldPath,
-  FieldValues,
-  useFormContext,
-} from "react-hook-form"
-
 import { Label } from "@/components/ui/Label"
 import { cn } from "@/lib/utils"
+import * as LabelPrimitive from "@radix-ui/react-label"
+import { Slot } from "@radix-ui/react-slot"
 import {
   ComponentPropsWithoutRef,
   createContext,
@@ -19,8 +11,15 @@ import {
   useContext,
   useId,
 } from "react"
+import {
+  Controller,
+  ControllerProps,
+  FieldPath,
+  FieldValues,
+  useFormContext,
+} from "react-hook-form"
 import { useDebounceValue } from "usehooks-ts"
-import { Collapse } from "./Collapse"
+import { Collapsible, CollapsibleContent } from "./Collapsible"
 
 type FormFieldContextValue<
   TFieldValues extends FieldValues = FieldValues,
@@ -144,20 +143,22 @@ const FormErrorMessage = forwardRef<
   const [debounceBody] = useDebounceValue(body, 200)
 
   return (
-    <Collapse open={!!error} animateOpacity>
-      <p
-        ref={ref}
-        id={formMessageId}
-        // TODO: not sure if it is a good idea to use "destructive-ghost-foreground" here? Should we add a completely new CSS variable instead?
-        className={cn(
-          "text-[0.8rem] font-medium text-destructive-ghost-foreground",
-          className
-        )}
-        {...props}
-      >
-        {body ?? debounceBody}
-      </p>
-    </Collapse>
+    <Collapsible open={!!error}>
+      <CollapsibleContent>
+        <p
+          ref={ref}
+          id={formMessageId}
+          // TODO: not sure if it is a good idea to use "destructive-ghost-foreground" here? Should we add a completely new CSS variable instead?
+          className={cn(
+            "text-[0.8rem] font-medium text-destructive-ghost-foreground",
+            className
+          )}
+          {...props}
+        >
+          {body ?? debounceBody}
+        </p>
+      </CollapsibleContent>
+    </Collapsible>
   )
 })
 FormErrorMessage.displayName = "FormErrorMessage"
