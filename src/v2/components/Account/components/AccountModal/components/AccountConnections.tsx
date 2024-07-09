@@ -60,7 +60,7 @@ const AccountConnections = () => {
 
       <AccountSectionTitle
         title="Linked addresses"
-        className="gap-3 pt-4"
+        className="gap-3"
         titleRightElement={
           addresses?.length > 1 ? (
             <div className="flex w-full items-center justify-between">

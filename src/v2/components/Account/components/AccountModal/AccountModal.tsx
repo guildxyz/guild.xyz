@@ -27,6 +27,7 @@ import { useAccount } from "wagmi"
 import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
 import NetworkModal from "../NetworkModal"
 import { AccountConnections } from "./components/AccountConnections"
+import { UsersGuildPins } from "./components/UsersGuildPins"
 
 const AccountModal = () => {
   const { address, disconnect, type } = useWeb3ConnectionManager()
@@ -141,8 +142,8 @@ const AccountModal = () => {
             </div>
 
             <AccountConnections />
-            {/* <hr className="my-4" /> */}
-            {/*TODO: <UsersGuildPins /> */}
+            <hr className="my-6" />
+            <UsersGuildPins />
           </>
         ) : (
           <p className="mb-6 text-2xl font-semibold">Not connected</p>
