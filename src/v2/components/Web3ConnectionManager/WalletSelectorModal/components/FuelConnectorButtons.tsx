@@ -1,6 +1,7 @@
 import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import { Button } from "@/components/ui/Button"
 import { useConnectors, useIsConnected } from "@fuels/react"
+import { useTheme } from "next-themes"
 import { useEffect, useState } from "react"
 import { connectorButtonBaseProps } from "./ConnectorButton"
 
@@ -8,12 +9,11 @@ const FuelConnectorButtons = () => {
   const { connectors } = useConnectors()
   const { isConnected } = useIsConnected()
 
-  // const fueletLogo = useColorModeValue(
-  //   "/walletLogos/fuelet-black.svg",
-  //   "/walletLogos/fuelet-white.svg"
-  // )
-  // TODO: color mode support
-  const fueletLogo = "/walletLogos/fuelet-black.svg"
+  const { resolvedTheme } = useTheme()
+  const fueletLogo =
+    resolvedTheme === "light"
+      ? "/walletLogos/fuelet-black.svg"
+      : "/walletLogos/fuelet-white.svg"
 
   const connectorIcons: Record<string, string> = {
     "Fuel Wallet": "/walletLogos/fuel.svg",

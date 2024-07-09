@@ -1,4 +1,5 @@
 import { useIsConnected } from "@fuels/react"
+import { useTheme } from "next-themes"
 import { useAccount, type Connector } from "wagmi"
 import { COINBASE_WALLET_SDK_ID } from "wagmiConfig"
 
@@ -33,11 +34,9 @@ const useConnectorNameAndIcon = (connectorParam?: Connector) => {
 
   const connector = connectorParam ?? evmConnectorFromHook
 
-  // TODO: find a solution for this
-  const colorMode = "light"
-
+  const { resolvedTheme } = useTheme()
   const connectorIcon =
-    CUSTOM_CONNECTOR_ICONS[connector?.id]?.[colorMode] ??
+    CUSTOM_CONNECTOR_ICONS[connector?.id]?.[resolvedTheme] ??
     connector?.icon ??
     (isFuelConnected ? "/walletLogos/fuel.svg" : null)
 
