@@ -42,7 +42,7 @@ const CreateSnapshotModal = ({ onClose, isOpen, onSuccess }: Props) => {
 
   const methods = useForm()
 
-  const { control, setValue } = methods
+  const { control } = methods
 
   const { field: selectedExistingId } = useController({
     control,

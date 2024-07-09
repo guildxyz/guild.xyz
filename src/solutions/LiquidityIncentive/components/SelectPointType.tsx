@@ -24,7 +24,6 @@ const SelectPointType = () => {
     control,
     register,
     formState: { errors },
-    setValue,
   } = useFormContext<LiquidityIncentiveForm>()
 
   const existingPointsRewards = guildPlatforms
