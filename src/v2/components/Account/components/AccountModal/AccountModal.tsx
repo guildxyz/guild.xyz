@@ -108,7 +108,7 @@ const AccountModal = () => {
                           className="size-4"
                         />
                       ) : (
-                        <LinkBreak />
+                        <LinkBreak weight="bold" />
                       )}
                     </Button>
                   ) : (
@@ -131,7 +131,7 @@ const AccountModal = () => {
                       onClick={handleLogout}
                       aria-label="Disconnect"
                     >
-                      <SignOut className="size-3" />
+                      <SignOut weight="bold" className="size-3" />
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>

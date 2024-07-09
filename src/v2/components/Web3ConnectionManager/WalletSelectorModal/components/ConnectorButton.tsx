@@ -56,7 +56,7 @@ const ConnectorButton = ({ connector, pendingConnector, connect, error }: Props)
           <img src={connectorIcon} className="h-6" alt={`${connectorName} logo`} />
         </div>
       ) : (
-        <Wallet className="size-6" />
+        <Wallet weight="bold" className="size-6" />
       )}
 
       <span>

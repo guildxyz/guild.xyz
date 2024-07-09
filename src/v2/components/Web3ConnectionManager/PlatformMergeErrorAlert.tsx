@@ -12,7 +12,7 @@ import {
   UnorderedList,
   chakra,
 } from "@chakra-ui/react"
-import { ArrowSquareOut } from "@phosphor-icons/react"
+import { ArrowSquareOut } from "@phosphor-icons/react/dist/ssr"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import Button from "components/common/Button"
 import CopyableAddress from "components/common/CopyableAddress"

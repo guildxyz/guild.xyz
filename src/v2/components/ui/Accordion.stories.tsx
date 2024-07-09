@@ -25,7 +25,7 @@ const AccordionExample = (props: AccordionSingleProps | AccordionMultipleProps) 
           className="text-blue-500 hover:underline"
         >
           An accordion.
-          <ArrowSquareOut className="ml-0.5 inline" />
+          <ArrowSquareOut className="ml-0.5 inline" weight="bold" />
         </a>
       </AccordionContent>
     </AccordionItem>

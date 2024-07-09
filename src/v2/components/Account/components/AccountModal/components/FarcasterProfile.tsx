@@ -210,7 +210,7 @@ const ConnectFarcasterButton = ({
                 "Connect Farcaster"
               ) : (
                 <>
-                  <DeviceMobileCamera className="size-6" />
+                  <DeviceMobileCamera weight="bold" className="size-6" />
                   <span>Scan With your phone</span>
                 </>
               )}
@@ -258,7 +258,7 @@ const ConnectFarcasterButton = ({
                         onRegenerate()
                       }}
                     >
-                      <ArrowCounterClockwise />
+                      <ArrowCounterClockwise weight="bold" />
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>

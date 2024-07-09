@@ -256,7 +256,7 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
                 <span>{"New to Ethereum wallets? "}</span>
                 {/* TODO: custom link component with generalised styles */}
                 <a href="https://ethereum.org/en/wallets">Learn more</a>
-                <ArrowSquareOut className="ml-1 inline" />
+                <ArrowSquareOut weight="bold" className="ml-1 inline" />
               </p>
 
               <p className="text-muted-foreground">

@@ -281,7 +281,9 @@ const ExportWaasModal = ({
                   isDisabled={hasCopied}
                   colorScheme="white"
                   borderWidth="2px"
-                  leftIcon={hasCopied ? <Check /> : <Copy />}
+                  leftIcon={
+                    hasCopied ? <Check weight="bold" /> : <Copy weight="bold" />
+                  }
                 >
                   {hasCopied ? "Private key copied" : "Copy private key"}
                 </Button>
@@ -289,7 +291,7 @@ const ExportWaasModal = ({
                 <Button
                   isDisabled={!hasCopiedAtLeastOnce}
                   colorScheme={"green"}
-                  leftIcon={<Wallet />}
+                  leftIcon={<Wallet weight="bold" />}
                   onClick={alert.onOpen}
                 >
                   Backup & import done

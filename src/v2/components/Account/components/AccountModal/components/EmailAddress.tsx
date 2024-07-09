@@ -214,7 +214,7 @@ const ConnectEmailButton = ({
                     aria-label="Use different email address"
                     onClick={differentEmail}
                   >
-                    <PencilSimple />
+                    <PencilSimple weight="bold" />
                   </Button>
                 </p>
 
@@ -312,7 +312,10 @@ const ConnectEmailButton = ({
         {emails?.pending ? (
           <>
             {/* TODO: maybe move this out to a CSS variable? */}
-            <Warning className="mr-1 text-orange-400 data-[theme=dark]:text-orange-200" />
+            <Warning
+              weight="bold"
+              className="mr-1 text-orange-400 data-[theme=dark]:text-orange-200"
+            />
             Verify
           </>
         ) : (
