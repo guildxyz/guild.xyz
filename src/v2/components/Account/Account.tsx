@@ -11,6 +11,9 @@ import { accountModalAtom, walletSelectorModalAtom } from "../Providers/atoms"
 import { Button } from "../ui/Button"
 import { Card } from "../ui/Card"
 import { useWeb3ConnectionManager } from "../Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/Popover"
+import { Bell } from "@phosphor-icons/react"
+import { Notifications } from "./components/Notifications"
 
 export const Account = () => {
   const { address } = useWeb3ConnectionManager()
@@ -33,7 +36,21 @@ export const Account = () => {
 
   return (
     <Card>
-      <Button variant="ghost" onClick={() => setIsAccountModalOpen(true)}>
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button variant="ghost" className="rounded-r-none border-r border-border">
+            <Bell />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent>
+          <Notifications />
+        </PopoverContent>
+      </Popover>
+      <Button
+        variant="ghost"
+        onClick={() => setIsAccountModalOpen(true)}
+        className="rounded-l-none"
+      >
         <div className="flex items-center gap-3">
           <div className="flex flex-col items-end gap-0">
             <span
