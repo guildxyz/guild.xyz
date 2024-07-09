@@ -2,7 +2,6 @@
 
 import { cn } from "@/lib/utils"
 import { SignIn } from "@phosphor-icons/react/dist/ssr"
-import clsx from "clsx"
 import useUser from "components/[guild]/hooks/useUser"
 import useResolveAddress from "hooks/useResolveAddress"
 import { useSetAtom } from "jotai"
@@ -38,13 +37,9 @@ export const Account = () => {
         <div className="flex items-center gap-3">
           <div className="flex flex-col items-end gap-0">
             <span
-              className={cn(
-                "text-base font-semibold",
-                clsx({
-                  "text-sm": linkedAddressesCount > 0,
-                  "font-bold": linkedAddressesCount > 0,
-                })
-              )}
+              className={cn("text-base font-semibold", {
+                "text-sm font-bold": linkedAddressesCount > 0,
+              })}
             >
               {domainName || `${shortenHex(address, 3)}`}
             </span>
