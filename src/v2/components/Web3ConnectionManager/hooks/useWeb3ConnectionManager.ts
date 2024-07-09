@@ -42,7 +42,12 @@ export function useWeb3ConnectionManager(): {
   const isWeb3Connected = isEvmConnected || isFuelConnected
   const address = evmAddress || fuelAddress
 
-  const type = isEvmConnected ? "EVM" : isFuelConnected ? "FUEL" : null
+  let type: "EVM" | "FUEL" | null = null
+  if (isEvmConnected) {
+    type = "EVM"
+  } else if (isFuelConnected) {
+    type = "FUEL"
+  }
 
   const { disconnect: disconnectEvm } = useDisconnect()
   const { disconnect: disconnectFuel } = useFuelDisconnect()
