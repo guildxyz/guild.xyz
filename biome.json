@@ -44,7 +44,7 @@
       },
       "suspicious": {
         "noDuplicateClassMembers": "error",
-        "noEmptyBlockStatements": "error",
+        "noEmptyBlockStatements": "warn",
         "noExplicitAny": "off",
         "noExtraNonNullAssertion": "error",
         "noMisleadingInstantiator": "error",
