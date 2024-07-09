@@ -94,7 +94,7 @@ const ConnectEmailButton = ({
   const { id: userId } = useUser()
   const toast = useToast()
 
-  const [emailSentAt, setEmailSentAt] = useState<number>(null)
+  const [emailSentAt, setEmailSentAt] = useState<number | null>(null)
 
   const submitVerificationRequest = (
     signedPayload: SignedValidation
@@ -161,7 +161,7 @@ const ConnectEmailButton = ({
 
   // Timer to decide if resend button is disabled
   const [dateNow, setDateNow] = useState(Date.now())
-  const canResend = dateNow - emailSentAt > TIMEOUT
+  const canResend = !emailSentAt || dateNow - emailSentAt > TIMEOUT
   useEffect(() => {
     const interval = setInterval(() => setDateNow(Date.now()), TIMEOUT)
     return () => clearInterval(interval)
