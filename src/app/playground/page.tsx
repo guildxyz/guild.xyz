@@ -1,6 +1,5 @@
 import { Header } from "@/components/Header"
 import { Metadata } from "next"
-import { FormExample } from "./_components/FormExample"
 
 export const metadata: Metadata = {
   title: "Playground",
@@ -14,8 +13,6 @@ export default function Page() {
       <div className="flex flex-col items-start gap-4">
         <Header />
       </div>
-
-      <FormExample />
     </div>
   )
 }
