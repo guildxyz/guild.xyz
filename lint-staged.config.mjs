@@ -1,5 +1,5 @@
 const config = {
-  "*.{mjs,js,jsx,ts,tsx}": ["biome format --write", "biome lint --apply"],
+  "*.{mjs,js,jsx,ts,tsx}": ["biome check --write"],
   "*.json": ["biome format --write"],
 }
 
