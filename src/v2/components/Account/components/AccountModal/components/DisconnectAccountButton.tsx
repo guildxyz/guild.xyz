@@ -63,13 +63,15 @@ const DisconnectAccountButton = ({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel onClick={onClose}>Cancel</AlertDialogCancel>
-          <AlertDialogAction
-            onClick={onConfirm}
-            // TODO
-            // isLoading={isLoading}
-            // loadingText={loadingText}
-          >
-            Disconnect
+          <AlertDialogAction asChild>
+            <Button
+              variant="destructive"
+              onClick={onConfirm}
+              isLoading={isLoading}
+              loadingText={loadingText}
+            >
+              Disconnect
+            </Button>
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

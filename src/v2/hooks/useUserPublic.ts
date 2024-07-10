@@ -1,15 +1,15 @@
 import { walletSelectorModalAtom } from "@/components/Providers/atoms"
-import { useToast } from "@/components/ui/hooks/useToast"
 import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import { useToast } from "@/components/ui/hooks/useToast"
 import { PublicUserProfile } from "@guildxyz/types"
 import { useSetAtom } from "jotai"
 import { KeyedMutator } from "swr"
 import useSWRImmutable from "swr/immutable"
 import fetcher from "utils/fetcher"
 import {
+  StoredKeyPair,
   deleteKeyPairFromIdb,
   getKeyPairFromIdb,
-  StoredKeyPair,
 } from "utils/keyPair"
 
 type PublicUser = PublicUserProfile & { keyPair?: StoredKeyPair }

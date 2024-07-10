@@ -1,6 +1,7 @@
 import { useDisconnectAddress } from "@/components/Account/components/AccountModal/hooks/useDisconnect"
 import { CopyableAddress } from "@/components/CopyableAddress"
 import { GuildAvatar } from "@/components/GuildAvatar"
+import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -26,7 +27,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/Tooltip"
-import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { useDisclosure } from "@/hooks/useDisclosure"
 import {
   CircleNotch,
@@ -65,7 +65,6 @@ const LinkedAddress = ({ addressData }: Props) => {
   } = useDisconnectAddress(onClose)
 
   const removeAddress = () => onDisconnectSubmit({ address })
-  // const removeMenuItemColor = useColorModeValue("red.600", "red.300")
 
   return (
     <>
@@ -78,7 +77,7 @@ const LinkedAddress = ({ addressData }: Props) => {
           <CopyableAddress
             address={address}
             decimals={5}
-            className="mr-0.5 text-sm font-bold"
+            className="mr-0.5 font-bold text-sm"
           />
           {isDelegated && (
             <TooltipProvider>
@@ -164,13 +163,15 @@ const LinkedAddress = ({ addressData }: Props) => {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={removeAddress}
-              // TODO
-              // isLoading={isDisconnectLoading}
-              // loadingText={disconnectSignLoadingText || "Removing"}
-            >
-              Continue
+            <AlertDialogAction asChild>
+              <Button
+                variant="destructive"
+                onClick={removeAddress}
+                isLoading={isDisconnectLoading}
+                loadingText={disconnectSignLoadingText || "Removing"}
+              >
+                Continue
+              </Button>
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

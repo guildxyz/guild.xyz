@@ -20,8 +20,8 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import { Check, Copy, DownloadSimple, Export } from "@phosphor-icons/react"
-import useGuild from "components/[guild]/hooks/useGuild"
 import RoleSelector from "components/[guild]/RoleSelector"
+import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"

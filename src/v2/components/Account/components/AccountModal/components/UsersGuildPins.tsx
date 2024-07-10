@@ -1,8 +1,10 @@
 import { AccountSectionTitle } from "@/components/Account/components/AccountModal/components/AccountSection"
 import { accountModalAtom } from "@/components/Providers/atoms"
+import { Alert, AlertDescription } from "@/components/ui/Alert"
 import { Badge } from "@/components/ui/Badge"
 import { Skeleton } from "@/components/ui/Skeleton"
 import useUsersGuildPins from "@/hooks/useUsersGuildPins"
+import { Info } from "@phosphor-icons/react/dist/ssr"
 import { useAtomValue, useSetAtom } from "jotai"
 import Link from "next/link"
 
@@ -14,18 +16,17 @@ const UsersGuildPins = () => {
     <>
       <AccountSectionTitle title="Guild Pins" />
 
-      {/* TODO: custom Error component */}
-      {/* {error && (
-        <>
-          <Alert status="warning" mb={3}>
-            <AlertIcon /> There was an error while fetching your pins, some may not
-            be visible.
-          </Alert>
-        </>
-      )} */}
+      {error && (
+        <Alert variant="info" className="mb-3">
+          <Info weight="bold" className="size-6" />
+          <AlertDescription>
+            There was an error while fetching your pins, some may not be visible.
+          </AlertDescription>
+        </Alert>
+      )}
 
       <div
-        className="invisible-scrollbar relative -mx-4 min-w-full overflow-x-auto"
+        className="invisible-scrollbar -mx-4 relative min-w-full overflow-x-auto"
         style={{
           maskImage:
             "linear-gradient(to right, transparent 0px, black 16px, black calc(100% - 16px), transparent)",
@@ -79,7 +80,7 @@ const GuildPin = ({
       <div className="relative size-20 rounded-full border-2 border-card bg-card">
         <img src={image} alt={name} />
 
-        <div className="absolute -bottom-1 left-1/2 flex -translate-x-1/2 rounded-lg border-2 border-card bg-card font-semibold">
+        <div className="-bottom-1 -translate-x-1/2 absolute left-1/2 flex rounded-lg border-2 border-card bg-card font-semibold">
           <Badge variant="secondary" size="sm">
             #{rank}
           </Badge>
@@ -90,7 +91,7 @@ const GuildPin = ({
 }
 
 const GuildPinSkeleton = () => (
-  <div className="relative -ml-10 size-20 rounded-full border-2 border-card bg-card first:ml-0">
+  <div className="-ml-10 relative size-20 rounded-full border-2 border-card bg-card first:ml-0">
     <Skeleton className="size-full rounded-full" />
   </div>
 )

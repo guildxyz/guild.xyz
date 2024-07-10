@@ -2,9 +2,10 @@ import { Button } from "@/components/ui/Button"
 import { useToast } from "@/components/ui/hooks/useToast"
 import { useDisclosure } from "@/hooks/useDisclosure"
 import { cn } from "@/lib/utils"
-import useUser from "components/[guild]/hooks/useUser"
+import { Warning } from "@phosphor-icons/react/dist/ssr"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
+import useUser from "components/[guild]/hooks/useUser"
 import useMembership from "components/explorer/hooks/useMembership"
 import { motion } from "framer-motion"
 import { ReactNode } from "react"
@@ -83,7 +84,7 @@ export const SocialAccountUI = ({
             />
             <div
               className={cn(
-                "absolute -bottom-0.5 -right-1 flex size-4 items-center justify-center rounded-full border border-card-secondary",
+                "-bottom-0.5 -right-1 absolute flex size-4 items-center justify-center rounded-full border border-card-secondary",
                 bgClassName
               )}
             >
@@ -95,7 +96,7 @@ export const SocialAccountUI = ({
         )}
       </div>
 
-      <span className="overflow-hidden text-ellipsis text-sm font-bold">
+      <span className="overflow-hidden text-ellipsis font-bold text-sm">
         {username ?? `${platformName} ${isConnected ? "connected" : ""}`}
       </span>
 
@@ -146,12 +147,16 @@ const ConnectPlatformButton = ({
       onClick={onConnect}
       isLoading={isLoading}
       disabled={!!response}
-      // TODO: use the proper colors
-      // colorScheme={isReconnect ? "orange" : rewards[type].colorScheme}
-      // variant={isReconnect ? "subtle" : "solid"}
+      variant={isReconnect ? "secondary" : "default"}
       size="sm"
       className={cn("ml-auto", PLATFORM_COLORS[type])}
     >
+      {isReconnect && (
+        <Warning
+          weight="bold"
+          className="mr-1 text-orange-400 data-[theme=dark]:text-orange-200"
+        />
+      )}
       {isReconnect ? "Reconnect" : "Connect"}
     </Button>
   )

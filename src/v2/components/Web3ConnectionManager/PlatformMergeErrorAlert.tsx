@@ -15,6 +15,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "../ui/AlertDialog"
+import { anchorVariants } from "../ui/Anchor"
+import { Button } from "../ui/Button"
 import { useToast } from "../ui/hooks/useToast"
 import { useWeb3ConnectionManager } from "./hooks/useWeb3ConnectionManager"
 
@@ -73,12 +75,13 @@ const PlatformMergeErrorAlert = () => {
                 <span className="font-semibold">
                   {address ? shortenHex(address) : ""}
                 </span>
-                ) to it by following {/* TODO: blue link color */}
+                ) to it by following{" "}
                 <a
                   target="_blank"
                   href={
                     "https://help.guild.xyz/en/articles/6947559-how-to-un-link-wallet-addresses"
                   }
+                  className={anchorVariants({ variant: "highlighted" })}
                 >
                   this guide
                   <ArrowSquareOut className="ml-1 inline" weight="bold" />
@@ -95,9 +98,14 @@ const PlatformMergeErrorAlert = () => {
 
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            {/* TODO: loading state */}
-            <AlertDialogAction /* isLoading={isLoading} */ onClick={onConnect}>
-              Connect anyway
+            <AlertDialogAction asChild>
+              <Button
+                variant="destructive"
+                isLoading={isLoading}
+                onClick={onConnect}
+              >
+                Connect anyway
+              </Button>
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

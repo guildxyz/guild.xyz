@@ -1,5 +1,6 @@
 import { WarningCircle } from "@phosphor-icons/react/dist/ssr"
 import { PropsWithChildren, useEffect, useState } from "react"
+import { Alert, AlertDescription, AlertTitle } from "./ui/Alert"
 import { Collapsible, CollapsibleContent } from "./ui/Collapsible"
 
 type ErrorInfo = {
@@ -32,17 +33,11 @@ const Error = <ErrorType,>({
   return (
     <Collapsible open={!!state.title}>
       <CollapsibleContent>
-        <div className="mb-6 flex items-start gap-3 rounded-xl bg-toast-error p-4">
-          <WarningCircle
-            weight="fill"
-            className="size-6 text-destructive-ghost-foreground"
-          />
-
-          <div className="flex flex-col gap-1">
-            <p className="font-bold">{state.title}</p>
-            <p>{state.description}</p>
-          </div>
-        </div>
+        <Alert variant="error" className="mb-6">
+          <WarningCircle weight="fill" className="size-6" />
+          <AlertTitle>{state.title}</AlertTitle>
+          <AlertDescription>{state.description}</AlertDescription>
+        </Alert>
       </CollapsibleContent>
     </Collapsible>
   )

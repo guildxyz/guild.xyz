@@ -1,6 +1,8 @@
 import { CopyableAddress } from "@/components/CopyableAddress"
 import { GuildAvatar } from "@/components/GuildAvatar"
 import { accountModalAtom } from "@/components/Providers/atoms"
+import useConnectorNameAndIcon from "@/components/Web3ConnectionManager/hooks/useConnectorNameAndIcon"
+import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { Button } from "@/components/ui/Button"
 import {
   Dialog,
@@ -15,12 +17,11 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/Tooltip"
-import useConnectorNameAndIcon from "@/components/Web3ConnectionManager/hooks/useConnectorNameAndIcon"
-import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { useDisclosure } from "@/hooks/useDisclosure"
 import { useUserPublic } from "@/hooks/useUserPublic"
 import { LinkBreak, SignOut } from "@phosphor-icons/react/dist/ssr"
 import useUser from "components/[guild]/hooks/useUser"
+import useResolveAddress from "hooks/useResolveAddress"
 import { useAtom } from "jotai"
 import { deleteKeyPairFromIdb } from "utils/keyPair"
 import { useAccount } from "wagmi"
@@ -28,7 +29,6 @@ import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
 import NetworkModal from "../NetworkModal"
 import { AccountConnections } from "./components/AccountConnections"
 import { UsersGuildPins } from "./components/UsersGuildPins"
-import useResolveAddress from "hooks/useResolveAddress"
 
 const AccountModal = () => {
   const { address, disconnect, type } = useWeb3ConnectionManager()
@@ -90,7 +90,7 @@ const AccountModal = () => {
                 />
 
                 <div className="flex items-center gap-1">
-                  <p className="line-clamp-1 text-sm font-medium text-muted-foreground">
+                  <p className="line-clamp-1 font-medium text-muted-foreground text-sm">
                     {`Connected with ${connectorName}`}
                   </p>
 
@@ -146,7 +146,7 @@ const AccountModal = () => {
             <UsersGuildPins />
           </>
         ) : (
-          <p className="mb-6 text-2xl font-semibold">Not connected</p>
+          <p className="mb-6 font-semibold text-2xl">Not connected</p>
         )}
       </DialogContent>
     </Dialog>

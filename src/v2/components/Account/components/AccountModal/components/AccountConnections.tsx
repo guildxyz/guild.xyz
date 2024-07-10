@@ -89,7 +89,7 @@ const AccountConnections = () => {
               "flex-row items-center justify-between": !vaults?.length,
             })}
           >
-            <p className="text-sm font-medium">No linked addresses yet</p>
+            <p className="font-medium text-sm">No linked addresses yet</p>
             {vaults?.length ? (
               <div className="flex gap-1">
                 <LinkAddressButton />

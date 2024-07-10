@@ -58,6 +58,16 @@
     --toast-warning: 40 79% 96%;
     --toast-info: 218 80% 98%;
 
+    --alert-success: var(--toast-success);
+    --alert-success-icon: 142 71% 45%;
+    --alert-info: var(--toast-info);
+    --alert-info-icon: 217 91% 60%; /* TODO: --info-... CSS variables */
+    --alert-warning: var(--toast-warning);
+    --alert-warning-icon: 27 96% 61%;
+    /* TODO: should we call it error or destructive? */
+    --alert-error: var(--toast-error);
+    --alert-error-icon: 0 84% 60%;
+
     --discord: 233 78% 63%;
     --discord-hover: 243 75% 59%;
     --discord-active: 245 58% 51%;
@@ -144,6 +154,15 @@
     --toast-error: 317 4% 35%;
     --toast-warning: 30 6% 34%;
     --toast-info: 226 7% 36%;
+
+    --alert-success: var(--toast-success);
+    --alert-success-icon: 141 79% 85%;
+    --alert-info: var(--toast-info);
+    --alert-info-icon: 213 97% 87%;
+    --alert-warning: var(--toast-warning);
+    --alert-warning-icon: 32 98% 83%;
+    --alert-error: var(--toast-error);
+    --alert-error-icon: 0 96% 89%;
 
     --discord-hover: 234 89% 74%;
     --discord-active: 230 94% 82%;

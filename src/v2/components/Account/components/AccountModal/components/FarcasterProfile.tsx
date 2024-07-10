@@ -14,7 +14,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/Dialog"
-import { useToast } from "@/components/ui/hooks/useToast"
 import { Skeleton } from "@/components/ui/Skeleton"
 import {
   Tooltip,
@@ -22,6 +21,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/Tooltip"
+import { useToast } from "@/components/ui/hooks/useToast"
 import { useDisclosure } from "@/hooks/useDisclosure"
 import { cn } from "@/lib/utils"
 import { FarcasterProfile as FarcasterProfileType } from "@guildxyz/types"
@@ -234,7 +234,7 @@ const ConnectFarcasterButton = ({
             )}
 
             <div className="mt-2 flex justify-center">
-              <p className="text-sm text-muted-foreground">
+              <p className="text-muted-foreground text-sm">
                 {isMobile
                   ? "The link is active for "
                   : "The QR code will be regenerated in "}
@@ -268,7 +268,7 @@ const ConnectFarcasterButton = ({
               </TooltipProvider>
             </div>
 
-            <p className="text-center text-sm text-muted-foreground">
+            <p className="text-center text-muted-foreground text-sm">
               One Farcaster account can only be connected to{" "}
               <strong>one Guild account</strong> at a time
             </p>
@@ -278,7 +278,7 @@ const ConnectFarcasterButton = ({
             <Accordion type="single" collapsible>
               <AccordionItem
                 value="write-access"
-                className="text-sm text-muted-foreground"
+                className="text-muted-foreground text-sm"
               >
                 <AccordionTrigger>
                   Why does Guild request write access?

@@ -1,7 +1,7 @@
 "use client"
 
 import * as ToastPrimitives from "@radix-ui/react-toast"
-import { cva, type VariantProps } from "class-variance-authority"
+import { type VariantProps, cva } from "class-variance-authority"
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
@@ -16,7 +16,7 @@ const ToastViewport = React.forwardRef<
   <ToastPrimitives.Viewport
     ref={ref}
     className={cn(
-      "fixed right-0 top-0 z-[100] flex max-h-screen w-full max-w-[min(420px,_100%)] flex-col gap-2 p-4 focus:outline-none",
+      "fixed top-0 right-0 z-[100] flex max-h-screen w-full max-w-[min(420px,_100%)] flex-col gap-2 p-4 focus:outline-none",
       className
     )}
     {...props}
@@ -61,7 +61,7 @@ const ToastAction = React.forwardRef<
   <ToastPrimitives.Action
     ref={ref}
     className={cn(
-      "inline-flex h-8 w-max shrink-0 items-center justify-center rounded-md bg-secondary px-3 text-sm font-medium transition-colors hover:bg-secondary-hover focus:outline-none focus-visible:ring-4 focus-visible:ring-ring active:bg-secondary-active disabled:pointer-events-none disabled:opacity-50",
+      "inline-flex h-8 w-max shrink-0 items-center justify-center rounded-md bg-secondary px-3 font-medium text-sm transition-colors hover:bg-secondary-hover focus:outline-none focus-visible:ring-4 focus-visible:ring-ring active:bg-secondary-active disabled:pointer-events-none disabled:opacity-50",
       className
     )}
     {...props}
@@ -76,7 +76,7 @@ const ToastClose = React.forwardRef<
   <ToastPrimitives.Close
     ref={ref}
     className={cn(
-      "absolute right-2 top-2 rounded-full p-1 text-foreground/50 opacity-0 ring-ring transition-opacity hover:text-foreground focus:opacity-100 focus:outline-none focus-visible:ring-4 group-hover:opacity-100",
+      "absolute top-2 right-2 rounded-full p-1 text-foreground/50 opacity-0 ring-ring transition-opacity hover:text-foreground focus:opacity-100 focus:outline-none focus-visible:ring-4 group-hover:opacity-100",
       className
     )}
     toast-close=""

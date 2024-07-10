@@ -27,7 +27,6 @@ const NetworkModal = ({
       </DialogHeader>
 
       <p className="mb-4 text-muted-foreground">
-        {" "}
         It doesn't matter which supported chain you're connected to, it's only used
         to know your address and sign messages so each will work equally.
       </p>

@@ -15,8 +15,8 @@ import useMembership, {
   useRoleMembership,
 } from "components/explorer/hooks/useMembership"
 import dynamic from "next/dynamic"
-import rewards from "rewards"
 import { memo, useEffect, useRef } from "react"
+import rewards from "rewards"
 import { PlatformType, Role } from "types"
 import RoleRequirements from "../Requirements"
 import useGuild from "../hooks/useGuild"

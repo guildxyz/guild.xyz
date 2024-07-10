@@ -1,6 +1,6 @@
 import { usePostHogContext } from "@/components/Providers/PostHogProvider"
-import { Button } from "@/components/ui/Button"
 import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import { Button } from "@/components/ui/Button"
 import {
   Divider,
   Icon,

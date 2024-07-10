@@ -22,7 +22,7 @@ Cypress.Commands.add("clearIndexedDB", () => {
   indexedDB.deleteDatabase("guild.xyz")
 })
 
-// eslint-disable-next-line @typescript-eslint/no-namespace
+// biome-ignore lint/style/noNamespace: <explanation>
 declare namespace Cypress {
   interface Chainable {
     getByDataTest(selector: string): Chainable<JQuery<HTMLElement>>

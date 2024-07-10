@@ -12,13 +12,13 @@ import {
   HStack,
   Stack,
   Text,
-  useDisclosure,
   VStack,
+  useDisclosure,
 } from "@chakra-ui/react"
 import { GuildContact, Schemas } from "@guildxyz/types"
 import UrlName from "components/[guild]/EditGuild/components/UrlName"
-import useGuild from "components/[guild]/hooks/useGuild"
 import { useThemeContext } from "components/[guild]/ThemeContext"
+import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import DrawerHeader from "components/common/DrawerHeader"
@@ -39,9 +39,9 @@ import { FormProvider, useForm } from "react-hook-form"
 import { EventSourcesKey, GuildTags } from "types"
 import handleSubmitDirty from "utils/handleSubmitDirty"
 import { Chain } from "wagmiConfig/chains"
+import LeaveButton from "../LeaveButton"
 import useGuildPermission from "../hooks/useGuildPermission"
 import useUser from "../hooks/useUser"
-import LeaveButton from "../LeaveButton"
 import Admins from "./components/Admins"
 import BackgroundImageUploader from "./components/BackgroundImageUploader"
 import ChangingGuildPinDesignAlert from "./components/ChangingGuildPinDesignAlert"

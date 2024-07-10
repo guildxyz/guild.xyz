@@ -37,7 +37,7 @@ const WalletLinkHelperModal = () => {
 
         <div className="flex w-full items-center gap-4 py-4">
           <hr className="w-full border-border" />
-          <span className="text-xs font-bold text-muted-foreground">OR</span>
+          <span className="font-bold text-muted-foreground text-xs">OR</span>
           <hr className="w-full border-border" />
         </div>
 

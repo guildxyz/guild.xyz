@@ -22,7 +22,7 @@ import { ArrowSquareOut } from "@phosphor-icons/react/dist/ssr"
 import useSetKeyPair from "hooks/useSetKeyPair"
 import { useAtom, useSetAtom } from "jotai"
 import { useEffect } from "react"
-import { useAccount, useConnect, type Connector } from "wagmi"
+import { type Connector, useAccount, useConnect } from "wagmi"
 import { COINBASE_INJECTED_WALLET_ID, COINBASE_WALLET_SDK_ID } from "wagmiConfig"
 import AccountButton from "./components/AccountButton"
 import ConnectorButton from "./components/ConnectorButton"
@@ -194,7 +194,7 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
                   error={error}
                 />
 
-                <p className="mb-2 mt-6 text-xs font-bold uppercase text-muted-foreground">
+                <p className="mt-6 mb-2 font-bold text-muted-foreground text-xs uppercase">
                   Or connect with wallet
                 </p>
               </>

@@ -1,4 +1,4 @@
-import { FueletWalletConnector, FuelWalletConnector } from "@fuels/connectors"
+import { FuelWalletConnector, FueletWalletConnector } from "@fuels/connectors"
 import { FuelConfig } from "fuels"
 
 export const fuelConfig: FuelConfig = {

@@ -7,8 +7,8 @@ import {
   DrawerOverlay,
   FormLabel,
   HStack,
-  useDisclosure,
   VStack,
+  useDisclosure,
 } from "@chakra-ui/react"
 import { ClientStateRequirementHandlerProvider } from "components/[guild]/RequirementHandlerContext"
 import AddRolePlatforms from "components/[guild]/RolePlatforms/AddRolePlatforms"
@@ -17,10 +17,10 @@ import DiscardAlert from "components/common/DiscardAlert"
 import Section from "components/common/Section"
 import Description from "components/create-guild/Description"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
-import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
 import SetRequirements from "components/create-guild/Requirements"
+import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import useCreateRRR from "hooks/useCreateRRR"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"

@@ -4,10 +4,10 @@ import * as LabelPrimitive from "@radix-ui/react-label"
 import { Slot } from "@radix-ui/react-slot"
 import {
   ComponentPropsWithoutRef,
-  createContext,
   ElementRef,
-  forwardRef,
   HTMLAttributes,
+  createContext,
+  forwardRef,
   useContext,
   useId,
 } from "react"
@@ -150,7 +150,7 @@ const FormErrorMessage = forwardRef<
           id={formMessageId}
           // TODO: not sure if it is a good idea to use "destructive-ghost-foreground" here? Should we add a completely new CSS variable instead?
           className={cn(
-            "text-[0.8rem] font-medium text-destructive-ghost-foreground",
+            "font-medium text-[0.8rem] text-destructive-ghost-foreground",
             className
           )}
           {...props}

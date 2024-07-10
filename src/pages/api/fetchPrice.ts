@@ -14,7 +14,7 @@ import {
   ZeroXSupportedSources,
 } from "utils/guildCheckout/constants"
 import { flipPath } from "utils/guildCheckout/utils"
-import { createPublicClient, erc20Abi, formatUnits, http, parseUnits } from "viem"
+import { http, createPublicClient, erc20Abi, formatUnits, parseUnits } from "viem"
 import { wagmiConfig } from "wagmiConfig"
 import { CHAIN_CONFIG, Chain, Chains } from "wagmiConfig/chains"
 import { NON_PURCHASABLE_ASSETS_KV_KEY } from "./nonPurchasableAssets"

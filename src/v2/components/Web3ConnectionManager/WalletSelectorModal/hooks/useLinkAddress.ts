@@ -1,5 +1,5 @@
-import { addressLinkParamsAtom } from "@/components/Providers/atoms"
 import { usePostHogContext } from "@/components/Providers/PostHogProvider"
+import { addressLinkParamsAtom } from "@/components/Providers/atoms"
 import { AddressLinkParams } from "@/components/Providers/types"
 import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { useUserPublic } from "@/hooks/useUserPublic"

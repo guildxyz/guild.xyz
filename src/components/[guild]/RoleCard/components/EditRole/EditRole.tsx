@@ -8,12 +8,12 @@ import {
   HStack,
   Icon,
   IconButton,
-  useDisclosure,
   VStack,
+  useDisclosure,
 } from "@chakra-ui/react"
 import { PencilSimple } from "@phosphor-icons/react"
-import useGuild from "components/[guild]/hooks/useGuild"
 import { ApiRequirementHandlerProvider } from "components/[guild]/RequirementHandlerContext"
+import useGuild from "components/[guild]/hooks/useGuild"
 import DiscardAlert from "components/common/DiscardAlert"
 import Section from "components/common/Section"
 import Description from "components/create-guild/Description"

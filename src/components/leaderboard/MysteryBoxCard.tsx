@@ -1,8 +1,8 @@
 import {
   FormControl,
   FormLabel,
-  Heading,
   HStack,
+  Heading,
   Img,
   Input,
   ModalBody,

@@ -16,7 +16,6 @@ import {
   FormItem,
   FormLabel,
 } from "@/components/ui/Form"
-import { useToast } from "@/components/ui/hooks/useToast"
 import { Input } from "@/components/ui/Input"
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/InputOTP"
 import {
@@ -25,14 +24,15 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/Tooltip"
+import { useToast } from "@/components/ui/hooks/useToast"
 import { useDisclosure } from "@/hooks/useDisclosure"
 import { cn } from "@/lib/utils"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { PencilSimple, Warning } from "@phosphor-icons/react/dist/ssr"
-import useUser from "components/[guild]/hooks/useUser"
 import { useConnectEmail } from "components/[guild]/JoinModal/hooks/useConnectPlatform"
+import useUser from "components/[guild]/hooks/useUser"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
-import { useEffect, useState } from "react"
+import { ReactNode, useEffect, useState } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { emailData } from "rewards/Email/data"
 import fetcher from "utils/fetcher"
@@ -75,9 +75,14 @@ const EmailAddress = () => {
 const ConnectEmailButton = ({
   onSuccess,
   isReconnection: _,
+  leftIcon,
   className,
   ...props
-}: ButtonProps & { onSuccess?: () => void; isReconnection?: boolean }) => {
+}: ButtonProps & {
+  onSuccess?: () => void
+  isReconnection?: boolean
+  leftIcon?: ReactNode // TODO: we should find a different solution
+}) => {
   const { emails } = useUser()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [pendingEmailAddress, setPendingEmailAddress] = useState(
@@ -323,7 +328,10 @@ const ConnectEmailButton = ({
             Verify
           </>
         ) : (
-          emails?.emailAddress || "Connect"
+          <>
+            {leftIcon}
+            emails?.emailAddress || "Connect"
+          </>
         )}
       </Button>
     </>

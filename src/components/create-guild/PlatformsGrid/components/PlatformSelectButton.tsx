@@ -2,18 +2,18 @@ import { walletSelectorModalAtom } from "@/components/Providers/atoms"
 import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import {
   Circle,
-  Heading,
   HStack,
+  Heading,
   Icon,
   Spinner,
   Text,
   Tooltip,
-  useColorModeValue,
   VStack,
+  useColorModeValue,
 } from "@chakra-ui/react"
 import { ArrowSquareIn, CaretRight, IconProps } from "@phosphor-icons/react"
-import useUser from "components/[guild]/hooks/useUser"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
+import useUser from "components/[guild]/hooks/useUser"
 import DisplayCard from "components/common/DisplayCard"
 import { useSetAtom } from "jotai"
 import dynamic from "next/dynamic"
