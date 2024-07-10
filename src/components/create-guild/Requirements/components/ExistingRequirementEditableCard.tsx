@@ -11,6 +11,7 @@ import useVisibilityModalProps from "components/[guild]/SetVisibility/hooks/useV
 import { ComponentProps, PropsWithChildren, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import REQUIREMENTS from "requirements"
+import { REQUIREMENT_DISPLAY_COMPONENTS } from "requirements/requirementDisplayComponents"
 import { Requirement, Requirement as RequirementType } from "types"
 import mapRequirement from "utils/mapRequirement"
 import useEditRequirement from "../hooks/useEditRequirement"
@@ -43,7 +44,7 @@ const ExistingRequirementEditableCard = ({
     onClose: onDeleteClose,
   } = useDisclosure()
 
-  const RequirementComponent = REQUIREMENTS[requirement.type]?.displayComponent
+  const RequirementComponent = REQUIREMENT_DISPLAY_COMPONENTS[requirement.type]
   const FormComponent = REQUIREMENTS[requirement.type].formComponent
 
   const editButtonRef = useRef()

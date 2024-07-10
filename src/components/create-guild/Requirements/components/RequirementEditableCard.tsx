@@ -9,6 +9,7 @@ import dynamic from "next/dynamic"
 import { PropsWithChildren, memo, useRef } from "react"
 import { FormProvider, useForm, useFormContext } from "react-hook-form"
 import REQUIREMENTS, { RequirementType } from "requirements"
+import { REQUIREMENT_DISPLAY_COMPONENTS } from "requirements/requirementDisplayComponents"
 import { Requirement, RoleFormType } from "types"
 import BalancyFooter from "./BalancyFooter"
 import RemoveRequirementButton from "./RemoveRequirementButton"
@@ -35,7 +36,7 @@ const RequirementEditableCard = ({
   isEditDisabled = false,
 }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const RequirementComponent = REQUIREMENTS[type]?.displayComponent
+  const RequirementComponent = REQUIREMENT_DISPLAY_COMPONENTS[type]
   const FormComponent = REQUIREMENTS[type].formComponent
 
   const editButtonRef = useRef()

@@ -1,6 +1,5 @@
 import { Schemas } from "@guildxyz/types"
 import { Icon } from "@phosphor-icons/react"
-import { RequirementProps } from "components/[guild]/Requirements/components/Requirement"
 import { ComponentType } from "react"
 import { UseControllerProps } from "react-hook-form"
 import { Requirement } from "types"
@@ -31,7 +30,6 @@ export type RequirementData = {
   isPlatform?: boolean
   customNameRules?: UseControllerProps["rules"]
   isNegatable?: boolean
-  displayComponent: ComponentType<RequirementProps>
   formComponent: ComponentType<RequirementFormProps>
 }
 
