@@ -13,10 +13,6 @@ export default function Page() {
       <div className="flex flex-col items-start gap-4">
         <Header />
       </div>
-
-      <Section title="Form">
-        <FormExample />
-      </Section>
     </div>
   )
 }
