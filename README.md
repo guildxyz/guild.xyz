@@ -1,5 +1,7 @@
 # Guild.xyz interface
 
+[![Code check](https://github.com/guildxyz/guild.xyz/actions/workflows/code-check.yml/badge.svg)](https://github.com/guildxyz/guild.xyz/actions/workflows/code-check.yml)
+
 Open source interface for Guild.xyz -- a tool for platformless membership management.
 
 - Website: [guild.xyz](https://guild.xyz)
