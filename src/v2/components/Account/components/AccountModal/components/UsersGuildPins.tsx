@@ -1,8 +1,10 @@
 import { AccountSectionTitle } from "@/components/Account/components/AccountModal/components/AccountSection"
 import { accountModalAtom } from "@/components/Providers/atoms"
+import { Alert, AlertDescription } from "@/components/ui/Alert"
 import { Badge } from "@/components/ui/Badge"
 import { Skeleton } from "@/components/ui/Skeleton"
 import useUsersGuildPins from "@/hooks/useUsersGuildPins"
+import { Info } from "@phosphor-icons/react/dist/ssr"
 import { useAtomValue, useSetAtom } from "jotai"
 import Link from "next/link"
 
@@ -14,15 +16,14 @@ const UsersGuildPins = () => {
     <>
       <AccountSectionTitle title="Guild Pins" />
 
-      {/* TODO: custom Error component */}
-      {/* {error && (
-        <>
-          <Alert status="warning" mb={3}>
-            <AlertIcon /> There was an error while fetching your pins, some may not
-            be visible.
-          </Alert>
-        </>
-      )} */}
+      {error && (
+        <Alert variant="info" className="mb-3">
+          <Info weight="bold" className="size-6" />
+          <AlertDescription>
+            There was an error while fetching your pins, some may not be visible.
+          </AlertDescription>
+        </Alert>
+      )}
 
       <div
         className="invisible-scrollbar relative -mx-4 min-w-full overflow-x-auto"
