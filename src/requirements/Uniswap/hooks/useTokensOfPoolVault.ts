@@ -3,10 +3,10 @@ import { useReadContracts } from "wagmi"
 
 export function useTokensOfPoolVault(
   chainId: number,
-  lpVaultAddress: `0x${string}`
+  lpVaultAddress: `0x${string}` | null
 ) {
   const vaultContract = {
-    address: lpVaultAddress,
+    address: lpVaultAddress ?? undefined,
     chainId,
     abi: UNISWAP_V3_POSITIONS_VAULT_ABI,
   } as const

@@ -1,6 +1,7 @@
 import { ModalOverlay } from "@chakra-ui/react"
 import { Modal } from "components/common/Modal"
-import rewards, { modalSizeForPlatform } from "rewards"
+import { modalSizeForPlatform } from "rewards"
+import rewardComponents from "rewards/components"
 
 const CreateFormModal = ({ isOpen, onClose, onAdd }) => (
   <Modal
@@ -11,7 +12,7 @@ const CreateFormModal = ({ isOpen, onClose, onAdd }) => (
     colorScheme="dark"
   >
     <ModalOverlay />
-    <rewards.FORM.AddRewardPanel onAdd={onAdd} />
+    <rewardComponents.FORM.AddRewardPanel onAdd={onAdd} />
   </Modal>
 )
 

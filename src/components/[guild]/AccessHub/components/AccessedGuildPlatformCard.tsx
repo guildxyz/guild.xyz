@@ -2,6 +2,7 @@ import PlatformCard from "components/[guild]/RolePlatforms/components/PlatformCa
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import rewards from "rewards"
+import rewardComponents from "rewards/components"
 import { GuildPlatform, PlatformName, PlatformType } from "types"
 import PlatformAccessButton from "./PlatformAccessButton"
 
@@ -16,7 +17,7 @@ const AccessedGuildPlatformCard = ({ platform }: { platform: GuildPlatform }) =>
     cardMenuComponent: PlatformCardMenu,
     cardWarningComponent: PlatformCardWarning,
     cardButton: PlatformCardButton,
-  } = rewards[PlatformType[platform.platformId] as PlatformName]
+  } = rewardComponents[PlatformType[platform.platformId] as PlatformName]
 
   return (
     <PlatformCard

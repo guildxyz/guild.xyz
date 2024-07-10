@@ -1,8 +1,11 @@
-import { Box } from "@chakra-ui/react"
+import { Box, Icon } from "@chakra-ui/react"
+import { Question } from "@phosphor-icons/react"
 import { EditGuildDrawerProvider } from "components/[guild]/EditGuild/EditGuildDrawerContext"
 import JoinModalProvider from "components/[guild]/JoinModal/JoinModalProvider"
+import useActiveMembershipUpdate from "components/[guild]/JoinModal/hooks/useActiveMembershipUpdate"
 import RoleRequirements from "components/[guild]/Requirements"
 import { RoleRequirementsSkeleton } from "components/[guild]/Requirements/RoleRequirements"
+import Requirement from "components/[guild]/Requirements/components/Requirement"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import GuildImageAndName from "components/[guild]/collect/components/GuildImageAndName"
 import FillForm from "components/[guild]/forms/FillForm"
@@ -14,6 +17,7 @@ import ErrorAlert from "components/common/ErrorAlert"
 import Layout from "components/common/Layout"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import { GetStaticPaths, GetStaticProps } from "next"
+import { useEffect } from "react"
 import { SWRConfig } from "swr"
 import { Guild } from "types"
 import fetcher from "utils/fetcher"
@@ -24,10 +28,23 @@ type Props = {
 }
 
 const FormPage = ({ formId }: Props) => {
-  const { roles, imageUrl, guildPlatforms } = useGuild()
+  const { roles, imageUrl, guildPlatforms, isLoading } = useGuild()
+
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
 
-  const { form, error } = useGuildForm(formId)
+  const { form, error, mutate: mutateForm } = useGuildForm(formId)
+
+  /**
+   * Mutating the form, so in case the user gets access to the form's role by
+   * clicking on the join / re-check access button, we can show them the form right
+   * away
+   */
+  const { data: activeMembershipUpdate } = useActiveMembershipUpdate()
+  const isMembershipUpdateDone = activeMembershipUpdate?.done
+  useEffect(() => {
+    if (!isMembershipUpdateDone) return
+    mutateForm()
+  }, [isMembershipUpdateDone, mutateForm])
 
   const relevantGuildPlatform = guildPlatforms.find(
     (gp) => gp.platformGuildData?.formId === formId
@@ -57,7 +74,7 @@ const FormPage = ({ formId }: Props) => {
         <Card>
           <ErrorAlert label="Couldn't load form" mb="0" />
         </Card>
-      ) : hasRoleAccess ? (
+      ) : form?.fields && role && hasRoleAccess ? (
         <FillForm form={form} />
       ) : (
         <FormNoAccess isMember={isMember}>
@@ -65,7 +82,13 @@ const FormPage = ({ formId }: Props) => {
             <RoleRequirements role={role} isOpen isExpanded />
           ) : (
             <Box px={5} pb={5}>
-              <RoleRequirementsSkeleton />
+              {isLoading ? (
+                <RoleRequirementsSkeleton />
+              ) : (
+                <Requirement image={<Icon as={Question} boxSize={5} />}>
+                  Some secret requirements
+                </Requirement>
+              )}
             </Box>
           )}
         </FormNoAccess>

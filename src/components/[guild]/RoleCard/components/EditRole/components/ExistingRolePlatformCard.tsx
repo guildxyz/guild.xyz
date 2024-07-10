@@ -10,8 +10,9 @@ import SetVisibility from "components/[guild]/SetVisibility"
 import useVisibilityModalProps from "components/[guild]/SetVisibility/hooks/useVisibilityModalProps"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
-import NftAvailabilityTags from "rewards/ContractCall/components/NftAvailabilityTags"
 import rewards, { CAPACITY_TIME_PLATFORMS } from "rewards"
+import NftAvailabilityTags from "rewards/ContractCall/components/NftAvailabilityTags"
+import rewardComponents from "rewards/components"
 import {
   GuildPlatformWithOptionalId,
   PlatformName,
@@ -67,11 +68,9 @@ const ExistingRolePlatformCard = ({ rolePlatform }: Props) => {
     guildPlatform.platformGuildData.function ===
       ContractCallFunction.DEPRECATED_SIMPLE_CLAIM
 
-  const {
-    cardPropsHook: useCardProps,
-    isPlatform,
-    cardSettingsComponent,
-  } = rewards[type]
+  const { cardPropsHook: useCardProps, cardSettingsComponent } =
+    rewardComponents[type]
+  const { isPlatform } = rewards[type]
 
   return (
     <RolePlatformProvider

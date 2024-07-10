@@ -21,6 +21,7 @@ import useToast from "hooks/useToast"
 import { useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import rewards, { CAPACITY_TIME_PLATFORMS } from "rewards"
+import rewardComponents from "rewards/components"
 import SelectRoleOrSetRequirements from "rewards/components/SelectRoleOrSetRequirements"
 import { RoleTypeToAddTo, useAddRewardContext } from "../AddRewardContext"
 import useGuild from "../hooks/useGuild"
@@ -72,11 +73,11 @@ const SelectRolePanel = ({
   const isAddRewardButtonDisabled =
     activeTab === RoleTypeToAddTo.NEW_ROLE ? !requirements?.length : !roleIds?.length
 
-  const { RewardPreview } = rewards[selection] ?? {}
+  const { RewardPreview } = rewardComponents[selection] ?? {}
 
   const goBack = () => {
     if (!rewards[selection].autoRewardSetup) methods.reset(defaultValues)
-    setStep("REWARD_SETUP")
+    setStep(selection === "POLYGON_ID" ? "HOME" : "REWARD_SETUP")
   }
 
   return (

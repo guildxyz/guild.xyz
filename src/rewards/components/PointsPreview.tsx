@@ -1,3 +1,4 @@
+import { CREATE_NEW_OPTION } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddPointsPanel/components/ExistingPointsTypeSelect"
 import useGuildPlatform from "components/[guild]/hooks/useGuildPlatform"
 import { useWatch } from "react-hook-form"
 import RewardPreview from "./RewardPreview"
@@ -14,9 +15,10 @@ const PointsPreview = (): JSX.Element => {
   })
 
   const { guildPlatform } = useGuildPlatform(guildPlatformId)
-  const { name, imageUrl } = guildPlatformId
-    ? guildPlatform.platformGuildData ?? {}
-    : platformGuildData ?? {}
+  const { name, imageUrl } =
+    guildPlatformId && guildPlatformId !== CREATE_NEW_OPTION
+      ? guildPlatform.platformGuildData ?? {}
+      : platformGuildData ?? {}
 
   return (
     <RewardPreview

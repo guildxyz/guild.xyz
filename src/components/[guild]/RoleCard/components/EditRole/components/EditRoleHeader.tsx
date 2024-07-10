@@ -1,5 +1,4 @@
-import { HStack, Icon, IconButton } from "@chakra-ui/react"
-import { ArrowLeft } from "@phosphor-icons/react"
+import { HStack } from "@chakra-ui/react"
 import SetVisibility, { SetVisibilityForm } from "components/[guild]/SetVisibility"
 import useVisibilityModalProps from "components/[guild]/SetVisibility/hooks/useVisibilityModalProps"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -43,20 +42,6 @@ const EditRoleHeader = ({
       spacing={1}
       alignItems="center"
       w="full"
-      leftElement={
-        <IconButton
-          aria-label="Back"
-          icon={<Icon as={ArrowLeft} weight="bold" />}
-          variant="ghost"
-          display={{ base: "flex", md: "none" }}
-          borderRadius="full"
-          maxW={10}
-          maxH={10}
-          onClick={onClose}
-        >
-          Cancel
-        </IconButton>
-      }
     >
       <HStack justifyContent={"space-between"} flexGrow={1} w={"fit-content"}>
         <SetVisibility

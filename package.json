@@ -16,7 +16,8 @@
     "test": "cypress run",
     "test:mobile": "cypress run --config viewportWidth=375,viewportHeight=667",
     "snyk-protect": "snyk-protect",
-    "postinstall": "npx dotenv-cli -e .env.local -- bash -c 'npm i --no-save --ignore-scripts $WAAS_WEB_URL $WAAS_VIEM_URL'"
+    "postinstall": "npx dotenv-cli -e .env.local -- bash -c 'npm i --no-save --ignore-scripts $WAAS_WEB_URL $WAAS_VIEM_URL'",
+    "dcd": "npx tsx scripts/detectCircularDependencies.ts"
   },
   "dependencies": {
     "@bugsnag/js": "^7.22.4",
@@ -29,7 +30,7 @@
     "@emotion/styled": "^11.11.0",
     "@fuels/connectors": "^0.5.0",
     "@fuels/react": "^0.20.0",
-    "@guildxyz/types": "1.9.24",
+    "@guildxyz/types": "1.9.25",
     "@hcaptcha/react-hcaptcha": "^1.4.4",
     "@hookform/resolvers": "^3.3.4",
     "@lexical/code": "^0.12.0",
@@ -78,7 +79,6 @@
     "react-error-boundary": "^4.0.13",
     "react-google-recaptcha": "^3.1.0",
     "react-hook-form": "7.43.9",
-    "react-intersection-observer": "^9.4.3",
     "react-live-chat-loader": "^2.9.1",
     "react-markdown": "^8.0.7",
     "react-papaparse": "^4.4.0",
@@ -88,8 +88,8 @@
     "swr": "^2.2.4",
     "usehooks-ts": "^3.1.0",
     "uuidv7": "^0.6.3",
-    "viem": "^2.15.1",
-    "wagmi": "^2.10.2",
+    "viem": "^2.17.0",
+    "wagmi": "^2.10.9",
     "wicg-inert": "^3.1.2",
     "zod": "^3.22.4"
   },
@@ -102,8 +102,10 @@
     "@types/react-google-recaptcha": "^2.1.5",
     "@typescript-eslint/eslint-plugin": "^5.54.0",
     "abitype": "^1.0.2",
+    "circular-dependency-plugin": "^5.2.2",
     "cypress": "^13.3.2",
     "dotenv-cli": "^7.4.1",
+    "dpdm": "^3.14.0",
     "eslint": "^8.57.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-typescript": "^17.0.0",
@@ -113,7 +115,7 @@
     "lint-staged": "^13.0.0",
     "prettier": "^2.8.1",
     "prettier-plugin-jsdoc": "^0.4.2",
-    "typescript": "^5.4.2",
+    "typescript": "^5.5.3",
     "webpack-bugsnag-plugins": "^1.8.0"
   },
   "lint-staged": {

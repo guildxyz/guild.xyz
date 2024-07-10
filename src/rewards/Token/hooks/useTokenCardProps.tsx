@@ -1,17 +1,18 @@
 import useTokenData from "hooks/useTokenData"
-import { GuildPlatformWithOptionalId, PlatformName } from "types"
+import { CardPropsHook } from "rewards/types"
+import { GuildPlatformWithOptionalId } from "types"
 
-// used in role edit drawer, for AccessHub we have TokenRewardCard
-const useTokenCardProps = (guildPlatform: GuildPlatformWithOptionalId) => {
-  const { chain, imageUrl, tokenAddress } = guildPlatform.platformGuildData
-
+/** Used in role edit drawer, for AccessHub we have TokenRewardCard */
+const useTokenCardProps: CardPropsHook = ({
+  platformGuildData,
+}: GuildPlatformWithOptionalId) => {
   const {
     data: { symbol, logoURI },
-  } = useTokenData(chain, tokenAddress)
+  } = useTokenData(platformGuildData?.chain, platformGuildData?.tokenAddress)
 
   return {
-    type: "ERC20" as PlatformName,
-    image: logoURI || imageUrl,
+    type: "ERC20",
+    image: logoURI || platformGuildData?.imageUrl,
     name: `Claim ${symbol}`,
   }
 }

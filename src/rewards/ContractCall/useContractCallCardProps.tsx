@@ -5,8 +5,11 @@ import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import { GuildPlatformWithOptionalId, PlatformName } from "types"
 import { Chains } from "wagmiConfig/chains"
 import NftAvailabilityTags from "./components/NftAvailabilityTags"
+import { CardPropsHook } from "rewards/types"
 
-const useContractCallCardProps = (guildPlatform: GuildPlatformWithOptionalId) => {
+const useContractCallCardProps: CardPropsHook = (
+  guildPlatform: GuildPlatformWithOptionalId
+) => {
   const { roles } = useGuild()
   const { isAdmin } = useGuildPermission()
   const { chain, contractAddress } = guildPlatform.platformGuildData
@@ -16,10 +19,10 @@ const useContractCallCardProps = (guildPlatform: GuildPlatformWithOptionalId) =>
     nftAddress: contractAddress,
     chainId: Chains[chain],
   })
-  const alreadyCollected = nftBalance > 0
+  const alreadyCollected = nftBalance && nftBalance > 0
 
   const rolePlatform = roles
-    .flatMap((role) => role.rolePlatforms)
+    ?.flatMap((role) => role.rolePlatforms)
     .find((rp) => rp.guildPlatformId === guildPlatform.id)
 
   return {
@@ -33,7 +36,7 @@ const useContractCallCardProps = (guildPlatform: GuildPlatformWithOptionalId) =>
         mt={1}
       />
     ),
-    shouldHide: !isAdmin && alreadyCollected,
+    shouldHide: !isAdmin && Boolean(alreadyCollected),
   }
 }
 

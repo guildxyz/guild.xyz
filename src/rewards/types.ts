@@ -1,6 +1,6 @@
 import type { ThemingProps } from "@chakra-ui/react"
 import type { IconProps } from "@phosphor-icons/react"
-import type { RewardProps } from "components/[guild]/RoleCard/components/Reward"
+import type { RewardProps } from "components/[guild]/RoleCard/components/types"
 import type {
   ComponentType,
   ForwardRefExoticComponent,
@@ -35,29 +35,33 @@ export enum PlatformAsRewardRestrictions {
 }
 
 export type RewardData = {
-  icon: ForwardRefExoticComponent<IconProps & RefAttributes<SVGSVGElement>>
+  icon?: ForwardRefExoticComponent<IconProps & RefAttributes<SVGSVGElement>>
   imageUrl?: string
   name: string
   colorScheme: ThemingProps["colorScheme"]
   gatedEntity: string
-  cardPropsHook?: CardPropsHook
   /**
    * True when the AddRewardPanel just automatically adds the platform without any
    * user input
    */
-  autoRewardSetup?: boolean
-  cardSettingsComponent?: CardSettingsComponent
-  cardMenuComponent?: (props) => JSX.Element
-  cardWarningComponent?: (props) => JSX.Element
-  cardButton?: (props) => JSX.Element
-  AddRewardPanel?: ComponentType<AddRewardPanelProps>
-  RewardPreview?: ComponentType<PropsWithChildren<unknown>>
-  RoleCardComponent?: ComponentType<RewardProps>
-  isPlatform?: boolean
+  autoRewardSetup: boolean
+  isPlatform: boolean
   asRewardRestriction: PlatformAsRewardRestrictions
 }
 
+export type RewardComponentsData = {
+  cardPropsHook?: CardPropsHook
+  cardSettingsComponent?: CardSettingsComponent
+  cardMenuComponent?: (props: any) => JSX.Element
+  cardWarningComponent?: (props: any) => JSX.Element
+  cardButton?: (props: any) => JSX.Element
+  AddRewardPanel?: ComponentType<AddRewardPanelProps>
+  RewardPreview?: ComponentType<PropsWithChildren>
+  RoleCardComponent?: ComponentType<RewardProps>
+}
+
 export type Rewards = Readonly<Record<PlatformName, RewardData>>
+export type RewardComponents = Readonly<Record<PlatformName, RewardComponentsData>>
 
 export type AddRewardPanelProps = {
   onAdd: (
