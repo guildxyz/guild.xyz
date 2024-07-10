@@ -5,8 +5,8 @@ import {
   HStack,
   Icon,
   Input,
-  useColorModeValue,
   VStack,
+  useColorModeValue,
 } from "@chakra-ui/react"
 import { Palette } from "@phosphor-icons/react"
 import Color from "color"

@@ -3,17 +3,17 @@ import {
   HStack,
   IconButton,
   Input,
-  useColorModeValue,
   Wrap,
+  useColorModeValue,
 } from "@chakra-ui/react"
 import { CaretDown, X } from "@phosphor-icons/react"
 import * as combobox from "@zag-js/combobox"
 import { normalizeProps, useMachine } from "@zag-js/react"
 import { KeyboardEvent, useEffect, useRef, useState } from "react"
 import {
-  isSupportedQueryParam,
   SUPPORTED_SEARCH_OPTIONS,
   SupportedSearchOption,
+  isSupportedQueryParam,
   useActivityLogFilters,
 } from "./ActivityLogFiltersContext"
 import Dropdown from "./Dropdown"

@@ -2,10 +2,10 @@ import useGuildRewardNftBalanceByUserId from "components/[guild]/collect/hooks/u
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
+import { CardPropsHook } from "rewards/types"
 import { GuildPlatformWithOptionalId, PlatformName } from "types"
 import { Chains } from "wagmiConfig/chains"
 import NftAvailabilityTags from "./components/NftAvailabilityTags"
-import { CardPropsHook } from "rewards/types"
 
 const useContractCallCardProps: CardPropsHook = (
   guildPlatform: GuildPlatformWithOptionalId

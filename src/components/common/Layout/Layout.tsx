@@ -2,10 +2,10 @@ import {
   Box,
   BoxProps,
   Container,
-  Heading,
   HStack,
-  useColorMode,
+  Heading,
   VStack,
+  useColorMode,
 } from "@chakra-ui/react"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import useIsomorphicLayoutEffect from "hooks/useIsomorphicLayoutEffect"

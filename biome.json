@@ -7,10 +7,13 @@
     "indentWidth": 2,
     "lineEnding": "lf",
     "lineWidth": 85,
-    "attributePosition": "auto",
-    "ignore": ["node_modules", ".next", "yarn.lock", "package-lock.json", "public"]
+    "attributePosition": "auto"
   },
-  "organizeImports": { "enabled": false },
+  "files": {
+    "include": ["src", "cypress"],
+    "ignore": ["node_modules", ".next", "public", ".out"]
+  },
+  "organizeImports": { "enabled": true },
   "linter": {
     "enabled": true,
     "rules": {
@@ -46,8 +49,7 @@
         "useAwait": "off",
         "useNamespaceKeyword": "error"
       }
-    },
-    "ignore": ["**/node_modules/*", "**/out/*", "**/.next/*"]
+    }
   },
   "javascript": {
     "formatter": {
@@ -64,7 +66,6 @@
   },
   "overrides": [
     {
-      "include": ["*.ts", "*.tsx"],
       "linter": {
         "rules": {
           "correctness": {
@@ -92,7 +93,6 @@
       }
     },
     {
-      "include": ["*.ts", "*.tsx", "*.mts", "*.cts"],
       "linter": {
         "rules": {
           "correctness": {

@@ -9,7 +9,7 @@ import Requirement, {
 import RequirementChainIndicator from "components/[guild]/Requirements/components/RequirementChainIndicator"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import useTokenData from "hooks/useTokenData"
-import { Chain, CHAIN_CONFIG } from "wagmiConfig/chains"
+import { CHAIN_CONFIG, Chain } from "wagmiConfig/chains"
 
 type Props = RequirementProps
 

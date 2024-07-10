@@ -1,9 +1,9 @@
 import {
   FarcasterProfile,
   Logic,
-  schemas,
   Schemas,
   Visibility,
+  schemas,
 } from "@guildxyz/types"
 import { FeatureFlag } from "components/[guild]/EditGuild/components/FeatureFlags"
 import { ContractCallFunction } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"

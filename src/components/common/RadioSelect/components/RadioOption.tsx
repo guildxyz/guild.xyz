@@ -1,8 +1,8 @@
 import {
   Box,
   Collapse,
-  Heading,
   HStack,
+  Heading,
   Icon,
   Tag,
   Text,

@@ -1,7 +1,7 @@
 import {
   Box,
-  Collapse,
   FormErrorMessage as ChakraFormErrorMessage,
+  Collapse,
   useFormControlContext,
 } from "@chakra-ui/react"
 import { PropsWithChildren } from "react"

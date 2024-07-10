@@ -5,7 +5,7 @@ import useConnectorNameAndIcon from "components/_app/Web3ConnectionManager/hooks
 import Button from "components/common/Button"
 import { addressLinkParamsAtom } from "components/common/Layout/components/Account/components/AccountModal/components/LinkAddressButton"
 import { useAtomValue, useSetAtom } from "jotai"
-import { useAccount, type Connector } from "wagmi"
+import { type Connector, useAccount } from "wagmi"
 import { walletLinkHelperModalAtom } from "../../WalletLinkHelperModal"
 import { COINBASE_WALLET_SDK_ID } from "../WalletSelectorModal"
 

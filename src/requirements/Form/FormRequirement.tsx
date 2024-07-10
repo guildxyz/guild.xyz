@@ -6,8 +6,8 @@ import Requirement, {
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useGuildForm } from "components/[guild]/hooks/useGuildForms"
-import { useUserFormSubmission } from "rewards/Forms/hooks/useFormSubmissions"
 import rewards from "rewards"
+import { useUserFormSubmission } from "rewards/Forms/hooks/useFormSubmissions"
 
 const FormRequirement = (props: RequirementProps) => {
   const { urlName } = useGuild()

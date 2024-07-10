@@ -8,8 +8,8 @@ import {
   Spinner,
   Text,
   Tooltip,
-  useClipboard,
   Wrap,
+  useClipboard,
 } from "@chakra-ui/react"
 import { Copy, DownloadSimple, Question, Warning } from "@phosphor-icons/react"
 import Button from "components/common/Button"

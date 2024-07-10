@@ -1,8 +1,8 @@
 import {
   Box,
   Divider,
-  Heading,
   HStack,
+  Heading,
   Icon,
   IconButton,
   Img,
@@ -16,10 +16,10 @@ import {
   Stack,
   Text,
   Tooltip,
-  useDisclosure,
   VStack,
+  useDisclosure,
 } from "@chakra-ui/react"
-import { schemas, Schemas } from "@guildxyz/types"
+import { Schemas, schemas } from "@guildxyz/types"
 import { ArrowLeft, CaretRight } from "@phosphor-icons/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import AddCard from "components/common/AddCard"
@@ -32,9 +32,9 @@ import useToast from "hooks/useToast"
 import {
   Dispatch,
   FC,
-  forwardRef,
   LegacyRef,
   SetStateAction,
+  forwardRef,
   useEffect,
   useRef,
   useState,

@@ -1,9 +1,9 @@
 import { Circle, Img, useColorModeValue } from "@chakra-ui/react"
 import AvailabilityTags from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
 import useGuild from "components/[guild]/hooks/useGuild"
+import { CardPropsHook } from "rewards/types"
 import { GuildPlatform, PlatformName } from "types"
 import { gatherData } from "./data"
-import { CardPropsHook } from "rewards/types"
 
 const useGatherCardProps: CardPropsHook = (guildPlatform: GuildPlatform) => {
   const bgColor = useColorModeValue("gray.700", "gray.600")

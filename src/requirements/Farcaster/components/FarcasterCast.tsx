@@ -18,8 +18,8 @@ import {
   WarningCircle,
 } from "@phosphor-icons/react"
 import { PropsWithChildren } from "react"
-import FarcasterCastSmall from "./FarcasterCastSmall"
 import { FarcasterCastData } from "../types"
+import FarcasterCastSmall from "./FarcasterCastSmall"
 
 const FarcasterCast = ({
   cast,

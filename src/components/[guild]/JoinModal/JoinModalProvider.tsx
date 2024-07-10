@@ -1,7 +1,7 @@
 import { useDisclosure } from "@chakra-ui/react"
 import useMembership from "components/explorer/hooks/useMembership"
 import useClearUrlQuery from "hooks/useClearUrlQuery"
-import { createContext, PropsWithChildren, useContext, useEffect } from "react"
+import { PropsWithChildren, createContext, useContext, useEffect } from "react"
 import JoinModal from "./JoinModal"
 
 const JoinModalContext = createContext<() => void>(null)
