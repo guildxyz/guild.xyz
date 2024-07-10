@@ -36,7 +36,7 @@ const meta: Meta<typeof Alert> = {
     (Story) => (
       <div className="p-4">
         <Card className="p-4">
-          <h2 className="font-display text-xl font-black">Alert example</h2>
+          <h2 className="font-black font-display text-xl">Alert example</h2>
           <p className="mb-4">
             On a Card component, so we can see the colors properly
           </p>

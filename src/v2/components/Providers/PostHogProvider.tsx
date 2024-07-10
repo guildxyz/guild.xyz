@@ -5,7 +5,7 @@ import {
   PostHogProvider as DefaultPostHogProvider,
   usePostHog,
 } from "posthog-js/react"
-import { createContext, ReactNode, useCallback, useContext, useEffect } from "react"
+import { ReactNode, createContext, useCallback, useContext, useEffect } from "react"
 import { User } from "types"
 import useConnectorNameAndIcon from "../Web3ConnectionManager/hooks/useConnectorNameAndIcon"
 import { useWeb3ConnectionManager } from "../Web3ConnectionManager/hooks/useWeb3ConnectionManager"

@@ -21,7 +21,7 @@ const DialogOverlay = React.forwardRef<
   <DialogPrimitive.Overlay
     ref={ref}
     className={cn(
-      "fixed inset-0 z-50 grid place-items-center overflow-y-auto bg-black/50 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+      "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 grid place-items-center overflow-y-auto bg-black/50 backdrop-blur-sm data-[state=closed]:animate-out data-[state=open]:animate-in",
       className
     )}
     {...props}
@@ -82,7 +82,7 @@ const DialogCloseButton = React.forwardRef<
   <DialogPrimitive.Close
     ref={ref}
     className={cn(
-      "absolute right-10 top-8 rounded-full opacity-70 transition-opacity hover:opacity-100 focus:outline-none focus:ring-4 focus-visible:ring-ring disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground",
+      "absolute top-8 right-10 rounded-full opacity-70 transition-opacity hover:opacity-100 focus:outline-none focus:ring-4 focus-visible:ring-ring disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground",
       className
     )}
     {...props}
@@ -122,7 +122,7 @@ const DialogTitle = React.forwardRef<
   <DialogPrimitive.Title
     ref={ref}
     className={cn(
-      "font-display text-xl font-bold leading-none tracking-wide",
+      "font-bold font-display text-xl leading-none tracking-wide",
       className
     )}
     {...props}

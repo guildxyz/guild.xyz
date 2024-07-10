@@ -2,8 +2,8 @@ import {
   addressLinkParamsAtom,
   walletSelectorModalAtom,
 } from "@/components/Providers/atoms"
-import { Button, ButtonProps } from "@/components/ui/Button"
 import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import { Button, ButtonProps } from "@/components/ui/Button"
 import { Plus } from "@phosphor-icons/react"
 import useUser from "components/[guild]/hooks/useUser"
 import { useSetAtom } from "jotai"

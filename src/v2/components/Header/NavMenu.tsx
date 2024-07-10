@@ -32,7 +32,7 @@ export const NavMenu = () => (
     <PopoverTrigger asChild>
       <Button className="gap-2 rounded-2xl text-white" variant="ghost">
         <AnimatedLogo />
-        <span className="font-display text-base font-bold">Guild</span>
+        <span className="font-bold font-display text-base">Guild</span>
         <List weight="bold" />
       </Button>
     </PopoverTrigger>
@@ -116,7 +116,7 @@ export const NavMenu = () => (
 
 const NavGroup = ({ title, children }: { title: string; children: ReactNode }) => (
   <div className="flex min-w-36 max-w-max flex-col gap-[2px]">
-    <span className="my-1 pl-4 text-sm font-bold text-muted-foreground">
+    <span className="my-1 pl-4 font-bold text-muted-foreground text-sm">
       {title}
     </span>
     {children}

@@ -8,9 +8,9 @@ import { useSetAtom } from "jotai"
 import shortenHex from "utils/shortenHex"
 import { GuildAvatar } from "../GuildAvatar"
 import { accountModalAtom, walletSelectorModalAtom } from "../Providers/atoms"
+import { useWeb3ConnectionManager } from "../Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { Button } from "../ui/Button"
 import { Card } from "../ui/Card"
-import { useWeb3ConnectionManager } from "../Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 
 export const Account = () => {
   const { address } = useWeb3ConnectionManager()
@@ -37,14 +37,14 @@ export const Account = () => {
         <div className="flex items-center gap-3">
           <div className="flex flex-col items-end gap-0">
             <span
-              className={cn("text-base font-semibold", {
-                "text-sm font-bold": linkedAddressesCount > 0,
+              className={cn("font-semibold text-base", {
+                "font-bold text-sm": linkedAddressesCount > 0,
               })}
             >
               {domainName || `${shortenHex(address, 3)}`}
             </span>
             {linkedAddressesCount > 0 && (
-              <span className="text-xs font-medium text-muted-foreground">
+              <span className="font-medium text-muted-foreground text-xs">
                 {`+ ${linkedAddressesCount} address${
                   linkedAddressesCount > 1 ? "es" : ""
                 }`}

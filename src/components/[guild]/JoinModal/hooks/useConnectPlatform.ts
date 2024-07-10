@@ -1,5 +1,5 @@
-import { platformMergeAlertAtom } from "@/components/Providers/atoms"
 import { usePostHogContext } from "@/components/Providers/PostHogProvider"
+import { platformMergeAlertAtom } from "@/components/Providers/atoms"
 import { useErrorToast } from "@/components/ui/hooks/useErrorToast"
 import { useToast } from "@/components/ui/hooks/useToast"
 import useUser from "components/[guild]/hooks/useUser"

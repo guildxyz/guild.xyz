@@ -1,6 +1,7 @@
 import { useDisconnectAddress } from "@/components/Account/components/AccountModal/hooks/useDisconnect"
 import { CopyableAddress } from "@/components/CopyableAddress"
 import { GuildAvatar } from "@/components/GuildAvatar"
+import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -26,7 +27,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/Tooltip"
-import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { useDisclosure } from "@/hooks/useDisclosure"
 import {
   CircleNotch,
@@ -77,7 +77,7 @@ const LinkedAddress = ({ addressData }: Props) => {
           <CopyableAddress
             address={address}
             decimals={5}
-            className="mr-0.5 text-sm font-bold"
+            className="mr-0.5 font-bold text-sm"
           />
           {isDelegated && (
             <TooltipProvider>

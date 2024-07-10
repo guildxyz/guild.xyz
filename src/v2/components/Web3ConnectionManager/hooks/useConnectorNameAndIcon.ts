@@ -1,6 +1,6 @@
 import { useIsConnected } from "@fuels/react"
 import { useTheme } from "next-themes"
-import { useAccount, type Connector } from "wagmi"
+import { type Connector, useAccount } from "wagmi"
 import { COINBASE_WALLET_SDK_ID } from "wagmiConfig"
 
 const CUSTOM_CONNECTOR_ICONS: Record<

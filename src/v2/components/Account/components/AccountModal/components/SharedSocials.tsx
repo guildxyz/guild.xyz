@@ -88,7 +88,7 @@ const SharedSocials = () => {
             target="_blank"
           >
             Learn more{" "}
-            <ArrowSquareOut weight="bold" className="relative -top-px inline" />
+            <ArrowSquareOut weight="bold" className="-top-px relative inline" />
           </a>
         </p>
 
@@ -156,7 +156,7 @@ const ShareSocialsWithGuildSelect = ({
       )}
 
       {name?.length > 0 ? (
-        <span className="overflow-hidden text-ellipsis text-lg font-bold">
+        <span className="overflow-hidden text-ellipsis font-bold text-lg">
           {name}
         </span>
       ) : (
