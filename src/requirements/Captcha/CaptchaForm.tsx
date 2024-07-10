@@ -2,7 +2,7 @@ import { FormControl, FormLabel } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { ControlledRelativeTimeInput } from "components/common/RelativeTimeInput"
 import { useFormState } from "react-hook-form"
-import { RequirementFormProps } from "requirements"
+import { RequirementFormProps } from "requirements/types"
 import parseFromObject from "utils/parseFromObject"
 
 const CaptchaForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {

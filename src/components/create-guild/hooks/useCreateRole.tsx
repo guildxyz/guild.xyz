@@ -2,7 +2,6 @@ import processConnectorError from "components/[guild]/JoinModal/utils/processCon
 import useGuild from "components/[guild]/hooks/useGuild"
 import useRoleGroup from "components/[guild]/hooks/useRoleGroup"
 import { usePostHogContext } from "components/_app/PostHogProvider"
-import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import { useYourGuilds } from "components/explorer/YourGuilds"
 import useCustomPosthogEvents from "hooks/useCustomPosthogEvents"
 import useMatchMutate from "hooks/useMatchMutate"
@@ -50,7 +49,6 @@ const useCreateRole = ({
   const { rewardCreated } = useCustomPosthogEvents()
 
   const showErrorToast = useShowErrorToast()
-  const triggerConfetti = useJsConfetti()
 
   const { captureEvent } = usePostHogContext()
   const postHogOptions = {
@@ -72,8 +70,6 @@ const useCreateRole = ({
       onError?.(error_)
     },
     onSuccess: async (response_) => {
-      triggerConfetti()
-
       if (response_?.createdGuildPlatforms?.length > 0) {
         response_.createdGuildPlatforms.forEach((guildPlatform) => {
           rewardCreated(guildPlatform.platformId)

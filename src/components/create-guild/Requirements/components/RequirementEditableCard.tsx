@@ -8,7 +8,9 @@ import useVisibilityModalProps from "components/[guild]/SetVisibility/hooks/useV
 import dynamic from "next/dynamic"
 import { PropsWithChildren, memo, useRef } from "react"
 import { FormProvider, useForm, useFormContext } from "react-hook-form"
-import REQUIREMENTS, { RequirementType } from "requirements"
+import { REQUIREMENT_DISPLAY_COMPONENTS } from "requirements/requirementDisplayComponents"
+import { REQUIREMENT_FORM_COMPONENTS } from "requirements/requirementFormComponents"
+import { RequirementType } from "requirements/types"
 import { Requirement, RoleFormType } from "types"
 import BalancyFooter from "./BalancyFooter"
 import RemoveRequirementButton from "./RemoveRequirementButton"
@@ -35,8 +37,8 @@ const RequirementEditableCard = ({
   isEditDisabled = false,
 }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const RequirementComponent = REQUIREMENTS[type]?.displayComponent
-  const FormComponent = REQUIREMENTS[type].formComponent
+  const RequirementComponent = REQUIREMENT_DISPLAY_COMPONENTS[type]
+  const FormComponent = REQUIREMENT_FORM_COMPONENTS[type]
 
   const editButtonRef = useRef()
 

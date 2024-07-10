@@ -1,7 +1,7 @@
-import { env } from "env"
 import { kv } from "@vercel/kv"
+import { env } from "env"
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next"
-import { RequirementType } from "requirements"
+import { RequirementType } from "requirements/types"
 import { OneOf } from "types"
 import {
   ADDRESS_REGEX,

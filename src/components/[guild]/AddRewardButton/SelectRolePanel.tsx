@@ -15,7 +15,9 @@ import { Visibility } from "@guildxyz/types"
 import { ArrowLeft, Info } from "@phosphor-icons/react"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
+import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import useCreateRRR, { SubmitData } from "hooks/useCreateRRR"
+import useToast from "hooks/useToast"
 import { useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import rewards, { CAPACITY_TIME_PLATFORMS } from "rewards"
@@ -51,9 +53,16 @@ const SelectRolePanel = ({
     requirements: requirements,
     roleIds: roleIds,
   }
+  const toast = useToast()
+  const triggerConfetti = useJsConfetti()
 
   const { onSubmit, isLoading } = useCreateRRR({
     onSuccess: (res) => {
+      triggerConfetti()
+      toast({
+        title: "Reward successfully created!",
+        status: "success",
+      })
       captureEvent("reward created (AddRewardButton)", postHogOptions)
       onSuccess?.(res)
     },

@@ -1,5 +1,5 @@
 import RelativeMinMaxTimeFormControls from "components/common/RelativeMinMaxTimeFormControls"
-import { RequirementFormProps } from "requirements"
+import { RequirementFormProps } from "requirements/types"
 
 const CovalentFirstTxRelative = ({
   baseFieldPath,
