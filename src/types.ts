@@ -7,7 +7,6 @@ import {
 } from "@guildxyz/types"
 import { FeatureFlag } from "components/[guild]/EditGuild/components/FeatureFlags"
 import { ContractCallFunction } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
-import { RequirementType } from "requirements"
 import type { Chain, Chains } from "wagmiConfig/chains"
 import { z } from "zod"
 
@@ -793,7 +792,6 @@ export type {
   Requirement,
   RequirementCreateResponseOutput,
   RequirementCreationPayloadWithTempID,
-  RequirementType,
   Rest,
   Role,
   RoleFormType,

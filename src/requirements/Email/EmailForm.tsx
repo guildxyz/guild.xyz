@@ -2,8 +2,8 @@ import { Divider, FormControl, FormLabel, Input, Stack } from "@chakra-ui/react"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { useFormContext, useWatch } from "react-hook-form"
-import { RequirementFormProps } from "requirements"
 import AllowlistFormInputs from "requirements/Allowlist/components/AllowlistFormInputs"
+import { RequirementFormProps } from "requirements/types"
 import parseFromObject from "utils/parseFromObject"
 
 const guildRequirementTypes = [

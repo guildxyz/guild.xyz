@@ -1,5 +1,5 @@
 import useGuildPlatform from "components/[guild]/hooks/useGuildPlatform"
-import { ProvidedValueDisplayProps } from "requirements"
+import type { ProvidedValueDisplayProps } from "requirements/requirementProvidedValues"
 
 const PointsAmountProvidedValue = ({ requirement }: ProvidedValueDisplayProps) => {
   const { guildPlatform } = useGuildPlatform(requirement?.data?.guildPlatformId)

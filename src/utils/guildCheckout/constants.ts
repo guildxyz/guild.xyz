@@ -1,4 +1,4 @@
-import { RequirementType } from "requirements"
+import { RequirementType } from "requirements/types"
 import oldTokenBuyerAbi from "static/abis/oldTokenBuyer"
 import tokenBuyerAbi from "static/abis/tokenBuyer"
 import { Abi, toBytes } from "viem"

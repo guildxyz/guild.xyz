@@ -1,6 +1,6 @@
 import { FormControl, FormLabel } from "@chakra-ui/react"
 import ControlledSelect from "components/common/ControlledSelect"
-import { RequirementFormProps } from "requirements"
+import { RequirementFormProps } from "requirements/types"
 import { SelectOption } from "types"
 
 type ValueType = "any" | "blue" | "business" | "government"

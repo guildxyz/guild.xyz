@@ -1,5 +1,5 @@
-import { PropsWithChildren, createContext, useContext } from "react"
-import { RequirementType } from "requirements"
+import { createContext, PropsWithChildren, useContext } from "react"
+import { RequirementType } from "requirements/types"
 
 type RequirementErrorConfig = Partial<Record<RequirementType, string>>
 
