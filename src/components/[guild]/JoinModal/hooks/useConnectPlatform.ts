@@ -1,5 +1,6 @@
 import { platformMergeAlertAtom } from "@/components/Providers/atoms"
 import { usePostHogContext } from "@/components/Providers/PostHogProvider"
+import { useErrorToast } from "@/components/ui/hooks/useErrorToast"
 import { useToast } from "@/components/ui/hooks/useToast"
 import useUser from "components/[guild]/hooks/useUser"
 import { env } from "env"
@@ -220,7 +221,7 @@ const useConnectPlatform = (
 
 const useConnect = (useSubmitOptions?: UseSubmitOptions, isAutoConnect = false) => {
   const { captureEvent } = usePostHogContext()
-  // const showErrorToast = useShowErrorToast()
+  const showErrorToast = useErrorToast()
   const showPlatformMergeAlert = useSetAtom(platformMergeAlertAtom)
 
   const { mutate: mutateUser, id } = useUser()
@@ -310,18 +311,11 @@ const useConnect = (useSubmitOptions?: UseSubmitOptions, isAutoConnect = false) 
         )
         showPlatformMergeAlert({ addressOrDomain, platformName })
       } else {
-        // TODO: migrate the useShowErrorToast hook
-        // showErrorToast(
-        //   toastError
-        //     ? { error: toastError, correlationId: rawError.correlationId }
-        //     : // temporary until we solve the X rate limit
-        //       platformName === "TWITTER"
-        //       ? {
-        //           error:
-        //             "There're a lot of users connecting now, and X is rate limiting us, so your request timed out. Please try again later!",
-        //         }
-        //       : rawError
-        // )
+        showErrorToast(
+          toastError
+            ? { error: toastError, correlationId: rawError.correlationId }
+            : rawError
+        )
       }
     },
   })
