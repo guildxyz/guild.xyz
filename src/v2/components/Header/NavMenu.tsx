@@ -94,7 +94,7 @@ export const NavMenu = () => (
             Guild SDK
           </NavButton>
 
-          <NavButton href="https://guildxyz.notion.site/Join-the-Guild-Team-7ffd822c4d7749cb9c1adb525c858ae1">
+          <NavButton href="https://careers.guild.xyz">
             <UsersThree weight="bold" />
             Team
           </NavButton>
