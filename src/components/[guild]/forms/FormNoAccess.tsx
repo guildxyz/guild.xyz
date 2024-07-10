@@ -11,10 +11,16 @@ import { Lock } from "@phosphor-icons/react"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import ClientOnly from "components/common/ClientOnly"
+import { PropsWithChildren } from "react"
 import { useOpenJoinModal } from "../JoinModal/JoinModalProvider"
 import RecheckAccessesButton from "../RecheckAccessesButton"
 
-const FormNoAccess = ({ isMember, children }) => {
+const FormNoAccess = ({
+  isMember,
+  children,
+}: PropsWithChildren<{
+  isMember: boolean
+}>) => {
   const openJoinModal = useOpenJoinModal()
 
   const bgColor = useColorModeValue("gray.50", "blackAlpha.300")
