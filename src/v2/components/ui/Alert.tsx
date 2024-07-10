@@ -3,7 +3,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { forwardRef, HTMLAttributes } from "react"
 
 const alertVariants = cva(
-  "relative w-full rounded-xl p-4 [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 text-foreground [&>svg~*]:pl-7",
+  "relative w-full rounded-xl p-4 [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 text-foreground [&>svg~*]:pl-8 [&>svg~*]:mt-1",
   {
     variants: {
       variant: {

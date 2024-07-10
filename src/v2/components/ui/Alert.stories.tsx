@@ -20,7 +20,7 @@ const AlertExample = (props: AlertProps) => {
   const AlertIcon = icons[props.variant]
   return (
     <Alert {...props}>
-      <AlertIcon weight="fill" className="h-auto w-5" />
+      <AlertIcon weight="fill" className="size-6" />
       <AlertTitle>Heads up!</AlertTitle>
       <AlertDescription>
         You can add components and dependencies to your app using the cli.

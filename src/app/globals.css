@@ -156,10 +156,13 @@
     --toast-info: 226 7% 36%;
 
     --alert-success: var(--toast-success);
+    --alert-success-icon: 141 79% 85%;
     --alert-info: var(--toast-info);
+    --alert-info-icon: 213 97% 87%;
     --alert-warning: var(--toast-warning);
-    --alert-warning-icon: 27 96% 61%;
+    --alert-warning-icon: 32 98% 83%;
     --alert-error: var(--toast-error);
+    --alert-error-icon: 0 96% 89%;
 
     --discord-hover: 234 89% 74%;
     --discord-active: 230 94% 82%;
