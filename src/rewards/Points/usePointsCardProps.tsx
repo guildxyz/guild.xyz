@@ -1,8 +1,8 @@
 import useDynamicRewardUserAmount from "rewards/Token/hooks/useDynamicRewardUserAmount"
+import { CardPropsHook } from "rewards/types"
 import Star from "static/icons/star.svg"
 import { GuildPlatformWithOptionalId } from "types"
 import { useRolePlatform } from "../../components/[guild]/RolePlatforms/components/RolePlatformProvider"
-import { CardPropsHook } from "rewards/types"
 
 const usePointsCardProps: CardPropsHook = (
   guildPlatform: GuildPlatformWithOptionalId

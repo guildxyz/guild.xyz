@@ -1,4 +1,4 @@
-import { useController, UseControllerProps } from "react-hook-form"
+import { UseControllerProps, useController } from "react-hook-form"
 import { SelectOption } from "types"
 import StyledSelect from "./StyledSelect"
 import { StyledSelectProps } from "./StyledSelect/StyledSelect"

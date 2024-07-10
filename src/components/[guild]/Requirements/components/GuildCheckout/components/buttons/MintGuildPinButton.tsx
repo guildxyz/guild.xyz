@@ -42,8 +42,8 @@ const MintGuildPinButton = (): JSX.Element => {
   const loadingText = isMinting
     ? mintLoadingText
     : isValidating
-    ? "Checking your NFTs"
-    : "Checking your balance"
+      ? "Checking your NFTs"
+      : "Checking your balance"
 
   const isDisabled =
     isInvalidImage ||
@@ -73,10 +73,10 @@ const MintGuildPinButton = (): JSX.Element => {
       {isInvalidImage || isTooSmallImage
         ? "Setup required"
         : alreadyMintedOnChain
-        ? "Already minted"
-        : !isSufficientBalance
-        ? "Insufficient balance"
-        : "Mint NFT"}
+          ? "Already minted"
+          : !isSufficientBalance
+            ? "Insufficient balance"
+            : "Mint NFT"}
     </Button>
   )
 }

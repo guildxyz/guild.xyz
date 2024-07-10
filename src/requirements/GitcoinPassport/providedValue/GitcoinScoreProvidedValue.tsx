@@ -1,4 +1,4 @@
-import { ProvidedValueDisplayProps } from "requirements"
+import type { ProvidedValueDisplayProps } from "requirements/requirementProvidedValues"
 import { scorers } from "../components/Score"
 
 const GitcoinScoreProvidedValue = ({ requirement }: ProvidedValueDisplayProps) =>

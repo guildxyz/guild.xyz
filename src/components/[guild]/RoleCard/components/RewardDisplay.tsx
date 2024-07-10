@@ -1,4 +1,4 @@
-import { ChakraProps, HStack, Stack, Wrap, Text } from "@chakra-ui/react"
+import { ChakraProps, HStack, Stack, Text, Wrap } from "@chakra-ui/react"
 import { PropsWithChildren, ReactNode } from "react"
 
 export const RewardDisplay = ({

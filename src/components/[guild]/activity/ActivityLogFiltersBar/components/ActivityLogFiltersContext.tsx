@@ -1,9 +1,9 @@
+import { ParsedUrlQuery } from "querystring"
 import { usePrevious } from "@chakra-ui/react"
 import { useRouter } from "next/router"
-import { ParsedUrlQuery } from "querystring"
 import {
-  createContext,
   PropsWithChildren,
+  createContext,
   useContext,
   useEffect,
   useState,

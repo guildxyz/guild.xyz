@@ -122,8 +122,8 @@ const FormCardEditable = ({ index, fieldId, onUpdate, onRemove }: Props) => {
                                   },
                                 ]
                               : isRate
-                              ? [...Array(10)].map((_, i) => ({ value: i + 1 }))
-                              : [],
+                                ? [...Array(10)].map((_, i) => ({ value: i + 1 }))
+                                : [],
                           })
                         }}
                       />

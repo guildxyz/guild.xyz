@@ -1,5 +1,5 @@
 import { Icon, Link } from "@chakra-ui/react"
-import { Heart, Share, UserPlus, type IconProps } from "@phosphor-icons/react"
+import { Heart, type IconProps, Share, UserPlus } from "@phosphor-icons/react"
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import useUser from "components/[guild]/hooks/useUser"
@@ -74,8 +74,8 @@ const TwitterIntent = ({
       ? isTwitterConnected && !hasAccess && !isIOS
         ? `${TWITTER_INTENT_BASE_URL}/${action}?${intentQueryParam[action]}=${id}`
         : requirementType === "TWITTER_FOLLOW_V2"
-        ? `https://x.com/${id}`
-        : `https://x.com/twitter/status/${id}`
+          ? `https://x.com/${id}`
+          : `https://x.com/twitter/status/${id}`
       : undefined
 
   const completeAction = (signedValidation: SignedValidation) =>

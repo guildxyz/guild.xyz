@@ -1,6 +1,6 @@
 import { useColorMode } from "@chakra-ui/react"
 import { useIsConnected } from "@fuels/react"
-import { useAccount, type Connector } from "wagmi"
+import { type Connector, useAccount } from "wagmi"
 import { COINBASE_WALLET_SDK_ID } from "../components/WalletSelectorModal"
 
 const CUSTOM_CONNECTOR_ICONS: Record<
@@ -46,8 +46,8 @@ const useConnectorNameAndIcon = (connectorParam?: Connector) => {
       connector?.name === "Injected"
         ? "Injected Wallet"
         : connector?.id === "coinbaseWalletSDK"
-        ? "Smart Wallet"
-        : connector?.name || (isFuelConnected ? "Fuel" : ""),
+          ? "Smart Wallet"
+          : connector?.name || (isFuelConnected ? "Fuel" : ""),
     connectorIcon,
   }
 }

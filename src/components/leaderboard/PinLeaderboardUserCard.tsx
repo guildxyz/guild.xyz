@@ -17,8 +17,8 @@ import {
   SkeletonCircle,
   Stack,
   Text,
-  useColorModeValue,
   VStack,
+  useColorModeValue,
 } from "@chakra-ui/react"
 import { CaretDown, Trophy } from "@phosphor-icons/react"
 import Button from "components/common/Button"
@@ -112,10 +112,10 @@ const PinLeaderboardUserCard = ({
                 position <= 3
                   ? { base: "sm", sm: "md" }
                   : position < 1000
-                  ? { base: "lg", sm: "xl" }
-                  : position < 10000
-                  ? { base: "md", sm: "lg" }
-                  : { base: "xs", sm: "sm" }
+                    ? { base: "lg", sm: "xl" }
+                    : position < 10000
+                      ? { base: "md", sm: "lg" }
+                      : { base: "xs", sm: "sm" }
               }
               fontWeight="bold"
               letterSpacing="wide"

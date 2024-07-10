@@ -1,10 +1,10 @@
 import { inputAnatomy as parts } from "@chakra-ui/anatomy"
 import {
-  createMultiStyleConfigHelpers,
-  defineStyle,
   PartsStyleFunction,
   PartsStyleObject,
   SystemStyleObject,
+  createMultiStyleConfigHelpers,
+  defineStyle,
 } from "@chakra-ui/react"
 import { mode } from "@chakra-ui/theme-tools"
 

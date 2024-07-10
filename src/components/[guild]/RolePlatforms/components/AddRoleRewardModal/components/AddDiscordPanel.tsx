@@ -1,6 +1,6 @@
 import DiscordGuildSetup from "components/common/DiscordGuildSetup"
-import { AddRewardPanelProps } from "rewards"
 import { useWatch } from "react-hook-form"
+import { AddRewardPanelProps } from "rewards"
 import { PlatformGuildData, PlatformType } from "types"
 import DefaultAddRewardPanelWrapper from "../DefaultAddRewardPanelWrapper"
 

@@ -27,8 +27,8 @@ const Details = () => {
               {typeof maxSupply !== "bigint"
                 ? "Loading..."
                 : maxSupply === BigInt(0)
-                ? "Unlimited"
-                : maxSupply.toString()}
+                  ? "Unlimited"
+                  : maxSupply.toString()}
             </Text>
           </Skeleton>
         </InfoBlock>

@@ -1,8 +1,8 @@
 import {
   Box,
   Divider,
-  Heading,
   HStack,
+  Heading,
   Icon,
   IconButton,
   Img,
@@ -16,10 +16,10 @@ import {
   Stack,
   Text,
   Tooltip,
-  useDisclosure,
   VStack,
+  useDisclosure,
 } from "@chakra-ui/react"
-import { schemas, Schemas } from "@guildxyz/types"
+import { Schemas, schemas } from "@guildxyz/types"
 import { ArrowLeft, CaretRight } from "@phosphor-icons/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import AddCard from "components/common/AddCard"
@@ -32,19 +32,21 @@ import useToast from "hooks/useToast"
 import {
   Dispatch,
   FC,
-  forwardRef,
   LegacyRef,
   SetStateAction,
+  forwardRef,
   useEffect,
   useRef,
   useState,
 } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
-import REQUIREMENTS, { REQUIREMENTS_DATA, RequirementType } from "requirements"
+import REQUIREMENTS, { REQUIREMENTS_DATA } from "requirements"
+import { REQUIREMENT_FORM_COMPONENTS } from "requirements/requirementFormComponents"
 import {
   PROVIDER_TYPES,
   REQUIREMENT_PROVIDED_VALUES,
-} from "requirements/requirements"
+} from "requirements/requirementProvidedValues"
+import { RequirementType } from "requirements/types"
 import { Requirement } from "types"
 import useCreateRequirement from "../hooks/useCreateRequirement"
 import BalancyFooter from "./BalancyFooter"
@@ -56,7 +58,9 @@ const general = REQUIREMENTS_DATA.slice(1, GENERAL_REQUIREMENTS_COUNT + 1)
 const integrations = REQUIREMENTS_DATA.slice(GENERAL_REQUIREMENTS_COUNT + 1)
 
 // call undocumented preload() from next/dynamic, so the components are already loaded when they mount, which is needed for the height animation
-Object.values(REQUIREMENTS).forEach((a: any) => a.formComponent?.render?.preload?.())
+Object.values(REQUIREMENT_FORM_COMPONENTS).forEach((requirementFormComponent) =>
+  requirementFormComponent?.render?.preload?.()
+)
 
 const TRANSITION_DURATION_MS = 200
 const HOME_MAX_HEIGHT = "550px"
@@ -147,8 +151,8 @@ const AddRequirement = ({
                 {selectedType
                   ? `Add ${REQUIREMENTS[selectedType]?.name} requirement`
                   : providerTypesOnly
-                  ? "Add provider requirement"
-                  : "Add requirement"}
+                    ? "Add provider requirement"
+                    : "Add requirement"}
               </Text>
             </HStack>
           </ModalHeader>
@@ -203,7 +207,7 @@ const AddRequirementForm = forwardRef(
     }: AddRequirementFormProps,
     ref: LegacyRef<HTMLDivElement>
   ) => {
-    const FormComponent = REQUIREMENTS[selectedType].formComponent
+    const FormComponent = REQUIREMENT_FORM_COMPONENTS[selectedType]
 
     const methods = useForm<Schemas["RequirementCreationPayload"]>({ mode: "all" })
 

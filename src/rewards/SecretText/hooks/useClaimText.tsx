@@ -20,11 +20,11 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import { PropsWithChildren } from "react"
 import ReactMarkdown from "react-markdown"
+import remarkGfm from "remark-gfm"
 import { useSWRConfig } from "swr"
 import useSWRImmutable from "swr/immutable"
 import fetcher from "utils/fetcher"
 import { useClaimedReward } from "../../../hooks/useClaimedReward"
-import remarkGfm from "remark-gfm"
 
 type ClaimResponse = {
   uniqueValue: string

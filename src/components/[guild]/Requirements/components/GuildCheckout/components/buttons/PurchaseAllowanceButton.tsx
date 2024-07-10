@@ -7,7 +7,7 @@ import Button from "components/common/Button"
 import useTokenData from "hooks/useTokenData"
 import { NULL_ADDRESS, TOKEN_BUYER_CONTRACTS } from "utils/guildCheckout/constants"
 import { useChainId } from "wagmi"
-import { Chain, CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
+import { CHAIN_CONFIG, Chain, Chains } from "wagmiConfig/chains"
 import { useRequirementContext } from "../../../RequirementContext"
 import usePrice from "../../hooks/usePrice"
 import { useGuildCheckoutContext } from "../GuildCheckoutContext"
@@ -76,8 +76,8 @@ const PurchaseAllowanceButton = (): JSX.Element => {
           isPriceLoading || isAllowanceLoading
             ? "Checking allowance"
             : isAllowing
-            ? "Allowing"
-            : "Check your wallet"
+              ? "Allowing"
+              : "Check your wallet"
         }
         onClick={onClick}
         w="full"

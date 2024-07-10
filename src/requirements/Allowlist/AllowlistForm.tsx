@@ -3,7 +3,7 @@ import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { StyledSelectProps } from "components/common/StyledSelect/StyledSelect"
 import { useFormContext } from "react-hook-form"
-import { RequirementFormProps } from "requirements"
+import { RequirementFormProps } from "requirements/types"
 import parseFromObject from "utils/parseFromObject"
 import AllowlistFormInputs from "./components/AllowlistFormInputs"
 

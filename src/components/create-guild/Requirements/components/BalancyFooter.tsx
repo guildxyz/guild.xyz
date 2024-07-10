@@ -24,8 +24,8 @@ const BalancyFooter = ({ baseFieldPath }) => {
           requirement?.isNegated
             ? "excluded by"
             : holders > 1
-            ? "satisfy"
-            : "satisfies"
+              ? "satisfy"
+              : "satisfies"
         } this requirement`}
       </Text>
     )

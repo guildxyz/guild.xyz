@@ -1,5 +1,5 @@
 import { HStack, Text } from "@chakra-ui/react"
-import { ProvidedValueDisplayProps } from "requirements"
+import type { ProvidedValueDisplayProps } from "requirements/requirementProvidedValues"
 import useSWRImmutable from "swr/immutable"
 import { ArtistLink } from "../SoundRequirement"
 

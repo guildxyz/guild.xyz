@@ -67,8 +67,8 @@ const ClaimPoapButton = ({ rolePlatform, ...rest }: Props) => {
           isAccessLoading
             ? "Checking access"
             : isMembershipUpdateLoading
-            ? "Checking eligibility"
-            : "Claiming POAP"
+              ? "Checking eligibility"
+              : "Claiming POAP"
         }
         onClick={() => {
           captureEvent("Click: ClaimPoapButton", {
@@ -92,8 +92,8 @@ const ClaimPoapButton = ({ rolePlatform, ...rest }: Props) => {
         {claimed
           ? "View mint link"
           : !hasRoleAccess
-          ? "Check access & claim"
-          : "Claim now"}
+            ? "Check access & claim"
+            : "Claim now"}
       </Button>
       <MintLinkModal
         isLoading={isLoading}

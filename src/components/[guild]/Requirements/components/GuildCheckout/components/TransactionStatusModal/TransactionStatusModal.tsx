@@ -40,10 +40,10 @@ const TransactionStatusModal = ({
           {txError
             ? "Transaction failed"
             : txSuccess
-            ? successTitle ?? "Successful payment"
-            : txHash
-            ? "Transaction is processing..."
-            : title}
+              ? successTitle ?? "Successful payment"
+              : txHash
+                ? "Transaction is processing..."
+                : title}
         </ModalHeader>
         {txSuccess && <ModalCloseButton />}
 

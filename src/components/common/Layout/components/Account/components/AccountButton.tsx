@@ -1,6 +1,6 @@
 import { ButtonProps } from "@chakra-ui/react"
 import Button from "components/common/Button"
-import { forwardRef, PropsWithChildren } from "react"
+import { PropsWithChildren, forwardRef } from "react"
 
 const AccountButton = forwardRef(
   ({ children, ...rest }: PropsWithChildren<ButtonProps>, ref: any): JSX.Element => (

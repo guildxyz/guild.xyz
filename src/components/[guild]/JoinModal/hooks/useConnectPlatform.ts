@@ -10,8 +10,8 @@ import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
 import useToast from "hooks/useToast"
 import { useSetAtom } from "jotai"
 import { OAuthResultParams } from "pages/oauth-result"
-import rewards from "rewards"
 import { useCallback, useMemo } from "react"
+import rewards from "rewards"
 import useSWR from "swr"
 import { PlatformName, PlatformType } from "types"
 import fetcher from "utils/fetcher"
@@ -314,12 +314,12 @@ const useConnect = (useSubmitOptions?: UseSubmitOptions, isAutoConnect = false) 
           toastError
             ? { error: toastError, correlationId: rawError.correlationId }
             : // temporary until we solve the X rate limit
-            platformName === "TWITTER"
-            ? {
-                error:
-                  "There're a lot of users connecting now, and X is rate limiting us, so your request timed out. Please try again later!",
-              }
-            : rawError
+              platformName === "TWITTER"
+              ? {
+                  error:
+                    "There're a lot of users connecting now, and X is rate limiting us, so your request timed out. Please try again later!",
+                }
+              : rawError
         )
       }
     },

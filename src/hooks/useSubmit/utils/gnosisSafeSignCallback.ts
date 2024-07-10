@@ -1,7 +1,7 @@
-import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
 // import EIP1271_ABI from "static/abis/EIP1271.json"
 import gnosisSignMessageLibAbi from "static/abis/gnosisSignMessageLib"
-import { createPublicClient, hashMessage, http } from "viem"
+import { http, createPublicClient, hashMessage } from "viem"
+import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
 
 // Move this type elsewhere, if we add multiple callbacks like this
 export type MethodSignCallback = (

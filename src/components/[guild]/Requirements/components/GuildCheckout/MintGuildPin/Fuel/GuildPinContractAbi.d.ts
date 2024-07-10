@@ -10,8 +10,8 @@
 */
 
 import type {
-  BigNumberish,
   BN,
+  BigNumberish,
   Bytes,
   Contract,
   EvmAddress,

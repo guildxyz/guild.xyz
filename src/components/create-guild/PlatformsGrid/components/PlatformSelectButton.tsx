@@ -1,17 +1,17 @@
 import {
   Circle,
-  Heading,
   HStack,
+  Heading,
   Icon,
   Spinner,
   Text,
   Tooltip,
-  useColorModeValue,
   VStack,
+  useColorModeValue,
 } from "@chakra-ui/react"
 import { ArrowSquareIn, CaretRight, IconProps } from "@phosphor-icons/react"
-import useUser from "components/[guild]/hooks/useUser"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
+import useUser from "components/[guild]/hooks/useUser"
 import { walletSelectorModalAtom } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import DisplayCard from "components/common/DisplayCard"
@@ -91,10 +91,10 @@ const PlatformSelectButton = ({
           !!disabledText
             ? undefined
             : !isWeb3Connected
-            ? () => setIsWalletSelectorModalOpen(true)
-            : isPlatformConnected
-            ? selectPlatform
-            : onConnect
+              ? () => setIsWalletSelectorModalOpen(true)
+              : isPlatformConnected
+                ? selectPlatform
+                : onConnect
         }
         h="auto"
         {...rest}
