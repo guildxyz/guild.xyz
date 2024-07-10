@@ -81,9 +81,8 @@ export const Account = () => {
             </span>
             {linkedAddressesCount > 0 && (
               <span className="text-xs font-medium text-muted-foreground">
-                {`+ ${linkedAddressesCount} address${
-                  linkedAddressesCount > 1 ? "es" : ""
-                }`}
+                {`+ ${linkedAddressesCount} address${linkedAddressesCount > 1 ? "es" : ""
+                  }`}
               </span>
             )}
           </div>

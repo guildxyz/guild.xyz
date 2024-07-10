@@ -33,8 +33,8 @@ export const NotificationContent = () => {
 }
 
 const WebInboxSkeleton = () => (
-  <div className="grid grid-cols-2 grid-rows-2 gap-4">
-    <Skeleton className="row-span-2 rounded-full" />
+  <div className="grid grid-cols-[auto_1fr] grid-rows-2 gap-2 h-16">
+    <Skeleton className="row-span-2 rounded-full aspect-square h-full" />
     <Skeleton className="" />
     <Skeleton className="" />
   </div>
