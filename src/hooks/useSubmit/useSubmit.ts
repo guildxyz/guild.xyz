@@ -173,28 +173,27 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
       setSignLoadingText(defaultLoadingText)
       setIsSigning(true)
 
-      const [signedPayload, validation] = await (
-        type === "EVM"
-          ? sign({
-              publicClient,
-              walletClient,
-              address,
-              payload,
-              chainId: chainId.toString(),
-              forcePrompt,
-              keyPair,
-              msg: message,
-              ts: Date.now() + timeInaccuracy,
-            })
-          : fuelSign({
-              wallet: fuelWallet,
-              address,
-              payload,
-              forcePrompt,
-              keyPair,
-              msg: message,
-              ts: Date.now() + timeInaccuracy,
-            })
+      const [signedPayload, validation] = await (type === "EVM"
+        ? sign({
+            publicClient,
+            walletClient,
+            address,
+            payload,
+            chainId: chainId.toString(),
+            forcePrompt,
+            keyPair,
+            msg: message,
+            ts: Date.now() + timeInaccuracy,
+          })
+        : fuelSign({
+            wallet: fuelWallet,
+            address,
+            payload,
+            forcePrompt,
+            keyPair,
+            msg: message,
+            ts: Date.now() + timeInaccuracy,
+          })
       )
         .then(async ([signed, val]) => {
           const callbackData = signCallbacks.find(({ domain }) =>

@@ -1,21 +1,21 @@
 "use client"
 
+import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { Button } from "@/components/ui/Button"
 import { Separator } from "@/components/ui/Separator"
 import { Skeleton } from "@/components/ui/Skeleton"
-import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { ArrowRight } from "@phosphor-icons/react"
-import Link from "next/link"
-import MessageImage from "/public/img/message.svg"
-import Image from "next/image"
-import { env } from "env"
 import {
   initWeb3InboxClient,
   useSubscription,
   useWeb3InboxAccount,
   useWeb3InboxClient,
 } from "@web3inbox/react"
+import { env } from "env"
+import Image from "next/image"
+import Link from "next/link"
 import { useAccount, useSignMessage } from "wagmi"
+import MessageImage from "/public/img/message.svg"
 
 export const NotificationContent = () => {
   const { type } = useWeb3ConnectionManager()
@@ -44,13 +44,13 @@ export const NotificationContent = () => {
     <div>
       {type === "EVM" && (
         <section className="mx-4">
-          <h3 className="mb-4 text-xs font-bold text-muted-foreground">MESSAGES</h3>
+          <h3 className="mb-4 font-bold text-muted-foreground text-xs">MESSAGES</h3>
           <div className="flex flex-col gap-4">
             {!subscription && (
               <div className="grid">
                 <Image src={MessageImage} alt="Messages" />
                 <h4 className="font-semibold">Subscribe to messages</h4>
-                <p className="text-sm leading-normal text-muted-foreground">
+                <p className="text-muted-foreground text-sm leading-normal">
                   Receive messages from guild admins
                 </p>
               </div>
