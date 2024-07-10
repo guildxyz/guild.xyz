@@ -1,3 +1,5 @@
+import { walletSelectorModalAtom } from "@/components/Providers/atoms"
+import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import {
   Circle,
   HStack,
@@ -12,8 +14,6 @@ import {
 import { ArrowSquareIn, CaretRight, IconProps } from "@phosphor-icons/react"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import useUser from "components/[guild]/hooks/useUser"
-import { walletSelectorModalAtom } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal"
-import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import DisplayCard from "components/common/DisplayCard"
 import { useSetAtom } from "jotai"
 import dynamic from "next/dynamic"

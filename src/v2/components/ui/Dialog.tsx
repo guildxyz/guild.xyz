@@ -1,6 +1,6 @@
 "use client"
 
-import { X } from "@phosphor-icons/react"
+import { X } from "@phosphor-icons/react/dist/ssr"
 import * as DialogPrimitive from "@radix-ui/react-dialog"
 import { FocusScope, FocusScopeProps } from "@radix-ui/react-focus-scope"
 import * as React from "react"
@@ -34,8 +34,8 @@ export const dialogContentVariants = cva(
   {
     variants: {
       size: {
-        md: "max-w-md",
         sm: "max-w-sm",
+        md: "max-w-md",
         lg: "max-w-lg",
         xl: "max-w-xl",
         "2xl": "max-w-2xl",
@@ -60,8 +60,8 @@ const DialogContent = React.forwardRef<
   DialogContentProps
 >(({ size, trapFocus = true, className, children, ...props }, ref) => (
   <DialogPortal>
-    <DialogOverlay>
-      <FocusScope trapped={trapFocus} loop>
+    <FocusScope trapped={trapFocus} loop>
+      <DialogOverlay>
         <DialogPrimitive.Content
           ref={ref}
           className={cn(dialogContentVariants({ size, className }))}
@@ -69,8 +69,8 @@ const DialogContent = React.forwardRef<
         >
           {children}
         </DialogPrimitive.Content>
-      </FocusScope>
-    </DialogOverlay>
+      </DialogOverlay>
+    </FocusScope>
   </DialogPortal>
 ))
 DialogContent.displayName = DialogPrimitive.Content.displayName
@@ -82,12 +82,12 @@ const DialogCloseButton = React.forwardRef<
   <DialogPrimitive.Close
     ref={ref}
     className={cn(
-      "absolute right-10 top-8 rounded-full opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground",
+      "absolute right-10 top-8 rounded-full opacity-70 transition-opacity hover:opacity-100 focus:outline-none focus:ring-4 focus-visible:ring-ring disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground",
       className
     )}
     {...props}
   >
-    <X className="h-5 w-5" />
+    <X weight="bold" className="h-5 w-5" />
     <span className="sr-only">Close</span>
   </DialogPrimitive.Close>
 ))

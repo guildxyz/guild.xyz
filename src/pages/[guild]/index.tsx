@@ -32,7 +32,6 @@ import GuildTabs from "components/[guild]/Tabs/GuildTabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
-import { addIntercomSettings } from "components/_app/IntercomProvider"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import BackButton from "components/common/Layout/components/BackButton"
@@ -49,6 +48,7 @@ import { MintPolygonIDProofProvider } from "rewards/PolygonID/components/MintPol
 import { SWRConfig } from "swr"
 import { Guild, SocialLinkKey } from "types"
 import fetcher from "utils/fetcher"
+import { addIntercomSettings } from "utils/intercom"
 import parseDescription from "utils/parseDescription"
 
 const DynamicOngoingIssuesBanner = dynamic(

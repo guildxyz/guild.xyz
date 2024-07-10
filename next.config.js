@@ -22,6 +22,9 @@ const nextConfig = {
       ],
     })
 
+    // To get rid of "Can't resolve ..." errors which come from some wallet connector SDKs
+    config.externals.push("pino-pretty", "lokijs", "encoding")
+
     if (!config.plugins) config.plugins = []
     if (process.env.VERCEL_ENV === "production") {
       config.plugins.push(
@@ -91,7 +94,12 @@ const nextConfig = {
   },
   experimental: {
     scrollRestoration: true,
-    optimizePackageImports: ["@phosphor-icons/react"],
+    optimizePackageImports: [
+      "@phosphor-icons/react",
+      "@phosphor-icons/react/dist/ssr",
+      "@fuels/react",
+      "fuels",
+    ],
   },
   async rewrites() {
     return {

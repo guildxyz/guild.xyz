@@ -1,3 +1,4 @@
+import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { MenuItem, useDisclosure } from "@chakra-ui/react"
 import { PencilSimple } from "@phosphor-icons/react"
 import RemovePlatformMenuItem from "components/[guild]/AccessHub/components/RemovePlatformMenuItem"
@@ -6,7 +7,6 @@ import PlatformCardMenu from "components/[guild]/RolePlatforms/components/Platfo
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
-import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import EditNFTDescriptionModal from "./components/EditNFTDescriptionModal"
 import EditNftModal from "./components/EditNftModal"
 

@@ -1,17 +1,13 @@
 "use client"
 
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/ToggleGroup"
-import { Desktop, Moon, Sun } from "@phosphor-icons/react"
+import { Desktop, Moon, Sun } from "@phosphor-icons/react/dist/ssr"
 import { useTheme } from "next-themes"
-import { useEffect, useState } from "react"
+import { useIsClient } from "usehooks-ts"
 
 export function ThemeToggle() {
   const { setTheme, theme } = useTheme()
-  const [isClient, setIsClient] = useState(false)
-
-  useEffect(() => {
-    setIsClient(true)
-  }, [])
+  const isClient = useIsClient()
 
   if (!isClient) {
     return

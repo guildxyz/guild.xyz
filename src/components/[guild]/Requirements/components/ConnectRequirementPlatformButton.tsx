@@ -1,10 +1,10 @@
-import { ButtonProps, Icon } from "@chakra-ui/react"
+import { ConnectEmailButton } from "@/components/Account/components/AccountModal/components/EmailAddress"
+import { ConnectFarcasterButton } from "@/components/Account/components/AccountModal/components/FarcasterProfile"
+import { ButtonProps } from "@chakra-ui/react"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
-import { ConnectEmailButton } from "components/common/Layout/components/Account/components/AccountModal/components/SocialAccount/EmailAddress"
-import { ConnectFarcasterButton } from "components/common/Layout/components/Account/components/AccountModal/components/SocialAccount/FarcasterProfile"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import useToast from "hooks/useToast"
 import REQUIREMENTS from "requirements"
@@ -62,16 +62,19 @@ const RequirementConnectButton = (props: ButtonProps) => {
         ? ConnectFarcasterButton
         : ConnectRequirementPlatformButton
 
-  return (
-    <ButtonComponent
-      isReconnection={isReconnection}
-      onSuccess={onSuccess}
-      leftIcon={<Icon as={rewards[platform]?.icon} />}
-      size="xs"
-      iconSpacing="1"
-      {...props}
-    />
-  )
+  return null
+  // TODO
+  // return (
+  //   <ButtonComponent
+  //     isReconnection={isReconnection}
+  //     onSuccess={onSuccess}
+  //     // TODO:
+  //     // leftIcon={<Icon as={rewards[platform]?.icon} />}
+  //     // size="xs"
+  //     // iconSpacing="1"
+  //     {...props}
+  //   />
+  // )
 }
 
 const ConnectRequirementPlatformButton = ({

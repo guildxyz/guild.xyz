@@ -1,3 +1,4 @@
+import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import {
   ModalBody,
   ModalCloseButton,
@@ -12,7 +13,6 @@ import {
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import dynamic from "next/dynamic"

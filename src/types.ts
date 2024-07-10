@@ -2,6 +2,7 @@ import {
   FarcasterProfile,
   Logic,
   Schemas,
+  UserProfile,
   Visibility,
   schemas,
 } from "@guildxyz/types"
@@ -118,11 +119,6 @@ type PlatformAccountDetails = {
   username?: string
 }
 
-type SharedSocial = {
-  guildId: number
-  isShared: boolean
-}
-
 type UserAddress = {
   address: `0x${string}`
   userId: number
@@ -136,7 +132,7 @@ type User = {
   id: number
   addresses: UserAddress[]
   platformUsers: PlatformAccountDetails[]
-  sharedSocials: SharedSocial[]
+  sharedSocials: UserProfile["sharedSocials"]
   publicKey?: string
   isSuperAdmin: boolean
 

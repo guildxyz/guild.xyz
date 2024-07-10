@@ -12,9 +12,9 @@ import {
 } from "@chakra-ui/react"
 import { Chat } from "@phosphor-icons/react"
 import { IpGeodata } from "app/api/ip-geodata/route"
-import { triggerChat } from "components/_app/IntercomProvider"
 import Button from "components/common/Button"
 import useSWRImmutable from "swr/immutable"
+import { triggerChat } from "utils/intercom"
 
 const BLOCKED_COUNTRY_CODES = [
   "US",

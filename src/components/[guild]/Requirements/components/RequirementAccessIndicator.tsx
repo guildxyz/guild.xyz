@@ -1,3 +1,4 @@
+import { accountModalAtom } from "@/components/Providers/atoms"
 import {
   ButtonGroup,
   Icon,
@@ -9,7 +10,6 @@ import {
 import { ArrowSquareIn, Check, LockSimple, Warning, X } from "@phosphor-icons/react"
 import RecheckAccessesButton from "components/[guild]/RecheckAccessesButton"
 import Button from "components/common/Button"
-import { accountModalAtom } from "components/common/Layout/components/Account/components/AccountModal"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import { useSetAtom } from "jotai"
 import dynamic from "next/dynamic"

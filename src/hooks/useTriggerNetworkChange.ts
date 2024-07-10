@@ -1,9 +1,9 @@
+import { useToast } from "@/components/ui/hooks/useToast"
 import { useSwitchChain } from "wagmi"
 import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
-import useToast from "./useToast"
 
 const useTriggerNetworkChange = () => {
-  const toast = useToast()
+  const { toast } = useToast()
   const { switchChainAsync, isPending } = useSwitchChain()
 
   const requestNetworkChange = async (
@@ -17,7 +17,7 @@ const useTriggerNetworkChange = () => {
         description: `Please switch to ${
           CHAIN_CONFIG[Chains[newChainId]].name
         } from your wallet manually!`,
-        status: "info",
+        variant: "info",
       })
     } else {
       switchChainAsync({

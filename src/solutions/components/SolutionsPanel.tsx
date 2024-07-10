@@ -1,3 +1,4 @@
+import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import {
   Box,
   Collapse,
@@ -12,7 +13,6 @@ import {
 } from "@chakra-ui/react"
 import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import SegmentedControl from "components/common/SegmentedControl"
 import SearchBar from "components/explorer/SearchBar"
 import { AnimatePresence } from "framer-motion"

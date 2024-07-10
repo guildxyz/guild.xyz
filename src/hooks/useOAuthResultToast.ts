@@ -1,4 +1,4 @@
-import { platformMergeAlertAtom } from "components/_app/Web3ConnectionManager/components/PlatformMergeErrorAlert"
+import { platformMergeAlertAtom } from "@/components/Providers/atoms"
 import { useSetAtom } from "jotai"
 import { useRouter } from "next/router"
 import { useEffect } from "react"

@@ -1,3 +1,6 @@
+import { usePostHogContext } from "@/components/Providers/PostHogProvider"
+import { Button } from "@/components/ui/Button"
+import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import {
   Divider,
   Icon,
@@ -12,11 +15,8 @@ import {
 import { Bell } from "@phosphor-icons/react"
 import { ActivityLogProvider } from "components/[guild]/activity/ActivityLogContext"
 import useUser from "components/[guild]/hooks/useUser"
-import { usePostHogContext } from "components/_app/PostHogProvider"
-import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import useLocalStorage from "hooks/useLocalStorage"
 import dynamic from "next/dynamic"
-import AccountButton from "../AccountButton"
 import WebInboxSkeleton from "../Web3Inbox/WebInboxSkeleton"
 import NotificationsActivityLog from "./components/NotificationsActivityLog"
 import NotificationsSection from "./components/NotificationsSection"
@@ -51,22 +51,22 @@ const Notifications = () => {
       {({ isOpen }) => (
         <>
           <PopoverTrigger>
-            <AccountButton
+            <Button
               aria-label="Notifications"
               onClick={() => {
                 setClickedOnNotifications(true)
                 if (isOpen) return
                 captureEvent("opened UserActivityLogPopover")
               }}
-              sx={{
-                "@keyframes notification": {
-                  "0%": { transform: "rotate(0deg)" },
-                  "2.5%": { transform: "rotate(15deg)" },
-                  "5%": { transform: "rotate(-15deg)" },
-                  "7.5": { transform: "rotate(15deg)" },
-                  "10%": { transform: "rotate(0deg)" },
-                },
-              }}
+              // sx={{
+              //   "@keyframes notification": {
+              //     "0%": { transform: "rotate(0deg)" },
+              //     "2.5%": { transform: "rotate(15deg)" },
+              //     "5%": { transform: "rotate(-15deg)" },
+              //     "7.5": { transform: "rotate(15deg)" },
+              //     "10%": { transform: "rotate(0deg)" },
+              //   },
+              // }}
             >
               <Icon
                 as={Bell}
@@ -77,7 +77,7 @@ const Notifications = () => {
                     : "notification 4s ease-in-out infinite"
                 }
               />
-            </AccountButton>
+            </Button>
           </PopoverTrigger>
 
           <PopoverContent

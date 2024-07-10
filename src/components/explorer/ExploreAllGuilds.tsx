@@ -1,3 +1,4 @@
+import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import {
   Center,
   Divider,
@@ -15,7 +16,6 @@ import {
   TABS_SM_BUTTONS_STYLES,
 } from "components/[guild]/Tabs/Tabs"
 import useUser from "components/[guild]/hooks/useUser"
-import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import ClientOnly from "components/common/ClientOnly"
 import Section from "components/common/Section"
 import ExplorerCardMotionWrapper from "components/explorer/ExplorerCardMotionWrapper"
