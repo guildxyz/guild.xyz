@@ -1,6 +1,6 @@
 import {
-  AlertDialog as ChakraAlert,
   AlertDialogProps,
+  AlertDialog as ChakraAlert,
   Modal as ChakraModal,
   ModalProps,
   useBreakpointValue,

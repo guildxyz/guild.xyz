@@ -16,12 +16,12 @@ import {
   PinInputField,
   Text,
   Tooltip,
-  useDisclosure,
   VStack,
+  useDisclosure,
 } from "@chakra-ui/react"
 import { PencilSimple } from "@phosphor-icons/react"
-import useUser from "components/[guild]/hooks/useUser"
 import { useConnectEmail } from "components/[guild]/JoinModal/hooks/useConnectPlatform"
+import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import { Error } from "components/common/Error"
 import { Modal } from "components/common/Modal"

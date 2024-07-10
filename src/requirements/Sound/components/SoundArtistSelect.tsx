@@ -69,8 +69,8 @@ const SoundArtistSelect = ({
                 !search?.length
                   ? "Start typing..."
                   : artistsLoading
-                  ? "Loading..."
-                  : "No results"
+                    ? "Loading..."
+                    : "No results"
               }
             />
           ),

@@ -7,8 +7,8 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import { motion } from "framer-motion"
-import rewards from "rewards"
 import { PropsWithChildren } from "react"
+import rewards from "rewards"
 import { PlatformName } from "types"
 
 const MotionHStack = motion(HStack)

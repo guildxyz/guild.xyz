@@ -17,8 +17,8 @@ import {
   SkeletonCircle,
   Stack,
   Text,
-  useColorModeValue,
   VStack,
+  useColorModeValue,
 } from "@chakra-ui/react"
 import { CaretDown, Trophy } from "@phosphor-icons/react"
 import Button from "components/common/Button"

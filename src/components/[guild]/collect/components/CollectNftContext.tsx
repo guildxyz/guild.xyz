@@ -6,6 +6,7 @@ import {
 import TransactionStatusModal from "components/[guild]/Requirements/components/GuildCheckout/components/TransactionStatusModal"
 import OpenseaLink from "components/[guild]/Requirements/components/GuildCheckout/components/TransactionStatusModal/components/OpenseaLink"
 import { RewardIcon } from "components/[guild]/RoleCard/components/Reward"
+import { RewardDisplay } from "components/[guild]/RoleCard/components/RewardDisplay"
 import { ContractCallFunction } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
 import { PropsWithChildren, createContext, useContext, useEffect } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
@@ -13,7 +14,6 @@ import { GuildPlatform } from "types"
 import { Chain, Chains } from "wagmiConfig/chains"
 import useGuildRewardNftBalanceByUserId from "../hooks/useGuildRewardNftBalanceByUserId"
 import useNftDetails from "../hooks/useNftDetails"
-import { RewardDisplay } from "components/[guild]/RoleCard/components/RewardDisplay"
 
 type Props = {
   roleId: number

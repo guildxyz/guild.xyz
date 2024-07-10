@@ -1,5 +1,5 @@
-import { ColumnFiltersState, SortingState } from "@tanstack/react-table"
 import { ParsedUrlQuery } from "querystring"
+import { ColumnFiltersState, SortingState } from "@tanstack/react-table"
 
 const parseFiltersFromQuery = (query: ParsedUrlQuery): ColumnFiltersState => {
   const filtersArray = []

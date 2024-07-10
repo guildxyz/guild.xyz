@@ -1,3 +1,4 @@
+import LegacyLayout from "./Layout"
 import BackButton from "./components/BackButton"
 import Background from "./components/Background"
 import Footer from "./components/Footer"
@@ -7,7 +8,6 @@ import HeaderSection from "./components/HeaderSection"
 import Headline from "./components/Headline"
 import MainSection from "./components/MainSection"
 import Root from "./components/Root"
-import LegacyLayout from "./Layout"
 
 export default LegacyLayout
 

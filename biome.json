@@ -1,0 +1,88 @@
+{
+  "$schema": "https://biomejs.dev/schemas/1.8.3/schema.json",
+  "formatter": {
+    "enabled": true,
+    "formatWithErrors": false,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineEnding": "lf",
+    "lineWidth": 85,
+    "attributePosition": "auto"
+  },
+  "files": {
+    "include": ["src", "cypress"],
+    "ignore": ["node_modules", ".next", "public", ".out"]
+  },
+  "organizeImports": { "enabled": true },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": false,
+      "a11y": { "useValidAnchor": "warn" },
+      "complexity": {
+        "noBannedTypes": "error",
+        "noUselessConstructor": "error",
+        "noUselessTypeConstraint": "error",
+        "useLiteralKeys": "error"
+      },
+      "correctness": {
+        "noInvalidUseBeforeDeclaration": "off",
+        "noPrecisionLoss": "error",
+        "noUnusedVariables": "off",
+        "useArrayLiterals": "off",
+        "noConstAssign": "off",
+        "noGlobalObjectCalls": "off",
+        "noInvalidConstructorSuper": "off",
+        "noNewSymbol": "off",
+        "noSetterReturn": "off",
+        "noUndeclaredVariables": "off",
+        "noUnreachable": "off",
+        "noUnreachableSuper": "off"
+      },
+      "style": {
+        "noInferrableTypes": "error",
+        "noNamespace": "error",
+        "noNonNullAssertion": "warn",
+        "useAsConstAssertion": "error",
+        "useBlockStatements": "off",
+        "useDefaultParameterLast": "error",
+        "noArguments": "error",
+        "noVar": "error",
+        "useConst": "error"
+      },
+      "suspicious": {
+        "noDuplicateClassMembers": "error",
+        "noEmptyBlockStatements": "warn",
+        "noExplicitAny": "off",
+        "noExtraNonNullAssertion": "error",
+        "noMisleadingInstantiator": "error",
+        "noRedeclare": "error",
+        "useAwait": "off",
+        "useNamespaceKeyword": "error",
+        "noDuplicateObjectKeys": "off",
+        "noDuplicateParameters": "off",
+        "noFunctionAssign": "off",
+        "noImportAssign": "off",
+        "noUnsafeNegation": "off",
+        "useGetterReturn": "off",
+        "useValidTypeof": "off"
+      },
+      "nursery": {
+        "useSortedClasses": "info"
+      }
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "jsxQuoteStyle": "double",
+      "quoteProperties": "asNeeded",
+      "trailingCommas": "es5",
+      "semicolons": "asNeeded",
+      "arrowParentheses": "always",
+      "bracketSpacing": true,
+      "bracketSameLine": false,
+      "quoteStyle": "double",
+      "attributePosition": "auto"
+    }
+  }
+}

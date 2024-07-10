@@ -1,10 +1,10 @@
 import {
-  forwardRef,
   Tag,
   TagLabel,
   TagLeftIcon,
   TagProps,
   TagRightIcon,
+  forwardRef,
 } from "@chakra-ui/react"
 import { DotsThreeVertical, IconProps } from "@phosphor-icons/react"
 import { ForwardRefExoticComponent, RefAttributes } from "react"

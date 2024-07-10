@@ -1,5 +1,5 @@
-import { env } from "env"
 import { useUserPublic } from "components/[guild]/hooks/useUser"
+import { env } from "env"
 import { useRouter } from "next/router"
 import { posthog } from "posthog-js"
 import {
@@ -110,10 +110,10 @@ const CustomPostHogProvider = ({
             typeof options?.error?.message === "string"
               ? options.error.message
               : typeof options?.error === "string"
-              ? options.error
-              : typeof options?.errorMessage === "string"
-              ? options.errorMessage
-              : undefined
+                ? options.error
+                : typeof options?.errorMessage === "string"
+                  ? options.errorMessage
+                  : undefined
 
           if (
             /**

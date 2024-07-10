@@ -1,5 +1,5 @@
-import { env } from "env"
 import useUser from "components/[guild]/hooks/useUser"
+import { env } from "env"
 import useSWRImmutable from "swr/immutable"
 
 const useConnectedDID = () => {

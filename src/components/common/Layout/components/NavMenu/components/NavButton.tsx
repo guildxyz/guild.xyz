@@ -2,7 +2,7 @@ import { ButtonProps } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import NextLink from "next/link"
 import { useRouter } from "next/router"
-import { forwardRef, PropsWithChildren, Ref } from "react"
+import { PropsWithChildren, Ref, forwardRef } from "react"
 import { Rest } from "types"
 
 const NavButton = forwardRef(

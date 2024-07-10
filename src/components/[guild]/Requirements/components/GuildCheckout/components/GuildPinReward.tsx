@@ -1,8 +1,8 @@
-import { env } from "env"
 import { Img, Text } from "@chakra-ui/react"
-import useGuild from "components/[guild]/hooks/useGuild"
-import { GuildAction, useMintGuildPinContext } from "../MintGuildPinContext"
 import { RewardDisplay } from "components/[guild]/RoleCard/components/RewardDisplay"
+import useGuild from "components/[guild]/hooks/useGuild"
+import { env } from "env"
+import { GuildAction, useMintGuildPinContext } from "../MintGuildPinContext"
 
 const GuildPinReward = (): JSX.Element => {
   const { pinType, pinImage } = useMintGuildPinContext()

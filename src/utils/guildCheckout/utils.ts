@@ -16,7 +16,7 @@ export type GeneratedGetAssetsParams =
           amount: bigint
         },
         `0x${string}`,
-        `0x${string}`[]
+        `0x${string}`[],
       ]
       value?: bigint
     }
@@ -27,7 +27,7 @@ export type GeneratedGetAssetsParams =
           amount: bigint
         },
         `0x${string}`,
-        `0x${string}`[]
+        `0x${string}`[],
       ]
       value?: bigint
     }

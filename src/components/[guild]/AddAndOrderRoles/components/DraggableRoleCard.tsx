@@ -1,4 +1,4 @@
-import { Heading, HStack, Icon, Spacer } from "@chakra-ui/react"
+import { HStack, Heading, Icon, Spacer } from "@chakra-ui/react"
 import { DotsSixVertical } from "@phosphor-icons/react"
 import MemberCount from "components/[guild]/RoleCard/components/MemberCount"
 import Visibility from "components/[guild]/Visibility"
