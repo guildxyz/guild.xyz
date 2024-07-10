@@ -8,8 +8,8 @@ import {
   Tag,
   Text,
   Tooltip,
-  useColorModeValue,
   VStack,
+  useColorModeValue,
 } from "@chakra-ui/react"
 import { Trophy } from "@phosphor-icons/react"
 import Card from "components/common/Card"
@@ -89,10 +89,10 @@ const LeaderboardUserCard = ({
                 position <= 3
                   ? { base: "sm", sm: "md" }
                   : position < 1000
-                  ? { base: "lg", sm: "xl" }
-                  : position < 10000
-                  ? { base: "md", sm: "lg" }
-                  : { base: "xs", sm: "sm" }
+                    ? { base: "lg", sm: "xl" }
+                    : position < 10000
+                      ? { base: "md", sm: "lg" }
+                      : { base: "xs", sm: "sm" }
               }
               fontWeight="bold"
               letterSpacing="wide"

@@ -8,8 +8,8 @@ import {
   ModalHeader,
   ModalOverlay,
   Text,
-  useColorModeValue,
   Wrap,
+  useColorModeValue,
 } from "@chakra-ui/react"
 import { Row } from "@tanstack/react-table"
 import CopyableAddress from "components/common/CopyableAddress"
@@ -19,8 +19,8 @@ import useResolveAddress from "hooks/useResolveAddress"
 import useGuild from "../hooks/useGuild"
 import { WalletTag } from "./Identities"
 import { ClickableCrmRoleTag } from "./RoleTags"
-import { Member } from "./useMembers"
 import UserPlatformTags from "./UserPlatformTags"
+import { Member } from "./useMembers"
 
 type Props = {
   row: Row<Member>

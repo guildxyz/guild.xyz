@@ -1,4 +1,3 @@
-import { env } from "env"
 import {
   Card,
   HStack,
@@ -15,6 +14,7 @@ import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import GuildLogo from "components/common/GuildLogo"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
+import { env } from "env"
 import useCustomPosthogEvents from "hooks/useCustomPosthogEvents"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"

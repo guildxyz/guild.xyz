@@ -1,8 +1,8 @@
 import {
   ButtonGroup,
   Divider,
-  Heading,
   HStack,
+  Heading,
   Icon,
   Popover,
   PopoverArrow,

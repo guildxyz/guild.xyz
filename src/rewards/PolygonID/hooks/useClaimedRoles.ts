@@ -1,6 +1,6 @@
-import { env } from "env"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
+import { env } from "env"
 import useSWRImmutable from "swr/immutable"
 
 const useClaimedRoles = () => {

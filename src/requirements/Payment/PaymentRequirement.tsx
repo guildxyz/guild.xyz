@@ -52,8 +52,8 @@ const PaymentRequirement = (props: RequirementProps): JSX.Element => {
     ? isNativeCurrency
       ? formatUnits(fee, CHAIN_CONFIG[chain].nativeCurrency.decimals)
       : tokenData?.decimals
-      ? formatUnits(fee, tokenData.decimals)
-      : undefined
+        ? formatUnits(fee, tokenData.decimals)
+        : undefined
     : undefined
 
   const symbol = isNativeCurrency
@@ -100,8 +100,8 @@ const PaymentRequirement = (props: RequirementProps): JSX.Element => {
             vaultError
               ? "Couldn't fetch vault"
               : tokenError
-              ? "Couldn't fetch token info"
-              : undefined
+                ? "Couldn't fetch token info"
+                : undefined
           }
         >
           {convertedFee && symbol ? `${convertedFee} ${symbol}` : "-"}

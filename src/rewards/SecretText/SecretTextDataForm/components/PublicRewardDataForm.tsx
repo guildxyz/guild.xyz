@@ -1,9 +1,9 @@
 import { Box, FormControl, FormLabel, HStack, Input } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import { UniqueTextRewardForm } from "rewards/UniqueText/UniqueTextDataForm"
 import { useFormContext } from "react-hook-form"
-import RewardImagePicker from "./RewardImagePicker"
+import { UniqueTextRewardForm } from "rewards/UniqueText/UniqueTextDataForm"
 import { SecretTextRewardForm } from "../types"
+import RewardImagePicker from "./RewardImagePicker"
 
 const PublicRewardDataForm = ({ defaultIcon }) => {
   const {

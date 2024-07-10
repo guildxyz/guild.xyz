@@ -5,8 +5,8 @@ import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import RewardCard from "components/common/RewardCard"
 import useMembership from "components/explorer/hooks/useMembership"
 import dynamic from "next/dynamic"
-import rewards from "rewards"
 import { useMemo } from "react"
+import rewards from "rewards"
 import { GuildPlatform } from "types"
 import ClaimTokenButton from "./ClaimTokenButton"
 import { TokenRewardProvider, useTokenRewardContext } from "./TokenRewardContext"
@@ -76,8 +76,8 @@ const TokenRewardCard = () => {
               {alreadyClaimed === 0
                 ? ``
                 : claimableAmount > 0
-                ? `Already claimed: ${alreadyClaimed} ${token.data.symbol}`
-                : `You have claimed all of your ${token.data.symbol} rewards`}
+                  ? `Already claimed: ${alreadyClaimed} ${token.data.symbol}`
+                  : `You have claimed all of your ${token.data.symbol} rewards`}
             </Text>
             {/* TODO: This will not work if multiple rewards are set */}
             <AvailabilityTags

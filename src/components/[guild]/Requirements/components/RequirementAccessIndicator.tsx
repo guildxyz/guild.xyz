@@ -76,8 +76,8 @@ const RequirementAccessIndicator = () => {
           {type === "CAPTCHA"
             ? "Complete CAPTCHA to check access"
             : type.startsWith("GITCOIN_")
-            ? "Setup GitCoin Passport to check access"
-            : "Connect account to check access"}
+              ? "Setup GitCoin Passport to check access"
+              : "Connect account to check access"}
         </PopoverHeader>
         <PopoverFooter {...POPOVER_FOOTER_STYLES}>
           {type === "POLYGON_ID_QUERY" || type === "POLYGON_ID_BASIC" ? (

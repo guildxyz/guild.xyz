@@ -5,8 +5,8 @@ import {
   $insertNodes,
   $isRootOrShadowRoot,
   COMMAND_PRIORITY_EDITOR,
-  createCommand,
   LexicalCommand,
+  createCommand,
 } from "lexical"
 import { useEffect } from "react"
 

@@ -48,8 +48,8 @@ const TokenRolePlatformClaimCard = ({
       membershipLoading
         ? "Checking access..."
         : claimLoadingText
-        ? claimLoadingText
-        : null,
+          ? claimLoadingText
+          : null,
     [membershipLoading, claimLoadingText]
   )
 

@@ -4,8 +4,8 @@ import { Center, Heading, Text } from "@chakra-ui/react"
 import { PlatformName } from "@guildxyz/types"
 import { GetServerSideProps, NextPage } from "next"
 import { useRouter } from "next/router"
-import rewards from "rewards"
 import { useEffect, useState } from "react"
+import rewards from "rewards"
 
 export type OAuthResultParams =
   | {
@@ -64,8 +64,8 @@ const OAuth: NextPage<OAuthResultParams> = (query) => {
         {query.status === "success"
           ? `${rewards[query.platform]?.name} successfully conneted!`
           : query.platform
-          ? `${rewards[query.platform]?.name} connection failed`
-          : "Connection unsuccessful"}
+            ? `${rewards[query.platform]?.name} connection failed`
+            : "Connection unsuccessful"}
       </Heading>
       <Text>
         {query.status === "success"

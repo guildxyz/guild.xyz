@@ -9,10 +9,10 @@ import {
 } from "@chakra-ui/react"
 import { ArrowSquareOut, LockSimple } from "@phosphor-icons/react"
 import usePlatformAccessButton from "components/[guild]/AccessHub/components/usePlatformAccessButton"
-import useGuild from "components/[guild]/hooks/useGuild"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import { ApiRequirementHandlerProvider } from "components/[guild]/RequirementHandlerContext"
 import Visibility from "components/[guild]/Visibility"
+import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import useMembership, {
   useRoleMembership,
@@ -20,8 +20,8 @@ import useMembership, {
 import { motion } from "framer-motion"
 import { useMemo, useState } from "react"
 import rewards from "rewards"
-import rewardComponents from "rewards/components"
 import GoogleCardWarning from "rewards/Google/GoogleCardWarning"
+import rewardComponents from "rewards/components"
 import { PlatformType, RolePlatform } from "types"
 import capitalize from "utils/capitalize"
 import { RewardDisplay } from "./RewardDisplay"

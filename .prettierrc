@@ -1,9 +1,0 @@
-{
-  "plugins": ["prettier-plugin-jsdoc"],
-  "semi": false,
-  "singleQuote": false,
-  "printWidth": 85,
-  "useTabs": false,
-  "tabWidth": 2,
-  "trailingComma": "es5"
-}

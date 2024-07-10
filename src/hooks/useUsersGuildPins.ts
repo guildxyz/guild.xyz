@@ -10,10 +10,10 @@ import {
 } from "utils/guildCheckout/constants"
 import ipfsToGuildGateway from "utils/ipfsToGuildGateway"
 import {
-  PublicClient,
-  createPublicClient,
   http,
+  PublicClient,
   type Chain as ViemChain,
+  createPublicClient,
 } from "viem"
 import { wagmiConfig } from "wagmiConfig"
 import { Chains } from "wagmiConfig/chains"
@@ -191,7 +191,7 @@ const fetchGuildPinsOnChain = async (
 const fetchGuildPins = async ([_, addresses, includeTestnets]: [
   string,
   User["addresses"],
-  boolean
+  boolean,
 ]) => {
   const TESTNET_KEYS: GuildPinsSupportedChain[] = ["SEPOLIA"]
   const guildPinChains = Object.keys(GUILD_PIN_CONTRACTS).filter((key) =>

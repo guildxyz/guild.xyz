@@ -58,8 +58,8 @@ const AddRoleRewardModal = ({ onAdd }: Props) => {
         step === "SELECT_ROLE"
           ? "2xl"
           : isRewardSetupStep
-          ? modalSizeForPlatform(selection)
-          : "4xl"
+            ? modalSizeForPlatform(selection)
+            : "4xl"
       }
       scrollBehavior="inside"
       colorScheme="dark"

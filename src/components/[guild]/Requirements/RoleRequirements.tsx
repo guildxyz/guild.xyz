@@ -2,8 +2,8 @@ import {
   Box,
   Collapse,
   SlideFade,
-  useColorModeValue,
   VStack,
+  useColorModeValue,
 } from "@chakra-ui/react"
 import { Logic } from "@guildxyz/types"
 import React, {
@@ -16,9 +16,9 @@ import React, {
 } from "react"
 import { VariableSizeList } from "react-window"
 import { Requirement, Role } from "types"
-import useRequirements from "../hooks/useRequirements"
 import LogicDivider from "../LogicDivider"
 import { RoleCardCollapseProps } from "../RoleCard"
+import useRequirements from "../hooks/useRequirements"
 import AnyOfHeader from "./components/AnyOfHeader"
 import ExpandRequirementsButton from "./components/ExpandRequirementsButton"
 import { RequirementSkeleton } from "./components/Requirement"

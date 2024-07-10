@@ -262,8 +262,8 @@ const EditTokenModal = ({
                     rpIsLoading
                       ? "Updating the conversion rate..."
                       : reqIsLoading
-                      ? "Updating the snapshot..."
-                      : "Saving..."
+                        ? "Updating the snapshot..."
+                        : "Saving..."
                   }
                   size="lg"
                   width="fill"

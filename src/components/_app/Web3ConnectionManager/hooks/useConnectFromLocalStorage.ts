@@ -3,8 +3,8 @@ import { Message } from "components/[guild]/JoinModal/hooks/useOauthPopupWindow"
 import useUser, { useUserPublic } from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useToast from "hooks/useToast"
-import rewards from "rewards"
 import { useEffect } from "react"
+import rewards from "rewards"
 
 const useConnectFromLocalStorage = () => {
   const { keyPair } = useUserPublic()

@@ -83,8 +83,8 @@ const UniswapRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
       {maxAmount
         ? `${minAmount} - ${maxAmount}`
         : minAmount > 0
-        ? `at least ${minAmount}`
-        : "any amount of"}{" "}
+          ? `at least ${minAmount}`
+          : "any amount of"}{" "}
       <Skeleton isLoaded={!!baseSymbol} display={"inline"}>
         <DataBlock>{baseSymbol ?? "___"}</DataBlock>
       </Skeleton>{" "}

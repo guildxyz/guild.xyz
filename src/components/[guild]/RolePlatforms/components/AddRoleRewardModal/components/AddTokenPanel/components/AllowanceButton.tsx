@@ -43,8 +43,8 @@ const AllowanceButton = ({ chain, token, contract }: Props) => {
           isAllowanceLoading
             ? "Checking allowance"
             : isAllowing
-            ? "Allowing"
-            : "Check your wallet"
+              ? "Allowing"
+              : "Check your wallet"
         }
         leftIcon={allowanceError ? <Icon as={Warning} /> : null}
         rightIcon={

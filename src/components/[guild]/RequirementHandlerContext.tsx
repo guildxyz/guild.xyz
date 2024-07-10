@@ -1,7 +1,7 @@
 import { Schemas } from "@guildxyz/types"
 import useCreateRequirement from "components/create-guild/Requirements/hooks/useCreateRequirement"
 import useHandleRequirementState from "components/create-guild/Requirements/hooks/useHandleRequirementState"
-import { createContext, ReactNode, useContext } from "react"
+import { ReactNode, createContext, useContext } from "react"
 import {
   ClientStateRequirementCreateResponse,
   Requirement,

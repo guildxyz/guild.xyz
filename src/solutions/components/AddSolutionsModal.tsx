@@ -84,10 +84,10 @@ const AddSolutionsModal = () => {
         step === "SELECT_ROLE"
           ? "2xl"
           : step === "SOLUTION_SETUP"
-          ? "xl"
-          : isRewardSetupStep
-          ? modalSizeForPlatform(selection)
-          : "4xl"
+            ? "xl"
+            : isRewardSetupStep
+              ? modalSizeForPlatform(selection)
+              : "4xl"
       }
       scrollBehavior="inside"
       colorScheme="dark"

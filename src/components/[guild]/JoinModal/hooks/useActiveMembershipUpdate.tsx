@@ -52,7 +52,7 @@ const useActiveMembershipUpdate = ({
         const newRoles = Object.entries(reqJobsByRoleId).map(
           ([roleIdStr, reqAccesses]: [
             string,
-            AccessCheckJob["children:access-check:jobs"]
+            AccessCheckJob["children:access-check:jobs"],
           ]) => {
             const roleId = +roleIdStr
             return {

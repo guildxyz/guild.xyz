@@ -2,8 +2,8 @@ import {
   Box,
   Center,
   Divider,
-  Heading,
   HStack,
+  Heading,
   Icon,
   Link,
   Spinner,
@@ -20,8 +20,6 @@ import {
   useEditGuildDrawer,
 } from "components/[guild]/EditGuild/EditGuildDrawerContext"
 import GuildName from "components/[guild]/GuildName"
-import useGuild from "components/[guild]/hooks/useGuild"
-import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import JoinButton from "components/[guild]/JoinButton"
 import JoinModalProvider from "components/[guild]/JoinModal/JoinModalProvider"
 import LeaveButton from "components/[guild]/LeaveButton"
@@ -32,6 +30,8 @@ import SocialIcon from "components/[guild]/SocialIcon"
 import useStayConnectedToast from "components/[guild]/StayConnectedToast"
 import GuildTabs from "components/[guild]/Tabs/GuildTabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
+import useGuild from "components/[guild]/hooks/useGuild"
+import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import { addIntercomSettings } from "components/_app/IntercomProvider"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"

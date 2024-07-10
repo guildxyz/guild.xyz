@@ -1,5 +1,5 @@
 export default async function createAndAwaitJob<
-  Job extends { done?: boolean; failed?: any; failedErrorMsg?: any }
+  Job extends { done?: boolean; failed?: any; failedErrorMsg?: any },
 >(
   fetcherWithSign: ([string, any]) => Promise<any>,
   url: string,

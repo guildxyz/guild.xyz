@@ -171,8 +171,8 @@ const AmountPicker = () => {
                           mintableAmountPerUserFromContract > range.max)
                           ? `${range.min}+`
                           : range.min === range.max
-                          ? range.min
-                          : `${range.min} - ${range.max}`}
+                            ? range.min
+                            : `${range.min} - ${range.max}`}
                       </Text>
                     </Stack>
                   </Stack>
