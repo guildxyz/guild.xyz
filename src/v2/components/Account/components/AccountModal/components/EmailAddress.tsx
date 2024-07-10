@@ -16,6 +16,7 @@ import {
   FormItem,
   FormLabel,
 } from "@/components/ui/Form"
+import { useToast } from "@/components/ui/hooks/useToast"
 import { Input } from "@/components/ui/Input"
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/InputOTP"
 import {
@@ -31,7 +32,6 @@ import { PencilSimple, Warning } from "@phosphor-icons/react/dist/ssr"
 import useUser from "components/[guild]/hooks/useUser"
 import { useConnectEmail } from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
-import useToast from "hooks/useToast"
 import { useEffect, useState } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { emailData } from "rewards/Email/data"
@@ -92,7 +92,7 @@ const ConnectEmailButton = ({
   const { handleSubmit, control, setValue, setError, reset } = methods
   const email = useWatch({ control, name: "email" })
   const { id: userId } = useUser()
-  const toast = useToast()
+  const { toast } = useToast()
 
   const [emailSentAt, setEmailSentAt] = useState<number | null>(null)
 
@@ -135,7 +135,7 @@ const ConnectEmailButton = ({
       if (onSuccess) {
         onSuccess()
       } else {
-        toast({ status: "success", title: "Email verified" })
+        toast({ variant: "success", title: "Email verified" })
       }
       handleOnClose()
     },
