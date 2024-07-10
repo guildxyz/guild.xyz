@@ -13,10 +13,6 @@ const REQUIREMENTS: Record<RequirementType, RequirementData> =
     {} as any
   )
 
-export type ProvidedValueDisplayProps = {
-  requirement: Partial<Requirement>
-}
-
 export type RequirementType = Schemas["Requirement"]["type"]
 
 export type RequirementFormProps = {

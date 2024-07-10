@@ -12,7 +12,7 @@ import {
 import ControlledSelect from "components/common/ControlledSelect"
 import { useFormContext, useFormState, useWatch } from "react-hook-form"
 import { RequirementFormProps, RequirementType } from "requirements"
-import { PROVIDER_TYPES } from "requirements/requirements"
+import { PROVIDER_TYPES } from "requirements/requirementProvidedValues"
 import parseFromObject from "utils/parseFromObject"
 import TwitterAccountAge from "./components/TwitterAccountAge"
 import TwitterAccountAgeRelative from "./components/TwitterAccountAgeRelative"

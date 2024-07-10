@@ -44,7 +44,7 @@ import REQUIREMENTS, { REQUIREMENTS_DATA, RequirementType } from "requirements"
 import {
   PROVIDER_TYPES,
   REQUIREMENT_PROVIDED_VALUES,
-} from "requirements/requirements"
+} from "requirements/requirementProvidedValues"
 import { Requirement } from "types"
 import useCreateRequirement from "../hooks/useCreateRequirement"
 import BalancyFooter from "./BalancyFooter"
@@ -147,8 +147,8 @@ const AddRequirement = ({
                 {selectedType
                   ? `Add ${REQUIREMENTS[selectedType]?.name} requirement`
                   : providerTypesOnly
-                  ? "Add provider requirement"
-                  : "Add requirement"}
+                    ? "Add provider requirement"
+                    : "Add requirement"}
               </Text>
             </HStack>
           </ModalHeader>
