@@ -15,8 +15,8 @@ import { useRequirementContext } from "./RequirementContext"
 
 function requirementTypeToPlatformName(type: RequirementType): PlatformName {
   if (type === "ALLOWLIST_EMAIL") return "EMAIL"
-  if (REQUIREMENTS[type].types[0] === "TWITTER") return "TWITTER_V1"
-  return REQUIREMENTS[type].types[0] as PlatformName
+  if (REQUIREMENTS[type].types[0].startsWith("TWITTER")) return "TWITTER_V1"
+  return REQUIREMENTS[type].types[0].split("_")[0] as PlatformName
 }
 
 const RequirementConnectButton = (props: ButtonProps) => {
@@ -81,10 +81,7 @@ const ConnectRequirementPlatformButton = ({
 }: ButtonProps & { onSuccess: () => void; isReconnection?: boolean }) => {
   const { type } = useRequirementContext()
 
-  const platform =
-    REQUIREMENTS[type].types[0] === "TWITTER"
-      ? "TWITTER_V1"
-      : (REQUIREMENTS[type].types[0] as PlatformName)
+  const platform = requirementTypeToPlatformName(type)
 
   const { onConnect, isLoading, loadingText } = useConnectPlatform(
     platform,

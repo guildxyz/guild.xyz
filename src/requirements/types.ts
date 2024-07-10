@@ -1,6 +1,5 @@
 import { Schemas } from "@guildxyz/types"
 import { Icon } from "@phosphor-icons/react"
-import { ComponentType } from "react"
 import { UseControllerProps } from "react-hook-form"
 import { Requirement } from "types"
 
@@ -17,10 +16,9 @@ export type RequirementFormProps = {
 export type RequirementData = {
   icon: string | Icon
   name: string
-  readonly types: string[]
+  readonly types: RequirementType[]
   disabled?: boolean
   isPlatform?: boolean
   customNameRules?: UseControllerProps["rules"]
   isNegatable?: boolean
-  formComponent: ComponentType<RequirementFormProps>
 }

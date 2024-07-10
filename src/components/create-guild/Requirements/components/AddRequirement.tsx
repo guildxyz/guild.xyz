@@ -41,6 +41,7 @@ import {
 } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import REQUIREMENTS, { REQUIREMENTS_DATA } from "requirements"
+import { REQUIREMENT_FORM_COMPONENTS } from "requirements/requirementFormComponents"
 import {
   PROVIDER_TYPES,
   REQUIREMENT_PROVIDED_VALUES,
@@ -57,7 +58,9 @@ const general = REQUIREMENTS_DATA.slice(1, GENERAL_REQUIREMENTS_COUNT + 1)
 const integrations = REQUIREMENTS_DATA.slice(GENERAL_REQUIREMENTS_COUNT + 1)
 
 // call undocumented preload() from next/dynamic, so the components are already loaded when they mount, which is needed for the height animation
-Object.values(REQUIREMENTS).forEach((a: any) => a.formComponent?.render?.preload?.())
+Object.values(REQUIREMENT_FORM_COMPONENTS).forEach((requirementFormComponent) =>
+  requirementFormComponent?.render?.preload?.()
+)
 
 const TRANSITION_DURATION_MS = 200
 const HOME_MAX_HEIGHT = "550px"
@@ -204,7 +207,7 @@ const AddRequirementForm = forwardRef(
     }: AddRequirementFormProps,
     ref: LegacyRef<HTMLDivElement>
   ) => {
-    const FormComponent = REQUIREMENTS[selectedType].formComponent
+    const FormComponent = REQUIREMENT_FORM_COMPONENTS[selectedType]
 
     const methods = useForm<Schemas["RequirementCreationPayload"]>({ mode: "all" })
 
