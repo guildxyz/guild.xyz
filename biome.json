@@ -1,9 +1,5 @@
 {
   "$schema": "https://biomejs.dev/schemas/1.8.3/schema.json",
-  "files": {
-    "ignore": ["node_modules", ".next", "public", ".out"],
-    "include": ["src", "cypress"]
-  },
   "formatter": {
     "enabled": true,
     "formatWithErrors": false,
@@ -12,6 +8,10 @@
     "lineEnding": "lf",
     "lineWidth": 85,
     "attributePosition": "auto"
+  },
+  "files": {
+    "include": ["src", "cypress"],
+    "ignore": ["node_modules", ".next", "public", ".out"]
   },
   "organizeImports": { "enabled": true },
   "linter": {
@@ -26,48 +26,49 @@
         "useLiteralKeys": "error"
       },
       "correctness": {
+        "noInvalidUseBeforeDeclaration": "off",
+        "noPrecisionLoss": "error",
+        "noUnusedVariables": "off",
+        "useArrayLiterals": "off",
         "noConstAssign": "off",
         "noGlobalObjectCalls": "off",
         "noInvalidConstructorSuper": "off",
-        "noInvalidUseBeforeDeclaration": "off",
         "noNewSymbol": "off",
-        "noPrecisionLoss": "error",
         "noSetterReturn": "off",
         "noUndeclaredVariables": "off",
         "noUnreachable": "off",
-        "noUnreachableSuper": "off",
-        "noUnusedVariables": "warn",
-        "useArrayLiterals": "off"
+        "noUnreachableSuper": "off"
       },
-      "nursery": { "useSortedClasses": "info" },
       "style": {
-        "noArguments": "error",
         "noInferrableTypes": "error",
         "noNamespace": "error",
         "noNonNullAssertion": "warn",
-        "noVar": "error",
         "useAsConstAssertion": "error",
         "useBlockStatements": "off",
-        "useConst": "error",
-        "useDefaultParameterLast": "error"
+        "useDefaultParameterLast": "error",
+        "noArguments": "error",
+        "noVar": "error",
+        "useConst": "error"
       },
       "suspicious": {
-        "noConsoleLog": "warn",
         "noDuplicateClassMembers": "error",
-        "noDuplicateObjectKeys": "off",
-        "noDuplicateParameters": "off",
         "noEmptyBlockStatements": "warn",
         "noExplicitAny": "off",
         "noExtraNonNullAssertion": "error",
-        "noFunctionAssign": "off",
-        "noImportAssign": "off",
         "noMisleadingInstantiator": "error",
         "noRedeclare": "error",
-        "noUnsafeNegation": "off",
         "useAwait": "off",
-        "useGetterReturn": "off",
         "useNamespaceKeyword": "error",
+        "noDuplicateObjectKeys": "off",
+        "noDuplicateParameters": "off",
+        "noFunctionAssign": "off",
+        "noImportAssign": "off",
+        "noUnsafeNegation": "off",
+        "useGetterReturn": "off",
         "useValidTypeof": "off"
+      },
+      "nursery": {
+        "useSortedClasses": "info"
       }
     }
   },
