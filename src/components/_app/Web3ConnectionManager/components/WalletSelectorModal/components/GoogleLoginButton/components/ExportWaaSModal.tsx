@@ -71,6 +71,7 @@ async function generatePrivateKey(backupData: string) {
   try {
     const waas = await getWaas()
     const { Logout } = await cwaasImport()
+    // @ts-ignore
     await Logout().catch(() => {})
 
     const wallet = await waas.wallets.restoreFromBackup(backupData)
