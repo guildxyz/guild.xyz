@@ -27,7 +27,6 @@
     "@chakra-ui/next-js": "^2.2.0",
     "@chakra-ui/react": "^2.8.2",
     "@chakra-ui/theme-tools": "^2.0.17",
-    "@coinbase/waas-sdk-web": "^3.3.2",
     "@dotlottie/react-player": "^1.6.18",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.0",
