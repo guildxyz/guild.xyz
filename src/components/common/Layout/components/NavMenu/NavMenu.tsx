@@ -153,7 +153,7 @@ const NavMenu = (): JSX.Element => {
               </NavButton>
               <NavButton
                 target="_blank"
-                href="https://guildxyz.notion.site/Join-the-Guild-Team-7ffd822c4d7749cb9c1adb525c858ae1"
+                href="https://careers.guild.xyz"
                 rel="noopener"
                 leftIcon={<UsersThree />}
               >
