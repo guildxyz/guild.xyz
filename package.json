@@ -108,7 +108,7 @@
     "dpdm": "^3.14.0",
     "husky": "^8.0.3",
     "lint-staged": "^13.0.0",
-    "typescript": "^5.4.2",
+    "typescript": "^5.5.3",
     "webpack-bugsnag-plugins": "^1.8.0"
   },
   "snyk": true,
