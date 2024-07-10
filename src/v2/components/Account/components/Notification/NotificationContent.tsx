@@ -1,37 +1,53 @@
 "use client"
 
 import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import { Anchor } from "@/components/ui/Anchor"
 import { Button } from "@/components/ui/Button"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/Dialog"
 import { Separator } from "@/components/ui/Separator"
 import { Skeleton } from "@/components/ui/Skeleton"
-import { ArrowRight } from "@phosphor-icons/react"
+import { useToast } from "@/components/ui/hooks/useToast"
+import { useDisclosure } from "@/hooks/useDisclosure"
+import { ArrowRight, ArrowSquareOut } from "@phosphor-icons/react"
 import {
   initWeb3InboxClient,
+  useNotifications,
+  usePrepareRegistration,
+  useRegister,
+  useSubscribe,
   useSubscription,
   useWeb3InboxAccount,
   useWeb3InboxClient,
 } from "@web3inbox/react"
 import { env } from "env"
-import Image from "next/image"
 import Link from "next/link"
+import { useState } from "react"
 import { useAccount, useSignMessage } from "wagmi"
 import MessageImage from "/public/img/message.svg"
 
+const WEB3_INBOX_INIT_PARAMS = {
+  projectId: env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
+  domain: "guild.xyz",
+  allApps: process.env.NODE_ENV !== "production",
+} as const
+
 export const NotificationContent = () => {
   const { type } = useWeb3ConnectionManager()
-  const WEB3_INBOX_INIT_PARAMS = {
-    projectId: env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
-    domain: "guild.xyz",
-    allApps: process.env.NODE_ENV !== "production",
-  }
-  // initWeb3InboxClient(WEB3_INBOX_INIT_PARAMS)
-  // const { data } = useWeb3InboxClient()
-  // const isReady = !!data
+  initWeb3InboxClient(WEB3_INBOX_INIT_PARAMS)
+  const { data } = useWeb3InboxClient()
+  const isReady = !!data
 
   const { address } = useAccount()
   const { data: account } = useWeb3InboxAccount(
     address ? `eip155:1:${address}` : undefined
   )
+  console.log(account)
   const { data: subscription } = useSubscription(
     account ?? undefined,
     WEB3_INBOX_INIT_PARAMS.domain
@@ -43,19 +59,24 @@ export const NotificationContent = () => {
         <section className="mx-4">
           <h3 className="mb-4 font-bold text-muted-foreground text-xs">MESSAGES</h3>
           <div className="flex flex-col gap-4">
+            {isReady || <WebInboxSkeleton />}
             {!subscription && (
-              <div className="grid">
-                <Image src={MessageImage} alt="Messages" />
-                <h4 className="font-semibold">Subscribe to messages</h4>
-                <p className="text-muted-foreground text-sm leading-normal">
-                  Receive messages from guild admins
-                </p>
+              <div className="flex items-center gap-4">
+                <MessageImage className="row-span-2 size-6 min-w-6" />
+                <div className="flex flex-col">
+                  <h4 className="font-semibold">Subscribe to messages</h4>
+                  <p className="text-muted-foreground text-sm leading-normal">
+                    Receive messages from guild admins
+                  </p>
+                </div>
+                <span className="grow" />
+                <SubscribeToMessages />
               </div>
             )}
           </div>
         </section>
       )}
-      <Separator className="my-6" />
+      <Separator className="my-4" />
       <div className="px-4">
         <Link href="/profile/activity">
           <Button className="w-full gap-2" variant="ghost" size="sm">
@@ -75,6 +96,80 @@ const WebInboxSkeleton = () => (
     <Skeleton className="w-10/12" />
   </div>
 )
+
+const SubscribeToMessages = () => {
+  const { address } = useAccount()
+  const { data: account } = useWeb3InboxAccount(
+    address ? `eip155:1:${address}` : undefined
+  )
+  const [isSigning, setIsSigning] = useState(false)
+  const { prepareRegistration } = usePrepareRegistration()
+  const { register, isLoading: isRegistering } = useRegister()
+  const { subscribe, isLoading: isSubscribing } = useSubscribe(
+    account,
+    WEB3_INBOX_INIT_PARAMS.domain
+  )
+  const { signMessageAsync } = useSignMessage()
+  const { toast } = useToast()
+  const performSubscribe = async () => {
+    if (!address) return
+
+    try {
+      const { message, registerParams } = await prepareRegistration()
+      setIsSigning(true)
+      const signature = await signMessageAsync({
+        account: address,
+        message: message,
+      }).finally(() => setIsSigning(false))
+      await register({ registerParams, signature })
+    } catch (web3InboxRegisterError) {
+      console.error("web3InboxRegisterError", web3InboxRegisterError)
+      toast({ title: "Web3Inbox registration error", variant: "error" })
+      return
+    }
+
+    try {
+      await subscribe()
+      toast({
+        variant: "success",
+        title: "Success",
+        description: "Successfully subscribed to Guild messages via Web3Inbox",
+      })
+      onClose()
+    } catch (web3InboxSubscribeError) {
+      console.error("web3InboxSubscribeError", web3InboxSubscribeError)
+      toast({ title: "Couldn't subscribe to Guild messages", variant: "error" })
+    }
+  }
+
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button className="size-8 min-w-8 px-0">
+          <ArrowRight />
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogTitle>Subscribe to messages</DialogTitle>
+        <DialogDescription className="my-8 text-card-foreground">
+          Guild admins can send broadcast messages to your wallet through{" "}
+          <Anchor href="https://web3inbox.com" variant="highlighted" showExternal>
+            Web3Inbox
+          </Anchor>
+          . Sign a message to start receiving them!
+        </DialogDescription>
+        <Button
+          onClick={performSubscribe}
+          isLoading={isSigning || isRegistering || isSubscribing}
+          loadingText={isSigning ? "Check your wallet" : "Subscribing"}
+          className="w-full"
+        >
+          Sign to subscribe
+        </Button>
+      </DialogContent>
+    </Dialog>
+  )
+}
 
 // import {
 //   Box,
