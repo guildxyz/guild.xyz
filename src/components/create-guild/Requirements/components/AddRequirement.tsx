@@ -40,11 +40,12 @@ import {
   useState,
 } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
-import REQUIREMENTS, { REQUIREMENTS_DATA, RequirementType } from "requirements"
+import REQUIREMENTS, { REQUIREMENTS_DATA } from "requirements"
 import {
   PROVIDER_TYPES,
   REQUIREMENT_PROVIDED_VALUES,
 } from "requirements/requirementProvidedValues"
+import { RequirementType } from "requirements/types"
 import { Requirement } from "types"
 import useCreateRequirement from "../hooks/useCreateRequirement"
 import BalancyFooter from "./BalancyFooter"

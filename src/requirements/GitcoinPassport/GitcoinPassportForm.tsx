@@ -7,8 +7,8 @@ import {
 } from "@chakra-ui/react"
 import ControlledSelect from "components/common/ControlledSelect"
 import { useFormContext, useWatch } from "react-hook-form"
-import { RequirementFormProps, RequirementType } from "requirements"
 import { PROVIDER_TYPES } from "requirements/requirementProvidedValues"
+import { RequirementFormProps, RequirementType } from "requirements/types"
 import parseFromObject from "utils/parseFromObject"
 import Score from "./components/Score"
 

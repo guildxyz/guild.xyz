@@ -1,4 +1,4 @@
-import { RequirementFormProps } from "requirements"
+import { RequirementFormProps } from "requirements/types"
 import SoundArtistSelect from "./SoundArtistSelect"
 import SoundEdition from "./SoundEditionSelect"
 

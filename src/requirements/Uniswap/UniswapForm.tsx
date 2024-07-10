@@ -18,10 +18,10 @@ import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { useCallback, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
-import { RequirementFormProps } from "requirements"
 import ChainPicker from "requirements/common/ChainPicker"
 import MinMaxAmount from "requirements/common/MinMaxAmount"
 import TokenPicker from "requirements/common/TokenPicker"
+import { RequirementFormProps } from "requirements/types"
 import parseFromObject from "utils/parseFromObject"
 import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
 import { usePairOfTokenId } from "./hooks/usePairOfTokenId"
@@ -90,7 +90,7 @@ const UniswapForm = ({
   const setTokensAndFee = ([t0, t1, fee]: [
     `0x${string}`,
     `0x${string}`,
-    number
+    number,
   ]) => {
     setValue(`${baseFieldPath}.data.token0`, t0, { shouldDirty: true })
     setValue(`${baseFieldPath}.data.token1`, t1, { shouldDirty: true })

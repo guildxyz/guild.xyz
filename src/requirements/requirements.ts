@@ -11,11 +11,11 @@ import {
   Wrench,
 } from "@phosphor-icons/react"
 import dynamic from "next/dynamic"
-import { RequirementFormProps } from "requirements"
 import { VISIT_LINK_REGEX } from "requirements/VisitLink/VisitLinkRequirement"
 import rewards from "rewards"
 import Star from "static/icons/star.svg"
 import GuildLogo from "static/logo.svg"
+import { RequirementFormProps } from "./types"
 
 export const REQUIREMENTS_DATA = [
   {
