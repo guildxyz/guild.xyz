@@ -149,7 +149,6 @@ const ShareSocialsWithGuildSelect = ({
 
   return (
     <div className="flex items-center gap-4">
-      {/* TODO: GuildLogo migration */}
       {imageUrl ? (
         <GuildLogo imageUrl={imageUrl} className="size-9" />
       ) : (
