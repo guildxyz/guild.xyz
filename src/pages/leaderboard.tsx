@@ -171,6 +171,7 @@ const getStaticProps: GetStaticProps = async () => {
     props: {
       leaderboard,
     },
+    fallback: false,
   }
 }
 
