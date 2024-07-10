@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/Button"
 import { useToast } from "@/components/ui/hooks/useToast"
 import { useDisclosure } from "@/hooks/useDisclosure"
 import { cn } from "@/lib/utils"
+import { Warning } from "@phosphor-icons/react/dist/ssr"
 import useUser from "components/[guild]/hooks/useUser"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
@@ -146,12 +147,16 @@ const ConnectPlatformButton = ({
       onClick={onConnect}
       isLoading={isLoading}
       disabled={!!response}
-      // TODO: use the proper colors
-      // colorScheme={isReconnect ? "orange" : rewards[type].colorScheme}
-      // variant={isReconnect ? "subtle" : "solid"}
+      variant={isReconnect ? "secondary" : "default"}
       size="sm"
       className={cn("ml-auto", PLATFORM_COLORS[type])}
     >
+      {isReconnect && (
+        <Warning
+          weight="bold"
+          className="mr-1 text-orange-400 data-[theme=dark]:text-orange-200"
+        />
+      )}
       {isReconnect ? "Reconnect" : "Connect"}
     </Button>
   )
