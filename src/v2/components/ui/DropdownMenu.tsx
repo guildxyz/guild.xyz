@@ -6,8 +6,8 @@ import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu"
 import {
   ComponentPropsWithoutRef,
   ElementRef,
-  forwardRef,
   HTMLAttributes,
+  forwardRef,
 } from "react"
 
 const DropdownMenu = DropdownMenuPrimitive.Root

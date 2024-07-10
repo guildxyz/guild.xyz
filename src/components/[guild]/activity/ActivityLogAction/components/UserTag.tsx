@@ -1,10 +1,10 @@
 import {
-  forwardRef,
   Tag,
   TagLabel,
   TagLeftIcon,
   TagProps,
   TagRightIcon,
+  forwardRef,
   useColorModeValue,
 } from "@chakra-ui/react"
 import { DotsThreeVertical } from "@phosphor-icons/react"

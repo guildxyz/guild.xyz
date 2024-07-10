@@ -1,4 +1,4 @@
-import { Heading, HStack, StackProps } from "@chakra-ui/react"
+import { HStack, Heading, StackProps } from "@chakra-ui/react"
 import { PropsWithChildren } from "react"
 
 type Props = {

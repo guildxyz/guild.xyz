@@ -1,7 +1,7 @@
-import rewards from "rewards"
-import { useWatch } from "react-hook-form"
-import RewardPreview from "./RewardPreview"
 import { PropsWithChildren } from "react"
+import { useWatch } from "react-hook-form"
+import rewards from "rewards"
+import RewardPreview from "./RewardPreview"
 
 const PoapPreview = ({ children }: PropsWithChildren): JSX.Element => {
   const name = useWatch({

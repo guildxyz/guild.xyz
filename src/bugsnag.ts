@@ -1,5 +1,5 @@
-import { env } from "env"
 import Bugsnag from "@bugsnag/js"
+import { env } from "env"
 
 export const bugsnagStart = () => {
   if (

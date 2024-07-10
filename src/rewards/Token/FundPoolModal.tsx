@@ -21,10 +21,10 @@ import useAllowance from "components/[guild]/Requirements/components/GuildChecko
 import AllowanceButton from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/components/AllowanceButton"
 import useIsBalanceSufficient from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/hooks/useIsBalanceSufficient"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
-import { useTokenRewardContext } from "rewards/Token/TokenRewardContext"
 import { RefObject } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import ControlledNumberInput from "requirements/WalletActivity/components/ControlledNumberInput"
+import { useTokenRewardContext } from "rewards/Token/TokenRewardContext"
 import Token from "static/icons/token.svg"
 import {
   ERC20_CONTRACTS,

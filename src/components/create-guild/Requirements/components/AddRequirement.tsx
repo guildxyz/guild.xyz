@@ -1,8 +1,8 @@
 import {
   Box,
   Divider,
-  Heading,
   HStack,
+  Heading,
   Icon,
   IconButton,
   Img,
@@ -16,10 +16,10 @@ import {
   Stack,
   Text,
   Tooltip,
-  useDisclosure,
   VStack,
+  useDisclosure,
 } from "@chakra-ui/react"
-import { schemas, Schemas } from "@guildxyz/types"
+import { Schemas, schemas } from "@guildxyz/types"
 import { ArrowLeft, CaretRight } from "@phosphor-icons/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import AddCard from "components/common/AddCard"
@@ -32,9 +32,9 @@ import useToast from "hooks/useToast"
 import {
   Dispatch,
   FC,
-  forwardRef,
   LegacyRef,
   SetStateAction,
+  forwardRef,
   useEffect,
   useRef,
   useState,
@@ -48,6 +48,7 @@ import {
 } from "requirements/requirementProvidedValues"
 import { RequirementType } from "requirements/types"
 import { Requirement } from "types"
+import preprocessRequirement from "utils/preprocessRequirement"
 import useCreateRequirement from "../hooks/useCreateRequirement"
 import BalancyFooter from "./BalancyFooter"
 import IsNegatedPicker from "./IsNegatedPicker"
@@ -242,10 +243,19 @@ const AddRequirementForm = forwardRef(
 
       const { type, ...requirementData } = data
 
-      const requirement = schemas.RequirementCreationPayloadSchema.parse({
-        type: type ?? selectedType,
+      /**
+       * TODO: This was a quick solution to avoid Zod errors when submitting a
+       * CONTRACT requirement. The type of data.params is {value: number}[] on our
+       * frontend, but it's just a simple number array in the schema. We should fix
+       * this and make sure to not use preprocessRequirements.
+       */
+      const preprocessedRequirement = preprocessRequirement({
+        type: (type ?? selectedType) as any,
         ...requirementData,
       })
+      const requirement = schemas.RequirementCreationPayloadSchema.parse(
+        preprocessedRequirement
+      )
 
       if (!roleId) {
         onAdd?.(requirement)

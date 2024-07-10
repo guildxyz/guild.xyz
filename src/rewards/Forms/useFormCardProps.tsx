@@ -7,11 +7,11 @@ import {
 } from "@chakra-ui/react"
 import { useGuildForm } from "components/[guild]/hooks/useGuildForms"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
+import { CardPropsHook } from "rewards/types"
 import { GuildPlatformWithOptionalId, PlatformName } from "types"
 import pluralize from "utils/pluralize"
-import { useUserFormSubmission } from "./hooks/useFormSubmissions"
 import { formData } from "./data"
-import { CardPropsHook } from "rewards/types"
+import { useUserFormSubmission } from "./hooks/useFormSubmissions"
 
 const useFormCardProps: CardPropsHook = (
   guildPlatform: GuildPlatformWithOptionalId

@@ -2,7 +2,7 @@ import { kv } from "@vercel/kv"
 import { sql } from "@vercel/postgres"
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next"
 import { OneOf } from "types"
-import { createPublicClient, erc721Abi, http, recoverMessageAddress } from "viem"
+import { http, createPublicClient, erc721Abi, recoverMessageAddress } from "viem"
 import { wagmiConfig } from "wagmiConfig"
 import { Chain, Chains } from "wagmiConfig/chains"
 

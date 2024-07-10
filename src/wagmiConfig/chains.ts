@@ -16,6 +16,7 @@ import {
 } from "static/customChains"
 // import type { Chain as ViemChain } from "viem"
 import {
+  type Chain as ViemChain,
   arbitrum,
   arbitrumNova,
   astarZkEVM,
@@ -63,7 +64,6 @@ import {
   zetachainAthensTestnet,
   zkSync,
   zora,
-  type Chain as ViemChain,
 } from "wagmi/chains"
 type GuildChain = {
   id: number

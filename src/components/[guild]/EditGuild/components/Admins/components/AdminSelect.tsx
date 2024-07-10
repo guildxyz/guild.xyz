@@ -1,11 +1,11 @@
-import { forwardRef, HStack, Icon } from "@chakra-ui/react"
+import { HStack, Icon, forwardRef } from "@chakra-ui/react"
 import { Warning } from "@phosphor-icons/react"
 import {
-  chakraComponents,
   CreatableSelect,
   GroupBase,
   MultiValueGenericProps,
   Props,
+  chakraComponents,
 } from "chakra-react-select"
 import CopyableAddress from "components/common/CopyableAddress"
 import StyledSelect from "components/common/StyledSelect"

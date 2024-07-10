@@ -1,10 +1,10 @@
 import { useDisclosure } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import {
-  createContext,
   Dispatch,
   PropsWithChildren,
   SetStateAction,
+  createContext,
   useContext,
   useEffect,
   useState,

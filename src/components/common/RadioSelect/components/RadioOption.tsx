@@ -1,8 +1,8 @@
 import {
   Box,
   Collapse,
-  Heading,
   HStack,
+  Heading,
   Icon,
   Tag,
   Text,
@@ -97,8 +97,8 @@ const RadioOption = (props) => {
         bg: isChecked
           ? null
           : colorMode === "light"
-          ? "blackAlpha.50"
-          : "whiteAlpha.100",
+            ? "blackAlpha.50"
+            : "whiteAlpha.100",
       }}
       _active={{ bg: null }}
     >

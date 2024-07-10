@@ -1,6 +1,6 @@
+import fs from "fs"
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { defineConfig } from "cypress"
-import fs from "fs"
 
 export default defineConfig({
   e2e: {

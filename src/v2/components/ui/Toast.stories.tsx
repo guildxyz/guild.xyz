@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react"
 
 import { Button } from "./Button"
-import { useToast } from "./hooks/useToast"
 import { ToastAction, ToastActionElement, ToastProps } from "./Toast"
 import { Toaster } from "./Toaster"
+import { useToast } from "./hooks/useToast"
 
 const ToastExample = (props: {
   variant: ToastProps["variant"]
