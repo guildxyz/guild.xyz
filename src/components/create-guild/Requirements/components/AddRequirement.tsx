@@ -46,6 +46,7 @@ import {
   REQUIREMENT_PROVIDED_VALUES,
 } from "requirements/requirements"
 import { Requirement } from "types"
+import preprocessRequirement from "utils/preprocessRequirement"
 import useCreateRequirement from "../hooks/useCreateRequirement"
 import BalancyFooter from "./BalancyFooter"
 import IsNegatedPicker from "./IsNegatedPicker"
@@ -147,8 +148,8 @@ const AddRequirement = ({
                 {selectedType
                   ? `Add ${REQUIREMENTS[selectedType]?.name} requirement`
                   : providerTypesOnly
-                  ? "Add provider requirement"
-                  : "Add requirement"}
+                    ? "Add provider requirement"
+                    : "Add requirement"}
               </Text>
             </HStack>
           </ModalHeader>
@@ -238,10 +239,19 @@ const AddRequirementForm = forwardRef(
 
       const { type, ...requirementData } = data
 
-      const requirement = schemas.RequirementCreationPayloadSchema.parse({
-        type: type ?? selectedType,
+      /**
+       * TODO: This was a quick solution to avoid Zod errors when submitting a
+       * CONTRACT requirement. The type of data.params is {value: number}[] on our
+       * frontend, but it's just a simple number array in the schema. We should fix
+       * this and make sure to not use preprocessRequirements.
+       */
+      const preprocessedRequirement = preprocessRequirement({
+        type: (type ?? selectedType) as any,
         ...requirementData,
       })
+      const requirement = schemas.RequirementCreationPayloadSchema.parse(
+        preprocessedRequirement
+      )
 
       if (!roleId) {
         onAdd?.(requirement)
