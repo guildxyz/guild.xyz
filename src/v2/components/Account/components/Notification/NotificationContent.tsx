@@ -24,21 +24,18 @@ export const NotificationContent = () => {
     domain: "guild.xyz",
     allApps: process.env.NODE_ENV !== "production",
   }
+  // initWeb3InboxClient(WEB3_INBOX_INIT_PARAMS)
+  // const { data } = useWeb3InboxClient()
+  // const isReady = !!data
 
-  const Web3Inbox = () => {
-    initWeb3InboxClient(WEB3_INBOX_INIT_PARAMS)
-    const { data } = useWeb3InboxClient()
-    const isReady = !!data
-
-    const { address } = useAccount()
-    const { data: account } = useWeb3InboxAccount(
-      address ? `eip155:1:${address}` : undefined
-    )
-    const { data: subscription } = useSubscription(
-      account,
-      WEB3_INBOX_INIT_PARAMS.domain
-    )
-  }
+  const { address } = useAccount()
+  const { data: account } = useWeb3InboxAccount(
+    address ? `eip155:1:${address}` : undefined
+  )
+  const { data: subscription } = useSubscription(
+    account ?? undefined,
+    WEB3_INBOX_INIT_PARAMS.domain
+  )
 
   return (
     <div>
