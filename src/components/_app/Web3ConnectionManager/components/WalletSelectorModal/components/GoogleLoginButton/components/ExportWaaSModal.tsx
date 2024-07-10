@@ -16,7 +16,6 @@ import {
   useClipboard,
   useDisclosure,
 } from "@chakra-ui/react"
-// @ts-expect-error: fetched from prive sources, prevents successful build
 import type { RawPrivateKey, Waas } from "@coinbase/waas-sdk-web"
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Check, Copy, Wallet } from "@phosphor-icons/react"
@@ -36,12 +35,10 @@ import { getDriveFileAppProperties, listWalletsOnDrive } from "../utils/googleDr
 const WAAS_DEPRECATION_ERROR_MESSAGE =
   "Looks like you don't have an existing Google-based Guild account. We recommend signing in with the Smart Wallet option"
 
-// @ts-expect-error: fetched from prive sources, prevents successful build
 let cwaasModule: typeof import("@coinbase/waas-sdk-web")
 const cwaasImport = async () => {
   if (cwaasModule) return cwaasModule
   // eslint-disable-next-line import/no-extraneous-dependencies
-  // @ts-expect-error: fetched from prive sources, prevents successful build
   const mod = await import("@coinbase/waas-sdk-web")
   cwaasModule = mod
   return mod
