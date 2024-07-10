@@ -1,5 +1,5 @@
 import AbsoluteMinMaxTimeFormControls from "components/common/AbsoluteMinMaxTimeFormControls"
-import { RequirementFormProps } from "requirements"
+import { RequirementFormProps } from "requirements/types"
 import TxCountFormControl from "./TxCountFormControl"
 
 const CovalentContractDeploy = ({

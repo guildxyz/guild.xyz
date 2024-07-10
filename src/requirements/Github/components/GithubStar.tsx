@@ -1,6 +1,6 @@
 import { FormControl, FormErrorMessage, FormLabel, Input } from "@chakra-ui/react"
 import { useController, useFormState } from "react-hook-form"
-import { RequirementFormProps } from "requirements"
+import { RequirementFormProps } from "requirements/types"
 import parseFromObject from "utils/parseFromObject"
 
 const GithubStar = ({ baseFieldPath }: RequirementFormProps) => {

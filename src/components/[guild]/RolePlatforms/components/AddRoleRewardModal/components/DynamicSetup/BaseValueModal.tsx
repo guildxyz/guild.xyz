@@ -15,7 +15,7 @@ import RequirementDisplayComponent from "components/[guild]/Requirements/compone
 import DisplayCard from "components/common/DisplayCard"
 import { Modal } from "components/common/Modal"
 import AddRequirement from "components/create-guild/Requirements/components/AddRequirement"
-import { REQUIREMENT_PROVIDED_VALUES } from "requirements/requirements"
+import { REQUIREMENT_PROVIDED_VALUES } from "requirements/requirementProvidedValues"
 
 type Props = {
   isOpen: boolean

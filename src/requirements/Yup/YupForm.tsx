@@ -11,7 +11,7 @@ import {
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Controller, useFormContext } from "react-hook-form"
-import { RequirementFormProps } from "requirements"
+import { RequirementFormProps } from "requirements/types"
 import { SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
 import useYupAdapters from "./hooks/useYupAdapters"
