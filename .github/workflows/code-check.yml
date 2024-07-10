@@ -5,7 +5,7 @@ on:
     branches: ["*"]
 
 jobs:
-  quality:
+  quality-assurance:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -14,3 +14,16 @@ jobs:
         uses: biomejs/setup-biome@v2
       - name: Run Biome
         run: biome ci --reporter=github .
+  type:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+      - name: Install dependencies
+        run: npm install
+      - name: Run TypeScript compiler
+        run: npm run type-check
