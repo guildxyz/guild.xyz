@@ -6,37 +6,76 @@ import { Skeleton } from "@/components/ui/Skeleton"
 import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { ArrowRight } from "@phosphor-icons/react"
 import Link from "next/link"
+import MessageImage from "/public/img/message.svg"
+import Image from "next/image"
+import { env } from "env"
+import {
+  initWeb3InboxClient,
+  useSubscription,
+  useWeb3InboxAccount,
+  useWeb3InboxClient,
+} from "@web3inbox/react"
+import { useAccount, useSignMessage } from "wagmi"
 
 export const NotificationContent = () => {
   const { type } = useWeb3ConnectionManager()
+  const WEB3_INBOX_INIT_PARAMS = {
+    projectId: env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
+    domain: "guild.xyz",
+    allApps: process.env.NODE_ENV !== "production",
+  }
+
+  const Web3Inbox = () => {
+    initWeb3InboxClient(WEB3_INBOX_INIT_PARAMS)
+    const { data } = useWeb3InboxClient()
+    const isReady = !!data
+
+    const { address } = useAccount()
+    const { data: account } = useWeb3InboxAccount(
+      address ? `eip155:1:${address}` : undefined
+    )
+    const { data: subscription } = useSubscription(
+      account,
+      WEB3_INBOX_INIT_PARAMS.domain
+    )
+  }
 
   return (
     <div>
       {type === "EVM" && (
-        <section>
-          <h3 className="text-xs font-bold text-muted-foreground">MESSAGES</h3>
-          <div className="flex flex-col gap-2">
-            <WebInboxSkeleton />
-            <div>card</div>
+        <section className="mx-4">
+          <h3 className="mb-4 text-xs font-bold text-muted-foreground">MESSAGES</h3>
+          <div className="flex flex-col gap-4">
+            {!subscription && (
+              <div className="grid">
+                <Image src={MessageImage} alt="Messages" />
+                <h4 className="font-semibold">Subscribe to messages</h4>
+                <p className="text-sm leading-normal text-muted-foreground">
+                  Receive messages from guild admins
+                </p>
+              </div>
+            )}
           </div>
         </section>
       )}
-      <Separator className="my-4" />
-      <Link href="/profile/activity">
-        <Button className="w-full gap-2" variant="ghost">
-          View activity
-          <ArrowRight />
-        </Button>
-      </Link>
+      <Separator className="my-6" />
+      <div className="px-4">
+        <Link href="/profile/activity">
+          <Button className="w-full gap-2" variant="ghost" size="sm">
+            View activity
+            <ArrowRight />
+          </Button>
+        </Link>
+      </div>
     </div>
   )
 }
 
 const WebInboxSkeleton = () => (
-  <div className="grid grid-cols-[auto_1fr] grid-rows-2 gap-2 h-16">
-    <Skeleton className="row-span-2 rounded-full aspect-square h-full" />
+  <div className="grid h-10 grid-cols-[auto_1fr] grid-rows-2 gap-2">
+    <Skeleton className="row-span-2 aspect-square h-full rounded-full" />
     <Skeleton className="" />
-    <Skeleton className="" />
+    <Skeleton className="w-10/12" />
   </div>
 )
 
