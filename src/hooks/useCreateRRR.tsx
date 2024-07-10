@@ -8,7 +8,6 @@ import useCreateRole, {
 } from "components/create-guild/hooks/useCreateRole"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
-import useToast from "hooks/useToast"
 import {
   Requirement,
   RequirementCreationPayloadWithTempID,
@@ -71,8 +70,7 @@ export type RequirementIdMap = {
   }
 }
 
-const useCreateRRR = ({ onSuccess }: { onSuccess: (res) => void }) => {
-  const toast = useToast()
+const useCreateRRR = ({ onSuccess }: { onSuccess?: (res) => void }) => {
   const showErrorToast = useShowErrorToast()
   const { captureEvent } = usePostHogContext()
   const postHogOptions = {
@@ -139,11 +137,6 @@ const useCreateRRR = ({ onSuccess }: { onSuccess: (res) => void }) => {
   const { onSubmit: submitWrapper, isLoading } = useSubmit(submit, {
     onSuccess: (res) => {
       const { roleIds, createdRole, createdRequirements, createdRolePlatforms } = res
-
-      toast({
-        title: "Role successfully created",
-        status: "success",
-      })
 
       if (!!createdRole)
         mutateCreatedRole(createdRole, createdRequirements, createdRolePlatforms)

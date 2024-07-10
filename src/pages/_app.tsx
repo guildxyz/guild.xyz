@@ -27,6 +27,7 @@ import "../app/globals.css"
  */
 import { AccountModal } from "@/components/Account/components/AccountModal"
 import { IntercomProvider } from "@/components/Providers/IntercomProvider"
+import { Toaster } from "@/components/ui/Toaster"
 import { LegacyPostHogProvider } from "components/_app/LegacyPostHogProvider"
 import { LegacyWeb3ConnectionManager } from "components/_app/LegacyWeb3ConnectionManager"
 import "wicg-inert"
@@ -137,6 +138,8 @@ const App = ({
               </QueryClientProvider>
             </WagmiProvider>
           </SWRConfig>
+
+          <Toaster />
         </IconContext.Provider>
       </Chakra>
     </>

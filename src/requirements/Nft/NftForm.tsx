@@ -32,7 +32,7 @@ import {
   useFormContext,
   useWatch,
 } from "react-hook-form"
-import { RequirementFormProps } from "requirements"
+import { RequirementFormProps } from "requirements/types"
 import { SelectOption } from "types"
 import capitalize from "utils/capitalize"
 import parseFromObject from "utils/parseFromObject"

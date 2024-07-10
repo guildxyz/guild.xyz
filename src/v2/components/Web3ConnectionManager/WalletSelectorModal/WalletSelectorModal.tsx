@@ -5,6 +5,7 @@ import {
   walletLinkHelperModalAtom,
 } from "@/components/Providers/atoms"
 import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import { Anchor, anchorVariants } from "@/components/ui/Anchor"
 import { Button } from "@/components/ui/Button"
 import {
   Dialog,
@@ -20,7 +21,6 @@ import { useUserPublic } from "@/hooks/useUserPublic"
 import { ArrowSquareOut } from "@phosphor-icons/react/dist/ssr"
 import useSetKeyPair from "hooks/useSetKeyPair"
 import { useAtom, useSetAtom } from "jotai"
-import Link from "next/link"
 import { useEffect } from "react"
 import { useAccount, useConnect, type Connector } from "wagmi"
 import { COINBASE_INJECTED_WALLET_ID, COINBASE_WALLET_SDK_ID } from "wagmiConfig"
@@ -254,28 +254,38 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
             <div className="flex w-full flex-col gap-2 text-center text-sm">
               <p className="text-muted-foreground">
                 <span>{"New to Ethereum wallets? "}</span>
-                {/* TODO: custom link component with generalised styles */}
-                <a href="https://ethereum.org/en/wallets">Learn more</a>
-                <ArrowSquareOut weight="bold" className="ml-1 inline" />
+                <a
+                  href="https://ethereum.org/en/wallets"
+                  target="_blank"
+                  className={anchorVariants({
+                    variant: "muted",
+                    className: "inline-flex items-center gap-1",
+                  })}
+                >
+                  Learn more
+                  <ArrowSquareOut />
+                </a>
               </p>
 
               <p className="text-muted-foreground">
                 <span>{"By continuing, you agree to our "}</span>
-                <Link
+                <Anchor
                   href="/privacy-policy"
+                  variant="muted"
                   className="font-semibold"
                   onClick={onClose}
                 >
                   Privacy Policy
-                </Link>
+                </Anchor>
                 <span>{" and "}</span>
-                <Link
+                <Anchor
                   href="/terms-of-use"
+                  variant="muted"
                   className="font-semibold"
                   onClick={onClose}
                 >
                   Terms & conditions
-                </Link>
+                </Anchor>
               </p>
             </div>
           ) : (
@@ -287,14 +297,22 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
                 <span>{"This site is protected by reCAPTCHA, so the Google "}</span>
                 <a
                   href="https://policies.google.com/privacy"
-                  className="font-semibold"
+                  target="_blank"
+                  className={anchorVariants({
+                    variant: "muted",
+                    className: "font-semibold",
+                  })}
                 >
                   Privacy Policy
                 </a>{" "}
                 <span>{"and "}</span>
                 <a
                   href="https://policies.google.com/terms"
-                  className="font-semibold"
+                  target="_blank"
+                  className={anchorVariants({
+                    variant: "muted",
+                    className: "font-semibold",
+                  })}
                 >
                   Terms of Service
                 </a>

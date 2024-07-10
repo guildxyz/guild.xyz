@@ -8,8 +8,8 @@ import {
 } from "@phosphor-icons/react/dist/ssr"
 import useGuild, { useSimpleGuild } from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
-import GuildLogo from "components/common/GuildLogo"
 
+import { GuildLogo } from "@/components/GuildLogo"
 import { Button, ButtonProps } from "@/components/ui/Button"
 import {
   Dialog,
@@ -51,7 +51,7 @@ const SharedSocials = () => {
 
   return (
     <Dialog>
-      {/* TODO: scrollBehavior="inside" */}
+      {/* TODO: scrollBehavior="inside" (maybe we can do it here and don't need to abstract it into the component?) */}
       <DialogTrigger>
         {!guildSharedSocial ? (
           <Button {...buttonProps}>
@@ -149,9 +149,8 @@ const ShareSocialsWithGuildSelect = ({
 
   return (
     <div className="flex items-center gap-4">
-      {/* TODO: GuildLogo migration */}
       {imageUrl ? (
-        <GuildLogo imageUrl={imageUrl} size="36px" />
+        <GuildLogo imageUrl={imageUrl} className="size-9" />
       ) : (
         <Skeleton className="size-9 shrink-0 rounded-full" />
       )}

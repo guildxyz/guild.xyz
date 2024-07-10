@@ -1,7 +1,7 @@
 import { HStack, Text, useColorModeValue } from "@chakra-ui/react"
 import RequirementChainIndicator from "components/[guild]/Requirements/components/RequirementChainIndicator"
 import useTokenData from "hooks/useTokenData"
-import { ProvidedValueDisplayProps } from "requirements"
+import type { ProvidedValueDisplayProps } from "requirements/requirementProvidedValues"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { Chain } from "wagmiConfig/chains"
 

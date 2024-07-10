@@ -11,7 +11,6 @@ type OAuthData<Data> = {
 
 type OAuthError = { error: string; errorDescription: string }
 
-// TODO: move this out to its own file?
 export type Message = OneOf<
   { type: "OAUTH_ERROR"; data: OAuthError },
   { type: "OAUTH_SUCCESS"; data: any }

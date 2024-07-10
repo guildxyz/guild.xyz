@@ -14,6 +14,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/Dialog"
+import { useToast } from "@/components/ui/hooks/useToast"
 import { Skeleton } from "@/components/ui/Skeleton"
 import {
   Tooltip,
@@ -31,7 +32,6 @@ import {
 import useUser from "components/[guild]/hooks/useUser"
 import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import useSubmit, { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
-import useToast from "hooks/useToast"
 import { QRCodeSVG } from "qrcode.react"
 import { useCallback, useEffect, useState } from "react"
 import { isMobile } from "react-device-detect"
@@ -73,14 +73,14 @@ const ConnectFarcasterButton = ({
   const { farcasterProfiles, id: userId, mutate } = useUser()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const fetcherWithSign = useFetcherWithSign()
-  const toast = useToast()
+  const { toast } = useToast()
   const [pollInterval, setPollInterval] = useState<NodeJS.Timeout>()
 
   const onApprove = () => {
     captureEvent("[farcaster] request approved")
     onClose()
     toast({
-      status: "success",
+      variant: "success",
       description: "Farcaster profile connected",
     })
     onSuccess?.()
@@ -321,7 +321,7 @@ const DisconnectFarcasterButton = () => {
   const disclosure = useDisclosure()
   const { farcasterProfiles, id, mutate } = useUser()
   const fetcherWithSign = useFetcherWithSign()
-  const toast = useToast()
+  const { toast } = useToast()
 
   const { onSubmit, isLoading } = useSubmit(
     async (fid?: number) => {
@@ -341,7 +341,7 @@ const DisconnectFarcasterButton = () => {
     {
       onSuccess: () => {
         toast({
-          status: "success",
+          variant: "success",
           description: "Farcaster profile disconnected",
         })
         disclosure.onClose()

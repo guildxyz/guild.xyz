@@ -13,6 +13,7 @@ import { Modal } from "components/common/Modal"
 import { ReactNode } from "react"
 import { useFormContext } from "react-hook-form"
 import REQUIREMENTS from "requirements"
+import { REQUIREMENT_FORM_COMPONENTS } from "requirements/requirementFormComponents"
 import { Requirement } from "types"
 import IsNegatedPicker from "./IsNegatedPicker"
 
@@ -45,7 +46,7 @@ const RequirementEditModal = ({
     onClose()
   }
 
-  const FormComponent = REQUIREMENTS[requirementField.type].formComponent
+  const FormComponent = REQUIREMENT_FORM_COMPONENTS[requirementField.type]
 
   return (
     <>

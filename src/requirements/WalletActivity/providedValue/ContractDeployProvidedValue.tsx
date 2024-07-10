@@ -1,6 +1,6 @@
 import { HStack, Text, useColorModeValue } from "@chakra-ui/react"
 import RequirementChainIndicator from "components/[guild]/Requirements/components/RequirementChainIndicator"
-import { ProvidedValueDisplayProps } from "requirements"
+import type { ProvidedValueDisplayProps } from "requirements/requirementProvidedValues"
 
 const ContractDeployProvidedValue = ({ requirement }: ProvidedValueDisplayProps) => {
   const tagBg = useColorModeValue("blackAlpha.100", "blackAlpha.300")

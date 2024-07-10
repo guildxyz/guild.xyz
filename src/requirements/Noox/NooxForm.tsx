@@ -13,7 +13,7 @@ import {
 import FormErrorMessage from "components/common/FormErrorMessage"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import { useController, useFormContext } from "react-hook-form"
-import { RequirementFormProps } from "requirements"
+import { RequirementFormProps } from "requirements/types"
 import parseFromObject from "utils/parseFromObject"
 import useNooxBadge, { NUMBER_REGEX } from "./hooks/useNooxBadge"
 
