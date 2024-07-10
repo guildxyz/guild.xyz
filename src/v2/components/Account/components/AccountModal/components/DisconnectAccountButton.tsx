@@ -35,7 +35,6 @@ const DisconnectAccountButton = ({
   state: DisclosureState
 }) => (
   <>
-    {/* TODO: placement="top" hasArrow */}
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
