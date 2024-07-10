@@ -65,7 +65,6 @@ const LinkedAddress = ({ addressData }: Props) => {
   } = useDisconnectAddress(onClose)
 
   const removeAddress = () => onDisconnectSubmit({ address })
-  // const removeMenuItemColor = useColorModeValue("red.600", "red.300")
 
   return (
     <>
@@ -164,13 +163,15 @@ const LinkedAddress = ({ addressData }: Props) => {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={removeAddress}
-              // TODO
-              // isLoading={isDisconnectLoading}
-              // loadingText={disconnectSignLoadingText || "Removing"}
-            >
-              Continue
+            <AlertDialogAction asChild>
+              <Button
+                variant="destructive"
+                onClick={removeAddress}
+                isLoading={isDisconnectLoading}
+                loadingText={disconnectSignLoadingText || "Removing"}
+              >
+                Continue
+              </Button>
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
