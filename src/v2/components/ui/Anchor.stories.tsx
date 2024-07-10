@@ -15,6 +15,7 @@ export const Default: Story = {
     children: "Default",
     href: "#",
     variant: "default",
+    showExternal: false,
   },
   argTypes: {
     variant: {

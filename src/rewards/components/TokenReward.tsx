@@ -2,11 +2,9 @@ import { Icon, Spinner, Tooltip } from "@chakra-ui/react"
 import { ArrowSquareIn, LockSimple } from "@phosphor-icons/react"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import DynamicTag from "components/[guild]/RoleCard/components/DynamicReward/DynamicTag"
-import {
-  RewardDisplay,
-  RewardIcon,
-  RewardProps,
-} from "components/[guild]/RoleCard/components/Reward"
+import { RewardIcon } from "components/[guild]/RoleCard/components/Reward"
+import { RewardDisplay } from "components/[guild]/RoleCard/components/RewardDisplay"
+import { RewardProps } from "components/[guild]/RoleCard/components/types"
 import AvailabilityTags from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import Button from "components/common/Button"

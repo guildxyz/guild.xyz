@@ -34,17 +34,16 @@ const nextConfig = {
           publicPath: `https://${process.env.VERCEL_URL ?? "guild.xyz"}/_next/`,
         })
       )
+      config.plugins.push(
+        new CircularDependencyPlugin({
+          exclude: /.next|node_modules/,
+          include: /src/,
+          // TODO: if all circular dependencies are resolved, set this argument to true
+          failOnError: false,
+          allowAsyncCycles: false,
+        })
+      )
     }
-
-    // config.plugins.push(
-    //   new CircularDependencyPlugin({
-    //     exclude: /.next|node_modules/,
-    //     include: /src/,
-    //     // TODO: if all circular dependencies are resolved, set this argument to true
-    //     failOnError: false,
-    //     allowAsyncCycles: false,
-    //   })
-    // )
 
     return config
   },
@@ -94,7 +93,12 @@ const nextConfig = {
   },
   experimental: {
     scrollRestoration: true,
-    optimizePackageImports: ["@phosphor-icons/react"],
+    optimizePackageImports: [
+      "@phosphor-icons/react",
+      "@phosphor-icons/react/dist/ssr",
+      "@fuels/react",
+      "fuels",
+    ],
   },
   async rewrites() {
     return {

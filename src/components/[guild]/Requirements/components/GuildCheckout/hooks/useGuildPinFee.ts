@@ -2,9 +2,9 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import guildPinAbi from "static/abis/guildPin"
 import useSWR from "swr"
 import { GUILD_PIN_CONTRACTS } from "utils/guildCheckout/constants"
-import { createPublicClient, type Chain as ViemChain } from "viem"
+import { type Chain as ViemChain, createPublicClient } from "viem"
 import { wagmiConfig } from "wagmiConfig"
-import { Chains, type Chain } from "wagmiConfig/chains"
+import { type Chain, Chains } from "wagmiConfig/chains"
 
 /**
  * For some reason, `useReadContract` didn't work on Ontology EVM, so we use the

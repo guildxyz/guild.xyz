@@ -1,13 +1,13 @@
 import { Button, Flex } from "@chakra-ui/react"
 import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hooks/useAddRewardDiscardAlert"
+import { FormProvider, useForm, useWatch } from "react-hook-form"
+import { AddRewardPanelProps } from "rewards"
 import GatherForm from "rewards/Gather/GatherForm"
 import useGatherAccess from "rewards/Gather/hooks/useGatherAccess"
 import {
   gatherSpaceIdToName,
   gatherSpaceUrlToSpaceId,
 } from "rewards/Gather/useGatherCardProps"
-import { AddRewardPanelProps } from "rewards"
-import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { PlatformType } from "types"
 import DefaultAddRewardPanelWrapper from "../DefaultAddRewardPanelWrapper"
 

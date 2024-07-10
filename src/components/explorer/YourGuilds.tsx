@@ -1,5 +1,6 @@
 import { walletSelectorModalAtom } from "@/components/Providers/atoms"
 import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import { useYourGuilds } from "@/hooks/useYourGuilds"
 import { Box, HStack, Img, Stack, Text } from "@chakra-ui/react"
 import { Plus, SignIn } from "@phosphor-icons/react"
 import ActionCard from "components/common/ActionCard"
@@ -7,19 +8,9 @@ import Button from "components/common/Button"
 import Card from "components/common/Card"
 import GuildCard, { GuildSkeletonCard } from "components/explorer/GuildCard"
 import GuildCardsGrid from "components/explorer/GuildCardsGrid"
-import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import { useSetAtom } from "jotai"
 import Link from "next/link"
 import { forwardRef } from "react"
-import { GuildBase } from "types"
-
-const useYourGuilds = () =>
-  useSWRWithOptionalAuth<GuildBase[]>(
-    `/v2/guilds?yours=true`,
-    undefined,
-    false,
-    true
-  )
 
 const YourGuilds = forwardRef((_, ref: any) => {
   const { isWeb3Connected } = useWeb3ConnectionManager()
@@ -91,5 +82,4 @@ const YourGuilds = forwardRef((_, ref: any) => {
   )
 })
 
-export { useYourGuilds }
 export default YourGuilds

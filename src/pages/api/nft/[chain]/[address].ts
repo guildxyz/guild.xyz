@@ -11,8 +11,8 @@ import {
 
 type NftStandard = "ERC-721" | "ERC-1155" | "Unknown"
 enum ContractInterface {
-  "ERC721" = "0x80ac58cd",
-  "ERC1155" = "0xd9b67a26",
+  ERC721 = "0x80ac58cd",
+  ERC1155 = "0xd9b67a26",
 }
 
 export type NFTDetails = {

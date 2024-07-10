@@ -1,8 +1,8 @@
 import { ButtonProps } from "@chakra-ui/react"
 import { MintLinkModal } from "components/[guild]/claim-poap/components/MintLinkModal"
 import Button from "components/common/Button"
-import useClaimText from "rewards/SecretText/hooks/useClaimText"
 import { PropsWithChildren } from "react"
+import useClaimText from "rewards/SecretText/hooks/useClaimText"
 import { Rest } from "types"
 
 type ShowMintLinkButtonProps = { rolePlatformId: number } & ButtonProps & Rest

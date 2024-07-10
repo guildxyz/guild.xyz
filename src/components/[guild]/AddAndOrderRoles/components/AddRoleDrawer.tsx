@@ -7,8 +7,8 @@ import {
   DrawerOverlay,
   FormLabel,
   HStack,
-  useDisclosure,
   VStack,
+  useDisclosure,
 } from "@chakra-ui/react"
 import { ClientStateRequirementHandlerProvider } from "components/[guild]/RequirementHandlerContext"
 import AddRolePlatforms from "components/[guild]/RolePlatforms/AddRolePlatforms"
@@ -20,9 +20,11 @@ import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
 import SetRequirements from "components/create-guild/Requirements"
+import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import useCreateRRR from "hooks/useCreateRRR"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
+import useToast from "hooks/useToast"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { useRef } from "react"
 import { FormProvider } from "react-hook-form"
@@ -59,9 +61,16 @@ const AddRoleDrawer = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
   })
 
   const drawerBodyRef = useRef<HTMLDivElement>()
+  const toast = useToast()
+  const triggerConfetti = useJsConfetti()
 
   const { onSubmit, isLoading, loadingText } = useCreateRRR({
     onSuccess: () => {
+      triggerConfetti()
+      toast({
+        title: "Role successfully created!",
+        status: "success",
+      })
       methods.reset(methods.defaultValues)
       onClose()
     },

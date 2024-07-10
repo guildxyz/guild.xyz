@@ -27,8 +27,8 @@ const ConnectAccount = ({
       isReconnect
         ? `Reconnect ${account}`
         : isConnected
-        ? `${account} connected`
-        : `Connect ${account}`
+          ? `${account} connected`
+          : `Connect ${account}`
     }
     titleRightElement={titleRightElement}
     buttonLabel={isReconnect ? "Reconnect" : isConnected || "Connect"}

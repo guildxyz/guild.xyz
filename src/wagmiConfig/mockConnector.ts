@@ -8,22 +8,22 @@
  */
 
 import {
-  Account,
-  RpcRequestError,
-  SwitchChainError,
-  UserRejectedRequestError,
-  createWalletClient,
-  custom,
-  fromHex,
-  getAddress,
   http,
-  numberToHex,
+  Account,
   type Address,
   type Client,
   type EIP1193RequestFn,
   type Hex,
+  RpcRequestError,
+  SwitchChainError,
   type Transport,
+  UserRejectedRequestError,
   type WalletRpcSchema,
+  createWalletClient,
+  custom,
+  fromHex,
+  getAddress,
+  numberToHex,
 } from "viem"
 import { rpc } from "viem/utils"
 import { ChainNotConfiguredError, createConnector, normalizeChainId } from "wagmi"

@@ -34,8 +34,8 @@ const PaymentFeeCurrency = (): JSX.Element => {
     ? isNativeCurrency
       ? formatUnits(fee, CHAIN_CONFIG[requirement.chain].nativeCurrency.decimals)
       : tokenData?.decimals
-      ? formatUnits(fee, tokenData.decimals)
-      : undefined
+        ? formatUnits(fee, tokenData.decimals)
+        : undefined
     : undefined
 
   useEffect(() => {

@@ -6,7 +6,7 @@ import LogicFormControl from "components/create-guild/Requirements/components/Lo
 import RequirementEditableCard from "components/create-guild/Requirements/components/RequirementEditableCard"
 import { AnimatePresence } from "framer-motion"
 import { useFieldArray, useFormContext, useWatch } from "react-hook-form"
-import { RequirementType } from "requirements"
+import { RequirementType } from "requirements/types"
 import { Requirement } from "types"
 
 const SetHiddenRoleRequirements = (): JSX.Element => {

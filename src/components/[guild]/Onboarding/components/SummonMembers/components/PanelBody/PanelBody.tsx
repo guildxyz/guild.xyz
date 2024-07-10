@@ -4,8 +4,8 @@ import {
   Grid,
   HStack,
   Text,
-  useColorModeValue,
   VStack,
+  useColorModeValue,
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Image from "next/image"

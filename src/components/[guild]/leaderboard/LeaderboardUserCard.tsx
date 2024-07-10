@@ -8,8 +8,8 @@ import {
   Tag,
   Text,
   Tooltip,
-  useColorModeValue,
   VStack,
+  useColorModeValue,
 } from "@chakra-ui/react"
 import { Trophy } from "@phosphor-icons/react"
 import Card from "components/common/Card"

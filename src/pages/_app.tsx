@@ -5,7 +5,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { bugsnagStart } from "bugsnag"
 import AppErrorBoundary from "components/_app/AppErrorBoundary"
 import Chakra from "components/_app/Chakra"
-import IntercomProvider from "components/_app/IntercomProvider"
 import ClientOnly from "components/common/ClientOnly"
 import { env } from "env"
 import { dystopian, inter } from "fonts"
@@ -17,7 +16,6 @@ import dynamic from "next/dynamic"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { SWRConfig } from "swr"
-import "theme/custom-scrollbar.css"
 import { fetcherForSWR } from "utils/fetcher"
 import { shouldUseReCAPTCHAAtom } from "utils/recaptcha"
 import { WagmiProvider } from "wagmi"
@@ -28,6 +26,8 @@ import "../app/globals.css"
  * https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/inert#browser_compatibility
  */
 import { AccountModal } from "@/components/Account/components/AccountModal"
+import { IntercomProvider } from "@/components/Providers/IntercomProvider"
+import { Toaster } from "@/components/ui/Toaster"
 import { LegacyPostHogProvider } from "components/_app/LegacyPostHogProvider"
 import { LegacyWeb3ConnectionManager } from "components/_app/LegacyWeb3ConnectionManager"
 import "wicg-inert"
@@ -138,6 +138,8 @@ const App = ({
               </QueryClientProvider>
             </WagmiProvider>
           </SWRConfig>
+
+          <Toaster />
         </IconContext.Provider>
       </Chakra>
     </>

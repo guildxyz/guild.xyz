@@ -5,10 +5,8 @@ import {
 } from "components/[guild]/Requirements/components/GuildCheckout/components/TransactionStatusContext"
 import TransactionStatusModal from "components/[guild]/Requirements/components/GuildCheckout/components/TransactionStatusModal"
 import OpenseaLink from "components/[guild]/Requirements/components/GuildCheckout/components/TransactionStatusModal/components/OpenseaLink"
-import {
-  RewardDisplay,
-  RewardIcon,
-} from "components/[guild]/RoleCard/components/Reward"
+import { RewardIcon } from "components/[guild]/RoleCard/components/Reward"
+import { RewardDisplay } from "components/[guild]/RoleCard/components/RewardDisplay"
 import { ContractCallFunction } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
 import { PropsWithChildren, createContext, useContext, useEffect } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
@@ -58,9 +56,9 @@ const CollectNftProvider = ({
     !maxSupply && !mintableAmountPerUser
       ? false
       : mintableAmountPerUser > 0
-      ? nftBalance >= mintableAmountPerUser ||
-        (maxSupply > 0 ? totalSupply >= maxSupply : false)
-      : totalSupply >= maxSupply
+        ? nftBalance >= mintableAmountPerUser ||
+          (maxSupply > 0 ? totalSupply >= maxSupply : false)
+        : totalSupply >= maxSupply
 
   const { txHash, isTxModalOpen, onTxModalOpen } = useTransactionStatusContext()
   useEffect(() => {

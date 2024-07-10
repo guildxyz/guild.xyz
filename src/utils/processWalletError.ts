@@ -1,4 +1,4 @@
-import { ErrorInfo } from "components/common/Error"
+import { ErrorInfo } from "@/components/Error"
 import type { WalletError } from "types"
 
 const processWalletError = (error: WalletError): ErrorInfo => {

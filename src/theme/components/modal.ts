@@ -18,6 +18,7 @@ const styles = {
       },
       dialog: {
         borderTopRadius: "xl",
+        backgroundColor: c === "dark" && darkBgColor,
         borderBottomRadius: { base: 0, sm: "xl" },
         overflow: "hidden",
         marginTop: "auto",

@@ -5,8 +5,8 @@ import Button from "components/common/Button"
 import { useClaimedReward } from "hooks/useClaimedReward"
 import dynamic from "next/dynamic"
 import Link from "next/link"
-import { claimTextButtonTooltipLabel } from "rewards/SecretText/TextCardButton"
 import rewards from "rewards"
+import { claimTextButtonTooltipLabel } from "rewards/SecretText/TextCardButton"
 import { GuildPlatform } from "types"
 import {
   getRolePlatformStatus,

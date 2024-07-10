@@ -3,7 +3,7 @@ import useTokenData from "hooks/useTokenData"
 import useVault from "requirements/Payment/hooks/useVault"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { formatUnits } from "viem"
-import { Chain, CHAIN_CONFIG } from "wagmiConfig/chains"
+import { CHAIN_CONFIG, Chain } from "wagmiConfig/chains"
 import { useRequirementContext } from "../../RequirementContext"
 import usePayFee from "../hooks/usePayFee"
 import FeesTable from "./FeesTable"
@@ -46,9 +46,9 @@ const BuyTotal = (): JSX.Element => {
           formatUnits(fee, CHAIN_CONFIG[requirementChain].nativeCurrency.decimals)
         )
       : tokenData?.decimals
-      ? Number(formatUnits(fee, tokenData.decimals)) +
-        (isNativeCurrency ? estimatedGasInFloat ?? 0 : 0)
-      : 0
+        ? Number(formatUnits(fee, tokenData.decimals)) +
+          (isNativeCurrency ? estimatedGasInFloat ?? 0 : 0)
+        : 0
     : 0
 
   const isTooSmallPrice = priceInSellToken < 0.001

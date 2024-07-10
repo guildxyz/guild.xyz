@@ -6,8 +6,8 @@ import {
   Img,
   Spinner,
   Text,
-  useColorModeValue,
   VStack,
+  useColorModeValue,
 } from "@chakra-ui/react"
 import { DownloadSimple } from "@phosphor-icons/react"
 import useGuild from "components/[guild]/hooks/useGuild"

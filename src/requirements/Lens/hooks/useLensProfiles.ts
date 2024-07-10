@@ -1,4 +1,3 @@
-import REQUIREMENTS from "requirements"
 import { useSWRConfig } from "swr"
 import useSWRImmutable from "swr/immutable"
 import fetcher from "utils/fetcher"
@@ -66,9 +65,7 @@ const useLensProfiles = (searchQuery: string) => {
     handles: data?.map(({ id, handle: { localName }, metadata }) => ({
       label: `${localName}.lens`,
       value: id,
-      img:
-        metadata?.picture?.optimized?.uri ??
-        (REQUIREMENTS.LENS_ACTION.icon as string),
+      img: metadata?.picture?.optimized?.uri ?? "/requirementLogos/lens.svg",
     })),
     isLoading,
   }

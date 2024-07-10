@@ -1,4 +1,4 @@
-import { domAnimation, LazyMotion, m } from "framer-motion"
+import { LazyMotion, domAnimation, m } from "framer-motion"
 import { PropsWithChildren, useEffect, useState } from "react"
 
 type Props = {

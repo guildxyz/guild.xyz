@@ -1,16 +1,16 @@
 import {
   Center,
-  forwardRef,
   Img,
   Tag,
   TagLabel,
   TagLeftIcon,
   TagProps,
   TagRightIcon,
+  forwardRef,
   useColorModeValue,
 } from "@chakra-ui/react"
 import { IconProps } from "@phosphor-icons/react"
-import { ForwardRefExoticComponent, memo, RefAttributes } from "react"
+import { ForwardRefExoticComponent, RefAttributes, memo } from "react"
 
 type Props = {
   name: string

@@ -1,4 +1,4 @@
-import { ErrorInfo } from "components/common/Error"
+import { ErrorInfo } from "@/components/Error"
 import { DiscordError } from "types"
 import capitalize from "utils/capitalize"
 

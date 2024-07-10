@@ -27,4 +27,4 @@ export default {
   DISCORD: discordComponents,
   GITHUB: githubComponents,
   POAP: poapComponents,
-} as const satisfies Partial<RewardComponents>
+} as Partial<RewardComponents>

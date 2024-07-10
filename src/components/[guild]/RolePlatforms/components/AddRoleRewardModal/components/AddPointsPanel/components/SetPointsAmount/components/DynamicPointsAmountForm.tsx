@@ -4,7 +4,7 @@ import DynamicRewardSetup from "components/[guild]/RolePlatforms/components/AddR
 import { useEditRolePlatformContext } from "components/[guild]/RolePlatforms/components/EditRolePlatformModal"
 import Button from "components/common/Button"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
-import { useEffect, type ReactNode } from "react"
+import { type ReactNode, useEffect } from "react"
 import { useWatch } from "react-hook-form"
 import InformationModal from "../../../../DynamicSetup/InformationModal"
 
@@ -31,7 +31,7 @@ const DynamicPointsAmountForm = ({ imageUrl, baseFieldPath }) => {
     return () => {
       setIsSubmitDisabled?.(false)
     }
-  }, [requirementId])
+  }, [requirementId, setIsSubmitDisabled])
 
   return (
     <>

@@ -1,18 +1,17 @@
+import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import { Circle, Img, SkeletonCircle, SkeletonProps } from "@chakra-ui/react"
 import { ArrowRight } from "@phosphor-icons/react"
+import { RewardDisplay } from "components/[guild]/RoleCard/components/RewardDisplay"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import { motion } from "framer-motion"
-import {
-  RewardDisplay,
-  RewardIconProps,
-  RewardProps,
-} from "../../components/[guild]/RoleCard/components/Reward"
-
-import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import Link from "next/link"
 import { forwardRef } from "react"
+import {
+  RewardIconProps,
+  RewardProps,
+} from "../../components/[guild]/RoleCard/components/types"
 import NftAvailabilityTags from "./components/NftAvailabilityTags"
 
 const ContractCallReward = ({

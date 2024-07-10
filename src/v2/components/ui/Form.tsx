@@ -1,27 +1,25 @@
+import { Label } from "@/components/ui/Label"
+import { cn } from "@/lib/utils"
 import * as LabelPrimitive from "@radix-ui/react-label"
 import { Slot } from "@radix-ui/react-slot"
+import {
+  ComponentPropsWithoutRef,
+  ElementRef,
+  HTMLAttributes,
+  createContext,
+  forwardRef,
+  useContext,
+  useId,
+} from "react"
 import {
   Controller,
   ControllerProps,
   FieldPath,
   FieldValues,
-  FormProvider,
   useFormContext,
 } from "react-hook-form"
-
-import { Label } from "@/components/ui/Label"
-import { cn } from "@/lib/utils"
-import {
-  ComponentPropsWithoutRef,
-  createContext,
-  ElementRef,
-  forwardRef,
-  HTMLAttributes,
-  useContext,
-  useId,
-} from "react"
-
-const Form = FormProvider
+import { useDebounceValue } from "usehooks-ts"
+import { Collapsible, CollapsibleContent } from "./Collapsible"
 
 type FormFieldContextValue<
   TFieldValues extends FieldValues = FieldValues,
@@ -142,30 +140,30 @@ const FormErrorMessage = forwardRef<
 >(({ className, children, ...props }, ref) => {
   const { error, formMessageId } = useFormField()
   const body = error ? String(error?.message) : children
-
-  if (!body) {
-    return null
-  }
+  const [debounceBody] = useDebounceValue(body, 200)
 
   return (
-    <p
-      ref={ref}
-      id={formMessageId}
-      // TODO: not sure if it is a good idea to use "destructive-ghost-foreground" here? Should we add a completely new CSS variable instead?
-      className={cn(
-        "text-[0.8rem] font-medium text-destructive-ghost-foreground",
-        className
-      )}
-      {...props}
-    >
-      {body}
-    </p>
+    <Collapsible open={!!error}>
+      <CollapsibleContent>
+        <p
+          ref={ref}
+          id={formMessageId}
+          // TODO: not sure if it is a good idea to use "destructive-ghost-foreground" here? Should we add a completely new CSS variable instead?
+          className={cn(
+            "font-medium text-[0.8rem] text-destructive-ghost-foreground",
+            className
+          )}
+          {...props}
+        >
+          {body ?? debounceBody}
+        </p>
+      </CollapsibleContent>
+    </Collapsible>
   )
 })
 FormErrorMessage.displayName = "FormErrorMessage"
 
 export {
-  Form,
   FormControl,
   FormDescription,
   FormErrorMessage,

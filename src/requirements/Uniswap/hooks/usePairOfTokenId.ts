@@ -6,7 +6,7 @@ import { Chains } from "wagmiConfig/chains"
 
 export function usePairOfTokenId(
   chain: keyof typeof consts.UniswapV3PositionsAddresses,
-  tokenId: number,
+  tokenId: number | null,
   onSuccess?: (positions: [`0x${string}`, `0x${string}`, number]) => void
 ) {
   const enabled = typeof tokenId === "number"
@@ -20,12 +20,12 @@ export function usePairOfTokenId(
     chainId: Chains[chain],
     abi: UNISWAP_V3_POSITIONS_NFT_ABI,
     functionName: "positions",
-    args: [enabled ? BigInt(tokenId) : undefined],
+    args: enabled ? [BigInt(tokenId)] : undefined,
     query: { enabled, staleTime: Infinity },
   })
 
   useEffect(() => {
-    if (!token0 || !token1) return
+    if (!token0 || !token1 || !fee) return
     onSuccess?.([token0, token1, fee])
   }, [token0, token1, fee, onSuccess])
 

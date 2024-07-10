@@ -3,7 +3,7 @@ import { PostHogPageViews } from "@/components/Providers/PostHogPageViews"
 import clsx from "clsx"
 import { dystopian, inter } from "fonts"
 import type { Metadata } from "next"
-import { Suspense, type ReactNode } from "react"
+import { type ReactNode, Suspense } from "react"
 import "./globals.css"
 
 interface RootLayoutProps {

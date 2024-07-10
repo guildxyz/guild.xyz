@@ -1,7 +1,7 @@
-import { Checkbox, CheckboxProps, Heading, HStack } from "@chakra-ui/react"
+import { Checkbox, CheckboxProps, HStack, Heading } from "@chakra-ui/react"
+import MemberCount from "components/[guild]/RoleCard/components/MemberCount"
 import Card from "components/common/Card"
 import GuildLogo from "components/common/GuildLogo"
-import MemberCount from "components/[guild]/RoleCard/components/MemberCount"
 import { forwardRef } from "react"
 import { Role } from "types"
 
