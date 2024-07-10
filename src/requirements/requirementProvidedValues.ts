@@ -1,14 +1,14 @@
-import { Schemas } from "@guildxyz/types"
 import dynamic from "next/dynamic"
 import { ComponentType } from "react"
 import { Requirement } from "types"
+import { RequirementType } from "./types"
 
 export type ProvidedValueDisplayProps = {
   requirement: Partial<Requirement>
 }
 
 export const REQUIREMENT_PROVIDED_VALUES: Partial<
-  Record<Schemas["Requirement"]["type"], ComponentType<ProvidedValueDisplayProps>>
+  Record<RequirementType, ComponentType<ProvidedValueDisplayProps>>
 > = {
   ERC20: dynamic<ProvidedValueDisplayProps>(
     () => import("requirements/Token/providedValue/TokenProvidedValue")

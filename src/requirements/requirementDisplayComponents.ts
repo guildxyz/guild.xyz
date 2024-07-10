@@ -1,7 +1,7 @@
-import { Schemas } from "@guildxyz/types"
 import type { RequirementProps } from "components/[guild]/Requirements/components/Requirement"
 import dynamic from "next/dynamic"
 import { ComponentType } from "react"
+import { RequirementType } from "./types"
 
 export const REQUIREMENT_DISPLAY_COMPONENTS = {
   FREE: dynamic<RequirementProps>(() => import("requirements/Free/FreeRequirement")),
@@ -374,7 +374,4 @@ export const REQUIREMENT_DISPLAY_COMPONENTS = {
   PARALLEL_TRAIT: dynamic<RequirementProps>(
     () => import("requirements/Parallel/ParallelRequirement")
   ),
-} as const satisfies Record<
-  Schemas["Requirement"]["type"],
-  ComponentType<RequirementProps>
->
+} as const satisfies Record<RequirementType, ComponentType<RequirementProps>>

@@ -1,6 +1,5 @@
-import { Schemas } from "@guildxyz/types"
 import dynamic from "next/dynamic"
-import { RequirementFormProps } from "./types"
+import { RequirementFormProps, RequirementType } from "./types"
 
 export const REQUIREMENT_FORM_COMPONENTS = {
   FREE: null,
@@ -364,6 +363,6 @@ export const REQUIREMENT_FORM_COMPONENTS = {
     () => import("requirements/Parallel/ParallelForm")
   ),
 } as const satisfies Record<
-  Schemas["Requirement"]["type"],
+  RequirementType,
   ReturnType<typeof dynamic<RequirementFormProps>> | null
 >
