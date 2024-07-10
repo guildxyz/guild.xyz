@@ -1,7 +1,7 @@
+import { Header as NavHeader } from "@/components/Header"
+import { PageBoundary } from "@/components/PageBoundary"
 import { ReactNode } from "react"
 import { PropsWithChildren } from "react"
-import { PageBoundary } from "@/components/PageBoundary"
-import { Header as NavHeader } from "@/components/Header"
 
 /* -------------------------------------------------------------------------------------------------
  * Root
@@ -32,7 +32,7 @@ interface HeadlineProps {
 
 const Headline = ({ title }: HeadlineProps) => (
   <PageBoundary>
-    <h1 className="pb-14 pt-9 font-display text-4xl font-bold tracking-tight text-white sm:text-5xl">
+    <h1 className="pt-9 pb-14 font-bold font-display text-4xl text-white tracking-tight sm:text-5xl">
       {title}
     </h1>
   </PageBoundary>
@@ -43,10 +43,10 @@ const Headline = ({ title }: HeadlineProps) => (
  * -----------------------------------------------------------------------------------------------*/
 
 const Banner = () => (
-  <div className="absolute inset-0 -bottom-28 -z-10 overflow-hidden">
+  <div className="-bottom-28 -z-10 absolute inset-0 overflow-hidden">
     <div className="absolute inset-0 bg-[hsl(240deg_4%_16%)]" />
-    <div className="absolute inset-0 bg-[url('/banner.png')] bg-[auto_115%] bg-[right_top_10px] bg-no-repeat opacity-10" />
-    <div className="absolute inset-0 bg-gradient-to-tr from-[hsl(240deg_2.65%_22.16%)] from-50% to-transparent" />
+    <div className="absolute inset-0 bg-[auto_115%] bg-[right_top_10px] bg-[url('/banner.png')] bg-no-repeat opacity-10" />
+    <div className="absolute inset-0 bg-gradient-to-tr from-50% from-[hsl(240deg_2.65%_22.16%)] to-transparent" />
   </div>
 )
 

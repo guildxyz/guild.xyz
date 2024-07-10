@@ -1,13 +1,13 @@
 "use client"
 
 import { MagnifyingGlass, PushPin, Sparkle } from "@phosphor-icons/react"
-import { Input } from "./ui/Input"
-import { ToggleGroup, ToggleGroupItem } from "./ui/ToggleGroup"
-import { PrimitiveAtom, useSetAtom } from "jotai"
-import React, { useEffect, useState } from "react"
-import { useSearchParams, usePathname } from "next/navigation"
 import { ActiveSection } from "app/explorer/types"
 import useDebouncedState from "hooks/useDebouncedState"
+import { PrimitiveAtom, useSetAtom } from "jotai"
+import { usePathname, useSearchParams } from "next/navigation"
+import React, { useEffect, useState } from "react"
+import { Input } from "./ui/Input"
+import { ToggleGroup, ToggleGroupItem } from "./ui/ToggleGroup"
 
 enum Order {
   Featured = "FEATURED",
@@ -46,7 +46,7 @@ export const GuildSearchBar = ({
   return (
     <div className="relative flex flex-col gap-3 py-4 sm:flex-row sm:gap-0">
       <Input
-        className="text-md relative h-12 grow rounded-xl border pl-10 pr-6 sm:rounded-r-none"
+        className="relative h-12 grow rounded-xl border pr-6 pl-10 text-md sm:rounded-r-none"
         placeholder="Search verified guilds"
         onChange={({ currentTarget }) => setSearch(currentTarget.value)}
         value={search}

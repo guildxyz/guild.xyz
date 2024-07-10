@@ -1,18 +1,18 @@
-import { Users, CircleWavyCheck } from "@phosphor-icons/react"
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/Avatar"
-import { Badge } from "./ui/Badge"
+import { CircleWavyCheck, Users } from "@phosphor-icons/react"
+import Image from "next/image"
 import { GuildBase } from "types"
 import pluralize from "utils/pluralize"
+import { Anchor } from "./ui/Anchor"
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/Avatar"
+import { Badge } from "./ui/Badge"
+import { Card } from "./ui/Card"
+import { Skeleton } from "./ui/Skeleton"
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "./ui/Tooltip"
-import { Skeleton } from "./ui/Skeleton"
-import { Card } from "./ui/Card"
-import Image from "next/image"
-import { Anchor } from "./ui/Anchor"
 
 type Props = {
   guildData: GuildBase
@@ -29,14 +29,14 @@ export const GuildCard: React.FC<Props> = ({ guildData }) => (
       </AvatarFallback>
     </Avatar>
     <div className="flex items-center">
-      <h3 className="max-w-36 truncate font-display text-lg font-bold tracking-tight text-foreground">
+      <h3 className="max-w-36 truncate font-bold font-display text-foreground text-lg tracking-tight">
         {guildData.name}
       </h3>
       {guildData.tags.includes("VERIFIED") && (
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger
-              className="relative rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring p-1"
+              className="relative rounded-full p-1 outline-none focus-visible:ring-2 focus-visible:ring-ring"
               aria-label="verified"
             >
               <div

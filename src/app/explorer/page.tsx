@@ -1,29 +1,29 @@
 "use client"
 
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/ToggleGroup"
-import { Button } from "@/components/ui/Button"
-import { Plus } from "@phosphor-icons/react"
-import useIsStuck from "hooks/useIsStuck"
-import { Suspense, useEffect } from "react"
-import useScrollspy from "hooks/useScrollSpy"
 import { GuildInfiniteScroll } from "@/components/GuildInfiniteScroll"
 import { GuildSearchBar } from "@/components/GuildSeachBar"
-import { ActiveSection } from "./types"
-import { Anchor } from "@/components/ui/Anchor"
 import { Layout } from "@/components/Layout"
+import { walletSelectorModalAtom } from "@/components/Providers/atoms"
+import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import { YourGuilds } from "@/components/YourGuilds"
+import { Anchor } from "@/components/ui/Anchor"
+import { Button } from "@/components/ui/Button"
+import { Card } from "@/components/ui/Card"
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/ToggleGroup"
+import { Plus } from "@phosphor-icons/react"
+import { SignIn } from "@phosphor-icons/react"
+import useIsStuck from "hooks/useIsStuck"
+import useScrollspy from "hooks/useScrollSpy"
+import { useAtom, useAtomValue, useSetAtom } from "jotai"
+import { Suspense, useEffect } from "react"
+import Robot from "/public/landing/robot.svg"
 import {
-  isNavStuckAtom,
-  isSeachStuckAtom,
   activeSectionAtom,
   guildQueryAtom,
+  isNavStuckAtom,
+  isSeachStuckAtom,
 } from "./atoms"
-import { useAtom, useAtomValue, useSetAtom } from "jotai"
-import { YourGuilds } from "@/components/YourGuilds"
-import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
-import { SignIn } from "@phosphor-icons/react"
-import Robot from "/public/landing/robot.svg"
-import { Card } from "@/components/ui/Card"
-import { walletSelectorModalAtom } from "@/components/Providers/atoms"
+import { ActiveSection } from "./types"
 
 const HeaderBackground = () => {
   const isNavStuck = useAtomValue(isNavStuckAtom)
@@ -31,7 +31,7 @@ const HeaderBackground = () => {
 
   return (
     <div
-      className="fixed inset-x-0 top-0 z-10 h-40 -translate-y-40 border-b border-border bg-gradient-to-b from-background to-card/30 backdrop-blur backdrop-saturate-150 duration-75 data-[nav-stuck='true']:-translate-y-24 data-[nav-stuck='true']:data-[search-stuck='true']:translate-y-0 motion-safe:transition-transform sm:h-28 sm:-translate-y-28 sm:data-[nav-stuck='true']:-translate-y-12"
+      className="-translate-y-40 data-[nav-stuck='true']:-translate-y-24 sm:-translate-y-28 sm:data-[nav-stuck='true']:-translate-y-12 fixed inset-x-0 top-0 z-10 h-40 border-border border-b bg-gradient-to-b from-background to-card/30 backdrop-blur backdrop-saturate-150 duration-75 data-[nav-stuck='true']:data-[search-stuck='true']:translate-y-0 motion-safe:transition-transform sm:h-28"
       data-nav-stuck={isNavStuck}
       data-search-stuck={isSearchStuck}
     />
@@ -115,7 +115,7 @@ const Page = () => {
             </Card>
           )}
           <section id={ActiveSection.ExploreGuilds}>
-            <h2 className="text-lg font-bold tracking-tight">
+            <h2 className="font-bold text-lg tracking-tight">
               Explore verified guilds
             </h2>
             <div className="sticky top-10 z-10" ref={searchRef}>
@@ -127,7 +127,7 @@ const Page = () => {
           </section>
         </Layout.Main>
         <Layout.Footer>
-          <p className="my-8 text-center text-sm text-muted-foreground">
+          <p className="my-8 text-center text-muted-foreground text-sm">
             This website is{" "}
             <Anchor
               href="https://github.com/guildxyz/guild.xyz"

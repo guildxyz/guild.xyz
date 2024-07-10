@@ -1,14 +1,14 @@
-import { GuildCardSkeleton, GuildCardWithLink } from "./GuildCard"
-import { PrimitiveAtom, useAtomValue } from "jotai"
-import { env } from "env"
+import { Spinner } from "@phosphor-icons/react"
 import useUser from "components/[guild]/hooks/useUser"
+import { env } from "env"
+import { useScrollBatchedRendering } from "hooks/useScrollBatchedRendering"
+import { PrimitiveAtom, useAtomValue } from "jotai"
 import { memo, useRef } from "react"
+import { SWRConfiguration } from "swr"
 import useSWRInfinite from "swr/infinite"
 import { GuildBase } from "types"
 import { fetcherWithSign } from "utils/fetcher"
-import { useScrollBatchedRendering } from "hooks/useScrollBatchedRendering"
-import { Spinner } from "@phosphor-icons/react"
-import { SWRConfiguration } from "swr"
+import { GuildCardSkeleton, GuildCardWithLink } from "./GuildCard"
 
 const BATCH_SIZE = 24
 
