@@ -2,8 +2,8 @@ import { FormControl, FormLabel } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { ControlledTimestampInput } from "components/common/TimestampInput"
 import { useFormState } from "react-hook-form"
+import { RequirementFormProps } from "requirements/types"
 import parseFromObject from "utils/parseFromObject"
-import { RequirementFormProps } from "../../index"
 
 const TwitterAccountAge = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
   const { errors } = useFormState()

@@ -1,10 +1,10 @@
 import { HStack, Text } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import DataBlock from "components/common/DataBlock"
-import { ProvidedValueDisplayProps } from "requirements"
+import type { ProvidedValueDisplayProps } from "requirements/requirementProvidedValues"
 import { GUILD_PIN_CONTRACTS } from "utils/guildCheckout/constants"
-import useNftMetadata, { useNftMetadataWithTraits } from "../hooks/useNftMetadata"
 import { Chain } from "wagmiConfig/chains"
+import useNftMetadata, { useNftMetadataWithTraits } from "../hooks/useNftMetadata"
 
 export function hasOnlyTypeProperty(obj) {
   const keys = Object.keys(obj)

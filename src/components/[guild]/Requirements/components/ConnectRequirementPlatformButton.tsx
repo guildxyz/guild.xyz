@@ -7,15 +7,16 @@ import { ConnectEmailButton } from "components/common/Layout/components/Account/
 import { ConnectFarcasterButton } from "components/common/Layout/components/Account/components/AccountModal/components/SocialAccount/FarcasterProfile"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import useToast from "hooks/useToast"
+import REQUIREMENTS from "requirements"
+import { RequirementType } from "requirements/types"
 import rewards from "rewards"
-import REQUIREMENTS, { RequirementType } from "requirements"
 import { PlatformName } from "types"
 import { useRequirementContext } from "./RequirementContext"
 
 function requirementTypeToPlatformName(type: RequirementType): PlatformName {
   if (type === "ALLOWLIST_EMAIL") return "EMAIL"
-  if (REQUIREMENTS[type].types[0] === "TWITTER") return "TWITTER_V1"
-  return REQUIREMENTS[type].types[0] as PlatformName
+  if (REQUIREMENTS[type].types[0].startsWith("TWITTER")) return "TWITTER_V1"
+  return REQUIREMENTS[type].types[0].split("_")[0] as PlatformName
 }
 
 const RequirementConnectButton = (props: ButtonProps) => {
@@ -40,8 +41,8 @@ const RequirementConnectButton = (props: ButtonProps) => {
     platform === "EMAIL"
       ? !emails?.pending && emails?.emailAddress
       : platform === "FARCASTER"
-      ? !farcasterProfiles || !!farcasterProfiles?.[0]
-      : !isReconnection && (!platformUsers || platformFromDb)
+        ? !farcasterProfiles || !!farcasterProfiles?.[0]
+        : !isReconnection && (!platformUsers || platformFromDb)
   )
     return null
 
@@ -58,8 +59,8 @@ const RequirementConnectButton = (props: ButtonProps) => {
     platform === "EMAIL"
       ? ConnectEmailButton
       : platform === "FARCASTER"
-      ? ConnectFarcasterButton
-      : ConnectRequirementPlatformButton
+        ? ConnectFarcasterButton
+        : ConnectRequirementPlatformButton
 
   return (
     <ButtonComponent
@@ -80,10 +81,7 @@ const ConnectRequirementPlatformButton = ({
 }: ButtonProps & { onSuccess: () => void; isReconnection?: boolean }) => {
   const { type } = useRequirementContext()
 
-  const platform =
-    REQUIREMENTS[type].types[0] === "TWITTER"
-      ? "TWITTER_V1"
-      : (REQUIREMENTS[type].types[0] as PlatformName)
+  const platform = requirementTypeToPlatformName(type)
 
   const { onConnect, isLoading, loadingText } = useConnectPlatform(
     platform,

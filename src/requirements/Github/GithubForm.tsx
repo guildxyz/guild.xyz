@@ -7,7 +7,7 @@ import {
 } from "@chakra-ui/react"
 import ControlledSelect from "components/common/ControlledSelect"
 import { useFormContext, useFormState, useWatch } from "react-hook-form"
-import { RequirementFormProps } from "requirements"
+import { RequirementFormProps } from "requirements/types"
 import parseFromObject from "utils/parseFromObject"
 import GithubAccountAge from "./components/GithubAccountAge"
 import GithubAccountAgeRelative from "./components/GithubAccountAgeRelative"

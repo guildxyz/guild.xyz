@@ -1,7 +1,7 @@
 import { Stack } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useController, useWatch } from "react-hook-form"
-import { RequirementFormProps } from "requirements"
+import { RequirementFormProps } from "requirements/types"
 import FormSelector from "./components/FormSelector"
 import SetExpectedAnswers from "./components/SetExpectedAnswers"
 

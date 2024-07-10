@@ -10,107 +10,58 @@ import {
   Wallet,
   Wrench,
 } from "@phosphor-icons/react"
-import { RequirementProps } from "components/[guild]/Requirements/components/Requirement"
-import dynamic from "next/dynamic"
-import { ComponentType } from "react"
-import {
-  ProvidedValueDisplayProps,
-  RequirementFormProps,
-  RequirementType,
-} from "requirements"
 import { VISIT_LINK_REGEX } from "requirements/VisitLink/VisitLinkRequirement"
-import rewards from "rewards"
+import { emailData } from "rewards/Email/data"
+import { formData } from "rewards/Forms/data"
 import Star from "static/icons/star.svg"
 import GuildLogo from "static/logo.svg"
+import { RequirementData } from "./types"
 
 export const REQUIREMENTS_DATA = [
   {
     icon: LockOpen,
     name: "Free",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Free/FreeRequirement")
-    ),
     types: ["FREE"],
   },
   {
     icon: ImageSquare,
     name: "NFT",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Nft/NftRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Nft/NftForm")
-    ),
     types: ["ERC721", "ERC1155", "NOUNS"],
     isNegatable: true,
   },
   {
     icon: CurrencyCircleDollar,
     name: "Token",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Token/TokenRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Token/TokenForm")
-    ),
     types: ["ERC20", "COIN"],
     isNegatable: true,
   },
   {
     icon: ListChecks,
     name: "Allowlist",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Allowlist/AllowlistRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Allowlist/AllowlistForm")
-    ),
     types: ["ALLOWLIST", "ALLOWLIST_EMAIL"],
     isNegatable: true,
   },
   {
     icon: Parachute,
     name: "Airdrop",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Airdrop/AirdropRequirement")
-    ),
     types: ["GUILD_SNAPSHOT"],
     isNegatable: true,
   },
   {
     icon: Coins,
     name: "Payment",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Payment/PaymentRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Payment/PaymentForm")
-    ),
     types: ["PAYMENT"],
   },
   {
     icon: Wrench,
     name: "Contract query",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/ContractState/ContractStateRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/ContractState/ContractStateForm")
-    ),
     types: ["CONTRACT"],
     isNegatable: true,
   },
   {
     icon: Wallet,
     name: "Wallet activity",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/WalletActivity/WalletActivityRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/WalletActivity/WalletActivityForm")
-    ),
     types: [
-      "WALLET_ACTIVITY",
       "COVALENT_FIRST_TX",
       "COVALENT_FIRST_TX_RELATIVE",
       "COVALENT_CONTRACT_DEPLOY",
@@ -123,26 +74,13 @@ export const REQUIREMENTS_DATA = [
   {
     icon: Robot,
     name: "Captcha",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Captcha/CaptchaRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Captcha/CaptchaForm")
-    ),
     types: ["CAPTCHA"],
     isNegatable: true,
   },
   {
     icon: GuildLogo,
     name: "Guild",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Guild/GuildRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Guild/GuildForm")
-    ),
     types: [
-      "GUILD",
       "GUILD_ROLE",
       "GUILD_ROLE_RELATIVE",
       "GUILD_MINGUILDS",
@@ -155,24 +93,12 @@ export const REQUIREMENTS_DATA = [
   {
     icon: Star,
     name: "Points",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Points/PointsRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Points/PointsForm")
-    ),
     types: ["POINTS_AMOUNT", "POINTS_TOTAL_AMOUNT", "POINTS_RANK"],
     isNegatable: true,
   },
   {
     icon: Link,
     name: "Visit link",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/VisitLink/VisitLinkRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/VisitLink/VisitLinkForm")
-    ),
     types: ["LINK_VISIT"],
     customNameRules: {
       pattern: {
@@ -183,40 +109,21 @@ export const REQUIREMENTS_DATA = [
     },
   },
   {
-    icon: rewards.EMAIL.icon,
-    name: rewards.EMAIL.name,
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Email/EmailRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Email/EmailForm")
-    ),
-    types: ["EMAIL", "EMAIL_VERIFIED", "EMAIL_DOMAIN"],
+    icon: emailData.icon,
+    name: emailData.name,
+    types: ["EMAIL_VERIFIED", "EMAIL_DOMAIN"],
     isNegatable: true,
   },
   {
-    icon: rewards.FORM.icon,
-    name: rewards.FORM.name,
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Form/FormRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Form/FormForm")
-    ),
+    icon: formData.icon,
+    name: formData.name,
     types: ["FORM_SUBMISSION"],
     isNegatable: true,
   },
   {
     icon: "/requirementLogos/x.svg",
     name: "X",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Twitter/TwitterRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Twitter/TwitterForm")
-    ),
     types: [
-      "TWITTER",
       "TWITTER_ACCOUNT_AGE",
       "TWITTER_ACCOUNT_AGE_RELATIVE",
       "TWITTER_ACCOUNT_PROTECTED",
@@ -242,14 +149,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/platforms/github.png",
     name: "GitHub",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Github/GithubRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Github/GithubForm")
-    ),
     types: [
-      "GITHUB",
       "GITHUB_STARRING",
       "GITHUB_ACCOUNT_AGE",
       "GITHUB_ACCOUNT_AGE_RELATIVE",
@@ -262,14 +162,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/platforms/discord.png",
     name: "Discord",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Discord/DiscordRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Discord/DiscordForm")
-    ),
     types: [
-      "DISCORD",
       "DISCORD_ROLE",
       "DISCORD_JOIN",
       "DISCORD_JOIN_FROM_NOW",
@@ -281,98 +174,49 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/coinbase.png",
     name: "Coinbase",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/CoinbaseEAS/CoinbaseEASRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/CoinbaseEAS/CoinbaseEASForm")
-    ),
     types: ["COINBASE_EAS_ATTESTED_BY"],
     isNegatable: true,
   },
   {
     icon: "/requirementLogos/uniswap.svg",
     name: "Uniswap Liquidity",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Uniswap/UniswapRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Uniswap/UniswapForm")
-    ),
     types: ["UNISWAP_V3_POSITIONS"],
     isNegatable: true,
   },
   {
     icon: "/requirementLogos/polygonId.svg",
     name: "PolygonID",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/PolygonID/PolygonIDRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/PolygonID/PolygonIDForm")
-    ),
     types: ["POLYGON_ID_QUERY", "POLYGON_ID_BASIC"],
     isNegatable: true,
   },
   {
     icon: "/requirementLogos/gitcoin-passport.svg",
     name: "Gitcoin Passport",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/GitcoinPassport/GitcoinPassportRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/GitcoinPassport/GitcoinPassportForm")
-    ),
-    types: ["GITCOIN", "GITCOIN_PASS", "GITCOIN_STAMP", "GITCOIN_SCORE"],
+    types: ["GITCOIN_PASS", "GITCOIN_STAMP", "GITCOIN_SCORE"],
     isNegatable: true,
   },
   {
     icon: "/requirementLogos/poap.svg",
     name: "POAP",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Poap/PoapRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Poap/PoapForm")
-    ),
     types: ["POAP"],
     isNegatable: true,
   },
   {
     icon: "/requirementLogos/gitpoap.svg",
     name: "GitPOAP",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/GitPoap/GitPoapRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/GitPoap/GitPoapForm")
-    ),
     types: ["GITPOAP"],
     isNegatable: true,
   },
   {
     icon: "/requirementLogos/eas.png",
     name: "EAS",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/EthereumAttestation/EthereumAttestationRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/EthereumAttestation/EthereumAttestationForm")
-    ),
     types: ["EAS_ATTESTED_BY", "EAS_ATTEST"],
     isNegatable: true,
   },
   {
     icon: "/requirementLogos/farcaster.png",
     name: "Farcaster",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Farcaster/FarcasterRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Farcaster/FarcasterForm")
-    ),
     types: [
-      "FARCASTER",
       "FARCASTER_PROFILE",
       "FARCASTER_TOTAL_FOLLOWERS",
       "FARCASTER_FOLLOW",
@@ -388,14 +232,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/lens.svg",
     name: "Lens",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Lens/LensRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Lens/LensForm")
-    ),
     types: [
-      "LENS",
       "LENS_PROFILE",
       "LENS_FOLLOW",
       "LENS_REACT",
@@ -410,37 +247,18 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/web3inbox.png",
     name: "Web3Inbox",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Web3Inbox/Web3InboxRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Web3Inbox/Web3InboxForm")
-    ),
     types: ["WEB3INBOX_SUBSCRIBERS"],
   },
   {
     icon: "/requirementLogos/galaxy.svg",
     name: "Galxe",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Galaxy/GalaxyRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Galaxy/GalaxyForm")
-    ),
     types: ["GALAXY", "GALAXY_PARTICIPATION"],
     isNegatable: true,
   },
   {
     icon: "/requirementLogos/snapshot.png",
     name: "Snapshot",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Snapshot/SnapshotRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Snapshot/SnapshotForm")
-    ),
     types: [
-      "SNAPSHOT",
       "SNAPSHOT_STRATEGY",
       "SNAPSHOT_SPACE_ADMIN",
       "SNAPSHOT_SPACE_AUTHOR",
@@ -456,26 +274,13 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/mirror.svg",
     name: "Mirror",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Mirror/MirrorRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Mirror/MirrorForm")
-    ),
-    types: ["MIRROR_COLLECT", "MIRROR"],
+    types: ["MIRROR_COLLECT"],
     isNegatable: true,
   },
   {
     icon: "/requirementLogos/sound.png",
     name: "Sound",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Sound/SoundRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Sound/SoundForm")
-    ),
     types: [
-      "SOUND",
       "SOUND_ARTIST_BACKED",
       "SOUND_COLLECTED",
       "SOUND_ARTIST",
@@ -487,180 +292,52 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/disco.png",
     name: "Disco",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Disco/DiscoRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Disco/DiscoForm")
-    ),
+
     types: ["DISCO"],
     isNegatable: true,
   },
   {
     icon: "/requirementLogos/unlock.png",
     name: "Unlock",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Unlock/UnlockRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Unlock/UnlockForm")
-    ),
     types: ["UNLOCK"],
     isNegatable: true,
   },
   {
     icon: "/requirementLogos/juicebox.png",
     name: "Juicebox",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Juicebox/JuiceboxRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Juicebox/JuiceboxForm")
-    ),
     types: ["JUICEBOX"],
     isNegatable: true,
   },
   {
     icon: "/walletLogos/fuel.svg",
     name: "Fuel",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Fuel/FuelRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Fuel/FuelForm")
-    ),
-    types: ["FUEL", "FUEL_BALANCE", "FUEL_TRANSACTIONS"],
+    types: ["FUEL_BALANCE", "FUEL_TRANSACTIONS"],
     isNegatable: true,
   },
   {
     icon: "/requirementLogos/noox.svg",
     name: "Noox",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Noox/NooxRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Noox/NooxForm")
-    ),
     types: ["NOOX"],
     isNegatable: true,
   },
   {
     icon: "/requirementLogos/yup.svg",
     name: "Yup",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Yup/YupRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Yup/YupForm")
-    ),
     types: ["YUP"],
     isNegatable: true,
   },
   {
     icon: "/requirementLogos/rep3.png",
     name: "Rep3",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Rep3/Rep3Requirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Rep3/Rep3Form")
-    ),
     types: ["REP3"],
     isNegatable: true,
   },
   {
     icon: "/requirementLogos/parallel.png",
     name: "Parallel",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Parallel/ParallelRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Parallel/ParallelForm")
-    ),
     types: ["PARALLEL_ID", "PARALLEL_SANCTIONS_SAFE", "PARALLEL_TRAIT"],
     isNegatable: true,
   },
-] as const
-
-export const REQUIREMENT_PROVIDED_VALUES: Partial<
-  Record<RequirementType, ComponentType<ProvidedValueDisplayProps>>
-> = {
-  ERC20: dynamic<ProvidedValueDisplayProps>(
-    () => import("requirements/Token/providedValue/TokenProvidedValue")
-  ),
-  COIN: dynamic<ProvidedValueDisplayProps>(
-    () => import("requirements/Token/providedValue/TokenProvidedValue")
-  ),
-  GUILD_SNAPSHOT: dynamic<ProvidedValueDisplayProps>(
-    () => import("requirements/Airdrop/providedValue/AirdropProvidedValue")
-  ),
-  UNISWAP_V3_POSITIONS: dynamic<ProvidedValueDisplayProps>(
-    () => import("requirements/Uniswap/providedValue/PositionsProvidedValue")
-  ),
-
-  // NFTs
-  ERC721: dynamic<ProvidedValueDisplayProps>(
-    () => import("requirements/Nft/providedValue/NftAmountProvidedValue")
-  ),
-  ERC1155: dynamic<ProvidedValueDisplayProps>(
-    () => import("requirements/Nft/providedValue/NftAmountProvidedValue")
-  ),
-  NOUNS: dynamic<ProvidedValueDisplayProps>(
-    () => import("requirements/Nft/providedValue/NftAmountProvidedValue")
-  ),
-
-  GUILD_MINGUILDS: () => "Guild membership count",
-
-  COVALENT_TX_COUNT: dynamic<ProvidedValueDisplayProps>(
-    () => import("requirements/WalletActivity/providedValue/TxCountProvidedValue")
-  ),
-  COVALENT_TX_COUNT_RELATIVE: dynamic<ProvidedValueDisplayProps>(
-    () => import("requirements/WalletActivity/providedValue/TxCountProvidedValue")
-  ),
-  COVALENT_CONTRACT_DEPLOY: dynamic<ProvidedValueDisplayProps>(
-    () =>
-      import("requirements/WalletActivity/providedValue/ContractDeployProvidedValue")
-  ),
-  COVALENT_CONTRACT_DEPLOY_RELATIVE: dynamic<ProvidedValueDisplayProps>(
-    () =>
-      import("requirements/WalletActivity/providedValue/ContractDeployProvidedValue")
-  ),
-
-  POINTS_AMOUNT: dynamic<ProvidedValueDisplayProps>(
-    () => import("requirements/Points/providedValue/PointsAmountProvidedValue")
-  ),
-  POINTS_TOTAL_AMOUNT: () => "Total score summing all points",
-  POINTS_RANK: dynamic<ProvidedValueDisplayProps>(
-    () => import("requirements/Points/providedValue/PointsRankProvidedValue")
-  ),
-
-  TWITTER_FOLLOWER_COUNT: () => "Followers on X",
-
-  FARCASTER_TOTAL_FOLLOWERS: () => "Followers on Farcaster",
-
-  LENS_TOTAL_FOLLOWERS: () => "Followers on Lens Protocol",
-  LENS_TOTAL_POSTS: () => "Number of posts",
-
-  GITCOIN_SCORE: dynamic<ProvidedValueDisplayProps>(
-    () =>
-      import("requirements/GitcoinPassport/providedValue/GitcoinScoreProvidedValue")
-  ),
-
-  SNAPSHOT_VOTES: dynamic<ProvidedValueDisplayProps>(
-    () => import("requirements/Snapshot/providedValue/VotesProvidedValue")
-  ),
-  SNAPSHOT_PROPOSALS: dynamic<ProvidedValueDisplayProps>(
-    () => import("requirements/Snapshot/providedValue/ProposalsProvidedValue")
-  ),
-
-  SOUND_TOP_COLLECTOR: dynamic<ProvidedValueDisplayProps>(
-    () => import("requirements/Sound/providedValue/TopCollectorProvidedValue")
-  ),
-  SOUND_NFTS: () => "Songs owned",
-}
-
-export const PROVIDER_TYPES = Object.keys(REQUIREMENT_PROVIDED_VALUES) as Array<
-  keyof typeof REQUIREMENT_PROVIDED_VALUES
->
+] as const satisfies RequirementData[]
 
 export default REQUIREMENTS_DATA

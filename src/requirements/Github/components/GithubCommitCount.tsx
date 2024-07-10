@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react"
 import AbsoluteMinMaxTimeFormControls from "components/common/AbsoluteMinMaxTimeFormControls"
 import { useController, useFormState } from "react-hook-form"
-import { RequirementFormProps } from "requirements"
+import { RequirementFormProps } from "requirements/types"
 import parseFromObject from "utils/parseFromObject"
 
 const GithubCommitCount = ({ baseFieldPath }: RequirementFormProps) => {
