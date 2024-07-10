@@ -8,13 +8,7 @@
     "lineEnding": "lf",
     "lineWidth": 85,
     "attributePosition": "auto",
-    "ignore": [
-      "**/node_modules",
-      "**/.next",
-      "**/yarn.lock",
-      "**/package-lock.json",
-      "**/public"
-    ]
+    "ignore": ["node_modules", ".next", "yarn.lock", "package-lock.json", "public"]
   },
   "organizeImports": { "enabled": false },
   "linter": {
