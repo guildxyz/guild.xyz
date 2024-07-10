@@ -1,10 +1,9 @@
+import { cn } from "@/lib/utils"
+import { ArrowSquareOut } from "@phosphor-icons/react/dist/ssr/ArrowSquareOut"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
-import * as React from "react"
-
-import { cn } from "@/lib/utils"
 import Link from "next/link"
-import { ArrowSquareOut } from "@phosphor-icons/react/dist/ssr/ArrowSquareOut"
+import * as React from "react"
 
 const anchorVariants = cva(
   "underline-offset-4 focus-visible:ring-ring focus-visible:ring-4 outline-none",
@@ -13,7 +12,7 @@ const anchorVariants = cva(
       variant: {
         default: "text-foreground hover:underline",
         highlighted: "text-anchor-foreground hover:underline",
-        muted: "text-muted-foreground font-semibold hover:underline",
+        muted: "text-muted-foreground hover:underline",
         silent: "",
       },
     },
