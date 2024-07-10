@@ -86,6 +86,24 @@ const config = {
           warning: "hsla(var(--toast-warning))",
           info: "hsla(var(--toast-info))",
         },
+        alert: {
+          success: {
+            DEFAULT: "hsla(var(--alert-success))",
+            icon: "hsl(var(--alert-success-icon))",
+          },
+          info: {
+            DEFAULT: "hsla(var(--alert-info))",
+            icon: "hsl(var(--alert-info-icon))",
+          },
+          warning: {
+            DEFAULT: "hsla(var(--alert-warning))",
+            icon: "hsl(var(--alert-warning-icon))",
+          },
+          error: {
+            DEFAULT: "hsla(var(--alert-error))",
+            icon: "hsl(var(--alert-error-icon))",
+          },
+        },
         // Platforms
         discord: {
           DEFAULT: "hsl(var(--discord))",
