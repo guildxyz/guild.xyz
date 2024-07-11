@@ -1,4 +1,4 @@
-User-agent: *
+User-Agent: *
 Allow: /
 
 Sitemap: https://guild.xyz/sitemap.xml
