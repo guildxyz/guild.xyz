@@ -87,7 +87,7 @@ const RequirementAccessIndicator = () => {
           ) : type.startsWith("GITCOIN_") ? (
             <DynamicSetupPassport size="sm" />
           ) : (
-            <DynamicConnectRequirementPlatformButton size="sm" iconSpacing={2} />
+            <DynamicConnectRequirementPlatformButton className="gap-2" size="sm" />
           )}
         </PopoverFooter>
       </RequirementAccessIndicatorUI>

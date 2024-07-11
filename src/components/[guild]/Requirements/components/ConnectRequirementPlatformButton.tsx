@@ -21,7 +21,7 @@ function requirementTypeToPlatformName(type: RequirementType): PlatformName {
   return REQUIREMENTS[type].types[0].split("_")[0] as PlatformName
 }
 
-const RequirementConnectButton = () => {
+const RequirementConnectButton = ({ className, ...props }: ButtonProps) => {
   const { platformUsers, emails, farcasterProfiles } = useUser()
   const { type, roleId, id } = useRequirementContext()
   const platform = requirementTypeToPlatformName(type)
@@ -68,12 +68,13 @@ const RequirementConnectButton = () => {
     <ButtonComponent
       isReconnection={isReconnection}
       onSuccess={onSuccess}
-      className="gap-1"
+      className={cn("gap-1", className)}
       size="xs"
       // TODO: find a better solution for handling the icon
       {...(platform === "EMAIL" || platform === "FARCASTER"
         ? undefined
         : { icon: rewards[platform]?.icon })}
+      {...props}
     />
   )
 }
