@@ -18,9 +18,9 @@ import {
   Text,
   useSteps,
 } from "@chakra-ui/react"
+import { ArrowLeft } from "@phosphor-icons/react"
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import { FormProvider, useForm } from "react-hook-form"
-import { PiArrowLeft } from "react-icons/pi"
 import { UniswapChains } from "requirements/Uniswap/hooks/useParsePoolChain"
 import SelectLiquidityPoolStep from "./components/SelectLiquidityPoolStep"
 import SetLiquidityPointsRewardStep from "./components/SetLiquidityPointsRewardStep"
@@ -116,7 +116,7 @@ const LiquidityIncentiveSetupModal = ({
               aria-label="Back"
               size="sm"
               mb="-3px"
-              icon={<PiArrowLeft size={20} />}
+              icon={<ArrowLeft size={20} />}
               variant="ghost"
               onClick={() => onClose(false)}
             />

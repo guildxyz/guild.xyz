@@ -8,11 +8,11 @@ import {
   Text,
   Tooltip,
 } from "@chakra-ui/react"
+import { Question } from "@phosphor-icons/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import RadioButtonGroup from "components/common/RadioButtonGroup"
 import { useFormContext, useWatch } from "react-hook-form"
-import { PiQuestion } from "react-icons/pi"
 import { useSymbolsOfPair } from "requirements/Uniswap/hooks/useSymbolsOfPair"
 import { PlatformType } from "types"
 import { Chains } from "wagmiConfig/chains"
@@ -71,7 +71,7 @@ const SetLiquidityPointsRewardStep = ({
               label="The reward will be calculated based on the amount of liquidity provided in the currency you select"
               hasArrow
             >
-              <Icon as={PiQuestion} color="GrayText" />
+              <Icon as={Question} color="GrayText" />
             </Tooltip>
           </HStack>
           <RadioButtonGroup

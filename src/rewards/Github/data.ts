@@ -1,8 +1,8 @@
-import { PiGithubLogo } from "react-icons/pi"
+import { GithubLogo } from "@phosphor-icons/react"
 import { PlatformAsRewardRestrictions, RewardData } from "rewards/types"
 
 export const githubData = {
-  icon: PiGithubLogo,
+  icon: GithubLogo,
   imageUrl: "/platforms/github.png",
   name: "GitHub",
   colorScheme: "GITHUB",

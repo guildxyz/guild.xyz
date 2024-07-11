@@ -1,5 +1,6 @@
 import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import { Circle, Img, SkeletonCircle, SkeletonProps } from "@chakra-ui/react"
+import { ArrowRight } from "@phosphor-icons/react"
 import { RewardDisplay } from "components/[guild]/RoleCard/components/RewardDisplay"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -7,7 +8,6 @@ import Button from "components/common/Button"
 import { motion } from "framer-motion"
 import Link from "next/link"
 import { forwardRef } from "react"
-import { PiArrowRight } from "react-icons/pi"
 import {
   RewardIconProps,
   RewardProps,
@@ -43,7 +43,7 @@ const ContractCallReward = ({
           <Button
             as={Link}
             variant="link"
-            rightIcon={<PiArrowRight />}
+            rightIcon={<ArrowRight />}
             iconSpacing="1"
             maxW="full"
             href={`/${urlName}/collect/${chain.toLowerCase()}/${contractAddress.toLowerCase()}`}
