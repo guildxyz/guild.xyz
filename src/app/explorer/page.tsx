@@ -10,6 +10,7 @@ import { Anchor } from "@/components/ui/Anchor"
 import { Button } from "@/components/ui/Button"
 import { Card } from "@/components/ui/Card"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/ToggleGroup"
+import { cn } from "@/lib/utils"
 import { Plus } from "@phosphor-icons/react"
 import { SignIn } from "@phosphor-icons/react"
 import useIsStuck from "hooks/useIsStuck"
@@ -21,26 +22,31 @@ import {
   activeSectionAtom,
   guildQueryAtom,
   isNavStuckAtom,
-  isSeachStuckAtom,
+  isSearchStuckAtom,
 } from "./atoms"
 import { ActiveSection } from "./types"
 
 const HeaderBackground = () => {
   const isNavStuck = useAtomValue(isNavStuckAtom)
-  const isSearchStuck = useAtomValue(isSeachStuckAtom)
+  const isSearchStuck = useAtomValue(isSearchStuckAtom)
 
   return (
     <div
-      className="-translate-y-40 data-[nav-stuck='true']:-translate-y-24 sm:-translate-y-28 sm:data-[nav-stuck='true']:-translate-y-12 fixed inset-x-0 top-0 z-10 h-40 border-border border-b bg-gradient-to-b from-background to-card/30 backdrop-blur backdrop-saturate-150 duration-75 data-[nav-stuck='true']:data-[search-stuck='true']:translate-y-0 motion-safe:transition-transform sm:h-28"
-      data-nav-stuck={isNavStuck}
-      data-search-stuck={isSearchStuck}
+      className={cn(
+        "fixed inset-x-0 top-0 z-10 h-0 bg-background shadow-md transition-all duration-200",
+        {
+          "h-16": isNavStuck,
+          "h-[calc(theme(space.28)-theme(space.2))] bg-gradient-to-b from-background to-card-secondary":
+            isSearchStuck,
+        }
+      )}
     />
   )
 }
 
 const Nav = () => {
   const isNavStuck = useAtomValue(isNavStuckAtom)
-  const isSearchStuck = useAtomValue(isSeachStuckAtom)
+  const isSearchStuck = useAtomValue(isSearchStuckAtom)
   const [activeSection, setActiveSection] = useAtom(activeSectionAtom)
   const spyActiveSection = useScrollspy(Object.values(ActiveSection), 100)
   useEffect(() => {
@@ -51,28 +57,79 @@ const Nav = () => {
   return (
     <ToggleGroup
       type="single"
-      className="space-x-2"
+      className="gap-2"
       size={isSearchStuck ? "sm" : "lg"}
       variant={isNavStuck ? "default" : "mono"}
       onValueChange={(value) => value && setActiveSection(value as ActiveSection)}
       value={activeSection}
     >
-      <ToggleGroupItem value={ActiveSection.YourGuilds} asChild>
+      <ToggleGroupItem
+        value={ActiveSection.YourGuilds}
+        className={cn("rounded-xl transition-all", {
+          "rounded-lg": isSearchStuck,
+        })}
+        asChild
+      >
         <a href={`#${ActiveSection.YourGuilds}`}>Your guilds</a>
       </ToggleGroupItem>
-      <ToggleGroupItem value={ActiveSection.ExploreGuilds} asChild>
+      <ToggleGroupItem
+        value={ActiveSection.ExploreGuilds}
+        className={cn("rounded-xl transition-all", {
+          "rounded-lg": isSearchStuck,
+        })}
+        asChild
+      >
         <a href={`#${ActiveSection.ExploreGuilds}`}>Explore guilds</a>
       </ToggleGroupItem>
     </ToggleGroup>
   )
 }
 
-const Page = () => {
+const CreateGuildLink = () => {
+  const isNavStuck = useAtomValue(isNavStuckAtom)
+  return (
+    <Button
+      variant="ghost"
+      size="sm"
+      className={cn("gap-1.5", {
+        "text-white": !isNavStuck,
+      })}
+    >
+      <Plus />
+      <span>Create guild</span>
+    </Button>
+  )
+}
+
+const StickyBar = () => {
   const { isWeb3Connected } = useWeb3ConnectionManager()
   const setIsNavStuck = useSetAtom(isNavStuckAtom)
-  const setIsSearchStuck = useSetAtom(isSeachStuckAtom)
-  const setIsWalletSelectorModalOpen = useSetAtom(walletSelectorModalAtom)
+  const isSearchStuck = useAtomValue(isSearchStuckAtom)
   const { ref: navToggleRef } = useIsStuck(setIsNavStuck)
+
+  return (
+    <div
+      className={cn(
+        "sticky top-0 z-10 flex h-16 w-full items-center transition-all",
+        {
+          "h-12": isSearchStuck,
+        }
+      )}
+      ref={navToggleRef}
+    >
+      <div className="relative flex w-full items-center justify-between">
+        <Nav />
+        {isWeb3Connected && <CreateGuildLink />}
+      </div>
+    </div>
+  )
+}
+
+const Page = () => {
+  const { isWeb3Connected } = useWeb3ConnectionManager()
+  const setIsSearchStuck = useSetAtom(isSearchStuckAtom)
+  const setIsWalletSelectorModalOpen = useSetAtom(walletSelectorModalAtom)
+
   const { ref: searchRef } = useIsStuck(setIsSearchStuck)
 
   return (
@@ -86,17 +143,7 @@ const Page = () => {
           <Layout.Banner />
         </Layout.Header>
         <Layout.Main>
-          <div className="sticky top-0 z-10 my-1 py-2" ref={navToggleRef}>
-            <div className="relative flex items-start justify-between">
-              <Nav />
-              {isWeb3Connected && (
-                <Button variant="ghost" className="space-x-2">
-                  <Plus />
-                  <span>Create guild</span>
-                </Button>
-              )}
-            </div>
-          </div>
+          <StickyBar />
           {isWeb3Connected ? (
             <YourGuilds />
           ) : (
@@ -118,7 +165,7 @@ const Page = () => {
             <h2 className="font-bold text-lg tracking-tight">
               Explore verified guilds
             </h2>
-            <div className="sticky top-10 z-10" ref={searchRef}>
+            <div className="sticky top-8 z-10" ref={searchRef}>
               <Suspense>
                 <GuildSearchBar queryAtom={guildQueryAtom} />
               </Suspense>
