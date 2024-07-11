@@ -258,7 +258,7 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
                   href="https://ethereum.org/en/wallets"
                   target="_blank"
                   className={anchorVariants({
-                    variant: "muted",
+                    variant: "highlighted",
                     className: "inline-flex items-center gap-1",
                   })}
                 >
