@@ -6,8 +6,8 @@ import useDebouncedState from "hooks/useDebouncedState"
 import { PrimitiveAtom, useSetAtom } from "jotai"
 import { usePathname, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
-import { Input } from "./ui/Input"
-import { ToggleGroup, ToggleGroupItem } from "./ui/ToggleGroup"
+import { Input } from "../../../v2/components/ui/Input"
+import { ToggleGroup, ToggleGroupItem } from "../../../v2/components/ui/ToggleGroup"
 
 enum Order {
   Featured = "FEATURED",

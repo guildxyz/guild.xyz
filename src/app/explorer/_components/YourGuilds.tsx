@@ -2,7 +2,10 @@
 
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import { GuildBase } from "types"
-import { GuildCardSkeleton, GuildCardWithLink } from "./GuildCard"
+import {
+  GuildCardSkeleton,
+  GuildCardWithLink,
+} from "../../../v2/components/GuildCard"
 
 const useYourGuilds = () =>
   useSWRWithOptionalAuth<GuildBase[]>(

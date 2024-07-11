@@ -1,14 +1,19 @@
+"use client"
+
 import { Spinner } from "@phosphor-icons/react"
 import useUser from "components/[guild]/hooks/useUser"
 import { env } from "env"
 import { useScrollBatchedRendering } from "hooks/useScrollBatchedRendering"
 import { PrimitiveAtom, useAtomValue } from "jotai"
 import { memo, useRef } from "react"
-import { SWRConfiguration } from "swr"
+import { SWRConfiguration, useSWRConfig } from "swr"
 import useSWRInfinite from "swr/infinite"
 import { GuildBase } from "types"
 import { fetcherWithSign } from "utils/fetcher"
-import { GuildCardSkeleton, GuildCardWithLink } from "./GuildCard"
+import {
+  GuildCardSkeleton,
+  GuildCardWithLink,
+} from "../../../v2/components/GuildCard"
 
 const BATCH_SIZE = 24
 
@@ -21,16 +26,13 @@ const GuildCards = ({ guildData }: { guildData?: GuildBase[] }) => {
   return Array.from({ length: BATCH_SIZE }, (_, i) => <GuildCardSkeleton key={i} />)
 }
 
-const useExploreGuilds = (
-  searchParams: URLSearchParams,
-  guildsInitial: GuildBase[]
-) => {
+const useExploreGuilds = (searchParams: URLSearchParams) => {
   const { isSuperAdmin } = useUser()
   const options: SWRConfiguration = {
-    fallbackData: guildsInitial,
-    dedupingInterval: 60000, // one minute
+    dedupingInterval: 60_000,
   }
 
+  const { cache } = useSWRConfig()
   // sending authed request for superAdmins, so they can see unverified & hideFromExplorer guilds too
   // @ts-expect-error TODO: resolve this type error
   return useSWRInfinite<GuildBase[]>(
@@ -39,6 +41,7 @@ const useExploreGuilds = (
         return null
       const url = new URL("/v2/guilds", env.NEXT_PUBLIC_API)
       const params: Record<string, string> = {
+        order: "FEATURED",
         ...Object.fromEntries(searchParams.entries()),
         offset: (BATCH_SIZE * pageIndex).toString(),
         limit: BATCH_SIZE.toString(),
@@ -69,7 +72,7 @@ export const GuildInfiniteScroll = ({
     setSize,
     isValidating,
     isLoading,
-  } = useExploreGuilds(searchParams, [])
+  } = useExploreGuilds(searchParams)
   const renderedGuilds = filteredGuilds?.flat()
 
   useScrollBatchedRendering({
