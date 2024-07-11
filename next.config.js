@@ -210,12 +210,6 @@ const nextConfig = {
         source: "/",
         destination: "/explorer",
         permanent: false,
-        has: [
-          {
-            type: "host",
-            value: "guild.xyz",
-          },
-        ],
       },
       {
         source: "/community",
