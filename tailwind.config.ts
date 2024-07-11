@@ -80,6 +80,7 @@ const config = {
           secondary: "hsl(var(--card-secondary))",
           foreground: "hsl(var(--card-foreground))",
         },
+        image: "hsl(var(--image))",
         toast: {
           success: "hsla(var(--toast-success))",
           error: "hsla(var(--toast-error))",

@@ -16,14 +16,11 @@ type Props = {
 
 const GuildLogo = ({ imageUrl, className }: Props) => {
   const { resolvedTheme } = useTheme()
-  // TODO: should we move it to a CSS variable?
-  const bgColor = resolvedTheme === "light" ? "bg-gray-700" : "bg-gray-600"
 
   return (
     <div
       className={cn(
-        "relative flex size-12 items-center justify-center overflow-hidden rounded-full",
-        bgColor,
+        "relative flex size-12 items-center justify-center overflow-hidden rounded-full bg-image",
         className
       )}
     >
