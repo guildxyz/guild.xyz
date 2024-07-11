@@ -1,8 +1,8 @@
+import { Header } from "@/components/Header"
+import { PageContainer } from "@/components/PageContainer"
+import { cn } from "@/lib/utils"
 import { ReactNode } from "react"
 import { PropsWithChildren } from "react"
-import { PageBoundary } from "@/components/PageBoundary"
-// import { Header as NavHeader } from "@/components/Header"
-const NavHeader = () => <div className="h-16 border-border border-b">mocked header</div>
 
 /* -------------------------------------------------------------------------------------------------
  * Root
@@ -16,11 +16,11 @@ const Root = ({ children }: PropsWithChildren) => (
  * Header
  * -----------------------------------------------------------------------------------------------*/
 
-const Header = ({ children }: PropsWithChildren) => (
-  <header className="relative">
-    <NavHeader />
+const Hero = ({ children }: PropsWithChildren) => (
+  <div className="relative">
+    <Header />
     {children}
-  </header>
+  </div>
 )
 
 /* -------------------------------------------------------------------------------------------------
@@ -32,22 +32,29 @@ interface HeadlineProps {
 }
 
 const Headline = ({ title }: HeadlineProps) => (
-  <PageBoundary>
-    <h1 className="pb-14 pt-9 font-display text-4xl font-bold tracking-tight text-white sm:text-5xl">
+  <PageContainer>
+    <h1 className="pt-9 pb-14 font-bold font-display text-4xl text-white tracking-tight sm:text-5xl">
       {title}
     </h1>
-  </PageBoundary>
+  </PageContainer>
 )
 
 /* -------------------------------------------------------------------------------------------------
  * Banner
  * -----------------------------------------------------------------------------------------------*/
 
-const Banner = () => (
-  <div className="absolute inset-0 -bottom-28 -z-10 overflow-hidden">
-    <div className="absolute inset-0 bg-[hsl(240deg_4%_16%)]" />
-    <div className="absolute inset-0 bg-[url('/banner.png')] bg-[auto_115%] bg-[right_top_10px] bg-no-repeat opacity-10" />
-    <div className="absolute inset-0 bg-gradient-to-tr from-[hsl(240deg_2.65%_22.16%)] from-50% to-transparent" />
+interface BannerProps extends PropsWithChildren {
+  offset?: number
+}
+
+const Banner = ({ children, offset = 112 }: BannerProps) => (
+  <div
+    className={cn(
+      "-z-10 absolute inset-0 overflow-hidden",
+      `-bottom-[${Math.abs(offset)}px]`
+    )}
+  >
+    {children}
   </div>
 )
 
@@ -57,7 +64,7 @@ const Banner = () => (
 
 const Main = ({ children }: PropsWithChildren) => (
   <main>
-    <PageBoundary>{children}</PageBoundary>
+    <PageContainer>{children}</PageContainer>
   </main>
 )
 
@@ -67,10 +74,10 @@ const Main = ({ children }: PropsWithChildren) => (
 
 const Footer = ({ children }: PropsWithChildren) => (
   <footer className="mt-auto">
-    <PageBoundary>{children}</PageBoundary>
+    <PageContainer>{children}</PageContainer>
   </footer>
 )
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export { Root, Header, Headline, Banner, Main, Footer }
+export { Root, Hero, Headline, Banner, Main, Footer }
