@@ -1,5 +1,6 @@
 "use client"
 
+import { cn } from "@/lib/utils"
 import {
   Book,
   CircleWavyCheck,
@@ -18,6 +19,7 @@ import {
 } from "@phosphor-icons/react/dist/ssr"
 import dynamic from "next/dynamic"
 import Link, { LinkProps } from "next/link"
+import { useRouter } from "next/router"
 import { AnchorHTMLAttributes, ReactNode } from "react"
 import { ThemeToggle } from "../ThemeToggle"
 import { Button } from "../ui/Button"
@@ -34,12 +36,12 @@ export const NavMenu = () => (
       <Button className="gap-2 rounded-2xl text-white" variant="ghost">
         <AnimatedLogo />
         <span className="font-bold font-display text-base">Guild</span>
-        <List weight="bold" />
+        <List weight="bold" className="ml-1" />
       </Button>
     </PopoverTrigger>
     <PopoverContent
       align="start"
-      className="mt-1 w-auto origin-top-left overflow-hidden p-0"
+      className="mt-1 w-auto min-w-[300px] origin-top-left overflow-hidden p-0"
     >
       <nav className="flex flex-col gap-2 px-3 py-4 sm:flex-row sm:gap-12">
         <NavGroup title="Navigation">
@@ -112,7 +114,7 @@ export const NavMenu = () => (
         </NavGroup>
       </nav>
 
-      <div className="flex items-center justify-between bg-card-secondary px-7 py-4 text-foreground">
+      <div className="flex items-center justify-between bg-card-secondary px-7 py-4 text-foreground text-sm">
         <span>Theme:</span>
         <ThemeToggle />
       </div>
@@ -130,6 +132,8 @@ const NavGroup = ({ title, children }: { title: string; children: ReactNode }) =
 )
 
 const NavButton = ({ href, children }: { href: string; children: ReactNode }) => {
+  const router = useRouter()
+
   const isExternal = href.startsWith("http")
   const wrapperProps = {
     href,
@@ -150,7 +154,10 @@ const NavButton = ({ href, children }: { href: string; children: ReactNode }) =>
     <Wrapper {...wrapperProps}>
       <Button
         variant="ghost"
-        className="h-10 w-full justify-start gap-2 font-normal"
+        className={cn(
+          "h-10 w-full justify-start gap-2",
+          router.route === href ? "font-semibold" : "font-normal"
+        )}
       >
         {children}
       </Button>
