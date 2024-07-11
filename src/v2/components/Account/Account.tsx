@@ -39,7 +39,7 @@ export const Account = () => {
     )
 
   return (
-    <Card>
+    <Card className="flex items-center">
       <Popover open={isOpen} onOpenChange={setValue}>
         <PopoverTrigger asChild>
           <Button
@@ -51,13 +51,14 @@ export const Account = () => {
               captureEvent("opened UserActivityLogPopover")
             }}
           >
-            <Bell />
+            <Bell weight="bold" />
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-96 px-0">
           <NotificationContent />
         </PopoverContent>
       </Popover>
+
       <Button
         variant="ghost"
         onClick={() => setIsAccountModalOpen(true)}
