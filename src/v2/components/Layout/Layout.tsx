@@ -68,17 +68,10 @@ interface BannerProps extends PropsWithChildren {
 
 const Banner = ({ children, offset = 112, className }: BannerProps) => (
   <div
-    className={cn(
-      "-z-10 absolute inset-0 overflow-hidden",
-      `-bottom-[${Math.abs(offset)}px]`
-    )}
+    className={"-z-10 absolute inset-0 overflow-hidden"}
+    style={{ bottom: -offset }}
   >
-    <div
-      className={cn(
-        "absolute inset-0 bg-[hsl(240_4%_16%)] data-[theme='dark']:bg-[hsl(240_3%_22%)]",
-        className
-      )}
-    />
+    <div className={cn("absolute inset-0 bg-banner", className)} />
     {children}
   </div>
 )

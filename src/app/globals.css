@@ -52,6 +52,8 @@
     --success-active: 142 72% 29%;
     --success-foreground: 0 0% 100%;
 
+    --banner: 240 4% 16%;
+
     --border: 240 5.9% 90%;
     --border-muted: 240 3% 93%;
     --input: var(--border);
@@ -152,6 +154,8 @@
     --success-hover: 142 69% 58%;
     --success-active: 142 77% 73%;
     --success-foreground: 0 0% 100%;
+
+    --banner: 240 3% 22%;
 
     --border: 240 3% 38%;
     --border-muted: 240 3% 28%;
