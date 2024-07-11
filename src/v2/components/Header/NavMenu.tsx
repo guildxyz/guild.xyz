@@ -11,6 +11,7 @@ import {
   List,
   Package,
   Palette,
+  Plus,
   Shield,
   UsersThree,
   XLogo,
@@ -45,6 +46,11 @@ export const NavMenu = () => (
           <NavButton href="/explorer">
             <House weight="bold" />
             Explore guilds
+          </NavButton>
+
+          <NavButton href="/create-guild">
+            <Plus weight="bold" />
+            Create guild
           </NavButton>
 
           <NavButton href="/leaderboard">
