@@ -30,7 +30,7 @@
     --muted: 0 0% 100%;
     --muted-foreground: 240 5% 56%;
 
-    --accent: 240 7% 90%;
+    --accent: 240 5% 96%;
     --accent-foreground: 240 4% 16%;
 
     --anchor-foreground: 221 83% 53%;
@@ -48,8 +48,8 @@
     --success-active: 142 72% 29%;
     --success-foreground: 0 0% 100%;
 
-    --border: 240 6% 90%;
-    --border-muted: 240 6% 94%;
+    --border: 240 5.9% 90%;
+    --border-muted: 240 3% 93%;
     --input: var(--border);
     --ring: 240, 0%, 45%, 25%;
 

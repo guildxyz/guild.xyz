@@ -1,13 +1,16 @@
 "use client"
 
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/ToggleGroup"
+import { useColorMode } from "@chakra-ui/react"
 import { Desktop, Moon, Sun } from "@phosphor-icons/react/dist/ssr"
 import { useTheme } from "next-themes"
-import { useIsClient } from "usehooks-ts"
+import { useIsClient, useLocalStorage } from "usehooks-ts"
 
 export function ThemeToggle() {
   const { setTheme, theme } = useTheme()
   const isClient = useIsClient()
+  const { colorMode: chakraColorMode, setColorMode: setChakraColorMode } =
+    useColorMode()
 
   if (!isClient) {
     return
@@ -16,9 +19,13 @@ export function ThemeToggle() {
   return (
     <ToggleGroup
       type="single"
-      value={theme}
+      value={chakraColorMode || theme}
       onValueChange={(selected) => {
-        if (selected) setTheme(selected)
+        if (selected) {
+          console.log("selected", selected)
+          setTheme(selected)
+          if (typeof setChakraColorMode === "function") setChakraColorMode(selected)
+        }
       }}
       aria-label="Toggle between themes"
     >
