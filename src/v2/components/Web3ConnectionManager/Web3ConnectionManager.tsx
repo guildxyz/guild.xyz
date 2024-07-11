@@ -32,33 +32,5 @@ export function Web3ConnectionManagerBase() {
 export function Web3ConnectionManager() {
   useTriggerWalletSelectorModal()
 
-  // a11y: WCM misses label from their modal
-  useEffect(() => {
-    function waitQuerySelector(selector: string): Promise<Element> {
-      return new Promise((resolve) => {
-        const elem = document.querySelector(selector)
-        if (elem) {
-          return resolve(elem)
-        }
-        const observer = new MutationObserver(() => {
-          const elem = document.querySelector(selector)
-          if (elem) {
-            observer.disconnect()
-            resolve(elem)
-          }
-        })
-        observer.observe(document.body, {
-          childList: true,
-          subtree: true,
-        })
-      })
-    }
-    waitQuerySelector("wcm-modal").then((element) => {
-      element?.shadowRoot
-        ?.getElementById("wcm-modal")
-        ?.setAttribute("aria-label", "Web3ConnectionManager")
-    })
-  }, [])
-
   return <Web3ConnectionManagerBase />
 }
