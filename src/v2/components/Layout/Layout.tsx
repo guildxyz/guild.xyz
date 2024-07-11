@@ -1,7 +1,7 @@
-import { Header as NavHeader } from "@/components/Header"
-import { PageBoundary } from "@/components/PageBoundary"
-import { ReactNode } from "react"
-import { PropsWithChildren } from "react"
+import { cn } from "@/lib/utils"
+import { Slot } from "@radix-ui/react-slot"
+import clsx from "clsx"
+import { PropsWithChildren, ReactNode, forwardRef } from "react"
 
 /* -------------------------------------------------------------------------------------------------
  * Root
@@ -12,14 +12,33 @@ const Root = ({ children }: PropsWithChildren) => (
 )
 
 /* -------------------------------------------------------------------------------------------------
- * Header
+ * PageContainer
  * -----------------------------------------------------------------------------------------------*/
 
-const Header = ({ children }: PropsWithChildren) => (
-  <header className="relative">
-    <NavHeader />
-    {children}
-  </header>
+export interface PageContainerProps extends React.HTMLAttributes<HTMLDivElement> {
+  asChild?: boolean
+}
+
+const PageContainer = forwardRef<HTMLDivElement, PageContainerProps>(
+  ({ children, className, asChild = false }, ref) => {
+    const Comp = asChild ? Slot : "div"
+    return (
+      <Comp
+        className={clsx("mx-auto max-w-screen-lg px-4 sm:px-8 md:px-10", className)}
+        ref={ref}
+      >
+        {children}
+      </Comp>
+    )
+  }
+)
+
+/* -------------------------------------------------------------------------------------------------
+ * Hero
+ * -----------------------------------------------------------------------------------------------*/
+
+const Hero = ({ children }: PropsWithChildren) => (
+  <div className="relative">{children}</div>
 )
 
 /* -------------------------------------------------------------------------------------------------
@@ -31,22 +50,36 @@ interface HeadlineProps {
 }
 
 const Headline = ({ title }: HeadlineProps) => (
-  <PageBoundary>
+  <PageContainer>
     <h1 className="pt-9 pb-14 font-bold font-display text-4xl text-white tracking-tight sm:text-5xl">
       {title}
     </h1>
-  </PageBoundary>
+  </PageContainer>
 )
 
 /* -------------------------------------------------------------------------------------------------
  * Banner
  * -----------------------------------------------------------------------------------------------*/
 
-const Banner = () => (
-  <div className="-bottom-28 -z-10 absolute inset-0 overflow-hidden">
-    <div className="absolute inset-0 bg-[hsl(240deg_4%_16%)]" />
-    <div className="absolute inset-0 bg-[auto_115%] bg-[right_top_10px] bg-[url('/banner.png')] bg-no-repeat opacity-10" />
-    <div className="absolute inset-0 bg-gradient-to-tr from-50% from-[hsl(240deg_2.65%_22.16%)] to-transparent" />
+interface BannerProps extends PropsWithChildren {
+  offset?: number
+  className?: string
+}
+
+const Banner = ({ children, offset = 112, className }: BannerProps) => (
+  <div
+    className={cn(
+      "-z-10 absolute inset-0 overflow-hidden",
+      `-bottom-[${Math.abs(offset)}px]`
+    )}
+  >
+    <div
+      className={cn(
+        "absolute inset-0 bg-[hsl(240_4%_16%)] data-[theme='dark']:bg-[hsl(240_3%_22%)]",
+        className
+      )}
+    />
+    {children}
   </div>
 )
 
@@ -56,7 +89,7 @@ const Banner = () => (
 
 const Main = ({ children }: PropsWithChildren) => (
   <main>
-    <PageBoundary>{children}</PageBoundary>
+    <PageContainer>{children}</PageContainer>
   </main>
 )
 
@@ -66,10 +99,10 @@ const Main = ({ children }: PropsWithChildren) => (
 
 const Footer = ({ children }: PropsWithChildren) => (
   <footer className="mt-auto">
-    <PageBoundary>{children}</PageBoundary>
+    <PageContainer>{children}</PageContainer>
   </footer>
 )
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export { Root, Header, Headline, Banner, Main, Footer }
+export { Banner, Footer, Headline, Hero, Main, PageContainer, Root }

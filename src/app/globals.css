@@ -7,6 +7,8 @@
     --background: 240 5% 96%;
     --foreground: 240 4% 16%;
 
+    --skeleton: 240 5% 84%;
+
     --card: 0 0% 100%;
     --card-secondary: 0 0% 98%;
     --card-foreground: var(--foreground);
@@ -105,6 +107,8 @@
   :root[data-theme="dark"] {
     --background: 240 3.7% 15.88%;
     --foreground: 210 20% 98%;
+
+    --skeleton: 240 5% 65%;
 
     --card: 240 5.26% 26.08%;
     --card-secondary: 240 5% 22%;
