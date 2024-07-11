@@ -2,25 +2,25 @@ import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import useScrollEffect from "hooks/useScrollEffect"
 import { useRouter } from "next/router"
 import {
-  createContext,
   Dispatch,
   PropsWithChildren,
   SetStateAction,
+  createContext,
   useContext,
   useState,
 } from "react"
 import useSWRInfinite, { SWRInfiniteResponse } from "swr/infinite"
 import { PlatformName, Requirement } from "types"
-import { useUserPublic } from "../hooks/useUser"
 import {
-  isSupportedQueryParam,
   SupportedQueryParam,
+  isSupportedQueryParam,
 } from "./ActivityLogFiltersBar/components/ActivityLogFiltersContext"
 
+import { useUserPublic } from "@/hooks/useUserPublic"
 import {
+  ADMIN_ACTIONS,
   ActivityLogAction,
   ActivityLogActionGroup,
-  ADMIN_ACTIONS,
   USER_ACTIONS,
 } from "./constants"
 

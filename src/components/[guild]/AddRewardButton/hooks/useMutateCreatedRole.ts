@@ -1,6 +1,6 @@
+import { useYourGuilds } from "@/hooks/useYourGuilds"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { mutateGuildsCache } from "components/create-guild/hooks/useCreateRole"
-import { useYourGuilds } from "components/explorer/YourGuilds"
 import useMatchMutate from "hooks/useMatchMutate"
 import { GuildBase, GuildPlatform, Requirement, Role } from "types"
 import { CreateRolePlatformResponse } from "./useCreateRolePlatforms"

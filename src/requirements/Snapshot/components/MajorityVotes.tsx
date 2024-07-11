@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { useController, useFormState } from "react-hook-form"
-import { RequirementFormProps } from "requirements"
+import { RequirementFormProps } from "requirements/types"
 import parseFromObject from "utils/parseFromObject"
 
 const MajorityVotes = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {

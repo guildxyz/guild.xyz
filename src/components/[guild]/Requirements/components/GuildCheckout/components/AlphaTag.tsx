@@ -10,8 +10,8 @@ import {
   Text,
 } from "@chakra-ui/react"
 import { Chat } from "@phosphor-icons/react"
-import { triggerChat } from "components/_app/IntercomProvider"
 import Button from "components/common/Button"
+import { triggerChat } from "utils/intercom"
 
 const AlphaTag = () => (
   <Popover trigger="hover">

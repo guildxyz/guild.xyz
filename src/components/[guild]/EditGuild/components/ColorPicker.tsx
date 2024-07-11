@@ -3,14 +3,17 @@ import {
   FormControl,
   FormLabel,
   HStack,
+  Icon,
   Input,
-  useColorModeValue,
   VStack,
+  useColorModeValue,
 } from "@chakra-ui/react"
+import { Palette } from "@phosphor-icons/react"
+import Color from "color"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import useDebouncedState from "hooks/useDebouncedState"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 
 type Props = {
@@ -23,6 +26,7 @@ const ColorPicker = ({ fieldName }: Props): JSX.Element => {
     setValue,
     formState: { errors },
   } = useFormContext()
+  const [isIconLight, setIsIconLight] = useState(false)
 
   const pickedColor = useWatch({ name: fieldName })
   const debouncedPickedColor = useDebouncedState(pickedColor, 300)
@@ -32,6 +36,8 @@ const ColorPicker = ({ fieldName }: Props): JSX.Element => {
   useEffect(() => {
     if (!CSS.supports("color", debouncedPickedColor)) return
     setLocalThemeColor(debouncedPickedColor)
+    const color = Color(pickedColor)
+    setIsIconLight(color.isDark())
   }, [debouncedPickedColor, setLocalThemeColor])
 
   const borderColor = useColorModeValue("gray.300", "whiteAlpha.300")
@@ -74,6 +80,12 @@ const ColorPicker = ({ fieldName }: Props): JSX.Element => {
                   ref={ref}
                 />
               )}
+            />
+            <Icon
+              as={Palette}
+              pos="absolute"
+              pointerEvents={"none"}
+              color={isIconLight ? "whiteAlpha.800" : "blackAlpha.800"}
             />
           </Flex>
           <Input

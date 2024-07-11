@@ -1,21 +1,21 @@
+import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import {
   Center,
   Divider,
   Spinner,
   Stack,
   Text,
+  VStack,
   useBreakpointValue,
   useColorModeValue,
   usePrevious,
-  VStack,
 } from "@chakra-ui/react"
-import useUser from "components/[guild]/hooks/useUser"
 import {
   TABS_HEIGHT,
   TABS_HEIGHT_SM,
   TABS_SM_BUTTONS_STYLES,
 } from "components/[guild]/Tabs/Tabs"
-import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import useUser from "components/[guild]/hooks/useUser"
 import ClientOnly from "components/common/ClientOnly"
 import Section from "components/common/Section"
 import ExplorerCardMotionWrapper from "components/explorer/ExplorerCardMotionWrapper"

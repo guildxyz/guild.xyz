@@ -1,5 +1,5 @@
 import { schemas } from "@guildxyz/types"
-import { createContext, PropsWithChildren, useContext } from "react"
+import { PropsWithChildren, createContext, useContext } from "react"
 import { Requirement } from "types"
 import { z } from "zod"
 

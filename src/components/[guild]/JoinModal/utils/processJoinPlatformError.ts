@@ -1,4 +1,4 @@
-import { ErrorInfo } from "components/common/Error"
+import { ErrorInfo } from "@/components/Error"
 import { DiscordError, WalletError } from "types"
 import processWalletError from "utils/processWalletError"
 import processConnectorError from "./processConnectorError"

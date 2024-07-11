@@ -1,5 +1,5 @@
+import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { Img, useDisclosure } from "@chakra-ui/react"
-import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import { ConnectPolygonIDModal } from "requirements/PolygonID/components/ConnectPolygonID"
 import JoinStep from "./JoinStep"

@@ -1,21 +1,22 @@
-import { ButtonProps, Icon } from "@chakra-ui/react"
+import { ConnectEmailButton } from "@/components/Account/components/AccountModal/components/EmailAddress"
+import { ConnectFarcasterButton } from "@/components/Account/components/AccountModal/components/FarcasterProfile"
+import { ButtonProps } from "@chakra-ui/react"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
-import { ConnectEmailButton } from "components/common/Layout/components/Account/components/AccountModal/components/SocialAccount/EmailAddress"
-import { ConnectFarcasterButton } from "components/common/Layout/components/Account/components/AccountModal/components/SocialAccount/FarcasterProfile"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import useToast from "hooks/useToast"
+import REQUIREMENTS from "requirements"
+import { RequirementType } from "requirements/types"
 import rewards from "rewards"
-import REQUIREMENTS, { RequirementType } from "requirements"
 import { PlatformName } from "types"
 import { useRequirementContext } from "./RequirementContext"
 
 function requirementTypeToPlatformName(type: RequirementType): PlatformName {
   if (type === "ALLOWLIST_EMAIL") return "EMAIL"
-  if (REQUIREMENTS[type].types[0] === "TWITTER") return "TWITTER_V1"
-  return REQUIREMENTS[type].types[0] as PlatformName
+  if (REQUIREMENTS[type].types[0].startsWith("TWITTER")) return "TWITTER_V1"
+  return REQUIREMENTS[type].types[0].split("_")[0] as PlatformName
 }
 
 const RequirementConnectButton = (props: ButtonProps) => {
@@ -61,16 +62,19 @@ const RequirementConnectButton = (props: ButtonProps) => {
         ? ConnectFarcasterButton
         : ConnectRequirementPlatformButton
 
-  return (
-    <ButtonComponent
-      isReconnection={isReconnection}
-      onSuccess={onSuccess}
-      leftIcon={<Icon as={rewards[platform]?.icon} />}
-      size="xs"
-      iconSpacing="1"
-      {...props}
-    />
-  )
+  return null
+  // TODO
+  // return (
+  //   <ButtonComponent
+  //     isReconnection={isReconnection}
+  //     onSuccess={onSuccess}
+  //     // TODO:
+  //     // leftIcon={<Icon as={rewards[platform]?.icon} />}
+  //     // size="xs"
+  //     // iconSpacing="1"
+  //     {...props}
+  //   />
+  // )
 }
 
 const ConnectRequirementPlatformButton = ({
@@ -80,10 +84,7 @@ const ConnectRequirementPlatformButton = ({
 }: ButtonProps & { onSuccess: () => void; isReconnection?: boolean }) => {
   const { type } = useRequirementContext()
 
-  const platform =
-    REQUIREMENTS[type].types[0] === "TWITTER"
-      ? "TWITTER_V1"
-      : (REQUIREMENTS[type].types[0] as PlatformName)
+  const platform = requirementTypeToPlatformName(type)
 
   const { onConnect, isLoading, loadingText } = useConnectPlatform(
     platform,

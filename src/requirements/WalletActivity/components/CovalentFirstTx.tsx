@@ -1,5 +1,5 @@
 import AbsoluteMinMaxTimeFormControls from "components/common/AbsoluteMinMaxTimeFormControls"
-import { RequirementFormProps } from "requirements"
+import { RequirementFormProps } from "requirements/types"
 
 const CovalentFirstTx = ({ baseFieldPath }: RequirementFormProps): JSX.Element => (
   <AbsoluteMinMaxTimeFormControls

@@ -1,12 +1,12 @@
 "use client"
 
-import { X } from "@phosphor-icons/react"
+import { X } from "@phosphor-icons/react/dist/ssr"
 import * as DialogPrimitive from "@radix-ui/react-dialog"
 import { FocusScope, FocusScopeProps } from "@radix-ui/react-focus-scope"
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
-import { cva, VariantProps } from "class-variance-authority"
+import { VariantProps, cva } from "class-variance-authority"
 
 const Dialog = DialogPrimitive.Root
 
@@ -21,7 +21,7 @@ const DialogOverlay = React.forwardRef<
   <DialogPrimitive.Overlay
     ref={ref}
     className={cn(
-      "fixed inset-0 z-50 grid place-items-center overflow-y-auto bg-black/50 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+      "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 grid place-items-center overflow-y-auto bg-black/50 backdrop-blur-sm data-[state=closed]:animate-out data-[state=open]:animate-in",
       className
     )}
     {...props}
@@ -34,8 +34,8 @@ export const dialogContentVariants = cva(
   {
     variants: {
       size: {
-        md: "max-w-md",
         sm: "max-w-sm",
+        md: "max-w-md",
         lg: "max-w-lg",
         xl: "max-w-xl",
         "2xl": "max-w-2xl",
@@ -60,8 +60,8 @@ const DialogContent = React.forwardRef<
   DialogContentProps
 >(({ size, trapFocus = true, className, children, ...props }, ref) => (
   <DialogPortal>
-    <DialogOverlay>
-      <FocusScope trapped={trapFocus} loop>
+    <FocusScope trapped={trapFocus} loop>
+      <DialogOverlay>
         <DialogPrimitive.Content
           ref={ref}
           className={cn(dialogContentVariants({ size, className }))}
@@ -69,8 +69,8 @@ const DialogContent = React.forwardRef<
         >
           {children}
         </DialogPrimitive.Content>
-      </FocusScope>
-    </DialogOverlay>
+      </DialogOverlay>
+    </FocusScope>
   </DialogPortal>
 ))
 DialogContent.displayName = DialogPrimitive.Content.displayName
@@ -82,12 +82,12 @@ const DialogCloseButton = React.forwardRef<
   <DialogPrimitive.Close
     ref={ref}
     className={cn(
-      "absolute right-10 top-8 rounded-full opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground",
+      "absolute top-8 right-10 rounded-full opacity-70 transition-opacity hover:opacity-100 focus:outline-none focus:ring-4 focus-visible:ring-ring disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground",
       className
     )}
     {...props}
   >
-    <X className="h-5 w-5" />
+    <X weight="bold" className="h-5 w-5" />
     <span className="sr-only">Close</span>
   </DialogPrimitive.Close>
 ))
@@ -122,7 +122,7 @@ const DialogTitle = React.forwardRef<
   <DialogPrimitive.Title
     ref={ref}
     className={cn(
-      "font-display text-xl font-bold leading-none tracking-wide",
+      "font-bold font-display text-xl leading-none tracking-wide",
       className
     )}
     {...props}

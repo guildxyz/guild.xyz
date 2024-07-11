@@ -1,4 +1,4 @@
-import { createContext, PropsWithChildren, useContext } from "react"
+import { PropsWithChildren, createContext, useContext } from "react"
 import { ActivityLogAction } from "../constants"
 
 const ActivityLogActionContext = createContext<ActivityLogAction>(undefined)

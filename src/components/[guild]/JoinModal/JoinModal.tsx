@@ -1,3 +1,4 @@
+import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import {
   Box,
   Collapse,
@@ -13,7 +14,6 @@ import {
 } from "@chakra-ui/react"
 import { ArrowRight } from "@phosphor-icons/react"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
@@ -22,8 +22,9 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import dynamic from "next/dynamic"
 import { ComponentType, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
+import { RequirementType } from "requirements/types"
 import rewards from "rewards"
-import { PlatformName, RequirementType } from "types"
+import { PlatformName } from "types"
 import ConnectPlatform from "./components/ConnectPlatform"
 import ShareSocialsCheckbox from "./components/ShareSocialsCheckbox"
 import WalletAuthButton from "./components/WalletAuthButton"

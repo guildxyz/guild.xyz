@@ -12,7 +12,7 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import useDebouncedState from "hooks/useDebouncedState"
 import { LinkMetadata } from "pages/api/link-metadata"
 import { useController, useFormContext } from "react-hook-form"
-import { RequirementFormProps } from "requirements"
+import { RequirementFormProps } from "requirements/types"
 import useSWRImmutable from "swr/immutable"
 import parseFromObject from "utils/parseFromObject"
 

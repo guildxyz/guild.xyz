@@ -1,5 +1,5 @@
+import { useYourGuilds } from "@/hooks/useYourGuilds"
 import * as combobox from "@zag-js/combobox"
-import { useYourGuilds } from "components/explorer/YourGuilds"
 import GuildTag from "components/[guild]/activity/ActivityLogAction/components/GuildTag"
 import { HTMLAttributes } from "react"
 import { useActivityLogFilters } from "../../ActivityLogFiltersContext"

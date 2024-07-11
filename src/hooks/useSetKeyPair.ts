@@ -1,11 +1,11 @@
-import { useUserPublic } from "components/[guild]/hooks/useUser"
-import { usePostHogContext } from "components/_app/PostHogProvider"
-import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import { usePostHogContext } from "@/components/Providers/PostHogProvider"
+import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import { useUserPublic } from "@/hooks/useUserPublic"
 import { useFetcherWithSign } from "hooks/useFetcherWithSign"
-import { createStore, del, get, set } from "idb-keyval"
 import { useAtomValue, useSetAtom } from "jotai"
 import { useEffect } from "react"
 import { mutate } from "swr"
+import { StoredKeyPair, setKeyPairToIdb } from "utils/keyPair"
 import { recaptchaAtom, shouldUseReCAPTCHAAtom } from "utils/recaptcha"
 import { checksumAddress } from "viem"
 import useSubmit from "./useSubmit"
@@ -40,24 +40,11 @@ Issued At: ${new Date(+ts).toISOString()}`
  */
 const RPC_INTERNAL_ERROR_CODE = -32603
 
-export type StoredKeyPair = {
-  keyPair: CryptoKeyPair
-  pubKey: string
-}
-
 type SetKeypairPayload = Omit<StoredKeyPair, "keyPair"> & {
   verificationParams?: {
     reCaptcha: string
   }
 }
-
-const getStore = () => createStore("guild.xyz", "signingKeyPairs")
-export const getKeyPairFromIdb = (userId: number) =>
-  get<StoredKeyPair>(userId, getStore())
-export const deleteKeyPairFromIdb = (userId: number) =>
-  userId ? del(userId, getStore()) : null
-const setKeyPairToIdb = (userId: number, keys: StoredKeyPair) =>
-  set(userId, keys, getStore())
 
 const generateKeyPair = async () => {
   const keyPair: StoredKeyPair = {

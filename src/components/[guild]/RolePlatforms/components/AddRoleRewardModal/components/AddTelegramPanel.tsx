@@ -1,8 +1,8 @@
 import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hooks/useAddRewardDiscardAlert"
 import Button from "components/common/Button"
 import TelegramGroup from "components/create-guild/TelegramGroup"
-import { AddRewardPanelProps } from "rewards"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
+import { AddRewardPanelProps } from "rewards"
 import { PlatformType } from "types"
 import DefaultAddRewardPanelWrapper from "../DefaultAddRewardPanelWrapper"
 

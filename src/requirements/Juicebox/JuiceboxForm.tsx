@@ -16,7 +16,7 @@ import OptionImage from "components/common/StyledSelect/components/CustomSelectO
 import useDebouncedState from "hooks/useDebouncedState"
 import { useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { RequirementFormProps } from "requirements"
+import { RequirementFormProps } from "requirements/types"
 import parseFromObject from "utils/parseFromObject"
 import { useJuicebox, useJuiceboxProject } from "./hooks/useJuicebox"
 

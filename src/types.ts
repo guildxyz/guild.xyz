@@ -1,13 +1,13 @@
 import {
   FarcasterProfile,
   Logic,
-  schemas,
   Schemas,
+  UserProfile,
   Visibility,
+  schemas,
 } from "@guildxyz/types"
 import { FeatureFlag } from "components/[guild]/EditGuild/components/FeatureFlags"
 import { ContractCallFunction } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
-import { RequirementType } from "requirements"
 import type { Chain, Chains } from "wagmiConfig/chains"
 import { z } from "zod"
 
@@ -119,11 +119,6 @@ type PlatformAccountDetails = {
   username?: string
 }
 
-type SharedSocial = {
-  guildId: number
-  isShared: boolean
-}
-
 type UserAddress = {
   address: `0x${string}`
   userId: number
@@ -137,7 +132,7 @@ type User = {
   id: number
   addresses: UserAddress[]
   platformUsers: PlatformAccountDetails[]
-  sharedSocials: SharedSocial[]
+  sharedSocials: UserProfile["sharedSocials"]
   publicKey?: string
   isSuperAdmin: boolean
 
@@ -674,24 +669,24 @@ type SelectOption<T = string> = {
 } & Rest
 
 export enum PlatformType {
-  "UNSET" = -1,
-  "DISCORD" = 1,
-  "TELEGRAM" = 2,
-  "GITHUB" = 3,
-  "GOOGLE" = 4,
-  "TWITTER" = 5,
+  UNSET = -1,
+  DISCORD = 1,
+  TELEGRAM = 2,
+  GITHUB = 3,
+  GOOGLE = 4,
+  TWITTER = 5,
   // "STEAM" = 6,
-  "CONTRACT_CALL" = 7,
-  "TWITTER_V1" = 8,
-  "UNIQUE_TEXT" = 9,
-  "TEXT" = 10,
-  "GUILD_PIN" = 11,
-  "POLYGON_ID" = 12,
-  "POINTS" = 13,
-  "POAP" = 14,
-  "FORM" = 15,
-  "GATHER_TOWN" = 16,
-  "ERC20" = 17,
+  CONTRACT_CALL = 7,
+  TWITTER_V1 = 8,
+  UNIQUE_TEXT = 9,
+  TEXT = 10,
+  GUILD_PIN = 11,
+  POLYGON_ID = 12,
+  POINTS = 13,
+  POAP = 14,
+  FORM = 15,
+  GATHER_TOWN = 16,
+  ERC20 = 17,
 }
 
 enum ValidationMethod {
@@ -793,7 +788,6 @@ export type {
   Requirement,
   RequirementCreateResponseOutput,
   RequirementCreationPayloadWithTempID,
-  RequirementType,
   Rest,
   Role,
   RoleFormType,

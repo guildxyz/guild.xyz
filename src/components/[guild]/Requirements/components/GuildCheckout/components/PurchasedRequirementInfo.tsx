@@ -4,8 +4,8 @@ import {
   SimpleGrid,
   Skeleton,
   Text,
-  useColorModeValue,
   VStack,
+  useColorModeValue,
 } from "@chakra-ui/react"
 import useTokenData from "hooks/useTokenData"
 import { Chain } from "wagmiConfig/chains"

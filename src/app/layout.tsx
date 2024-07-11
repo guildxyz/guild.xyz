@@ -1,11 +1,13 @@
-import { ThemeProvider } from "@/components/ThemeProvider"
+import { Providers } from "@/components/Providers"
+import { PostHogPageViews } from "@/components/Providers/PostHogPageViews"
 import clsx from "clsx"
 import { dystopian, inter } from "fonts"
 import type { Metadata } from "next"
+import { type ReactNode, Suspense } from "react"
 import "./globals.css"
 
 interface RootLayoutProps {
-  children: React.ReactNode
+  children: ReactNode
 }
 
 export const metadata: Metadata = {
@@ -19,15 +21,13 @@ export default function RootLayout({ children }: RootLayoutProps) {
     <html lang="en" suppressHydrationWarning>
       <head />
       <body className={clsx(dystopian.variable, inter.variable)}>
-        <ThemeProvider
-          attribute="data-theme"
-          storageKey="chakra-ui-color-mode"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
+        <Providers>
           {children}
-        </ThemeProvider>
+
+          <Suspense>
+            <PostHogPageViews />
+          </Suspense>
+        </Providers>
       </body>
     </html>
   )

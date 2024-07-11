@@ -1,10 +1,10 @@
+import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import { ButtonProps } from "@chakra-ui/react"
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useGuildFee from "components/[guild]/collect/hooks/useGuildFee"
 import useGuildRewardNftBalanceByUserId from "components/[guild]/collect/hooks/useGuildRewardNftBalanceByUserId"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import useShowErrorToast from "hooks/useShowErrorToast"
@@ -77,8 +77,8 @@ const CollectNftButton = ({
   const loadingText = isNftBalanceLoading
     ? "Checking your balance"
     : isMinting
-    ? mintLoadingText
-    : "Checking eligibility"
+      ? mintLoadingText
+      : "Checking eligibility"
 
   const isDisabled =
     !isConnected || shouldSwitchNetwork || alreadyCollected || !isSufficientBalance
@@ -111,10 +111,10 @@ const CollectNftButton = ({
       {alreadyCollected
         ? "Already collected"
         : typeof isSufficientBalance === "boolean" && !isSufficientBalance
-        ? "Insufficient balance"
-        : !hasRoleAccess
-        ? "Check access & collect"
-        : label}
+          ? "Insufficient balance"
+          : !hasRoleAccess
+            ? "Check access & collect"
+            : label}
     </Button>
   )
 }

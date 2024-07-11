@@ -29,6 +29,7 @@ const config = {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        "anchor-foreground": "hsl(var(--anchor-foreground))",
         primary: {
           DEFAULT: "hsl(var(--primary))",
           hover: "hsl(var(--primary-hover))",
@@ -76,12 +77,74 @@ const config = {
         },
         card: {
           DEFAULT: "hsl(var(--card))",
+          secondary: "hsl(var(--card-secondary))",
           foreground: "hsl(var(--card-foreground))",
         },
-        "toast-success": "hsla(var(--toast-success))",
-        "toast-error": "hsla(var(--toast-error))",
-        "toast-warning": "hsla(var(--toast-warning))",
-        "toast-info": "hsla(var(--toast-info))",
+        toast: {
+          success: "hsla(var(--toast-success))",
+          error: "hsla(var(--toast-error))",
+          warning: "hsla(var(--toast-warning))",
+          info: "hsla(var(--toast-info))",
+        },
+        alert: {
+          success: {
+            DEFAULT: "hsla(var(--alert-success))",
+            icon: "hsl(var(--alert-success-icon))",
+          },
+          info: {
+            DEFAULT: "hsla(var(--alert-info))",
+            icon: "hsl(var(--alert-info-icon))",
+          },
+          warning: {
+            DEFAULT: "hsla(var(--alert-warning))",
+            icon: "hsl(var(--alert-warning-icon))",
+          },
+          error: {
+            DEFAULT: "hsla(var(--alert-error))",
+            icon: "hsl(var(--alert-error-icon))",
+          },
+        },
+        // Platforms
+        discord: {
+          DEFAULT: "hsl(var(--discord))",
+          hover: "hsl(var(--discord-hover))",
+          active: "hsl(var(--discord-active))",
+        },
+        telegram: {
+          DEFAULT: "hsl(var(--telegram))",
+          hover: "hsl(var(--telegram-hover))",
+          active: "hsl(var(--telegram-active))",
+        },
+        email: {
+          DEFAULT: "hsl(var(--email))",
+          hover: "hsl(var(--email-hover))",
+          active: "hsl(var(--email-active))",
+        },
+        google: {
+          DEFAULT: "hsl(var(--google))",
+          hover: "hsl(var(--google-hover))",
+          active: "hsl(var(--google-active))",
+        },
+        twitter: {
+          DEFAULT: "hsl(var(--twitter))",
+          hover: "hsl(var(--twitter-hover))",
+          active: "hsl(var(--twitter-active))",
+        },
+        github: {
+          DEFAULT: "hsl(var(--github))",
+          hover: "hsl(var(--github-hover))",
+          active: "hsl(var(--github-active))",
+        },
+        polygonid: {
+          DEFAULT: "hsl(var(--polygonid))",
+          hover: "hsl(var(--polygonid-hover))",
+          active: "hsl(var(--polygonid-active))",
+        },
+        farcaster: {
+          DEFAULT: "hsl(var(--farcaster))",
+          hover: "hsl(var(--farcaster-hover))",
+          active: "hsl(var(--farcaster-active))",
+        },
       },
       keyframes: {
         "accordion-down": {
@@ -92,10 +155,25 @@ const config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        "caret-blink": {
+          "0%,70%,100%": { opacity: "1" },
+          "20%,50%": { opacity: "0" },
+        },
+        "collapse-open": {
+          from: { height: "0", opacity: "0" },
+          to: { height: "var(--radix-collapsible-content-height)", opacity: "1" },
+        },
+        "collapse-closed": {
+          from: { height: "var(--radix-collapsible-content-height)", opacity: "1" },
+          to: { height: "0", opacity: "0" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "caret-blink": "caret-blink 1.25s ease-out infinite",
+        "collapse-open": "collapse-open 200ms ease-out",
+        "collapse-closed": "collapse-closed 200ms ease-out",
       },
     },
   },

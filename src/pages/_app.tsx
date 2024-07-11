@@ -1,18 +1,14 @@
 import { Box, Progress, Slide, useColorMode } from "@chakra-ui/react"
-import { FuelWalletConnector, FueletWalletConnector } from "@fuels/connectors"
 import { FuelProvider } from "@fuels/react"
 import { IconContext } from "@phosphor-icons/react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { bugsnagStart } from "bugsnag"
 import AppErrorBoundary from "components/_app/AppErrorBoundary"
 import Chakra from "components/_app/Chakra"
-import IntercomProvider from "components/_app/IntercomProvider"
-import { PostHogProvider } from "components/_app/PostHogProvider"
-import Web3ConnectionManager from "components/_app/Web3ConnectionManager"
 import ClientOnly from "components/common/ClientOnly"
-import AccountModal from "components/common/Layout/components/Account/components/AccountModal"
 import { env } from "env"
 import { dystopian, inter } from "fonts"
+import { fuelConfig } from "fuelConfig"
 import useOAuthResultToast from "hooks/useOAuthResultToast"
 import { useAtomValue } from "jotai"
 import type { AppProps } from "next/app"
@@ -20,16 +16,20 @@ import dynamic from "next/dynamic"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { SWRConfig } from "swr"
-import "theme/custom-scrollbar.css"
 import { fetcherForSWR } from "utils/fetcher"
 import { shouldUseReCAPTCHAAtom } from "utils/recaptcha"
 import { WagmiProvider } from "wagmi"
 import { wagmiConfig } from "wagmiConfig"
-
+import "../app/globals.css"
 /**
  * Polyfill HTML inert property for Firefox support:
  * https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/inert#browser_compatibility
  */
+import { AccountModal } from "@/components/Account/components/AccountModal"
+import { IntercomProvider } from "@/components/Providers/IntercomProvider"
+import { Toaster } from "@/components/ui/Toaster"
+import { LegacyPostHogProvider } from "components/_app/LegacyPostHogProvider"
+import { LegacyWeb3ConnectionManager } from "components/_app/LegacyWeb3ConnectionManager"
 import "wicg-inert"
 
 const DynamicReCAPTCHA = dynamic(() => import("components/common/ReCAPTCHA"))
@@ -120,16 +120,8 @@ const App = ({
           <SWRConfig value={{ fetcher: fetcherForSWR }}>
             <WagmiProvider config={wagmiConfig} reconnectOnMount={false}>
               <QueryClientProvider client={queryClient}>
-                <FuelProvider
-                  ui={false}
-                  fuelConfig={{
-                    connectors: [
-                      new FuelWalletConnector(),
-                      new FueletWalletConnector(),
-                    ],
-                  }}
-                >
-                  <PostHogProvider>
+                <FuelProvider ui={false} fuelConfig={fuelConfig}>
+                  <LegacyPostHogProvider>
                     <IntercomProvider>
                       <AppErrorBoundary>
                         <Component {...pageProps} />
@@ -140,12 +132,14 @@ const App = ({
                       </ClientOnly>
                     </IntercomProvider>
 
-                    <Web3ConnectionManager />
-                  </PostHogProvider>
+                    <LegacyWeb3ConnectionManager />
+                  </LegacyPostHogProvider>
                 </FuelProvider>
               </QueryClientProvider>
             </WagmiProvider>
           </SWRConfig>
+
+          <Toaster />
         </IconContext.Provider>
       </Chakra>
     </>

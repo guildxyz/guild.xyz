@@ -9,7 +9,7 @@ import Requirement, {
 import RequirementChainIndicator from "components/[guild]/Requirements/components/RequirementChainIndicator"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import useTokenData from "hooks/useTokenData"
-import { Chain, CHAIN_CONFIG } from "wagmiConfig/chains"
+import { CHAIN_CONFIG, Chain } from "wagmiConfig/chains"
 
 type Props = RequirementProps
 
@@ -53,8 +53,8 @@ const TokenRequirement = ({ ...rest }: Props) => {
         requirement.data?.maxAmount
           ? `${requirement.data.minAmount} - ${requirement.data.maxAmount}`
           : requirement.data?.minAmount > 0
-          ? `at least ${requirement.data?.minAmount}`
-          : "any amount of"
+            ? `at least ${requirement.data?.minAmount}`
+            : "any amount of"
       } ${
         requirement.type === "COIN"
           ? CHAIN_CONFIG[requirementChain].nativeCurrency.symbol

@@ -8,10 +8,11 @@
     --foreground: 240 4% 16%;
 
     --card: 0 0% 100%;
+    --card-secondary: 0 0% 98%;
     --card-foreground: var(--foreground);
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 224 71.4% 4.1%;
+    --popover: var(--card);
+    --popover-foreground: var(--card-foreground);
 
     --tooltip: 0 0% 0%;
     --tooltip-foreground: 0 0% 100%;
@@ -32,6 +33,8 @@
     --accent: 240 7% 90%;
     --accent-foreground: 240 4% 16%;
 
+    --anchor-foreground: 221 83% 53%;
+
     --destructive: 0 84% 60%;
     --destructive-hover: 0 72% 51%;
     --destructive-active: 0 74% 42%;
@@ -48,12 +51,48 @@
     --border: 240 6% 90%;
     --border-muted: 240 6% 94%;
     --input: var(--border);
-    --ring: 224 71.4% 4.1%;
+    --ring: 240, 0%, 45%, 25%;
 
     --toast-success: 137 64% 98%;
     --toast-error: 0 78% 98%;
     --toast-warning: 40 79% 96%;
     --toast-info: 218 80% 98%;
+
+    --alert-success: var(--toast-success);
+    --alert-success-icon: 142 71% 45%;
+    --alert-info: var(--toast-info);
+    --alert-info-icon: 217 91% 60%; /* TODO: --info-... CSS variables */
+    --alert-warning: var(--toast-warning);
+    --alert-warning-icon: 27 96% 61%;
+    /* TODO: should we call it error or destructive? */
+    --alert-error: var(--toast-error);
+    --alert-error-icon: 0 84% 60%;
+
+    --discord: 233 78% 63%;
+    --discord-hover: 243 75% 59%;
+    --discord-active: 245 58% 51%;
+    --telegram: 200 73% 50%;
+    --telegram-hover: 200 98% 39%;
+    --telegram-active: 201 96% 32%;
+    --email: 217 91% 60%;
+    --email-hover: 221 83% 53%;
+    --email-active: 224 76% 48%;
+    --google: 217 91% 60%;
+    --google-hover: 221 83% 53%;
+    --google-active: 224 76% 48%;
+    /* TODO: proper hover/active colors for Twitter */
+    --twitter: 0 0% 0%;
+    --twitter-hover: 0 0% 0%;
+    --twitter-active: 0 0% 0%;
+    --github: 0 0% 20%;
+    --github-hover: 0 0% 18%;
+    --github-active: 0 0% 15%;
+    --polygonid: 259 59% 59%;
+    --polygonid-hover: 258 50% 52%;
+    --polygonid-active: 256 44% 42%;
+    --farcaster: 238 76% 69%;
+    --farcaster-hover: 239 75% 64%;
+    --farcaster-active: 239 75% 58%;
 
     --sm: 640px;
     --md: 768px;
@@ -66,10 +105,11 @@
     --foreground: 210 20% 98%;
 
     --card: 240 5.26% 26.08%;
+    --card-secondary: 240 5% 22%;
     --card-foreground: var(--foreground);
 
-    --popover: 240 5.26% 26.08%;
-    --popover-foreground: 240 2% 58%;
+    --popover: var(--card);
+    --popover-foreground: var(--card-foreground);
 
     --tooltip: 240 5% 84%;
     --tooltip-foreground: 240 4% 16%;
@@ -89,6 +129,8 @@
 
     --accent: 240 2% 35%;
     --accent-foreground: 0 0% 92%;
+
+    --anchor-foreground: 213 94% 68%;
 
     --destructive: 0 84% 60%;
     --destructive-hover: 0 91% 71%;
@@ -112,11 +154,30 @@
     --toast-error: 317 4% 35%;
     --toast-warning: 30 6% 34%;
     --toast-info: 226 7% 36%;
-  }
 
-  :root[data-theme="dark"] video,
-  :root[data-theme="dark"] img {
-    filter: brightness(0.85) contrast(1.15);
+    --alert-success: var(--toast-success);
+    --alert-success-icon: 141 79% 85%;
+    --alert-info: var(--toast-info);
+    --alert-info-icon: 213 97% 87%;
+    --alert-warning: var(--toast-warning);
+    --alert-warning-icon: 32 98% 83%;
+    --alert-error: var(--toast-error);
+    --alert-error-icon: 0 96% 89%;
+
+    --discord-hover: 234 89% 74%;
+    --discord-active: 230 94% 82%;
+    --telegram-hover: 198 93% 60%;
+    --telegram-active: 199 95% 74%;
+    --email-hover: 213 94% 68%;
+    --email-active: 212 96% 78%;
+    --google-hover: 213 94% 68%;
+    --google-active: 212 96% 78%;
+    --github-hover: 0 0% 44%;
+    --github-active: 0 0% 68%;
+    --polygonid-hover: 260 73% 70%;
+    --polygonid-active: 262 81% 77%;
+    --farcaster-hover: 239 75% 75%;
+    --farcaster-active: 238 76% 81%;
   }
 }
 
@@ -126,5 +187,45 @@
   }
   body {
     @apply min-h-screen bg-background font-sans text-foreground;
+  }
+}
+
+/* Copy-pasted from custom-scrollbar.css just so we can use it everywhere */
+@layer utilities {
+  .custom-scrollbar::-webkit-scrollbar,
+  .custom-menu-list > div::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    border-radius: 4px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track,
+  .custom-menu-list > div::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb,
+  .custom-menu-list > div::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.4);
+  }
+
+  .invisible-scrollbar::-webkit-scrollbar,
+  .invisible-menu-list > div::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+
+  .invisible-scrollbar::-webkit-scrollbar-track,
+  .invisible-menu-list > div::-webkit-scrollbar-track {
+    width: 0;
+    height: 0;
+  }
+
+  .invisible-scrollbar::-webkit-scrollbar-thumb,
+  .invisible-menu-list > div::-webkit-scrollbar-thumb {
+    width: 0;
+    height: 0;
   }
 }

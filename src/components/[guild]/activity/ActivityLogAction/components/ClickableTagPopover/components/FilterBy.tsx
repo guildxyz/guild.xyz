@@ -1,7 +1,7 @@
 import { Funnel } from "@phosphor-icons/react"
 import {
-  Filter,
   FILTER_NAMES,
+  Filter,
   useActivityLogFilters,
 } from "components/[guild]/activity/ActivityLogFiltersBar/components/ActivityLogFiltersContext"
 import Button from "components/common/Button"

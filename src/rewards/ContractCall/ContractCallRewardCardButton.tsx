@@ -1,7 +1,7 @@
+import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import { Tooltip } from "@chakra-ui/react"
 import useGuildRewardNftBalanceByUserId from "components/[guild]/collect/hooks/useGuildRewardNftBalanceByUserId"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import Link from "next/link"
 import { GuildPlatform } from "types"

@@ -1,7 +1,7 @@
-import { env } from "env"
 import { kv } from "@vercel/kv"
+import { env } from "env"
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next"
-import { RequirementType } from "requirements"
+import { RequirementType } from "requirements/types"
 import { OneOf } from "types"
 import {
   ADDRESS_REGEX,
@@ -14,7 +14,7 @@ import {
   ZeroXSupportedSources,
 } from "utils/guildCheckout/constants"
 import { flipPath } from "utils/guildCheckout/utils"
-import { createPublicClient, erc20Abi, formatUnits, http, parseUnits } from "viem"
+import { http, createPublicClient, erc20Abi, formatUnits, parseUnits } from "viem"
 import { wagmiConfig } from "wagmiConfig"
 import { CHAIN_CONFIG, Chain, Chains } from "wagmiConfig/chains"
 import { NON_PURCHASABLE_ASSETS_KV_KEY } from "./nonPurchasableAssets"

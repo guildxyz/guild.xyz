@@ -17,7 +17,6 @@ import {
 } from "@chakra-ui/react"
 import { consts } from "@guildxyz/types"
 import { Info } from "@phosphor-icons/react/dist/ssr"
-import { triggerChat } from "components/_app/IntercomProvider"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { useCallback } from "react"
@@ -35,6 +34,7 @@ import {
 import { useSymbolsOfPair } from "requirements/Uniswap/hooks/useSymbolsOfPair"
 import { useTokenSymbolsOfPoolVault } from "requirements/Uniswap/hooks/useTokenSymbolsOfPoolVault"
 import ChainPicker from "requirements/common/ChainPicker"
+import { triggerChat } from "utils/intercom"
 import parseFromObject from "utils/parseFromObject"
 import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
 

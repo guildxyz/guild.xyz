@@ -1,10 +1,10 @@
+import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import { Icon } from "@chakra-ui/react"
 import { Question, Warning } from "@phosphor-icons/react"
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import DataBlock from "components/common/DataBlock"
 import { PropsWithChildren } from "react"
 import { ErrorBoundary } from "react-error-boundary"
-import REQUIREMENTS from "requirements"
+import { REQUIREMENT_DISPLAY_COMPONENTS } from "requirements/requirementDisplayComponents"
 import { Requirement as RequirementType, Rest } from "types"
 import { CHAIN_CONFIG } from "wagmiConfig/chains"
 import HiddenRequirementAccessIndicator from "./HiddenRequirementAccessIndicator"
@@ -34,7 +34,7 @@ const RequirementDisplayComponent = ({
       </Requirement>
     )
 
-  const RequirementComponent = REQUIREMENTS[requirement.type]?.displayComponent
+  const RequirementComponent = REQUIREMENT_DISPLAY_COMPONENTS[requirement.type]
 
   if (!!requirement.chain && !CHAIN_CONFIG[requirement.chain])
     return (

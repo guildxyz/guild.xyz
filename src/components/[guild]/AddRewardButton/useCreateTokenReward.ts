@@ -1,5 +1,5 @@
+import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import { Schemas } from "@guildxyz/types"
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import useCreateRole from "components/create-guild/hooks/useCreateRole"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { PlatformType, Requirement, RolePlatform } from "types"
