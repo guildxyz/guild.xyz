@@ -67,7 +67,7 @@ export const NotificationContent = () => {
           )}
           href="/profile/activity"
         >
-          View activity
+          View recent activity
           <ArrowRight />
         </Anchor>
       </div>
@@ -75,7 +75,7 @@ export const NotificationContent = () => {
   )
 }
 
-const useInboxContainer = () => {
+const useInbox = () => {
   initWeb3InboxClient(WEB3_INBOX_INIT_PARAMS)
   const { data } = useWeb3InboxClient()
   const isWeb3ClientReady = !!data
@@ -112,7 +112,7 @@ const Inbox = () => {
     messages,
     isSubscribed,
     isSubscribedLoading,
-  } = useInboxContainer()
+  } = useInbox()
 
   if (!isWeb3ClientReady || isMessagesLoading || isSubscribedLoading)
     return (
@@ -122,6 +122,7 @@ const Inbox = () => {
         <Skeleton className="w-10/12" />
       </div>
     )
+
   if (!isSubscribed) {
     return (
       <div className="flex items-center gap-4 px-4">
@@ -137,6 +138,7 @@ const Inbox = () => {
       </div>
     )
   }
+
   if (messages?.length) {
     return messages.map((message) => (
       <Dialog>
@@ -194,10 +196,11 @@ const Inbox = () => {
       </Dialog>
     ))
   }
+
   return <p className="my-2 px-4">Your messages will appear here.</p>
 }
 
-const useSubscribeToMessagesContainer = () => {
+const useSubscribeToMessages = () => {
   const { onClose, isOpen, setValue: setIsOpen } = useDisclosure()
   const { address } = useAccount()
   const { data: account } = useWeb3InboxAccount(
@@ -242,6 +245,7 @@ const useSubscribeToMessagesContainer = () => {
       toast({ title: "Couldn't subscribe to Guild messages", variant: "error" })
     }
   }
+
   return {
     isOpen,
     setIsOpen,
@@ -260,7 +264,7 @@ const SubscribeToMessages = () => {
     performSubscribe,
     isRegistering,
     isSubscribing,
-  } = useSubscribeToMessagesContainer()
+  } = useSubscribeToMessages()
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
