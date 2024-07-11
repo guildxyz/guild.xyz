@@ -1,8 +1,8 @@
 import { Header } from "@/components/Header"
-import { PageContainer } from "@/components/PageContainer"
 import { cn } from "@/lib/utils"
-import { ReactNode } from "react"
-import { PropsWithChildren } from "react"
+import { Slot } from "@radix-ui/react-slot"
+import clsx from "clsx"
+import { PropsWithChildren, ReactNode, forwardRef } from "react"
 
 /* -------------------------------------------------------------------------------------------------
  * Root
@@ -10,6 +10,28 @@ import { PropsWithChildren } from "react"
 
 const Root = ({ children }: PropsWithChildren) => (
   <div className="flex min-h-screen flex-col">{children}</div>
+)
+
+/* -------------------------------------------------------------------------------------------------
+ * PageContainer
+ * -----------------------------------------------------------------------------------------------*/
+
+export interface PageContainerProps extends React.HTMLAttributes<HTMLDivElement> {
+  asChild?: boolean
+}
+
+const PageContainer = forwardRef<HTMLDivElement, PageContainerProps>(
+  ({ children, className, asChild = false }, ref) => {
+    const Comp = asChild ? Slot : "div"
+    return (
+      <Comp
+        className={clsx("mx-auto max-w-screen-lg px-4 sm:px-8 md:px-10", className)}
+        ref={ref}
+      >
+        {children}
+      </Comp>
+    )
+  }
 )
 
 /* -------------------------------------------------------------------------------------------------
@@ -81,4 +103,4 @@ const Footer = ({ children }: PropsWithChildren) => (
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export { Root, Hero, Headline, Banner, Main, Footer }
+export { Banner, Footer, Headline, Hero, Main, PageContainer, Root }
