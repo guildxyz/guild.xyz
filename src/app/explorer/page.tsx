@@ -27,12 +27,15 @@ const Page = async () => {
     >
       <HeaderBackground />
       <Layout.Root>
-        <Layout.Header>
+        <Layout.Hero>
           <div id={ActiveSection.YourGuilds}>
             <Layout.Headline title="Guildhall" />
           </div>
-          <Layout.Banner />
-        </Layout.Header>
+          <Layout.Banner>
+            <div className="absolute inset-0 bg-[auto_115%] bg-[right_top_10px] bg-[url('/banner.png')] bg-no-repeat opacity-10" />
+            <div className="absolute inset-0 bg-gradient-to-tr from-50% from-[hsl(240_4%_16%)] to-transparent data-[theme='dark']:from-[hsl(240_3%_22%)]" />
+          </Layout.Banner>
+        </Layout.Hero>
 
         <Layout.Main>
           <Explorer />
