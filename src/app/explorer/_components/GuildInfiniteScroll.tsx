@@ -3,13 +3,13 @@
 import { Spinner } from "@phosphor-icons/react"
 import useUser from "components/[guild]/hooks/useUser"
 import { env } from "env"
+import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import { useScrollBatchedRendering } from "hooks/useScrollBatchedRendering"
 import { PrimitiveAtom, useAtomValue } from "jotai"
 import { memo, useRef } from "react"
-import { SWRConfiguration, useSWRConfig } from "swr"
+import { SWRConfiguration } from "swr"
 import useSWRInfinite from "swr/infinite"
 import { GuildBase } from "types"
-import { fetcherWithSign } from "utils/fetcher"
 import {
   GuildCardSkeleton,
   GuildCardWithLink,
@@ -28,11 +28,11 @@ const GuildCards = ({ guildData }: { guildData?: GuildBase[] }) => {
 
 const useExploreGuilds = (searchParams: URLSearchParams) => {
   const { isSuperAdmin } = useUser()
+  const fetcherWithSign = useFetcherWithSign()
   const options: SWRConfiguration = {
     dedupingInterval: 60_000,
   }
 
-  const { cache } = useSWRConfig()
   // sending authed request for superAdmins, so they can see unverified & hideFromExplorer guilds too
   // @ts-expect-error TODO: resolve this type error
   return useSWRInfinite<GuildBase[]>(
