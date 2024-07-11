@@ -1,6 +1,5 @@
 import { Box, Progress, Slide, useColorMode } from "@chakra-ui/react"
 import { FuelProvider } from "@fuels/react"
-import { IconContext } from "@phosphor-icons/react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { bugsnagStart } from "bugsnag"
 import AppErrorBoundary from "components/_app/AppErrorBoundary"
@@ -109,38 +108,29 @@ const App = ({
           </Slide>
         ) : null}
 
-        <IconContext.Provider
-          value={{
-            color: "currentColor",
-            size: "1em",
-            weight: "bold",
-            mirrored: false,
-          }}
-        >
-          <SWRConfig value={{ fetcher: fetcherForSWR }}>
-            <WagmiProvider config={wagmiConfig} reconnectOnMount={false}>
-              <QueryClientProvider client={queryClient}>
-                <FuelProvider ui={false} fuelConfig={fuelConfig}>
-                  <LegacyPostHogProvider>
-                    <IntercomProvider>
-                      <AppErrorBoundary>
-                        <Component {...pageProps} />
-                      </AppErrorBoundary>
+        <SWRConfig value={{ fetcher: fetcherForSWR }}>
+          <WagmiProvider config={wagmiConfig} reconnectOnMount={false}>
+            <QueryClientProvider client={queryClient}>
+              <FuelProvider ui={false} fuelConfig={fuelConfig}>
+                <LegacyPostHogProvider>
+                  <IntercomProvider>
+                    <AppErrorBoundary>
+                      <Component {...pageProps} />
+                    </AppErrorBoundary>
 
-                      <ClientOnly>
-                        <AccountModal />
-                      </ClientOnly>
-                    </IntercomProvider>
+                    <ClientOnly>
+                      <AccountModal />
+                    </ClientOnly>
+                  </IntercomProvider>
 
-                    <LegacyWeb3ConnectionManager />
-                  </LegacyPostHogProvider>
-                </FuelProvider>
-              </QueryClientProvider>
-            </WagmiProvider>
-          </SWRConfig>
+                  <LegacyWeb3ConnectionManager />
+                </LegacyPostHogProvider>
+              </FuelProvider>
+            </QueryClientProvider>
+          </WagmiProvider>
+        </SWRConfig>
 
-          <Toaster />
-        </IconContext.Provider>
+        <Toaster />
       </Chakra>
     </>
   )

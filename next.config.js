@@ -91,13 +91,6 @@ const nextConfig = {
     ],
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
- modularizeImports: {
-    '@phosphor-icons/react': {
-      transform: '@phosphor-icons/react/dist/ssr/{{member}}',
-      skipDefaultConversion: true,
-      preventFullImport: true,
-    },
-  },
   experimental: {
     scrollRestoration: true,
     optimizePackageImports: [

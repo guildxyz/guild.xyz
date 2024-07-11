@@ -1,5 +1,4 @@
 import { HStack, Link, VStack, Wrap } from "@chakra-ui/react"
-import { NoteBlank } from "@phosphor-icons/react"
 import { EditGuildDrawerProvider } from "components/[guild]/EditGuild/EditGuildDrawerContext"
 import EventCard from "components/[guild]/Events/EventCard"
 import FallbackFrame from "components/[guild]/Events/FallbackFrame"
@@ -16,6 +15,7 @@ import BackButton from "components/common/Layout/components/BackButton"
 import useGuildEvents, { GuildEvent } from "hooks/useGuildEvents"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
+import { PiNoteBlank } from "react-icons/pi"
 import { SWRConfig } from "swr"
 import { Guild, SocialLinkKey } from "types"
 import parseDescription from "utils/parseDescription"
@@ -96,7 +96,7 @@ const GuildEvents = (): JSX.Element => {
       )}
       {!isValidating && data?.length === 0 && (
         <FallbackFrame
-          icon={NoteBlank}
+          icon={PiNoteBlank}
           title="No upcoming events"
           text="There aren't any upcoming events currently"
         />
