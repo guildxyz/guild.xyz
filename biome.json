@@ -13,7 +13,9 @@
     "include": ["src", "cypress"],
     "ignore": ["node_modules", ".next", "public", ".out", "package-lock.json"]
   },
-  "organizeImports": { "enabled": true },
+  "organizeImports": {
+    "enabled": true
+  },
   "linter": {
     "enabled": true,
     "rules": {

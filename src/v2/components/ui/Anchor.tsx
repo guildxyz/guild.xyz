@@ -6,7 +6,7 @@ import Link from "next/link"
 import * as React from "react"
 
 const anchorVariants = cva(
-  "underline-offset-4 focus-visible:ring-ring focus-visible:ring-4 outline-none",
+  "underline-offset-4 focus:ring-ring focus-visible:ring-4 outline-none",
   {
     variants: {
       variant: {
