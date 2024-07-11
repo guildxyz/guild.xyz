@@ -10,6 +10,7 @@ import useGuild, { useSimpleGuild } from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
 
 import { GuildLogo } from "@/components/GuildLogo"
+import { anchorVariants } from "@/components/ui/Anchor"
 import { Button, ButtonProps } from "@/components/ui/Button"
 import {
   Dialog,
@@ -84,7 +85,10 @@ const SharedSocials = () => {
           Choose which guilds you'd like to share your profile with.{" "}
           <a
             href="https://help.guild.xyz/en/articles/8489031-privacy-for-members"
-            className="font-semibold text-muted-foreground"
+            className={anchorVariants({
+              variant: "muted",
+              className: "font-semibold",
+            })}
             target="_blank"
           >
             Learn more{" "}
@@ -100,15 +104,18 @@ const SharedSocials = () => {
                 guildId={guildSharedSocial.guildId}
                 sharedSocials={sharedSocials}
               />
-              <hr />
+              <hr className="border-border-muted" />
             </>
           )}
           {restSharedSocials.map((sharedSocial) => (
-            <ShareSocialsWithGuildSelect
-              key={sharedSocial.guildId}
-              guildId={sharedSocial.guildId}
-              sharedSocials={sharedSocials}
-            />
+            <>
+              <ShareSocialsWithGuildSelect
+                key={sharedSocial.guildId}
+                guildId={sharedSocial.guildId}
+                sharedSocials={sharedSocials}
+              />
+              <hr className="border-border-muted" />
+            </>
           ))}
         </div>
 
