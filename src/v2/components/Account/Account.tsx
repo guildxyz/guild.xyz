@@ -54,7 +54,7 @@ export const Account = () => {
             <Bell weight="bold" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-96 px-0">
+        <PopoverContent className="w-[min(100vw,theme(space.96))]">
           <NotificationContent />
         </PopoverContent>
       </Popover>
