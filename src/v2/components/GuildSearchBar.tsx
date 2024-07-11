@@ -5,7 +5,7 @@ import { ActiveSection } from "app/explorer/types"
 import useDebouncedState from "hooks/useDebouncedState"
 import { PrimitiveAtom, useSetAtom } from "jotai"
 import { usePathname, useSearchParams } from "next/navigation"
-import React, { useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { Input } from "./ui/Input"
 import { ToggleGroup, ToggleGroupItem } from "./ui/ToggleGroup"
 
@@ -46,7 +46,7 @@ export const GuildSearchBar = ({
   return (
     <div className="relative flex flex-col gap-3 py-4 sm:flex-row sm:gap-0">
       <Input
-        className="relative h-12 grow rounded-xl border pr-6 pl-10 text-md sm:rounded-r-none"
+        className="relative h-12 grow rounded-xl border border-border-muted pr-6 pl-10 text-md sm:rounded-r-none"
         placeholder="Search verified guilds"
         onChange={({ currentTarget }) => setSearch(currentTarget.value)}
         value={search}
@@ -56,9 +56,9 @@ export const GuildSearchBar = ({
       </div>
       <ToggleGroup
         type="single"
-        className="self-start sm:h-12 sm:rounded-r-lg sm:border sm:border-l-0 sm:bg-card sm:px-4"
+        className="self-start sm:h-12 sm:rounded-r-xl sm:border sm:border-border-muted sm:border-l-0 sm:bg-card sm:px-4"
         size="sm"
-        variant="outline"
+        variant="default"
         onValueChange={(value) => value && setOrder(value as Order)}
         value={order}
       >

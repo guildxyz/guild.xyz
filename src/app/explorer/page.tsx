@@ -1,7 +1,7 @@
 "use client"
 
 import { GuildInfiniteScroll } from "@/components/GuildInfiniteScroll"
-import { GuildSearchBar } from "@/components/GuildSeachBar"
+import { GuildSearchBar } from "@/components/GuildSearchBar"
 import { Layout } from "@/components/Layout"
 import { walletSelectorModalAtom } from "@/components/Providers/atoms"
 import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
