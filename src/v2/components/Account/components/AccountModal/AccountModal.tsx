@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/Tooltip"
 import { useDisclosure } from "@/hooks/useDisclosure"
 import { useUserPublic } from "@/hooks/useUserPublic"
-import { LinkBreak, SignOut } from "@phosphor-icons/react/dist/ssr"
+import { LinkBreak, SignOut } from "@phosphor-icons/react"
 import useUser from "components/[guild]/hooks/useUser"
 import useResolveAddress from "hooks/useResolveAddress"
 import { useAtom } from "jotai"

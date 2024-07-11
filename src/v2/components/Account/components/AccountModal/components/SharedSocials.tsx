@@ -5,7 +5,7 @@ import {
   Check,
   Shield,
   ShieldCheck,
-} from "@phosphor-icons/react/dist/ssr"
+} from "@phosphor-icons/react"
 import useGuild, { useSimpleGuild } from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
 

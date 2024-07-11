@@ -4,7 +4,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/Accordion"
-import { ArrowSquareOut } from "@phosphor-icons/react/dist/ssr"
+import { ArrowSquareOut } from "@phosphor-icons/react"
 import {
   AccordionMultipleProps,
   AccordionSingleProps,

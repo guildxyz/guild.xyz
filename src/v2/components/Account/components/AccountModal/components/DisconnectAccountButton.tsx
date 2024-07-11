@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/Tooltip"
 import { DisclosureState } from "@/hooks/useDisclosure"
 import { cn } from "@/lib/utils"
-import { LinkBreak } from "@phosphor-icons/react/dist/ssr"
+import { LinkBreak } from "@phosphor-icons/react"
 
 const DisconnectAccountButton = ({
   onConfirm,

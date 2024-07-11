@@ -2,9 +2,9 @@
 
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/ToggleGroup"
 import { useColorMode } from "@chakra-ui/react"
-import { Desktop, Moon, Sun } from "@phosphor-icons/react/dist/ssr"
+import { Desktop, Moon, Sun } from "@phosphor-icons/react"
 import { useTheme } from "next-themes"
-import { useIsClient, useLocalStorage } from "usehooks-ts"
+import { useIsClient } from "usehooks-ts"
 
 export function ThemeToggle() {
   const { setTheme, theme } = useTheme()

@@ -28,12 +28,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/Tooltip"
 import { useDisclosure } from "@/hooks/useDisclosure"
-import {
-  CircleNotch,
-  DotsThree,
-  LinkBreak,
-  UserSwitch,
-} from "@phosphor-icons/react/dist/ssr"
+import { CircleNotch, DotsThree, LinkBreak, UserSwitch } from "@phosphor-icons/react"
 import Image from "next/image"
 import { User } from "types"
 import shortenHex from "utils/shortenHex"
