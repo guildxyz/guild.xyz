@@ -8,10 +8,15 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const GuildAvatar = memo(({ address, className }: Props) => {
+  const addressEnding = address
+    ?.toLowerCase()
+    ?.slice(-2) as keyof typeof addressAvatarPairs
+
   const Avatar = dynamic(
     () =>
+      // webpack can't resolve the dynamic import path when running storybook, so we just pass the first svg manually there
       import(
-        `static/avatars/${addressAvatarPairs[address?.toLowerCase()?.slice(-2)]}.svg`
+        `static/avatars/${process.env.STORYBOOK ? 1 : addressAvatarPairs[addressEnding]}.svg`
       )
   )
 

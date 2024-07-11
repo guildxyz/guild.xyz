@@ -1,4 +1,4 @@
-import type { StorybookConfig } from "@storybook/nextjs"
+import type { StorybookConfig } from "@storybook/nextjs";
 
 const config: StorybookConfig = {
   stories: ["../src/**/*.mdx", "../src/**/*.stories.@(js|jsx|mjs|ts|tsx)"],
@@ -14,11 +14,11 @@ const config: StorybookConfig = {
     name: "@storybook/nextjs",
     options: {},
   },
-  staticDirs: ["../public", "../static"],
+  staticDirs: ["../public"],
   refs: {
     "@chakra-ui/react": {
       disable: true,
     },
   },
-}
-export default config
+};
+export default config;
