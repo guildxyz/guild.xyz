@@ -54,6 +54,7 @@ const Banner = ({ children, offset = 112 }: BannerProps) => (
       `-bottom-[${Math.abs(offset)}px]`
     )}
   >
+    <div className="absolute inset-0 bg-[hsl(240_4%_16%)] data-[theme='dark']:bg-[hsl(240_3%_22%)]" />
     {children}
   </div>
 )
