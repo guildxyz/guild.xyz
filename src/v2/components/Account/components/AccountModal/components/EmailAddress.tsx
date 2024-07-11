@@ -330,7 +330,7 @@ const ConnectEmailButton = ({
         ) : (
           <>
             {leftIcon}
-            emails?.emailAddress || "Connect"
+            {emails?.emailAddress || "Connect"}
           </>
         )}
       </Button>

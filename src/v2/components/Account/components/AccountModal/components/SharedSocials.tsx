@@ -53,7 +53,7 @@ const SharedSocials = () => {
   return (
     <Dialog>
       {/* TODO: scrollBehavior="inside" (maybe we can do it here and don't need to abstract it into the component?) */}
-      <DialogTrigger>
+      <DialogTrigger asChild>
         {!guildSharedSocial ? (
           <Button {...buttonProps}>
             <Shield weight="bold" className="mr-1" />
