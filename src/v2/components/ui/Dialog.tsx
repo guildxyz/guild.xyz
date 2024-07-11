@@ -30,7 +30,7 @@ const DialogOverlay = React.forwardRef<
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName
 
 export const dialogContentVariants = cva(
-  "w-full my-16 relative rounded-xl bg-card shadow-lg p-10 duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
+  "w-full my-16 relative rounded-xl bg-card shadow-lg p-10 duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 focus-visible:outline-none ring-ring focus-visible:ring-4 ring-offset-0",
   {
     variants: {
       size: {
