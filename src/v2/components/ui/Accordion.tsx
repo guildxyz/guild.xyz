@@ -1,7 +1,7 @@
 "use client"
 
 import { cn } from "@/lib/utils"
-import { CaretDown } from "@phosphor-icons/react"
+import { CaretDown } from "@phosphor-icons/react/dist/ssr"
 import * as AccordionPrimitive from "@radix-ui/react-accordion"
 import * as React from "react"
 

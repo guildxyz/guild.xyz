@@ -5,7 +5,7 @@ import {
   Info as InfoIcon,
   Warning as WarningIcon,
   X,
-} from "@phosphor-icons/react"
+} from "@phosphor-icons/react/dist/ssr"
 import { Alert, AlertDescription, AlertProps, AlertTitle } from "./Alert"
 import { Card } from "./Card"
 

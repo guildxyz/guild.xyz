@@ -25,7 +25,10 @@ import { useToast } from "@/components/ui/hooks/useToast"
 import { useDisclosure } from "@/hooks/useDisclosure"
 import { cn } from "@/lib/utils"
 import { FarcasterProfile as FarcasterProfileType } from "@guildxyz/types"
-import { ArrowCounterClockwise, DeviceMobileCamera } from "@phosphor-icons/react"
+import {
+  ArrowCounterClockwise,
+  DeviceMobileCamera,
+} from "@phosphor-icons/react/dist/ssr"
 import useUser from "components/[guild]/hooks/useUser"
 import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import useSubmit, { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"

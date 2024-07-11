@@ -95,6 +95,7 @@ const nextConfig = {
     scrollRestoration: true,
     optimizePackageImports: [
       "@phosphor-icons/react",
+      "@phosphor-icons/react/dist/ssr",
       "@fuels/react",
       "fuels",
     ],

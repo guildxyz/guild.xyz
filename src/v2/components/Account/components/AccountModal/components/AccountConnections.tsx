@@ -5,7 +5,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/Tooltip"
 import { cn } from "@/lib/utils"
-import { Question } from "@phosphor-icons/react"
+import { Question } from "@phosphor-icons/react/dist/ssr"
 import useUser from "components/[guild]/hooks/useUser"
 import { Fragment, useMemo } from "react"
 import rewards from "rewards"

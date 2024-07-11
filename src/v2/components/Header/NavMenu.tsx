@@ -14,7 +14,7 @@ import {
   Shield,
   UsersThree,
   XLogo,
-} from "@phosphor-icons/react"
+} from "@phosphor-icons/react/dist/ssr"
 import dynamic from "next/dynamic"
 import Link, { LinkProps } from "next/link"
 import { AnchorHTMLAttributes, ReactNode } from "react"
