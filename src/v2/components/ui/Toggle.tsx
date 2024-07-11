@@ -12,7 +12,7 @@ const toggleVariants = cva(
     variants: {
       variant: {
         default:
-          "text-secondary-foreground hover:bg-secondary active:bg-secondary-hover",
+          "text-secondary-foreground hover:bg-secondary data-[state=on]:bg-secondary active:bg-secondary-hover",
         primary:
           "bg-transparent hover:bg-accent/50 hover:text-accent-foreground data-[state=on]:bg-primary data-[state=on]:text-primary-foreground",
         mono: "text-white hover:bg-white/10 data-[state=on]:bg-white/15 hover:text-white data-[state=on]:text-white",
