@@ -14,7 +14,7 @@ import { Separator } from "@/components/ui/Separator"
 import { Skeleton } from "@/components/ui/Skeleton"
 import { useToast } from "@/components/ui/hooks/useToast"
 import { useDisclosure } from "@/hooks/useDisclosure"
-import { ArrowRight, ArrowSquareOut } from "@phosphor-icons/react"
+import { ArrowRight } from "@phosphor-icons/react"
 import {
   initWeb3InboxClient,
   useNotifications,
@@ -26,10 +26,12 @@ import {
   useWeb3InboxClient,
 } from "@web3inbox/react"
 import { env } from "env"
+import Image from "next/image"
 import Link from "next/link"
 import { useState } from "react"
 import { useAccount, useSignMessage } from "wagmi"
 import MessageImage from "/public/img/message.svg"
+import guildNotificationImage from "/public/requirementLogos/guild.png"
 
 const WEB3_INBOX_INIT_PARAMS = {
   projectId: env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
@@ -39,47 +41,25 @@ const WEB3_INBOX_INIT_PARAMS = {
 
 export const NotificationContent = () => {
   const { type } = useWeb3ConnectionManager()
-  initWeb3InboxClient(WEB3_INBOX_INIT_PARAMS)
-  const { data } = useWeb3InboxClient()
-  const isReady = !!data
-
-  const { address } = useAccount()
-  const { data: account } = useWeb3InboxAccount(
-    address ? `eip155:1:${address}` : undefined
-  )
-  console.log(account)
-  const { data: subscription } = useSubscription(
-    account ?? undefined,
-    WEB3_INBOX_INIT_PARAMS.domain
-  )
 
   return (
     <div>
       {type === "EVM" && (
-        <section className="mx-4">
-          <h3 className="mb-4 font-bold text-muted-foreground text-xs">MESSAGES</h3>
-          <div className="flex flex-col gap-4">
-            {isReady || <WebInboxSkeleton />}
-            {!subscription && (
-              <div className="flex items-center gap-4">
-                <MessageImage className="row-span-2 size-6 min-w-6" />
-                <div className="flex flex-col">
-                  <h4 className="font-semibold">Subscribe to messages</h4>
-                  <p className="text-muted-foreground text-sm leading-normal">
-                    Receive messages from guild admins
-                  </p>
-                </div>
-                <span className="grow" />
-                <SubscribeToMessages />
-              </div>
-            )}
-          </div>
-        </section>
+        <>
+          <section>
+            <h3 className="mx-4 mb-4 font-bold text-muted-foreground text-xs">
+              MESSAGES
+            </h3>
+            <div className="flex flex-col gap-4">
+              <Inbox />
+            </div>
+          </section>
+          <Separator className="my-4" />
+        </>
       )}
-      <Separator className="my-4" />
       <div className="px-4">
         <Link href="/profile/activity">
-          <Button className="w-full gap-2" variant="ghost" size="sm">
+          <Button className="w-full gap-2" variant="ghost" size="md">
             View activity
             <ArrowRight />
           </Button>
@@ -89,15 +69,135 @@ export const NotificationContent = () => {
   )
 }
 
+const Inbox = () => {
+  // CONTAINER -------------
+
+  initWeb3InboxClient(WEB3_INBOX_INIT_PARAMS)
+  const { data } = useWeb3InboxClient()
+  const isReady = !!data
+
+  const { address } = useAccount()
+  const { data: account } = useWeb3InboxAccount(
+    address ? `eip155:1:${address}` : undefined
+  )
+  const { data: subscription } = useSubscription(
+    account ?? undefined,
+    WEB3_INBOX_INIT_PARAMS.domain
+  )
+  const { data: messages } = useNotifications(
+    5,
+    false,
+    account ?? undefined,
+    WEB3_INBOX_INIT_PARAMS.domain
+  )
+  messages?.sort((msgA, msgB) => msgB.sentAt - msgA.sentAt)
+
+  // VIEW -------------
+
+  if (!isReady) {
+    return (
+      <>
+        <WebInboxSkeleton />
+        <WebInboxSkeleton />
+      </>
+    )
+  }
+  if (!subscription) {
+    return (
+      <div className="flex items-center gap-4 px-4">
+        <MessageImage className="size-6 min-w-6" />
+        <div className="flex flex-col">
+          <h4 className="font-semibold">Subscribe to messages</h4>
+          <p className="text-muted-foreground text-sm leading-normal">
+            Receive messages from guild admins
+          </p>
+        </div>
+        <span className="grow" />
+        <SubscribeToMessages />
+      </div>
+    )
+  }
+  if (messages && messages.length) {
+    return messages.map((message) => (
+      <Dialog>
+        <DialogTrigger asChild>
+          <div
+            className="flex cursor-pointer items-center gap-4 px-4 py-2 hover:bg-accent"
+            key={message.id}
+          >
+            <div className="relative aspect-square min-w-10 rounded-full">
+              <Image
+                src={guildNotificationImage}
+                alt="Guild castle"
+                placeholder="blur"
+                fill
+              />
+            </div>
+            <div className="flex flex-col">
+              <h4 className="font-semibold">{message.title}</h4>
+              <p className="line-clamp-1 text-muted-foreground text-sm leading-normal">
+                {message.body}
+              </p>
+            </div>
+            <time className="ml-auto self-start text-muted-foreground text-xs">
+              {formatDate(message.sentAt)}
+            </time>
+          </div>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogTitle className="mb-6 flex items-center gap-2">
+            <Image
+              src={guildNotificationImage}
+              alt="Guild castle"
+              placeholder="blur"
+              width={32}
+              height={32}
+            />
+            {message.title}
+          </DialogTitle>
+          <DialogDescription className="text-card-foreground">
+            {message.body}
+          </DialogDescription>
+          <div className="mt-6 flex items-center justify-between">
+            <time className="text-muted-foreground text-xs">
+              {formatDate(message.sentAt)}
+            </time>
+            {message.url && (
+              <Anchor
+                href={message.url}
+                className="flex items-center gap-1"
+                variant="highlighted"
+              >
+                Go to guild <ArrowRight />
+              </Anchor>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
+    ))
+  }
+  return <p className="my-2 px-4">Your messages will appear here.</p>
+}
+
 const WebInboxSkeleton = () => (
-  <div className="grid h-10 grid-cols-[auto_1fr] grid-rows-2 gap-2">
+  <div className="grid h-10 grid-cols-[auto_1fr] grid-rows-2 gap-2 space-x-2 px-4">
     <Skeleton className="row-span-2 aspect-square h-full rounded-full" />
-    <Skeleton className="" />
+    <Skeleton />
     <Skeleton className="w-10/12" />
   </div>
 )
 
+const formatDate = (timestamp: number) =>
+  new Date(timestamp).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  })
+
 const SubscribeToMessages = () => {
+  const { onClose, isOpen, setValue } = useDisclosure()
   const { address } = useAccount()
   const { data: account } = useWeb3InboxAccount(
     address ? `eip155:1:${address}` : undefined
@@ -106,7 +206,7 @@ const SubscribeToMessages = () => {
   const { prepareRegistration } = usePrepareRegistration()
   const { register, isLoading: isRegistering } = useRegister()
   const { subscribe, isLoading: isSubscribing } = useSubscribe(
-    account,
+    account ?? undefined,
     WEB3_INBOX_INIT_PARAMS.domain
   )
   const { signMessageAsync } = useSignMessage()
@@ -143,7 +243,7 @@ const SubscribeToMessages = () => {
   }
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setValue}>
       <DialogTrigger asChild>
         <Button className="size-8 min-w-8 px-0">
           <ArrowRight />
@@ -169,6 +269,136 @@ const SubscribeToMessages = () => {
       </DialogContent>
     </Dialog>
   )
+}
+
+// import {
+//   HStack,
+//   Img,
+//   ModalBody,
+//   ModalCloseButton,
+//   ModalContent,
+//   ModalFooter,
+//   ModalHeader,
+//   ModalOverlay,
+//   Stack,
+//   Text,
+//   useBreakpointValue,
+//   useColorModeValue,
+//   useDisclosure,
+// } from "@chakra-ui/react"
+// import { ArrowRight } from "@phosphor-icons/react"
+// import Button from "components/common/Button"
+// import { Modal } from "components/common/Modal"
+// import Link from "next/link"
+import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
+
+// const GUILD_NOTIFICATION_ICON = "/requirementLogos/guild.png" as const
+
+const Web3InboxMessage = ({
+  sentAt,
+  title,
+  body,
+  url,
+}: {
+  sentAt: number
+  title: string
+  body: string
+  url: string
+}) => {
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  // const hoverBgColor = useColorModeValue("blackAlpha.300", "whiteAlpha.200")
+  // const isMobile = useBreakpointValue({ base: true, sm: false })
+
+  const prettyDate = new Date(sentAt).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  })
+
+  // return (
+  //   <>
+  //     <HStack
+  //       as="button"
+  //       spacing={4}
+  //       textAlign="left"
+  //       px={4}
+  //       pl={5}
+  //       py={3}
+  //       _focusVisible={{
+  //         outline: "none",
+  //         bgColor: hoverBgColor,
+  //       }}
+  //       _hover={{
+  //         bgColor: hoverBgColor,
+  //       }}
+  //       transition="background 0.2s ease"
+  //       onClick={onOpen}
+  //     >
+  //       <Img
+  //         src={GUILD_NOTIFICATION_ICON}
+  //         alt={title}
+  //         boxSize={10}
+  //         borderRadius="full"
+  //       />
+  //
+  //       <Stack spacing={0} w="full">
+  //         <HStack justifyContent="space-between">
+  //           <Text as="span" fontWeight="bold" noOfLines={1}>
+  //             {title}
+  //           </Text>
+  //           <Text as="span" colorScheme="gray" fontSize="xs" minW="max-content">
+  //             {formatRelativeTimeFromNow(Date.now() - sentAt)}
+  //           </Text>
+  //         </HStack>
+  //         <Text noOfLines={1} colorScheme="gray">
+  //           {body}
+  //         </Text>
+  //       </Stack>
+  //     </HStack>
+  //
+  //     <Modal isOpen={isOpen} onClose={onClose}>
+  //       <ModalOverlay />
+  //       <ModalContent>
+  //         <ModalHeader pb="6">
+  //           <HStack spacing={3}>
+  //             <Img
+  //               src={GUILD_NOTIFICATION_ICON}
+  //               alt={title}
+  //               boxSize={8}
+  //               borderRadius="full"
+  //             />
+  //             <Text mt="-1">{title}</Text>
+  //           </HStack>
+  //         </ModalHeader>
+  //         <ModalCloseButton />
+  //
+  //         <ModalBody>
+  //           <Stack spacing={4}>
+  //             <Text>{body}</Text>
+  //           </Stack>
+  //         </ModalBody>
+  //         <ModalFooter pt="0" pb="8">
+  //           <Text fontFamily="body" colorScheme="gray" fontSize="sm">
+  //             {prettyDate}
+  //           </Text>
+  //           <Button
+  //             as={Link}
+  //             href={url}
+  //             variant="ghost"
+  //             colorScheme="primary"
+  //             size="sm"
+  //             ml="auto"
+  //             rightIcon={<ArrowRight />}
+  //           >
+  //             Go to guild
+  //           </Button>
+  //         </ModalFooter>
+  //       </ModalContent>
+  //     </Modal>
+  //   </>
+  // )
 }
 
 // import {
