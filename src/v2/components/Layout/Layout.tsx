@@ -63,7 +63,7 @@ const Headline = ({ title }: HeadlineProps) => (
 
 interface BannerProps extends PropsWithChildren {
   offset?: number
-  className: string
+  className?: string
 }
 
 const Banner = ({ children, offset = 112, className }: BannerProps) => (
