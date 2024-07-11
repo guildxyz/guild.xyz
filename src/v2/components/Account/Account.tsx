@@ -27,12 +27,7 @@ export const Account = () => {
   const domainName = useResolveAddress(address)
   const { addresses } = useUser()
   const linkedAddressesCount = (addresses?.length ?? 1) - 1
-
   const { captureEvent } = usePostHogContext()
-  // const [clickedOnNotifications, setClickedOnNotifications] = useLocalStorage(
-  //   "clicked-web3inbox-feature-notification",
-  //   false
-  // )
 
   if (!address)
     return (
@@ -46,14 +41,13 @@ export const Account = () => {
 
   return (
     <Card>
-      <Popover open={true} onOpenChange={setValue}>
+      <Popover open={isOpen} onOpenChange={setValue}>
         <PopoverTrigger asChild>
           <Button
             variant="ghost"
             className="rounded-r-none border-border border-r"
             aria-label="Notifications"
             onClick={() => {
-              //   setClickedOnNotifications(true)
               if (isOpen) return
               captureEvent("opened UserActivityLogPopover")
             }}
