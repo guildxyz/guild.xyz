@@ -1,4 +1,3 @@
-import { Header } from "@/components/Header"
 import { cn } from "@/lib/utils"
 import { Slot } from "@radix-ui/react-slot"
 import clsx from "clsx"
@@ -35,14 +34,11 @@ const PageContainer = forwardRef<HTMLDivElement, PageContainerProps>(
 )
 
 /* -------------------------------------------------------------------------------------------------
- * Header
+ * Hero
  * -----------------------------------------------------------------------------------------------*/
 
 const Hero = ({ children }: PropsWithChildren) => (
-  <div className="relative">
-    <Header />
-    {children}
-  </div>
+  <div className="relative">{children}</div>
 )
 
 /* -------------------------------------------------------------------------------------------------
