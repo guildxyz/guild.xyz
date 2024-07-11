@@ -7,7 +7,7 @@ import type {
   PropsWithChildren,
   RefAttributes,
 } from "react"
-import type { IconType } from "react-icons/lib"
+import { IconType } from "react-icons/lib"
 import type {
   GuildPlatformWithOptionalId,
   PlatformName,
@@ -36,9 +36,7 @@ export enum PlatformAsRewardRestrictions {
 }
 
 export type RewardData = {
-  icon?:
-    | ForwardRefExoticComponent<IconProps & RefAttributes<SVGSVGElement>>
-    | IconType
+  icon?: IconType
   imageUrl?: string
   name: string
   colorScheme: ThemingProps["colorScheme"]
