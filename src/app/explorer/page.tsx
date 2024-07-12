@@ -2,12 +2,13 @@ import { Layout } from "@/components/Layout"
 import { Anchor } from "@/components/ui/Anchor"
 import { env } from "env"
 import { unstable_serialize as infinite_unstable_serialize } from "swr/infinite"
+import { SearchParams } from "types"
 import { Explorer } from "./_components/Explorer"
 import { ExplorerSWRProvider } from "./_components/ExplorerSWRProvider"
 import { HeaderBackground } from "./_components/HeaderBackground"
 import { ActiveSection } from "./types"
 
-const Page = async () => {
+const Page = async ({ searchParams }: { searchParams: SearchParams }) => {
   const featuredPath = `/v2/guilds?order=FEATURED&offset=0&limit=24`
   const newestPath = `/v2/guilds?order=NEWEST&offset=0&limit=24`
   const [ssrFeaturedGuilds, ssrNewestGuilds] = await Promise.all([
@@ -50,7 +51,7 @@ const Page = async () => {
         </Layout.Hero>
 
         <Layout.Main>
-          <Explorer />
+          <Explorer searchParams={searchParams} />
         </Layout.Main>
 
         <Layout.Footer>

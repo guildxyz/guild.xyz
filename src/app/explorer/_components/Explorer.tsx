@@ -10,13 +10,14 @@ import { YourGuilds } from "app/explorer/_components/YourGuilds"
 import useIsStuck from "hooks/useIsStuck"
 import { useSetAtom } from "jotai"
 import { Suspense } from "react"
+import { SearchParams } from "types"
 import Robot from "/public/landing/robot.svg"
 import { isSearchStuckAtom } from "../atoms"
 import { ActiveSection } from "../types"
 import { GuildInfiniteScroll } from "./GuildInfiniteScroll"
 import { StickyBar } from "./StickyBar"
 
-export const Explorer = () => {
+export const Explorer = ({ searchParams }: { searchParams: SearchParams }) => {
   const { keyPair } = useUserPublic()
   const setIsSearchStuck = useSetAtom(isSearchStuckAtom)
   const setIsWalletSelectorModalOpen = useSetAtom(walletSelectorModalAtom)
@@ -52,9 +53,8 @@ export const Explorer = () => {
             <GuildSearchBar />
           </Suspense>
         </div>
-        <Suspense>
-          <GuildInfiniteScroll />
-        </Suspense>
+
+        <GuildInfiniteScroll searchParams={searchParams} />
       </section>
     </>
   )

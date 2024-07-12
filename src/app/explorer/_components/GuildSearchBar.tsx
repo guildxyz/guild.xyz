@@ -1,5 +1,6 @@
 "use client"
 
+import { usePrevious } from "@/hooks/usePrevious"
 import { MagnifyingGlass, PushPin, Sparkle } from "@phosphor-icons/react"
 import { ActiveSection } from "app/explorer/types"
 import useDebouncedState from "hooks/useDebouncedState"
@@ -23,7 +24,7 @@ export const GuildSearchBar = () => {
     (searchParams?.get("order")?.toString() as Order) || Order.Featured
   )
   const [search, setSearch] = useState(searchParams?.get("search")?.toString() || "")
-  const debouncedSearch = useDebouncedState(search, 150)
+  const debouncedSearch = useDebouncedState(search, 200)
 
   useEffect(() => {
     const newSearchParams = new URLSearchParams(
@@ -32,10 +33,15 @@ export const GuildSearchBar = () => {
       )
     )
 
+    /**
+     * ?order=FEATURED is the default order, so added this early return to avoid navigating from /explorer to /explorer?order=FEATURED after the initial page load
+     */
+    if (!searchParams?.get("order") && !search) return
+
     router.push(`${pathname}?${newSearchParams.toString()}`, {
       scroll: false,
     })
-  }, [debouncedSearch, order])
+  }, [search, debouncedSearch, order])
 
   return (
     <div className="relative flex flex-col gap-3 sm:flex-row sm:gap-0">

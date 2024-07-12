@@ -1,19 +1,15 @@
 "use client"
 
+import { GuildCardSkeleton, GuildCardWithLink } from "@/components/GuildCard"
 import { Spinner } from "@phosphor-icons/react"
 import useUser from "components/[guild]/hooks/useUser"
 import { env } from "env"
 import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import { useScrollBatchedRendering } from "hooks/useScrollBatchedRendering"
-import { useSearchParams } from "next/navigation"
 import { memo, useRef } from "react"
 import { SWRConfiguration } from "swr"
 import useSWRInfinite from "swr/infinite"
-import { GuildBase } from "types"
-import {
-  GuildCardSkeleton,
-  GuildCardWithLink,
-} from "../../../v2/components/GuildCard"
+import { GuildBase, SearchParams } from "types"
 
 const BATCH_SIZE = 24
 
@@ -26,8 +22,7 @@ const GuildCards = ({ guildData }: { guildData?: GuildBase[] }) => {
   return Array.from({ length: BATCH_SIZE }, (_, i) => <GuildCardSkeleton key={i} />)
 }
 
-const useExploreGuilds = () => {
-  const searchParams = useSearchParams()
+const useExploreGuilds = (searchParams?: SearchParams) => {
   const { isSuperAdmin } = useUser()
   const fetcherWithSign = useFetcherWithSign()
   const options: SWRConfiguration = {
@@ -43,7 +38,7 @@ const useExploreGuilds = () => {
       const url = new URL("/v2/guilds", env.NEXT_PUBLIC_API)
       const params: Record<string, string> = {
         order: "FEATURED",
-        ...Object.fromEntries(searchParams?.entries() ?? []),
+        ...searchParams,
         offset: (BATCH_SIZE * pageIndex).toString(),
         limit: BATCH_SIZE.toString(),
       }
@@ -60,16 +55,17 @@ const useExploreGuilds = () => {
   )
 }
 
-export const GuildInfiniteScroll = () => {
-  const searchParams = useSearchParams()
-  const search = searchParams?.get("search")
+export const GuildInfiniteScroll = ({
+  searchParams,
+}: { searchParams: SearchParams }) => {
+  const search = searchParams.search
   const ref = useRef<HTMLElement>(null)
   const {
     data: filteredGuilds,
     setSize,
     isValidating,
     isLoading,
-  } = useExploreGuilds()
+  } = useExploreGuilds(searchParams)
   const renderedGuilds = filteredGuilds?.flat()
 
   useScrollBatchedRendering({

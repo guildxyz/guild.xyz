@@ -759,6 +759,8 @@ type DetailedPinLeaderboardUserData = {
   pins: LeaderboardPinData[]
 }
 
+type SearchParams = { [key: string]: string | string[] | undefined }
+
 export { supportedEventSources, supportedSocialLinks, ValidationMethod }
 export type {
   BaseUser,
@@ -803,4 +805,5 @@ export type {
   User,
   UserAddress,
   WalletError,
+  SearchParams,
 }
