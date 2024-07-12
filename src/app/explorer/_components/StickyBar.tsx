@@ -14,7 +14,7 @@ import { useEffect } from "react"
 import { activeSectionAtom, isNavStuckAtom, isSearchStuckAtom } from "../atoms"
 import { ActiveSection } from "../types"
 
-const smoothScrollTo = (id: string) => {
+export const smoothScrollTo = (id: string) => {
   const target = document.getElementById(id)
 
   if (!target) return

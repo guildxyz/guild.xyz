@@ -8,6 +8,7 @@ import { usePathname, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
 import { Input } from "../../../v2/components/ui/Input"
 import { ToggleGroup, ToggleGroupItem } from "../../../v2/components/ui/ToggleGroup"
+import { smoothScrollTo } from "./StickyBar"
 
 enum Order {
   Featured = "FEATURED",
@@ -62,17 +63,21 @@ export const GuildSearchBar = ({
         onValueChange={(value) => value && setOrder(value as Order)}
         value={order}
       >
-        <ToggleGroupItem value={Order.Featured} className="space-x-2" asChild>
-          <a href={`#${ActiveSection.ExploreGuilds}`}>
-            <PushPin />
-            <span>featured</span>
-          </a>
+        <ToggleGroupItem
+          value={Order.Featured}
+          className="space-x-2"
+          onClick={() => smoothScrollTo(ActiveSection.YourGuilds)}
+        >
+          <PushPin />
+          <span>featured</span>
         </ToggleGroupItem>
-        <ToggleGroupItem value={Order.Newest} className="space-x-2" asChild>
-          <a href={`#${ActiveSection.ExploreGuilds}`}>
-            <Sparkle />
-            <span>newest</span>
-          </a>
+        <ToggleGroupItem
+          value={Order.Newest}
+          className="space-x-2"
+          onClick={() => smoothScrollTo(ActiveSection.YourGuilds)}
+        >
+          <Sparkle />
+          <span>newest</span>
         </ToggleGroupItem>
       </ToggleGroup>
     </div>
