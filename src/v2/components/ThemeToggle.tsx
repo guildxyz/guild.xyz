@@ -4,7 +4,7 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/ToggleGroup"
 import { useColorMode } from "@chakra-ui/react"
 import { Desktop, Moon, Sun } from "@phosphor-icons/react/dist/ssr"
 import { useTheme } from "next-themes"
-import { useIsClient, useLocalStorage } from "usehooks-ts"
+import { useIsClient } from "usehooks-ts"
 
 export function ThemeToggle() {
   const { setTheme, theme } = useTheme()
@@ -22,7 +22,6 @@ export function ThemeToggle() {
       value={chakraColorMode || theme}
       onValueChange={(selected) => {
         if (selected) {
-          console.log("selected", selected)
           setTheme(selected)
           if (typeof setChakraColorMode === "function") setChakraColorMode(selected)
         }
