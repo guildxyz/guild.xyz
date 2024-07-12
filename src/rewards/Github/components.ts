@@ -1,7 +1,8 @@
 import dynamic from "next/dynamic"
+import { GithubLogo } from "phosphor-react"
 import { AddRewardPanelLoadingSpinner } from "rewards/components/AddRewardPanelLoadingSpinner"
 import LoadingRewardPreview from "rewards/components/LoadingRewardPreview"
-import { RewardComponentsData } from "rewards/types"
+import { PlatformAsRewardRestrictions, RewardData } from "rewards/types"
 import GithubCardMenu from "./GithubCardMenu"
 import useGithubCardProps from "./useGithubCardProps"
 

@@ -1,6 +1,6 @@
 import { Icon, Spinner, Text } from "@chakra-ui/react"
-import { IconProps } from "@phosphor-icons/react"
 import Card from "components/common/Card"
+import { IconProps } from "phosphor-react"
 import { ForwardRefExoticComponent } from "react"
 
 type FallbackProps = {

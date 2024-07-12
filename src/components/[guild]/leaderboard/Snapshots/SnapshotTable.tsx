@@ -16,10 +16,10 @@ import {
   Tr,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { MagnifyingGlass } from "@phosphor-icons/react"
 import { useVirtualizer } from "@tanstack/react-virtual"
 import CopyableAddress from "components/common/CopyableAddress"
 import useDebouncedState from "hooks/useDebouncedState"
+import { MagnifyingGlass } from "phosphor-react"
 import { useMemo, useRef, useState } from "react"
 
 type Props = {

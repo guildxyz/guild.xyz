@@ -1,3 +1,9 @@
+import { Schemas } from "@guildxyz/types"
+import { RequirementProps } from "components/[guild]/Requirements/components/Requirement"
+import { Icon } from "phosphor-react"
+import { ComponentType } from "react"
+import { UseControllerProps } from "react-hook-form"
+import { Requirement } from "types"
 import REQUIREMENTS_DATA from "./requirements"
 import { RequirementData, RequirementType } from "./types"
 

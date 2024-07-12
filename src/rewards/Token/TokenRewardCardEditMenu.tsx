@@ -4,10 +4,10 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
-import { Coin, Pencil, TrashSimple, Wallet } from "@phosphor-icons/react"
 import EditRewardAvailabilityMenuItem from "components/[guild]/AccessHub/components/EditRewardAvailabilityMenuItem"
 import PlatformCardMenu from "components/[guild]/RolePlatforms/components/PlatformCard/components/PlatformCardMenu"
 import useToast from "hooks/useToast"
+import { Coin, Pencil, TrashSimple, Wallet } from "phosphor-react"
 import { GuildPlatform } from "types"
 import EditTokenModal from "./EditTokenModal"
 import FundPoolModal from "./FundPoolModal"

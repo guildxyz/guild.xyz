@@ -11,11 +11,11 @@ import {
   VStack,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { Trophy } from "@phosphor-icons/react"
 import Card from "components/common/Card"
 import GuildAvatar from "components/common/GuildAvatar"
 import useResolveAddress from "hooks/useResolveAddress"
 import { useRouter } from "next/router"
+import { Trophy } from "phosphor-react"
 import shortenHex from "utils/shortenHex"
 import useGuildPlatform from "../hooks/useGuildPlatform"
 

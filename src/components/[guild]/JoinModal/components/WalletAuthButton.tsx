@@ -1,7 +1,7 @@
-import { SignIn, Wallet } from "@phosphor-icons/react"
 import { walletSelectorModalAtom } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { useSetAtom } from "jotai"
+import { SignIn, Wallet } from "phosphor-react"
 import shortenHex from "utils/shortenHex"
 import JoinStep from "./JoinStep"
 

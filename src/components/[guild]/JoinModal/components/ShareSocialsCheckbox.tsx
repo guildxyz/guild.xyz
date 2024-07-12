@@ -1,6 +1,6 @@
 import { Checkbox, Icon, Link, Text } from "@chakra-ui/react"
-import { ArrowSquareOut } from "@phosphor-icons/react"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import { ArrowSquareOut } from "phosphor-react"
 import { useFormContext } from "react-hook-form"
 
 const ShareSocialsCheckbox = (): JSX.Element => {

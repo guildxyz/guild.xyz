@@ -1,6 +1,6 @@
 import { Alert, AlertIcon, HStack, IconButton, Text } from "@chakra-ui/react"
-import { X } from "@phosphor-icons/react"
 import { useRouter } from "next/router"
+import { X } from "phosphor-react"
 import { PropsWithChildren } from "react"
 
 const IGNORED_PATHS = ["/", "/oauth", "/oauth-result"]

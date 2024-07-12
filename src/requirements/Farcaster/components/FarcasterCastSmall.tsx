@@ -1,7 +1,7 @@
 import { Flex, HStack, Image, Link, Skeleton, Text } from "@chakra-ui/react"
-import { Chat, Heart, ShareNetwork, WarningCircle } from "@phosphor-icons/react"
 import DataBlock from "components/common/DataBlock"
-import { FarcasterCastData } from "../types"
+import { Chat, Heart, ShareNetwork, WarningCircle } from "phosphor-react"
+import { FarcasterCastData } from "./FarcasterCast"
 
 const FarcasterCastSmall = ({
   cast,

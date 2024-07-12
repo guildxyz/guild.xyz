@@ -1,7 +1,8 @@
 import dynamic from "next/dynamic"
+import { Key } from "phosphor-react"
 import TextCardButton from "rewards/SecretText/TextCardButton"
 import LoadingRewardPreview from "rewards/components/LoadingRewardPreview"
-import { RewardComponentsData } from "rewards/types"
+import { PlatformAsRewardRestrictions, RewardData } from "rewards/types"
 import UniqueTextCardMenu from "./UniqueTextCardMenu"
 import useUniqueTextCardProps from "./useUniqueTextCardProps"
 

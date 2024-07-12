@@ -1,8 +1,8 @@
 import { Icon, Text, VStack, useColorModeValue } from "@chakra-ui/react"
-import { ArrowRight, CheckCircle } from "@phosphor-icons/react"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import Link from "next/link"
+import { ArrowRight, CheckCircle } from "phosphor-react"
 import useGuild from "../hooks/useGuild"
 
 const SuccessfullySubmittedForm = () => {

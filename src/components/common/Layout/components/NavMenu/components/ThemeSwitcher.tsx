@@ -4,9 +4,9 @@ import {
   useColorMode,
   useRadioGroup,
 } from "@chakra-ui/react"
-import { Moon, Sun } from "@phosphor-icons/react"
 import useLocalStorage from "hooks/useLocalStorage"
 import dynamic from "next/dynamic"
+import { Moon, Sun } from "phosphor-react"
 import { useEffect } from "react"
 
 /**

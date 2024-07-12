@@ -1,10 +1,10 @@
 import { Icon, Img, Tag, TagLabel, Text, useColorModeValue } from "@chakra-ui/react"
-import { ArrowsLeftRight } from "@phosphor-icons/react"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import DataBlockWithCopy from "components/common/DataBlockWithCopy"
+import { ArrowsLeftRight } from "phosphor-react"
 import shortenHex from "utils/shortenHex"
 
 const NULL_FUEL_ADDRESS =

@@ -23,11 +23,11 @@ import {
   useDisclosure,
   useRadioGroup,
 } from "@chakra-ui/react"
-import { Image } from "@phosphor-icons/react"
 import LogicDivider from "components/[guild]/LogicDivider"
 import GuildLogo from "components/common/GuildLogo"
 import { Modal } from "components/common/Modal"
 import { Uploader } from "hooks/usePinata/usePinata"
+import { Image } from "phosphor-react"
 import React, { ComponentProps, useEffect } from "react"
 import { useController, useFormContext } from "react-hook-form"
 import { CreateGuildFormType } from "../CreateGuildForm"

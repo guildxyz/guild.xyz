@@ -16,7 +16,7 @@ import {
   Heart,
   ShareNetwork,
   WarningCircle,
-} from "@phosphor-icons/react"
+} from "phosphor-react"
 import { PropsWithChildren } from "react"
 import { FarcasterCastData } from "../types"
 import FarcasterCastSmall from "./FarcasterCastSmall"

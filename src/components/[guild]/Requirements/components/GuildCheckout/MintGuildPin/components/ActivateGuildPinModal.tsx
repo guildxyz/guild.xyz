@@ -9,10 +9,10 @@ import {
   ModalOverlay,
   Stack,
 } from "@chakra-ui/react"
-import { ArrowSquareOut } from "@phosphor-icons/react"
 import { useEditGuildDrawer } from "components/[guild]/EditGuild/EditGuildDrawerContext"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
+import { ArrowSquareOut } from "phosphor-react"
 import { useMintGuildPinContext } from "../../MintGuildPinContext"
 import GuildPinImage from "../../components/GuildPinImage"
 import ActivateGuildPinForm from "./ActivateGuildPinForm"

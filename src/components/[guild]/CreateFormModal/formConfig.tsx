@@ -1,12 +1,12 @@
 import { Schemas } from "@guildxyz/types"
+import OptionIcon from "components/common/StyledSelect/components/CustomSelectOption/components/OptionIcon"
 import {
   CheckSquare,
   NumberCircleFive,
   NumberSquareFive,
   RadioButton,
   Textbox,
-} from "@phosphor-icons/react"
-import OptionIcon from "components/common/StyledSelect/components/CustomSelectOption/components/OptionIcon"
+} from "phosphor-react"
 import { ComponentType, ReactNode } from "react"
 import {
   ExpectedFieldDataProps,

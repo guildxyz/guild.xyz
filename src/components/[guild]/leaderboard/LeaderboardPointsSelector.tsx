@@ -9,11 +9,11 @@ import {
   MenuList,
   Portal,
 } from "@chakra-ui/react"
-import { CaretDown } from "@phosphor-icons/react"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import Link from "next/link"
 import { useRouter } from "next/router"
+import { CaretDown } from "phosphor-react"
 import Star from "static/icons/star.svg"
 import { useAccessedGuildPoints } from "../AccessHub/hooks/useAccessedGuildPoints"
 import useGuild from "../hooks/useGuild"

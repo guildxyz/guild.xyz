@@ -9,9 +9,9 @@ import {
   Tooltip,
   useDisclosure,
 } from "@chakra-ui/react"
-import { LinkBreak } from "@phosphor-icons/react"
 import Button from "components/common/Button"
 import { Alert } from "components/common/Modal"
+import { LinkBreak } from "phosphor-react"
 import { useRef } from "react"
 import { PathString } from "react-hook-form"
 

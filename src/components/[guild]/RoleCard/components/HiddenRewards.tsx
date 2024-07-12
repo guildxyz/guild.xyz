@@ -1,6 +1,6 @@
 import { Center, useColorModeValue } from "@chakra-ui/react"
-import { Question } from "@phosphor-icons/react"
-import { RewardDisplay } from "./RewardDisplay"
+import { Question } from "phosphor-react"
+import { RewardDisplay } from "./Reward"
 
 const HiddenRewards = () => {
   const rewardImageBgColor = useColorModeValue("blackAlpha.100", "blackAlpha.300")

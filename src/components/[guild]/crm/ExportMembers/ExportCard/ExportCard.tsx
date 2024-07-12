@@ -7,7 +7,6 @@ import {
   Text,
   Tooltip,
 } from "@chakra-ui/react"
-import { Download } from "@phosphor-icons/react"
 import MemberCount from "components/[guild]/RoleCard/components/MemberCount"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Card from "components/common/Card"
@@ -15,6 +14,7 @@ import CardMotionWrapper from "components/common/CardMotionWrapper"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign } from "hooks/useSubmit"
 import { atom, useAtom } from "jotai"
+import { Download } from "phosphor-react"
 import fetcher from "utils/fetcher"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 import { ExportData } from "../useExports"

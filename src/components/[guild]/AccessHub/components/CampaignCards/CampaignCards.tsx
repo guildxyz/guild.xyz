@@ -6,7 +6,6 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { ArrowRight, Plus } from "@phosphor-icons/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import Button from "components/common/Button"
@@ -16,6 +15,7 @@ import dynamic from "next/dynamic"
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/router"
+import { ArrowRight, Plus } from "phosphor-react"
 
 const DynamicCampaignCardMenu = dynamic(
   () => import("./components/CampaignCardMenu")
