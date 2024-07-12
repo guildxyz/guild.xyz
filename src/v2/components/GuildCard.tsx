@@ -1,4 +1,4 @@
-import { CircleWavyCheck, Users } from "@phosphor-icons/react"
+import { CircleWavyCheck, Users } from "phosphor-react"
 import { GuildBase } from "types"
 import pluralize from "utils/pluralize"
 import { GuildLogo } from "./GuildLogo"

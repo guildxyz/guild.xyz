@@ -1,13 +1,13 @@
-import { type Icon } from "@phosphor-icons/react"
+import useGuild, { useSimpleGuild } from "components/[guild]/hooks/useGuild"
+import useUser from "components/[guild]/hooks/useUser"
+import { type Icon } from "phosphor-react"
 import {
   ArrowSquareOut,
   CaretDown,
   Check,
   Shield,
   ShieldCheck,
-} from "@phosphor-icons/react/dist/ssr"
-import useGuild, { useSimpleGuild } from "components/[guild]/hooks/useGuild"
-import useUser from "components/[guild]/hooks/useUser"
+} from "phosphor-react"
 
 import { GuildLogo } from "@/components/GuildLogo"
 import { anchorVariants } from "@/components/ui/Anchor"

@@ -1,8 +1,8 @@
 import { Icon, Link, Wrap } from "@chakra-ui/react"
 import type { SocialLinks as SocialLinksType } from "@guildxyz/types"
-import { ArrowSquareOut } from "@phosphor-icons/react"
 import SocialIcon from "components/[guild]/SocialIcon"
 import Section from "components/common/Section"
+import { ArrowSquareOut } from "phosphor-react"
 import { SocialLinkKey } from "types"
 import capitalize from "utils/capitalize"
 

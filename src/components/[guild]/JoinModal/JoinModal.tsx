@@ -12,7 +12,6 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react"
-import { ArrowRight } from "@phosphor-icons/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
@@ -20,6 +19,7 @@ import ModalButton from "components/common/ModalButton"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import dynamic from "next/dynamic"
+import { ArrowRight } from "phosphor-react"
 import { ComponentType, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { RequirementType } from "requirements/types"

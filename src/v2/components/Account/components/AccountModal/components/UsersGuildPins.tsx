@@ -4,9 +4,9 @@ import { Alert, AlertDescription } from "@/components/ui/Alert"
 import { Badge } from "@/components/ui/Badge"
 import { Skeleton } from "@/components/ui/Skeleton"
 import useUsersGuildPins from "@/hooks/useUsersGuildPins"
-import { Info } from "@phosphor-icons/react/dist/ssr"
 import { useAtomValue, useSetAtom } from "jotai"
 import Link from "next/link"
+import { Info } from "phosphor-react"
 
 const UsersGuildPins = () => {
   const isAccountModalOpen = useAtomValue(accountModalAtom)

@@ -7,7 +7,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@chakra-ui/react"
-import { ArrowSquareOut, Question } from "@phosphor-icons/react"
+import { ArrowSquareOut, Question } from "phosphor-react"
 
 const FeePopover = () => (
   <Popover placement="top" trigger="hover">

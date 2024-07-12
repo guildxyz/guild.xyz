@@ -1,10 +1,10 @@
 "use client"
 
 import { usePrevious } from "@/hooks/usePrevious"
-import { MagnifyingGlass, PushPin, Sparkle } from "@phosphor-icons/react"
 import { ActiveSection } from "app/explorer/types"
 import useDebouncedState from "hooks/useDebouncedState"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
+import { MagnifyingGlass, PushPin, Sparkle } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { Input } from "../../../v2/components/ui/Input"
 import { ToggleGroup, ToggleGroupItem } from "../../../v2/components/ui/ToggleGroup"

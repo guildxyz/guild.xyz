@@ -16,8 +16,8 @@ import {
   ModalOverlay,
   Text,
 } from "@chakra-ui/react"
-import { ArrowSquareOut } from "@phosphor-icons/react"
 import useUser from "components/[guild]/hooks/useUser"
+import { ArrowSquareOut } from "phosphor-react"
 
 type ModalProps = {
   title: string

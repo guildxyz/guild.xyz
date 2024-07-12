@@ -9,9 +9,9 @@ import {
   Stack,
 } from "@chakra-ui/react"
 import { Schemas } from "@guildxyz/types"
-import { ArrowRight } from "@phosphor-icons/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import StyledSelect from "components/common/StyledSelect"
+import { ArrowRight } from "phosphor-react"
 import { useMemo } from "react"
 import useSWRImmutable from "swr/immutable"
 import { PlatformGuildData } from "types"

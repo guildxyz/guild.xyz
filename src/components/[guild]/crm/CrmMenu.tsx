@@ -9,9 +9,9 @@ import {
   // Portal,
   useDisclosure,
 } from "@chakra-ui/react"
-import { /* CaretDown, */ Export, Sliders } from "@phosphor-icons/react"
 import { Table } from "@tanstack/react-table"
 import Button from "components/common/Button"
+import { /* CaretDown, */ Export, Sliders } from "phosphor-react"
 import { useIsTabsStuck } from "../Tabs/Tabs"
 import { useThemeContext } from "../ThemeContext"
 import CustomizeViewModal from "./CustomizeViewModal"

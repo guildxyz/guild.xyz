@@ -1,5 +1,5 @@
-import { SignOut } from "@phosphor-icons/react/dist/ssr"
 import { useAtom } from "jotai"
+import { SignOut } from "phosphor-react"
 import { walletLinkHelperModalAtom } from "../Providers/atoms"
 import { Button } from "../ui/Button"
 import {

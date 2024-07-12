@@ -12,7 +12,6 @@ import {
 import { useToast } from "@/components/ui/hooks/useToast"
 import { useDisclosure } from "@/hooks/useDisclosure"
 import { cn, toDateTimeString } from "@/lib/utils"
-import { ArrowRight } from "@phosphor-icons/react"
 import {
   initWeb3InboxClient,
   useNotifications,
@@ -25,6 +24,7 @@ import {
 } from "@web3inbox/react"
 import { env } from "env"
 import Image from "next/image"
+import { ArrowRight } from "phosphor-react"
 import { useState } from "react"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 import { useAccount, useSignMessage } from "wagmi"

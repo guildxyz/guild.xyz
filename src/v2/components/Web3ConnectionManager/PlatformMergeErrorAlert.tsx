@@ -1,6 +1,6 @@
-import { ArrowSquareOut } from "@phosphor-icons/react/dist/ssr"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import { useAtom } from "jotai"
+import { ArrowSquareOut } from "phosphor-react"
 import rewards from "rewards"
 import capitalize from "utils/capitalize"
 import shortenHex from "utils/shortenHex"

@@ -12,7 +12,6 @@ import {
   Text,
   Wrap,
 } from "@chakra-ui/react"
-import { Info, Users } from "@phosphor-icons/react"
 import AccessHub from "components/[guild]/AccessHub"
 import { useAccessedGuildPlatforms } from "components/[guild]/AccessHub/AccessHub"
 import {
@@ -43,6 +42,7 @@ import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
 import Head from "next/head"
 import ErrorPage from "pages/_error"
+import { Info, Users } from "phosphor-react"
 import { useEffect } from "react"
 import { MintPolygonIDProofProvider } from "rewards/PolygonID/components/MintPolygonIDProofProvider"
 import { SWRConfig } from "swr"

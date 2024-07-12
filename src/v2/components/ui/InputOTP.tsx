@@ -1,8 +1,8 @@
 "use client"
 
 import { cn } from "@/lib/utils"
-import { Minus } from "@phosphor-icons/react/dist/ssr"
 import { OTPInput, OTPInputContext } from "input-otp"
+import { Minus } from "phosphor-react"
 import { ComponentPropsWithoutRef, ElementRef, forwardRef, useContext } from "react"
 
 const InputOTP = forwardRef<

@@ -18,7 +18,6 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
-import { Star } from "@phosphor-icons/react"
 import useEditRolePlatform from "components/[guild]/AccessHub/hooks/useEditRolePlatform"
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import { AddTokenFormType } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/AddTokenPanel"
@@ -33,6 +32,7 @@ import OptionImage from "components/common/StyledSelect/components/CustomSelectO
 import useCreateRequirement from "components/create-guild/Requirements/hooks/useCreateRequirement"
 import useEditRequirement from "components/create-guild/Requirements/hooks/useEditRequirement"
 import useToast from "hooks/useToast"
+import { Star } from "phosphor-react"
 import { ReactNode, useMemo, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { useTokenRewardContext } from "rewards/Token/TokenRewardContext"

@@ -13,10 +13,10 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
-import { ArrowRight } from "@phosphor-icons/react"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import Link from "next/link"
+import { ArrowRight } from "phosphor-react"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 
 const GUILD_NOTIFICATION_ICON = "/requirementLogos/guild.png"

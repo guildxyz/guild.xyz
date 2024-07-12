@@ -14,8 +14,8 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext"
-import { ImageSquare } from "@phosphor-icons/react"
 import Button from "components/common/Button"
+import { ImageSquare } from "phosphor-react"
 import { useRef, useState } from "react"
 import { INSERT_IMAGE_COMMAND } from "../../ImagesPlugin"
 

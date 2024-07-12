@@ -13,11 +13,11 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import { Visibility } from "@guildxyz/types"
-import { ArrowLeft, Info } from "@phosphor-icons/react"
 import Button from "components/common/Button"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import useCreateRRR, { SubmitData } from "hooks/useCreateRRR"
 import useToast from "hooks/useToast"
+import { ArrowLeft, Info } from "phosphor-react"
 import { useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import rewards, { CAPACITY_TIME_PLATFORMS } from "rewards"

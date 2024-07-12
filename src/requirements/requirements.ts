@@ -9,7 +9,7 @@ import {
   Robot,
   Wallet,
   Wrench,
-} from "@phosphor-icons/react"
+} from "phosphor-react"
 import { VISIT_LINK_REGEX } from "requirements/VisitLink/VisitLinkRequirement"
 import { emailData } from "rewards/Email/data"
 import { formData } from "rewards/Forms/data"

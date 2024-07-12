@@ -1,11 +1,11 @@
 "use client"
 
 import { GuildCardSkeleton, GuildCardWithLink } from "@/components/GuildCard"
-import { Spinner } from "@phosphor-icons/react"
 import useUser from "components/[guild]/hooks/useUser"
 import { env } from "env"
 import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import { useScrollBatchedRendering } from "hooks/useScrollBatchedRendering"
+import { Spinner } from "phosphor-react"
 import { memo, useRef } from "react"
 import { SWRConfiguration } from "swr"
 import useSWRInfinite from "swr/infinite"

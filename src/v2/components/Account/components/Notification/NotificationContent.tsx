@@ -5,8 +5,8 @@ import { Anchor } from "@/components/ui/Anchor"
 import { buttonVariants } from "@/components/ui/Button"
 import { Separator } from "@/components/ui/Separator"
 import { cn } from "@/lib/utils"
-import { ArrowRight } from "@phosphor-icons/react"
 import dynamic from "next/dynamic"
+import { ArrowRight } from "phosphor-react"
 import { Web3InboxSkeleton } from "./Web3InboxSkeleton"
 
 const DynamicWeb3Inbox = dynamic(() => import("./Web3Inbox"), {

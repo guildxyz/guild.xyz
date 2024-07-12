@@ -4,12 +4,12 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/Accordion"
-import { ArrowSquareOut } from "@phosphor-icons/react/dist/ssr"
 import {
   AccordionMultipleProps,
   AccordionSingleProps,
 } from "@radix-ui/react-accordion"
 import type { Meta, StoryObj } from "@storybook/react"
+import { ArrowSquareOut } from "phosphor-react"
 
 const AccordionExample = (props: AccordionSingleProps | AccordionMultipleProps) => (
   <Accordion

@@ -1,4 +1,4 @@
-import { WarningCircle } from "@phosphor-icons/react/dist/ssr"
+import { WarningCircle } from "phosphor-react"
 import { PropsWithChildren, useEffect, useState } from "react"
 import { Alert, AlertDescription, AlertTitle } from "./ui/Alert"
 import { Collapsible, CollapsibleContent } from "./ui/Collapsible"

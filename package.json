@@ -44,7 +44,7 @@
     "@lexical/selection": "^0.12.0",
     "@lexical/utils": "^0.12.0",
     "@nouns/assets": "^0.4.2",
-    "@phosphor-icons/react": "^2.1.7",
+    "phosphor-react": "^2.1.7",
     "@radix-ui/react-accordion": "^1.2.0",
     "@radix-ui/react-alert-dialog": "^1.1.1",
     "@radix-ui/react-avatar": "^1.1.0",

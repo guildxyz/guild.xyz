@@ -1,8 +1,8 @@
 import { IntercomProvider } from "@/components/Providers/IntercomProvider"
 import { Flex, Heading, Icon, Stack } from "@chakra-ui/react"
-import { ChatCircle, House } from "@phosphor-icons/react"
 import Button from "components/common/Button"
 import Head from "next/head"
+import { ChatCircle, House } from "phosphor-react"
 import NotFoundIcon from "static/avatars/58.svg"
 import { triggerChat } from "utils/intercom"
 

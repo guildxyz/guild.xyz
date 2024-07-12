@@ -1,7 +1,7 @@
 import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import { Icon } from "@chakra-ui/react"
-import { Question, Warning } from "@phosphor-icons/react"
 import DataBlock from "components/common/DataBlock"
+import { Question, Warning } from "phosphor-react"
 import { PropsWithChildren } from "react"
 import { ErrorBoundary } from "react-error-boundary"
 import { REQUIREMENT_DISPLAY_COMPONENTS } from "requirements/requirementDisplayComponents"

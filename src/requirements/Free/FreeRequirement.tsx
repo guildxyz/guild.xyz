@@ -1,6 +1,6 @@
 import { Icon } from "@chakra-ui/react"
-import { Icon as PhosphorIcon } from "@phosphor-icons/react"
 import Requirement from "components/[guild]/Requirements/components/Requirement"
+import { Icon as PhosphorIcon } from "phosphor-react"
 import REQUIREMENTS from "requirements"
 
 const FreeRequirement = ({ ...rest }) => (

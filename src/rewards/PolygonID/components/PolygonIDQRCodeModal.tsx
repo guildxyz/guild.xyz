@@ -11,12 +11,12 @@ import {
   Text,
   useBreakpointValue,
 } from "@chakra-ui/react"
-import { ArrowsClockwise } from "@phosphor-icons/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import ErrorAlert from "components/common/ErrorAlert"
 import { env } from "env"
+import { ArrowsClockwise } from "phosphor-react"
 import { QRCodeSVG } from "qrcode.react"
 import useSWRImmutable from "swr/immutable"
 import { Role } from "types"

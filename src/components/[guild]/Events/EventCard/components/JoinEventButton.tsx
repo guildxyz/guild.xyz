@@ -1,8 +1,8 @@
 import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import { ButtonProps } from "@chakra-ui/react"
-import { ArrowSquareOut } from "@phosphor-icons/react"
 import Button from "components/common/Button"
 import useColorPalette from "hooks/useColorPalette"
+import { ArrowSquareOut } from "phosphor-react"
 import { EventSourcesKey } from "types"
 
 type Props = {

@@ -1,6 +1,9 @@
 "use client"
 
 import { cn } from "@/lib/utils"
+import dynamic from "next/dynamic"
+import Link, { LinkProps } from "next/link"
+import { usePathname } from "next/navigation"
 import {
   Book,
   CircleWavyCheck,
@@ -16,10 +19,7 @@ import {
   Shield,
   UsersThree,
   XLogo,
-} from "@phosphor-icons/react/dist/ssr"
-import dynamic from "next/dynamic"
-import Link, { LinkProps } from "next/link"
-import { usePathname } from "next/navigation"
+} from "phosphor-react"
 import { AnchorHTMLAttributes, ReactNode } from "react"
 import { ThemeToggle } from "../ThemeToggle"
 import { Button } from "../ui/Button"

@@ -2,11 +2,11 @@
 
 import { useDisclosure } from "@/hooks/useDisclosure"
 import { cn } from "@/lib/utils"
-import { Bell } from "@phosphor-icons/react"
-import { SignIn } from "@phosphor-icons/react/dist/ssr"
 import useUser from "components/[guild]/hooks/useUser"
 import useResolveAddress from "hooks/useResolveAddress"
 import { useSetAtom } from "jotai"
+import { Bell } from "phosphor-react"
+import { SignIn } from "phosphor-react"
 import shortenHex from "utils/shortenHex"
 import { GuildAvatar } from "../GuildAvatar"
 import { usePostHogContext } from "../Providers/PostHogProvider"

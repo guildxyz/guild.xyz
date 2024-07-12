@@ -13,12 +13,12 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react"
-import { ArrowsClockwise, Check } from "@phosphor-icons/react"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
 import { useAtom } from "jotai"
 import { atomWithStorage } from "jotai/utils"
+import { ArrowsClockwise, Check } from "phosphor-react"
 import { useEffect, useMemo, useState } from "react"
 import GetRewardsJoinStep from "./JoinModal/components/progress/GetRewardsJoinStep"
 import GetRolesJoinStep from "./JoinModal/components/progress/GetRolesJoinStep"

@@ -14,11 +14,11 @@ import {
   ModalOverlay,
   Stack,
 } from "@chakra-ui/react"
-import { Coin } from "@phosphor-icons/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
+import { Coin } from "phosphor-react"
 import { paymentSupportedChains } from "utils/guildCheckout/constants"
 import { useChainId } from "wagmi"
 import { Chains } from "wagmiConfig/chains"

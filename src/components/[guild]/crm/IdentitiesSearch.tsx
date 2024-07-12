@@ -6,9 +6,9 @@ import {
   InputLeftElement,
   InputRightElement,
 } from "@chakra-ui/react"
-import { MagnifyingGlass } from "@phosphor-icons/react"
 import { Column } from "@tanstack/react-table"
 import useDebouncedState from "hooks/useDebouncedState"
+import { MagnifyingGlass } from "phosphor-react"
 import { useEffect, useRef, useState } from "react"
 
 type Props = {

@@ -11,10 +11,10 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
-import { SignIn } from "@phosphor-icons/react"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import { useSetAtom } from "jotai"
+import { SignIn } from "phosphor-react"
 import useGuildPermission from "./hooks/useGuildPermission"
 import useUser from "./hooks/useUser"
 

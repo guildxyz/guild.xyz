@@ -10,9 +10,9 @@ import {
   PopoverTrigger,
   Portal,
 } from "@chakra-ui/react"
-import { Chat } from "@phosphor-icons/react"
 import { IpGeodata } from "app/api/ip-geodata/route"
 import Button from "components/common/Button"
+import { Chat } from "phosphor-react"
 import useSWRImmutable from "swr/immutable"
 import { triggerChat } from "utils/intercom"
 

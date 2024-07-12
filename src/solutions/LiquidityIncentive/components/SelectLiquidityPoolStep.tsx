@@ -16,9 +16,9 @@ import {
   Text,
 } from "@chakra-ui/react"
 import { consts } from "@guildxyz/types"
-import { Info } from "@phosphor-icons/react/dist/ssr"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import { Info } from "phosphor-react"
 import { useCallback } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { usePairOfTokenId } from "requirements/Uniswap/hooks/usePairOfTokenId"

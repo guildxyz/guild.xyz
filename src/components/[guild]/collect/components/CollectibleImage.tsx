@@ -7,8 +7,8 @@ import {
   Img,
   Spinner,
 } from "@chakra-ui/react"
-import { Image } from "@phosphor-icons/react"
 import Card from "components/common/Card"
+import { Image } from "phosphor-react"
 import { ComponentType, Fragment } from "react"
 
 type Props = {

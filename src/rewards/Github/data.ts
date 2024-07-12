@@ -1,4 +1,4 @@
-import { GithubLogo } from "@phosphor-icons/react"
+import { GithubLogo } from "phosphor-react"
 import { PlatformAsRewardRestrictions, RewardData } from "rewards/types"
 
 export const githubData = {

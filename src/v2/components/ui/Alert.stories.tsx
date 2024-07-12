@@ -1,11 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react"
 
-import {
-  Check,
-  Info as InfoIcon,
-  Warning as WarningIcon,
-  X,
-} from "@phosphor-icons/react/dist/ssr"
+import { Check, Info as InfoIcon, Warning as WarningIcon, X } from "phosphor-react"
 import { Alert, AlertDescription, AlertProps, AlertTitle } from "./Alert"
 import { Card } from "./Card"
 
