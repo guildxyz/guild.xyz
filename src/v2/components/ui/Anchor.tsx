@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils"
 import { Slot } from "@radix-ui/react-slot"
 import { type VariantProps, cva } from "class-variance-authority"
 import Link from "next/link"
-import { ArrowSquareOut } from "phosphor-react/ArrowSquareOut"
+import { ArrowSquareOut } from "phosphor-react"
 import * as React from "react"
 
 const anchorVariants = cva(

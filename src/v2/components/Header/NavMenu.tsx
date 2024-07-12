@@ -18,9 +18,9 @@ import {
   Plus,
   Shield,
   UsersThree,
-  XLogo,
 } from "phosphor-react"
 import { AnchorHTMLAttributes, ReactNode } from "react"
+import XLogo from "static/icons/x.svg"
 import { ThemeToggle } from "../ThemeToggle"
 import { Button } from "../ui/Button"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/Popover"

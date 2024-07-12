@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/utils"
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu"
-import { CaretRight, Check, Dot } from "phosphor-react"
+import { CaretRight, Check, Circle } from "phosphor-react"
 import {
   ComponentPropsWithoutRef,
   ElementRef,
@@ -132,7 +132,7 @@ const DropdownMenuRadioItem = forwardRef<
   >
     <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
       <DropdownMenuPrimitive.ItemIndicator>
-        <Dot weight="bold" className="h-4 w-4 fill-current" />
+        <Circle weight="bold" className="h-4 w-4 fill-current" />
       </DropdownMenuPrimitive.ItemIndicator>
     </span>
     {children}
