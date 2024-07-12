@@ -30,6 +30,7 @@ import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hook
 import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import { AnimatePresence } from "framer-motion"
+import { useAtom, useSetAtom } from "jotai"
 import { GetStaticPaths } from "next"
 import dynamic from "next/dynamic"
 import {
@@ -37,11 +38,12 @@ import {
   validateNftAddress,
   validateNftChain,
 } from "pages/api/nft/collectors/[chain]/[address]"
-import { useRef } from "react"
+import { useEffect, useRef } from "react"
 import { SWRConfig, unstable_serialize } from "swr"
 import { Guild, PlatformType } from "types"
 import fetcher from "utils/fetcher"
 import { Chain } from "wagmiConfig/chains"
+import { isNftLoadingAtom } from "./atoms"
 
 type Props = {
   chain: Chain
@@ -206,7 +208,14 @@ const CollectNftPageProviderWrapper = (
   props: Omit<Props, "urlName" | "fallback">
 ) => {
   const { chain, address, guildPlatformId, rolePlatformId, roleId } = props
-  const { guildPlatforms } = useGuild()
+  const { guildPlatforms, isLoading } = useGuild()
+  const [isNftLoading, setIsNftLoading] = useAtom(isNftLoadingAtom)
+
+  useEffect(() => {
+    setIsNftLoading(isLoading)
+  }, [isLoading])
+
+  console.log("guildplatforms update", isLoading, isNftLoading)
 
   return (
     <CollectNftProvider

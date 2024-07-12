@@ -14,7 +14,7 @@ const currentDate = new Date()
 currentDate.setUTCHours(0, 0, 0, 0)
 const noonUnixTimestamp = currentDate.getTime() / 1000
 
-const fetchNftDetails = ([_, chain, address]) =>
+const fetchNftDetails = ([_, chain, address]: string[]) =>
   fetcher(`/api/nft/${chain}/${address}`)
 
 export const guildNftRewardMetadataSchema = z.object({
@@ -39,8 +39,8 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
   const relevantGuildPlatform = guildPlatforms?.find(
     (gp) =>
       gp.platformId === PlatformType.CONTRACT_CALL &&
-      gp.platformGuildData.chain === chain &&
-      gp.platformGuildData.contractAddress?.toLowerCase() === address?.toLowerCase()
+      gp.platformGuildData?.chain === chain &&
+      gp.platformGuildData?.contractAddress?.toLowerCase() === address?.toLowerCase()
   )
 
   const guildPlatformData =
@@ -91,14 +91,6 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
     error: multicallError,
     refetch,
   } = useReadContracts({
-    /**
-     * We need to @ts-ignore this line, since we get a "Type instantiation is
-     * excessively deep and possibly infinite" error here until strictNullChecks is
-     * set to false in our tsconfig. We should set it to true & sort out the related
-     * issues in another PR.
-     */
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     contracts: [
       {
         ...contract,

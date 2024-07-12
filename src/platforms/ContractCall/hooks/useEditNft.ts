@@ -2,20 +2,73 @@ import type { ExtractAbiFunctions } from "abitype"
 import useEditRolePlatform from "components/[guild]/AccessHub/hooks/useEditRolePlatform"
 import { CreateNftFormType } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/components/NftDataForm"
 import { generateGuildRewardNFTMetadata } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
-import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
+// import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuildPlatform from "components/[guild]/hooks/useGuildPlatform"
 import pinFileToIPFS from "hooks/usePinata/utils/pinataUpload"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
+import { useSetAtom } from "jotai"
+import { isNftLoadingAtom } from "pages/[guild]/collect/[chain]/atoms"
 import { useCallback } from "react"
 import { FormState } from "react-hook-form"
 import guildRewardNftAbi from "static/abis/guildRewardNft"
 import processViemContractError from "utils/processViemContractError"
 import { encodeFunctionData, parseUnits } from "viem"
-import { useWalletClient } from "wagmi"
+import { useReadContracts, useWalletClient } from "wagmi"
 import { wagmiConfig } from "wagmiConfig"
 import { CHAIN_CONFIG, Chain, Chains } from "wagmiConfig/chains"
+
+const useNftRefetch = (chain: Chain, address: `0x${string}`) => {
+  const contract = {
+    address,
+    abi: guildRewardNftAbi,
+    chainId: Chains[chain],
+  } as const
+
+  const {
+    data,
+    isLoading: isMulticallLoading,
+    error: multicallError,
+    refetch,
+  } = useReadContracts({
+    contracts: [
+      {
+        ...contract,
+        functionName: "locked",
+      },
+      {
+        ...contract,
+        functionName: "totalSupply",
+      },
+      {
+        ...contract,
+        functionName: "maxSupply",
+      },
+      {
+        ...contract,
+        functionName: "mintableAmountPerUser",
+      },
+      {
+        ...contract,
+        functionName: "tokenURI",
+        args: [BigInt(0)],
+      },
+      {
+        ...contract,
+        functionName: "fee",
+      },
+      {
+        ...contract,
+        functionName: "treasury",
+      },
+    ],
+    query: {
+      staleTime: Infinity,
+    },
+  })
+  return { refetch, data }
+}
 
 const useEditNft = ({
   guildPlatformId,
@@ -47,15 +100,6 @@ const useEditNft = ({
 
   const { guildPlatform } = useGuildPlatform(guildPlatformId)
   const { data: walletClient } = useWalletClient()
-
-  console.log(
-    guildPlatform?.platformGuildData?.chain,
-    guildPlatform?.platformGuildData?.contractAddress
-  )
-  const { refetch } = useNftDetails(
-    guildPlatform?.platformGuildData?.chain,
-    guildPlatform?.platformGuildData?.contractAddress
-  )
 
   const editNftContractCalls = async ({
     fields,
@@ -103,11 +147,10 @@ const useEditNft = ({
     return apiData
   }
 
+  const setIsNftLoading = useSetAtom(isNftLoadingAtom)
   const editNft = useSubmit(editNftContractCalls, {
     onSuccess: (apiData) => {
-      console.log("on success")
-      // refetch()
-
+      setIsNftLoading(true)
       if (!Object.keys(apiData.rolePlatform).length) {
         showSuccessToast()
         onSuccess()
