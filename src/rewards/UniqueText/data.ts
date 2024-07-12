@@ -1,4 +1,4 @@
-import { Key } from "phosphor-react"
+import { Key } from "@phosphor-icons/react"
 import { PlatformAsRewardRestrictions, RewardData } from "rewards/types"
 
 export const uniqueTextData = {

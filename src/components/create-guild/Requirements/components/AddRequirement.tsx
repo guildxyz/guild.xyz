@@ -20,6 +20,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import { Schemas, schemas } from "@guildxyz/types"
+import { ArrowLeft, CaretRight } from "@phosphor-icons/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import AddCard from "components/common/AddCard"
 import Button from "components/common/Button"
@@ -28,7 +29,6 @@ import { Modal } from "components/common/Modal"
 import SearchBar from "components/explorer/SearchBar"
 import { AnimatePresence, AnimateSharedLayout, usePresence } from "framer-motion"
 import useToast from "hooks/useToast"
-import { ArrowLeft, CaretRight } from "phosphor-react"
 import {
   Dispatch,
   FC,

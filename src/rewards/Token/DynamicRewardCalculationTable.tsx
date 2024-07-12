@@ -1,9 +1,9 @@
 import { HStack, Icon, Skeleton, Td, Text, Tr } from "@chakra-ui/react"
+import { LockSimple, X } from "@phosphor-icons/react"
 import FeesTable from "components/[guild]/Requirements/components/GuildCheckout/components/FeesTable"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
-import { LockSimple, X } from "phosphor-react"
-import { REQUIREMENT_PROVIDED_VALUES } from "requirements/requirements"
-import rewards from "rewards"
+import { REQUIREMENT_PROVIDED_VALUES } from "requirements/requirementProvidedValues"
+import rewardComponents from "rewards/components"
 import { PlatformType, Requirement, RolePlatform } from "types"
 import useDynamicRewardUserAmount from "./hooks/useDynamicRewardUserAmount"
 

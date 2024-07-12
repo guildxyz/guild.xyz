@@ -23,11 +23,11 @@ import {
   Text,
   TextProps,
 } from "@chakra-ui/react"
+import { Info, Plus, X } from "@phosphor-icons/react"
 import Button from "components/common/Button"
 import ControlledSelect from "components/common/ControlledSelect"
 import DataBlockWithCopy from "components/common/DataBlockWithCopy"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import { Info, Plus, X } from "phosphor-react"
 import { useMemo } from "react"
 import { Controller, useFieldArray, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements/types"

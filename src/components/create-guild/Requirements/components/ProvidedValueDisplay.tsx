@@ -12,9 +12,9 @@ import {
   Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react"
+import { Info, Lightning, Question } from "@phosphor-icons/react"
 import Card from "components/common/Card"
-import { Info, Lightning, Question } from "phosphor-react"
-import { REQUIREMENT_PROVIDED_VALUES } from "requirements/requirements"
+import { REQUIREMENT_PROVIDED_VALUES } from "requirements/requirementProvidedValues"
 import { Requirement } from "types"
 
 const ProvidedValueDisplay = ({

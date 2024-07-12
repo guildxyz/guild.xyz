@@ -22,6 +22,8 @@ import {
   useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react"
+import { FarcasterProfile as FarcasterProfileType } from "@guildxyz/types"
+import { ArrowCounterClockwise, DeviceMobileCamera } from "@phosphor-icons/react"
 import useUser from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
@@ -29,7 +31,6 @@ import { Modal } from "components/common/Modal"
 import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import useSubmit, { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
-import { ArrowCounterClockwise, DeviceMobileCamera } from "phosphor-react"
 import { QRCodeSVG } from "qrcode.react"
 import { useCallback, useEffect, useState } from "react"
 import { isMobile } from "react-device-detect"

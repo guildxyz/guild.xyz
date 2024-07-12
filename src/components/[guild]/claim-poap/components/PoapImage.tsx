@@ -9,8 +9,8 @@ import {
   Spinner,
   useColorModeValue,
 } from "@chakra-ui/react"
+import { Image } from "@phosphor-icons/react"
 import Card from "components/common/Card"
-import { Image } from "phosphor-react"
 import PoapBg from "static/icons/poap-bg.svg"
 
 type Props = {

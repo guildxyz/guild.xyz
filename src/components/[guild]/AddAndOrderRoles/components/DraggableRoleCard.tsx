@@ -1,9 +1,9 @@
 import { HStack, Heading, Icon, Spacer } from "@chakra-ui/react"
+import { DotsSixVertical } from "@phosphor-icons/react"
 import MemberCount from "components/[guild]/RoleCard/components/MemberCount"
 import Visibility from "components/[guild]/Visibility"
 import Card from "components/common/Card"
 import GuildLogo from "components/common/GuildLogo"
-import { DotsSixVertical } from "phosphor-react"
 import { Role } from "types"
 
 type Props = {

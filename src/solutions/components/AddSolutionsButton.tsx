@@ -1,3 +1,4 @@
+import { Plus } from "@phosphor-icons/react"
 import {
   AddRewardProvider,
   useAddRewardContext,
@@ -5,7 +6,6 @@ import {
 import { useIsTabsStuck } from "components/[guild]/Tabs"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import Button from "components/common/Button"
-import { Plus } from "phosphor-react"
 import AddSolutionsModal from "./AddSolutionsModal"
 
 const AddSolutionsButton = () => {

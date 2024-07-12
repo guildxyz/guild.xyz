@@ -1,12 +1,7 @@
 import dynamic from "next/dynamic"
-import { Star } from "phosphor-react"
 import { AddRewardPanelLoadingSpinner } from "rewards/components/AddRewardPanelLoadingSpinner"
 import LoadingRewardPreview from "rewards/components/LoadingRewardPreview"
-import {
-  CardSettingsComponent,
-  PlatformAsRewardRestrictions,
-  RewardData,
-} from "rewards/types"
+import { CardSettingsComponent, RewardComponentsData } from "rewards/types"
 import usePointsCardProps from "./usePointsCardProps"
 
 export default {

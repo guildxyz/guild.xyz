@@ -1,7 +1,7 @@
 import { HStack, Icon, Stack, Tooltip } from "@chakra-ui/react"
+import { Check, Question } from "@phosphor-icons/react"
 import Button from "components/common/Button"
 import useTriggerNetworkChange from "hooks/useTriggerNetworkChange"
-import { Check, Question } from "phosphor-react"
 import { useEffect } from "react"
 import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements/types"

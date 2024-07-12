@@ -1,14 +1,12 @@
 import { Skeleton, Tooltip } from "@chakra-ui/react"
-import {
-  RewardDisplay,
-  RewardIcon,
-  RewardProps,
-} from "components/[guild]/RoleCard/components/Reward"
+import { ArrowRight } from "@phosphor-icons/react"
+import { RewardIcon } from "components/[guild]/RoleCard/components/Reward"
+import { RewardDisplay } from "components/[guild]/RoleCard/components/RewardDisplay"
+import { RewardProps } from "components/[guild]/RoleCard/components/types"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useGuildForm } from "components/[guild]/hooks/useGuildForms"
 import Button from "components/common/Button"
 import Link from "next/link"
-import { ArrowRight } from "phosphor-react"
 import { useUserFormSubmission } from "rewards/Forms/hooks/useFormSubmissions"
 
 const FormReward = ({ platform, withMotionImg }: RewardProps) => {

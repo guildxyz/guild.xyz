@@ -1,4 +1,5 @@
 import { MenuItem, useDisclosure } from "@chakra-ui/react"
+import { PencilSimple } from "@phosphor-icons/react"
 import RemovePlatformMenuItem from "components/[guild]/AccessHub/components/RemovePlatformMenuItem"
 import { ContractCallFunction } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
 import PlatformCardMenu from "components/[guild]/RolePlatforms/components/PlatformCard/components/PlatformCardMenu"
@@ -6,7 +7,6 @@ import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
-import { PencilSimple } from "phosphor-react"
 import EditNFTDescriptionModal from "./components/EditNFTDescriptionModal"
 import EditNftModal from "./components/EditNftModal"
 

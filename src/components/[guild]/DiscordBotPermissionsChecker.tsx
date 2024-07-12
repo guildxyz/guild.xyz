@@ -11,12 +11,12 @@ import {
   UnorderedList,
   useDisclosure,
 } from "@chakra-ui/react"
+import { ArrowSquareOut, Info } from "@phosphor-icons/react"
 import Button from "components/common/Button"
 import DiscordRoleVideo from "components/common/DiscordRoleVideo"
 import { Modal } from "components/common/Modal"
 import { env } from "env"
 import { ActionToastOptions, useToastWithButton } from "hooks/useToast"
-import { ArrowSquareOut, Info } from "phosphor-react"
 import { useMemo, useRef, useState } from "react"
 import useSWRImmutable from "swr/immutable"
 import { PlatformType } from "types"
