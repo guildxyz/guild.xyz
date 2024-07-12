@@ -31,7 +31,7 @@ export const Explorer = () => {
       {!!keyPair ? (
         <YourGuilds />
       ) : (
-        <Card className="my-2 mb-12 flex flex-col items-stretch justify-between gap-8 p-6 font-semibold sm:flex-row sm:items-center">
+        <Card className="mt-2 mb-8 flex flex-col items-stretch justify-between gap-8 p-6 font-semibold sm:flex-row sm:items-center">
           <div className="flex items-center gap-4">
             <Robot className="size-8 min-w-8 text-white" />
             <span>Sign in to view your guilds / create new ones</span>
@@ -46,9 +46,9 @@ export const Explorer = () => {
         </Card>
       )}
 
-      <section id={ActiveSection.ExploreGuilds}>
+      <section id={ActiveSection.ExploreGuilds} className="flex flex-col gap-5">
         <h2 className="font-bold text-lg tracking-tight">Explore verified guilds</h2>
-        <div className="sticky top-8 z-10" ref={searchRef}>
+        <div className="sticky top-12 z-10" ref={searchRef}>
           <Suspense>
             <GuildSearchBar queryAtom={guildQueryAtom} />
           </Suspense>

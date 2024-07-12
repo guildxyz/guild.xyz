@@ -21,7 +21,7 @@ export const smoothScrollTo = (id: string) => {
 
   window.scrollTo({
     behavior: "smooth",
-    top: target.getBoundingClientRect().top,
+    top: target.offsetTop,
   })
 }
 

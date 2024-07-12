@@ -94,17 +94,17 @@ export const GuildInfiniteScroll = ({
   }
 
   return (
-    <div>
+    <>
       <section
-        className="mt-1 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
+        className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
         ref={ref}
       >
         <GuildCards guildData={renderedGuilds} />
       </section>
       <Spinner
-        className="invisible mx-auto mt-6 size-8 animate-spin data-[active=true]:visible"
+        className="invisible mx-auto size-8 animate-spin data-[active=true]:visible"
         data-active={isValidating || isLoading}
       />
-    </div>
+    </>
   )
 }

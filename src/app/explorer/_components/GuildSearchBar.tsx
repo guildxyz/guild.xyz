@@ -45,7 +45,7 @@ export const GuildSearchBar = ({
   }, [debouncedSearch, order, setGuildQuery, pathName])
 
   return (
-    <div className="relative flex flex-col gap-3 py-4 sm:flex-row sm:gap-0">
+    <div className="relative flex flex-col gap-3 sm:flex-row sm:gap-0">
       <Input
         className="relative h-12 grow rounded-xl border border-border-muted pr-6 pl-10 text-md sm:rounded-r-none"
         placeholder="Search verified guilds"
@@ -66,7 +66,7 @@ export const GuildSearchBar = ({
         <ToggleGroupItem
           value={Order.Featured}
           className="space-x-2"
-          onClick={() => smoothScrollTo(ActiveSection.YourGuilds)}
+          onClick={() => smoothScrollTo(ActiveSection.ExploreGuilds)}
         >
           <PushPin />
           <span>featured</span>
@@ -74,7 +74,7 @@ export const GuildSearchBar = ({
         <ToggleGroupItem
           value={Order.Newest}
           className="space-x-2"
-          onClick={() => smoothScrollTo(ActiveSection.YourGuilds)}
+          onClick={() => smoothScrollTo(ActiveSection.ExploreGuilds)}
         >
           <Sparkle />
           <span>newest</span>
