@@ -1,6 +1,7 @@
 import { Layout } from "@/components/Layout"
 import { Anchor } from "@/components/ui/Anchor"
 import { env } from "env"
+import Head from "next/head"
 import { unstable_serialize as infinite_unstable_serialize } from "swr/infinite"
 import { Explorer } from "./_components/Explorer"
 import { ExplorerSWRProvider } from "./_components/ExplorerSWRProvider"
@@ -33,6 +34,9 @@ const Page = async () => {
             <Layout.Headline title="Guildhall" />
           </div>
           <Layout.Banner>
+            <Head>
+              <link rel="preload" as="image" href="/banner.png" />
+            </Head>
             <div className="absolute inset-0 bg-[auto_115%] bg-[right_top_10px] bg-[url('/banner.png')] bg-no-repeat opacity-10" />
             <div className="absolute inset-0 bg-gradient-to-tr from-50% from-banner to-transparent" />
           </Layout.Banner>

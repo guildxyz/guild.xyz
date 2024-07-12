@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils"
 import { useTheme } from "next-themes"
 import Image from "next/image"
 
-const IMAGE_QUALITY = 70
+const IMAGE_QUALITY = 70 as const
 
 type Props = {
   imageUrl: string
@@ -32,10 +32,9 @@ const GuildLogo = ({ imageUrl, className }: Props) => {
             src={imageUrl}
             quality={IMAGE_QUALITY}
             alt="Guild logo"
-            fill
-            style={{
-              objectFit: "cover",
-            }}
+            width={48}
+            height={48}
+            objectFit="cover"
           />
         ))}
     </div>
