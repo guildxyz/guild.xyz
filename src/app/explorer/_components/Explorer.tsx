@@ -4,6 +4,7 @@ import { walletSelectorModalAtom } from "@/components/Providers/atoms"
 import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { Button } from "@/components/ui/Button"
 import { Card } from "@/components/ui/Card"
+import { useUserPublic } from "@/hooks/useUserPublic"
 import { SignIn } from "@phosphor-icons/react"
 import { GuildSearchBar } from "app/explorer/_components/GuildSearchBar"
 import { YourGuilds } from "app/explorer/_components/YourGuilds"
@@ -17,7 +18,7 @@ import { GuildInfiniteScroll } from "./GuildInfiniteScroll"
 import { StickyBar } from "./StickyBar"
 
 export const Explorer = () => {
-  const { isWeb3Connected } = useWeb3ConnectionManager()
+  const { keyPair } = useUserPublic()
   const setIsSearchStuck = useSetAtom(isSearchStuckAtom)
   const setIsWalletSelectorModalOpen = useSetAtom(walletSelectorModalAtom)
 
@@ -27,7 +28,7 @@ export const Explorer = () => {
     <>
       <StickyBar />
 
-      {isWeb3Connected ? (
+      {!!keyPair ? (
         <YourGuilds />
       ) : (
         <Card className="my-2 mb-12 flex flex-col items-stretch justify-between gap-8 p-6 font-semibold sm:flex-row sm:items-center">
