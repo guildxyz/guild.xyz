@@ -8,20 +8,31 @@ import { HeaderBackground } from "./_components/HeaderBackground"
 import { ActiveSection } from "./types"
 
 const Page = async () => {
-  const path = `/v2/guilds?order=FEATURED&offset=0&limit=24`
-  const ssrGuilds = await fetch(`${env.NEXT_PUBLIC_API.replace("/v1", "")}${path}`, {
-    next: {
-      revalidate: 300,
-    },
-  })
-    .then((res) => res.json())
-    .catch((_) => [])
+  const featuredPath = `/v2/guilds?order=FEATURED&offset=0&limit=24`
+  const newestPath = `/v2/guilds?order=NEWEST&offset=0&limit=24`
+  const [ssrFeaturedGuilds, ssrNewestGuilds] = await Promise.all([
+    fetch(`${env.NEXT_PUBLIC_API.replace("/v1", "")}${featuredPath}`, {
+      next: {
+        revalidate: 300,
+      },
+    })
+      .then((res) => res.json())
+      .catch((_) => []),
+    fetch(`${env.NEXT_PUBLIC_API.replace("/v1", "")}${newestPath}`, {
+      next: {
+        revalidate: 300,
+      },
+    })
+      .then((res) => res.json())
+      .catch((_) => []),
+  ])
 
   return (
     <ExplorerSWRProvider
       value={{
         fallback: {
-          [infinite_unstable_serialize(() => path)]: ssrGuilds,
+          [infinite_unstable_serialize(() => featuredPath)]: ssrFeaturedGuilds,
+          [infinite_unstable_serialize(() => newestPath)]: ssrNewestGuilds,
         },
       }}
     >
