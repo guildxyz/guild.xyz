@@ -4,6 +4,7 @@ import { FuelProvider } from "@fuels/react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { fuelConfig } from "fuelConfig"
 import { ThemeProvider } from "next-themes"
+import { IconContext } from "phosphor-react"
 import { Suspense } from "react"
 import { SWRConfig } from "swr"
 import { fetcherForSWR } from "utils/fetcher"
@@ -27,24 +28,32 @@ export function Providers({ children }: { children: React.ReactNode }) {
       enableSystem
       disableTransitionOnChange
     >
-      <SWRConfig value={{ fetcher: fetcherForSWR }}>
-        <WagmiProvider config={wagmiConfig} reconnectOnMount={false}>
-          <QueryClientProvider client={queryClient}>
-            <FuelProvider ui={false} fuelConfig={fuelConfig}>
-              <PostHogProvider>
-                <IntercomProvider>
-                  {children}
-                  <AccountModal />
-                  <Suspense>
-                    <Web3ConnectionManager />
-                  </Suspense>
-                </IntercomProvider>
-              </PostHogProvider>
-            </FuelProvider>
-          </QueryClientProvider>
-        </WagmiProvider>
-      </SWRConfig>
-
+      <IconContext.Provider
+        value={{
+          color: "currentColor",
+          size: "1em",
+          weight: "bold",
+          mirrored: false,
+        }}
+      >
+        <SWRConfig value={{ fetcher: fetcherForSWR }}>
+          <WagmiProvider config={wagmiConfig} reconnectOnMount={false}>
+            <QueryClientProvider client={queryClient}>
+              <FuelProvider ui={false} fuelConfig={fuelConfig}>
+                <PostHogProvider>
+                  <IntercomProvider>
+                    {children}
+                    <AccountModal />
+                    <Suspense>
+                      <Web3ConnectionManager />
+                    </Suspense>
+                  </IntercomProvider>
+                </PostHogProvider>
+              </FuelProvider>
+            </QueryClientProvider>
+          </WagmiProvider>
+        </SWRConfig>
+      </IconContext.Provider>
       <Toaster />
     </ThemeProvider>
   )
