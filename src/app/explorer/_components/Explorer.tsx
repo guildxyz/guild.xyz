@@ -52,7 +52,9 @@ export const Explorer = () => {
             <GuildSearchBar />
           </Suspense>
         </div>
-        <GuildInfiniteScroll />
+        <Suspense>
+          <GuildInfiniteScroll />
+        </Suspense>
       </section>
     </>
   )
