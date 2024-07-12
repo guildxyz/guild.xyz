@@ -35,9 +35,8 @@ const CompleteCaptcha = (props: ButtonProps): JSX.Element => {
   const { reqAccesses } = useRoleMembership(roleId)
 
   const reqAccess = reqAccesses?.find((err) => err.requirementId === id)
-  const errorType = reqAccess?.errorType
 
-  if (!userId || (!!reqAccess && !errorType)) return null
+  if (!userId || (!!reqAccess?.access && !reqAccess?.errorType)) return null
 
   return (
     <>
