@@ -33,11 +33,6 @@ export const GuildSearchBar = () => {
       )
     )
 
-    /**
-     * ?order=FEATURED is the default order, so added this early return to avoid navigating from /explorer to /explorer?order=FEATURED after the initial page load
-     */
-    if (!searchParams?.get("order") && !search) return
-
     router.push(`${pathname}?${newSearchParams.toString()}`, {
       scroll: false,
     })
