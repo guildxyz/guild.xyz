@@ -13,6 +13,8 @@
     --card-secondary: 0 0% 98%;
     --card-foreground: var(--foreground);
 
+    --image: 240 5% 26%;
+
     --popover: var(--card);
     --popover-foreground: var(--card-foreground);
 
@@ -49,6 +51,8 @@
     --success-hover: 142 76% 36%;
     --success-active: 142 72% 29%;
     --success-foreground: 0 0% 100%;
+
+    --banner: 240 4% 16%;
 
     --border: 240 5.9% 90%;
     --border-muted: 240 3% 93%;
@@ -112,6 +116,8 @@
     --card-secondary: 240 5% 22%;
     --card-foreground: var(--foreground);
 
+    --image: 240 5% 34%;
+
     --popover: var(--card);
     --popover-foreground: var(--card-foreground);
 
@@ -129,7 +135,7 @@
     --secondary-foreground: 0 0% 100%;
 
     --muted: 240 3% 13%;
-    --muted-foreground: 240 5% 56%;
+    --muted-foreground: 240 5% 60%;
 
     --accent: 240 2% 35%;
     --accent-foreground: 0 0% 92%;
@@ -148,6 +154,8 @@
     --success-hover: 142 69% 58%;
     --success-active: 142 77% 73%;
     --success-foreground: 0 0% 100%;
+
+    --banner: 240 3% 22%;
 
     --border: 240 3% 38%;
     --border-muted: 240 3% 28%;

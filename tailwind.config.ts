@@ -23,6 +23,7 @@ const config = {
         display: ["var(--font-dystopian,sans-serif)"],
       },
       colors: {
+        banner: "hsl(var(--banner))",
         border: "hsl(var(--border))",
         "border-muted": "hsl(var(--border-muted))",
         input: "hsl(var(--input))",
@@ -81,6 +82,7 @@ const config = {
           secondary: "hsl(var(--card-secondary))",
           foreground: "hsl(var(--card-foreground))",
         },
+        image: "hsl(var(--image))",
         toast: {
           success: "hsla(var(--toast-success))",
           error: "hsla(var(--toast-error))",

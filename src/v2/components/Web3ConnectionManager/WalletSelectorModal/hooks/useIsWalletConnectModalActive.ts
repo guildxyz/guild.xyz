@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react"
 const useIsWalletConnectModalActive = () => {
   const [isWalletConnectModalActive, setIsWalletConnectModalActive] = useState(false)
 
-  const w3mModalRef = useRef(null)
+  const w3mModalRef = useRef<Element | null>(null)
   useEffect(() => {
     if (typeof window === "undefined" || w3mModalRef.current) return
     w3mModalRef.current = document.querySelector("wcm-modal")
@@ -16,6 +16,8 @@ const useIsWalletConnectModalActive = () => {
       w3mModalRef.current.shadowRoot?.getElementById("wcm-modal")
 
     if (!observerTarget) return
+
+    observerTarget.setAttribute("aria-label", "WalletConnectModal")
 
     const mutationCallback: MutationCallback = (mutations, _) => {
       const classNameChange = mutations.find(

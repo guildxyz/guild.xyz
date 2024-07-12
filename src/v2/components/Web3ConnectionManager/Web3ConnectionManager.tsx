@@ -30,5 +30,6 @@ export function Web3ConnectionManagerBase() {
 
 export function Web3ConnectionManager() {
   useTriggerWalletSelectorModal()
+
   return <Web3ConnectionManagerBase />
 }
