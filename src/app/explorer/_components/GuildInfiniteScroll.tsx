@@ -5,7 +5,7 @@ import useUser from "components/[guild]/hooks/useUser"
 import { env } from "env"
 import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import { useScrollBatchedRendering } from "hooks/useScrollBatchedRendering"
-import { PrimitiveAtom, useAtomValue } from "jotai"
+import { useSearchParams } from "next/navigation"
 import { memo, useRef } from "react"
 import { SWRConfiguration } from "swr"
 import useSWRInfinite from "swr/infinite"
@@ -26,7 +26,8 @@ const GuildCards = ({ guildData }: { guildData?: GuildBase[] }) => {
   return Array.from({ length: BATCH_SIZE }, (_, i) => <GuildCardSkeleton key={i} />)
 }
 
-const useExploreGuilds = (searchParams: URLSearchParams) => {
+const useExploreGuilds = () => {
+  const searchParams = useSearchParams()
   const { isSuperAdmin } = useUser()
   const fetcherWithSign = useFetcherWithSign()
   const options: SWRConfiguration = {
@@ -42,7 +43,7 @@ const useExploreGuilds = (searchParams: URLSearchParams) => {
       const url = new URL("/v2/guilds", env.NEXT_PUBLIC_API)
       const params: Record<string, string> = {
         order: "FEATURED",
-        ...Object.fromEntries(searchParams.entries()),
+        ...Object.fromEntries(searchParams?.entries() ?? []),
         offset: (BATCH_SIZE * pageIndex).toString(),
         limit: BATCH_SIZE.toString(),
       }
@@ -59,20 +60,16 @@ const useExploreGuilds = (searchParams: URLSearchParams) => {
   )
 }
 
-export const GuildInfiniteScroll = ({
-  queryAtom,
-}: {
-  queryAtom: PrimitiveAtom<string>
-}) => {
-  const searchParams = new URLSearchParams(useAtomValue(queryAtom))
-  const search = searchParams.get("search")
+export const GuildInfiniteScroll = () => {
+  const searchParams = useSearchParams()
+  const search = searchParams?.get("search")
   const ref = useRef<HTMLElement>(null)
   const {
     data: filteredGuilds,
     setSize,
     isValidating,
     isLoading,
-  } = useExploreGuilds(searchParams)
+  } = useExploreGuilds()
   const renderedGuilds = filteredGuilds?.flat()
 
   useScrollBatchedRendering({

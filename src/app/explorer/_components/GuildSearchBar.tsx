@@ -3,8 +3,7 @@
 import { MagnifyingGlass, PushPin, Sparkle } from "@phosphor-icons/react"
 import { ActiveSection } from "app/explorer/types"
 import useDebouncedState from "hooks/useDebouncedState"
-import { PrimitiveAtom, useSetAtom } from "jotai"
-import { usePathname, useSearchParams } from "next/navigation"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
 import { Input } from "../../../v2/components/ui/Input"
 import { ToggleGroup, ToggleGroupItem } from "../../../v2/components/ui/ToggleGroup"
@@ -15,30 +14,28 @@ enum Order {
   Newest = "NEWEST",
 }
 
-export const GuildSearchBar = ({
-  queryAtom,
-}: {
-  queryAtom: PrimitiveAtom<string>
-}) => {
-  const setGuildQuery = useSetAtom(queryAtom)
+export const GuildSearchBar = () => {
+  const router = useRouter()
   const searchParams = useSearchParams()
-  const pathName = usePathname()
+  const pathname = usePathname()
+
   const [order, setOrder] = useState<Order>(
-    (searchParams?.get("order") as Order) || Order.Featured
+    (searchParams?.get("order")?.toString() as Order) || Order.Featured
   )
-  const [search, setSearch] = useState(searchParams?.get("search") || "")
+  const [search, setSearch] = useState(searchParams?.get("search")?.toString() || "")
   const debouncedSearch = useDebouncedState(search, 150)
 
   useEffect(() => {
-    if (pathName === null) return
     const newSearchParams = new URLSearchParams(
       Object.entries({ order, search: debouncedSearch }).filter(
         ([_, value]) => value
       )
     )
 
-    setGuildQuery(newSearchParams.toString())
-  }, [debouncedSearch, order, setGuildQuery, pathName])
+    router.push(`${pathname}?${newSearchParams.toString()}`, {
+      scroll: false,
+    })
+  }, [debouncedSearch, order])
 
   return (
     <div className="relative flex flex-col gap-3 sm:flex-row sm:gap-0">

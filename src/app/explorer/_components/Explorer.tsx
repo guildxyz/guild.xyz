@@ -1,7 +1,6 @@
 "use client"
 
 import { walletSelectorModalAtom } from "@/components/Providers/atoms"
-import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { Button } from "@/components/ui/Button"
 import { Card } from "@/components/ui/Card"
 import { useUserPublic } from "@/hooks/useUserPublic"
@@ -12,7 +11,7 @@ import useIsStuck from "hooks/useIsStuck"
 import { useSetAtom } from "jotai"
 import { Suspense } from "react"
 import Robot from "/public/landing/robot.svg"
-import { guildQueryAtom, isSearchStuckAtom } from "../atoms"
+import { isSearchStuckAtom } from "../atoms"
 import { ActiveSection } from "../types"
 import { GuildInfiniteScroll } from "./GuildInfiniteScroll"
 import { StickyBar } from "./StickyBar"
@@ -50,10 +49,10 @@ export const Explorer = () => {
         <h2 className="font-bold text-lg tracking-tight">Explore verified guilds</h2>
         <div className="sticky top-12 z-10" ref={searchRef}>
           <Suspense>
-            <GuildSearchBar queryAtom={guildQueryAtom} />
+            <GuildSearchBar />
           </Suspense>
         </div>
-        <GuildInfiniteScroll queryAtom={guildQueryAtom} />
+        <GuildInfiniteScroll />
       </section>
     </>
   )
