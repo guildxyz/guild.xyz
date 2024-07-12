@@ -1,6 +1,6 @@
 import { Link } from "@chakra-ui/next-js"
 import { Icon, Skeleton, Text } from "@chakra-ui/react"
-import { ArrowSquareOut } from "@phosphor-icons/react"
+import { ArrowSquareOut } from "phosphor-react"
 import shortenHex from "utils/shortenHex"
 import { CHAIN_CONFIG, Chain } from "wagmiConfig/chains"
 

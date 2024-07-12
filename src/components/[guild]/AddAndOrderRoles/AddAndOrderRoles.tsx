@@ -9,9 +9,9 @@ import {
   MenuList,
   useDisclosure,
 } from "@chakra-ui/react"
-import { CaretDown, ListNumbers, Plus } from "@phosphor-icons/react"
 import Button from "components/common/Button"
 import useIsStuck from "hooks/useIsStuck"
+import { CaretDown, ListNumbers, Plus } from "phosphor-react"
 import { useEffect, useRef } from "react"
 import RecheckAccessesButton from "../RecheckAccessesButton"
 import AddRoleDrawer from "./components/AddRoleDrawer"

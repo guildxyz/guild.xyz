@@ -1,8 +1,8 @@
-import { ArrowLeft } from "@phosphor-icons/react"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import Button from "components/common/Button"
 import Link from "next/link"
 import { useRouter } from "next/router"
+import { ArrowLeft } from "phosphor-react"
 import { PropsWithChildren } from "react"
 
 type Props = {

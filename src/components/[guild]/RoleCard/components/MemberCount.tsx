@@ -17,12 +17,12 @@ import {
   TagRightIcon,
   Text,
 } from "@chakra-ui/react"
-import { Users } from "@phosphor-icons/react"
 import { POPOVER_HEADER_STYLES } from "components/[guild]/Requirements/components/RequirementAccessIndicator"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useUser from "components/[guild]/hooks/useUser"
 import useActiveStatusUpdates from "hooks/useActiveStatusUpdates"
+import { Users } from "phosphor-react"
 import { PropsWithChildren } from "react"
 import MemberCountLastSyncTooltip, {
   SyncRoleButton,

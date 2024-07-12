@@ -12,8 +12,8 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
-import { CaretDown, Plus } from "@phosphor-icons/react"
 import CreateCampaignModal from "components/[guild]/CreateCampaignModal"
+import { CaretDown, Plus } from "phosphor-react"
 import AddSolutionsButton from "solutions/components/AddSolutionsButton"
 import { useIsTabsStuck } from "./Tabs"
 import { useThemeContext } from "./ThemeContext"

@@ -1,6 +1,6 @@
 import { Icon } from "@chakra-ui/react"
 import { SystemStyleObject } from "@chakra-ui/theme-tools"
-import { IconProps, Question } from "@phosphor-icons/react"
+import { IconProps, Question } from "phosphor-react"
 import { Rest } from "types"
 import { ACTION, activityLogActionIcons } from "../../constants"
 import { useActivityLogActionContext } from "../ActivityLogActionContext"

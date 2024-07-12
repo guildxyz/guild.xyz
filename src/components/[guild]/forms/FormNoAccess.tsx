@@ -7,10 +7,10 @@ import {
   useBreakpointValue,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { Lock } from "@phosphor-icons/react"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import ClientOnly from "components/common/ClientOnly"
+import { Lock } from "phosphor-react"
 import { PropsWithChildren } from "react"
 import { useOpenJoinModal } from "../JoinModal/JoinModalProvider"
 import RecheckAccessesButton from "../RecheckAccessesButton"

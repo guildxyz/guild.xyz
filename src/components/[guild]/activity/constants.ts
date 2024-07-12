@@ -29,7 +29,7 @@ import {
   UserList,
   UserMinus,
   UserSwitch,
-} from "@phosphor-icons/react"
+} from "phosphor-react"
 import { ForwardRefExoticComponent, RefAttributes } from "react"
 
 export enum ACTION {

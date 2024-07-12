@@ -12,9 +12,9 @@ import {
   UnorderedList,
   useDisclosure,
 } from "@chakra-ui/react"
-import { ArrowSquareOut, DotsThree } from "@phosphor-icons/react"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
+import { ArrowSquareOut, DotsThree } from "phosphor-react"
 import { CSSProperties, memo, useEffect, useRef } from "react"
 import { VariableSizeList } from "react-window"
 import { ActivityLogAction } from "../../constants"

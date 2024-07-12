@@ -9,10 +9,10 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
-import { ArchiveBox } from "@phosphor-icons/react"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import { SectionTitle } from "components/common/Section"
+import { ArchiveBox } from "phosphor-react"
 import ExportCard from "./ExportCard"
 import useExportMembers from "./useExportMembers"
 import useExports from "./useExports"

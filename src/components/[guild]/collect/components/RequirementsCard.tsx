@@ -1,10 +1,10 @@
 import { Box, Icon, Stack, useColorModeValue, useDisclosure } from "@chakra-ui/react"
-import { Question } from "@phosphor-icons/react"
 import RoleRequirements from "components/[guild]/Requirements"
 import Requirement from "components/[guild]/Requirements/components/Requirement"
 import { RoleRequirementsSectionHeader } from "components/[guild]/RoleCard/components/RoleRequirementsSection"
 import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
+import { Question } from "phosphor-react"
 import { PropsWithChildren } from "react"
 import { Role } from "types"
 

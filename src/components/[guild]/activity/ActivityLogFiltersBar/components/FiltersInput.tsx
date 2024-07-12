@@ -6,9 +6,9 @@ import {
   Wrap,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { CaretDown, X } from "@phosphor-icons/react"
 import * as combobox from "@zag-js/combobox"
 import { normalizeProps, useMachine } from "@zag-js/react"
+import { CaretDown, X } from "phosphor-react"
 import { KeyboardEvent, useEffect, useRef, useState } from "react"
 import {
   SUPPORTED_SEARCH_OPTIONS,

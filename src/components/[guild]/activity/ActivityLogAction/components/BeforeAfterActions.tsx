@@ -8,10 +8,10 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
-import { ArrowRight } from "@phosphor-icons/react"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import GuildLogo from "components/common/GuildLogo"
 import useColorPalette from "hooks/useColorPalette"
+import { ArrowRight } from "phosphor-react"
 import { Requirement } from "types"
 import { useActivityLog } from "../../ActivityLogContext"
 import { ACTION } from "../../constants"

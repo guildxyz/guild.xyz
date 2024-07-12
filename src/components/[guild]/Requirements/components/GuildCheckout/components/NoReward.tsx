@@ -1,5 +1,5 @@
 import { HStack, Icon, Text } from "@chakra-ui/react"
-import { StarHalf } from "@phosphor-icons/react"
+import { StarHalf } from "phosphor-react"
 
 const NoReward = () => (
   <HStack pt="3" spacing={0} alignItems={"flex-start"} opacity=".7">
