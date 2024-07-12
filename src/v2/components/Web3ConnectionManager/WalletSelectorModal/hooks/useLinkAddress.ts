@@ -108,7 +108,7 @@ const useLinkAddress = () => {
       const newPublicProfile = {
         id: userId,
         publicKey: keys.pubKey,
-        captchaVerifiedSince: new Date().toISOString(), // We don't necessarily know this, but the user has to be verified because of the main user. So we are just setting this to the current date, so the app knows the user is verified
+        captchaVerifiedSince: new Date("2002").toISOString(), // We don't necessarily know this, but the user has to be verified because of the main user. So we are just setting this to the current date, so the app knows the user is verified
         keyPair: keys,
       }
 

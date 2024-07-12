@@ -5,6 +5,7 @@ import { dystopian, inter } from "fonts"
 import type { Metadata } from "next"
 import { type ReactNode, Suspense } from "react"
 import "./globals.css"
+import { Recaptcha } from "@/components/Recaptcha"
 
 interface RootLayoutProps {
   children: ReactNode
@@ -27,6 +28,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           <Suspense>
             <PostHogPageViews />
           </Suspense>
+          <Recaptcha />
         </Providers>
       </body>
     </html>

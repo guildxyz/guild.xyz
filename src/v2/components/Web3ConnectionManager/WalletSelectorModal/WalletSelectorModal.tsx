@@ -5,7 +5,7 @@ import {
   walletLinkHelperModalAtom,
 } from "@/components/Providers/atoms"
 import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
-import { Anchor, anchorVariants } from "@/components/ui/Anchor"
+import { Anchor } from "@/components/ui/Anchor"
 import { Button } from "@/components/ui/Button"
 import {
   Dialog,
@@ -18,10 +18,10 @@ import {
 import { useErrorToast } from "@/components/ui/hooks/useErrorToast"
 import { usePrevious } from "@/hooks/usePrevious"
 import { useUserPublic } from "@/hooks/useUserPublic"
-import { ArrowSquareOut } from "@phosphor-icons/react/dist/ssr"
 import useSetKeyPair from "hooks/useSetKeyPair"
 import { useAtom, useSetAtom } from "jotai"
 import { useEffect } from "react"
+import { shouldUseReCAPTCHAAtom } from "utils/recaptcha"
 import { type Connector, useAccount, useConnect } from "wagmi"
 import { COINBASE_INJECTED_WALLET_ID, COINBASE_WALLET_SDK_ID } from "wagmiConfig"
 import AccountButton from "./components/AccountButton"
@@ -121,6 +121,12 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
   const conditionalOnClose = () => {
     if (!isWeb3Connected || !!keyPair) onClose()
   }
+  const [captcha, setCaptcha] = useAtom(shouldUseReCAPTCHAAtom)
+
+  useEffect(() => {
+    setCaptcha(true)
+  }, [])
+  console.log("captca", captcha)
 
   return (
     <Dialog
@@ -245,7 +251,7 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
             loadingText={!id ? "Looking for keypairs" : "Check your wallet"}
             className="mb-4 w-full"
           >
-            {isAddressLink ? "Link address" : "Verify address"}{" "}
+            {isAddressLink ? "Link address" : "Verify address"}
           </Button>
         )}
 
@@ -254,17 +260,15 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
             <div className="flex w-full flex-col gap-2 text-center text-sm">
               <p className="text-muted-foreground">
                 <span>{"New to Ethereum wallets? "}</span>
-                <a
+                <Anchor
                   href="https://ethereum.org/en/wallets"
                   target="_blank"
-                  className={anchorVariants({
-                    variant: "highlighted",
-                    className: "inline-flex items-center gap-1",
-                  })}
+                  variant="highlighted"
+                  className="inline-flex items-center gap-1"
+                  showExternal
                 >
                   Learn more
-                  <ArrowSquareOut />
-                </a>
+                </Anchor>
               </p>
 
               <p className="text-muted-foreground">
@@ -295,27 +299,23 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
               </p>
               <p className="text-muted-foreground">
                 <span>{"This site is protected by reCAPTCHA, so the Google "}</span>
-                <a
+                <Anchor
                   href="https://policies.google.com/privacy"
                   target="_blank"
-                  className={anchorVariants({
-                    variant: "muted",
-                    className: "font-semibold",
-                  })}
+                  variant="muted"
+                  className="font-semibold"
                 >
                   Privacy Policy
-                </a>{" "}
+                </Anchor>{" "}
                 <span>{"and "}</span>
-                <a
+                <Anchor
                   href="https://policies.google.com/terms"
                   target="_blank"
-                  className={anchorVariants({
-                    variant: "muted",
-                    className: "font-semibold",
-                  })}
+                  variant="muted"
+                  className="font-semibold"
                 >
                   Terms of Service
-                </a>
+                </Anchor>
                 <span>{" apply"}</span>
               </p>
             </div>
