@@ -55,7 +55,7 @@ const Page = async () => {
 
         <Layout.Footer>
           <p className="my-8 text-center text-muted-foreground text-sm">
-            This website is{" "}
+            {`This website is `}
             <Anchor
               href="https://github.com/guildxyz/guild.xyz"
               target="_blank"
@@ -63,7 +63,7 @@ const Page = async () => {
             >
               open source
             </Anchor>
-            , and built on the{" "}
+            {`, and built on the `}
             <Anchor
               target="_blank"
               href="https://www.npmjs.com/package/@guildxyz/sdk"
