@@ -1,6 +1,5 @@
 import useAutoReconnect from "@/hooks/useAutoReconnect"
 import { useAtom } from "jotai"
-import { useEffect } from "react"
 import { walletSelectorModalAtom } from "../Providers/atoms"
 import { PlatformMergeErrorAlert } from "./PlatformMergeErrorAlert"
 import WalletLinkHelperModal from "./WalletLinkHelperModal"

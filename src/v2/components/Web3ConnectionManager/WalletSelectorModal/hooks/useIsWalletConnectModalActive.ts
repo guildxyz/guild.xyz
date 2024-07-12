@@ -17,7 +17,7 @@ const useIsWalletConnectModalActive = () => {
 
     if (!observerTarget) return
 
-    observerTarget.setAttribute("aria-label", "Web3ConnectionManager")
+    observerTarget.setAttribute("aria-label", "WalletConnectModal")
 
     const mutationCallback: MutationCallback = (mutations, _) => {
       const classNameChange = mutations.find(

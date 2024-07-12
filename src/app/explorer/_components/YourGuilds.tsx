@@ -1,19 +1,12 @@
 "use client"
 
+import { useYourGuilds } from "@/hooks/useYourGuilds"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import { GuildBase } from "types"
 import {
   GuildCardSkeleton,
   GuildCardWithLink,
 } from "../../../v2/components/GuildCard"
-
-const useYourGuilds = () =>
-  useSWRWithOptionalAuth<GuildBase[]>(
-    `/v2/guilds?yours=true`,
-    undefined,
-    false,
-    true
-  )
 
 export const YourGuilds = () => {
   const { data: usersGuilds, isLoading: isGuildsLoading } = useYourGuilds()

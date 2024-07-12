@@ -1,25 +1,27 @@
 "use client"
 
 import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
-import { Button } from "@/components/ui/Button"
+import { Anchor } from "@/components/ui/Anchor"
+import { Button, buttonVariants } from "@/components/ui/Button"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/ToggleGroup"
 import { cn } from "@/lib/utils"
 import { Plus } from "@phosphor-icons/react"
 import useIsStuck from "hooks/useIsStuck"
 import useScrollspy from "hooks/useScrollSpy"
 import { useAtom, useAtomValue, useSetAtom } from "jotai"
+import Link from "next/link"
 import { useEffect } from "react"
 import { activeSectionAtom, isNavStuckAtom, isSearchStuckAtom } from "../atoms"
 import { ActiveSection } from "../types"
 
-const smoothScrollTo = (id: string) => {
+export const smoothScrollTo = (id: string) => {
   const target = document.getElementById(id)
 
   if (!target) return
 
   window.scrollTo({
     behavior: "smooth",
-    top: target.getBoundingClientRect().top,
+    top: target.offsetTop,
   })
 }
 
@@ -67,16 +69,23 @@ const Nav = () => {
 const CreateGuildLink = () => {
   const isNavStuck = useAtomValue(isNavStuckAtom)
   return (
-    <Button
-      variant="ghost"
-      size="sm"
-      className={cn("gap-1.5", {
-        "text-white": !isNavStuck,
+    <Link
+      href="/create-guild"
+      prefetch={false}
+      className={buttonVariants({
+        variant: "ghost",
+        size: "sm",
+        className: [
+          "gap-1.5",
+          {
+            "text-white": !isNavStuck,
+          },
+        ],
       })}
     >
       <Plus />
       <span>Create guild</span>
-    </Button>
+    </Link>
   )
 }
 

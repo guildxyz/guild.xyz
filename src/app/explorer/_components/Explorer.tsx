@@ -1,23 +1,24 @@
 "use client"
 
 import { walletSelectorModalAtom } from "@/components/Providers/atoms"
-import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { Button } from "@/components/ui/Button"
 import { Card } from "@/components/ui/Card"
+import { useUserPublic } from "@/hooks/useUserPublic"
 import { SignIn } from "@phosphor-icons/react"
 import { GuildSearchBar } from "app/explorer/_components/GuildSearchBar"
 import { YourGuilds } from "app/explorer/_components/YourGuilds"
 import useIsStuck from "hooks/useIsStuck"
 import { useSetAtom } from "jotai"
 import { Suspense } from "react"
+import { SearchParams } from "types"
 import Robot from "/public/landing/robot.svg"
-import { guildQueryAtom, isSearchStuckAtom } from "../atoms"
+import { isSearchStuckAtom } from "../atoms"
 import { ActiveSection } from "../types"
 import { GuildInfiniteScroll } from "./GuildInfiniteScroll"
 import { StickyBar } from "./StickyBar"
 
-export const Explorer = () => {
-  const { isWeb3Connected } = useWeb3ConnectionManager()
+export const Explorer = ({ searchParams }: { searchParams: SearchParams }) => {
+  const { keyPair } = useUserPublic()
   const setIsSearchStuck = useSetAtom(isSearchStuckAtom)
   const setIsWalletSelectorModalOpen = useSetAtom(walletSelectorModalAtom)
 
@@ -27,10 +28,10 @@ export const Explorer = () => {
     <>
       <StickyBar />
 
-      {isWeb3Connected ? (
+      {!!keyPair ? (
         <YourGuilds />
       ) : (
-        <Card className="my-2 mb-12 flex flex-col items-stretch justify-between gap-8 p-6 font-semibold sm:flex-row sm:items-center">
+        <Card className="mt-2 mb-8 flex flex-col items-stretch justify-between gap-8 p-6 font-semibold sm:flex-row sm:items-center">
           <div className="flex items-center gap-4">
             <Robot className="size-8 min-w-8 text-white" />
             <span>Sign in to view your guilds / create new ones</span>
@@ -45,14 +46,15 @@ export const Explorer = () => {
         </Card>
       )}
 
-      <section id={ActiveSection.ExploreGuilds}>
+      <section id={ActiveSection.ExploreGuilds} className="flex flex-col gap-5">
         <h2 className="font-bold text-lg tracking-tight">Explore verified guilds</h2>
-        <div className="sticky top-8 z-10" ref={searchRef}>
+        <div className="sticky top-12 z-10" ref={searchRef}>
           <Suspense>
-            <GuildSearchBar queryAtom={guildQueryAtom} />
+            <GuildSearchBar />
           </Suspense>
         </div>
-        <GuildInfiniteScroll queryAtom={guildQueryAtom} />
+
+        <GuildInfiniteScroll searchParams={searchParams} />
       </section>
     </>
   )

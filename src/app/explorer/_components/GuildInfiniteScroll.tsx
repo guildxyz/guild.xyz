@@ -1,19 +1,15 @@
 "use client"
 
+import { GuildCardSkeleton, GuildCardWithLink } from "@/components/GuildCard"
 import { Spinner } from "@phosphor-icons/react"
 import useUser from "components/[guild]/hooks/useUser"
 import { env } from "env"
 import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import { useScrollBatchedRendering } from "hooks/useScrollBatchedRendering"
-import { PrimitiveAtom, useAtomValue } from "jotai"
 import { memo, useRef } from "react"
 import { SWRConfiguration } from "swr"
 import useSWRInfinite from "swr/infinite"
-import { GuildBase } from "types"
-import {
-  GuildCardSkeleton,
-  GuildCardWithLink,
-} from "../../../v2/components/GuildCard"
+import { GuildBase, SearchParams } from "types"
 
 const BATCH_SIZE = 24
 
@@ -26,7 +22,7 @@ const GuildCards = ({ guildData }: { guildData?: GuildBase[] }) => {
   return Array.from({ length: BATCH_SIZE }, (_, i) => <GuildCardSkeleton key={i} />)
 }
 
-const useExploreGuilds = (searchParams: URLSearchParams) => {
+const useExploreGuilds = (searchParams?: SearchParams) => {
   const { isSuperAdmin } = useUser()
   const fetcherWithSign = useFetcherWithSign()
   const options: SWRConfiguration = {
@@ -42,7 +38,7 @@ const useExploreGuilds = (searchParams: URLSearchParams) => {
       const url = new URL("/v2/guilds", env.NEXT_PUBLIC_API)
       const params: Record<string, string> = {
         order: "FEATURED",
-        ...Object.fromEntries(searchParams.entries()),
+        ...searchParams,
         offset: (BATCH_SIZE * pageIndex).toString(),
         limit: BATCH_SIZE.toString(),
       }
@@ -60,12 +56,9 @@ const useExploreGuilds = (searchParams: URLSearchParams) => {
 }
 
 export const GuildInfiniteScroll = ({
-  queryAtom,
-}: {
-  queryAtom: PrimitiveAtom<string>
-}) => {
-  const searchParams = new URLSearchParams(useAtomValue(queryAtom))
-  const search = searchParams.get("search")
+  searchParams,
+}: { searchParams: SearchParams }) => {
+  const search = searchParams.search
   const ref = useRef<HTMLElement>(null)
   const {
     data: filteredGuilds,
@@ -94,17 +87,17 @@ export const GuildInfiniteScroll = ({
   }
 
   return (
-    <div>
+    <>
       <section
-        className="mt-1 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
+        className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
         ref={ref}
       >
         <GuildCards guildData={renderedGuilds} />
       </section>
       <Spinner
-        className="invisible mx-auto mt-6 size-8 animate-spin data-[active=true]:visible"
+        className="invisible mx-auto size-8 animate-spin data-[active=true]:visible"
         data-active={isValidating || isLoading}
       />
-    </div>
+    </>
   )
 }
