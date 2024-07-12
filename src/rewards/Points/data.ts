@@ -1,4 +1,4 @@
-import { Star } from "@phosphor-icons/react"
+import { Star } from "phosphor-react"
 import { PlatformAsRewardRestrictions, RewardData } from "rewards/types"
 
 export const pointsData = {

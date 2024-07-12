@@ -11,11 +11,11 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
-import { ShoppingCartSimple } from "@phosphor-icons/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
+import { ShoppingCartSimple } from "phosphor-react"
 import { useAccount } from "wagmi"
 import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
 import BlockExplorerUrl from "../BlockExplorerUrl"

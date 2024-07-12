@@ -16,7 +16,6 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
-import { ArrowRight, ArrowSquareOut } from "@phosphor-icons/react"
 import {
   initWeb3InboxClient,
   useNotifications,
@@ -33,6 +32,7 @@ import { env } from "env"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
 import dynamic from "next/dynamic"
+import { ArrowRight, ArrowSquareOut } from "phosphor-react"
 import { useRef, useState } from "react"
 import { useAccount, useSignMessage } from "wagmi"
 import WebInboxSkeleton from "./WebInboxSkeleton"

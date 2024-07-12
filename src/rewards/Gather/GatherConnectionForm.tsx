@@ -12,9 +12,9 @@ import {
   Stack,
   Tooltip,
 } from "@chakra-ui/react"
-import { Eye, EyeClosed, Question } from "@phosphor-icons/react"
 import { AddGatherFormType } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddGatherPanel"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import { Eye, EyeClosed, Question } from "phosphor-react"
 import { CSSProperties, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import GatherConnectionStatusAlert from "./GatherConnectionStatusAlert"

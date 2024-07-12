@@ -6,9 +6,9 @@ import {
   MenuButton,
   MenuList,
 } from "@chakra-ui/react"
-import { CaretDown, PencilSimple } from "@phosphor-icons/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import LinkMenuItem from "components/common/LinkMenuItem"
+import { CaretDown, PencilSimple } from "phosphor-react"
 import AddHiddenRoleButton from "./AddHiddenRoleButton"
 
 const AddAndEditHiddenRoles = () => {

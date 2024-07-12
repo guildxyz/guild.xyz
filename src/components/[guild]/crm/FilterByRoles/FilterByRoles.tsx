@@ -19,8 +19,8 @@ import {
   useColorMode,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { Funnel } from "@phosphor-icons/react"
 import { MemberCountWithSyncIndicator } from "components/[guild]/RoleCard/components/MemberCount"
+import { Funnel } from "phosphor-react"
 import { memo, useState } from "react"
 import { Role } from "types"
 import useGuild from "../../hooks/useGuild"

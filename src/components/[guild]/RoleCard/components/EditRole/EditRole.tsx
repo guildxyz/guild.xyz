@@ -11,7 +11,6 @@ import {
   VStack,
   useDisclosure,
 } from "@chakra-ui/react"
-import { PencilSimple } from "@phosphor-icons/react"
 import { ApiRequirementHandlerProvider } from "components/[guild]/RequirementHandlerContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import DiscardAlert from "components/common/DiscardAlert"
@@ -22,6 +21,7 @@ import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
 import EditRequirements from "components/create-guild/Requirements/EditRequirements"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
+import { PencilSimple } from "phosphor-react"
 import { useRef } from "react"
 import { FormProvider } from "react-hook-form"
 import EditRoleFooter from "./components/EditRoleFooter"

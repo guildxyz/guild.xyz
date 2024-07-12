@@ -8,10 +8,10 @@ import {
   Text,
   Tooltip,
 } from "@chakra-ui/react"
-import { Question } from "@phosphor-icons/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import RadioButtonGroup from "components/common/RadioButtonGroup"
+import { Question } from "phosphor-react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { useSymbolsOfPair } from "requirements/Uniswap/hooks/useSymbolsOfPair"
 import { PlatformType } from "types"

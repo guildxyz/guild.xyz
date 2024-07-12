@@ -1,8 +1,8 @@
 import { Icon } from "@chakra-ui/react"
-import { ArrowRight } from "@phosphor-icons/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import Link from "next/link"
+import { ArrowRight } from "phosphor-react"
 import { GuildPlatform } from "types"
 
 type Props = {

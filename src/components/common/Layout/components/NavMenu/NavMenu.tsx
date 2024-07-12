@@ -11,6 +11,11 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
+import Button from "components/common/Button"
+import { useSetAtom } from "jotai"
+import dynamic from "next/dynamic"
+import { useRouter } from "next/router"
+import { explorerScrollRestorationAtom } from "pages/explorer"
 import {
   Book,
   CircleWavyCheck,
@@ -25,12 +30,7 @@ import {
   Plus,
   Shield,
   UsersThree,
-} from "@phosphor-icons/react"
-import Button from "components/common/Button"
-import { useSetAtom } from "jotai"
-import dynamic from "next/dynamic"
-import { useRouter } from "next/router"
-import { explorerScrollRestorationAtom } from "pages/explorer"
+} from "phosphor-react"
 import XLogo from "static/icons/x.svg"
 import NavButton from "./components/NavButton"
 import NavGroup from "./components/NavGroup"

@@ -1,4 +1,4 @@
-import { DiscordLogo } from "@phosphor-icons/react"
+import { DiscordLogo } from "phosphor-react"
 import { PlatformAsRewardRestrictions, RewardData } from "rewards/types"
 
 export const discordData = {

@@ -14,7 +14,6 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
-import { ArrowSquareOut, Link as LinkIcon } from "@phosphor-icons/react"
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import Requirement, {
   RequirementProps,
@@ -34,6 +33,7 @@ import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import NextLink from "next/link"
+import { ArrowSquareOut, Link as LinkIcon } from "phosphor-react"
 import { useRef } from "react"
 import { useFormContext } from "react-hook-form"
 import fetcher from "utils/fetcher"
