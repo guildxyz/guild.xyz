@@ -94,7 +94,6 @@ const nextConfig = {
   experimental: {
     scrollRestoration: true,
     optimizePackageImports: [
-      "phosphor-react",
       "@fuels/react",
       "fuels",
     ],
