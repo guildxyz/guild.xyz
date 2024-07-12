@@ -21,7 +21,7 @@ const DialogOverlay = React.forwardRef<
   <DialogPrimitive.Overlay
     ref={ref}
     className={cn(
-      "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 grid place-items-center overflow-y-auto bg-black/50 backdrop-blur-sm data-[state=closed]:animate-out data-[state=open]:animate-in",
+      "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 grid items-end justify-center overflow-y-auto bg-black/50 backdrop-blur-sm data-[state=closed]:animate-out data-[state=open]:animate-in sm:items-center",
       className
     )}
     {...props}
@@ -30,7 +30,7 @@ const DialogOverlay = React.forwardRef<
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName
 
 export const dialogContentVariants = cva(
-  "w-full my-16 relative rounded-xl bg-card shadow-lg p-10 duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 focus-visible:outline-none ring-ring focus-visible:ring-4 ring-offset-0",
+  "w-full mt-4 md:my-16 relative rounded-xl max-sm:rounded-b-none bg-card shadow-lg px-6 py-10 sm:px-10 duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 focus-visible:outline-none ring-ring focus-visible:ring-4 ring-offset-0",
   {
     variants: {
       size: {
@@ -82,7 +82,7 @@ const DialogCloseButton = React.forwardRef<
   <DialogPrimitive.Close
     ref={ref}
     className={cn(
-      "absolute top-8 right-10 rounded-full opacity-70 transition-opacity hover:opacity-100 focus:outline-none focus:ring-ring focus-visible:ring-4 disabled:pointer-events-none data-[state=open]:text-muted-foreground",
+      "absolute top-8 right-8 rounded-full opacity-70 transition-opacity hover:opacity-100 focus:outline-none focus:ring-ring focus-visible:ring-4 disabled:pointer-events-none data-[state=open]:text-muted-foreground md:right-10",
       className
     )}
     {...props}
@@ -97,7 +97,7 @@ const DialogHeader = ({
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn("flex flex-col space-y-1.5 pb-8", className)} {...props} />
+  <div className={cn("flex flex-col space-y-1.5 pb-9", className)} {...props} />
 )
 DialogHeader.displayName = "DialogHeader"
 
