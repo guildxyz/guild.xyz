@@ -19,7 +19,7 @@ import {
 } from "@phosphor-icons/react/dist/ssr"
 import dynamic from "next/dynamic"
 import Link, { LinkProps } from "next/link"
-import { useRouter } from "next/router"
+import { usePathname } from "next/navigation"
 import { AnchorHTMLAttributes, ReactNode } from "react"
 import { ThemeToggle } from "../ThemeToggle"
 import { Button } from "../ui/Button"
@@ -132,7 +132,7 @@ const NavGroup = ({ title, children }: { title: string; children: ReactNode }) =
 )
 
 const NavButton = ({ href, children }: { href: string; children: ReactNode }) => {
-  const router = useRouter()
+  const pathname = usePathname()
 
   const isExternal = href.startsWith("http")
   const wrapperProps = {
@@ -156,7 +156,7 @@ const NavButton = ({ href, children }: { href: string; children: ReactNode }) =>
         variant="ghost"
         className={cn(
           "h-10 w-full justify-start gap-2",
-          router.route === href ? "font-semibold" : "font-normal"
+          pathname === href ? "font-semibold" : "font-normal"
         )}
       >
         {children}
