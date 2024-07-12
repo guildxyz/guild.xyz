@@ -26,7 +26,7 @@ export const GuildSearchBar = ({
     (searchParams?.get("order") as Order) || Order.Featured
   )
   const [search, setSearch] = useState(searchParams?.get("search") || "")
-  const debouncedSearch = useDebouncedState(search, 90)
+  const debouncedSearch = useDebouncedState(search, 150)
 
   useEffect(() => {
     if (pathName === null) return
