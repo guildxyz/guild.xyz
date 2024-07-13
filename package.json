@@ -119,7 +119,6 @@
   "devDependencies": {
     "@biomejs/biome": "1.8.3",
     "@chromatic-com/storybook": "^1.6.0",
-    "@esbuild/linux-x64": "^0.22.0",
     "@hookform/devtools": "^4.3.0",
     "@storybook/addon-essentials": "^8.1.11",
     "@storybook/addon-interactions": "^8.1.11",
