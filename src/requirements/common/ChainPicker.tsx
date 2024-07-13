@@ -6,7 +6,7 @@ import {
   InputGroup,
   InputLeftElement,
 } from "@chakra-ui/react"
-import { Question } from "@phosphor-icons/react"
+import { Question } from "@phosphor-icons/react/Question"
 import ControlledSelect from "components/common/ControlledSelect"
 import { StyledSelectProps } from "components/common/StyledSelect/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"

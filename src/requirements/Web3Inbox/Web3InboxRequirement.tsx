@@ -1,5 +1,5 @@
 import { Link, Text } from "@chakra-ui/react"
-import { ArrowSquareOut } from "@phosphor-icons/react"
+import { ArrowSquareOut } from "@phosphor-icons/react/ArrowSquareOut"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"

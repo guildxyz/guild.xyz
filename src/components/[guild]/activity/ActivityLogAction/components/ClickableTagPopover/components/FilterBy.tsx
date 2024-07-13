@@ -1,4 +1,4 @@
-import { Funnel } from "@phosphor-icons/react"
+import { Funnel } from "@phosphor-icons/react/Funnel"
 import {
   FILTER_NAMES,
   Filter,

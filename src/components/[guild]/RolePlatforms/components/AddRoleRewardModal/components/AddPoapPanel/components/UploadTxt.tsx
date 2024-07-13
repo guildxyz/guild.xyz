@@ -1,4 +1,4 @@
-import { File } from "@phosphor-icons/react"
+import { File } from "@phosphor-icons/react/File"
 import Button from "components/common/Button"
 import useDropzone from "hooks/useDropzone"
 import { useFormContext } from "react-hook-form"

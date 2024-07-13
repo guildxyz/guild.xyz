@@ -4,7 +4,10 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
-import { Coin, Pencil, TrashSimple, Wallet } from "@phosphor-icons/react"
+import { Coin } from "@phosphor-icons/react/Coin"
+import { Pencil } from "@phosphor-icons/react/Pencil"
+import { TrashSimple } from "@phosphor-icons/react/TrashSimple"
+import { Wallet } from "@phosphor-icons/react/Wallet"
 import EditRewardAvailabilityMenuItem from "components/[guild]/AccessHub/components/EditRewardAvailabilityMenuItem"
 import PlatformCardMenu from "components/[guild]/RolePlatforms/components/PlatformCard/components/PlatformCardMenu"
 import useToast from "hooks/useToast"

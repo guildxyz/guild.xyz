@@ -1,6 +1,6 @@
 import { ModalOverlay, useDisclosure } from "@chakra-ui/react"
 import { Schemas, Visibility } from "@guildxyz/types"
-import { Plus } from "@phosphor-icons/react"
+import { Plus } from "@phosphor-icons/react/Plus"
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"

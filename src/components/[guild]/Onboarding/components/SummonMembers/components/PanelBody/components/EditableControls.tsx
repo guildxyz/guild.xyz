@@ -4,7 +4,8 @@ import {
   useColorModeValue,
   useEditableControls,
 } from "@chakra-ui/react"
-import { Check, PencilSimple } from "@phosphor-icons/react"
+import { Check } from "@phosphor-icons/react/Check"
+import { PencilSimple } from "@phosphor-icons/react/PencilSimple"
 
 const EditableControls = (props: Omit<IconButtonProps, "aria-label">) => {
   const { isEditing, getSubmitButtonProps, getEditButtonProps } =

@@ -18,7 +18,7 @@ import {
   Text,
   useSteps,
 } from "@chakra-ui/react"
-import { ArrowLeft } from "@phosphor-icons/react"
+import { ArrowLeft } from "@phosphor-icons/react/ArrowLeft"
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import { FormProvider, useForm } from "react-hook-form"
 import { UniswapChains } from "requirements/Uniswap/hooks/useParsePoolChain"

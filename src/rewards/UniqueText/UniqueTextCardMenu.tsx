@@ -1,5 +1,5 @@
 import { MenuItem, useDisclosure } from "@chakra-ui/react"
-import { PencilSimple } from "@phosphor-icons/react"
+import { PencilSimple } from "@phosphor-icons/react/PencilSimple"
 import EditRewardAvailabilityMenuItem from "components/[guild]/AccessHub/components/EditRewardAvailabilityMenuItem"
 import RemovePlatformMenuItem from "components/[guild]/AccessHub/components/RemovePlatformMenuItem"
 import useGuild from "components/[guild]/hooks/useGuild"

@@ -9,7 +9,7 @@ import {
   ModalOverlay,
   Stack,
 } from "@chakra-ui/react"
-import { ArrowSquareOut } from "@phosphor-icons/react"
+import { ArrowSquareOut } from "@phosphor-icons/react/ArrowSquareOut"
 import { useEditGuildDrawer } from "components/[guild]/EditGuild/EditGuildDrawerContext"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"

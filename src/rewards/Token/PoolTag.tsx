@@ -10,7 +10,9 @@ import {
   useColorMode,
   useDisclosure,
 } from "@chakra-ui/react"
-import { Coin, DotsThreeVertical, Wallet } from "@phosphor-icons/react"
+import { Coin } from "@phosphor-icons/react/Coin"
+import { DotsThreeVertical } from "@phosphor-icons/react/DotsThreeVertical"
+import { Wallet } from "@phosphor-icons/react/Wallet"
 import ClickableTagPopover from "components/[guild]/activity/ActivityLogAction/components/ClickableTagPopover"
 import useToast from "hooks/useToast"
 import { useRef } from "react"

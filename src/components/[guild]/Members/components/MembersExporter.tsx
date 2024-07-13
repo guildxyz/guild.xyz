@@ -19,7 +19,10 @@ import {
   useClipboard,
   useDisclosure,
 } from "@chakra-ui/react"
-import { Check, Copy, DownloadSimple, Export } from "@phosphor-icons/react"
+import { Check } from "@phosphor-icons/react/Check"
+import { Copy } from "@phosphor-icons/react/Copy"
+import { DownloadSimple } from "@phosphor-icons/react/DownloadSimple"
+import { Export } from "@phosphor-icons/react/Export"
 import RoleSelector from "components/[guild]/RoleSelector"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"

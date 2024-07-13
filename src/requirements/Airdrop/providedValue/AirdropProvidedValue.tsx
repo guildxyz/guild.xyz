@@ -1,5 +1,5 @@
 import { HStack, Text, useDisclosure } from "@chakra-ui/react"
-import { ArrowSquareIn } from "@phosphor-icons/react"
+import { ArrowSquareIn } from "@phosphor-icons/react/ArrowSquareIn"
 import SnapshotModal from "components/[guild]/leaderboard/Snapshots/SnapshotModal"
 import Button from "components/common/Button"
 import type { ProvidedValueDisplayProps } from "requirements/requirementProvidedValues"

@@ -1,5 +1,6 @@
 import { FormControl, FormLabel, HStack, Icon, Input, Stack } from "@chakra-ui/react"
-import { ArrowSquareOut, Check } from "@phosphor-icons/react"
+import { ArrowSquareOut } from "@phosphor-icons/react/ArrowSquareOut"
+import { Check } from "@phosphor-icons/react/Check"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { env } from "env"

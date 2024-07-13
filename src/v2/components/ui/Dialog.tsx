@@ -1,6 +1,6 @@
 "use client"
 
-import { X } from "@phosphor-icons/react/dist/ssr"
+import { X } from "@phosphor-icons/react/dist/ssr/X"
 import * as DialogPrimitive from "@radix-ui/react-dialog"
 import { FocusScope, FocusScopeProps } from "@radix-ui/react-focus-scope"
 import * as React from "react"

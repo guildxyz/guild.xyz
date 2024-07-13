@@ -1,5 +1,6 @@
 import { Icon, Text, VStack, useColorModeValue } from "@chakra-ui/react"
-import { ArrowRight, CheckCircle } from "@phosphor-icons/react"
+import { ArrowRight } from "@phosphor-icons/react/ArrowRight"
+import { CheckCircle } from "@phosphor-icons/react/CheckCircle"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import Link from "next/link"

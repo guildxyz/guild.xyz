@@ -1,11 +1,9 @@
 import { Schemas } from "@guildxyz/types"
-import {
-  CheckSquare,
-  NumberCircleFive,
-  NumberSquareFive,
-  RadioButton,
-  Textbox,
-} from "@phosphor-icons/react"
+import { CheckSquare } from "@phosphor-icons/react/CheckSquare"
+import { NumberCircleFive } from "@phosphor-icons/react/NumberCircleFive"
+import { NumberSquareFive } from "@phosphor-icons/react/NumberSquareFive"
+import { RadioButton } from "@phosphor-icons/react/RadioButton"
+import { Textbox } from "@phosphor-icons/react/Textbox"
 import OptionIcon from "components/common/StyledSelect/components/CustomSelectOption/components/OptionIcon"
 import { ComponentType, ReactNode } from "react"
 import {

@@ -1,4 +1,4 @@
-import { Check } from "@phosphor-icons/react"
+import { Check } from "@phosphor-icons/react/Check"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useGuildForm } from "components/[guild]/hooks/useGuildForms"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"

@@ -1,5 +1,6 @@
 import { Tag, TagLeftIcon, Tooltip, Wrap } from "@chakra-ui/react"
-import { SortAscending, SortDescending } from "@phosphor-icons/react"
+import { SortAscending } from "@phosphor-icons/react/SortAscending"
+import { SortDescending } from "@phosphor-icons/react/SortDescending"
 import RoleTag from "components/[guild]/RoleTag"
 import useGuild from "components/[guild]/hooks/useGuild"
 import MagnifyingGlassX from "static/icons/magnifying-glass-x.svg"

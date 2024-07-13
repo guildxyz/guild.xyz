@@ -12,7 +12,7 @@ import {
   Tooltip,
 } from "@chakra-ui/react"
 import { consts } from "@guildxyz/types"
-import { Question } from "@phosphor-icons/react"
+import { Question } from "@phosphor-icons/react/Question"
 import Button from "components/common/Button"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"

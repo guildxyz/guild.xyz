@@ -1,6 +1,6 @@
 import { Link } from "@chakra-ui/next-js"
 import { Icon, Img, Text } from "@chakra-ui/react"
-import { ArrowSquareOut } from "@phosphor-icons/react"
+import { ArrowSquareOut } from "@phosphor-icons/react/ArrowSquareOut"
 import { GUILD_PIN_CONTRACTS, openseaBaseUrl } from "utils/guildCheckout/constants"
 import { useChainId } from "wagmi"
 import { Chains } from "wagmiConfig/chains"

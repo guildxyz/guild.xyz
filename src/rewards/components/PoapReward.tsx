@@ -1,5 +1,5 @@
 import { Tooltip } from "@chakra-ui/react"
-import { ArrowRight } from "@phosphor-icons/react"
+import { ArrowRight } from "@phosphor-icons/react/ArrowRight"
 import { RewardIcon } from "components/[guild]/RoleCard/components/Reward"
 import { RewardDisplay } from "components/[guild]/RoleCard/components/RewardDisplay"
 import { RewardProps } from "components/[guild]/RoleCard/components/types"

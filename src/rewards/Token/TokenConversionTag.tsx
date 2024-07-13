@@ -1,5 +1,5 @@
 import { Circle, Icon, Tag, Tooltip, useColorModeValue } from "@chakra-ui/react"
-import { ArrowRight } from "@phosphor-icons/react"
+import { ArrowRight } from "@phosphor-icons/react/ArrowRight"
 import { useAccessedGuildPoints } from "components/[guild]/AccessHub/hooks/useAccessedGuildPoints"
 import useRequirements from "components/[guild]/hooks/useRequirements"
 import GuildLogo from "components/common/GuildLogo"

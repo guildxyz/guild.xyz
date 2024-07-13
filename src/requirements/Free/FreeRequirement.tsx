@@ -1,5 +1,5 @@
 import { Icon } from "@chakra-ui/react"
-import { Icon as PhosphorIcon } from "@phosphor-icons/react"
+import type { Icon as PhosphorIcon } from "@phosphor-icons/react"
 import Requirement from "components/[guild]/Requirements/components/Requirement"
 import REQUIREMENTS from "requirements"
 

@@ -9,7 +9,7 @@ import {
   VStack,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { DownloadSimple } from "@phosphor-icons/react"
+import { DownloadSimple } from "@phosphor-icons/react/DownloadSimple"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import { env } from "env"

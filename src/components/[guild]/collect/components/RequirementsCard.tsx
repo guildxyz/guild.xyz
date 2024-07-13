@@ -1,5 +1,5 @@
 import { Box, Icon, Stack, useColorModeValue, useDisclosure } from "@chakra-ui/react"
-import { Question } from "@phosphor-icons/react"
+import { Question } from "@phosphor-icons/react/Question"
 import RoleRequirements from "components/[guild]/Requirements"
 import Requirement from "components/[guild]/Requirements/components/Requirement"
 import { RoleRequirementsSectionHeader } from "components/[guild]/RoleCard/components/RoleRequirementsSection"

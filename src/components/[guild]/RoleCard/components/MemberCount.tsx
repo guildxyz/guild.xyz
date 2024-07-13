@@ -17,7 +17,7 @@ import {
   TagRightIcon,
   Text,
 } from "@chakra-ui/react"
-import { Users } from "@phosphor-icons/react"
+import { Users } from "@phosphor-icons/react/Users"
 import { POPOVER_HEADER_STYLES } from "components/[guild]/Requirements/components/RequirementAccessIndicator"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"

@@ -1,5 +1,5 @@
 import { FormControl, FormLabel, Progress, Wrap } from "@chakra-ui/react"
-import { File } from "@phosphor-icons/react"
+import { File } from "@phosphor-icons/react/File"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"

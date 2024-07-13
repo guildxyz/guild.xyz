@@ -20,7 +20,7 @@ import {
   Stack,
   Textarea,
 } from "@chakra-ui/react"
-import { Plus } from "@phosphor-icons/react"
+import { Plus } from "@phosphor-icons/react/Plus"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"

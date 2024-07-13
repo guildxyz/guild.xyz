@@ -1,11 +1,9 @@
 import { Circle, Icon, Img } from "@chakra-ui/react"
-import {
-  GlobeHemisphereEast,
-  IconProps,
-  MediumLogo,
-  SpotifyLogo,
-  YoutubeLogo,
-} from "@phosphor-icons/react"
+import type { IconProps } from "@phosphor-icons/react"
+import { GlobeHemisphereEast } from "@phosphor-icons/react/GlobeHemisphereEast"
+import { MediumLogo } from "@phosphor-icons/react/MediumLogo"
+import { SpotifyLogo } from "@phosphor-icons/react/SpotifyLogo"
+import { YoutubeLogo } from "@phosphor-icons/react/YoutubeLogo"
 import { ForwardRefExoticComponent, RefAttributes } from "react"
 import XLogo from "static/icons/x.svg"
 import MirrorLogo from "static/socialIcons/mirror.svg"

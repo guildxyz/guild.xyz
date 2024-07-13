@@ -1,6 +1,6 @@
 import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import { Circle, Img, SkeletonCircle, SkeletonProps } from "@chakra-ui/react"
-import { ArrowRight } from "@phosphor-icons/react"
+import { ArrowRight } from "@phosphor-icons/react/ArrowRight"
 import { RewardDisplay } from "components/[guild]/RoleCard/components/RewardDisplay"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"

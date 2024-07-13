@@ -1,6 +1,6 @@
 import { IntercomProvider } from "@/components/Providers/IntercomProvider"
 import { Flex, Heading, Icon, Stack } from "@chakra-ui/react"
-import { ChatCircle, House } from "@phosphor-icons/react"
+import { ChatCircle } from "@phosphor-icons/react/ChatCircle"
 import Button from "components/common/Button"
 import Head from "next/head"
 import NotFoundIcon from "static/avatars/58.svg"

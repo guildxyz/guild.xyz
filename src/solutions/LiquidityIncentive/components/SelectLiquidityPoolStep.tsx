@@ -16,7 +16,7 @@ import {
   Text,
 } from "@chakra-ui/react"
 import { consts } from "@guildxyz/types"
-import { Info } from "@phosphor-icons/react/dist/ssr"
+import { Info } from "@phosphor-icons/react/dist/ssr/Info"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { useCallback } from "react"

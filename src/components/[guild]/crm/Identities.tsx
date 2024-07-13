@@ -6,7 +6,8 @@ import {
   TagProps,
   Tooltip,
 } from "@chakra-ui/react"
-import { LockSimple, Wallet } from "@phosphor-icons/react"
+import { LockSimple } from "@phosphor-icons/react/LockSimple"
+import { Wallet } from "@phosphor-icons/react/Wallet"
 import { useCardBg } from "components/common/Card"
 import { PropsWithChildren, memo } from "react"
 import rewards from "rewards"

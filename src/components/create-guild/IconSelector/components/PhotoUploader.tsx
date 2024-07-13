@@ -1,5 +1,5 @@
 import { FormControl, FormLabel, HStack } from "@chakra-ui/react"
-import { File } from "@phosphor-icons/react"
+import { File } from "@phosphor-icons/react/File"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import GuildLogo from "components/common/GuildLogo"

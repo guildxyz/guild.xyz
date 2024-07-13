@@ -6,7 +6,7 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react"
-import { ArrowRight } from "@phosphor-icons/react"
+import { ArrowRight } from "@phosphor-icons/react/ArrowRight"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import usePinata from "hooks/usePinata"

@@ -12,7 +12,9 @@ import {
   Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { Info, Lightning, Question } from "@phosphor-icons/react"
+import { Info } from "@phosphor-icons/react/Info"
+import { Lightning } from "@phosphor-icons/react/Lightning"
+import { Question } from "@phosphor-icons/react/Question"
 import Card from "components/common/Card"
 import { REQUIREMENT_PROVIDED_VALUES } from "requirements/requirementProvidedValues"
 import { Requirement } from "types"

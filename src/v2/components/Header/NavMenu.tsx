@@ -3,7 +3,6 @@
 import { cn } from "@/lib/utils"
 import {
   Book,
-  CircleWavyCheck,
   Code,
   DiscordLogo,
   File,
@@ -13,6 +12,7 @@ import {
   Package,
   Palette,
   Plus,
+  SealCheck,
   Shield,
   UsersThree,
   XLogo,
@@ -56,7 +56,7 @@ export const NavMenu = () => (
           </NavButton>
 
           <NavButton href="/leaderboard">
-            <CircleWavyCheck weight="bold" />
+            <SealCheck weight="bold" />
             Guild Pins leaderboard
           </NavButton>
 

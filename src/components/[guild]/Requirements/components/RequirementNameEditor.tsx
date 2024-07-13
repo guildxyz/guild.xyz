@@ -7,7 +7,8 @@ import {
   Tooltip,
   useEditableContext,
 } from "@chakra-ui/react"
-import { Check, PencilSimple } from "@phosphor-icons/react"
+import { Check } from "@phosphor-icons/react/Check"
+import { PencilSimple } from "@phosphor-icons/react/PencilSimple"
 import { MutableRefObject, PropsWithChildren, ReactNode, useRef } from "react"
 import {
   FormProvider,

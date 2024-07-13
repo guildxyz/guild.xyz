@@ -12,7 +12,8 @@ import {
   UnorderedList,
   useDisclosure,
 } from "@chakra-ui/react"
-import { ArrowSquareOut, DotsThree } from "@phosphor-icons/react"
+import { ArrowSquareOut } from "@phosphor-icons/react/ArrowSquareOut"
+import { DotsThree } from "@phosphor-icons/react/DotsThree"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import { CSSProperties, memo, useEffect, useRef } from "react"

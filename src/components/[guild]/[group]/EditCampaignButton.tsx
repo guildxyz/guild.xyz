@@ -1,5 +1,5 @@
 import { IconButton, useDisclosure } from "@chakra-ui/react"
-import { GearSix } from "@phosphor-icons/react"
+import { GearSix } from "@phosphor-icons/react/GearSix"
 import EditCampaignModal from "../AccessHub/components/CampaignCards/components/EditCampaignModal"
 import { useThemeContext } from "../ThemeContext"
 import useRoleGroup from "../hooks/useRoleGroup"

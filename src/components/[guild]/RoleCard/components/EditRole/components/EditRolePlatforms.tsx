@@ -1,5 +1,5 @@
 import { Box, Collapse, Spacer, Spinner, Stack, Tag } from "@chakra-ui/react"
-import { Plus } from "@phosphor-icons/react"
+import { Plus } from "@phosphor-icons/react/Plus"
 import {
   AddRewardProvider,
   useAddRewardContext,

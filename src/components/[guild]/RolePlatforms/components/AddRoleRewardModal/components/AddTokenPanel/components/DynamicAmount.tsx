@@ -1,5 +1,5 @@
 import { Icon, Stack, Text } from "@chakra-ui/react"
-import { Star } from "@phosphor-icons/react"
+import { Star } from "@phosphor-icons/react/Star"
 import useGuildPlatform from "components/[guild]/hooks/useGuildPlatform"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import useTokenData from "hooks/useTokenData"

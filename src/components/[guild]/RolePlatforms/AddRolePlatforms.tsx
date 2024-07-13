@@ -1,5 +1,5 @@
 import { SimpleGrid, Spacer } from "@chakra-ui/react"
-import { Plus } from "@phosphor-icons/react"
+import { Plus } from "@phosphor-icons/react/Plus"
 import TransitioningPlatformIcons from "components/[guild]/RolePlatforms/components/TransitioningPlatformIcons"
 import AddCard from "components/common/AddCard"
 import Button from "components/common/Button"

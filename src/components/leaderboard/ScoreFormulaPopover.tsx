@@ -15,7 +15,7 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react"
-import { Info } from "@phosphor-icons/react"
+import { Info } from "@phosphor-icons/react/Info"
 
 const ScoreFormulaPopover = () => (
   <Popover trigger="hover">

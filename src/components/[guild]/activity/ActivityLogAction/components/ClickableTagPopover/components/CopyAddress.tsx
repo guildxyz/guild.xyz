@@ -1,5 +1,6 @@
 import { useClipboard } from "@chakra-ui/react"
-import { Check, Copy } from "@phosphor-icons/react"
+import { Check } from "@phosphor-icons/react/Check"
+import { Copy } from "@phosphor-icons/react/Copy"
 import Button from "components/common/Button"
 
 type Props = {

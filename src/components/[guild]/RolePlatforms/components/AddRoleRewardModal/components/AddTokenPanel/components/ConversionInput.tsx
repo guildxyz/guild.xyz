@@ -9,7 +9,9 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { ArrowRight, Lock, LockOpen } from "@phosphor-icons/react"
+import { ArrowRight } from "@phosphor-icons/react/ArrowRight"
+import { Lock } from "@phosphor-icons/react/Lock"
+import { LockOpen } from "@phosphor-icons/react/LockOpen"
 import { PropsWithChildren, ReactNode, useEffect, useState } from "react"
 import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
 import ControlledNumberInput from "requirements/WalletActivity/components/ControlledNumberInput"

@@ -1,4 +1,4 @@
-import { PencilSimpleLine } from "@phosphor-icons/react"
+import { PencilSimpleLine } from "@phosphor-icons/react/PencilSimpleLine"
 import { PlatformAsRewardRestrictions, RewardData } from "rewards/types"
 
 export const formData = {

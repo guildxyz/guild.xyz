@@ -7,7 +7,7 @@ import {
   useBreakpointValue,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { Lock } from "@phosphor-icons/react"
+import { Lock } from "@phosphor-icons/react/Lock"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import ClientOnly from "components/common/ClientOnly"

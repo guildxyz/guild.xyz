@@ -7,7 +7,7 @@ import {
   ModalHeader,
   Text,
 } from "@chakra-ui/react"
-import { ArrowLeft } from "@phosphor-icons/react"
+import { ArrowLeft } from "@phosphor-icons/react/ArrowLeft"
 import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import { ReactNode } from "react"
 import rewards from "rewards"

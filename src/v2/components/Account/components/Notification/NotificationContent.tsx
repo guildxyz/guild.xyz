@@ -5,7 +5,7 @@ import { Anchor } from "@/components/ui/Anchor"
 import { buttonVariants } from "@/components/ui/Button"
 import { Separator } from "@/components/ui/Separator"
 import { cn } from "@/lib/utils"
-import { ArrowRight } from "@phosphor-icons/react"
+import { ArrowRight } from "@phosphor-icons/react/ArrowRight"
 import dynamic from "next/dynamic"
 import { Web3InboxSkeleton } from "./Web3InboxSkeleton"
 

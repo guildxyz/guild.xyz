@@ -1,5 +1,5 @@
 import { HStack, Icon, Text, Tooltip, useClipboard } from "@chakra-ui/react"
-import { Check } from "@phosphor-icons/react"
+import { Check } from "@phosphor-icons/react/Check"
 import { PropsWithChildren } from "react"
 import DataBlock from "./DataBlock"
 

@@ -1,5 +1,6 @@
 import { Button, Flex, HStack, Stack, Text, useToast } from "@chakra-ui/react"
-import { Upload, X } from "@phosphor-icons/react"
+import { Upload } from "@phosphor-icons/react/Upload"
+import { X } from "@phosphor-icons/react/X"
 import usePinata from "hooks/usePinata"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useTokenData from "hooks/useTokenData"

@@ -1,7 +1,7 @@
 import { ConnectEmailButton } from "@/components/Account/components/AccountModal/components/EmailAddress"
 import { cn } from "@/lib/utils"
 import { Tooltip } from "@chakra-ui/react"
-import { EnvelopeSimple } from "@phosphor-icons/react"
+import { EnvelopeSimple } from "@phosphor-icons/react/EnvelopeSimple"
 import useUser from "components/[guild]/hooks/useUser"
 import { useAccount } from "wagmi"
 import { JoinStepUI } from "./JoinStep"

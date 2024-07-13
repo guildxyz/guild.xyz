@@ -20,7 +20,8 @@ import {
   VStack,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { CaretDown, Trophy } from "@phosphor-icons/react"
+import { CaretDown } from "@phosphor-icons/react/CaretDown"
+import { Trophy } from "@phosphor-icons/react/Trophy"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import GuildAvatar from "components/common/GuildAvatar"

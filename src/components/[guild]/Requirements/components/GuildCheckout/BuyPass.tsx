@@ -14,7 +14,7 @@ import {
   ModalOverlay,
   Stack,
 } from "@chakra-ui/react"
-import { Coin } from "@phosphor-icons/react"
+import { Coin } from "@phosphor-icons/react/Coin"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"

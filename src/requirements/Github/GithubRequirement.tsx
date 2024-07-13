@@ -1,6 +1,6 @@
 import { Link } from "@chakra-ui/next-js"
 import { Icon } from "@chakra-ui/react"
-import { GithubLogo } from "@phosphor-icons/react"
+import { GithubLogo } from "@phosphor-icons/react/GithubLogo"
 import ConnectRequirementPlatformButton from "components/[guild]/Requirements/components/ConnectRequirementPlatformButton"
 import DataBlockWithDate from "components/[guild]/Requirements/components/DataBlockWithDate"
 import DataBlockWithRelativeDate from "components/[guild]/Requirements/components/DataBlockWithRelativeDate"

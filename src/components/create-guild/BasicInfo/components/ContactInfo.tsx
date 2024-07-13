@@ -11,7 +11,9 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
-import { ArrowSquareOut, Plus, TrashSimple } from "@phosphor-icons/react"
+import { ArrowSquareOut } from "@phosphor-icons/react/ArrowSquareOut"
+import { Plus } from "@phosphor-icons/react/Plus"
+import { TrashSimple } from "@phosphor-icons/react/TrashSimple"
 import Button from "components/common/Button"
 import ClientOnly from "components/common/ClientOnly"
 import FormErrorMessage from "components/common/FormErrorMessage"

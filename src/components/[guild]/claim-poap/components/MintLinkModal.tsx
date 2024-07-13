@@ -12,7 +12,8 @@ import {
   Spinner,
   Text,
 } from "@chakra-ui/react"
-import { ArrowSquareOut, CheckCircle } from "@phosphor-icons/react"
+import { ArrowSquareOut } from "@phosphor-icons/react/ArrowSquareOut"
+import { CheckCircle } from "@phosphor-icons/react/CheckCircle"
 import { useAccount } from "wagmi"
 import ErrorAlert from "../../../common/ErrorAlert"
 import { Modal } from "../../../common/Modal"

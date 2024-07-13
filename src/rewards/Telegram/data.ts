@@ -1,4 +1,4 @@
-import { TelegramLogo } from "@phosphor-icons/react"
+import { TelegramLogo } from "@phosphor-icons/react/TelegramLogo"
 import { PlatformAsRewardRestrictions, RewardData } from "rewards/types"
 
 export const telegramData = {

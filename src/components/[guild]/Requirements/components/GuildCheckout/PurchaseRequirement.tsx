@@ -12,7 +12,7 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
-import { ShoppingCartSimple } from "@phosphor-icons/react"
+import { ShoppingCartSimple } from "@phosphor-icons/react/ShoppingCartSimple"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"

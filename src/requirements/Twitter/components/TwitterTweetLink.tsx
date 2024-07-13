@@ -1,5 +1,5 @@
 import { Icon, Link } from "@chakra-ui/react"
-import { ArrowSquareOut } from "@phosphor-icons/react"
+import { ArrowSquareOut } from "@phosphor-icons/react/ArrowSquareOut"
 import { Requirement } from "types"
 
 type Props = {

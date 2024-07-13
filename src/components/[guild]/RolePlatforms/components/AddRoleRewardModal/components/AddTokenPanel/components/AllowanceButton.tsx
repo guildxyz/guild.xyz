@@ -1,5 +1,6 @@
 import { Collapse, Icon, Tooltip } from "@chakra-ui/react"
-import { Question, Warning } from "@phosphor-icons/react"
+import { Question } from "@phosphor-icons/react/Question"
+import { Warning } from "@phosphor-icons/react/Warning"
 import useAllowance from "components/[guild]/Requirements/components/GuildCheckout/hooks/useAllowance"
 import Button from "components/common/Button"
 import useTokenData from "hooks/useTokenData"

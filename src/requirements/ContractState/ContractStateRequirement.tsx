@@ -14,7 +14,8 @@ import {
   Tr,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { CaretDown, Function } from "@phosphor-icons/react"
+import { CaretDown } from "@phosphor-icons/react/CaretDown"
+import { Function } from "@phosphor-icons/react/Function"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
 import Requirement, {
   RequirementProps,

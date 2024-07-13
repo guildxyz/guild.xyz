@@ -11,7 +11,7 @@ import {
   Text,
   useBreakpointValue,
 } from "@chakra-ui/react"
-import { ArrowsClockwise } from "@phosphor-icons/react"
+import { ArrowsClockwise } from "@phosphor-icons/react/ArrowsClockwise"
 import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import ErrorAlert from "components/common/ErrorAlert"

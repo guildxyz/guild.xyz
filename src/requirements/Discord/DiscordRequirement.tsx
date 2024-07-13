@@ -1,5 +1,5 @@
 import { Icon, Text } from "@chakra-ui/react"
-import { DiscordLogo } from "@phosphor-icons/react"
+import { DiscordLogo } from "@phosphor-icons/react/DiscordLogo"
 import ConnectRequirementPlatformButton from "components/[guild]/Requirements/components/ConnectRequirementPlatformButton"
 import DataBlockWithDate from "components/[guild]/Requirements/components/DataBlockWithDate"
 import Requirement, {

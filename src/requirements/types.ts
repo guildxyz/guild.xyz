@@ -1,5 +1,5 @@
 import { Schemas } from "@guildxyz/types"
-import { Icon } from "@phosphor-icons/react"
+import type { Icon } from "@phosphor-icons/react"
 import { UseControllerProps } from "react-hook-form"
 import { Requirement } from "types"
 

@@ -1,5 +1,5 @@
 import { Icon } from "@chakra-ui/react"
-import { Warning } from "@phosphor-icons/react"
+import { Warning } from "@phosphor-icons/react/Warning"
 import Requirement from "components/[guild]/Requirements/components/Requirement"
 import DataBlock from "components/common/DataBlock"
 import { PropsWithChildren } from "react"

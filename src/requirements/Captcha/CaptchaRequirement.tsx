@@ -1,5 +1,5 @@
 import { Icon } from "@chakra-ui/react"
-import { Robot } from "@phosphor-icons/react"
+import { Robot } from "@phosphor-icons/react/Robot"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"

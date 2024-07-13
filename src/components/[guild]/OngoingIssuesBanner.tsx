@@ -1,5 +1,5 @@
 import { Button } from "@chakra-ui/react"
-import { ArrowSquareOut } from "@phosphor-icons/react"
+import { ArrowSquareOut } from "@phosphor-icons/react/ArrowSquareOut"
 import InfoBanner from "components/_app/InfoBanner"
 import { triggerChat } from "utils/intercom"
 

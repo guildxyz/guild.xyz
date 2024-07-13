@@ -1,6 +1,6 @@
 import { Link } from "@chakra-ui/next-js"
 import { HStack, Icon, Img, Stack, Text } from "@chakra-ui/react"
-import { ArrowSquareOut } from "@phosphor-icons/react"
+import { ArrowSquareOut } from "@phosphor-icons/react/ArrowSquareOut"
 import Card from "components/common/Card"
 import SendNewMessage from "./SendNewMessage"
 

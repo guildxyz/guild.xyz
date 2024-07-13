@@ -10,7 +10,7 @@ import {
   SimpleGrid,
 } from "@chakra-ui/react"
 import { SocialLinks as SocialLinksType } from "@guildxyz/types"
-import { Plus } from "@phosphor-icons/react"
+import { Plus } from "@phosphor-icons/react/Plus"
 import SocialIcon from "components/[guild]/SocialIcon"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"

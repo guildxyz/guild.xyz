@@ -1,5 +1,6 @@
 import { Box, HStack, Icon, Spinner, Text, Tooltip } from "@chakra-ui/react"
-import { Question, Shield } from "@phosphor-icons/react"
+import { Question } from "@phosphor-icons/react/Question"
+import { Shield } from "@phosphor-icons/react/Shield"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Switch from "components/common/Switch"
 import useShowErrorToast from "hooks/useShowErrorToast"

@@ -7,7 +7,7 @@ import {
   Text,
   Tooltip,
 } from "@chakra-ui/react"
-import { Download } from "@phosphor-icons/react"
+import { Download } from "@phosphor-icons/react/Download"
 import MemberCount from "components/[guild]/RoleCard/components/MemberCount"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Card from "components/common/Card"

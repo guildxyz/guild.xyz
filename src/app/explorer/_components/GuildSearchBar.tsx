@@ -1,7 +1,9 @@
 "use client"
 
 import { usePrevious } from "@/hooks/usePrevious"
-import { MagnifyingGlass, PushPin, Sparkle } from "@phosphor-icons/react"
+import { MagnifyingGlass } from "@phosphor-icons/react/MagnifyingGlass"
+import { PushPin } from "@phosphor-icons/react/PushPin"
+import { Sparkle } from "@phosphor-icons/react/Sparkle"
 import { ActiveSection } from "app/explorer/types"
 import useDebouncedState from "hooks/useDebouncedState"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"

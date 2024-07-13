@@ -1,5 +1,6 @@
 import { Icon, Spinner, Tooltip } from "@chakra-ui/react"
-import { LinkBreak, Wallet } from "@phosphor-icons/react"
+import { LinkBreak } from "@phosphor-icons/react/LinkBreak"
+import { Wallet } from "@phosphor-icons/react/Wallet"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import Button from "components/common/Button"
 import useTokenData from "hooks/useTokenData"

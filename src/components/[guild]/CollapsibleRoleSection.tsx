@@ -1,6 +1,6 @@
 import { Box, Button, Collapse, Icon, Stack, useDisclosure } from "@chakra-ui/react"
 
-import { CaretDown } from "@phosphor-icons/react"
+import { CaretDown } from "@phosphor-icons/react/CaretDown"
 import capitalize from "utils/capitalize"
 
 const CollapsibleRoleSection = ({

@@ -7,7 +7,7 @@ import {
   SimpleGrid,
   Stack,
 } from "@chakra-ui/react"
-import { StarHalf } from "@phosphor-icons/react"
+import { StarHalf } from "@phosphor-icons/react/StarHalf"
 import Card from "components/common/Card"
 import ClientOnly from "components/common/ClientOnly"
 import useMembership from "components/explorer/hooks/useMembership"

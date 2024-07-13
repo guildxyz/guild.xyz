@@ -1,5 +1,5 @@
 import { Circle, FormControl, Icon, useColorModeValue } from "@chakra-ui/react"
-import { ListNumbers } from "@phosphor-icons/react"
+import { ListNumbers } from "@phosphor-icons/react/ListNumbers"
 import CustomSnapshotForm from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/components/CustomSnapshotForm"
 import GuildPointsSnapshotForm from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/components/GuildPointsSnapshotForm"
 import { SnapshotOption } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/components/types"

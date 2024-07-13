@@ -1,6 +1,6 @@
 import { Link } from "@chakra-ui/next-js"
 import { ButtonProps } from "@chakra-ui/react"
-import { ArrowSquareOut } from "@phosphor-icons/react"
+import { ArrowSquareOut } from "@phosphor-icons/react/ArrowSquareOut"
 import Button from "components/common/Button"
 
 const SetupPassport = (buttonProps: ButtonProps) => (

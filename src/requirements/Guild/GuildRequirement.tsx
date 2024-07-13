@@ -1,6 +1,6 @@
 import { Link } from "@chakra-ui/next-js"
 import { Icon, Img, Skeleton, Text } from "@chakra-ui/react"
-import { Detective } from "@phosphor-icons/react"
+import { Detective } from "@phosphor-icons/react/Detective"
 import DataBlockWithDate from "components/[guild]/Requirements/components/DataBlockWithDate"
 import Requirement, {
   RequirementProps,

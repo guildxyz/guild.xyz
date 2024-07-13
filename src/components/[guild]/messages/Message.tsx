@@ -25,7 +25,9 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
-import { Check, Question, Users } from "@phosphor-icons/react"
+import { Check } from "@phosphor-icons/react/Check"
+import { Question } from "@phosphor-icons/react/Question"
+import { Users } from "@phosphor-icons/react/Users"
 import Card from "components/common/Card"
 import { Modal } from "components/common/Modal"
 import RoleTag from "../RoleTag"

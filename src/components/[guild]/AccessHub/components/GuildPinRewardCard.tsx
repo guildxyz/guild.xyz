@@ -1,5 +1,6 @@
 import { Icon, Tooltip, useColorModeValue } from "@chakra-ui/react"
-import { CircleWavyCheck, Question } from "@phosphor-icons/react"
+import { Question } from "@phosphor-icons/react/Question"
+import { SealCheck } from "@phosphor-icons/react/SealCheck"
 import { useMintGuildPinContext } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
@@ -31,7 +32,7 @@ const GuildPinRewardCard = () => {
       data-test="guild-pin-reward-card"
       label={
         <>
-          <Icon as={CircleWavyCheck} mb="-2px" mr="1.5" />
+          <Icon as={SealCheck} mb="-2px" mr="1.5" />
           Guild.xyz
           <Tooltip label="This is a built in reward by Guild.xyz" hasArrow>
             <Icon as={Question} mb="-2px" ml="1.5" />

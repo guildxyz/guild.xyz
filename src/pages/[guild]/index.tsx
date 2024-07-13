@@ -12,7 +12,8 @@ import {
   Text,
   Wrap,
 } from "@chakra-ui/react"
-import { Info, Users } from "@phosphor-icons/react"
+import { Info } from "@phosphor-icons/react/Info"
+import { Users } from "@phosphor-icons/react/Users"
 import AccessHub from "components/[guild]/AccessHub"
 import { useAccessedGuildPlatforms } from "components/[guild]/AccessHub/AccessHub"
 import {

@@ -8,7 +8,7 @@ import {
   TagLeftIcon,
   Text,
 } from "@chakra-ui/react"
-import { Users } from "@phosphor-icons/react"
+import { Users } from "@phosphor-icons/react/Users"
 import { Tooltip, TooltipDatum } from "@visx/xychart"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Card, { useCardBg } from "components/common/Card"

@@ -9,7 +9,7 @@ import {
   InputRightElement,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { MagnifyingGlass } from "@phosphor-icons/react"
+import { MagnifyingGlass } from "@phosphor-icons/react/MagnifyingGlass"
 import useDebouncedState from "hooks/useDebouncedState"
 import { useEffect, useRef, useState } from "react"
 

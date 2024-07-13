@@ -12,7 +12,7 @@ import {
 import { useToast } from "@/components/ui/hooks/useToast"
 import { useDisclosure } from "@/hooks/useDisclosure"
 import { cn, toDateTimeString } from "@/lib/utils"
-import { ArrowRight } from "@phosphor-icons/react"
+import { ArrowRight } from "@phosphor-icons/react/ArrowRight"
 import {
   initWeb3InboxClient,
   useNotifications,

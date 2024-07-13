@@ -11,7 +11,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { IconProps } from "@phosphor-icons/react"
+import type { IconProps } from "@phosphor-icons/react"
 import ColorCard from "components/common/ColorCard"
 import { PropsWithChildren, forwardRef, useState } from "react"
 

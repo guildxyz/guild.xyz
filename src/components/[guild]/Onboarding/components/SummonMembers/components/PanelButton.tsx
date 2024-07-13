@@ -8,7 +8,8 @@ import {
   Text,
   Wrap,
 } from "@chakra-ui/react"
-import { ArrowSquareOut, Link as LinkIcon } from "@phosphor-icons/react"
+import { ArrowSquareOut } from "@phosphor-icons/react/ArrowSquareOut"
+import { Link as LinkIcon } from "@phosphor-icons/react/Link"
 import { useController } from "react-hook-form"
 import EditableControls from "./PanelBody/components/EditableControls"
 

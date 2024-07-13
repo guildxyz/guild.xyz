@@ -18,7 +18,7 @@ import {
 import { useErrorToast } from "@/components/ui/hooks/useErrorToast"
 import { usePrevious } from "@/hooks/usePrevious"
 import { useUserPublic } from "@/hooks/useUserPublic"
-import { ArrowSquareOut } from "@phosphor-icons/react/dist/ssr"
+import { ArrowSquareOut } from "@phosphor-icons/react/dist/ssr/ArrowSquareOut"
 import useSetKeyPair from "hooks/useSetKeyPair"
 import { useAtom, useSetAtom } from "jotai"
 import { useEffect } from "react"

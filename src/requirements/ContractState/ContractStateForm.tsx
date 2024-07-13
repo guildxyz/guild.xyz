@@ -23,7 +23,9 @@ import {
   Text,
   TextProps,
 } from "@chakra-ui/react"
-import { Info, Plus, X } from "@phosphor-icons/react"
+import { Info } from "@phosphor-icons/react/Info"
+import { Plus } from "@phosphor-icons/react/Plus"
+import { X } from "@phosphor-icons/react/X"
 import Button from "components/common/Button"
 import ControlledSelect from "components/common/ControlledSelect"
 import DataBlockWithCopy from "components/common/DataBlockWithCopy"

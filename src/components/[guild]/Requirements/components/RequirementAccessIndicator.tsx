@@ -7,7 +7,11 @@ import {
   PopoverHeader,
   Text,
 } from "@chakra-ui/react"
-import { ArrowSquareIn, Check, LockSimple, Warning, X } from "@phosphor-icons/react"
+import { ArrowSquareIn } from "@phosphor-icons/react/ArrowSquareIn"
+import { Check } from "@phosphor-icons/react/Check"
+import { LockSimple } from "@phosphor-icons/react/LockSimple"
+import { Warning } from "@phosphor-icons/react/Warning"
+import { X } from "@phosphor-icons/react/X"
 import RecheckAccessesButton from "components/[guild]/RecheckAccessesButton"
 import Button from "components/common/Button"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"

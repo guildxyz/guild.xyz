@@ -17,7 +17,8 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react"
-import { Info, Upload } from "@phosphor-icons/react"
+import { Info } from "@phosphor-icons/react/Info"
+import { Upload } from "@phosphor-icons/react/Upload"
 import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import CopyableAddress from "components/common/CopyableAddress"

@@ -13,7 +13,8 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react"
-import { ArrowsClockwise, Check } from "@phosphor-icons/react"
+import { ArrowsClockwise } from "@phosphor-icons/react/ArrowsClockwise"
+import { Check } from "@phosphor-icons/react/Check"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"

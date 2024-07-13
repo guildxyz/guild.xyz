@@ -1,5 +1,5 @@
 import { Icon, Img, Link, Wrap, useColorMode } from "@chakra-ui/react"
-import { ArrowSquareOut } from "@phosphor-icons/react"
+import { ArrowSquareOut } from "@phosphor-icons/react/ArrowSquareOut"
 import SocialIcon from "components/[guild]/SocialIcon"
 import { useCollectNftContext } from "components/[guild]/collect/components/CollectNftContext"
 import useGuild from "components/[guild]/hooks/useGuild"

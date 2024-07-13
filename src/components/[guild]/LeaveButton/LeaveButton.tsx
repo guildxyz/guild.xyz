@@ -8,7 +8,7 @@ import {
   Tooltip,
   useDisclosure,
 } from "@chakra-ui/react"
-import { SignOut } from "@phosphor-icons/react"
+import { SignOut } from "@phosphor-icons/react/SignOut"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import { Alert } from "components/common/Modal"

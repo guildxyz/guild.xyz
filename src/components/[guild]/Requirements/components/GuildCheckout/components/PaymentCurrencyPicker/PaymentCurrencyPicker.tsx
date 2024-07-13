@@ -11,7 +11,8 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { ArrowSquareOut, CaretDown } from "@phosphor-icons/react"
+import { ArrowSquareOut } from "@phosphor-icons/react/ArrowSquareOut"
+import { CaretDown } from "@phosphor-icons/react/CaretDown"
 import Button from "components/common/Button"
 import { useSetAtom } from "jotai"
 import { useEffect } from "react"

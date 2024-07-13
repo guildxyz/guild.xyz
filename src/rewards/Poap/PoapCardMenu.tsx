@@ -1,5 +1,5 @@
 import { MenuItem, useDisclosure } from "@chakra-ui/react"
-import { UploadSimple } from "@phosphor-icons/react"
+import { UploadSimple } from "@phosphor-icons/react/UploadSimple"
 import RemovePlatformMenuItem from "components/[guild]/AccessHub/components/RemovePlatformMenuItem"
 import PlatformCardMenu from "components/[guild]/RolePlatforms/components/PlatformCard/components/PlatformCardMenu"
 import useGuild from "components/[guild]/hooks/useGuild"

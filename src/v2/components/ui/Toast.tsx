@@ -5,7 +5,7 @@ import { type VariantProps, cva } from "class-variance-authority"
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
-import { X } from "@phosphor-icons/react/dist/ssr"
+import { X } from "@phosphor-icons/react/dist/ssr/X"
 
 const ToastProvider = ToastPrimitives.Provider
 

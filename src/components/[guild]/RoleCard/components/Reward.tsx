@@ -7,7 +7,8 @@ import {
   Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { ArrowSquareOut, LockSimple } from "@phosphor-icons/react"
+import { ArrowSquareOut } from "@phosphor-icons/react/ArrowSquareOut"
+import { LockSimple } from "@phosphor-icons/react/LockSimple"
 import usePlatformAccessButton from "components/[guild]/AccessHub/components/usePlatformAccessButton"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import { ApiRequirementHandlerProvider } from "components/[guild]/RequirementHandlerContext"

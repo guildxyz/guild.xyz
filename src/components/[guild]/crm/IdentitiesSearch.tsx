@@ -6,7 +6,7 @@ import {
   InputLeftElement,
   InputRightElement,
 } from "@chakra-ui/react"
-import { MagnifyingGlass } from "@phosphor-icons/react"
+import { MagnifyingGlass } from "@phosphor-icons/react/MagnifyingGlass"
 import { Column } from "@tanstack/react-table"
 import useDebouncedState from "hooks/useDebouncedState"
 import { useEffect, useRef, useState } from "react"

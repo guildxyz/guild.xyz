@@ -9,7 +9,7 @@ import {
   MenuList,
   Portal,
 } from "@chakra-ui/react"
-import { CaretDown } from "@phosphor-icons/react"
+import { CaretDown } from "@phosphor-icons/react/CaretDown"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import Link from "next/link"

@@ -1,5 +1,7 @@
 import { FormControl, FormLabel, HStack, Stack, Text } from "@chakra-ui/react"
-import { Check, Minus, X } from "@phosphor-icons/react"
+import { Check } from "@phosphor-icons/react/Check"
+import { Minus } from "@phosphor-icons/react/Minus"
+import { X } from "@phosphor-icons/react/X"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import RadioButtonGroup from "components/common/RadioButtonGroup"
 import { useFieldArray, useFormContext, useFormState } from "react-hook-form"

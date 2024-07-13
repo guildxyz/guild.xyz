@@ -1,4 +1,4 @@
-import { GoogleLogo } from "@phosphor-icons/react"
+import { GoogleLogo } from "@phosphor-icons/react/GoogleLogo"
 import { PlatformAsRewardRestrictions, RewardData } from "rewards/types"
 
 export const googleData = {

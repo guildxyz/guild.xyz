@@ -15,7 +15,8 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { CaretLeft, CaretRight } from "@phosphor-icons/react"
+import { CaretLeft } from "@phosphor-icons/react/CaretLeft"
+import { CaretRight } from "@phosphor-icons/react/CaretRight"
 import { Row } from "@tanstack/react-table"
 import FormFieldTitle from "components/[guild]/CreateFormModal/components/FormCardEditable/components/FormFieldTitle"
 import { fieldTypes } from "components/[guild]/CreateFormModal/formConfig"

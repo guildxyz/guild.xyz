@@ -2,8 +2,8 @@
 
 import { useDisclosure } from "@/hooks/useDisclosure"
 import { cn } from "@/lib/utils"
-import { Bell } from "@phosphor-icons/react"
-import { SignIn } from "@phosphor-icons/react/dist/ssr"
+import { Bell } from "@phosphor-icons/react/Bell"
+import { SignIn } from "@phosphor-icons/react/dist/ssr/SignIn"
 import useUser from "components/[guild]/hooks/useUser"
 import useResolveAddress from "hooks/useResolveAddress"
 import { useSetAtom } from "jotai"

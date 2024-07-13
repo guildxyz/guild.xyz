@@ -1,5 +1,5 @@
 import { Box, Circle, Flex, HStack, Icon, SimpleGrid, Text } from "@chakra-ui/react"
-import { Lightning } from "@phosphor-icons/react"
+import { Lightning } from "@phosphor-icons/react/Lightning"
 import { REQUIREMENT_PROVIDED_VALUES } from "requirements/requirementProvidedValues"
 import { RequirementProps } from "./Requirement"
 import { useRequirementContext } from "./RequirementContext"

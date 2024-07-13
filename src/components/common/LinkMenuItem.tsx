@@ -1,5 +1,5 @@
 import { ButtonProps, MenuItem, MenuItemProps, Spinner } from "@chakra-ui/react"
-import { ArrowRight } from "@phosphor-icons/react"
+import { ArrowRight } from "@phosphor-icons/react/ArrowRight"
 import Link, { LinkProps } from "next/link"
 import { useState } from "react"
 import Button from "./Button"

@@ -9,7 +9,7 @@ import {
   Tag,
   Text,
 } from "@chakra-ui/react"
-import { Chat } from "@phosphor-icons/react"
+import { Chat } from "@phosphor-icons/react/Chat"
 import Button from "components/common/Button"
 import { triggerChat } from "utils/intercom"
 

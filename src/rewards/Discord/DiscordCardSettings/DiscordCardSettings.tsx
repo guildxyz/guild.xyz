@@ -1,5 +1,6 @@
 import { FormControl, FormErrorMessage, FormLabel } from "@chakra-ui/react"
-import { ShieldCheck, Sparkle } from "@phosphor-icons/react"
+import { ShieldCheck } from "@phosphor-icons/react/ShieldCheck"
+import { Sparkle } from "@phosphor-icons/react/Sparkle"
 import RadioSelect from "components/common/RadioSelect"
 import { useController, useFormContext, useFormState } from "react-hook-form"
 import GuildifyExistingRole from "./components/GuildifyExistingRole"

@@ -8,7 +8,7 @@ import {
   VStack,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { Palette } from "@phosphor-icons/react"
+import { Palette } from "@phosphor-icons/react/Palette"
 import Color from "color"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import FormErrorMessage from "components/common/FormErrorMessage"

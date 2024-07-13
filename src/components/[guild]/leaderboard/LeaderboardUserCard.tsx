@@ -11,7 +11,7 @@ import {
   VStack,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { Trophy } from "@phosphor-icons/react"
+import { Trophy } from "@phosphor-icons/react/Trophy"
 import Card from "components/common/Card"
 import GuildAvatar from "components/common/GuildAvatar"
 import useResolveAddress from "hooks/useResolveAddress"

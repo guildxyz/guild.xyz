@@ -23,7 +23,7 @@ import {
   useDisclosure,
   useRadioGroup,
 } from "@chakra-ui/react"
-import { Image } from "@phosphor-icons/react"
+import { Image } from "@phosphor-icons/react/Image"
 import LogicDivider from "components/[guild]/LogicDivider"
 import GuildLogo from "components/common/GuildLogo"
 import { Modal } from "components/common/Modal"

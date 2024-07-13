@@ -8,7 +8,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react"
-import { CaretRight } from "@phosphor-icons/react"
+import { CaretRight } from "@phosphor-icons/react/CaretRight"
 import LogicDivider from "components/[guild]/LogicDivider"
 import { useRequirementHandlerContext } from "components/[guild]/RequirementHandlerContext"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"

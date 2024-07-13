@@ -1,5 +1,5 @@
 import { IconButton, Tooltip } from "@chakra-ui/react"
-import { ArrowsClockwise } from "@phosphor-icons/react"
+import { ArrowsClockwise } from "@phosphor-icons/react/ArrowsClockwise"
 import Button from "components/common/Button"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import useShowErrorToast from "hooks/useShowErrorToast"

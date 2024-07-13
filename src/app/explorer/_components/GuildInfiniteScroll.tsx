@@ -1,7 +1,7 @@
 "use client"
 
 import { GuildCardSkeleton, GuildCardWithLink } from "@/components/GuildCard"
-import { Spinner } from "@phosphor-icons/react"
+import { Spinner } from "@phosphor-icons/react/Spinner"
 import useUser from "components/[guild]/hooks/useUser"
 import { env } from "env"
 import { useFetcherWithSign } from "hooks/useFetcherWithSign"

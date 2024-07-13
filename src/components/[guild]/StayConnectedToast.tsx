@@ -1,5 +1,5 @@
 import { ToastId, useToast } from "@chakra-ui/react"
-import { ArrowRight } from "@phosphor-icons/react"
+import { ArrowRight } from "@phosphor-icons/react/ArrowRight"
 import useLocalStorage from "hooks/useLocalStorage"
 import { useToastWithButton } from "hooks/useToast"
 import { useRouter } from "next/router"

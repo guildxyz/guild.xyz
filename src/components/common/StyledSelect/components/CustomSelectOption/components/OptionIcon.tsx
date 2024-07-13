@@ -1,5 +1,5 @@
 import { Center, Icon } from "@chakra-ui/react"
-import { IconProps } from "@phosphor-icons/react"
+import type { IconProps } from "@phosphor-icons/react"
 import { ForwardRefExoticComponent, RefAttributes } from "react"
 
 const OptionIcon = ({

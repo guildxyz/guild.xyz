@@ -9,7 +9,7 @@ import {
   Stack,
 } from "@chakra-ui/react"
 import { Schemas } from "@guildxyz/types"
-import { ArrowRight } from "@phosphor-icons/react"
+import { ArrowRight } from "@phosphor-icons/react/ArrowRight"
 import useGuild from "components/[guild]/hooks/useGuild"
 import StyledSelect from "components/common/StyledSelect"
 import { useMemo } from "react"

@@ -1,4 +1,5 @@
-import { CircleWavyCheck, Users } from "@phosphor-icons/react"
+import { SealCheck } from "@phosphor-icons/react/SealCheck"
+import { Users } from "@phosphor-icons/react/Users"
 import { GuildBase } from "types"
 import pluralize from "utils/pluralize"
 import { GuildLogo } from "./GuildLogo"
@@ -35,10 +36,7 @@ export const GuildCard: React.FC<Props> = ({ guildData }) => (
                 className="absolute inset-2 rounded-full bg-white"
                 aria-hidden="true"
               />
-              <CircleWavyCheck
-                weight="fill"
-                className="relative size-5 fill-blue-500"
-              />
+              <SealCheck weight="fill" className="relative size-5 fill-blue-500" />
             </TooltipTrigger>
             <TooltipContent>
               This guild is verified by <code>Guild.xyz</code>

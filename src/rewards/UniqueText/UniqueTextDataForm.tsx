@@ -6,7 +6,7 @@ import {
   Text,
   Textarea,
 } from "@chakra-ui/react"
-import { File } from "@phosphor-icons/react"
+import { File } from "@phosphor-icons/react/File"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import useDropzone from "hooks/useDropzone"

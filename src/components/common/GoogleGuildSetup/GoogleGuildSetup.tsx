@@ -14,7 +14,9 @@ import {
   useClipboard,
   useDisclosure,
 } from "@chakra-ui/react"
-import { Check, CopySimple, PencilSimple } from "@phosphor-icons/react"
+import { Check } from "@phosphor-icons/react/Check"
+import { CopySimple } from "@phosphor-icons/react/CopySimple"
+import { PencilSimple } from "@phosphor-icons/react/PencilSimple"
 import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import { env } from "env"

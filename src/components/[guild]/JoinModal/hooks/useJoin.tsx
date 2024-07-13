@@ -1,5 +1,5 @@
 import { JoinJob } from "@guildxyz/types"
-import { CircleWavyCheck } from "@phosphor-icons/react"
+import { SealCheck } from "@phosphor-icons/react/SealCheck"
 import { GUILD_PIN_MAINTENANCE } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPin/MintGuildPin"
 import { useMintGuildPinContext } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -44,7 +44,7 @@ const useJoin = ({ onSuccess, onError }: UseSubmitOptions<JoinJob>) => {
             title: "Successfully joined guild",
             description: "Let others know as well by minting it onchain",
             buttonProps: {
-              leftIcon: <CircleWavyCheck weight="fill" />,
+              leftIcon: <SealCheck weight="fill" />,
               children: "Mint Guild Pin",
               onClick: onOpen,
             },

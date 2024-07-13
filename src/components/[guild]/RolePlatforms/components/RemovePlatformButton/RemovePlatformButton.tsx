@@ -6,7 +6,7 @@ import {
   Tooltip,
   useDisclosure,
 } from "@chakra-ui/react"
-import { Info } from "@phosphor-icons/react"
+import { Info } from "@phosphor-icons/react/Info"
 import ConfirmationAlert from "components/create-guild/Requirements/components/ConfirmationAlert"
 import useRemovePlatform from "./hooks/useRemovePlatform"
 

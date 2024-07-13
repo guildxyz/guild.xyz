@@ -1,5 +1,5 @@
 import { Icon } from "@chakra-ui/react"
-import { X } from "@phosphor-icons/react"
+import { X } from "@phosphor-icons/react/X"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import Button from "components/common/Button"
 import { useFormContext } from "react-hook-form"

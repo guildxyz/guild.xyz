@@ -8,7 +8,7 @@ import {
   Tbody,
   useDisclosure,
 } from "@chakra-ui/react"
-import { CaretDown } from "@phosphor-icons/react"
+import { CaretDown } from "@phosphor-icons/react/CaretDown"
 import Button from "components/common/Button"
 import { PropsWithChildren } from "react"
 

@@ -1,5 +1,5 @@
 import { Center, Collapse, Icon, IconButton } from "@chakra-ui/react"
-import { CaretDown } from "@phosphor-icons/react"
+import { CaretDown } from "@phosphor-icons/react/CaretDown"
 import { WalletTag } from "components/[guild]/crm/Identities"
 import UserPlatformTags from "components/[guild]/crm/UserPlatformTags"
 import useGuild from "components/[guild]/hooks/useGuild"

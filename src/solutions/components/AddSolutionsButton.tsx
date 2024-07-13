@@ -1,4 +1,4 @@
-import { Plus } from "@phosphor-icons/react"
+import { Plus } from "@phosphor-icons/react/Plus"
 import {
   AddRewardProvider,
   useAddRewardContext,
