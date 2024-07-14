@@ -1,30 +1,34 @@
+import { cn } from "@/lib/utils"
+import { CircleNotch } from "@phosphor-icons/react/dist/ssr"
 import { Slot } from "@radix-ui/react-slot"
 import { type VariantProps, cva } from "class-variance-authority"
 import * as React from "react"
-
-import { cn } from "@/lib/utils"
-import { CircleNotch } from "@phosphor-icons/react/dist/ssr"
 
 const buttonVariants = cva(
   "font-semibold inline-flex items-center justify-center whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-4 focus:ring-ring disabled:pointer-events-none disabled:opacity-50 rounded-xl text-base min-w-max",
   {
     variants: {
       variant: {
-        default:
-          "bg-primary text-primary-foreground hover:bg-primary-hover active:bg-primary-active",
-        secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary-hover active:bg-secondary-active",
+        solid:
+          "bg-[hsl(var(--button-bg))] hover:bg-[hsl(var(--button-bg-hover))] active:bg-[hsl(var(--button-bg-active))] text-[hsl(var(--button-foreground))]",
+        ghost:
+          "bg-[hsl(var(--button-bg-subtle)/0)] hover:bg-[hsl(var(--button-bg-subtle)/0.12)] active:bg-[hsl(var(--button-bg-subtle)/0.24)] text-[hsl(var(--button-foreground-subtle))]",
+        subtle:
+          "bg-[hsl(var(--button-bg-subtle)/0.12)] hover:bg-[hsl(var(--button-bg-subtle)/0.24)] active:bg-[hsl(var(--button-bg-subtle)/0.36)] text-[hsl(var(--button-foreground-subtle))]",
         outline:
-          "border border-input border-2 hover:bg-secondary active:bg-secondary-hover",
-        ghost: "hover:bg-secondary active:bg-secondary-hover",
-        success:
-          "bg-success text-success-foreground hover:bg-success-hover active:bg-success-active",
+          "bg-[hsl(var(--button-bg-subtle)/0)] hover:bg-[hsl(var(--button-bg-subtle)/0.12)] active:bg-[hsl(var(--button-bg-subtle)/0.24)] text-[hsl(var(--button-foreground-subtle))] border-2 border-[hsl(var(--button-foreground-subtle))]",
+      },
+      // TODO: we could extract this to a Tailwind plugin
+      colorScheme: {
+        primary:
+          "[--button-bg:var(--primary)] [--button-bg-hover:var(--primary-hover)] [--button-bg-active:var(--primary-active)] [--button-foreground:var(--primary-foreground)] [--button-bg-subtle:var(--primary-subtle)] [--button-foreground-subtle:var(--primary-subtle-foreground)]",
+        secondary:
+          "[--button-bg:var(--secondary)] [--button-bg-hover:var(--secondary-hover)] [--button-bg-active:var(--secondary-active)] [--button-foreground:var(--secondary-foreground)] [--button-bg-subtle:var(--secondary-subtle)] [--button-foreground-subtle:var(--secondary-subtle-foreground)]",
+        info: "[--button-bg:var(--info)] [--button-bg-hover:var(--info-hover)]  [--button-bg-active:var(--info-active)] [--button-foreground:var(--info-foreground)] [--button-bg-subtle:var(--info-subtle)] [--button-foreground-subtle:var(--info-subtle-foreground)]",
         destructive:
-          "bg-destructive text-destructive-foreground hover:bg-destructive-hover active:bg-destructive-active",
-        "destructive-ghost":
-          "hover:bg-destructive-ghost-hover active:bg-destructive-ghost-active text-destructive-ghost-foreground",
-        link: "text-muted-foreground underline-offset-4 hover:underline",
-        unstyled: "",
+          "[--button-bg:var(--destructive)] [--button-bg-hover:var(--destructive-hover)] [--button-bg-active:var(--destructive-active)] [--button-foreground:var(--destructive-foreground)] [--button-bg-subtle:var(--destructive-subtle)] [--button-foreground-subtle:var(--destructive-subtle-foreground)]",
+        success:
+          "[--button-bg:var(--success)] [--button-bg-hover:var(--success-hover)] [--button-bg-active:var(--success-active)] [--button-foreground:var(--success-foreground)] [--button-bg-subtle:var(--success-subtle)] [--button-foreground-subtle:var(--success-subtle-foreground)]",
       },
       size: {
         xs: "h-6 px-2 text-xs",
@@ -35,8 +39,16 @@ const buttonVariants = cva(
         icon: "h-10 w-10",
       },
     },
+    compoundVariants: [
+      {
+        colorScheme: "secondary",
+        variant: "outline",
+        className: "border-[hsl(var(--secondary))]",
+      },
+    ],
     defaultVariants: {
-      variant: "default",
+      variant: "solid",
+      colorScheme: "primary",
       size: "md",
     },
   }
@@ -55,6 +67,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     {
       className,
       variant,
+      colorScheme,
       size,
       isLoading,
       loadingText,
@@ -69,7 +82,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     return (
       <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
+        className={cn(buttonVariants({ variant, colorScheme, size, className }))}
         ref={ref}
         {...props}
         disabled={isLoading || disabled}
