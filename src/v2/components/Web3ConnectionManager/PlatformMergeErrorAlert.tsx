@@ -100,7 +100,7 @@ const PlatformMergeErrorAlert = () => {
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction asChild>
               <Button
-                variant="destructive"
+                colorScheme="destructive"
                 isLoading={isLoading}
                 onClick={onConnect}
               >

@@ -10,7 +10,7 @@ const AccountButton = () => {
 
   return (
     <Button
-      variant="secondary"
+      colorScheme="secondary"
       className="mb-4 w-full justify-between"
       disabled
       size="xl"

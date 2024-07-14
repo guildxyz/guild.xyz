@@ -28,7 +28,7 @@ const NetworkButton = ({ chain, requestNetworkChange }: Props) => {
             disabled={isCurrentChain || CHAIN_CONFIG[chain].deprecated}
             onClick={requestNetworkChange}
             size="xl"
-            variant="secondary"
+            colorScheme="secondary"
             className={cn("w-full justify-start gap-2", {
               "border-2": isCurrentChain,
             })}

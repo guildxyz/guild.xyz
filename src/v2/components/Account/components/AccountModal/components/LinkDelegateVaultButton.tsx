@@ -13,7 +13,7 @@ const LinkDelegateVaultButton = ({
   return (
     <Button
       size="sm"
-      variant="secondary"
+      colorScheme="secondary"
       onClick={() => {
         linkDelegations.onSubmit()
       }}

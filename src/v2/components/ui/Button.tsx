@@ -17,6 +17,7 @@ const buttonVariants = cva(
           "bg-[hsl(var(--button-bg-subtle)/0.12)] hover:bg-[hsl(var(--button-bg-subtle)/0.24)] active:bg-[hsl(var(--button-bg-subtle)/0.36)] text-[hsl(var(--button-foreground-subtle))]",
         outline:
           "bg-[hsl(var(--button-bg-subtle)/0)] hover:bg-[hsl(var(--button-bg-subtle)/0.12)] active:bg-[hsl(var(--button-bg-subtle)/0.24)] text-[hsl(var(--button-foreground-subtle))] border-2 border-[hsl(var(--button-foreground-subtle))]",
+        unstyled: "",
       },
       // TODO: we could extract this to a Tailwind plugin
       colorScheme: {

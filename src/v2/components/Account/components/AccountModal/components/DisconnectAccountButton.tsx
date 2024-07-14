@@ -40,7 +40,8 @@ const DisconnectAccountButton = ({
         <TooltipTrigger asChild>
           <Button
             className={cn("size-8 rounded-full px-0", className)}
-            variant="destructive-ghost"
+            colorScheme="destructive"
+            variant="ghost"
             aria-label="Disconnect account"
             onClick={onOpen}
           >
@@ -65,7 +66,7 @@ const DisconnectAccountButton = ({
           <AlertDialogCancel onClick={onClose}>Cancel</AlertDialogCancel>
           <AlertDialogAction asChild>
             <Button
-              variant="destructive"
+              colorScheme="destructive"
               onClick={onConfirm}
               isLoading={isLoading}
               loadingText={loadingText}

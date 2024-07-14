@@ -165,7 +165,7 @@ const LinkedAddress = ({ addressData }: Props) => {
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction asChild>
               <Button
-                variant="destructive"
+                colorScheme="destructive"
                 onClick={removeAddress}
                 isLoading={isDisconnectLoading}
                 loadingText={disconnectSignLoadingText || "Removing"}

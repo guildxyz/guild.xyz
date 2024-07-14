@@ -147,7 +147,7 @@ const ConnectPlatformButton = ({
       onClick={onConnect}
       isLoading={isLoading}
       disabled={!!response}
-      variant={isReconnect ? "secondary" : "default"}
+      colorScheme={isReconnect ? "secondary" : "primary"}
       size="sm"
       className={cn("ml-auto", PLATFORM_COLORS[type])}
     >
