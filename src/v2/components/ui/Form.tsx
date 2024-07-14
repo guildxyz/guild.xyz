@@ -148,9 +148,9 @@ const FormErrorMessage = forwardRef<
         <p
           ref={ref}
           id={formMessageId}
-          // TODO: not sure if it is a good idea to use "destructive-ghost-foreground" here? Should we add a completely new CSS variable instead?
+          // TODO: not sure if it is a good idea to use "destructive-subtle-foreground" here? Should we add a completely new CSS variable instead?
           className={cn(
-            "font-medium text-[0.8rem] text-destructive-ghost-foreground",
+            "font-medium text-[0.8rem] text-destructive-subtle-foreground",
             className
           )}
           {...props}

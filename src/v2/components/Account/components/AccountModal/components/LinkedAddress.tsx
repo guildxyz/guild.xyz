@@ -139,7 +139,7 @@ const LinkedAddress = ({ addressData }: Props) => {
             )}
             <DropdownMenuItem
               onClick={onOpen}
-              className="text-destructive-ghost-foreground"
+              className="text-destructive-subtle-foreground"
             >
               <LinkBreak weight="bold" className="mr-1.5" />
               Disconnect
