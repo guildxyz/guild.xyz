@@ -37,7 +37,7 @@ const AccountConnections = () => {
   }, [platformUsers])
 
   return (
-    <div className="flex flex-col gap-1">
+    <div className="flex flex-col">
       <AccountSectionTitle
         title="Social accounts"
         titleRightElement={sharedSocials?.length > 0 ? <SharedSocials /> : undefined}
