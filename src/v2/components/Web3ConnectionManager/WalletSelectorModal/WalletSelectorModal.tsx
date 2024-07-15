@@ -9,6 +9,7 @@ import { Anchor, anchorVariants } from "@/components/ui/Anchor"
 import { Button } from "@/components/ui/Button"
 import {
   Dialog,
+  DialogBody,
   DialogCloseButton,
   DialogContent,
   DialogFooter,
@@ -143,111 +144,113 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
           </DialogTitle>
         </DialogHeader>
 
-        <ErrorComponent
-          {...(set.error || linkAddress.error
-            ? {
-                error: set.error ?? linkAddress.error,
-                processError: (err: any) => {
-                  if (err?.code === "ACTION_REJECTED") {
-                    return {
-                      title: "Rejected",
-                      description: "Signature request has been rejected",
+        <DialogBody>
+          <ErrorComponent
+            {...(set.error || linkAddress.error
+              ? {
+                  error: set.error ?? linkAddress.error,
+                  processError: (err: any) => {
+                    if (err?.code === "ACTION_REJECTED") {
+                      return {
+                        title: "Rejected",
+                        description: "Signature request has been rejected",
+                      }
                     }
-                  }
 
-                  return {
-                    title: "Error",
-                    description:
-                      err?.message ??
-                      (typeof err?.error === "string"
-                        ? err?.error
-                        : typeof err === "string"
-                          ? err
-                          : err?.errors?.[0]?.msg),
-                  }
-                },
-              }
-            : { error, processError: processConnectionError })}
-        />
+                    return {
+                      title: "Error",
+                      description:
+                        err?.message ??
+                        (typeof err?.error === "string"
+                          ? err?.error
+                          : typeof err === "string"
+                            ? err
+                            : err?.errors?.[0]?.msg),
+                    }
+                  },
+                }
+              : { error, processError: processConnectionError })}
+          />
 
-        {shouldShowVerify && (
-          <p className="mb-6">
-            Sign message to verify that you're the owner of this address.
-          </p>
-        )}
+          {shouldShowVerify && (
+            <p className="mb-6">
+              Sign message to verify that you're the owner of this address.
+            </p>
+          )}
 
-        {isWeb3Connected ? (
-          <AccountButton />
-        ) : (
-          <div className="flex w-full flex-col">
-            {!connector && !addressLinkParams?.userId && (
-              <>
-                <ConnectorButton
-                  key={COINBASE_WALLET_SDK_ID}
-                  connector={connectors.find(
-                    (conn) => conn.id === COINBASE_WALLET_SDK_ID
-                  )}
-                  connect={connect}
-                  pendingConnector={
-                    isPending ? (variables?.connector as Connector) : undefined
-                  }
-                  error={error}
-                />
-
-                <p className="mt-6 mb-2 font-bold text-muted-foreground text-xs uppercase">
-                  Or connect with wallet
-                </p>
-              </>
-            )}
-
-            <div className="flex flex-col gap-2">
-              {connectors
-                .filter(
-                  (conn) =>
-                    conn.id !== COINBASE_WALLET_SDK_ID &&
-                    (isInSafeContext || conn.id !== "safe") &&
-                    (shouldShowInjected || conn.id !== "injected") &&
-                    // Filtering Coinbase Wallet, since we use the `coinbaseWallet` connector for it
-                    conn.id !== COINBASE_INJECTED_WALLET_ID
-                )
-                .sort((conn, _) => (conn.type === "injected" ? -1 : 0))
-                .map((conn) => (
+          {isWeb3Connected ? (
+            <AccountButton />
+          ) : (
+            <div className="flex w-full flex-col">
+              {!connector && !addressLinkParams?.userId && (
+                <>
                   <ConnectorButton
-                    key={conn.id}
-                    connector={conn}
+                    key={COINBASE_WALLET_SDK_ID}
+                    connector={connectors.find(
+                      (conn) => conn.id === COINBASE_WALLET_SDK_ID
+                    )}
                     connect={connect}
                     pendingConnector={
                       isPending ? (variables?.connector as Connector) : undefined
                     }
                     error={error}
                   />
-                ))}
-              <FuelConnectorButtons key="fuel" />
-              <ExportCWaaSLink />
-            </div>
-          </div>
-        )}
 
-        {shouldShowVerify && (
-          <Button
-            size="xl"
-            colorScheme="success"
-            onClick={() => {
-              if (isAddressLink) {
-                return linkAddress.onSubmit(addressLinkParams)
+                  <p className="mt-6 mb-2 font-bold text-muted-foreground text-xs uppercase">
+                    Or connect with wallet
+                  </p>
+                </>
+              )}
+
+              <div className="flex flex-col gap-2">
+                {connectors
+                  .filter(
+                    (conn) =>
+                      conn.id !== COINBASE_WALLET_SDK_ID &&
+                      (isInSafeContext || conn.id !== "safe") &&
+                      (shouldShowInjected || conn.id !== "injected") &&
+                      // Filtering Coinbase Wallet, since we use the `coinbaseWallet` connector for it
+                      conn.id !== COINBASE_INJECTED_WALLET_ID
+                  )
+                  .sort((conn, _) => (conn.type === "injected" ? -1 : 0))
+                  .map((conn) => (
+                    <ConnectorButton
+                      key={conn.id}
+                      connector={conn}
+                      connect={connect}
+                      pendingConnector={
+                        isPending ? (variables?.connector as Connector) : undefined
+                      }
+                      error={error}
+                    />
+                  ))}
+                <FuelConnectorButtons key="fuel" />
+                <ExportCWaaSLink />
+              </div>
+            </div>
+          )}
+
+          {shouldShowVerify && (
+            <Button
+              size="xl"
+              colorScheme="success"
+              onClick={() => {
+                if (isAddressLink) {
+                  return linkAddress.onSubmit(addressLinkParams)
+                }
+                return set.onSubmit()
+              }}
+              disabled={!id && !publicUserError}
+              isLoading={
+                linkAddress.isLoading || set.isLoading || (!id && !publicUserError)
               }
-              return set.onSubmit()
-            }}
-            disabled={!id && !publicUserError}
-            isLoading={
-              linkAddress.isLoading || set.isLoading || (!id && !publicUserError)
-            }
-            loadingText={!id ? "Looking for keypairs" : "Check your wallet"}
-            className="mb-4 w-full"
-          >
-            {isAddressLink ? "Link address" : "Verify address"}{" "}
-          </Button>
-        )}
+              loadingText={!id ? "Looking for keypairs" : "Check your wallet"}
+              className="mb-4 w-full"
+            >
+              {isAddressLink ? "Link address" : "Verify address"}{" "}
+            </Button>
+          )}
+        </DialogBody>
 
         <DialogFooter>
           {!isConnectedAndKeyPairReady ? (

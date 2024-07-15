@@ -4,8 +4,11 @@ import { Anchor } from "@/components/ui/Anchor"
 import { Button, buttonVariants } from "@/components/ui/Button"
 import {
   Dialog,
+  DialogBody,
   DialogContent,
   DialogDescription,
+  DialogFooter,
+  DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/Dialog"
@@ -119,20 +122,24 @@ const Web3Inbox = () => {
           </div>
         </DialogTrigger>
         <DialogContent>
-          <DialogTitle className="mb-6 flex items-center gap-2">
-            <Image
-              src={guildNotificationImage}
-              alt="Guild castle"
-              placeholder="blur"
-              width={32}
-              height={32}
-            />
-            {message.title}
-          </DialogTitle>
-          <DialogDescription className="text-card-foreground">
-            {message.body}
-          </DialogDescription>
-          <div className="mt-6 flex items-center justify-between">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Image
+                src={guildNotificationImage}
+                alt="Guild castle"
+                placeholder="blur"
+                width={32}
+                height={32}
+              />
+              {message.title}
+            </DialogTitle>
+          </DialogHeader>
+
+          <DialogBody className="gap-4">
+            <p>{message.body}</p>
+          </DialogBody>
+
+          <DialogFooter className="flex flex-row items-center justify-between">
             <time className="text-muted-foreground text-xs">
               {toDateTimeString(message.sentAt)}
             </time>
@@ -152,7 +159,7 @@ const Web3Inbox = () => {
                 Go to guild <ArrowRight />
               </Anchor>
             )}
-          </div>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     ))

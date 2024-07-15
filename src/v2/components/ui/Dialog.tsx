@@ -1,12 +1,16 @@
 "use client"
 
+import { cn } from "@/lib/utils"
 import { X } from "@phosphor-icons/react/dist/ssr"
 import * as DialogPrimitive from "@radix-ui/react-dialog"
 import { FocusScope, FocusScopeProps } from "@radix-ui/react-focus-scope"
-import * as React from "react"
-
-import { cn } from "@/lib/utils"
 import { VariantProps, cva } from "class-variance-authority"
+import {
+  ComponentPropsWithoutRef,
+  ElementRef,
+  HTMLAttributes,
+  forwardRef,
+} from "react"
 
 const Dialog = DialogPrimitive.Root
 
@@ -14,14 +18,14 @@ const DialogTrigger = DialogPrimitive.Trigger
 
 const DialogPortal = DialogPrimitive.Portal
 
-const DialogOverlay = React.forwardRef<
-  React.ElementRef<typeof DialogPrimitive.Overlay>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
+const DialogOverlay = forwardRef<
+  ElementRef<typeof DialogPrimitive.Overlay>,
+  ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Overlay
     ref={ref}
     className={cn(
-      "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 grid items-end justify-center overflow-y-auto bg-black/50 backdrop-blur-sm data-[state=closed]:animate-out data-[state=open]:animate-in sm:items-center",
+      "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 grid items-end justify-center overflow-y-auto bg-black/50 backdrop-blur-sm duration-200 data-[state=closed]:animate-out data-[state=open]:animate-in sm:items-center",
       className
     )}
     {...props}
@@ -30,7 +34,7 @@ const DialogOverlay = React.forwardRef<
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName
 
 export const dialogContentVariants = cva(
-  "w-full mt-4 md:my-16 relative rounded-xl max-sm:rounded-b-none bg-card shadow-lg px-6 py-10 sm:px-10 duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 focus-visible:outline-none ring-ring focus-visible:ring-4 ring-offset-0",
+  "flex flex-col w-full mt-4 md:my-16 relative rounded-xl max-sm:rounded-b-none bg-card shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 focus-visible:outline-none ring-ring focus-visible:ring-4 ring-offset-0",
   {
     variants: {
       size: {
@@ -50,33 +54,36 @@ export const dialogContentVariants = cva(
 )
 
 export interface DialogContentProps
-  extends React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>,
+  extends ComponentPropsWithoutRef<typeof DialogPrimitive.Content>,
     VariantProps<typeof dialogContentVariants> {
+  scrollBody?: boolean
   trapFocus?: FocusScopeProps["trapped"]
 }
 
-const DialogContent = React.forwardRef<
-  React.ElementRef<typeof DialogPrimitive.Content>,
+const DialogContent = forwardRef<
+  ElementRef<typeof DialogPrimitive.Content>,
   DialogContentProps
->(({ size, trapFocus = true, className, children, ...props }, ref) => (
+>(({ size, trapFocus = true, className, scrollBody, children, ...props }, ref) => (
   <DialogPortal>
-    <FocusScope trapped={trapFocus} loop>
-      <DialogOverlay>
+    <DialogOverlay>
+      <FocusScope trapped={trapFocus} loop>
         <DialogPrimitive.Content
           ref={ref}
-          className={cn(dialogContentVariants({ size, className }))}
+          className={cn(dialogContentVariants({ size, className }), {
+            "max-h-[calc(100vh-2*theme(space.16))]": scrollBody,
+          })}
           {...props}
         >
           {children}
         </DialogPrimitive.Content>
-      </DialogOverlay>
-    </FocusScope>
+      </FocusScope>
+    </DialogOverlay>
   </DialogPortal>
 ))
 DialogContent.displayName = DialogPrimitive.Content.displayName
 
-const DialogCloseButton = React.forwardRef<
-  React.ElementRef<typeof DialogPrimitive.Close>,
+const DialogCloseButton = forwardRef<
+  ElementRef<typeof DialogPrimitive.Close>,
   DialogPrimitive.DialogCloseProps
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Close
@@ -93,21 +100,35 @@ const DialogCloseButton = React.forwardRef<
 ))
 DialogCloseButton.displayName = DialogPrimitive.Close.displayName
 
-const DialogHeader = ({
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn("flex flex-col space-y-1.5 pb-9", className)} {...props} />
+const DialogHeader = ({ className, ...props }: HTMLAttributes<HTMLDivElement>) => (
+  <div
+    className={cn("flex flex-col space-y-1.5 px-6 py-8 sm:px-10", className)}
+    {...props}
+  />
 )
 DialogHeader.displayName = "DialogHeader"
 
-const DialogFooter = ({
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLDivElement>) => (
+interface DialogBodyProps extends HTMLAttributes<HTMLDivElement> {
+  scroll?: boolean
+}
+const DialogBody = ({ className, ...props }: DialogBodyProps) => (
   <div
     className={cn(
-      "flex flex-col-reverse pt-8 sm:flex-row sm:justify-end sm:space-x-2",
+      "flex flex-col px-6 pb-10 has-[~div]:pb-0 sm:px-10",
+      {
+        "custom-scrollbar flex-shrink-1 flex-grow-1 overflow-y-auto": scroll,
+      },
+      className
+    )}
+    {...props}
+  />
+)
+DialogBody.displayName = "DialogBody"
+
+const DialogFooter = ({ className, ...props }: HTMLAttributes<HTMLDivElement>) => (
+  <div
+    className={cn(
+      "flex flex-col-reverse px-6 pt-8 pb-10 sm:flex-row sm:justify-end sm:space-x-2 sm:px-10",
       className
     )}
     {...props}
@@ -115,24 +136,21 @@ const DialogFooter = ({
 )
 DialogFooter.displayName = "DialogFooter"
 
-const DialogTitle = React.forwardRef<
-  React.ElementRef<typeof DialogPrimitive.Title>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
+const DialogTitle = forwardRef<
+  ElementRef<typeof DialogPrimitive.Title>,
+  ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Title
     ref={ref}
-    className={cn(
-      "font-bold font-display text-xl leading-none tracking-wide",
-      className
-    )}
+    className={cn("font-bold font-display text-xl tracking-wide", className)}
     {...props}
   />
 ))
 DialogTitle.displayName = DialogPrimitive.Title.displayName
 
-const DialogDescription = React.forwardRef<
-  React.ElementRef<typeof DialogPrimitive.Description>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description>
+const DialogDescription = forwardRef<
+  ElementRef<typeof DialogPrimitive.Description>,
+  ComponentPropsWithoutRef<typeof DialogPrimitive.Description>
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Description
     ref={ref}
@@ -148,6 +166,7 @@ export {
   DialogContent,
   DialogDescription,
   DialogFooter,
+  DialogBody,
   DialogHeader,
   DialogOverlay,
   DialogPortal,

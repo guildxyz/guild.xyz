@@ -6,6 +6,7 @@ import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hoo
 import { Button } from "@/components/ui/Button"
 import {
   Dialog,
+  DialogBody,
   DialogCloseButton,
   DialogContent,
   DialogHeader,
@@ -68,86 +69,92 @@ const AccountModal = () => {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent>
+      <DialogContent scrollBody>
         <DialogCloseButton />
 
         <DialogHeader>
           <DialogTitle>Account</DialogTitle>
         </DialogHeader>
 
-        {address ? (
-          <>
-            <div className="mb-8 flex items-center gap-3">
-              <div className="flex size-12 items-center justify-center rounded-full border bg-card-secondary">
-                <GuildAvatar address={address} />
-              </div>
-              <div className="flex flex-col items-start gap-1">
-                <CopyableAddress
-                  address={address}
-                  domain={domain}
-                  decimals={5}
-                  className="font-bold"
-                />
-
-                <div className="flex items-center gap-1">
-                  <p className="line-clamp-1 font-medium text-muted-foreground text-sm">
-                    {`Connected with ${connectorName}`}
-                  </p>
-
-                  {type === "EVM" ? (
-                    <Button
-                      variant="ghost"
-                      onClick={() => openNetworkModal()}
-                      size="xs"
-                      className="w-6 px-0"
-                    >
-                      {CHAIN_CONFIG[Chains[chainId]] ? (
-                        <img
-                          src={CHAIN_CONFIG[Chains[chainId]].iconUrl}
-                          alt={CHAIN_CONFIG[Chains[chainId]].name}
-                          className="size-4"
-                        />
-                      ) : (
-                        <LinkBreak weight="bold" />
-                      )}
-                    </Button>
-                  ) : (
-                    <img src="/walletLogos/fuel.svg" alt="Fuel" className="size-4" />
-                  )}
+        <DialogBody scroll>
+          {address ? (
+            <>
+              <div className="mb-8 flex items-center gap-3">
+                <div className="flex size-12 items-center justify-center rounded-full border bg-card-secondary">
+                  <GuildAvatar address={address} />
                 </div>
-                <NetworkModal
-                  isOpen={isNetworkModalOpen}
-                  onClose={closeNetworkModal}
-                />
+                <div className="flex flex-col items-start gap-1">
+                  <CopyableAddress
+                    address={address}
+                    domain={domain}
+                    decimals={5}
+                    className="font-bold"
+                  />
+
+                  <div className="flex items-center gap-1">
+                    <p className="line-clamp-1 font-medium text-muted-foreground text-sm">
+                      {`Connected with ${connectorName}`}
+                    </p>
+
+                    {type === "EVM" ? (
+                      <Button
+                        variant="ghost"
+                        onClick={() => openNetworkModal()}
+                        size="xs"
+                        className="w-6 px-0"
+                      >
+                        {CHAIN_CONFIG[Chains[chainId]] ? (
+                          <img
+                            src={CHAIN_CONFIG[Chains[chainId]].iconUrl}
+                            alt={CHAIN_CONFIG[Chains[chainId]].name}
+                            className="size-4"
+                          />
+                        ) : (
+                          <LinkBreak weight="bold" />
+                        )}
+                      </Button>
+                    ) : (
+                      <img
+                        src="/walletLogos/fuel.svg"
+                        alt="Fuel"
+                        className="size-4"
+                      />
+                    )}
+                  </div>
+                  <NetworkModal
+                    isOpen={isNetworkModalOpen}
+                    onClose={closeNetworkModal}
+                  />
+                </div>
+
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        size="icon"
+                        variant="outline"
+                        className="ml-auto size-8"
+                        onClick={handleLogout}
+                        aria-label="Disconnect"
+                      >
+                        <SignOut weight="bold" className="size-3" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <span>Disconnect</span>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </div>
 
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      size="icon"
-                      variant="outline"
-                      className="ml-auto size-8"
-                      onClick={handleLogout}
-                      aria-label="Disconnect"
-                    >
-                      <SignOut weight="bold" className="size-3" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <span>Disconnect</span>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>
-
-            <AccountConnections />
-            <hr className="my-6" />
-            <UsersGuildPins />
-          </>
-        ) : (
-          <p className="mb-6 font-semibold text-2xl">Not connected</p>
-        )}
+              <AccountConnections />
+              <hr className="my-6" />
+              <UsersGuildPins />
+            </>
+          ) : (
+            <p className="mb-6 font-semibold text-2xl">Not connected</p>
+          )}
+        </DialogBody>
       </DialogContent>
     </Dialog>
   )
