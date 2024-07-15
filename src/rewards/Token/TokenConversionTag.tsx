@@ -1,9 +1,9 @@
 import { Circle, Icon, Tag, Tooltip, useColorModeValue } from "@chakra-ui/react"
-import { ArrowRight } from "@phosphor-icons/react/ArrowRight"
 import { useAccessedGuildPoints } from "components/[guild]/AccessHub/hooks/useAccessedGuildPoints"
 import useRequirements from "components/[guild]/hooks/useRequirements"
 import GuildLogo from "components/common/GuildLogo"
 import { useMemo } from "react"
+import { PiArrowRight } from "react-icons/pi"
 import { useTokenRewardContext } from "rewards/Token/TokenRewardContext"
 import Star from "static/icons/star.svg"
 import { RolePlatform } from "types"
@@ -62,7 +62,7 @@ const TokenConversionTag = ({ platform }: { platform: RolePlatform }) => {
               )}
             </>
           )}
-          1 <Icon as={ArrowRight} boxSize={"10px"} ml={2} />{" "}
+          1 <Icon as={PiArrowRight} boxSize={"10px"} ml={2} />{" "}
           <GuildLogo imageUrl={imageUrl} size={"16px"} mr={1} ml={2} /> {amount}
         </Tag>
       </Tooltip>

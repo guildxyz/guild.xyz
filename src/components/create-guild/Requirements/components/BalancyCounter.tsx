@@ -11,11 +11,11 @@ import {
   Wrap,
   useClipboard,
 } from "@chakra-ui/react"
-import { Copy } from "@phosphor-icons/react/Copy"
-import { DownloadSimple } from "@phosphor-icons/react/DownloadSimple"
-import { Question } from "@phosphor-icons/react/Question"
-import { Warning } from "@phosphor-icons/react/Warning"
 import Button from "components/common/Button"
+import { PiCopy } from "react-icons/pi"
+import { PiDownloadSimple } from "react-icons/pi"
+import { PiQuestion } from "react-icons/pi"
+import { PiWarning } from "react-icons/pi"
 import useBalancy from "../hooks/useBalancy"
 
 const BalancyCounterWithPopover = ({ ...rest }) => {
@@ -39,7 +39,7 @@ const BalancyCounterWithPopover = ({ ...rest }) => {
                 inaccuracy > 1 ? "s" : ""
               }.`}
             >
-              <Warning color="gray" />
+              <PiWarning color="gray" />
             </Tooltip>
           )}
           <Text fontSize="sm" color="gray" fontWeight="medium">
@@ -49,7 +49,7 @@ const BalancyCounterWithPopover = ({ ...rest }) => {
           </Text>
           <Popover trigger="hover" openDelay={0} size="lg">
             <PopoverTrigger>
-              <Question color="gray" />
+              <PiQuestion color="gray" />
             </PopoverTrigger>
             <PopoverContent>
               <PopoverArrow />
@@ -65,9 +65,9 @@ const BalancyCounterWithPopover = ({ ...rest }) => {
                     rounded="md"
                     onClick={onCopy}
                     isDisabled={!addresses?.length}
-                    leftIcon={<Copy />}
+                    leftIcon={<PiCopy />}
                   >
-                    {hasCopied ? "Copied!" : "Copy addresses"}
+                    {hasCopied ? "Copied!" : "PiCopy addresses"}
                   </Button>
                   <Button
                     size="xs"
@@ -75,7 +75,7 @@ const BalancyCounterWithPopover = ({ ...rest }) => {
                     rounded="md"
                     onClick={exportAddresses}
                     isDisabled={!addresses?.length}
-                    leftIcon={<DownloadSimple />}
+                    leftIcon={<PiDownloadSimple />}
                   >
                     Export addresses
                   </Button>

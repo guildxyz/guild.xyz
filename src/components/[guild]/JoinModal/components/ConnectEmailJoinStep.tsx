@@ -1,8 +1,8 @@
 import { ConnectEmailButton } from "@/components/Account/components/AccountModal/components/EmailAddress"
 import { cn } from "@/lib/utils"
 import { Tooltip } from "@chakra-ui/react"
-import { EnvelopeSimple } from "@phosphor-icons/react/EnvelopeSimple"
 import useUser from "components/[guild]/hooks/useUser"
+import { PiEnvelopeSimple } from "react-icons/pi"
 import { useAccount } from "wagmi"
 import { JoinStepUI } from "./JoinStep"
 
@@ -23,7 +23,7 @@ const ConnectEmailJoinStep = (): JSX.Element => {
           disabled={!isConnected || isDone}
           size="md"
           className={cn("min-w-max shrink-0", { "max-w-40": isDone })}
-          leftIcon={<EnvelopeSimple />}
+          leftIcon={<PiEnvelopeSimple />}
         />
       </Tooltip>
     </JoinStepUI>

@@ -18,7 +18,6 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
-import { Star } from "@phosphor-icons/react/Star"
 import useEditRolePlatform from "components/[guild]/AccessHub/hooks/useEditRolePlatform"
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import { AddTokenFormType } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/AddTokenPanel"
@@ -35,6 +34,7 @@ import useEditRequirement from "components/create-guild/Requirements/hooks/useEd
 import useToast from "hooks/useToast"
 import { ReactNode, useMemo, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
+import { PiStar } from "react-icons/pi"
 import { useTokenRewardContext } from "rewards/Token/TokenRewardContext"
 import Token from "static/icons/token.svg"
 import DynamicTypeForm from "./DynamicTypeForm"
@@ -82,7 +82,7 @@ const EditTokenModal = ({
       alt={selectedPointsPlatform?.platformGuildData?.name ?? "Point type image"}
     />
   ) : (
-    <Icon as={Star} />
+    <Icon as={PiStar} />
   )
 
   const { captureEvent } = usePostHogContext()

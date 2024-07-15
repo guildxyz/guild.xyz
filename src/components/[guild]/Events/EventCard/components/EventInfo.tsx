@@ -1,6 +1,6 @@
 import { HStack, StackProps, Tag, TagLabel, TagLeftIcon } from "@chakra-ui/react"
-import { Clock } from "@phosphor-icons/react/Clock"
-import { Users } from "@phosphor-icons/react/Users"
+import { PiClock } from "react-icons/pi"
+import { PiUsers } from "react-icons/pi"
 
 type Props = {
   startDate: number
@@ -23,12 +23,12 @@ const EventInfo = ({ startDate, userCount, ...rest }: Props): JSX.Element => {
   return (
     <HStack w="full" {...rest}>
       <Tag>
-        <TagLeftIcon as={Clock} boxSize={3.5} />
+        <TagLeftIcon as={PiClock} boxSize={3.5} />
         <TagLabel> {formatedDateTime}</TagLabel>
       </Tag>
       {userCount && (
         <Tag>
-          <TagLeftIcon as={Users} boxSize={3.5} />
+          <TagLeftIcon as={PiUsers} boxSize={3.5} />
           <TagLabel> {userCount}</TagLabel>
         </Tag>
       )}

@@ -1,9 +1,9 @@
 "use client"
 
-import { X } from "@phosphor-icons/react/dist/ssr/X"
 import * as DialogPrimitive from "@radix-ui/react-dialog"
 import { FocusScope, FocusScopeProps } from "@radix-ui/react-focus-scope"
 import * as React from "react"
+import { PiX } from "react-icons/pi"
 
 import { cn } from "@/lib/utils"
 import { VariantProps, cva } from "class-variance-authority"
@@ -87,7 +87,7 @@ const DialogCloseButton = React.forwardRef<
     )}
     {...props}
   >
-    <X weight="bold" className="h-5 w-5" />
+    <PiX weight="bold" className="h-5 w-5" />
     <span className="sr-only">Close</span>
   </DialogPrimitive.Close>
 ))

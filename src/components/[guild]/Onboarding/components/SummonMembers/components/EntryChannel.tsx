@@ -1,8 +1,8 @@
 import { FormControl, FormLabel, Select, Text, Tooltip } from "@chakra-ui/react"
-import { Info } from "@phosphor-icons/react/Info"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
+import { PiInfo } from "react-icons/pi"
 import { Rest } from "types"
 
 export type Channel = {
@@ -49,7 +49,7 @@ const EntryChannel = ({
         {/* not focusable so it doesn't automatically open on modal open */}
         {tooltip && (
           <Tooltip label={tooltip} /* shouldWrapChildren */>
-            <Info tabIndex={withAction ? 0 : undefined} />
+            <PiInfo tabIndex={withAction ? 0 : undefined} />
           </Tooltip>
         )}
       </FormLabel>

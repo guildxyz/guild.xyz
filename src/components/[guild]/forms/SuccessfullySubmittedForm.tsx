@@ -1,9 +1,9 @@
 import { Icon, Text, VStack, useColorModeValue } from "@chakra-ui/react"
-import { ArrowRight } from "@phosphor-icons/react/ArrowRight"
-import { CheckCircle } from "@phosphor-icons/react/CheckCircle"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import Link from "next/link"
+import { PiArrowRight } from "react-icons/pi"
+import { PiCheckCircle } from "react-icons/pi"
 import useGuild from "../hooks/useGuild"
 
 const SuccessfullySubmittedForm = () => {
@@ -32,14 +32,14 @@ const SuccessfullySubmittedForm = () => {
     >
       <VStack spacing={8} py={6}>
         <VStack spacing={4}>
-          <Icon as={CheckCircle} color="green.500" weight="fill" boxSize={8} />
+          <Icon as={PiCheckCircle} color="green.500" weight="fill" boxSize={8} />
           <Text fontWeight="semibold">Form successfully submitted</Text>
         </VStack>
         <Button
           as={Link}
           href={`/${urlName}`}
           colorScheme="green"
-          rightIcon={<ArrowRight />}
+          rightIcon={<PiArrowRight />}
         >
           Go back to guild page
         </Button>

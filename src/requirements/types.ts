@@ -1,6 +1,6 @@
 import { Schemas } from "@guildxyz/types"
-import type { Icon } from "@phosphor-icons/react"
 import { UseControllerProps } from "react-hook-form"
+import type { PiIcon } from "react-icons/pi"
 import { Requirement } from "types"
 
 export type RequirementType = Schemas["Requirement"]["type"]
@@ -14,7 +14,7 @@ export type RequirementFormProps = {
 }
 
 export type RequirementData = {
-  icon: string | Icon
+  icon: string | PiIcon
   name: string
   readonly types: RequirementType[]
   disabled?: boolean

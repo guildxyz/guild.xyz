@@ -1,6 +1,4 @@
 import { Icon, Spinner, Text, Tooltip } from "@chakra-ui/react"
-import { ArrowSquareIn } from "@phosphor-icons/react/ArrowSquareIn"
-import { LockSimple } from "@phosphor-icons/react/LockSimple"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import { RewardIcon } from "components/[guild]/RoleCard/components/Reward"
 import { RewardDisplay } from "components/[guild]/RoleCard/components/RewardDisplay"
@@ -12,6 +10,8 @@ import useMembership, {
   useRoleMembership,
 } from "components/explorer/hooks/useMembership"
 import { useMemo } from "react"
+import { PiArrowSquareIn } from "react-icons/pi"
+import { PiLockSimple } from "react-icons/pi"
 import rewards from "rewards"
 import { claimTextButtonTooltipLabel } from "rewards/SecretText/TextCardButton"
 import useClaimText, { ClaimTextModal } from "rewards/SecretText/hooks/useClaimText"
@@ -68,7 +68,7 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
       return {
         tooltipLabel: (
           <>
-            <Icon as={LockSimple} display="inline" mb="-2px" mr="1" />
+            <Icon as={PiLockSimple} display="inline" mb="-2px" mr="1" />
             Join guild to check access
           </>
         ),
@@ -104,7 +104,11 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
               <Button
                 variant="link"
                 rightIcon={
-                  isAccessValidating ? <Spinner boxSize="1em" /> : <ArrowSquareIn />
+                  isAccessValidating ? (
+                    <Spinner boxSize="1em" />
+                  ) : (
+                    <PiArrowSquareIn />
+                  )
                 }
                 iconSpacing="1"
                 maxW="full"

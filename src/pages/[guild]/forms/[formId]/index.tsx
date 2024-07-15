@@ -1,5 +1,4 @@
 import { Box, Icon } from "@chakra-ui/react"
-import { Question } from "@phosphor-icons/react/Question"
 import { EditGuildDrawerProvider } from "components/[guild]/EditGuild/EditGuildDrawerContext"
 import JoinModalProvider from "components/[guild]/JoinModal/JoinModalProvider"
 import useActiveMembershipUpdate from "components/[guild]/JoinModal/hooks/useActiveMembershipUpdate"
@@ -18,6 +17,7 @@ import Layout from "components/common/Layout"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import { GetStaticPaths, GetStaticProps } from "next"
 import { useEffect } from "react"
+import { PiQuestion } from "react-icons/pi"
 import { SWRConfig } from "swr"
 import { Guild } from "types"
 import fetcher from "utils/fetcher"
@@ -85,7 +85,7 @@ const FormPage = ({ formId }: Props) => {
               {isLoading ? (
                 <RoleRequirementsSkeleton />
               ) : (
-                <Requirement image={<Icon as={Question} boxSize={5} />}>
+                <Requirement image={<Icon as={PiQuestion} boxSize={5} />}>
                   Some secret requirements
                 </Requirement>
               )}

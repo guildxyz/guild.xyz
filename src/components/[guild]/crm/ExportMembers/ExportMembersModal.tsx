@@ -9,10 +9,10 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
-import { BoxArrowDown } from "@phosphor-icons/react/BoxArrowDown"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import { SectionTitle } from "components/common/Section"
+import { PiBoxArrowDown } from "react-icons/pi"
 import ExportCard from "./ExportCard"
 import useExportMembers from "./useExportMembers"
 import useExports from "./useExports"
@@ -40,7 +40,7 @@ const ExportMembersModal = ({ isOpen, onClose }) => {
             onClick={startExport}
             isLoading={isStartExportLoading}
             loadingText="Starting export"
-            leftIcon={<BoxArrowDown />}
+            leftIcon={<PiBoxArrowDown />}
             mb="8"
             variant="subtle"
             borderWidth={2}

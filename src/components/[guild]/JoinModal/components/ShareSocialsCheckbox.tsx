@@ -1,7 +1,7 @@
 import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import { Checkbox, Icon, Link, Text } from "@chakra-ui/react"
-import { ArrowSquareOut } from "@phosphor-icons/react/ArrowSquareOut"
 import { useFormContext } from "react-hook-form"
+import { PiArrowSquareOut } from "react-icons/pi"
 
 const ShareSocialsCheckbox = (): JSX.Element => {
   const { setValue, watch } = useFormContext()
@@ -30,7 +30,7 @@ const ShareSocialsCheckbox = (): JSX.Element => {
           onClick={(e) => e.stopPropagation()}
         >
           Learn more
-          <Icon as={ArrowSquareOut} ml="0.5" />
+          <Icon as={PiArrowSquareOut} ml="0.5" />
         </Link>
       </Text>
     </Checkbox>

@@ -13,7 +13,6 @@ import {
   useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react"
-import { ArrowsClockwise } from "@phosphor-icons/react/ArrowsClockwise"
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import useUser from "components/[guild]/hooks/useUser"
@@ -25,6 +24,7 @@ import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { QRCodeSVG } from "qrcode.react"
 import { useEffect } from "react"
+import { PiArrowsClockwise } from "react-icons/pi"
 import useSWRImmutable from "swr/immutable"
 
 const ConnectPolygonID = (props: ButtonProps) => {
@@ -140,7 +140,7 @@ const ConnectPolygonIDModal = ({
                   borderRadius="lg"
                   mt="2"
                   variant="ghost"
-                  leftIcon={<ArrowsClockwise />}
+                  leftIcon={<PiArrowsClockwise />}
                   isLoading={isValidating}
                   loadingText={"Generating QR code"}
                   color="gray"

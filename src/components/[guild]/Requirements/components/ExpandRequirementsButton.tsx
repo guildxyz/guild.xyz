@@ -1,9 +1,9 @@
 import { Divider, Flex, Icon, useColorMode } from "@chakra-ui/react"
 import { Logic } from "@guildxyz/types"
-import { ArrowDown } from "@phosphor-icons/react/ArrowDown"
-import { ArrowUp } from "@phosphor-icons/react/ArrowUp"
 import { formattedLogic } from "components/[guild]/LogicDivider"
 import Button from "components/common/Button"
+import { PiArrowDown } from "react-icons/pi"
+import { PiArrowUp } from "react-icons/pi"
 
 type Props = {
   logic: Logic
@@ -43,7 +43,7 @@ const ExpandRequirementsButton = ({
           bg={colorMode === "light" ? "blackAlpha.50" : undefined}
           textTransform="uppercase"
           fontWeight="bold"
-          rightIcon={<Icon as={isRequirementsExpanded ? ArrowUp : ArrowDown} />}
+          rightIcon={<Icon as={isRequirementsExpanded ? PiArrowUp : PiArrowDown} />}
           onClick={onToggleExpanded}
         >
           {isRequirementsExpanded

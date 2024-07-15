@@ -9,9 +9,9 @@ import {
   InputRightElement,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { MagnifyingGlass } from "@phosphor-icons/react/MagnifyingGlass"
 import useDebouncedState from "hooks/useDebouncedState"
 import { useEffect, useRef, useState } from "react"
+import { PiMagnifyingGlass } from "react-icons/pi"
 
 type Props = {
   placeholder?: string
@@ -54,7 +54,7 @@ const SearchBar = ({
   return (
     <InputGroup size="lg" w="full" {...rest}>
       <InputLeftElement>
-        <Icon color="#858585" size={20} as={MagnifyingGlass} />
+        <Icon color="#858585" size={20} as={PiMagnifyingGlass} />
       </InputLeftElement>
       <Input
         ref={inputRef}

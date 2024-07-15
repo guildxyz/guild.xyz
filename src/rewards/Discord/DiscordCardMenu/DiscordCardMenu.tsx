@@ -1,9 +1,9 @@
 import { MenuDivider, MenuItem, useDisclosure } from "@chakra-ui/react"
-import { ChatDots } from "@phosphor-icons/react/ChatDots"
-import { Link } from "@phosphor-icons/react/Link"
 import RemovePlatformMenuItem from "components/[guild]/AccessHub/components/RemovePlatformMenuItem"
 import SendDiscordJoinButtonModal from "components/[guild]/Onboarding/components/SummonMembers/components/SendDiscordJoinButtonModal"
 import PlatformCardMenu from "components/[guild]/RolePlatforms/components/PlatformCard/components/PlatformCardMenu"
+import { PiChatDots } from "react-icons/pi"
+import { PiLink } from "react-icons/pi"
 import DiscordCaptchaSwitch from "./components/DiscordCaptchaSwitch"
 import DiscordRewardSettings from "./components/DiscordRewardSettings.tsx"
 
@@ -26,10 +26,10 @@ const DiscordCardMenu = ({ platformGuildId }: Props): JSX.Element => {
   return (
     <>
       <PlatformCardMenu>
-        <MenuItem icon={<ChatDots />} onClick={onSendJoinButtonOpen}>
+        <MenuItem icon={<PiChatDots />} onClick={onSendJoinButtonOpen}>
           Send join button
         </MenuItem>
-        <MenuItem icon={<Link />} onClick={onSettingsOpen}>
+        <MenuItem icon={<PiLink />} onClick={onSettingsOpen}>
           Customize invite link
         </MenuItem>
         <RemovePlatformMenuItem platformGuildId={platformGuildId} />

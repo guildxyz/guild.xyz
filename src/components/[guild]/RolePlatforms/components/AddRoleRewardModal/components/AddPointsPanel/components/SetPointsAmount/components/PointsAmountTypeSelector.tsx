@@ -9,9 +9,9 @@ import {
   Portal,
   Text,
 } from "@chakra-ui/react"
-import { CaretDown } from "@phosphor-icons/react/CaretDown"
-import { Lightning } from "@phosphor-icons/react/Lightning"
 import Button from "components/common/Button"
+import { PiCaretDown } from "react-icons/pi"
+import { PiLightning } from "react-icons/pi"
 
 const PointsAmountTypeSelector = ({ type, setType }) => {
   const options = [
@@ -27,7 +27,7 @@ const PointsAmountTypeSelector = ({ type, setType }) => {
             boxSize={3.5}
             weight="fill"
             color="green.500"
-            as={Lightning}
+            as={PiLightning}
             mr={1}
             mb="-0.5"
           />
@@ -48,7 +48,7 @@ const PointsAmountTypeSelector = ({ type, setType }) => {
         as={Button}
         size="sm"
         variant="ghost"
-        rightIcon={<CaretDown />}
+        rightIcon={<PiCaretDown />}
         color="GrayText"
       >
         {selected?.label}

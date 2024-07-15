@@ -1,9 +1,9 @@
 import { Flex, HStack, Image, Link, Skeleton, Text } from "@chakra-ui/react"
-import { Chat } from "@phosphor-icons/react/Chat"
-import { Heart } from "@phosphor-icons/react/Heart"
-import { ShareNetwork } from "@phosphor-icons/react/ShareNetwork"
-import { WarningCircle } from "@phosphor-icons/react/WarningCircle"
 import DataBlock from "components/common/DataBlock"
+import { PiChat } from "react-icons/pi"
+import { PiHeart } from "react-icons/pi"
+import { PiShareNetwork } from "react-icons/pi"
+import { PiWarningCircle } from "react-icons/pi"
 import { FarcasterCastData } from "../types"
 
 const FarcasterCastSmall = ({
@@ -22,7 +22,7 @@ const FarcasterCastSmall = ({
     return (
       <DataBlock>
         <Flex alignItems={"center"} gap={1}>
-          <WarningCircle /> <Text>Failed to load cast!</Text>
+          <PiWarningCircle /> <Text>Failed to load cast!</Text>
         </Flex>
       </DataBlock>
     )
@@ -56,21 +56,21 @@ const FarcasterCastSmall = ({
               <HStack gap={2} ml={"auto"}>
                 <HStack gap={0.5}>
                   {" "}
-                  <Heart weight="fill" size={10} />
+                  <PiHeart weight="fill" size={10} />
                   <Text fontSize={"xs"} fontWeight={"bold"}>
                     {cast.likes}
                   </Text>{" "}
                 </HStack>
                 <HStack gap={0.5}>
                   {" "}
-                  <ShareNetwork weight="fill" size={10} />
+                  <PiShareNetwork weight="fill" size={10} />
                   <Text fontSize={"xs"} fontWeight={"bold"}>
                     {cast.recasts}
                   </Text>{" "}
                 </HStack>
                 <HStack gap={0.5}>
                   {" "}
-                  <Chat weight="fill" size={10} />
+                  <PiChat weight="fill" size={10} />
                   <Text fontSize={"xs"} fontWeight={"bold"}>
                     {cast.replies}
                   </Text>{" "}

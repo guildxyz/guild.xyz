@@ -1,7 +1,7 @@
 import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { Icon, useDisclosure } from "@chakra-ui/react"
-import { Robot } from "@phosphor-icons/react/Robot"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
+import { PiRobot } from "react-icons/pi"
 import { CompleteCaptchaModal } from "requirements/Captcha/components/CompleteCaptcha"
 import JoinStep from "./JoinStep"
 
@@ -21,7 +21,7 @@ const CompleteCaptchaJoinStep = (): JSX.Element => {
       <JoinStep
         isDone={isDone}
         colorScheme="cyan"
-        icon={<Icon as={Robot} />}
+        icon={<Icon as={PiRobot} />}
         title="Complete CAPTCHA"
         buttonLabel={isDone ? "Completed" : "Complete"}
         onClick={onOpen}

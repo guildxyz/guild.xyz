@@ -12,10 +12,10 @@ import {
   Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { Info } from "@phosphor-icons/react/Info"
-import { Lightning } from "@phosphor-icons/react/Lightning"
-import { Question } from "@phosphor-icons/react/Question"
 import Card from "components/common/Card"
+import { PiInfo } from "react-icons/pi"
+import { PiLightning } from "react-icons/pi"
+import { PiQuestion } from "react-icons/pi"
 import { REQUIREMENT_PROVIDED_VALUES } from "requirements/requirementProvidedValues"
 import { Requirement } from "types"
 
@@ -40,7 +40,7 @@ const ProvidedValueDisplay = ({
             opacity={0.5}
             _hover={{ opacity: 1 }}
           >
-            <Icon as={Info} mr={2} />
+            <Icon as={PiInfo} mr={2} />
             Provides dynamic value
             <AccordionIcon ml={"auto"} />
           </AccordionButton>
@@ -53,7 +53,12 @@ const ProvidedValueDisplay = ({
                   size={9}
                   overflow="hidden"
                 >
-                  <Icon boxSize={5} as={Lightning} weight="fill" color="green.500" />
+                  <Icon
+                    boxSize={5}
+                    as={PiLightning}
+                    weight="fill"
+                    color="green.500"
+                  />
                 </Circle>
 
                 <Stack gap={0} w="full">
@@ -74,7 +79,7 @@ const ProvidedValueDisplay = ({
                   <Icon
                     boxSize={5}
                     weight="regular"
-                    as={Question}
+                    as={PiQuestion}
                     color="GrayText"
                   />
                 </Tooltip>

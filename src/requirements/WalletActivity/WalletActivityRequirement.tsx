@@ -1,11 +1,12 @@
-import { Icon } from "@chakra-ui/react"
+import { Icon } from "@chakra-ui/Pireact"
+import { ForwardRefExoticComponent, RefAttributes } from "Pireact"
 import {
   ArrowsLeftRight,
   Coins,
   FileText,
   IconProps,
   Wallet,
-} from "@phosphor-icons/react"
+} from "Pireact-icons/pi"
 import DataBlockWithDate from "components/[guild]/Requirements/components/DataBlockWithDate"
 import Requirement, {
   RequirementProps,
@@ -14,7 +15,6 @@ import RequirementChainIndicator from "components/[guild]/Requirements/component
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import DataBlock from "components/common/DataBlock"
 import DataBlockWithCopy from "components/common/DataBlockWithCopy"
-import { ForwardRefExoticComponent, RefAttributes } from "react"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 import shortenHex from "utils/shortenHex"
 

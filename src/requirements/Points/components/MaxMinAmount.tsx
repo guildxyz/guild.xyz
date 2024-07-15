@@ -11,11 +11,11 @@ import {
   Text,
   Tooltip,
 } from "@chakra-ui/react"
-import { Question } from "@phosphor-icons/react/Question"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { useEffect, useState } from "react"
 import { Controller, useFormContext } from "react-hook-form"
+import { PiQuestion } from "react-icons/pi"
 import { Requirement } from "types"
 import capitalize from "utils/capitalize"
 import parseFromObject from "utils/parseFromObject"
@@ -72,7 +72,7 @@ const MaxMinAmount = ({
             <Tooltip
               label={`min <= ${label} to have ${format === "INT" ? "<=" : "<"} max`}
             >
-              <Question color="gray" />
+              <PiQuestion color="gray" />
             </Tooltip>
           )}
         </HStack>

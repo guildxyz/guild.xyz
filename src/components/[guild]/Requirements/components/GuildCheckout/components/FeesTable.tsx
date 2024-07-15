@@ -8,9 +8,9 @@ import {
   Tbody,
   useDisclosure,
 } from "@chakra-ui/react"
-import { CaretDown } from "@phosphor-icons/react/CaretDown"
 import Button from "components/common/Button"
 import { PropsWithChildren } from "react"
+import { PiCaretDown } from "react-icons/pi"
 
 type Props = {
   buttonComponent: JSX.Element
@@ -36,7 +36,7 @@ const FeesTable = ({
         onClick={onToggle}
         rightIcon={
           <Icon
-            as={CaretDown}
+            as={PiCaretDown}
             boxSize={3}
             transition="transform 0.2s ease"
             transform={`rotate(${isOpen ? "-180" : "0"}deg)`}

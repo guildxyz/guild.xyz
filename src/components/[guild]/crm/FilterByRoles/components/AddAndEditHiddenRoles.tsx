@@ -6,10 +6,10 @@ import {
   MenuButton,
   MenuList,
 } from "@chakra-ui/react"
-import { CaretDown } from "@phosphor-icons/react/CaretDown"
-import { PencilSimple } from "@phosphor-icons/react/PencilSimple"
 import useGuild from "components/[guild]/hooks/useGuild"
 import LinkMenuItem from "components/common/LinkMenuItem"
+import { PiCaretDown } from "react-icons/pi"
+import { PiPencilSimple } from "react-icons/pi"
 import AddHiddenRoleButton from "./AddHiddenRoleButton"
 
 const AddAndEditHiddenRoles = () => {
@@ -23,13 +23,13 @@ const AddAndEditHiddenRoles = () => {
       <Menu placement="bottom-end">
         <MenuButton
           as={IconButton}
-          icon={<CaretDown />}
+          icon={<PiCaretDown />}
           borderRadius="lg"
           size="xs"
           variant="ghost"
         ></MenuButton>
         <MenuList>
-          <LinkMenuItem href={`/${urlName}#hiddenRoles`} icon={<PencilSimple />}>
+          <LinkMenuItem href={`/${urlName}#hiddenRoles`} icon={<PiPencilSimple />}>
             Edit hidden roles
           </LinkMenuItem>
         </MenuList>

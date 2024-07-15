@@ -1,11 +1,11 @@
 import { FormControl, FormLabel, Progress, Wrap } from "@chakra-ui/react"
-import { File } from "@phosphor-icons/react/File"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import useDropzone, { ERROR_MESSAGES } from "hooks/useDropzone"
 import { Uploader } from "hooks/usePinata/usePinata"
 import { useState } from "react"
+import { PiFile } from "react-icons/pi"
 import RemoveBackgroundImage from "./RemoveBackgroundImage"
 
 type Props = {
@@ -45,7 +45,7 @@ const BackgroundImageUploader = ({
             {...getRootProps()}
             as="label"
             variant="outline"
-            leftIcon={<File />}
+            leftIcon={<PiFile />}
             h="10"
           >
             <input {...getInputProps()} hidden />

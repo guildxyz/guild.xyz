@@ -1,11 +1,11 @@
 import { Visibility } from "@guildxyz/types"
-import {
-  Detective,
-  EyeSlash,
-  GlobeHemisphereEast,
-  IconProps,
-} from "@phosphor-icons/react"
 import { Option } from "components/common/RadioSelect/RadioSelect"
+import {
+  IconProps,
+  PiDetective,
+  PiEyeSlash,
+  PiGlobeHemisphereEast,
+} from "react-icons/pi"
 import PrivateVisibilityOptions from "./components/PrivateVisibilityOptions"
 
 export const VISIBILITY_DATA: Record<
@@ -20,18 +20,18 @@ export const VISIBILITY_DATA: Record<
 > = {
   PUBLIC: {
     title: "Public",
-    Icon: GlobeHemisphereEast,
+    Icon: PiGlobeHemisphereEast,
     description: "Visible to everyone",
   },
   PRIVATE: {
     title: "Secret",
-    Icon: Detective,
+    Icon: Detectiveve,
     description: "Only visible to users that satisfy...",
     Child: PrivateVisibilityOptions,
   },
   HIDDEN: {
     title: "Hidden",
-    Icon: EyeSlash,
+    Icon: PiDetective,
     description: "Only visible to admins",
   },
 }

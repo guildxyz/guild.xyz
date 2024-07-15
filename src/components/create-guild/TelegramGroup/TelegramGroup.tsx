@@ -1,11 +1,11 @@
 import { FormControl, FormLabel, HStack, Icon, Input, Stack } from "@chakra-ui/react"
-import { ArrowSquareOut } from "@phosphor-icons/react/ArrowSquareOut"
-import { Check } from "@phosphor-icons/react/Check"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { env } from "env"
 import { PropsWithChildren } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
+import { PiArrowSquareOut } from "react-icons/pi"
+import { PiCheck } from "react-icons/pi"
 import parseFromObject from "utils/parseFromObject"
 import useIsTGBotIn from "./hooks/useIsTGBotIn"
 
@@ -46,7 +46,7 @@ const TelegramGroup = ({ fieldName, children }: PropsWithChildren<Props>) => {
               h="var(--chakra-space-11)"
               href={`https://t.me/${env.NEXT_PUBLIC_TG_BOT_USERNAME}?startgroup=true&admin=post_messages+restrict_members+invite_users`}
               target="_blank"
-              rightIcon={<Icon as={ArrowSquareOut} mt="-1px" />}
+              rightIcon={<Icon as={PiArrowSquareOut} mt="-1px" />}
               isLoading={isValidating}
             >
               Add Guild bot
@@ -56,7 +56,7 @@ const TelegramGroup = ({ fieldName, children }: PropsWithChildren<Props>) => {
               h="var(--chakra-space-11)"
               w="full"
               isDisabled
-              rightIcon={<Check />}
+              rightIcon={<PiCheck />}
             >
               Guild bot added
             </Button>

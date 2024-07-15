@@ -1,9 +1,9 @@
 import { ToastId, useToast } from "@chakra-ui/react"
-import { ArrowRight } from "@phosphor-icons/react/ArrowRight"
 import useLocalStorage from "hooks/useLocalStorage"
 import { useToastWithButton } from "hooks/useToast"
 import { useRouter } from "next/router"
 import { useCallback, useEffect, useRef } from "react"
+import { PiArrowRight } from "react-icons/pi"
 import useGuild from "./hooks/useGuild"
 import useGuildPermission from "./hooks/useGuildPermission"
 
@@ -31,7 +31,7 @@ const useStayConnectedToast = (onClick: () => void) => {
       buttonProps: {
         children: "Open guild settings",
         onClick: () => onClick(),
-        rightIcon: <ArrowRight />,
+        rightIcon: <PiArrowRight />,
       },
       duration: null,
       isClosable: true,

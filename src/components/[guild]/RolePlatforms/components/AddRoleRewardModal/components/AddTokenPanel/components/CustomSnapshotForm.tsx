@@ -17,8 +17,6 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react"
-import { Info } from "@phosphor-icons/react/Info"
-import { Upload } from "@phosphor-icons/react/Upload"
 import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import CopyableAddress from "components/common/CopyableAddress"
@@ -27,6 +25,8 @@ import useToast from "hooks/useToast"
 import Papa from "papaparse"
 import { useDropzone } from "react-dropzone"
 import { useFormContext, useWatch } from "react-hook-form"
+import { PiInfo } from "react-icons/pi"
+import { PiUpload } from "react-icons/pi"
 
 const CustomSnapshotForm = () => {
   const { setValue } = useFormContext()
@@ -98,7 +98,7 @@ const CustomSnapshotForm = () => {
             transitionDuration={"0.2s"}
             {...getRootProps()}
           >
-            <Icon as={Upload} boxSize={4} opacity={0.5} />
+            <Icon as={PiUpload} boxSize={4} opacity={0.5} />
             <Text opacity={0.5}>Drag and drop file or browse from device</Text>
 
             <input {...getInputProps()} accept="csv" hidden />
@@ -107,7 +107,7 @@ const CustomSnapshotForm = () => {
             <AccordionItem borderBottom="0">
               <AccordionButton>
                 <Flex w="full" px={2} color={"GrayText"} alignItems={"center"}>
-                  <Icon as={Info} mr={2} />
+                  <Icon as={PiInfo} mr={2} />
                   <Text mr="auto" fontWeight={"semibold"} fontSize={"sm"}>
                     Required format
                   </Text>

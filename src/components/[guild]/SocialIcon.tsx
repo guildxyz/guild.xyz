@@ -1,10 +1,10 @@
 import { Circle, Icon, Img } from "@chakra-ui/react"
-import type { IconProps } from "@phosphor-icons/react"
-import { GlobeHemisphereEast } from "@phosphor-icons/react/GlobeHemisphereEast"
-import { MediumLogo } from "@phosphor-icons/react/MediumLogo"
-import { SpotifyLogo } from "@phosphor-icons/react/SpotifyLogo"
-import { YoutubeLogo } from "@phosphor-icons/react/YoutubeLogo"
 import { ForwardRefExoticComponent, RefAttributes } from "react"
+import type { PiIconProps } from "react-icons/pi"
+import { PiGlobeHemisphereEast } from "react-icons/pi"
+import { PiMediumLogo } from "react-icons/pi"
+import { PiSpotifyLogo } from "react-icons/pi"
+import { PiYoutubeLogo } from "react-icons/pi"
 import XLogo from "static/icons/x.svg"
 import MirrorLogo from "static/socialIcons/mirror.svg"
 import SubstackLogo from "static/socialIcons/substack.svg"
@@ -19,18 +19,18 @@ type Props = {
 
 const icons: Record<
   SocialLinkKey,
-  ForwardRefExoticComponent<IconProps & RefAttributes<SVGSVGElement>> | string
+  ForwardRefExoticComponent<PiIconProps & RefAttributes<SVGSVGElement>> | string
 > = {
   TWITTER: XLogo,
   LENS: "/requirementLogos/lens.svg",
-  YOUTUBE: YoutubeLogo,
-  SPOTIFY: SpotifyLogo,
+  YOUTUBE: PiYoutubeLogo,
+  SPOTIFY: PiSpotifyLogo,
   MIRROR: MirrorLogo,
-  MEDIUM: MediumLogo,
+  MEDIUM: PiMediumLogo,
   SUBSTACK: SubstackLogo,
   SNAPSHOT: "/requirementLogos/snapshot.png",
   SOUND: "/requirementLogos/sound.png",
-  WEBSITE: GlobeHemisphereEast,
+  WEBSITE: PiGlobeHemisphereEast,
   GITHUB: "/platforms/github.png",
 }
 
@@ -72,7 +72,7 @@ const SocialIcon = ({ type, size = "md", ...rest }: Props): JSX.Element => (
         boxSize={sizes[size].icon}
         as={
           icons[type] as ForwardRefExoticComponent<
-            IconProps & RefAttributes<SVGSVGElement>
+            PiIconProps & RefAttributes<SVGSVGElement>
           >
         }
       />

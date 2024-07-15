@@ -1,10 +1,10 @@
-import { Funnel } from "@phosphor-icons/react/Funnel"
 import {
   FILTER_NAMES,
   Filter,
   useActivityLogFilters,
 } from "components/[guild]/activity/ActivityLogFiltersBar/components/ActivityLogFiltersContext"
 import Button from "components/common/Button"
+import { PiFunnel } from "react-icons/pi"
 
 type Props = {
   filter: Omit<Filter, "id">
@@ -23,7 +23,7 @@ const FilterBy = ({ filter: filterProp }: Props): JSX.Element => {
   return (
     <Button
       variant="ghost"
-      leftIcon={<Funnel />}
+      leftIcon={<PiFunnel />}
       size="sm"
       borderRadius={0}
       onClick={() => addFilter(filterProp)}

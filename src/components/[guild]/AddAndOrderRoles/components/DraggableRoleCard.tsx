@@ -1,9 +1,9 @@
 import { HStack, Heading, Icon, Spacer } from "@chakra-ui/react"
-import { DotsSixVertical } from "@phosphor-icons/react/DotsSixVertical"
 import MemberCount from "components/[guild]/RoleCard/components/MemberCount"
 import Visibility from "components/[guild]/Visibility"
 import Card from "components/common/Card"
 import GuildLogo from "components/common/GuildLogo"
+import { PiDotsSixVertical } from "react-icons/pi"
 import { Role } from "types"
 
 type Props = {
@@ -40,7 +40,7 @@ const DraggableRoleCard = ({ role }: Props) => {
 
         <Spacer />
 
-        <Icon as={DotsSixVertical} />
+        <Icon as={PiDotsSixVertical} />
       </HStack>
     </Card>
   )

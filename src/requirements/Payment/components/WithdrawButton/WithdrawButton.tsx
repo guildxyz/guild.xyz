@@ -1,10 +1,10 @@
 import { Icon, Spinner, Tooltip } from "@chakra-ui/react"
-import { LinkBreak } from "@phosphor-icons/react/LinkBreak"
-import { Wallet } from "@phosphor-icons/react/Wallet"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import Button from "components/common/Button"
 import useTokenData from "hooks/useTokenData"
 import useTriggerNetworkChange from "hooks/useTriggerNetworkChange"
+import { PiLinkBreak } from "react-icons/pi"
+import { PiWallet } from "react-icons/pi"
 import useVault from "requirements/Payment/hooks/useVault"
 import shortenHex from "utils/shortenHex"
 import { formatUnits } from "viem"
@@ -60,7 +60,7 @@ const WithdrawButton = (): JSX.Element => {
           isLoading ? (
             <Spinner size="xs" />
           ) : (
-            <Icon as={isDisabledLabel || isOnVaultsChain ? Wallet : LinkBreak} />
+            <Icon as={isDisabledLabel || isOnVaultsChain ? PiWallet : PiLinkBreak} />
           )
         }
         isDisabled={isPreparing || isLoading || isDisabledLabel}

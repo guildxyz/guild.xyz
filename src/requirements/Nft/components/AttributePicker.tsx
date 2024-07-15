@@ -8,14 +8,14 @@ import {
   Stack,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { Plus } from "@phosphor-icons/react/Plus"
-import { TrashSimple } from "@phosphor-icons/react/TrashSimple"
-import { X } from "@phosphor-icons/react/X"
 import Button from "components/common/Button"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { useEffect, useMemo, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
+import { PiPlus } from "react-icons/pi"
+import { PiTrashSimple } from "react-icons/pi"
+import { PiX } from "react-icons/pi"
 import capitalize from "utils/capitalize"
 import isNumber from "utils/isNumber"
 import parseFromObject from "utils/parseFromObject"
@@ -305,7 +305,7 @@ const AttributePicker = ({
       <Flex mt={2}>
         {nftCustomAttributeValues?.length <= 1 && (
           <Button
-            leftIcon={<Icon as={isRangeValue ? X : Plus} />}
+            leftIcon={<Icon as={isRangeValue ? PiX : PiPlus} />}
             size="xs"
             borderRadius="md"
             onClick={changeRange}
@@ -316,7 +316,7 @@ const AttributePicker = ({
 
         <Button
           ml="auto"
-          leftIcon={<Icon as={TrashSimple} />}
+          leftIcon={<Icon as={PiTrashSimple} />}
           size="xs"
           borderRadius="md"
           colorScheme="red"

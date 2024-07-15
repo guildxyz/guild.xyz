@@ -23,15 +23,15 @@ import {
   Text,
   TextProps,
 } from "@chakra-ui/react"
-import { Info } from "@phosphor-icons/react/Info"
-import { Plus } from "@phosphor-icons/react/Plus"
-import { X } from "@phosphor-icons/react/X"
 import Button from "components/common/Button"
 import ControlledSelect from "components/common/ControlledSelect"
 import DataBlockWithCopy from "components/common/DataBlockWithCopy"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { useMemo } from "react"
 import { Controller, useFieldArray, useFormContext, useWatch } from "react-hook-form"
+import { PiInfo } from "react-icons/pi"
+import { PiPlus } from "react-icons/pi"
+import { PiX } from "react-icons/pi"
 import { RequirementFormProps } from "requirements/types"
 import parseFromObject from "utils/parseFromObject"
 import ChainPicker from "../common/ChainPicker"
@@ -212,7 +212,7 @@ const ContractStateForm = ({ baseFieldPath }: RequirementFormProps) => {
                 <InputRightElement>
                   <IconButton
                     aria-label="Remove parameter"
-                    icon={<X />}
+                    icon={<PiX />}
                     size="xs"
                     variant="ghost"
                     rounded="full"
@@ -225,7 +225,7 @@ const ContractStateForm = ({ baseFieldPath }: RequirementFormProps) => {
 
           <Button
             w="full"
-            leftIcon={<Plus />}
+            leftIcon={<PiPlus />}
             onClick={() => appendParam({ value: "" })}
           >
             Add parameter
@@ -248,7 +248,7 @@ const ContractStateForm = ({ baseFieldPath }: RequirementFormProps) => {
                 {input.type === "address" && (
                   <Popover trigger="hover">
                     <PopoverTrigger>
-                      <Info />
+                      <PiInfo />
                     </PopoverTrigger>
                     <PopoverContent>
                       <PopoverArrow />

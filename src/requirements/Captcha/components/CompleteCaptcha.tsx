@@ -14,7 +14,6 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import HCaptcha from "@hcaptcha/react-hcaptcha"
-import { Robot } from "@phosphor-icons/react/Robot"
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import useUser from "components/[guild]/hooks/useUser"
@@ -24,6 +23,7 @@ import { Modal } from "components/common/Modal"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import { useEffect } from "react"
+import { PiRobot } from "react-icons/pi"
 import useSWRImmutable from "swr/immutable"
 import useVerifyCaptcha from "../hooks/useVerifyCaptcha"
 
@@ -44,7 +44,7 @@ const CompleteCaptcha = (props: ButtonProps): JSX.Element => {
         size="xs"
         onClick={onOpen}
         colorScheme="cyan"
-        leftIcon={<Icon as={Robot} />}
+        leftIcon={<Icon as={PiRobot} />}
         iconSpacing="1"
         {...props}
       >

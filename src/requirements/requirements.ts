@@ -1,15 +1,15 @@
 import {
-  Coins,
-  CurrencyCircleDollar,
-  ImageSquare,
-  Link,
-  ListChecks,
-  LockOpen,
-  Parachute,
-  Robot,
-  Wallet,
-  Wrench,
-} from "@phosphor-icons/react"
+  PiCoins,
+  PiCurrencyCircleDollar,
+  PiImageSquare,
+  PiLink,
+  PiListChecks,
+  PiLockOpen,
+  PiParachute,
+  PiRobot,
+  PiWallet,
+  PiWrench,
+} from "react-icons/pi"
 import { VISIT_LINK_REGEX } from "requirements/VisitLink/VisitLinkRequirement"
 import { emailData } from "rewards/Email/data"
 import { formData } from "rewards/Forms/data"
@@ -19,47 +19,47 @@ import { RequirementData } from "./types"
 
 export const REQUIREMENTS_DATA = [
   {
-    icon: LockOpen,
+    icon: PiLockOpen,
     name: "Free",
     types: ["FREE"],
   },
   {
-    icon: ImageSquare,
+    icon: PiImageSquare,
     name: "NFT",
     types: ["ERC721", "ERC1155", "NOUNS"],
     isNegatable: true,
   },
   {
-    icon: CurrencyCircleDollar,
+    icon: PiCurrencyCircleDollar,
     name: "Token",
     types: ["ERC20", "COIN"],
     isNegatable: true,
   },
   {
-    icon: ListChecks,
+    icon: PiListChecks,
     name: "Allowlist",
     types: ["ALLOWLIST", "ALLOWLIST_EMAIL"],
     isNegatable: true,
   },
   {
-    icon: Parachute,
+    icon: PiParachute,
     name: "Airdrop",
     types: ["GUILD_SNAPSHOT"],
     isNegatable: true,
   },
   {
-    icon: Coins,
+    icon: PiCoins,
     name: "Payment",
     types: ["PAYMENT"],
   },
   {
-    icon: Wrench,
+    icon: PiWrench,
     name: "Contract query",
     types: ["CONTRACT"],
     isNegatable: true,
   },
   {
-    icon: Wallet,
+    icon: PiWallet,
     name: "Wallet activity",
     types: [
       "COVALENT_FIRST_TX",
@@ -72,7 +72,7 @@ export const REQUIREMENTS_DATA = [
     isNegatable: true,
   },
   {
-    icon: Robot,
+    icon: PiRobot,
     name: "Captcha",
     types: ["CAPTCHA"],
     isNegatable: true,
@@ -97,7 +97,7 @@ export const REQUIREMENTS_DATA = [
     isNegatable: true,
   },
   {
-    icon: Link,
+    icon: PiLink,
     name: "Visit link",
     types: ["LINK_VISIT"],
     customNameRules: {

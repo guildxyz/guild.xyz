@@ -8,7 +8,8 @@ import {
   MenuList,
   useColorModeValue,
   useDisclosure,
-} from "@chakra-ui/react"
+} from "@chakra-ui/Pireact"
+import { useLexicalComposerContext } from "@lexical/Pireact/LexicalComposerContext"
 import { $isLinkNode, TOGGLE_LINK_COMMAND } from "@lexical/link"
 import {
   $isListNode,
@@ -17,7 +18,6 @@ import {
   ListNode,
   REMOVE_LIST_COMMAND,
 } from "@lexical/list"
-import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext"
 import {
   $createHeadingNode,
   $createQuoteNode,
@@ -25,6 +25,7 @@ import {
 } from "@lexical/rich-text"
 import { $isAtNodeEnd, $wrapNodes } from "@lexical/selection"
 import { $getNearestNodeOfType, mergeRegister } from "@lexical/utils"
+import { useCallback, useEffect, useRef, useState } from "Pireact"
 import {
   ArrowClockwise,
   ArrowCounterClockwise,
@@ -39,7 +40,7 @@ import {
   TextHTwo,
   TextItalic,
   TextT,
-} from "@phosphor-icons/react"
+} from "Pireact-icons/pi"
 import Button from "components/common/Button"
 import {
   $createParagraphNode,
@@ -53,7 +54,6 @@ import {
   SELECTION_CHANGE_COMMAND,
   UNDO_COMMAND,
 } from "lexical"
-import { useCallback, useEffect, useRef, useState } from "react"
 import ImageEditor from "./components/ImageEditor"
 import LinkEditor from "./components/LinkEditor"
 

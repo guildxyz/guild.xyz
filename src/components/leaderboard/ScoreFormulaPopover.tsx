@@ -15,12 +15,12 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react"
-import { Info } from "@phosphor-icons/react/Info"
+import { PiInfo } from "react-icons/pi"
 
 const ScoreFormulaPopover = () => (
   <Popover trigger="hover">
     <PopoverTrigger>
-      <Icon as={Info} boxSize={3.5} color="gray" />
+      <Icon as={PiInfo} boxSize={3.5} color="gray" />
     </PopoverTrigger>
     <PopoverContent>
       <PopoverArrow />

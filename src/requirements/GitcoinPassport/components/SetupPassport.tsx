@@ -1,7 +1,7 @@
 import { Link } from "@chakra-ui/next-js"
 import { ButtonProps } from "@chakra-ui/react"
-import { ArrowSquareOut } from "@phosphor-icons/react/ArrowSquareOut"
 import Button from "components/common/Button"
+import { PiArrowSquareOut } from "react-icons/pi"
 
 const SetupPassport = (buttonProps: ButtonProps) => (
   <Link
@@ -14,7 +14,7 @@ const SetupPassport = (buttonProps: ButtonProps) => (
     <Button
       size="xs"
       colorScheme="teal"
-      rightIcon={<ArrowSquareOut />}
+      rightIcon={<PiArrowSquareOut />}
       iconSpacing="1"
       {...buttonProps}
     >

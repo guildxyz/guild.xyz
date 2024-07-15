@@ -1,7 +1,7 @@
 import { IconButton, useDisclosure } from "@chakra-ui/react"
-import { GearSix } from "@phosphor-icons/react/GearSix"
 import { ContractCallFunction } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
 import { useThemeContext } from "components/[guild]/ThemeContext"
+import { PiGearSix } from "react-icons/pi"
 import EditNftModal from "rewards/ContractCall/components/EditNftModal"
 import { useCollectNftContext } from "./CollectNftContext"
 
@@ -19,7 +19,7 @@ const EditNftButton = () => {
   return (
     <>
       <IconButton
-        icon={<GearSix />}
+        icon={<PiGearSix />}
         aria-label="Edit NFT"
         size="sm"
         variant="ghost"

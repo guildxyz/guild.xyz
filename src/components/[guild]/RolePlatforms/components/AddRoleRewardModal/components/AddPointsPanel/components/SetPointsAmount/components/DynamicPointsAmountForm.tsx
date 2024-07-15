@@ -1,12 +1,12 @@
 import { Icon, Text, useColorModeValue, useDisclosure } from "@chakra-ui/react"
-import { ArrowSquareOut } from "@phosphor-icons/react/ArrowSquareOut"
-import { Star } from "@phosphor-icons/react/Star"
 import DynamicRewardSetup from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/DynamicSetup/DynamicRewardSetup"
 import { useEditRolePlatformContext } from "components/[guild]/RolePlatforms/components/EditRolePlatformModal"
 import Button from "components/common/Button"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import { type ReactNode, useEffect } from "react"
 import { useWatch } from "react-hook-form"
+import { PiArrowSquareOut } from "react-icons/pi"
+import { PiStar } from "react-icons/pi"
 import InformationModal from "../../../../DynamicSetup/InformationModal"
 
 const DynamicPointsAmountForm = ({ imageUrl, baseFieldPath }) => {
@@ -16,7 +16,7 @@ const DynamicPointsAmountForm = ({ imageUrl, baseFieldPath }) => {
   const pointImage: ReactNode = imageUrl ? (
     <OptionImage img={imageUrl} alt={"Point type image"} />
   ) : (
-    <Icon as={Star} />
+    <Icon as={PiStar} />
   )
 
   const requirementId = useWatch({
@@ -41,7 +41,7 @@ const DynamicPointsAmountForm = ({ imageUrl, baseFieldPath }) => {
         <Button
           variant="link"
           onClick={onOpen}
-          rightIcon={<Icon as={ArrowSquareOut} />}
+          rightIcon={<Icon as={PiArrowSquareOut} />}
           iconSpacing={1}
           opacity={learnMoreOpacity}
         >

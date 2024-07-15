@@ -19,9 +19,9 @@ import {
   useColorMode,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { Funnel } from "@phosphor-icons/react/Funnel"
 import { MemberCountWithSyncIndicator } from "components/[guild]/RoleCard/components/MemberCount"
 import { memo, useState } from "react"
+import { PiFunnel } from "react-icons/pi"
 import { Role } from "types"
 import useGuild from "../../hooks/useGuild"
 import FilterByRolesLogicSelector from "./FilterByRolesLogicSelector"
@@ -66,7 +66,7 @@ const FilterByRoles = ({ getFilterValue, setFilterValue }: any) => {
                   {`${selectedRoleIds.length} filtered roles`}
                 </Text>
               )}
-              <Icon as={Funnel} />
+              <Icon as={PiFunnel} />
             </Button>
           </PopoverTrigger>
           <Portal>

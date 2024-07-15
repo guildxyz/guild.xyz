@@ -1,12 +1,12 @@
 import { ModalOverlay, useDisclosure } from "@chakra-ui/react"
 import { Schemas, Visibility } from "@guildxyz/types"
-import { Plus } from "@phosphor-icons/react/Plus"
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { atom, useAtomValue } from "jotai"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
+import { PiPlus } from "react-icons/pi"
 import { modalSizeForPlatform } from "rewards"
 import rewardComponents from "rewards/components"
 import { RoleFormType } from "types"
@@ -95,7 +95,7 @@ const AddRewardButton = () => {
     <>
       <Button
         data-test="add-reward-button"
-        leftIcon={<Plus />}
+        leftIcon={<PiPlus />}
         onClick={onOpen}
         variant="ghost"
         size="sm"

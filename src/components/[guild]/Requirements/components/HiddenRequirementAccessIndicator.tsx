@@ -14,7 +14,7 @@ import {
   Tag,
   Text,
   useDisclosure,
-} from "@chakra-ui/react"
+} from "@chakra-ui/Pireact"
 import {
   ArrowSquareIn,
   CaretDown,
@@ -24,7 +24,7 @@ import {
   LockSimple,
   Warning,
   X,
-} from "@phosphor-icons/react"
+} from "Pireact-icons/pi"
 import RecheckAccessesButton from "components/[guild]/RecheckAccessesButton"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useRequirements from "components/[guild]/hooks/useRequirements"

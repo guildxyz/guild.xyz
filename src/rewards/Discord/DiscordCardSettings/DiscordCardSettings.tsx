@@ -1,8 +1,8 @@
 import { FormControl, FormErrorMessage, FormLabel } from "@chakra-ui/react"
-import { ShieldCheck } from "@phosphor-icons/react/ShieldCheck"
-import { Sparkle } from "@phosphor-icons/react/Sparkle"
 import RadioSelect from "components/common/RadioSelect"
 import { useController, useFormContext, useFormState } from "react-hook-form"
+import { PiShieldCheck } from "react-icons/pi"
+import { PiSparkle } from "react-icons/pi"
 import GuildifyExistingRole from "./components/GuildifyExistingRole"
 
 const roleOptions = [
@@ -10,12 +10,12 @@ const roleOptions = [
     value: "NEW",
     defaultValue: "NEW",
     title: "Create a new Discord role for me",
-    icon: Sparkle,
+    icon: PiSparkle,
   },
   {
     value: "EXISTING",
     title: "Guildify an already existing role on my server",
-    icon: ShieldCheck,
+    icon: PiShieldCheck,
     children: <GuildifyExistingRole />,
   },
 ]

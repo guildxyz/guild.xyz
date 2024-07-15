@@ -7,9 +7,9 @@ import {
   Icon,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { DotsSixVertical } from "@phosphor-icons/react/DotsSixVertical"
 import { Reorder, useDragControls } from "framer-motion"
 import { PropsWithChildren, ReactNode } from "react"
+import { PiDotsSixVertical } from "react-icons/pi"
 import { Rest } from "types"
 
 type Props = {
@@ -89,7 +89,7 @@ const OptionLayout = ({
             onPointerDown={draggable ? (e) => dragControls.start(e) : undefined}
           >
             <Icon
-              as={DotsSixVertical}
+              as={PiDotsSixVertical}
               boxSize={3}
               opacity={0}
               {...(draggable ? draggableIconProps : undefined)}

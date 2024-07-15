@@ -5,12 +5,12 @@ import { Anchor } from "@/components/ui/Anchor"
 import { Button, buttonVariants } from "@/components/ui/Button"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/ToggleGroup"
 import { cn } from "@/lib/utils"
-import { Plus } from "@phosphor-icons/react/Plus"
 import useIsStuck from "hooks/useIsStuck"
 import useScrollspy from "hooks/useScrollSpy"
 import { useAtom, useAtomValue, useSetAtom } from "jotai"
 import Link from "next/link"
 import { useEffect } from "react"
+import { PiPlus } from "react-icons/pi"
 import { activeSectionAtom, isNavStuckAtom, isSearchStuckAtom } from "../atoms"
 import { ActiveSection } from "../types"
 
@@ -83,7 +83,7 @@ const CreateGuildLink = () => {
         ],
       })}
     >
-      <Plus />
+      <PiPlus />
       <span>Create guild</span>
     </Link>
   )

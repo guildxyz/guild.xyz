@@ -1,8 +1,8 @@
-import { DiscordLogo } from "@phosphor-icons/react/DiscordLogo"
+import { PiDiscordLogo } from "react-icons/pi"
 import { PlatformAsRewardRestrictions, RewardData } from "rewards/types"
 
 export const discordData = {
-  icon: DiscordLogo,
+  icon: PiDiscordLogo,
   imageUrl: "/platforms/discord.png",
   name: "Discord",
   colorScheme: "DISCORD",

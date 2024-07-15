@@ -1,7 +1,7 @@
 import { Img } from "@chakra-ui/react"
-import { ArrowSquareOut } from "@phosphor-icons/react/ArrowSquareOut"
 import Button from "components/common/Button"
 import { PropsWithChildren, forwardRef } from "react"
+import { PiArrowSquareOut } from "react-icons/pi"
 import { Rest } from "types"
 
 type Props = PropsWithChildren<Rest>
@@ -29,7 +29,7 @@ const RequirementLinkButton = ({ children, imageUrl, ...rest }: LinkProps) => (
     target="_blank"
     rel="noopener"
     leftIcon={<Img src={imageUrl} alt="Link image" boxSize={3} mr="1" />}
-    rightIcon={<ArrowSquareOut />}
+    rightIcon={<PiArrowSquareOut />}
     {...rest}
   >
     {children}

@@ -1,9 +1,9 @@
-import { ArrowLeft } from "@phosphor-icons/react/ArrowLeft"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import Button from "components/common/Button"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { PropsWithChildren } from "react"
+import { PiArrowLeft } from "react-icons/pi"
 
 type Props = {
   href?: string
@@ -25,7 +25,7 @@ const BackButton = ({ href, children }: PropsWithChildren<Props>) => {
       color={colorContext?.textColor}
       opacity={0.75}
       size="sm"
-      leftIcon={<ArrowLeft />}
+      leftIcon={<PiArrowLeft />}
       alignSelf="flex-start"
       mb="6"
     >

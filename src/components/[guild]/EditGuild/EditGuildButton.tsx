@@ -1,5 +1,5 @@
 import { IconButton } from "@chakra-ui/react"
-import { GearSix } from "@phosphor-icons/react/GearSix"
+import { PiGearSix } from "react-icons/pi"
 import { useThemeContext } from "../ThemeContext"
 import { useEditGuildDrawer } from "./EditGuildDrawerContext"
 
@@ -10,7 +10,7 @@ const EditGuildButton = (): JSX.Element => {
 
   return (
     <IconButton
-      icon={<GearSix />}
+      icon={<PiGearSix />}
       aria-label="Edit Guild"
       minW={"44px"}
       rounded="full"

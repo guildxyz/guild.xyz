@@ -14,11 +14,11 @@ import {
   Text,
   Textarea,
 } from "@chakra-ui/react"
-import { ArrowSquareOut } from "@phosphor-icons/react/ArrowSquareOut"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { useEffect, useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
+import { PiArrowSquareOut } from "react-icons/pi"
 import useSWRImmutable from "swr/immutable"
 import parseFromObject from "utils/parseFromObject"
 
@@ -140,7 +140,7 @@ const SingleStrategy = ({ baseFieldPath, index }: Props): JSX.Element => {
             isExternal
           >
             <Text fontSize="sm">Snapshot strategies</Text>
-            <Icon ml={1} as={ArrowSquareOut} />
+            <Icon ml={1} as={PiArrowSquareOut} />
           </Link>
         </FormHelperText>
 

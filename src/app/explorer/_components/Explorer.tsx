@@ -4,12 +4,12 @@ import { walletSelectorModalAtom } from "@/components/Providers/atoms"
 import { Button } from "@/components/ui/Button"
 import { Card } from "@/components/ui/Card"
 import { useUserPublic } from "@/hooks/useUserPublic"
-import { SignIn } from "@phosphor-icons/react/SignIn"
 import { GuildSearchBar } from "app/explorer/_components/GuildSearchBar"
 import { YourGuilds } from "app/explorer/_components/YourGuilds"
 import useIsStuck from "hooks/useIsStuck"
 import { useSetAtom } from "jotai"
 import { Suspense } from "react"
+import { PiSignIn } from "react-icons/pi"
 import { SearchParams } from "types"
 import Robot from "/public/landing/robot.svg"
 import { isSearchStuckAtom } from "../atoms"
@@ -40,7 +40,7 @@ export const Explorer = ({ searchParams }: { searchParams: SearchParams }) => {
             className="space-x-2"
             onClick={() => setIsWalletSelectorModalOpen(true)}
           >
-            <SignIn />
+            <PiSignIn />
             <span className="text-md">Sign in</span>
           </Button>
         </Card>

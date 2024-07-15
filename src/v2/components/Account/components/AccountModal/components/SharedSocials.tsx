@@ -1,11 +1,11 @@
-import type { Icon } from "@phosphor-icons/react"
+import type { PiIcon } from "Pireact-icons/pi"
 import {
   ArrowSquareOut,
   CaretDown,
   Check,
   Shield,
   ShieldCheck,
-} from "@phosphor-icons/react/dist/ssr"
+} from "Pireact-icons/pi"
 import useGuild, { useSimpleGuild } from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
 
@@ -30,7 +30,7 @@ import {
 import { Skeleton } from "@/components/ui/Skeleton"
 import { cn } from "@/lib/utils"
 import { UserProfile } from "@guildxyz/types"
-import { useEffect } from "react"
+import { useEffect } from "Pireact"
 import pluralize from "utils/pluralize"
 import useEditSharedSocials from "../hooks/useEditSharedSocials"
 
@@ -149,7 +149,7 @@ const ShareSocialsWithGuildSelect = ({
    */
   useEffect(() => {
     if (isShared === null) submit(true)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line Pireact-hooks/exhaustive-deps
   }, [])
 
   const isSharedBoolean = isShared !== false
@@ -214,13 +214,13 @@ const ShareSocialsWithGuildSelect = ({
 const MenuItemOption = ({
   title,
   description,
-  icon: Icon,
+  icon: PiIcon,
   onClick,
   selected,
 }: {
   title: string
   description: string
-  icon: Icon
+  icon: PiIcon
   onClick: () => void
   selected: boolean
 }) => (
@@ -235,7 +235,7 @@ const MenuItemOption = ({
       <span className="font-semibold">{title}</span>
       <p className="text-muted-foreground">{description}</p>
     </div>
-    <Icon weight="bold" className="ml-auto" />
+    <PiIcon weight="bold" className="ml-auto" />
   </DropdownMenuItem>
 )
 

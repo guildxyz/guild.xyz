@@ -1,7 +1,7 @@
 import { Link } from "@chakra-ui/next-js"
 import { Box, HStack, Icon, Stack, Tag, Text, useColorMode } from "@chakra-ui/react"
-import { Plus } from "@phosphor-icons/react/Plus"
 import { FC, forwardRef } from "react"
+import { PiPlus } from "react-icons/pi"
 import { Rest } from "types"
 
 type Props = {
@@ -51,7 +51,7 @@ const AddCard = forwardRef(
       >
         <HStack spacing={{ base: 5, sm: 7 }} alignItems="center" w="full">
           <Icon
-            as={Plus}
+            as={PiPlus}
             boxSize={8}
             color={colorMode === "light" ? "gray.300" : "gray.500"}
           />

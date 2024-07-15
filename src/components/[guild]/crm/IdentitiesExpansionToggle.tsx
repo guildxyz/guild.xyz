@@ -1,8 +1,5 @@
-import { IconButton } from "@chakra-ui/react"
-import {
-  ArrowsInLineHorizontal,
-  ArrowsOutLineHorizontal,
-} from "@phosphor-icons/react"
+import { IconButton } from "@chakra-ui/Pireact"
+import { ArrowsInLineHorizontal, ArrowsOutLineHorizontal } from "Pireact-icons/pi"
 import useLocalStorage from "hooks/useLocalStorage"
 
 export const IDENTITIES_COLLAPSED_STYLE = `.identityTd .identityTag:not(:first-child) {margin-left: var(--stacked-margin-left)}`

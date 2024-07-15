@@ -8,11 +8,11 @@ import {
   TagLeftIcon,
   Text,
 } from "@chakra-ui/react"
-import { Users } from "@phosphor-icons/react/Users"
 import { Tooltip, TooltipDatum } from "@visx/xychart"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Card, { useCardBg } from "components/common/Card"
 import { PropsWithChildren } from "react"
+import { PiUsers } from "react-icons/pi"
 import { MemberCountData, MembersChartAccessors } from "../MembersChart"
 import SimpleRoleTag from "./SimpleRoleTag"
 
@@ -89,7 +89,7 @@ const LineSeriesData = ({
     {children}
     <Spacer />
     <Tag bg="unset" color="gray" mt="3px !important" flexShrink={0}>
-      <TagLeftIcon as={Users} boxSize={"16px"} />
+      <TagLeftIcon as={PiUsers} boxSize={"16px"} />
       <TagLabel mb="-1px">
         {new Intl.NumberFormat("en", { notation: "compact" }).format(count)}
       </TagLabel>

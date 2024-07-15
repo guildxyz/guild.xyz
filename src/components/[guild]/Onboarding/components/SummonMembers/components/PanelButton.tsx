@@ -8,9 +8,9 @@ import {
   Text,
   Wrap,
 } from "@chakra-ui/react"
-import { ArrowSquareOut } from "@phosphor-icons/react/ArrowSquareOut"
-import { Link as LinkIcon } from "@phosphor-icons/react/Link"
 import { useController } from "react-hook-form"
+import { PiArrowSquareOut } from "react-icons/pi"
+import { PiLink } from "react-icons/pi"
 import EditableControls from "./PanelBody/components/EditableControls"
 
 const PanelButton = () => {
@@ -31,7 +31,7 @@ const PanelButton = () => {
           as={HStack}
           alignItems="center"
         >
-          <Icon as={LinkIcon} boxSize={5} />
+          <Icon as={PiLink} boxSize={5} />
           <EditablePreview />
           <EditableInput />
           <EditableControls color="white" />
@@ -49,7 +49,7 @@ const PanelButton = () => {
         <Text fontSize={"sm"} fontWeight="semibold" color={"white"}>
           Guide
         </Text>
-        <ArrowSquareOut color="white" />
+        <PiArrowSquareOut color="white" />
       </HStack>
     </Wrap>
   )

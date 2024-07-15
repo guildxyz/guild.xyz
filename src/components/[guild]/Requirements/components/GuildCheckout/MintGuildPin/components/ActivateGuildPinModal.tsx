@@ -9,10 +9,10 @@ import {
   ModalOverlay,
   Stack,
 } from "@chakra-ui/react"
-import { ArrowSquareOut } from "@phosphor-icons/react/ArrowSquareOut"
 import { useEditGuildDrawer } from "components/[guild]/EditGuild/EditGuildDrawerContext"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
+import { PiArrowSquareOut } from "react-icons/pi"
 import { useMintGuildPinContext } from "../../MintGuildPinContext"
 import GuildPinImage from "../../components/GuildPinImage"
 import ActivateGuildPinForm from "./ActivateGuildPinForm"
@@ -47,7 +47,7 @@ const ActivateGuildPinModal = (): JSX.Element => {
                 <Button
                   size="sm"
                   w="max-content"
-                  rightIcon={<ArrowSquareOut />}
+                  rightIcon={<PiArrowSquareOut />}
                   onClick={onEditGuildDrawerOpen}
                   colorScheme="blue"
                   variant="link"

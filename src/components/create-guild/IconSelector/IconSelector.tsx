@@ -23,13 +23,13 @@ import {
   useDisclosure,
   useRadioGroup,
 } from "@chakra-ui/react"
-import { Image } from "@phosphor-icons/react/Image"
 import LogicDivider from "components/[guild]/LogicDivider"
 import GuildLogo from "components/common/GuildLogo"
 import { Modal } from "components/common/Modal"
 import { Uploader } from "hooks/usePinata/usePinata"
 import React, { ComponentProps, useEffect } from "react"
 import { useController, useFormContext } from "react-hook-form"
+import { PiImage } from "react-icons/pi"
 import { CreateGuildFormType } from "../CreateGuildForm"
 import PhotoUploader from "./components/PhotoUploader"
 import SelectorButton from "./components/SelectorButton"
@@ -106,7 +106,7 @@ const IconSelector = ({
           field.value ? (
             <GuildLogo imageUrl={field.value} bgColor="transparent" size={boxSize} />
           ) : (
-            <Icon as={Image} boxSize="35%" />
+            <Icon as={PiImage} boxSize="35%" />
           )
         }
         aria-label="Guild logo"

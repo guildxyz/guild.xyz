@@ -6,10 +6,10 @@ import {
   InputLeftElement,
   InputRightElement,
 } from "@chakra-ui/react"
-import { MagnifyingGlass } from "@phosphor-icons/react/MagnifyingGlass"
 import { Column } from "@tanstack/react-table"
 import useDebouncedState from "hooks/useDebouncedState"
 import { useEffect, useRef, useState } from "react"
+import { PiMagnifyingGlass } from "react-icons/pi"
 
 type Props = {
   column: Column<any>
@@ -35,7 +35,7 @@ const IdentitiesSearch = ({ column }: Props) => {
   return (
     <InputGroup>
       <InputLeftElement h="8" w="auto">
-        <Icon size={14} as={MagnifyingGlass} />
+        <Icon size={14} as={PiMagnifyingGlass} />
       </InputLeftElement>
       <Input
         ref={inputRef}

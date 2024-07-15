@@ -12,7 +12,6 @@ import {
 import { useToast } from "@/components/ui/hooks/useToast"
 import { useDisclosure } from "@/hooks/useDisclosure"
 import { cn, toDateTimeString } from "@/lib/utils"
-import { ArrowRight } from "@phosphor-icons/react/ArrowRight"
 import {
   initWeb3InboxClient,
   useNotifications,
@@ -26,6 +25,7 @@ import {
 import { env } from "env"
 import Image from "next/image"
 import { useState } from "react"
+import { PiArrowRight } from "react-icons/pi"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 import { useAccount, useSignMessage } from "wagmi"
 import MessageImage from "/public/img/message.svg"
@@ -145,7 +145,7 @@ const Web3Inbox = () => {
                   "gap-2"
                 )}
               >
-                Go to guild <ArrowRight />
+                Go to guild <PiArrowRight />
               </Anchor>
             )}
           </div>
@@ -227,7 +227,7 @@ const SubscribeToMessages = () => {
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button className="size-8 min-w-8 px-0">
-          <ArrowRight />
+          <PiArrowRight />
         </Button>
       </DialogTrigger>
       <DialogContent>

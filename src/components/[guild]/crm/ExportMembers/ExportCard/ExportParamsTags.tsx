@@ -1,8 +1,8 @@
 import { Tag, TagLeftIcon, Tooltip, Wrap } from "@chakra-ui/react"
-import { SortAscending } from "@phosphor-icons/react/SortAscending"
-import { SortDescending } from "@phosphor-icons/react/SortDescending"
 import RoleTag from "components/[guild]/RoleTag"
 import useGuild from "components/[guild]/hooks/useGuild"
+import { PiSortAscending } from "react-icons/pi"
+import { PiSortDescending } from "react-icons/pi"
 import MagnifyingGlassX from "static/icons/magnifying-glass-x.svg"
 import capitalize from "utils/capitalize"
 import { ExportData, crmOrderByParams } from "../useExports"
@@ -28,7 +28,7 @@ const ExportParamsTags = ({
       >
         <Tag>
           <TagLeftIcon
-            as={sortOrder === "desc" ? SortDescending : SortAscending}
+            as={sortOrder === "desc" ? PiSortDescending : PiSortAscending}
             mr="1.5"
           />
           {capitalize(crmOrderByParams[order])}

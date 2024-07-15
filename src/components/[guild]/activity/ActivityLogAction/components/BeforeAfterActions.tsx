@@ -8,10 +8,10 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
-import { ArrowRight } from "@phosphor-icons/react/ArrowRight"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import GuildLogo from "components/common/GuildLogo"
 import useColorPalette from "hooks/useColorPalette"
+import { PiArrowRight } from "react-icons/pi"
 import { Requirement } from "types"
 import { useActivityLog } from "../../ActivityLogContext"
 import { ACTION } from "../../constants"
@@ -120,7 +120,7 @@ const BeforeAfterActions = (): JSX.Element => {
               <HStack>
                 <Text as="span">{before.logic}</Text>
                 <Center>
-                  <Icon as={ArrowRight} boxSize={5} />
+                  <Icon as={PiArrowRight} boxSize={5} />
                 </Center>
                 <Text as="span">{data.logic}</Text>
               </HStack>

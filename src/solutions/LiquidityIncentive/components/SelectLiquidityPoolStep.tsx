@@ -16,11 +16,11 @@ import {
   Text,
 } from "@chakra-ui/react"
 import { consts } from "@guildxyz/types"
-import { Info } from "@phosphor-icons/react/dist/ssr/Info"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { useCallback } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
+import { PiInfo } from "react-icons/pi"
 import { usePairOfTokenId } from "requirements/Uniswap/hooks/usePairOfTokenId"
 import useParsePoolChain, {
   UNISWAP_POOL_URL,
@@ -184,7 +184,7 @@ const SelectLiquidityPoolStep = ({ onContinue }: { onContinue: () => void }) => 
 const LiquidityPoolInfoTooltip = () => (
   <Popover trigger="hover">
     <PopoverTrigger>
-      <Icon as={Info} weight="regular" ml={2} mb="-1.5px" />
+      <Icon as={PiInfo} weight="regular" ml={2} mb="-1.5px" />
     </PopoverTrigger>
     <PopoverContent>
       <PopoverArrow />

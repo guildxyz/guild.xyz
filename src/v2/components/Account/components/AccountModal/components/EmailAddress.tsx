@@ -28,13 +28,13 @@ import { useToast } from "@/components/ui/hooks/useToast"
 import { useDisclosure } from "@/hooks/useDisclosure"
 import { cn } from "@/lib/utils"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { PencilSimple } from "@phosphor-icons/react/dist/ssr/PencilSimple"
-import { Warning } from "@phosphor-icons/react/dist/ssr/Warning"
 import { useConnectEmail } from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import useUser from "components/[guild]/hooks/useUser"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import { ReactNode, useEffect, useState } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
+import { PiPencilSimple } from "react-icons/pi"
+import { PiWarning } from "react-icons/pi"
 import { emailData } from "rewards/Email/data"
 import fetcher from "utils/fetcher"
 import { z } from "zod"
@@ -223,7 +223,7 @@ const ConnectEmailButton = ({
                       aria-label="Use different email address"
                       onClick={differentEmail}
                     >
-                      <PencilSimple weight="bold" />
+                      <PiPencilSimple weight="bold" />
                     </Button>
                   </p>
 
@@ -322,7 +322,7 @@ const ConnectEmailButton = ({
         {emails?.pending ? (
           <>
             {/* TODO: maybe move this out to a CSS variable? */}
-            <Warning
+            <PiWarning
               weight="bold"
               className="mr-1 text-orange-400 data-[theme=dark]:text-orange-200"
             />

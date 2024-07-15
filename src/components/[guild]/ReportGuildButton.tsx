@@ -1,7 +1,7 @@
 import { ButtonProps, IconButton, Tooltip } from "@chakra-ui/react"
-import { Flag } from "@phosphor-icons/react/Flag"
 import Button from "components/common/Button"
 import { useEffect } from "react"
+import { PiFlag } from "react-icons/pi"
 import { addIntercomSettings } from "utils/intercom"
 import useGuild from "./hooks/useGuild"
 
@@ -32,14 +32,14 @@ const ReportGuildButton = ({
   }
 
   return layout === "FULL" ? (
-    <Button {...baseButtonProps} leftIcon={<Flag />} {...buttonProps}>
+    <Button {...baseButtonProps} leftIcon={<PiFlag />} {...buttonProps}>
       {label}
     </Button>
   ) : (
     <Tooltip label={label} placement="top" hasArrow>
       <IconButton
         {...baseButtonProps}
-        icon={<Flag />}
+        icon={<PiFlag />}
         aria-label={label}
         boxSize={8}
         rounded="full"

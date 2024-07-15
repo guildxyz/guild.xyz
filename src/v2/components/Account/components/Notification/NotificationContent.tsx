@@ -5,8 +5,8 @@ import { Anchor } from "@/components/ui/Anchor"
 import { buttonVariants } from "@/components/ui/Button"
 import { Separator } from "@/components/ui/Separator"
 import { cn } from "@/lib/utils"
-import { ArrowRight } from "@phosphor-icons/react/ArrowRight"
 import dynamic from "next/dynamic"
+import { PiArrowRight } from "react-icons/pi"
 import { Web3InboxSkeleton } from "./Web3InboxSkeleton"
 
 const DynamicWeb3Inbox = dynamic(() => import("./Web3Inbox"), {
@@ -42,7 +42,7 @@ export const NotificationContent = () => {
           href="/profile/activity"
         >
           View recent activity
-          <ArrowRight />
+          <PiArrowRight />
         </Anchor>
       </div>
     </div>

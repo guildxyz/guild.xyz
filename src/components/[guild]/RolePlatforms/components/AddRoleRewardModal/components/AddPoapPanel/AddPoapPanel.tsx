@@ -14,12 +14,12 @@ import {
   Text,
   Tooltip,
 } from "@chakra-ui/react"
-import { Question } from "@phosphor-icons/react/Question"
 import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hooks/useAddRewardDiscardAlert"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { useEffect } from "react"
 import { FormProvider, useController, useForm, useWatch } from "react-hook-form"
+import { PiQuestion } from "react-icons/pi"
 import usePoapById from "requirements/Poap/hooks/usePoapById"
 import rewards, { AddRewardPanelProps } from "rewards"
 import { PlatformGuildData, PlatformType } from "types"
@@ -137,7 +137,7 @@ const AddPoapPanel = ({ onAdd }: AddRewardPanelProps) => {
                   placement="top"
                   hasArrow
                 >
-                  <Icon as={Question} color="GrayText" />
+                  <Icon as={PiQuestion} color="GrayText" />
                 </Tooltip>
               </HStack>
             </FormLabel>

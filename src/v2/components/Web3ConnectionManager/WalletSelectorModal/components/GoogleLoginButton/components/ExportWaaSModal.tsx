@@ -20,15 +20,15 @@ import {
 } from "@chakra-ui/react"
 // @ts-ignore: fetched from prive sources, prevents successful build
 import type { RawPrivateKey, Waas } from "@coinbase/waas-sdk-web"
-import { Check } from "@phosphor-icons/react/Check"
-import { Copy } from "@phosphor-icons/react/Copy"
-import { Wallet } from "@phosphor-icons/react/Wallet"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import ConfirmationAlert from "components/create-guild/Requirements/components/ConfirmationAlert"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useState } from "react"
+import { PiCheck } from "react-icons/pi"
+import { PiCopy } from "react-icons/pi"
+import { PiWallet } from "react-icons/pi"
 import fetcher from "utils/fetcher"
 import { useConnect } from "wagmi"
 // import { connectorButtonProps } from "../../ConnectorButton"
@@ -36,7 +36,7 @@ import useDriveOAuth from "../hooks/useDriveOAuth"
 import { getDriveFileAppProperties, listWalletsOnDrive } from "../utils/googleDrive"
 
 const WAAS_DEPRECATION_ERROR_MESSAGE =
-  "Looks like you don't have an existing Google-based Guild account. We recommend signing in with the Smart Wallet option"
+  "Looks like you don't have an existing Google-based Guild account. We recommend signing in with the Smart PiWallet option"
 
 // @ts-ignore: fetched from prive sources, prevents successful build
 let cwaasModule: typeof import("@coinbase/waas-sdk-web")
@@ -191,7 +191,7 @@ const ExportWaasModal = ({
         <ModalOverlay />
         <ModalContent maxWidth={privateKey ? "2xl" : undefined}>
           <ModalHeader>
-            {privateKey ? "Import & back up your wallet" : "Export Google Wallet"}
+            {privateKey ? "Import & back up your wallet" : "Export Google PiWallet"}
           </ModalHeader>
           <ModalBody>
             {!privateKey ? (
@@ -206,7 +206,7 @@ const ExportWaasModal = ({
                 </Text>
                 <Text>
                   If you don't have a Google-based account or have no value on it,
-                  use the <strong>Smart Wallet</strong> sign-in option
+                  use the <strong>Smart PiWallet</strong> sign-in option
                 </Text>
               </VStack>
             ) : (
@@ -287,16 +287,16 @@ const ExportWaasModal = ({
                   colorScheme="white"
                   borderWidth="2px"
                   leftIcon={
-                    hasCopied ? <Check weight="bold" /> : <Copy weight="bold" />
+                    hasCopied ? <PiCheck weight="bold" /> : <PiCopy weight="bold" />
                   }
                 >
-                  {hasCopied ? "Private key copied" : "Copy private key"}
+                  {hasCopied ? "Private key copied" : "PiCopy private key"}
                 </Button>
 
                 <Button
                   isDisabled={!hasCopiedAtLeastOnce}
                   colorScheme={"green"}
-                  leftIcon={<Wallet weight="bold" />}
+                  leftIcon={<PiWallet weight="bold" />}
                   onClick={alert.onOpen}
                 >
                   Backup & import done

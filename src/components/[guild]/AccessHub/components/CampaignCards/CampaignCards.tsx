@@ -6,8 +6,6 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { ArrowRight } from "@phosphor-icons/react/ArrowRight"
-import { Plus } from "@phosphor-icons/react/Plus"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import Button from "components/common/Button"
@@ -17,6 +15,8 @@ import dynamic from "next/dynamic"
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/router"
+import { PiArrowRight } from "react-icons/pi"
+import { PiPlus } from "react-icons/pi"
 
 const DynamicCampaignCardMenu = dynamic(
   () => import("./components/CampaignCardMenu")
@@ -87,7 +87,7 @@ const CampaignCards = () => {
                 as={Link}
                 colorScheme="primary"
                 href={`/${guildUrlName}/${urlName}`}
-                rightIcon={<ArrowRight />}
+                rightIcon={<PiArrowRight />}
                 prefetch={false}
               >
                 View page
@@ -97,7 +97,7 @@ const CampaignCards = () => {
                 as={Link}
                 variant="outline"
                 href={`/${guildUrlName}/${urlName}`}
-                leftIcon={<Plus />}
+                leftIcon={<PiPlus />}
                 prefetch={false}
               >
                 Add roles

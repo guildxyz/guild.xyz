@@ -7,8 +7,8 @@ import {
   Wrap,
   WrapProps,
 } from "@chakra-ui/react"
-import { Clock } from "@phosphor-icons/react/Clock"
 import { PropsWithChildren, useState } from "react"
+import { PiClock } from "react-icons/pi"
 import { RolePlatform } from "types"
 import formatRelativeTimeFromNow, {
   DAY_IN_MS,
@@ -98,7 +98,7 @@ const StartTimeTag = ({ startTime, ...rest }: { startTime: string } & TagProps) 
       hasArrow
     >
       <Tag {...rest}>
-        <TagLeftIcon as={Clock} mr={1} />
+        <TagLeftIcon as={PiClock} mr={1} />
         <TagLabel>{`Claim starts in ${formatRelativeTimeFromNow(
           startTimeDiff
         )}`}</TagLabel>
@@ -123,7 +123,7 @@ const EndTimeTag = ({ endTime, ...rest }: { endTime: string } & TagProps) => {
       hasArrow
     >
       <Tag {...rest}>
-        <TagLeftIcon as={Clock} mr={1} />
+        <TagLeftIcon as={PiClock} mr={1} />
         <TagLabel>
           {endTimeDiff <= 0
             ? "Claim ended"

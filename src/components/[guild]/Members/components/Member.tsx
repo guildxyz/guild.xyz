@@ -1,7 +1,7 @@
 import { Icon, Text, Tooltip, VStack } from "@chakra-ui/react"
-import { Crown } from "@phosphor-icons/react/Crown"
 import GuildAvatar from "components/common/GuildAvatar"
 import useResolveAddress from "hooks/useResolveAddress"
+import { PiCrown } from "react-icons/pi"
 import shortenHex from "utils/shortenHex"
 
 type Props = {
@@ -43,7 +43,7 @@ const Member = ({ address, isOwner, isAdmin }: Props): JSX.Element => {
             right="0"
             m="0 !important"
             color="yellow.400"
-            as={Crown}
+            as={PiCrown}
             weight="fill"
           />
         </Tooltip>

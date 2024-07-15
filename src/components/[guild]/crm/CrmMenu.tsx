@@ -9,10 +9,10 @@ import {
   // Portal,
   useDisclosure,
 } from "@chakra-ui/react"
-import { Export } from "@phosphor-icons/react/Export"
-import { Sliders } from "@phosphor-icons/react/Sliders"
 import { Table } from "@tanstack/react-table"
 import Button from "components/common/Button"
+import { PiExport } from "react-icons/pi"
+import { PiSliders } from "react-icons/pi"
 import { useIsTabsStuck } from "../Tabs/Tabs"
 import { useThemeContext } from "../ThemeContext"
 import CustomizeViewModal from "./CustomizeViewModal"
@@ -44,15 +44,15 @@ const CrmMenu = ({ table }: Props) => {
 
   const exportButtonProps = {
     onClick: onExportOpen,
-    leftIcon: <Export />,
-    icon: <Export />,
-    children: `Export members`,
+    leftIcon: <PiExport />,
+    icon: <PiExport />,
+    children: `PiExport members`,
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const customizeButtonProps = {
-    leftIcon: <Sliders />,
-    icon: <Sliders />,
+    leftIcon: <PiSliders />,
+    icon: <PiSliders />,
     onClick: onCustomizeOpen,
     children: "Customize view",
   }

@@ -1,10 +1,10 @@
 import { IconButton, Tooltip } from "@chakra-ui/react"
-import { ArrowsClockwise } from "@phosphor-icons/react/ArrowsClockwise"
 import Button from "components/common/Button"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useRouter } from "next/router"
 import { useState } from "react"
+import { PiArrowsClockwise } from "react-icons/pi"
 import useGuild from "../hooks/useGuild"
 import usePointsLeaderboard, {
   PointsLeaderboardResponse,
@@ -52,7 +52,7 @@ const RecalculateLeaderboardButton = ({ size = "FULL" }: Props) => {
       <IconButton
         size="sm"
         aria-label="Refresh leaderboard"
-        icon={<ArrowsClockwise />}
+        icon={<PiArrowsClockwise />}
         onClick={onClick}
         isLoading={isValidating}
       />
@@ -60,7 +60,7 @@ const RecalculateLeaderboardButton = ({ size = "FULL" }: Props) => {
   ) : (
     <Button
       size="sm"
-      leftIcon={<ArrowsClockwise />}
+      leftIcon={<PiArrowsClockwise />}
       onClick={onClick}
       isLoading={isValidating}
       loadingText="Refreshing"

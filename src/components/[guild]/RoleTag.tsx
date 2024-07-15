@@ -9,14 +9,14 @@ import {
   forwardRef,
   useColorModeValue,
 } from "@chakra-ui/react"
-import type { IconProps } from "@phosphor-icons/react"
 import { ForwardRefExoticComponent, RefAttributes, memo } from "react"
+import type { PiIconProps } from "react-icons/pi"
 
 type Props = {
   name: string
   imageUrl?: string
   isHidden?: boolean
-  rightIcon?: ForwardRefExoticComponent<IconProps & RefAttributes<SVGSVGElement>>
+  rightIcon?: ForwardRefExoticComponent<PiIconProps & RefAttributes<SVGSVGElement>>
   amount?: number
 } & TagProps
 

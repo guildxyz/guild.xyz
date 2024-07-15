@@ -12,8 +12,6 @@ import {
   Text,
   Wrap,
 } from "@chakra-ui/react"
-import { Info } from "@phosphor-icons/react/Info"
-import { Users } from "@phosphor-icons/react/Users"
 import AccessHub from "components/[guild]/AccessHub"
 import { useAccessedGuildPlatforms } from "components/[guild]/AccessHub/AccessHub"
 import {
@@ -45,6 +43,8 @@ import dynamic from "next/dynamic"
 import Head from "next/head"
 import ErrorPage from "pages/_error"
 import { useEffect } from "react"
+import { PiInfo } from "react-icons/pi"
+import { PiUsers } from "react-icons/pi"
 import { MintPolygonIDProofProvider } from "rewards/PolygonID/components/MintPolygonIDProofProvider"
 import { SWRConfig } from "swr"
 import { Guild, SocialLinkKey } from "types"
@@ -219,7 +219,7 @@ const GuildPage = (): JSX.Element => {
               titleRightElement={
                 <HStack justifyContent="space-between" w="full" my="-2 !important">
                   <Tag maxH={6} pt={0.5}>
-                    <TagLeftIcon as={Users} />
+                    <TagLeftIcon as={PiUsers} />
                     {isLoading ? (
                       <Spinner size="xs" />
                     ) : (
@@ -237,7 +237,7 @@ const GuildPage = (): JSX.Element => {
 
                 <Members members={members} />
                 <Text mt="6" colorScheme={"gray"}>
-                  <Icon as={Info} mr="2" mb="-2px" />
+                  <Icon as={PiInfo} mr="2" mb="-2px" />
                   Members section is only visible to admins and is under rework,
                   until then only admins are shown
                 </Text>

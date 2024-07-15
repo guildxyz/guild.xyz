@@ -14,9 +14,6 @@ import {
   useClipboard,
   useDisclosure,
 } from "@chakra-ui/react"
-import { Check } from "@phosphor-icons/react/Check"
-import { CopySimple } from "@phosphor-icons/react/CopySimple"
-import { PencilSimple } from "@phosphor-icons/react/PencilSimple"
 import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import { env } from "env"
@@ -25,6 +22,9 @@ import useGateables from "hooks/useGateables"
 import { useSetAtom } from "jotai"
 import { useEffect, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
+import { PiCheck } from "react-icons/pi"
+import { PiCopySimple } from "react-icons/pi"
+import { PiPencilSimple } from "react-icons/pi"
 import { PlatformType } from "types"
 import AddCard from "../AddCard"
 import CardMotionWrapper from "../CardMotionWrapper"
@@ -189,7 +189,7 @@ const AddDocumentModal = ({ isOpen, onClose = undefined }) => {
               flexShrink="0"
               onClick={onCopy}
               colorScheme="blue"
-              rightIcon={hasCopied ? <Check /> : <CopySimple />}
+              rightIcon={hasCopied ? <PiCheck /> : <PiCopySimple />}
               fontWeight={"bold"}
             >
               {hasCopied ? "Copied" : `Copy`}
@@ -207,7 +207,7 @@ const AddDocumentModal = ({ isOpen, onClose = undefined }) => {
               variant="link"
               color="inherit"
               onClick={() => setIsAccountModalOpen(true)}
-              rightIcon={<PencilSimple />}
+              rightIcon={<PiPencilSimple />}
             >
               {googleAcc?.platformUserData?.username}
             </Button>

@@ -11,14 +11,14 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
-import type { IconProps } from "@phosphor-icons/react"
 import ColorCard from "components/common/ColorCard"
 import { PropsWithChildren, forwardRef, useState } from "react"
+import type { PiIconProps } from "react-icons/pi"
 
 type Props = {
   colorScheme: string
   icon: React.ForwardRefExoticComponent<
-    IconProps & React.RefAttributes<SVGSVGElement>
+    PiIconProps & React.RefAttributes<SVGSVGElement>
   >
   title: JSX.Element | string
   description?: string

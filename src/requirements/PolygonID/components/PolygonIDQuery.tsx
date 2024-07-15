@@ -8,9 +8,9 @@ import {
   Text,
   Textarea,
 } from "@chakra-ui/react"
-import { ArrowSquareOut } from "@phosphor-icons/react/ArrowSquareOut"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Controller, useFormContext } from "react-hook-form"
+import { PiArrowSquareOut } from "react-icons/pi"
 import { RequirementFormProps } from "requirements/types"
 import parseFromObject from "utils/parseFromObject"
 import PolygonIDProofAge from "./PolygonIDProofAge"
@@ -71,7 +71,7 @@ const PolygonIDQuery = ({ baseFieldPath }: RequirementFormProps) => {
             isExternal
           >
             <Text fontSize="sm">Docs</Text>
-            <Icon ml={1} as={ArrowSquareOut} />
+            <Icon ml={1} as={PiArrowSquareOut} />
           </Link>
         </FormHelperText>
 

@@ -1,11 +1,11 @@
 import { Center, Collapse, Icon, IconButton } from "@chakra-ui/react"
-import { CaretDown } from "@phosphor-icons/react/CaretDown"
 import { WalletTag } from "components/[guild]/crm/Identities"
 import UserPlatformTags from "components/[guild]/crm/UserPlatformTags"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { LinkButton } from "components/common/LinkMenuItem"
 import useResolveAddress from "hooks/useResolveAddress"
 import { useState } from "react"
+import { PiCaretDown } from "react-icons/pi"
 import shortenHex from "utils/shortenHex"
 
 const CollapsibleIdentityTags = ({ addresses, platformUsers, isShared }) => {
@@ -66,7 +66,7 @@ const CollapsibleIdentityTags = ({ addresses, platformUsers, isShared }) => {
           size="xs"
           icon={
             <Icon
-              as={CaretDown}
+              as={PiCaretDown}
               transform={isOpen.children && "rotate(-180deg)"}
               transition="transform .3s"
             />

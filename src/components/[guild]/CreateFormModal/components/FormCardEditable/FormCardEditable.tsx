@@ -14,9 +14,6 @@ import {
   Tooltip,
 } from "@chakra-ui/react"
 import { Schemas } from "@guildxyz/types"
-import { DotsSixVertical } from "@phosphor-icons/react/DotsSixVertical"
-import { PencilSimple } from "@phosphor-icons/react/PencilSimple"
-import { Trash } from "@phosphor-icons/react/Trash"
 import { CreateForm } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddFormPanel"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
@@ -26,6 +23,9 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import { Reorder, useDragControls } from "framer-motion"
 import { useState } from "react"
 import { useController, useFormContext, useWatch } from "react-hook-form"
+import { PiDotsSixVertical } from "react-icons/pi"
+import { PiPencilSimple } from "react-icons/pi"
+import { PiTrash } from "react-icons/pi"
 import { SelectOption } from "types"
 import { fieldTypes } from "../../formConfig"
 import FormFieldTitle from "./components/FormFieldTitle"
@@ -149,12 +149,12 @@ const FormCardEditable = ({ index, fieldId, onUpdate, onRemove }: Props) => {
                     _focusVisible={{
                       color: "var(--chakra-colors-chakra-body-text)",
                     }}
-                    icon={<PencilSimple />}
+                    icon={<PiPencilSimple />}
                     onClick={() => setIsEditing(true)}
                   />
                 </HStack>
                 <Icon
-                  as={DotsSixVertical}
+                  as={PiDotsSixVertical}
                   boxSize={"18px"}
                   cursor="grab"
                   onPointerDown={(e) => dragControls.start(e)}
@@ -198,7 +198,7 @@ const FormCardEditable = ({ index, fieldId, onUpdate, onRemove }: Props) => {
                 >
                   <IconButton
                     aria-label="Remove"
-                    icon={<Icon as={Trash} boxSize="4" />}
+                    icon={<Icon as={PiTrash} boxSize="4" />}
                     rounded="full"
                     size="sm"
                     variant="ghost"

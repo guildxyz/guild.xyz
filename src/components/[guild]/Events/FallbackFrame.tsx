@@ -1,11 +1,11 @@
 import { Icon, Spinner, Text } from "@chakra-ui/react"
-import type { IconProps } from "@phosphor-icons/react"
 import Card from "components/common/Card"
 import { ForwardRefExoticComponent } from "react"
+import type { PiIconProps } from "react-icons/pi"
 
 type FallbackProps = {
   isLoading?: boolean
-  icon?: ForwardRefExoticComponent<IconProps & React.RefAttributes<SVGSVGElement>>
+  icon?: ForwardRefExoticComponent<PiIconProps & React.RefAttributes<SVGSVGElement>>
   title?: string
   text: string
 }

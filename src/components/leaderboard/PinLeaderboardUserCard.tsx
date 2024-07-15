@@ -20,14 +20,14 @@ import {
   VStack,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { CaretDown } from "@phosphor-icons/react/CaretDown"
-import { Trophy } from "@phosphor-icons/react/Trophy"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import GuildAvatar from "components/common/GuildAvatar"
 import { env } from "env"
 import useResolveAddress from "hooks/useResolveAddress"
 import dynamic from "next/dynamic"
+import { PiCaretDown } from "react-icons/pi"
+import { PiTrophy } from "react-icons/pi"
 import { GuildPinMetadata } from "types"
 import base64ToObject from "utils/base64ToObject"
 import shortenHex from "utils/shortenHex"
@@ -84,7 +84,7 @@ const PinLeaderboardUserCard = ({
   const TrophyIcon =
     position <= 3 ? (
       <Icon
-        as={Trophy}
+        as={PiTrophy}
         weight="fill"
         color={getTrophyColor(position)}
         boxSize={{ base: 8, sm: 10 }}
@@ -220,7 +220,7 @@ const PinLeaderboardUserCard = ({
                         {pinMetadataArray.length - PINS_SLICE_LENGTH > 0 ? (
                           `+${pinMetadataArray.length - PINS_SLICE_LENGTH}`
                         ) : (
-                          <CaretDown />
+                          <PiCaretDown />
                         )}
                       </Button>
                     </Circle>

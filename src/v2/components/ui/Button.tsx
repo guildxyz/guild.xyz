@@ -3,7 +3,7 @@ import { type VariantProps, cva } from "class-variance-authority"
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
-import { CircleNotch } from "@phosphor-icons/react/dist/ssr/CircleNotch"
+import { PiCircleNotch } from "react-icons/pi"
 
 const buttonVariants = cva(
   "font-semibold inline-flex items-center justify-center whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-4 focus:ring-ring disabled:pointer-events-none disabled:opacity-50 rounded-xl text-base min-w-max",
@@ -75,7 +75,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         disabled={isLoading || disabled}
       >
         {isLoading ? (
-          <CircleNotch
+          <PiCircleNotch
             weight="bold"
             className={cn("animate-spin", {
               "mr-1.5": !!loadingText,

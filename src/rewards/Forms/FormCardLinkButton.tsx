@@ -1,10 +1,10 @@
-import { Check } from "@phosphor-icons/react/Check"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useGuildForm } from "components/[guild]/hooks/useGuildForms"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import Button from "components/common/Button"
 import { LinkButton } from "components/common/LinkMenuItem"
 import Link from "next/link"
+import { PiCheck } from "react-icons/pi"
 import rewards from "rewards"
 import { GuildPlatform } from "types"
 import { useUserFormSubmission } from "./hooks/useFormSubmissions"
@@ -43,7 +43,7 @@ const FormCardLinkButton = ({ platform }: Props) => {
       href={!!form && !userSubmission ? `/${urlName}/forms/${form?.id}` : "#"}
       w="full"
       colorScheme={rewards.FORM.colorScheme}
-      leftIcon={userSubmission && <Check />}
+      leftIcon={userSubmission && <PiCheck />}
     >
       {userSubmission ? "Already submitted" : "Fill form"}
     </Button>

@@ -1,9 +1,9 @@
 import { IconButton, theme, useColorModeValue } from "@chakra-ui/react"
 import { transparentize } from "@chakra-ui/theme-tools"
-import { Check } from "@phosphor-icons/react/Check"
-import { Copy } from "@phosphor-icons/react/Copy"
 import { GroupBase, IndicatorsContainerProps, components } from "chakra-react-select"
 import { useState } from "react"
+import { PiCheck } from "react-icons/pi"
+import { PiCopy } from "react-icons/pi"
 import parseFromObject from "utils/parseFromObject"
 import { StyledSelectProps } from "../StyledSelect"
 
@@ -37,8 +37,8 @@ const CustomIndicatorsContainerWithCopy = ({
         <IconButton
           backgroundColor={isCopied && transparentize(successIconColor, 0.12)(theme)}
           color={isCopied && successIconColor}
-          icon={isCopied ? <Check /> : <Copy />}
-          aria-label={"Copy"}
+          icon={isCopied ? <PiCheck /> : <PiCopy />}
+          aria-label={"PiCopy"}
           size={"xs"}
           rounded={"full"}
           variant={"ghost"}

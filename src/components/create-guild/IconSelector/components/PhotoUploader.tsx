@@ -1,5 +1,4 @@
 import { FormControl, FormLabel, HStack } from "@chakra-ui/react"
-import { File } from "@phosphor-icons/react/File"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import GuildLogo from "components/common/GuildLogo"
@@ -7,6 +6,7 @@ import useDropzone, { ERROR_MESSAGES } from "hooks/useDropzone"
 import { Uploader } from "hooks/usePinata/usePinata"
 import { FileError } from "react-dropzone"
 import { useFormContext, useWatch } from "react-hook-form"
+import { PiFile } from "react-icons/pi"
 
 type Props = {
   uploader: Uploader
@@ -16,10 +16,10 @@ type Props = {
   onGeneratedBlobChange?: (objectURL: string) => void
 }
 
-type FileWithWidthandHeight = File & { width: number; height: number }
+type FileWithWidthandHeight = PiFile & { width: number; height: number }
 
 const getWidthAndHeightFromFile = (
-  file: File
+  file: PiFile
 ): Promise<{ width: number; height: number }> =>
   new Promise((resolve) => {
     const dataURL = URL.createObjectURL(file)
@@ -128,7 +128,7 @@ const PhotoUploader = ({
           {...getRootProps()}
           as="label"
           variant="outline"
-          leftIcon={<File />}
+          leftIcon={<PiFile />}
           fontWeight="medium"
           isLoading={isUploading}
           cursor="pointer"

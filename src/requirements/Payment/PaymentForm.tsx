@@ -1,10 +1,10 @@
 import { HStack, Icon, Stack, Tooltip } from "@chakra-ui/react"
-import { Check } from "@phosphor-icons/react/Check"
-import { Question } from "@phosphor-icons/react/Question"
 import Button from "components/common/Button"
 import useTriggerNetworkChange from "hooks/useTriggerNetworkChange"
 import { useEffect } from "react"
 import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
+import { PiCheck } from "react-icons/pi"
+import { PiQuestion } from "react-icons/pi"
 import { RequirementFormProps } from "requirements/types"
 import { FEE_COLLECTOR_CONTRACT } from "utils/guildCheckout/constants"
 import { useAccount } from "wagmi"
@@ -94,7 +94,7 @@ const PaymentForm = ({
             }
             isLoading={isLoading}
             loadingText="Registering vault"
-            leftIcon={vaultId && <Icon as={Check} />}
+            leftIcon={vaultId && <Icon as={PiCheck} />}
           >
             Register vault & add requirement
           </Button>
@@ -105,7 +105,7 @@ const PaymentForm = ({
             onClick={() => requestNetworkChange(Chains[chain])}
             rightIcon={
               <Tooltip label="This feature is available on Görli">
-                <Icon as={Question} />
+                <Icon as={PiQuestion} />
               </Tooltip>
             }
           >

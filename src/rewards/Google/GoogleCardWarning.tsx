@@ -7,8 +7,8 @@ import {
   PopoverTrigger,
   Portal,
 } from "@chakra-ui/react"
-import { WarningCircle } from "@phosphor-icons/react/WarningCircle"
 import useGuild from "components/[guild]/hooks/useGuild"
+import { PiWarningCircle } from "react-icons/pi"
 import { GuildPlatform } from "types"
 
 type Props = {
@@ -41,7 +41,7 @@ const GoogleCardWarning = ({
     <Popover trigger="hover" openDelay={0}>
       <PopoverTrigger>
         <Icon
-          as={WarningCircle}
+          as={PiWarningCircle}
           color="orange.300"
           weight="fill"
           // boxSize={size === "sm" ? 5 : 6}

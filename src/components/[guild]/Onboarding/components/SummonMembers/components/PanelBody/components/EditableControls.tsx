@@ -4,16 +4,16 @@ import {
   useColorModeValue,
   useEditableControls,
 } from "@chakra-ui/react"
-import { Check } from "@phosphor-icons/react/Check"
-import { PencilSimple } from "@phosphor-icons/react/PencilSimple"
+import { PiCheck } from "react-icons/pi"
+import { PiPencilSimple } from "react-icons/pi"
 
 const EditableControls = (props: Omit<IconButtonProps, "aria-label">) => {
   const { isEditing, getSubmitButtonProps, getEditButtonProps } =
     useEditableControls()
 
   const conditionalProps = isEditing
-    ? { "aria-label": "Edit", icon: <Check />, ...getSubmitButtonProps() }
-    : { "aria-label": "Save", icon: <PencilSimple />, ...getEditButtonProps() }
+    ? { "aria-label": "Edit", icon: <PiCheck />, ...getSubmitButtonProps() }
+    : { "aria-label": "Save", icon: <PiPencilSimple />, ...getEditButtonProps() }
 
   const color = useColorModeValue("gray.600", "white")
   const colorScheme = useColorModeValue("whiteAlpha", undefined)

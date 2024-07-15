@@ -9,9 +9,9 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
-import { CaretDown } from "@phosphor-icons/react/CaretDown"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import Card from "components/common/Card"
+import { PiCaretDown } from "react-icons/pi"
 import { Requirement } from "types"
 import { ACTION, ActivityLogAction as Action } from "../constants"
 import {
@@ -88,7 +88,7 @@ const ActivityLogAction = (): JSX.Element => {
               aria-label="Show details"
               icon={
                 <Icon
-                  as={CaretDown}
+                  as={PiCaretDown}
                   transform={isOpen && "rotate(-180deg)"}
                   transition="transform .3s"
                 />

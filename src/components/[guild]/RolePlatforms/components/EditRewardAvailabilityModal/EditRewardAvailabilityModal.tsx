@@ -13,12 +13,12 @@ import {
   Text,
   Tooltip,
 } from "@chakra-ui/react"
-import { Clock } from "@phosphor-icons/react/Clock"
-import { Hash } from "@phosphor-icons/react/Hash"
 import Button from "components/common/Button"
 import CheckboxColorCard from "components/common/CheckboxColorCard"
 import { Modal } from "components/common/Modal"
 import { FormProvider, useController, useForm } from "react-hook-form"
+import { PiClock } from "react-icons/pi"
+import { PiHash } from "react-icons/pi"
 import rewards from "rewards"
 import { PlatformName } from "types"
 import StartEndTimeForm, {
@@ -116,7 +116,7 @@ const EditRewardAvailabilityModal = ({
                       !!defaultValues?.capacity
                     }
                     colorScheme="purple"
-                    icon={Hash}
+                    icon={PiHash}
                     title="Limit supply"
                     description="First come, first served. Max-cap the number of users that can claim the reward"
                     onChange={(e) => {
@@ -159,7 +159,7 @@ const EditRewardAvailabilityModal = ({
                   <CheckboxColorCard
                     isDisabled={AUTO_TIMEFRAME_PLATFORMS.includes(platformType)}
                     colorScheme="purple"
-                    icon={Clock}
+                    icon={PiClock}
                     title="Limit claiming time"
                     description="Set a time frame the reward will be only claimable within"
                     defaultChecked={

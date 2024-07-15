@@ -1,10 +1,10 @@
 import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import { Icon } from "@chakra-ui/react"
-import { Question } from "@phosphor-icons/react/Question"
-import { Warning } from "@phosphor-icons/react/Warning"
 import DataBlock from "components/common/DataBlock"
 import { PropsWithChildren } from "react"
 import { ErrorBoundary } from "react-error-boundary"
+import { PiQuestion } from "react-icons/pi"
+import { PiWarning } from "react-icons/pi"
 import { REQUIREMENT_DISPLAY_COMPONENTS } from "requirements/requirementDisplayComponents"
 import { Requirement as RequirementType, Rest } from "types"
 import { CHAIN_CONFIG } from "wagmiConfig/chains"
@@ -26,7 +26,7 @@ const RequirementDisplayComponent = ({
   if (requirement.visibility === "HIDDEN")
     return (
       <Requirement
-        image={<Icon as={Question} boxSize={5} />}
+        image={<Icon as={PiQuestion} boxSize={5} />}
         rightElement={
           <HiddenRequirementAccessIndicator roleId={requirement.roleId} />
         }
@@ -39,7 +39,7 @@ const RequirementDisplayComponent = ({
 
   if (!!requirement.chain && !CHAIN_CONFIG[requirement.chain])
     return (
-      <Requirement image={<Icon as={Warning} boxSize={5} color="orange.300" />}>
+      <Requirement image={<Icon as={PiWarning} boxSize={5} color="orange.300" />}>
         {`Unsupported requirement chain: `}
         <DataBlock>{requirement.chain}</DataBlock>
       </Requirement>
@@ -47,7 +47,7 @@ const RequirementDisplayComponent = ({
 
   if (!RequirementComponent)
     return (
-      <Requirement image={<Icon as={Warning} boxSize={5} color="orange.300" />}>
+      <Requirement image={<Icon as={PiWarning} boxSize={5} color="orange.300" />}>
         {`Unsupported requirement type: `}
         <DataBlock>{requirement.type}</DataBlock>
       </Requirement>
@@ -79,7 +79,7 @@ export const InvalidRequirementErrorBoundary = ({
     <ErrorBoundary
       fallback={
         <Requirement
-          image={<Icon as={Warning} boxSize={5} color="orange.300" />}
+          image={<Icon as={PiWarning} boxSize={5} color="orange.300" />}
           rightElement={rightElement}
         >
           {`Invalid requirement: `}

@@ -1,5 +1,5 @@
 import { Icon, Link, Text } from "@chakra-ui/react"
-import { ArrowSquareOut } from "@phosphor-icons/react/ArrowSquareOut"
+import { PiArrowSquareOut } from "react-icons/pi"
 import { useChainId } from "wagmi"
 import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
 import { useTransactionStatusContext } from "../../TransactionStatusContext"
@@ -15,7 +15,7 @@ const TransactionLink = (): JSX.Element => {
         href={`${CHAIN_CONFIG[Chains[chainId]].blockExplorerUrl}/tx/${txHash}`}
       >
         View on block explorer
-        <Icon ml={1} as={ArrowSquareOut} />
+        <Icon ml={1} as={PiArrowSquareOut} />
       </Link>
     </Text>
   )

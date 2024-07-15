@@ -9,7 +9,6 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react"
-import { Image } from "@phosphor-icons/react/Image"
 import TiltCard from "components/[guild]/collect/components/TiltCard"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
@@ -17,6 +16,7 @@ import useDropzone from "hooks/useDropzone"
 import usePinata from "hooks/usePinata"
 import { Fragment, useState } from "react"
 import { useController, useFormContext } from "react-hook-form"
+import { PiImage } from "react-icons/pi"
 import { CreateNftFormType } from "./NftDataForm"
 
 const ImagePicker = () => {
@@ -95,7 +95,7 @@ const ImagePicker = () => {
               />
             ) : (
               <VStack p={4}>
-                <Icon as={Image} weight="light" boxSize={16} color="gray" />
+                <Icon as={PiImage} weight="light" boxSize={16} color="gray" />
                 <Text
                   display={{ base: "none", md: "inline" }}
                   colorScheme="gray"

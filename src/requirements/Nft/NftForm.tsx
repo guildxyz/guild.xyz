@@ -20,7 +20,6 @@ import {
   Stack,
   Textarea,
 } from "@chakra-ui/react"
-import { Plus } from "@phosphor-icons/react/Plus"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
@@ -32,6 +31,7 @@ import {
   useFormContext,
   useWatch,
 } from "react-hook-form"
+import { PiPlus } from "react-icons/pi"
 import { RequirementFormProps } from "requirements/types"
 import { SelectOption } from "types"
 import capitalize from "utils/capitalize"
@@ -272,7 +272,7 @@ const NftForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element =>
               ))}
 
               <Button
-                leftIcon={<Icon as={Plus} />}
+                leftIcon={<Icon as={PiPlus} />}
                 onClick={() =>
                   appendTrait({
                     trait_type: null,

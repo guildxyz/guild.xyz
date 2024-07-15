@@ -12,13 +12,13 @@ import {
   Stack,
   Tooltip,
 } from "@chakra-ui/react"
-import { Eye } from "@phosphor-icons/react/Eye"
-import { EyeClosed } from "@phosphor-icons/react/EyeClosed"
-import { Question } from "@phosphor-icons/react/Question"
 import { AddGatherFormType } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddGatherPanel"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { CSSProperties, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
+import { PiEye } from "react-icons/pi"
+import { PiEyeClosed } from "react-icons/pi"
+import { PiQuestion } from "react-icons/pi"
 import GatherConnectionStatusAlert from "./GatherConnectionStatusAlert"
 import useGatherAccess from "./hooks/useGatherAccess"
 
@@ -57,7 +57,7 @@ const GatherConnectionForm = () => {
             placement="top"
             hasArrow
           >
-            <Icon as={Question} color="GrayText" />
+            <Icon as={PiQuestion} color="GrayText" />
           </Tooltip>
         </HStack>
         <InputGroup>
@@ -74,7 +74,7 @@ const GatherConnectionForm = () => {
               _hover={{ opacity: 1 }}
               variant={"simple"}
               aria-label="Hide/ShowPassword"
-              icon={showApiKey ? <EyeClosed /> : <Eye />}
+              icon={showApiKey ? <PiEyeClosed /> : <PiEye />}
             ></IconButton>
           </InputRightElement>
         </InputGroup>
@@ -100,7 +100,7 @@ const GatherConnectionForm = () => {
             placement="top"
             hasArrow
           >
-            <Icon as={Question} color="GrayText" />
+            <Icon as={PiQuestion} color="GrayText" />
           </Tooltip>
         </HStack>
         <Input

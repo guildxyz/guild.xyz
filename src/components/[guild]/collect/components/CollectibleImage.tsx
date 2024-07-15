@@ -7,9 +7,9 @@ import {
   Img,
   Spinner,
 } from "@chakra-ui/react"
-import { Image } from "@phosphor-icons/react/Image"
 import Card from "components/common/Card"
 import { ComponentType, Fragment } from "react"
+import { PiImage } from "react-icons/pi"
 
 type Props = {
   src: string
@@ -63,7 +63,7 @@ const CollectibleImage = ({
         </>
       ) : (
         <AspectRatio w="full" ratio={1} justifyContent="center">
-          <Icon mx="auto" as={Image} weight="light" maxW="50%" color="gray.500" />
+          <Icon mx="auto" as={PiImage} weight="light" maxW="50%" color="gray.500" />
         </AspectRatio>
       )}
     </Card>

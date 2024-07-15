@@ -1,7 +1,7 @@
 import { Tooltip } from "@chakra-ui/react"
-import { ArrowSquareOut } from "@phosphor-icons/react/ArrowSquareOut"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
+import { PiArrowSquareOut } from "react-icons/pi"
 import { claimTextButtonTooltipLabel } from "rewards/SecretText/TextCardButton"
 import { GuildPlatform } from "types"
 import {
@@ -45,7 +45,7 @@ const GatherCardButton = ({ platform }: Props) => {
           target="_blank"
           href={spaceUrl}
           iconSpacing={1}
-          rightIcon={<ArrowSquareOut />}
+          rightIcon={<PiArrowSquareOut />}
           w="full"
           colorScheme="GATHER_TOWN"
         >

@@ -5,8 +5,8 @@ import {
 import useConnectorNameAndIcon from "@/components/Web3ConnectionManager/hooks/useConnectorNameAndIcon"
 import { Button, ButtonProps } from "@/components/ui/Button"
 import { useUserPublic } from "@/hooks/useUserPublic"
-import { Wallet } from "@phosphor-icons/react/dist/ssr/Wallet"
 import { useAtomValue, useSetAtom } from "jotai"
+import { PiWallet } from "react-icons/pi"
 import { Config, type Connector, useAccount } from "wagmi"
 import { ConnectMutate } from "wagmi/query"
 import { COINBASE_WALLET_SDK_ID } from "wagmiConfig"
@@ -59,7 +59,7 @@ const ConnectorButton = ({ connector, pendingConnector, connect, error }: Props)
           <img src={connectorIcon} className="h-6" alt={`${connectorName} logo`} />
         </div>
       ) : (
-        <Wallet weight="bold" className="size-6" />
+        <PiWallet weight="bold" className="size-6" />
       )}
 
       <span>

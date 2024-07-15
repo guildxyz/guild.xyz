@@ -12,8 +12,8 @@ import {
   Spinner,
   Text,
 } from "@chakra-ui/react"
-import { ArrowSquareOut } from "@phosphor-icons/react/ArrowSquareOut"
-import { CheckCircle } from "@phosphor-icons/react/CheckCircle"
+import { PiArrowSquareOut } from "react-icons/pi"
+import { PiCheckCircle } from "react-icons/pi"
 import { useAccount } from "wagmi"
 import ErrorAlert from "../../../common/ErrorAlert"
 import { Modal } from "../../../common/Modal"
@@ -40,7 +40,12 @@ export const MintLinkModal = ({ isOpen, onClose, isLoading, error, response }) =
             </HStack>
           ) : httpsLink ? (
             <HStack spacing={0}>
-              <Icon as={CheckCircle} color="green.500" boxSize="16" weight="light" />
+              <Icon
+                as={PiCheckCircle}
+                color="green.500"
+                boxSize="16"
+                weight="light"
+              />
               <Box pl="6" w="calc(100% - var(--chakra-sizes-16))">
                 <Text>You can mint your POAP on the link below:</Text>
                 <Link
@@ -54,7 +59,7 @@ export const MintLinkModal = ({ isOpen, onClose, isLoading, error, response }) =
                   <Text as="span" noOfLines={1}>
                     {httpsLink}
                   </Text>
-                  <Icon as={ArrowSquareOut} />
+                  <Icon as={PiArrowSquareOut} />
                 </Link>
               </Box>
             </HStack>

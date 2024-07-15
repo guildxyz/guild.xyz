@@ -11,12 +11,12 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { CaretDown } from "@phosphor-icons/react/CaretDown"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import DataBlock from "components/common/DataBlock"
+import { PiCaretDown } from "react-icons/pi"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 import ConnectPolygonID from "./components/ConnectPolygonID"
 
@@ -42,7 +42,7 @@ const PolygonIDRequirement = (props: RequirementProps) => {
           <PopoverTrigger>
             <Button
               variant="link"
-              rightIcon={<Icon as={CaretDown} />}
+              rightIcon={<Icon as={PiCaretDown} />}
               iconSpacing={1}
             >
               query

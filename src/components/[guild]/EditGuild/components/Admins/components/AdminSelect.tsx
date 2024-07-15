@@ -1,5 +1,4 @@
 import { HStack, Icon, forwardRef } from "@chakra-ui/react"
-import { Warning } from "@phosphor-icons/react/Warning"
 import {
   CreatableSelect,
   GroupBase,
@@ -12,6 +11,7 @@ import StyledSelect from "components/common/StyledSelect"
 import CustomMenuList from "components/common/StyledSelect/components/CustomMenuList"
 import { PropsWithChildren, useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
+import { PiWarning } from "react-icons/pi"
 import { useEnsAddress } from "wagmi"
 import { mainnet } from "wagmi/chains"
 import { isValidAddress } from "../Admins"
@@ -55,7 +55,7 @@ const CustomMultiValueLabel = (props: PropsWithChildren<PropsHelper>) => {
       <HStack gap="0">
         {resolvedAddress === null ||
         admins.includes(resolvedAddress?.toLowerCase()) ? (
-          <Icon as={Warning} mr={1} color="red.300" boxSize={4} weight="bold" />
+          <Icon as={PiWarning} mr={1} color="red.300" boxSize={4} weight="bold" />
         ) : (
           props.data.img
         )}

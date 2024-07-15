@@ -7,10 +7,10 @@ import {
   Link,
   Stack,
 } from "@chakra-ui/react"
-import { ArrowSquareOut } from "@phosphor-icons/react/ArrowSquareOut"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
+import { PiArrowSquareOut } from "react-icons/pi"
 import { RequirementFormProps } from "requirements/types"
 import parseFromObject from "utils/parseFromObject"
 
@@ -88,7 +88,7 @@ const ParallelForm = ({ baseFieldPath, field }: RequirementFormProps) => {
               isExternal
             >
               Docs
-              <Icon as={ArrowSquareOut} ml="1" />
+              <Icon as={PiArrowSquareOut} ml="1" />
             </Link>
           </FormHelperText>
 

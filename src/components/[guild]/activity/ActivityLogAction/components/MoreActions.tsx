@@ -12,11 +12,11 @@ import {
   UnorderedList,
   useDisclosure,
 } from "@chakra-ui/react"
-import { ArrowSquareOut } from "@phosphor-icons/react/ArrowSquareOut"
-import { DotsThree } from "@phosphor-icons/react/DotsThree"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import { CSSProperties, memo, useEffect, useRef } from "react"
+import { PiArrowSquareOut } from "react-icons/pi"
+import { PiDotsThree } from "react-icons/pi"
 import { VariableSizeList } from "react-window"
 import { ActivityLogAction } from "../../constants"
 import { ActivityLogActionProvider } from "../ActivityLogActionContext"
@@ -81,13 +81,17 @@ const MoreActions = ({ actions, displayedActionCount }: Props): JSX.Element => {
   return (
     <>
       <HStack>
-        <Icon as={DotsThree} boxSize={6} />
+        <Icon as={PiDotsThree} boxSize={6} />
         <Text as="span" fontWeight="semibold">
           {`${numberOfAdditionalActions} more action${
             numberOfAdditionalActions > 1 ? "s" : ""
           }`}
         </Text>
-        <Button rightIcon={<Icon as={ArrowSquareOut} />} size="sm" onClick={onOpen}>
+        <Button
+          rightIcon={<Icon as={PiArrowSquareOut} />}
+          size="sm"
+          onClick={onOpen}
+        >
           View all
         </Button>
       </HStack>

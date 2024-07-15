@@ -11,9 +11,6 @@ import {
   VStack,
   useColorModeValue,
 } from "@chakra-ui/react"
-import type { IconProps } from "@phosphor-icons/react"
-import { ArrowSquareIn } from "@phosphor-icons/react/ArrowSquareIn"
-import { CaretRight } from "@phosphor-icons/react/CaretRight"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import useUser from "components/[guild]/hooks/useUser"
 import DisplayCard from "components/common/DisplayCard"
@@ -21,6 +18,9 @@ import { useSetAtom } from "jotai"
 import dynamic from "next/dynamic"
 import Image from "next/image"
 import { ComponentType, RefAttributes, useMemo } from "react"
+import type { PiIconProps } from "react-icons/pi"
+import { PiArrowSquareIn } from "react-icons/pi"
+import { PiCaretRight } from "react-icons/pi"
 import rewards from "rewards"
 import { PlatformName, Rest } from "types"
 
@@ -34,7 +34,7 @@ export type PlatformHookType = ({
   onClick: () => void
   isLoading: boolean
   loadingText: string
-  rightIcon: ComponentType<IconProps & RefAttributes<SVGSVGElement>>
+  rightIcon: ComponentType<PiIconProps & RefAttributes<SVGSVGElement>>
 }
 
 type Props = {
@@ -43,7 +43,7 @@ type Props = {
   title: string
   description?: string
   imageUrl?: string
-  icon?: ComponentType<IconProps & RefAttributes<SVGSVGElement>>
+  icon?: ComponentType<PiIconProps & RefAttributes<SVGSVGElement>>
   onSelection: (platform: PlatformName) => void
   disabledText?: string
 } & Rest
@@ -81,7 +81,8 @@ const PlatformSelectButton = ({
   const circleBgColor = useColorModeValue("gray.100", "gray.600")
 
   const DynamicCtaIcon = useMemo(
-    () => dynamic(async () => (!isPlatformConnected ? ArrowSquareIn : CaretRight)),
+    () =>
+      dynamic(async () => (!isPlatformConnected ? PiArrowSquareIn : PiCaretRight)),
     [isPlatformConnected]
   )
 
@@ -147,7 +148,9 @@ const PlatformSelectButton = ({
             )}
           </VStack>
           <Icon
-            as={isLoading ? Spinner : isWeb3Connected ? DynamicCtaIcon : CaretRight}
+            as={
+              isLoading ? Spinner : isWeb3Connected ? DynamicCtaIcon : PiCaretRight
+            }
           />
         </HStack>
       </DisplayCard>

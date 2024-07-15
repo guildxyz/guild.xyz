@@ -1,6 +1,6 @@
-import { ArrowSquareOut } from "@phosphor-icons/react/dist/ssr/ArrowSquareOut"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import { useAtom } from "jotai"
+import { PiArrowSquareOut } from "react-icons/pi"
 import rewards from "rewards"
 import capitalize from "utils/capitalize"
 import shortenHex from "utils/shortenHex"
@@ -84,7 +84,7 @@ const PlatformMergeErrorAlert = () => {
                   className={anchorVariants({ variant: "highlighted" })}
                 >
                   this guide
-                  <ArrowSquareOut className="ml-1 inline" weight="bold" />
+                  <PiArrowSquareOut className="ml-1 inline" weight="bold" />
                 </a>
               </li>
 

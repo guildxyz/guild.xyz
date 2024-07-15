@@ -4,11 +4,11 @@ import { PLATFORM_COLORS } from "@/components/Account/components/AccountModal/co
 import { Button, ButtonProps } from "@/components/ui/Button"
 import { cn } from "@/lib/utils"
 import { useToast } from "@chakra-ui/react"
-import type { Icon } from "@phosphor-icons/react"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useUser from "components/[guild]/hooks/useUser"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
+import type { PiIcon } from "react-icons/pi"
 import REQUIREMENTS from "requirements"
 import { RequirementType } from "requirements/types"
 import rewards from "rewards"
@@ -88,7 +88,7 @@ const ConnectRequirementPlatformButton = ({
 }: ButtonProps & {
   onSuccess: () => void
   isReconnection?: boolean
-  icon?: Icon
+  icon?: PiIcon
 }) => {
   const { type } = useRequirementContext()
 

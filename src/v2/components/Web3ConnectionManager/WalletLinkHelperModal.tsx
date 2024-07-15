@@ -1,5 +1,5 @@
-import { SignOut } from "@phosphor-icons/react/dist/ssr/SignOut"
 import { useAtom } from "jotai"
+import { PiSignOut } from "react-icons/pi"
 import { walletLinkHelperModalAtom } from "../Providers/atoms"
 import { Button } from "../ui/Button"
 import {
@@ -43,7 +43,7 @@ const WalletLinkHelperModal = () => {
 
         <Button onClick={() => setIsWalletLinkModalOpen(false)} className="w-full">
           Connect another wallet
-          <SignOut weight="bold" className="ml-1.5" />
+          <PiSignOut weight="bold" className="ml-1.5" />
         </Button>
         <DialogCloseButton />
       </DialogContent>

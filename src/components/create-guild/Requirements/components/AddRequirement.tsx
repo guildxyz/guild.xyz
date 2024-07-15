@@ -20,8 +20,6 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import { Schemas, schemas } from "@guildxyz/types"
-import { ArrowLeft } from "@phosphor-icons/react/ArrowLeft"
-import { CaretRight } from "@phosphor-icons/react/CaretRight"
 import useGuild from "components/[guild]/hooks/useGuild"
 import AddCard from "components/common/AddCard"
 import Button from "components/common/Button"
@@ -41,6 +39,8 @@ import {
   useState,
 } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
+import { PiArrowLeft } from "react-icons/pi"
+import { PiCaretRight } from "react-icons/pi"
 import REQUIREMENTS, { REQUIREMENTS_DATA } from "requirements"
 import { REQUIREMENT_FORM_COMPONENTS } from "requirements/requirementFormComponents"
 import {
@@ -144,7 +144,7 @@ const AddRequirement = ({
                   aria-label="Back"
                   size="sm"
                   mb="-3px"
-                  icon={<ArrowLeft size={20} />}
+                  icon={<PiArrowLeft size={20} />}
                   variant="ghost"
                   onClick={() => setSelectedType(null)}
                 />
@@ -391,7 +391,7 @@ const AddRequirementHome = forwardRef(
                             <Icon as={requirementButton.icon} boxSize={6} />
                           )
                         }
-                        rightIcon={<Icon as={CaretRight} />}
+                        rightIcon={<Icon as={PiCaretRight} />}
                         iconSpacing={4}
                         onClick={() => setSelectedType(requirementButton.types[0])}
                         isDisabled={(requirementButton as any).isDisabled}

@@ -4,12 +4,12 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/Accordion"
-import { ArrowSquareOut } from "@phosphor-icons/react/dist/ssr/ArrowSquareOut"
 import {
   AccordionMultipleProps,
   AccordionSingleProps,
 } from "@radix-ui/react-accordion"
 import type { Meta, StoryObj } from "@storybook/react"
+import { PiArrowSquareOut } from "react-icons/pi"
 
 const AccordionExample = (props: AccordionSingleProps | AccordionMultipleProps) => (
   <Accordion
@@ -25,7 +25,7 @@ const AccordionExample = (props: AccordionSingleProps | AccordionMultipleProps) 
           className="text-blue-500 hover:underline"
         >
           An accordion.
-          <ArrowSquareOut className="ml-0.5 inline" weight="bold" />
+          <PiArrowSquareOut className="ml-0.5 inline" weight="bold" />
         </a>
       </AccordionContent>
     </AccordionItem>

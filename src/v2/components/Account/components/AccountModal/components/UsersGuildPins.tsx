@@ -4,9 +4,9 @@ import { Alert, AlertDescription } from "@/components/ui/Alert"
 import { Badge } from "@/components/ui/Badge"
 import { Skeleton } from "@/components/ui/Skeleton"
 import useUsersGuildPins from "@/hooks/useUsersGuildPins"
-import { Info } from "@phosphor-icons/react/dist/ssr/Info"
 import { useAtomValue, useSetAtom } from "jotai"
 import Link from "next/link"
+import { PiInfo } from "react-icons/pi"
 
 const UsersGuildPins = () => {
   const isAccountModalOpen = useAtomValue(accountModalAtom)
@@ -18,7 +18,7 @@ const UsersGuildPins = () => {
 
       {error && (
         <Alert variant="info" className="mb-3">
-          <Info weight="bold" className="size-6" />
+          <PiInfo weight="bold" className="size-6" />
           <AlertDescription>
             There was an error while fetching your pins, some may not be visible.
           </AlertDescription>

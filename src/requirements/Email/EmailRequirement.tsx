@@ -1,18 +1,18 @@
 import { Icon } from "@chakra-ui/react"
-import { EnvelopeSimple } from "@phosphor-icons/react/EnvelopeSimple"
 import RequirementConnectButton from "components/[guild]/Requirements/components/ConnectRequirementPlatformButton"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import DataBlock from "components/common/DataBlock"
+import { PiEnvelopeSimple } from "react-icons/pi"
 
 const EmailRequirement = (props: RequirementProps) => {
   const { data, type } = useRequirementContext()
 
   return (
     <Requirement
-      image={<Icon as={EnvelopeSimple} boxSize={6} />}
+      image={<Icon as={PiEnvelopeSimple} boxSize={6} />}
       footer={<RequirementConnectButton />}
       {...props}
     >

@@ -1,5 +1,4 @@
 import type { ThemingProps } from "@chakra-ui/react"
-import type { IconProps } from "@phosphor-icons/react"
 import type { RewardProps } from "components/[guild]/RoleCard/components/types"
 import type {
   ComponentType,
@@ -7,6 +6,7 @@ import type {
   PropsWithChildren,
   RefAttributes,
 } from "react"
+import type { PiIconProps } from "react-icons/pi"
 import type {
   GuildPlatformWithOptionalId,
   PlatformName,
@@ -35,7 +35,7 @@ export enum PlatformAsRewardRestrictions {
 }
 
 export type RewardData = {
-  icon?: ForwardRefExoticComponent<IconProps & RefAttributes<SVGSVGElement>>
+  icon?: ForwardRefExoticComponent<PiIconProps & RefAttributes<SVGSVGElement>>
   imageUrl?: string
   name: string
   colorScheme: ThemingProps["colorScheme"]

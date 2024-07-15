@@ -7,8 +7,6 @@ import {
   Tooltip,
   useEditableContext,
 } from "@chakra-ui/react"
-import { Check } from "@phosphor-icons/react/Check"
-import { PencilSimple } from "@phosphor-icons/react/PencilSimple"
 import { MutableRefObject, PropsWithChildren, ReactNode, useRef } from "react"
 import {
   FormProvider,
@@ -16,6 +14,8 @@ import {
   useForm,
   useFormContext,
 } from "react-hook-form"
+import { PiCheck } from "react-icons/pi"
+import { PiPencilSimple } from "react-icons/pi"
 import REQUIREMENTS from "requirements"
 import { useRequirementContext } from "./RequirementContext"
 
@@ -77,7 +77,7 @@ const RequirementNameEditor = ({
             variant="ghost"
             borderRadius={0}
             aria-label="Edit"
-            icon={<Check />}
+            icon={<PiCheck />}
             colorScheme={"green"}
             {...getSubmitButtonProps({
               onClick: (e) => {
@@ -100,7 +100,7 @@ const RequirementNameEditor = ({
         ml={0.5}
         mt={-0.5}
         aria-label="Save"
-        icon={<PencilSimple />}
+        icon={<PiPencilSimple />}
         color="gray"
         {...getEditButtonProps({
           onClick: () => {

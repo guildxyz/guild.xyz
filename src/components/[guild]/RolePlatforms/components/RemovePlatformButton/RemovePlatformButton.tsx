@@ -6,8 +6,8 @@ import {
   Tooltip,
   useDisclosure,
 } from "@chakra-ui/react"
-import { Info } from "@phosphor-icons/react/Info"
 import ConfirmationAlert from "components/create-guild/Requirements/components/ConfirmationAlert"
+import { PiInfo } from "react-icons/pi"
 import useRemovePlatform from "./hooks/useRemovePlatform"
 
 type Props = {
@@ -57,7 +57,7 @@ export const AlreadyGrantedAccessesWillRemainInfo = () => (
   <>
     <Divider mb="4" mt="6" />
     <Text colorScheme="gray" display="flex">
-      <Icon as={Info} mt="3px" mr="1.5" />
+      <Icon as={PiInfo} mt="3px" mr="1.5" />
       Already granted accesses will remain as is on the platform.
     </Text>
   </>

@@ -23,13 +23,13 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
-import { Lightning } from "@phosphor-icons/react/Lightning"
-import { PencilSimple } from "@phosphor-icons/react/PencilSimple"
-import { Question } from "@phosphor-icons/react/Question"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import Card from "components/common/Card"
 import dynamic from "next/dynamic"
+import { PiLightning } from "react-icons/pi"
+import { PiPencilSimple } from "react-icons/pi"
+import { PiQuestion } from "react-icons/pi"
 import { Requirement, RolePlatform } from "types"
 import DynamicRewardCalculationTable from "./DynamicRewardCalculationTable"
 
@@ -46,7 +46,7 @@ const LinkedRequirement = ({ requirement }: { requirement?: Requirement }) => (
         placement="bottom"
         hasArrow
       >
-        <Icon as={Question} color="GrayText" />
+        <Icon as={PiQuestion} color="GrayText" />
       </Tooltip>
     </HStack>
     <Stack>
@@ -103,7 +103,7 @@ const DynamicRewardModal = ({
           {isAdmin && !editDisabled && (
             <IconButton
               position={"absolute"}
-              icon={<PencilSimple size={18} weight="regular" />}
+              icon={<PiPencilSimple size={18} weight="regular" />}
               aria-label="Edit dynamic parameters"
               rounded="full"
               right={16}
@@ -119,7 +119,7 @@ const DynamicRewardModal = ({
           <ModalCloseButton />
           <ModalHeader>
             <Text>
-              <Icon color="green.500" boxSize={4} weight="fill" as={Lightning} />{" "}
+              <Icon color="green.500" boxSize={4} weight="fill" as={PiLightning} />{" "}
               Dynamic Reward
             </Text>
           </ModalHeader>
@@ -144,7 +144,7 @@ const DynamicRewardModal = ({
                   opacity={0.5}
                   _hover={{ opacity: 1 }}
                 >
-                  <Icon as={Question} mr={2} />
+                  <Icon as={PiQuestion} mr={2} />
                   What's a dynamic reward?
                   <AccordionIcon ml={"auto"} />
                 </AccordionButton>

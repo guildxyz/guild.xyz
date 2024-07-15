@@ -1,5 +1,5 @@
 import { Center, Icon } from "@chakra-ui/react"
-import { Circle } from "@phosphor-icons/react/Circle"
+import { PiCircle } from "react-icons/pi"
 
 export type MarkerProps = {
   colorScheme?: string
@@ -42,7 +42,7 @@ const Marker = ({ colorScheme, placement }: MarkerProps): JSX.Element => {
       }}
     >
       <Icon
-        as={Circle}
+        as={PiCircle}
         weight="fill"
         pos="absolute"
         boxSize="3"

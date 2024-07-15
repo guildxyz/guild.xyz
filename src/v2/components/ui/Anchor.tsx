@@ -1,9 +1,9 @@
 import { cn } from "@/lib/utils"
-import { ArrowSquareOut } from "@phosphor-icons/react/dist/ssr/ArrowSquareOut"
 import { Slot } from "@radix-ui/react-slot"
 import { type VariantProps, cva } from "class-variance-authority"
 import Link from "next/link"
 import * as React from "react"
+import { PiArrowSquareOut } from "react-icons/pi"
 
 const anchorVariants = cva(
   "underline-offset-4 focus:ring-ring focus-visible:ring-4 outline-none font-medium",
@@ -54,7 +54,7 @@ const Anchor = React.forwardRef<HTMLAnchorElement, AnchorProps>(
         {...props}
       >
         {children}
-        {showExternal && <ArrowSquareOut />}
+        {showExternal && <PiArrowSquareOut />}
       </Comp>
     )
   }

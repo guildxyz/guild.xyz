@@ -7,11 +7,11 @@ import {
   useBreakpointValue,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { Lock } from "@phosphor-icons/react/Lock"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import ClientOnly from "components/common/ClientOnly"
 import { PropsWithChildren } from "react"
+import { PiLock } from "react-icons/pi"
 import { useOpenJoinModal } from "../JoinModal/JoinModalProvider"
 import RecheckAccessesButton from "../RecheckAccessesButton"
 
@@ -30,7 +30,7 @@ const FormNoAccess = ({
     <Card>
       <HStack justifyContent="space-between" p={5} bgColor={bgColor}>
         <HStack>
-          <Icon as={Lock} />
+          <Icon as={PiLock} />
           <Text fontWeight="semibold">
             {`This form is locked${
               isMember || !isMobile ? ". Requirements to access:" : ""

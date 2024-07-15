@@ -1,7 +1,7 @@
 import { HStack, Text, useDisclosure } from "@chakra-ui/react"
-import { ArrowSquareIn } from "@phosphor-icons/react/ArrowSquareIn"
 import SnapshotModal from "components/[guild]/leaderboard/Snapshots/SnapshotModal"
 import Button from "components/common/Button"
+import { PiArrowSquareIn } from "react-icons/pi"
 import type { ProvidedValueDisplayProps } from "requirements/requirementProvidedValues"
 
 const AirdropProvidedValue = ({ requirement }: ProvidedValueDisplayProps) => {
@@ -12,7 +12,7 @@ const AirdropProvidedValue = ({ requirement }: ProvidedValueDisplayProps) => {
       <Text>Points in</Text>
       <Button
         variant="link"
-        rightIcon={<ArrowSquareIn />}
+        rightIcon={<PiArrowSquareIn />}
         iconSpacing={0.5}
         onClick={onOpen}
       >

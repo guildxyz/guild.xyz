@@ -6,12 +6,12 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react"
-import { ArrowRight } from "@phosphor-icons/react/ArrowRight"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import { FormProvider, useForm } from "react-hook-form"
+import { PiArrowRight } from "react-icons/pi"
 import CampaignForm, { CampaignFormType } from "./components/CampaignForm"
 import useCreateRoleGroup from "./hooks/useCreateRoleGroup"
 
@@ -46,7 +46,7 @@ const CreateCampaignModal = (props: Props) => {
           <ModalFooter pt={0}>
             <Button
               colorScheme="green"
-              rightIcon={<ArrowRight />}
+              rightIcon={<PiArrowRight />}
               onClick={handleSubmitWithUpload}
               isLoading={isUploadingShown || isLoading}
               loadingText="Creating page"

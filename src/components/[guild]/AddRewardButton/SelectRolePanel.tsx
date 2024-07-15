@@ -13,14 +13,14 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import { Visibility } from "@guildxyz/types"
-import { ArrowLeft } from "@phosphor-icons/react/ArrowLeft"
-import { Info } from "@phosphor-icons/react/Info"
 import Button from "components/common/Button"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import useCreateRRR, { SubmitData } from "hooks/useCreateRRR"
 import useToast from "hooks/useToast"
 import { useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
+import { PiArrowLeft } from "react-icons/pi"
+import { PiInfo } from "react-icons/pi"
 import rewards, { CAPACITY_TIME_PLATFORMS } from "rewards"
 import rewardComponents from "rewards/components"
 import SelectRoleOrSetRequirements from "rewards/components/SelectRoleOrSetRequirements"
@@ -93,7 +93,7 @@ const SelectRolePanel = ({
               aria-label="Back"
               size="sm"
               mb="-3px"
-              icon={<ArrowLeft size={20} />}
+              icon={<PiArrowLeft size={20} />}
               variant="ghost"
               onClick={goBack}
             />
@@ -154,7 +154,7 @@ const SelectRolePanel = ({
                   : "The role will be created with hidden visibility, so users won't see it yet. You can edit & activate it later"
               }
             >
-              <Info />
+              <PiInfo />
             </Tooltip>
           }
         >

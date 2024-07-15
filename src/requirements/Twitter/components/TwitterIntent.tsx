@@ -1,8 +1,4 @@
 import { Icon, Link } from "@chakra-ui/react"
-import type { IconProps } from "@phosphor-icons/react"
-import { Heart } from "@phosphor-icons/react/Heart"
-import { Share } from "@phosphor-icons/react/Share"
-import { UserPlus } from "@phosphor-icons/react/UserPlus"
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import useUser from "components/[guild]/hooks/useUser"
@@ -12,6 +8,10 @@ import useIsIOS from "hooks/useIsIOS"
 import usePopupWindow from "hooks/usePopupWindow"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import { PropsWithChildren, useState } from "react"
+import type { PiIconProps } from "react-icons/pi"
+import { PiHeart } from "react-icons/pi"
+import { PiShare } from "react-icons/pi"
+import { PiUserPlus } from "react-icons/pi"
 import useSWR from "swr"
 import { PlatformType } from "types"
 import fetcher from "utils/fetcher"
@@ -31,11 +31,11 @@ const label: Record<TwitterIntentAction, string> = {
 
 const buttonIcon: Record<
   TwitterIntentAction,
-  React.ForwardRefExoticComponent<IconProps & React.RefAttributes<SVGSVGElement>>
+  React.ForwardRefExoticComponent<PiIconProps & React.RefAttributes<SVGSVGElement>>
 > = {
-  follow: UserPlus,
-  like: Heart,
-  retweet: Share,
+  follow: PiUserPlus,
+  like: PiHeart,
+  retweet: PiShare,
 }
 
 const intentQueryParam: Record<TwitterIntentAction, string> = {

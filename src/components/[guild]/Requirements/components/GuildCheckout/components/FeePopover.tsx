@@ -7,13 +7,13 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@chakra-ui/react"
-import { ArrowSquareOut } from "@phosphor-icons/react/ArrowSquareOut"
-import { Question } from "@phosphor-icons/react/Question"
+import { PiArrowSquareOut } from "react-icons/pi"
+import { PiQuestion } from "react-icons/pi"
 
 const FeePopover = () => (
   <Popover placement="top" trigger="hover">
     <PopoverTrigger>
-      <Icon as={Question} color="gray" />
+      <Icon as={PiQuestion} color="gray" />
     </PopoverTrigger>
     <PopoverContent w="max-content">
       <PopoverArrow />
@@ -23,7 +23,7 @@ const FeePopover = () => (
           isExternal
           href="https://help.guild.xyz/en/articles/8193498-guild-base-fee"
         >
-          Guild base fee <Icon as={ArrowSquareOut} ml={1} />
+          Guild base fee <Icon as={PiArrowSquareOut} ml={1} />
         </Link>
       </PopoverBody>
     </PopoverContent>

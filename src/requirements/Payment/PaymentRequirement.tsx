@@ -1,5 +1,4 @@
 import { Icon, Text } from "@chakra-ui/react"
-import { Coins } from "@phosphor-icons/react/Coins"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
 import BuyPass from "components/[guild]/Requirements/components/GuildCheckout/BuyPass"
 import { GuildCheckoutProvider } from "components/[guild]/Requirements/components/GuildCheckout/components/GuildCheckoutContext"
@@ -11,6 +10,7 @@ import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import DataBlock from "components/common/DataBlock"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import useToken from "hooks/useToken"
+import { PiCoins } from "react-icons/pi"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { formatUnits } from "viem"
 import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
@@ -68,7 +68,7 @@ const PaymentRequirement = (props: RequirementProps): JSX.Element => {
 
   return (
     <Requirement
-      image={<Icon as={Coins} boxSize={6} />}
+      image={<Icon as={PiCoins} boxSize={6} />}
       {...props}
       rightElement={
         props?.rightElement ? (

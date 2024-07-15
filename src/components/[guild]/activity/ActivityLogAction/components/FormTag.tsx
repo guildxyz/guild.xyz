@@ -8,9 +8,9 @@ import {
   forwardRef,
   useColorModeValue,
 } from "@chakra-ui/react"
-import type { IconProps } from "@phosphor-icons/react"
-import { DotsThreeVertical } from "@phosphor-icons/react/DotsThreeVertical"
 import { ForwardRefExoticComponent, RefAttributes } from "react"
+import type { PiIconProps } from "react-icons/pi"
+import { PiDotsThreeVertical } from "react-icons/pi"
 import rewards from "rewards"
 import { useActivityLog } from "../../ActivityLogContext"
 import ClickableTagPopover from "./ClickableTagPopover"
@@ -21,7 +21,7 @@ type FormTagProps = { formId: number }
 
 type Props = FormTagProps &
   Omit<TagProps, "colorScheme"> & {
-    rightIcon?: ForwardRefExoticComponent<IconProps & RefAttributes<SVGSVGElement>>
+    rightIcon?: ForwardRefExoticComponent<PiIconProps & RefAttributes<SVGSVGElement>>
   }
 
 const FormTag = forwardRef<Props, "span">(
@@ -87,7 +87,7 @@ const ClickableFormTag = ({
         </>
       }
     >
-      <FormTag formId={formId} rightIcon={DotsThreeVertical} cursor="pointer" />
+      <FormTag formId={formId} rightIcon={PiDotsThreeVertical} cursor="pointer" />
     </ClickableTagPopover>
   )
 }

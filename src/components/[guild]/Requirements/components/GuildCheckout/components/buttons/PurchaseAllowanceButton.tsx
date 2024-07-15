@@ -1,12 +1,12 @@
 import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import { Collapse, Icon, Tooltip } from "@chakra-ui/react"
-import { Check } from "@phosphor-icons/react/Check"
-import { Question } from "@phosphor-icons/react/Question"
-import { Warning } from "@phosphor-icons/react/Warning"
 import useAllowance from "components/[guild]/Requirements/components/GuildCheckout/hooks/useAllowance"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import useTokenData from "hooks/useTokenData"
+import { PiCheck } from "react-icons/pi"
+import { PiQuestion } from "react-icons/pi"
+import { PiWarning } from "react-icons/pi"
 import { NULL_ADDRESS, TOKEN_BUYER_CONTRACTS } from "utils/guildCheckout/constants"
 import { useChainId } from "wagmi"
 import { CHAIN_CONFIG, Chain, Chains } from "wagmiConfig/chains"
@@ -79,15 +79,15 @@ const PurchaseAllowanceButton = (): JSX.Element => {
             ? "Checking allowance"
             : isAllowing
               ? "Allowing"
-              : "Check your wallet"
+              : "PiCheck your wallet"
         }
         onClick={onClick}
         w="full"
         leftIcon={
           allowanceError ? (
-            <Icon as={Warning} />
+            <Icon as={PiWarning} />
           ) : isEnoughAllowance ? (
-            <Icon as={Check} />
+            <Icon as={PiCheck} />
           ) : null
         }
         rightIcon={
@@ -95,7 +95,7 @@ const PurchaseAllowanceButton = (): JSX.Element => {
             <Tooltip
               label={`You have to give the Guild smart contracts permission to use your ${tokenName}. You only have to do this once per token.`}
             >
-              <Icon as={Question} />
+              <Icon as={PiQuestion} />
             </Tooltip>
           )
         }

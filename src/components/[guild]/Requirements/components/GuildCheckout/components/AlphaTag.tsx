@@ -9,8 +9,8 @@ import {
   Tag,
   Text,
 } from "@chakra-ui/react"
-import { Chat } from "@phosphor-icons/react/Chat"
 import Button from "components/common/Button"
+import { PiChat } from "react-icons/pi"
 import { triggerChat } from "utils/intercom"
 
 const AlphaTag = () => (
@@ -28,7 +28,7 @@ const AlphaTag = () => (
           know!
         </Text>
         <Flex mt="2" w="full" justifyContent={"right"}>
-          <Button size="sm" onClick={triggerChat} leftIcon={<Icon as={Chat} />}>
+          <Button size="sm" onClick={triggerChat} leftIcon={<Icon as={PiChat} />}>
             Open help center
           </Button>
         </Flex>

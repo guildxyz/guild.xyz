@@ -1,11 +1,11 @@
 import { SimpleGrid, Spacer } from "@chakra-ui/react"
-import { Plus } from "@phosphor-icons/react/Plus"
 import TransitioningPlatformIcons from "components/[guild]/RolePlatforms/components/TransitioningPlatformIcons"
 import AddCard from "components/common/AddCard"
 import Button from "components/common/Button"
 import Section from "components/common/Section"
 import { atom } from "jotai"
 import { useFieldArray, useFormContext } from "react-hook-form"
+import { PiPlus } from "react-icons/pi"
 import { RoleFormType, RolePlatform } from "types"
 import NewRolePlatformCard from "../AddAndOrderRoles/components/NewRolePlatformCard"
 import { AddRewardProvider, useAddRewardContext } from "../AddRewardContext"
@@ -40,7 +40,7 @@ const AddRolePlatforms = () => {
           <Button
             variant="ghost"
             size="sm"
-            leftIcon={<Plus />}
+            leftIcon={<PiPlus />}
             rightIcon={<TransitioningPlatformIcons boxSize="4" />}
             onClick={onOpen}
           >

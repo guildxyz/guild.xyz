@@ -1,8 +1,8 @@
 import { Icon } from "@chakra-ui/react"
-import { ArrowRight } from "@phosphor-icons/react/ArrowRight"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import Link from "next/link"
+import { PiArrowRight } from "react-icons/pi"
 import { GuildPlatform } from "types"
 
 type Props = {
@@ -21,7 +21,7 @@ const PointsCardButton = ({ platform }: Props) => {
         w="full"
         prefetch={false}
       >
-        View leaderboard <Icon as={ArrowRight} mb="-0.5" />
+        View leaderboard <Icon as={PiArrowRight} mb="-0.5" />
       </Button>
     </>
   )

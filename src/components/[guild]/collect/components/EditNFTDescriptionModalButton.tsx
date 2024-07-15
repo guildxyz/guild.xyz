@@ -1,6 +1,6 @@
 import { Icon, IconButton, useDisclosure } from "@chakra-ui/react"
-import { PencilSimple } from "@phosphor-icons/react/PencilSimple"
 import React from "react"
+import { PiPencilSimple } from "react-icons/pi"
 import EditNFTDescriptionModal from "rewards/ContractCall/components/EditNFTDescriptionModal"
 import { GuildPlatform } from "types"
 
@@ -14,7 +14,7 @@ const EditNFTDescriptionModalButton: React.FC<Props> = ({ guildPlatform }) => {
   return (
     <>
       <IconButton
-        icon={<Icon as={PencilSimple} />}
+        icon={<Icon as={PiPencilSimple} />}
         size="sm"
         rounded="full"
         aria-label="Edit description"

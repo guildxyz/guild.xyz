@@ -9,15 +9,15 @@ import {
   StackProps,
   Text,
   useColorModeValue,
-} from "@chakra-ui/react"
+} from "@chakra-ui/Pireact"
+import { PropsWithChildren } from "Pireact"
 import {
   ArrowSquareOut,
   Chat,
   Heart,
   ShareNetwork,
   WarningCircle,
-} from "@phosphor-icons/react"
-import { PropsWithChildren } from "react"
+} from "Pireact-icons/pi"
 import { FarcasterCastData } from "../types"
 import FarcasterCastSmall from "./FarcasterCastSmall"
 

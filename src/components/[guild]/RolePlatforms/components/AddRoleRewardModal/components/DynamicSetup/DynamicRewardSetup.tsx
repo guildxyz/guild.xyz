@@ -8,14 +8,14 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
-import { ArrowsClockwise } from "@phosphor-icons/react/ArrowsClockwise"
-import { Lightning } from "@phosphor-icons/react/Lightning"
 import { useRequirementHandlerContext } from "components/[guild]/RequirementHandlerContext"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import AddCard from "components/common/AddCard"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import { useFormContext, useWatch } from "react-hook-form"
+import { PiArrowsClockwise } from "react-icons/pi"
+import { PiLightning } from "react-icons/pi"
 import ConversionInput from "../AddTokenPanel/components/ConversionInput"
 import BaseValueModal from "./BaseValueModal"
 
@@ -41,7 +41,7 @@ const DynamicRewardSetup = ({
 
   const fromImage = (
     <Circle bgColor={"white"} size={5} overflow="hidden">
-      <Icon boxSize={3} as={Lightning} weight="fill" color="green.500" />
+      <Icon boxSize={3} as={PiLightning} weight="fill" color="green.500" />
     </Circle>
   )
 
@@ -58,7 +58,7 @@ const DynamicRewardSetup = ({
                 size="xs"
                 variant="ghost"
                 borderRadius={"lg"}
-                leftIcon={<ArrowsClockwise />}
+                leftIcon={<PiArrowsClockwise />}
                 onClick={onOpen}
                 color="GrayText"
               >

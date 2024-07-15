@@ -9,11 +9,11 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { ArrowRight } from "@phosphor-icons/react/ArrowRight"
-import { Lock } from "@phosphor-icons/react/Lock"
-import { LockOpen } from "@phosphor-icons/react/LockOpen"
 import { PropsWithChildren, ReactNode, useEffect, useState } from "react"
 import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
+import { PiArrowRight } from "react-icons/pi"
+import { PiLock } from "react-icons/pi"
+import { PiLockOpen } from "react-icons/pi"
 import ControlledNumberInput from "requirements/WalletActivity/components/ControlledNumberInput"
 import { MIN_TOKEN_AMOUNT } from "utils/guildCheckout/constants"
 
@@ -101,11 +101,11 @@ const ConversionInput = ({
         <FormLabel>Conversion</FormLabel>
         <IconButton
           opacity={conversionLocked ? 1 : 0.5}
-          icon={conversionLocked ? <Lock /> : <LockOpen />}
+          icon={conversionLocked ? <PiLock /> : <PiLockOpen />}
           size={"xs"}
           rounded={"full"}
           variant={"ghost"}
-          aria-label="Lock/unlock conversion"
+          aria-label="PiLock/unlock conversion"
           onClick={toggleConversionLock}
         />
       </HStack>
@@ -139,7 +139,7 @@ const ConversionInput = ({
         </InputGroup>
 
         <Circle background={"whiteAlpha.200"} p="1">
-          <ArrowRight size={12} color="grayText" />
+          <PiArrowRight size={12} color="grayText" />
         </Circle>
 
         <InputGroup>

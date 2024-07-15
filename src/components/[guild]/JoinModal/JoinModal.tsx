@@ -12,7 +12,6 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react"
-import { ArrowRight } from "@phosphor-icons/react/ArrowRight"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
@@ -22,6 +21,7 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import dynamic from "next/dynamic"
 import { ComponentType, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
+import { PiArrowRight } from "react-icons/pi"
 import { RequirementType } from "requirements/types"
 import rewards from "rewards"
 import { PlatformName } from "types"
@@ -149,7 +149,7 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
                         {`You're not eligible with your connected accounts. `}
                         <Button
                           variant="link"
-                          rightIcon={<ArrowRight />}
+                          rightIcon={<PiArrowRight />}
                           onClick={onClick}
                           iconSpacing={1.5}
                         >

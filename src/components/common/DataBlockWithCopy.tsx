@@ -1,6 +1,6 @@
 import { HStack, Icon, Text, Tooltip, useClipboard } from "@chakra-ui/react"
-import { Check } from "@phosphor-icons/react/Check"
 import { PropsWithChildren } from "react"
+import { PiCheck } from "react-icons/pi"
 import DataBlock from "./DataBlock"
 
 type Props = {
@@ -19,7 +19,7 @@ const DataBlockWithCopy = ({
       closeOnClick={false}
       label={
         <HStack spacing={0.5}>
-          {hasCopied && <Icon as={Check} />}
+          {hasCopied && <Icon as={PiCheck} />}
           <Text as="span">{hasCopied ? "Copied" : "Click to copy"}</Text>
         </HStack>
       }

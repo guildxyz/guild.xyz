@@ -15,8 +15,6 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { CaretLeft } from "@phosphor-icons/react/CaretLeft"
-import { CaretRight } from "@phosphor-icons/react/CaretRight"
 import { Row } from "@tanstack/react-table"
 import FormFieldTitle from "components/[guild]/CreateFormModal/components/FormCardEditable/components/FormFieldTitle"
 import { fieldTypes } from "components/[guild]/CreateFormModal/formConfig"
@@ -24,6 +22,8 @@ import { useGuildForm } from "components/[guild]/hooks/useGuildForms"
 import Button from "components/common/Button"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Modal } from "components/common/Modal"
+import { PiCaretLeft } from "react-icons/pi"
+import { PiCaretRight } from "react-icons/pi"
 import { FormSubmission } from "rewards/Forms/hooks/useFormSubmissions"
 import CollapsibleIdentityTags from "./CollapsibleIdentityTags"
 
@@ -127,11 +127,15 @@ const ResponseModal = ({ row, isOpen, onClose, onPrev, onNext }: Props) => {
           </Text>
 
           <ButtonGroup size="sm" variant={"ghost"} isAttached mr="-3">
-            <Button onClick={onPrev} isDisabled={!onPrev} leftIcon={<CaretLeft />}>
+            <Button onClick={onPrev} isDisabled={!onPrev} leftIcon={<PiCaretLeft />}>
               Prev
             </Button>
             <Divider orientation="vertical" h="8" />
-            <Button onClick={onNext} isDisabled={!onNext} rightIcon={<CaretRight />}>
+            <Button
+              onClick={onNext}
+              isDisabled={!onNext}
+              rightIcon={<PiCaretRight />}
+            >
               Next
             </Button>
           </ButtonGroup>

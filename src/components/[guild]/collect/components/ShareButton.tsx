@@ -6,10 +6,10 @@ import {
   Portal,
   useClipboard,
 } from "@chakra-ui/react"
-import { CopySimple } from "@phosphor-icons/react/CopySimple"
-import { ShareNetwork } from "@phosphor-icons/react/ShareNetwork"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import Button from "components/common/Button"
+import { PiCopySimple } from "react-icons/pi"
+import { PiShareNetwork } from "react-icons/pi"
 import XLogo from "static/icons/x.svg"
 
 type Props = {
@@ -30,7 +30,7 @@ const ShareButton = ({ onClick, shareText }: Props): JSX.Element => {
     <Menu closeOnSelect={false}>
       <MenuButton
         as={Button}
-        leftIcon={<ShareNetwork />}
+        leftIcon={<PiShareNetwork />}
         variant="ghost"
         size="sm"
         colorScheme={buttonColorScheme}
@@ -41,7 +41,7 @@ const ShareButton = ({ onClick, shareText }: Props): JSX.Element => {
       </MenuButton>
       <Portal>
         <MenuList>
-          <MenuItem icon={<CopySimple size={12} />} fontSize="sm" onClick={onCopy}>
+          <MenuItem icon={<PiCopySimple size={12} />} fontSize="sm" onClick={onCopy}>
             {hasCopied ? "Copied!" : "Copy URL"}
           </MenuItem>
           <MenuItem

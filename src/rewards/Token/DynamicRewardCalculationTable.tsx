@@ -1,8 +1,8 @@
 import { HStack, Icon, Skeleton, Td, Text, Tr } from "@chakra-ui/react"
-import { LockSimple } from "@phosphor-icons/react/LockSimple"
-import { X } from "@phosphor-icons/react/X"
 import FeesTable from "components/[guild]/Requirements/components/GuildCheckout/components/FeesTable"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
+import { PiLockSimple } from "react-icons/pi"
+import { PiX } from "react-icons/pi"
 import { REQUIREMENT_PROVIDED_VALUES } from "requirements/requirementProvidedValues"
 import rewardComponents from "rewards/components"
 import { PlatformType, Requirement, RolePlatform } from "types"
@@ -77,7 +77,7 @@ const DynamicRewardCalculationTable = ({ requirement, rolePlatform }: Props) => 
         <Tr>
           <Td>Multiplier</Td>
           <Td isNumeric>
-            <Icon boxSize={3} mb={"-1px"} as={X} />{" "}
+            <Icon boxSize={3} mb={"-1px"} as={PiX} />{" "}
             {(rolePlatform.dynamicAmount.operation as any).params.multiplier}
           </Td>
         </Tr>
@@ -99,7 +99,7 @@ const DynamicRewardCalculationTable = ({ requirement, rolePlatform }: Props) => 
 
 const JoinToCalculate = () => (
   <Text colorScheme={"gray"}>
-    <Icon as={LockSimple} mr="1" mb="-3px" />
+    <Icon as={PiLockSimple} mr="1" mb="-3px" />
     Join to calculate
   </Text>
 )

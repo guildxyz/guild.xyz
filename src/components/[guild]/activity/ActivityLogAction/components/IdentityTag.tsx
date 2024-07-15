@@ -1,5 +1,5 @@
 import { Tag, TagLabel, TagLeftIcon } from "@chakra-ui/react"
-import { Wallet } from "@phosphor-icons/react/Wallet"
+import { PiWallet } from "react-icons/pi"
 import rewards from "rewards"
 import { PlatformName } from "types"
 
@@ -18,8 +18,8 @@ const IdentityTag = ({ platformName, username }: Props): JSX.Element => {
       minW="max-content"
       h="max-content"
     >
-      <TagLeftIcon as={icon ?? Wallet} mr={1} />
-      <TagLabel>{username ?? rewards[platformName]?.name ?? "Wallet"}</TagLabel>
+      <TagLeftIcon as={icon ?? PiWallet} mr={1} />
+      <TagLabel>{username ?? rewards[platformName]?.name ?? "PiWallet"}</TagLabel>
     </Tag>
   )
 }

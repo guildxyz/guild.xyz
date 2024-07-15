@@ -19,16 +19,16 @@ import {
   useClipboard,
   useDisclosure,
 } from "@chakra-ui/react"
-import { Check } from "@phosphor-icons/react/Check"
-import { Copy } from "@phosphor-icons/react/Copy"
-import { DownloadSimple } from "@phosphor-icons/react/DownloadSimple"
-import { Export } from "@phosphor-icons/react/Export"
 import RoleSelector from "components/[guild]/RoleSelector"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import { useRef } from "react"
+import { PiCheck } from "react-icons/pi"
+import { PiCopy } from "react-icons/pi"
+import { PiDownloadSimple } from "react-icons/pi"
+import { PiExport } from "react-icons/pi"
 
 const MembersExporter = (): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -38,7 +38,7 @@ const MembersExporter = (): JSX.Element => {
   )
 
   const downloadAnchorRef = useRef(null)
-  const label = useBreakpointValue({ base: "Export", sm: "Export members" })
+  const label = useBreakpointValue({ base: "PiExport", sm: "PiExport members" })
 
   const { hasCopied, value, setValue, onCopy } = useClipboard("")
   const csvContent = encodeURI("data:text/csv;charset=utf-8," + value)
@@ -71,9 +71,9 @@ const MembersExporter = (): JSX.Element => {
   return (
     <>
       <Button
-        aria-label="Export members"
+        aria-label="PiExport members"
         variant="ghost"
-        leftIcon={<Icon as={Export} />}
+        leftIcon={<Icon as={PiExport} />}
         size="sm"
         onClick={onOpen}
       >
@@ -134,14 +134,14 @@ const MembersExporter = (): JSX.Element => {
                 <Button
                   h="10"
                   onClick={onCopy}
-                  leftIcon={hasCopied ? <Check /> : <Copy />}
+                  leftIcon={hasCopied ? <PiCheck /> : <PiCopy />}
                 >
-                  {`${hasCopied ? "Copied" : "Copy"}`}
+                  {`${hasCopied ? "Copied" : "PiCopy"}`}
                 </Button>
                 <Button
                   h="10"
                   onClick={exportMembersAsCsv}
-                  leftIcon={<DownloadSimple />}
+                  leftIcon={<PiDownloadSimple />}
                 >
                   Download
                 </Button>

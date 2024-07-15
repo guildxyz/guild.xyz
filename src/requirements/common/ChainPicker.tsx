@@ -6,12 +6,12 @@ import {
   InputGroup,
   InputLeftElement,
 } from "@chakra-ui/react"
-import { Question } from "@phosphor-icons/react/Question"
 import ControlledSelect from "components/common/ControlledSelect"
 import { StyledSelectProps } from "components/common/StyledSelect/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
+import { PiQuestion } from "react-icons/pi"
 import { useChainId } from "wagmi"
 import {
   CHAIN_CONFIG,
@@ -39,7 +39,7 @@ const mappedChains: Array<{
   details?: string
 }> = defaultSupportedChains
   .map((chainName: Chain) => ({
-    img: CHAIN_CONFIG[chainName].iconUrl || <Icon as={Question} boxSize={5} />,
+    img: CHAIN_CONFIG[chainName].iconUrl || <Icon as={PiQuestion} boxSize={5} />,
     label: CHAIN_CONFIG[chainName].name,
     value: chainName,
     isDisabled: CHAIN_CONFIG[chainName].deprecated,

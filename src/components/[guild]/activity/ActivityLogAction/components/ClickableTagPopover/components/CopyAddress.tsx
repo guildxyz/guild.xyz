@@ -1,7 +1,7 @@
 import { useClipboard } from "@chakra-ui/react"
-import { Check } from "@phosphor-icons/react/Check"
-import { Copy } from "@phosphor-icons/react/Copy"
 import Button from "components/common/Button"
+import { PiCheck } from "react-icons/pi"
+import { PiCopy } from "react-icons/pi"
 
 type Props = {
   address: string
@@ -13,13 +13,13 @@ const CopyAddress = ({ address }: Props): JSX.Element => {
   return (
     <Button
       variant="ghost"
-      leftIcon={hasCopied ? <Check /> : <Copy />}
+      leftIcon={hasCopied ? <PiCheck /> : <PiCopy />}
       size="sm"
       borderRadius={0}
       onClick={onCopy}
       justifyContent="start"
     >
-      Copy address
+      PiCopy address
     </Button>
   )
 }

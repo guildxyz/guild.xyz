@@ -1,8 +1,8 @@
 import { Icon, Link, Wrap } from "@chakra-ui/react"
 import type { SocialLinks as SocialLinksType } from "@guildxyz/types"
-import { ArrowSquareOut } from "@phosphor-icons/react/ArrowSquareOut"
 import SocialIcon from "components/[guild]/SocialIcon"
 import Section from "components/common/Section"
+import { PiArrowSquareOut } from "react-icons/pi"
 import { SocialLinkKey } from "types"
 import capitalize from "utils/capitalize"
 
@@ -23,7 +23,7 @@ const SocialLinks = ({ socialLinks }: Props) => (
         >
           <SocialIcon type={type as SocialLinkKey} size="sm" mr="1.5" />
           {capitalize(type.toLowerCase())}
-          <Icon ml={1.5} as={ArrowSquareOut} />
+          <Icon ml={1.5} as={PiArrowSquareOut} />
         </Link>
       ))}
     </Wrap>

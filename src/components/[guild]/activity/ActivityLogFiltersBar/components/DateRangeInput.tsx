@@ -12,15 +12,15 @@ import {
   Text,
   useBreakpointValue,
   useColorModeValue,
-} from "@chakra-ui/react"
+} from "@chakra-ui/Pireact"
+import { ChangeEvent } from "Pireact"
 import {
   CalendarBlank,
   CalendarCheck,
   CaretDown,
   TrashSimple,
-} from "@phosphor-icons/react"
+} from "Pireact-icons/pi"
 import Button from "components/common/Button"
-import { ChangeEvent } from "react"
 import { useActivityLog } from "../../ActivityLogContext"
 import {
   SupportedQueryParam,

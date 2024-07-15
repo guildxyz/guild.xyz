@@ -1,11 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react"
+import type { Meta, StoryObj } from "@storybook/Pireact"
 
-import {
-  Check,
-  Info as InfoIcon,
-  Warning as WarningIcon,
-  X,
-} from "@phosphor-icons/react/dist/ssr"
+import { Check, Info as InfoIcon, Warning as WarningIcon, X } from "Pireact-icons/pi"
 import { Alert, AlertDescription, AlertProps, AlertTitle } from "./Alert"
 import { Card } from "./Card"
 

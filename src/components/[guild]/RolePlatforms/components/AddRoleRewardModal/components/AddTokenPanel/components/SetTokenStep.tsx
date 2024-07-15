@@ -1,12 +1,12 @@
 import { Button, Flex, HStack, Stack, Text, useToast } from "@chakra-ui/react"
-import { Upload } from "@phosphor-icons/react/Upload"
-import { X } from "@phosphor-icons/react/X"
 import usePinata from "hooks/usePinata"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useTokenData from "hooks/useTokenData"
 import { useCallback, useEffect, useState } from "react"
 import { useDropzone } from "react-dropzone"
 import { useFormContext, useWatch } from "react-hook-form"
+import { PiUpload } from "react-icons/pi"
+import { PiX } from "react-icons/pi"
 import ChainPicker from "requirements/common/ChainPicker"
 import TokenPicker from "requirements/common/TokenPicker"
 import { ERC20_SUPPORTED_CHAINS } from "utils/guildCheckout/constants"
@@ -82,12 +82,12 @@ const SetTokenStep = ({ onContinue }: { onContinue: () => void }) => {
                   <Button
                     variant="link"
                     fontSize="small"
-                    leftIcon={<Upload />}
+                    leftIcon={<PiUpload />}
                     {...getRootProps()}
                     isLoading={uploader.isUploading}
                     loadingText={`Uploading (${(progress * 100).toFixed()}%)`}
                   >
-                    Upload custom image
+                    PiUpload custom image
                   </Button>
                   <input {...getInputProps()} accept="image/*" hidden />
                 </>
@@ -96,7 +96,7 @@ const SetTokenStep = ({ onContinue }: { onContinue: () => void }) => {
                   variant="link"
                   fontSize="small"
                   onClick={() => setValue("imageUrl", null)}
-                  leftIcon={<X />}
+                  leftIcon={<PiX />}
                 >
                   Remove custom image
                 </Button>

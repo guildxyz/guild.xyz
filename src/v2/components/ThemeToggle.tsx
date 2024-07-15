@@ -2,10 +2,10 @@
 
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/ToggleGroup"
 import { useColorMode } from "@chakra-ui/react"
-import { Desktop } from "@phosphor-icons/react/dist/ssr/Desktop"
-import { Moon } from "@phosphor-icons/react/dist/ssr/Moon"
-import { Sun } from "@phosphor-icons/react/dist/ssr/Sun"
 import { useTheme } from "next-themes"
+import { PiDesktop } from "react-icons/pi"
+import { PiMoon } from "react-icons/pi"
+import { PiSun } from "react-icons/pi"
 import { useIsClient } from "usehooks-ts"
 
 export function ThemeToggle() {
@@ -37,7 +37,7 @@ export function ThemeToggle() {
         variant="primary"
         className="size-8"
       >
-        <Sun weight="bold" />
+        <PiSun weight="bold" />
       </ToggleGroupItem>
       <ToggleGroupItem
         value="dark"
@@ -46,7 +46,7 @@ export function ThemeToggle() {
         variant="primary"
         className="size-8"
       >
-        <Moon weight="bold" />
+        <PiMoon weight="bold" />
       </ToggleGroupItem>
       <ToggleGroupItem
         value="system"
@@ -55,7 +55,7 @@ export function ThemeToggle() {
         variant="primary"
         className="size-8"
       >
-        <Desktop weight="bold" />
+        <PiDesktop weight="bold" />
       </ToggleGroupItem>
     </ToggleGroup>
   )

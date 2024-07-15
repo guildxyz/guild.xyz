@@ -5,7 +5,7 @@ import { type VariantProps, cva } from "class-variance-authority"
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
-import { X } from "@phosphor-icons/react/dist/ssr/X"
+import { PiX } from "react-icons/pi"
 
 const ToastProvider = ToastPrimitives.Provider
 
@@ -82,7 +82,7 @@ const ToastClose = React.forwardRef<
     toast-close=""
     {...props}
   >
-    <X weight="bold" className="h-4 w-4" />
+    <PiX weight="bold" className="h-4 w-4" />
   </ToastPrimitives.Close>
 ))
 ToastClose.displayName = ToastPrimitives.Close.displayName

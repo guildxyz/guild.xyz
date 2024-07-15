@@ -7,8 +7,8 @@ import {
   useBreakpointValue,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { ArrowDown } from "@phosphor-icons/react/ArrowDown"
-import { ArrowRight } from "@phosphor-icons/react/ArrowRight"
+import { PiArrowDown } from "react-icons/pi"
+import { PiArrowRight } from "react-icons/pi"
 
 type Props = {
   before: JSX.Element
@@ -28,7 +28,7 @@ const UpdatedDataGrid = ({
     base: "1fr",
     md: "1fr var(--chakra-space-8) 1fr",
   })
-  const icon = useBreakpointValue({ base: ArrowDown, md: ArrowRight })
+  const icon = useBreakpointValue({ base: PiArrowDown, md: PiArrowRight })
 
   const boxProps = unstyled
     ? {}

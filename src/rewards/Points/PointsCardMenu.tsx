@@ -1,8 +1,8 @@
 import { MenuItem, useDisclosure } from "@chakra-ui/react"
-import { PencilSimple } from "@phosphor-icons/react/PencilSimple"
 import RemovePlatformMenuItem from "components/[guild]/AccessHub/components/RemovePlatformMenuItem"
 import PlatformCardMenu from "components/[guild]/RolePlatforms/components/PlatformCard/components/PlatformCardMenu"
 import useGuild from "components/[guild]/hooks/useGuild"
+import { PiPencilSimple } from "react-icons/pi"
 import EditPointsModal from "./EditPointsModal"
 
 type Props = {
@@ -20,7 +20,7 @@ const PointsCardMenu = ({ platformGuildId }: Props): JSX.Element => {
   return (
     <>
       <PlatformCardMenu>
-        <MenuItem icon={<PencilSimple />} onClick={onOpen}>
+        <MenuItem icon={<PiPencilSimple />} onClick={onOpen}>
           Edit points
         </MenuItem>
         <RemovePlatformMenuItem platformGuildId={platformGuildId} />

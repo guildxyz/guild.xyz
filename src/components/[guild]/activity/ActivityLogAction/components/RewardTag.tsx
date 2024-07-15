@@ -6,9 +6,9 @@ import {
   TagRightIcon,
   forwardRef,
 } from "@chakra-ui/react"
-import type { IconProps } from "@phosphor-icons/react"
-import { DotsThreeVertical } from "@phosphor-icons/react/DotsThreeVertical"
 import { ForwardRefExoticComponent, RefAttributes } from "react"
+import type { PiIconProps } from "react-icons/pi"
+import { PiDotsThreeVertical } from "react-icons/pi"
 import rewards from "rewards"
 import { PlatformName, PlatformType } from "types"
 import { useActivityLog } from "../../ActivityLogContext"
@@ -18,7 +18,7 @@ import FilterBy from "./ClickableTagPopover/components/FilterBy"
 type Props = ClickableRewardTagProps & {
   label?: string
   platformType?: PlatformName
-  rightIcon?: ForwardRefExoticComponent<IconProps & RefAttributes<SVGSVGElement>>
+  rightIcon?: ForwardRefExoticComponent<PiIconProps & RefAttributes<SVGSVGElement>>
 } & Omit<TagProps, "colorScheme">
 
 const RewardTag = forwardRef<Props, "span">(
@@ -79,7 +79,7 @@ const ClickableRewardTag = ({
       roleId={roleId}
       rolePlatformId={rolePlatformId}
       cursor={"pointer"}
-      rightIcon={DotsThreeVertical}
+      rightIcon={PiDotsThreeVertical}
     />
   </ClickableTagPopover>
 )

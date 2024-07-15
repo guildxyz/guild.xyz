@@ -28,13 +28,8 @@ import {
   TooltipTrigger,
 } from "@/components/ui/Tooltip"
 import { useDisclosure } from "@/hooks/useDisclosure"
-import {
-  CircleNotch,
-  DotsThree,
-  LinkBreak,
-  UserSwitch,
-} from "@phosphor-icons/react/dist/ssr"
 import Image from "next/image"
+import { PiCircleNotch, PiLinkBreak, PiUserSwitch } from "react-icons/pi"
 import { User } from "types"
 import shortenHex from "utils/shortenHex"
 import useEditPrimaryAddress from "../hooks/useEditPrimaryAddress"
@@ -130,9 +125,9 @@ const LinkedAddress = ({ addressData }: Props) => {
                 }
               >
                 {isEditPrimaryAddressLoading ? (
-                  <CircleNotch weight="bold" className="mr-1.5 animate-spin" />
+                  <PiCircleNotch weight="bold" className="mr-1.5 animate-spin" />
                 ) : (
-                  <UserSwitch weight="bold" className="mr-1.5" />
+                  <PiUserSwitch weight="bold" className="mr-1.5" />
                 )}
                 Set as primary
               </DropdownMenuItem>
@@ -141,7 +136,7 @@ const LinkedAddress = ({ addressData }: Props) => {
               onClick={onOpen}
               className="text-destructive-ghost-foreground"
             >
-              <LinkBreak weight="bold" className="mr-1.5" />
+              <PiLinkBreak weight="bold" className="mr-1.5" />
               Disconnect
             </DropdownMenuItem>
           </DropdownMenuContent>

@@ -16,8 +16,8 @@ import {
   ModalOverlay,
   Text,
 } from "@chakra-ui/react"
-import { ArrowSquareOut } from "@phosphor-icons/react/ArrowSquareOut"
 import useUser from "components/[guild]/hooks/useUser"
+import { PiArrowSquareOut } from "react-icons/pi"
 
 type ModalProps = {
   title: string
@@ -90,7 +90,7 @@ const ClaimGatherModal = ({
                 href={gatherSpaceUrl}
                 onClick={onClose}
                 iconSpacing={1}
-                rightIcon={<ArrowSquareOut />}
+                rightIcon={<PiArrowSquareOut />}
                 w="full"
                 colorScheme="GATHER_TOWN"
               >

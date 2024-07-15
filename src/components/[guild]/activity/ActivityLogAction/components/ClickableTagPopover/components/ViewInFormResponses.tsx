@@ -1,7 +1,7 @@
-import { ArrowSquareOut } from "@phosphor-icons/react/ArrowSquareOut"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import { useRouter } from "next/router"
+import { PiArrowSquareOut } from "react-icons/pi"
 
 type Props = {
   label: string
@@ -22,7 +22,7 @@ const ViewInFormResponses = ({
   return (
     <Button
       variant="ghost"
-      leftIcon={<ArrowSquareOut />}
+      leftIcon={<PiArrowSquareOut />}
       size="sm"
       borderRadius={0}
       onClick={() =>

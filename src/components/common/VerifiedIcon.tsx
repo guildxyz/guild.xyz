@@ -6,7 +6,7 @@ import {
   ResponsiveValue,
   Tooltip,
 } from "@chakra-ui/react"
-import { SealCheck } from "@phosphor-icons/react/SealCheck"
+import { PiSealCheck } from "react-icons/pi"
 
 type Props = {
   size: ResponsiveValue<number>
@@ -21,7 +21,7 @@ const VerifiedIcon = ({ size, ...chakraProps }: Props): JSX.Element => (
         _before={{ content: '""', bg: "white", pos: "absolute", inset: 1.5 }}
       >
         <Icon
-          as={SealCheck}
+          as={PiSealCheck}
           boxSize={size}
           color={"blue.500"}
           weight="fill"

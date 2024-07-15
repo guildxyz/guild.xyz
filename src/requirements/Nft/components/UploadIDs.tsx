@@ -1,6 +1,6 @@
-import { File } from "@phosphor-icons/react/File"
 import Button from "components/common/Button"
 import useDropzone from "hooks/useDropzone"
+import { PiFile } from "react-icons/pi"
 
 export const INVALID_TOKEN_IDS_ERROR = {
   type: "validate",
@@ -16,7 +16,7 @@ export const validateNftIds = (idsArray: string[]) =>
   idsArray.filter(Boolean).every((num) => /^\d+$/.test(num))
 
 const UploadIDs = ({ onSuccess, onError }: Props) => {
-  const parseTxt = (file: File) => {
+  const parseTxt = (file: PiFile) => {
     const fileReader = new FileReader()
     fileReader.onload = () => {
       const lines = fileReader.result?.toString()?.split("\n")
@@ -52,7 +52,7 @@ const UploadIDs = ({ onSuccess, onError }: Props) => {
     <Button
       {...getRootProps()}
       as="label"
-      leftIcon={<File />}
+      leftIcon={<PiFile />}
       size="sm"
       borderRadius="lg"
       w="max-content"

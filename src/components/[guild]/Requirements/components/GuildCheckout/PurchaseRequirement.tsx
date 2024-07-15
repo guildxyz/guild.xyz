@@ -12,10 +12,10 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
-import { ShoppingCartSimple } from "@phosphor-icons/react/ShoppingCartSimple"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
+import { PiShoppingCartSimple } from "react-icons/pi"
 import { useAccount } from "wagmi"
 import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
 import BlockExplorerUrl from "../BlockExplorerUrl"
@@ -61,7 +61,7 @@ const PurchaseRequirement = (): JSX.Element => {
       <Button
         colorScheme="blue"
         size="xs"
-        leftIcon={<Icon as={ShoppingCartSimple} />}
+        leftIcon={<Icon as={PiShoppingCartSimple} />}
         borderRadius="md"
         fontWeight="medium"
         onClick={onClick}

@@ -1,6 +1,6 @@
 import { Icon } from "@chakra-ui/react"
-import { ArrowSquareOut } from "@phosphor-icons/react/ArrowSquareOut"
 import Button from "components/common/Button"
+import { PiArrowSquareOut } from "react-icons/pi"
 import rewards from "rewards"
 import { GuildPlatform, PlatformType } from "types"
 import usePlatformAccessButton from "./usePlatformAccessButton"
@@ -17,7 +17,7 @@ const PlatformAccessButton = ({ platform }: Props) => {
     <Button
       {...buttonProps}
       leftIcon={!buttonProps.href && <Icon as={icon} />}
-      rightIcon={buttonProps.href && <ArrowSquareOut />}
+      rightIcon={buttonProps.href && <PiArrowSquareOut />}
       colorScheme={colorScheme}
     >
       {label}

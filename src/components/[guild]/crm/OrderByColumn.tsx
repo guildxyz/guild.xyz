@@ -13,10 +13,10 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
-import { SortAscending } from "@phosphor-icons/react/SortAscending"
-import { SortDescending } from "@phosphor-icons/react/SortDescending"
-import { TrashSimple } from "@phosphor-icons/react/TrashSimple"
 import { Column } from "@tanstack/react-table"
+import { PiSortAscending } from "react-icons/pi"
+import { PiSortDescending } from "react-icons/pi"
+import { PiTrashSimple } from "react-icons/pi"
 import capitalize from "utils/capitalize"
 
 type Props = {
@@ -45,7 +45,9 @@ const OrderByColumn = ({ label, column }: Props) => {
                   {capitalize(sortDirection)}
                 </Text>
               )}
-              <Icon as={sortDirection === "desc" ? SortDescending : SortAscending} />
+              <Icon
+                as={sortDirection === "desc" ? PiSortDescending : PiSortAscending}
+              />
             </Button>
           </PopoverTrigger>
           <Portal>
@@ -65,7 +67,7 @@ const OrderByColumn = ({ label, column }: Props) => {
                       column.clearSorting()
                       onClose()
                     }}
-                    leftIcon={<TrashSimple />}
+                    leftIcon={<PiTrashSimple />}
                     flexShrink={0}
                   >
                     Clear

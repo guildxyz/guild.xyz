@@ -14,7 +14,6 @@ import {
   Tr,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { CaretDown } from "@phosphor-icons/react/CaretDown"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
@@ -22,6 +21,7 @@ import { RequirementButton } from "components/[guild]/Requirements/components/Re
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import DataBlock from "components/common/DataBlock"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
+import { PiCaretDown } from "react-icons/pi"
 import { scorers } from "./components/Score"
 import SetupPassport from "./components/SetupPassport"
 
@@ -56,7 +56,7 @@ const GitcoinPassportRequirement = ({ ...rest }: RequirementProps): JSX.Element 
             Object.keys(requirement.data ?? {}).length > 0 && (
               <Popover placement="bottom">
                 <PopoverTrigger>
-                  <RequirementButton rightIcon={<Icon as={CaretDown} />}>
+                  <RequirementButton rightIcon={<Icon as={PiCaretDown} />}>
                     View parameters
                   </RequirementButton>
                 </PopoverTrigger>

@@ -10,12 +10,12 @@ import {
   useColorMode,
   useDisclosure,
 } from "@chakra-ui/react"
-import { Coin } from "@phosphor-icons/react/Coin"
-import { DotsThreeVertical } from "@phosphor-icons/react/DotsThreeVertical"
-import { Wallet } from "@phosphor-icons/react/Wallet"
 import ClickableTagPopover from "components/[guild]/activity/ActivityLogAction/components/ClickableTagPopover"
 import useToast from "hooks/useToast"
 import { useRef } from "react"
+import { PiCoin } from "react-icons/pi"
+import { PiDotsThreeVertical } from "react-icons/pi"
+import { PiWallet } from "react-icons/pi"
 import FundPoolModal from "rewards/Token/FundPoolModal"
 import { useTokenRewardContext } from "rewards/Token/TokenRewardContext"
 import usePool from "rewards/Token/hooks/usePool"
@@ -90,7 +90,7 @@ const PoolTag = ({ poolId, ...rest }: { poolId: bigint } & TagProps) => {
                     colorMode === "light" ? "blackAlpha.100" : "whiteAlpha.100",
                 }}
               >
-                <Icon as={Coin} weight="bold" />
+                <Icon as={PiCoin} weight="bold" />
                 <Text fontSize={"sm"} fontWeight={"bold"}>
                   Fund pool
                 </Text>
@@ -106,7 +106,7 @@ const PoolTag = ({ poolId, ...rest }: { poolId: bigint } & TagProps) => {
                 opacity={isWithdrawDisabled ? 0.5 : 1}
                 onClick={!isWithdrawDisabled ? withdrawOnOpen : () => {}}
               >
-                <Icon as={Wallet} weight="bold" />
+                <Icon as={PiWallet} weight="bold" />
                 <Text fontSize={"sm"} fontWeight={"bold"}>
                   Withdraw
                 </Text>
@@ -116,7 +116,7 @@ const PoolTag = ({ poolId, ...rest }: { poolId: bigint } & TagProps) => {
         >
           <TagRightIcon
             ref={finalFocusRef}
-            as={DotsThreeVertical}
+            as={PiDotsThreeVertical}
             opacity={0.5}
             _hover={{ opacity: 1, cursor: "pointer" }}
           />

@@ -1,6 +1,6 @@
 import { Box, Button, Collapse, Icon, Stack, useDisclosure } from "@chakra-ui/react"
 
-import { CaretDown } from "@phosphor-icons/react/CaretDown"
+import { PiCaretDown } from "react-icons/pi"
 import capitalize from "utils/capitalize"
 
 const CollapsibleRoleSection = ({
@@ -22,7 +22,7 @@ const CollapsibleRoleSection = ({
         color="gray"
         rightIcon={
           <Icon
-            as={CaretDown}
+            as={PiCaretDown}
             transform={isOpen && "rotate(-180deg)"}
             transition="transform .3s"
           />

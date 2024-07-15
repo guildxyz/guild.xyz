@@ -19,11 +19,11 @@ import {
 } from "@/components/ui/Tooltip"
 import { useDisclosure } from "@/hooks/useDisclosure"
 import { useUserPublic } from "@/hooks/useUserPublic"
-import { LinkBreak } from "@phosphor-icons/react/dist/ssr/LinkBreak"
-import { SignOut } from "@phosphor-icons/react/dist/ssr/SignOut"
 import useUser from "components/[guild]/hooks/useUser"
 import useResolveAddress from "hooks/useResolveAddress"
 import { useAtom } from "jotai"
+import { PiLinkBreak } from "react-icons/pi"
+import { PiSignOut } from "react-icons/pi"
 import { deleteKeyPairFromIdb } from "utils/keyPair"
 import { useAccount } from "wagmi"
 import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
@@ -109,7 +109,7 @@ const AccountModal = () => {
                           className="size-4"
                         />
                       ) : (
-                        <LinkBreak weight="bold" />
+                        <PiLinkBreak weight="bold" />
                       )}
                     </Button>
                   ) : (
@@ -132,7 +132,7 @@ const AccountModal = () => {
                       onClick={handleLogout}
                       aria-label="Disconnect"
                     >
-                      <SignOut weight="bold" className="size-3" />
+                      <PiSignOut weight="bold" className="size-3" />
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>

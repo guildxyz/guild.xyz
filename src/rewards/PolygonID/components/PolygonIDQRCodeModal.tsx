@@ -11,13 +11,13 @@ import {
   Text,
   useBreakpointValue,
 } from "@chakra-ui/react"
-import { ArrowsClockwise } from "@phosphor-icons/react/ArrowsClockwise"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import ErrorAlert from "components/common/ErrorAlert"
 import { env } from "env"
 import { QRCodeSVG } from "qrcode.react"
+import { PiArrowsClockwise } from "react-icons/pi"
 import useSWRImmutable from "swr/immutable"
 import { Role } from "types"
 import useClaimedRoles from "../hooks/useClaimedRoles"
@@ -78,7 +78,7 @@ const PolygonIDQRCodeModal = ({ role, isOpen, onClose }: Props) => {
                   borderRadius="lg"
                   mt="2"
                   variant="ghost"
-                  leftIcon={<ArrowsClockwise />}
+                  leftIcon={<PiArrowsClockwise />}
                   loadingText={"Generating QR code"}
                   color="gray"
                   onClick={() => mutate()}

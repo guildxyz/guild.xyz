@@ -25,11 +25,11 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
-import { Check } from "@phosphor-icons/react/Check"
-import { Question } from "@phosphor-icons/react/Question"
-import { Users } from "@phosphor-icons/react/Users"
 import Card from "components/common/Card"
 import { Modal } from "components/common/Modal"
+import { PiCheck } from "react-icons/pi"
+import { PiQuestion } from "react-icons/pi"
+import { PiUsers } from "react-icons/pi"
 import RoleTag from "../RoleTag"
 import useGuild from "../hooks/useGuild"
 import { Message as MessageType } from "./hooks/useGuildMessages"
@@ -132,11 +132,11 @@ const Message = ({
               </HStack>
 
               <HStack>
-                <Icon as={Check} color="GrayText" />
+                <Icon as={PiCheck} color="GrayText" />
                 <Text as="span" colorScheme="gray" fontSize="sm">
                   {receiverCount}
                 </Text>
-                <Icon as={Users} color="GrayText" />
+                <Icon as={PiUsers} color="GrayText" />
               </HStack>
             </HStack>
           </Stack>
@@ -211,7 +211,7 @@ const Message = ({
                           placement="top"
                           hasArrow
                         >
-                          <Icon as={Question} color="GrayText" ml={1} mt={0.5} />
+                          <Icon as={PiQuestion} color="GrayText" ml={1} mt={0.5} />
                         </Tooltip>
                       </HStack>
                     </Td>

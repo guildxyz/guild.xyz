@@ -11,7 +11,6 @@ import {
   Text,
   useBreakpointValue,
 } from "@chakra-ui/react"
-import { ArrowsClockwise } from "@phosphor-icons/react/ArrowsClockwise"
 import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import ErrorAlert from "components/common/ErrorAlert"
@@ -20,6 +19,7 @@ import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import useToast from "hooks/useToast"
 import { QRCodeSVG } from "qrcode.react"
 import { useEffect } from "react"
+import { PiArrowsClockwise } from "react-icons/pi"
 import useSWR from "swr"
 import useSWRImmutable from "swr/immutable"
 import useConnectedDID from "../hooks/useConnectedDID"
@@ -112,7 +112,7 @@ const ConnectDIDModal = ({
                   borderRadius="lg"
                   mt={2}
                   variant="ghost"
-                  leftIcon={<ArrowsClockwise />}
+                  leftIcon={<PiArrowsClockwise />}
                   isLoading={isValidating}
                   loadingText="Generating QR code"
                   color="gray"

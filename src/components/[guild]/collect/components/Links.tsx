@@ -1,9 +1,9 @@
 import { Icon, Img, Link, Wrap, useColorMode } from "@chakra-ui/react"
-import { ArrowSquareOut } from "@phosphor-icons/react/ArrowSquareOut"
 import SocialIcon from "components/[guild]/SocialIcon"
 import { useCollectNftContext } from "components/[guild]/collect/components/CollectNftContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Section from "components/common/Section"
+import { PiArrowSquareOut } from "react-icons/pi"
 import { SocialLinkKey } from "types"
 import capitalize from "utils/capitalize"
 import { openseaBaseUrl } from "utils/guildCheckout/constants"
@@ -28,7 +28,7 @@ const Links = () => {
           >
             <Img src={"/requirementLogos/opensea.svg"} boxSize={5} mr="1.5" />
             OpenSea
-            <Icon ml={1.5} as={ArrowSquareOut} />
+            <Icon ml={1.5} as={PiArrowSquareOut} />
           </Link>
         )}
 
@@ -41,7 +41,7 @@ const Links = () => {
           >
             <Img src={"/networkLogos/base.svg"} boxSize={5} mr="1.5" />
             Coinbase NFT
-            <Icon ml={1.5} as={ArrowSquareOut} />
+            <Icon ml={1.5} as={PiArrowSquareOut} />
           </Link>
         )}
 
@@ -57,7 +57,7 @@ const Links = () => {
             mr="1.5"
           />
           Explorer
-          <Icon ml={1.5} as={ArrowSquareOut} />
+          <Icon ml={1.5} as={PiArrowSquareOut} />
         </Link>
 
         {Object.keys(socialLinks ?? {}).length > 0 &&
@@ -71,7 +71,7 @@ const Links = () => {
             >
               <SocialIcon type={type as SocialLinkKey} size="sm" mr="1.5" />
               {capitalize(type.toLowerCase())}
-              <Icon ml={1.5} as={ArrowSquareOut} />
+              <Icon ml={1.5} as={PiArrowSquareOut} />
             </Link>
           ))}
       </Wrap>

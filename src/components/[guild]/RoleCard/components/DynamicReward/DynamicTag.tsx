@@ -1,9 +1,9 @@
 import { Icon, Tag, Tooltip, Wrap, useDisclosure } from "@chakra-ui/react"
-import { Lightning } from "@phosphor-icons/react/Lightning"
-import { Warning } from "@phosphor-icons/react/Warning"
 import { useRequirementHandlerContext } from "components/[guild]/RequirementHandlerContext"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useRequirements from "components/[guild]/hooks/useRequirements"
+import { PiLightning } from "react-icons/pi"
+import { PiWarning } from "react-icons/pi"
 import DynamicRewardModal from "rewards/Token/DynamicRewardModal"
 import { Rest, RolePlatform } from "types"
 
@@ -40,7 +40,7 @@ const DynamicTag = ({
               boxSize={"13px"}
               weight="fill"
               color="green.500"
-              as={Lightning}
+              as={PiLightning}
               mr={1}
             />
             Dynamic
@@ -53,7 +53,7 @@ const DynamicTag = ({
             label="Dynamic rewards need a base value for reward amount calculation from a requirement. Edit the reward to set one!"
           >
             <Tag colorScheme={"orange"} w="fit-content">
-              <Icon as={Warning} mr={1} /> Missing linked requirement!
+              <Icon as={PiWarning} mr={1} /> Missing linked requirement!
             </Tag>
           </Tooltip>
         )}

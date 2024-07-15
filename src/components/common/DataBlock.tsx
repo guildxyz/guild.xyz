@@ -1,6 +1,6 @@
 import { Icon, Skeleton, Text, Tooltip, useColorModeValue } from "@chakra-ui/react"
-import { Warning } from "@phosphor-icons/react/Warning"
 import { PropsWithChildren } from "react"
+import { PiWarning } from "react-icons/pi"
 
 type Props = {
   isLoading?: boolean
@@ -29,7 +29,7 @@ const DataBlock = ({
       >
         {error && (
           <Icon
-            as={Warning}
+            as={PiWarning}
             position="relative"
             top={0.5}
             mr={1}

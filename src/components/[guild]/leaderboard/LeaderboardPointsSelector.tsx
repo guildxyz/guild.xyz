@@ -9,11 +9,11 @@ import {
   MenuList,
   Portal,
 } from "@chakra-ui/react"
-import { CaretDown } from "@phosphor-icons/react/CaretDown"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import Link from "next/link"
 import { useRouter } from "next/router"
+import { PiCaretDown } from "react-icons/pi"
 import Star from "static/icons/star.svg"
 import { useAccessedGuildPoints } from "../AccessHub/hooks/useAccessedGuildPoints"
 import useGuild from "../hooks/useGuild"
@@ -67,7 +67,7 @@ const LeaderboardPointsSelector = () => {
           <MenuButton
             as={Button}
             size="sm"
-            rightIcon={<CaretDown />}
+            rightIcon={<PiCaretDown />}
             leftIcon={currentPoints.image}
           >
             {currentPoints.name}

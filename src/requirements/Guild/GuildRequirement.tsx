@@ -1,6 +1,5 @@
 import { Link } from "@chakra-ui/next-js"
 import { Icon, Img, Skeleton, Text } from "@chakra-ui/react"
-import { Detective } from "@phosphor-icons/react/Detective"
 import DataBlockWithDate from "components/[guild]/Requirements/components/DataBlockWithDate"
 import Requirement, {
   RequirementProps,
@@ -8,6 +7,7 @@ import Requirement, {
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import { useSimpleGuild } from "components/[guild]/hooks/useGuild"
 import useRole from "components/[guild]/hooks/useRole"
+import { PiDetective } from "react-icons/pi"
 import useSWRImmutable from "swr/immutable"
 import { Group } from "types"
 import pluralize from "utils/pluralize"
@@ -50,7 +50,7 @@ const HaveRole = (props: RequirementProps): JSX.Element => {
     <Requirement
       image={
         !roleId ? (
-          <Icon as={Detective} boxSize={6} />
+          <Icon as={PiDetective} boxSize={6} />
         ) : (
           roleImageUrl &&
           (roleImageUrl.match("guildLogos") ? (

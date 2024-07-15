@@ -1,9 +1,9 @@
 import { MenuItem, useColorModeValue, useDisclosure } from "@chakra-ui/react"
-import { TrashSimple } from "@phosphor-icons/react/TrashSimple"
 import useRemoveGuildPlatform from "components/[guild]/AccessHub/hooks/useRemoveGuildPlatform"
 import { AlreadyGrantedAccessesWillRemainInfo } from "components/[guild]/RolePlatforms/components/RemovePlatformButton/RemovePlatformButton"
 import useGuild from "components/[guild]/hooks/useGuild"
 import ConfirmationAlert from "components/create-guild/Requirements/components/ConfirmationAlert"
+import { PiTrashSimple } from "react-icons/pi"
 import rewards from "rewards"
 import { PlatformType } from "types"
 
@@ -27,7 +27,7 @@ const RemovePlatformMenuItem = ({ platformGuildId }: Props): JSX.Element => {
 
   return (
     <>
-      <MenuItem icon={<TrashSimple />} onClick={onOpen} color={color}>
+      <MenuItem icon={<PiTrashSimple />} onClick={onOpen} color={color}>
         Remove reward...
       </MenuItem>
 

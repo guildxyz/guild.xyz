@@ -1,7 +1,7 @@
 import { HStack, Icon, Skeleton, Td, Text, Tooltip, Tr } from "@chakra-ui/react"
-import { Info } from "@phosphor-icons/react/Info"
-import { Question } from "@phosphor-icons/react/Question"
 import useTokenData from "hooks/useTokenData"
+import { PiInfo } from "react-icons/pi"
+import { PiQuestion } from "react-icons/pi"
 import { GUILD_FEE_PERCENTAGE, NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { formatUnits } from "viem"
 import { CHAIN_CONFIG, Chain } from "wagmiConfig/chains"
@@ -120,7 +120,7 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
               hasArrow
               label="You will pay no more than this, including slippage"
             >
-              <Icon as={Question} boxSize={4} color="gray" />
+              <Icon as={PiQuestion} boxSize={4} color="gray" />
             </Tooltip>
           </HStack>
         </Td>
@@ -154,7 +154,7 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
               placement="top"
               hasArrow
             >
-              <Icon as={Info} />
+              <Icon as={PiInfo} />
             </Tooltip>
           </HStack>
         </Td>

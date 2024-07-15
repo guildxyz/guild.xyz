@@ -12,12 +12,12 @@ import {
   Tooltip,
 } from "@chakra-ui/react"
 import { consts } from "@guildxyz/types"
-import { Question } from "@phosphor-icons/react/Question"
 import Button from "components/common/Button"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { useCallback, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
+import { PiQuestion } from "react-icons/pi"
 import ChainPicker from "requirements/common/ChainPicker"
 import MinMaxAmount from "requirements/common/MinMaxAmount"
 import TokenPicker from "requirements/common/TokenPicker"
@@ -250,7 +250,7 @@ const UniswapForm = ({
               </Text>
             }
           >
-            <Icon as={Question} boxSize={4} />
+            <Icon as={PiQuestion} boxSize={4} />
           </Tooltip>
         </FormLabel>
 

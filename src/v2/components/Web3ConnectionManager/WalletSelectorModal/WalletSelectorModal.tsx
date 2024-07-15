@@ -18,10 +18,10 @@ import {
 import { useErrorToast } from "@/components/ui/hooks/useErrorToast"
 import { usePrevious } from "@/hooks/usePrevious"
 import { useUserPublic } from "@/hooks/useUserPublic"
-import { ArrowSquareOut } from "@phosphor-icons/react/dist/ssr/ArrowSquareOut"
 import useSetKeyPair from "hooks/useSetKeyPair"
 import { useAtom, useSetAtom } from "jotai"
 import { useEffect } from "react"
+import { PiArrowSquareOut } from "react-icons/pi"
 import { type Connector, useAccount, useConnect } from "wagmi"
 import { COINBASE_INJECTED_WALLET_ID, COINBASE_WALLET_SDK_ID } from "wagmiConfig"
 import AccountButton from "./components/AccountButton"
@@ -263,7 +263,7 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
                   })}
                 >
                   Learn more
-                  <ArrowSquareOut />
+                  <PiArrowSquareOut />
                 </a>
               </p>
 

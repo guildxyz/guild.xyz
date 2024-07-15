@@ -1,5 +1,4 @@
 import { Icon, Text } from "@chakra-ui/react"
-import { DiscordLogo } from "@phosphor-icons/react/DiscordLogo"
 import ConnectRequirementPlatformButton from "components/[guild]/Requirements/components/ConnectRequirementPlatformButton"
 import DataBlockWithDate from "components/[guild]/Requirements/components/DataBlockWithDate"
 import Requirement, {
@@ -8,6 +7,7 @@ import Requirement, {
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import DataBlock from "components/common/DataBlock"
 import useServerData from "hooks/useServerData"
+import { PiDiscordLogo } from "react-icons/pi"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 
 const DiscordRequirement = (props: RequirementProps) => {
@@ -32,7 +32,7 @@ const DiscordRequirement = (props: RequirementProps) => {
 
   return (
     <Requirement
-      image={serverIcon ?? <Icon as={DiscordLogo} boxSize={6} />}
+      image={serverIcon ?? <Icon as={PiDiscordLogo} boxSize={6} />}
       footer={<ConnectRequirementPlatformButton />}
       {...props}
     >

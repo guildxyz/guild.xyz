@@ -1,7 +1,7 @@
 import { Alert, AlertIcon, HStack, IconButton, Text } from "@chakra-ui/react"
-import { X } from "@phosphor-icons/react/X"
 import { useRouter } from "next/router"
 import { PropsWithChildren } from "react"
+import { PiX } from "react-icons/pi"
 
 const IGNORED_PATHS = ["/", "/oauth", "/oauth-result"]
 
@@ -35,7 +35,7 @@ const InfoBanner = ({
           <IconButton
             aria-label="Close"
             variant="ghost"
-            icon={<X />}
+            icon={<PiX />}
             size="xs"
             borderRadius="full"
             onClick={onClose}

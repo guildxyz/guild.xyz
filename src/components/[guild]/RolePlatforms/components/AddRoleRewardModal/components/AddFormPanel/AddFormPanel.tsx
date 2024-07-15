@@ -1,12 +1,12 @@
 import { Stack } from "@chakra-ui/react"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { ArrowRight } from "@phosphor-icons/react/ArrowRight"
 import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hooks/useAddRewardDiscardAlert"
 import CreateFormForm from "components/[guild]/CreateFormModal/components/CreateFormForm"
 import useCreateForm from "components/[guild]/CreateFormModal/hooks/useCreateForm"
 import { FormCreationSchema } from "components/[guild]/CreateFormModal/schemas"
 import Button from "components/common/Button"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
+import { PiArrowRight } from "react-icons/pi"
 import { AddRewardPanelProps } from "rewards"
 import { PlatformGuildData, PlatformType } from "types"
 import { uuidv7 } from "uuidv7"
@@ -66,7 +66,7 @@ const AddFormPanel = ({ onAdd }: AddRewardPanelProps) => {
           <CreateFormForm />
           <Button
             colorScheme="green"
-            rightIcon={<ArrowRight />}
+            rightIcon={<PiArrowRight />}
             w="max-content"
             ml="auto"
             onClick={methods.handleSubmit(onSubmit, console.error)}

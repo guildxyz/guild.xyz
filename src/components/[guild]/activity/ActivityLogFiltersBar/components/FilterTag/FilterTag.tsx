@@ -15,13 +15,13 @@ import * as combobox from "@zag-js/combobox"
 import { normalizeProps, useMachine } from "@zag-js/react"
 import ActivityLogRoleTag from "../../../ActivityLogAction/components/ActivityLogRoleTag"
 
-import { Warning } from "@phosphor-icons/react/Warning"
-import { X } from "@phosphor-icons/react/X"
 import FormTag from "components/[guild]/activity/ActivityLogAction/components/FormTag"
 import GuildTag from "components/[guild]/activity/ActivityLogAction/components/GuildTag"
 import { useActivityLog } from "components/[guild]/activity/ActivityLogContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { PropsWithChildren, useEffect, useState } from "react"
+import { PiWarning } from "react-icons/pi"
+import { PiX } from "react-icons/pi"
 import { PlatformName, PlatformType } from "types"
 import capitalize from "utils/capitalize"
 import fetcher from "utils/fetcher"
@@ -180,7 +180,7 @@ const FilterTag = ({
         <HStack {...controlProps}>
           {inputError && (
             <Tooltip label={inputError} placement="top" hasArrow>
-              <Icon as={Warning} color="red.500" boxSize={3} />
+              <Icon as={PiWarning} color="red.500" boxSize={3} />
             </Tooltip>
           )}
 
@@ -296,7 +296,7 @@ const FilterTag = ({
             top={1}
             right={1}
             aria-label="Remove filter"
-            icon={<X />}
+            icon={<PiX />}
             size="xs"
             boxSize={4}
             minW={4}

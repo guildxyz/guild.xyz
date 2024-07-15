@@ -1,5 +1,4 @@
 import { JoinJob } from "@guildxyz/types"
-import { SealCheck } from "@phosphor-icons/react/SealCheck"
 import { GUILD_PIN_MAINTENANCE } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPin/MintGuildPin"
 import { useMintGuildPinContext } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -8,6 +7,7 @@ import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
 import { useToastWithButton, useToastWithTweetButton } from "hooks/useToast"
 import { useRouter } from "next/router"
 import { useState } from "react"
+import { PiSealCheck } from "react-icons/pi"
 import useMembershipUpdate from "./useMembershipUpdate"
 
 const useJoin = ({ onSuccess, onError }: UseSubmitOptions<JoinJob>) => {
@@ -44,7 +44,7 @@ const useJoin = ({ onSuccess, onError }: UseSubmitOptions<JoinJob>) => {
             title: "Successfully joined guild",
             description: "Let others know as well by minting it onchain",
             buttonProps: {
-              leftIcon: <SealCheck weight="fill" />,
+              leftIcon: <PiSealCheck weight="fill" />,
               children: "Mint Guild Pin",
               onClick: onOpen,
             },

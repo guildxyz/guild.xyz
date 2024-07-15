@@ -9,10 +9,10 @@ import {
   VStack,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { DownloadSimple } from "@phosphor-icons/react/DownloadSimple"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import { env } from "env"
+import { PiDownloadSimple } from "react-icons/pi"
 import GuildGhost from "static/avatars/ghost.svg"
 import useSWRImmutable from "swr/immutable"
 import convertSVGToPNG from "utils/convertSVGToPNG"
@@ -117,7 +117,7 @@ const DownloadGuildPinImage = ({ pinUrl }: { pinUrl: string }): JSX.Element => {
       color="white"
     >
       <VStack>
-        <Icon as={DownloadSimple} boxSize={8} />
+        <Icon as={PiDownloadSimple} boxSize={8} />
         <Text as="span" fontWeight="semibold" fontSize="sm">
           Download PNG
         </Text>

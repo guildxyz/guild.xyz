@@ -10,11 +10,11 @@ import {
   SimpleGrid,
 } from "@chakra-ui/react"
 import { SocialLinks as SocialLinksType } from "@guildxyz/types"
-import { Plus } from "@phosphor-icons/react/Plus"
 import SocialIcon from "components/[guild]/SocialIcon"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import { useFormContext, useWatch } from "react-hook-form"
+import { PiPlus } from "react-icons/pi"
 import { SelectOption, SocialLinkKey, supportedSocialLinks } from "types"
 import capitalize from "utils/capitalize"
 import { z } from "zod"
@@ -113,7 +113,7 @@ const SocialLinks = (): JSX.Element => {
           placeholder="Add more"
           value=""
           components={{
-            DropdownIndicator: () => <Icon as={Plus} pr={2} boxSize={6} />,
+            DropdownIndicator: () => <Icon as={PiPlus} pr={2} boxSize={6} />,
           }}
           size="lg"
         />

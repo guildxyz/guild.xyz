@@ -1,5 +1,5 @@
 import { IconButton, IconButtonProps } from "@chakra-ui/react"
-import { X } from "@phosphor-icons/react/X"
+import { PiX } from "react-icons/pi"
 
 const RemoveButton = (
   props: Omit<
@@ -9,7 +9,7 @@ const RemoveButton = (
 ) => (
   <IconButton
     aria-label="Remove"
-    icon={<X />}
+    icon={<PiX />}
     rounded="full"
     boxSize={5}
     minW={5}

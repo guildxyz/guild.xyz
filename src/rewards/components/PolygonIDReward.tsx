@@ -1,6 +1,4 @@
 import { Icon, Spinner, Tooltip } from "@chakra-ui/react"
-import { ArrowSquareIn } from "@phosphor-icons/react/ArrowSquareIn"
-import { LockSimple } from "@phosphor-icons/react/LockSimple"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import { RewardIcon } from "components/[guild]/RoleCard/components/Reward"
 import { RewardDisplay } from "components/[guild]/RoleCard/components/RewardDisplay"
@@ -11,6 +9,8 @@ import useMembership, {
   useRoleMembership,
 } from "components/explorer/hooks/useMembership"
 import { useMemo } from "react"
+import { PiArrowSquareIn } from "react-icons/pi"
+import { PiLockSimple } from "react-icons/pi"
 import rewards from "rewards"
 import { useMintPolygonIDProofContext } from "rewards/PolygonID/components/MintPolygonIDProofProvider"
 import useConnectedDID from "rewards/PolygonID/hooks/useConnectedDID"
@@ -47,7 +47,7 @@ const PolygonIDReward = ({ platform, withMotionImg }: RewardProps) => {
       return {
         tooltipLabel: (
           <>
-            <Icon as={LockSimple} display="inline" mb="-2px" mr="1" />
+            <Icon as={PiLockSimple} display="inline" mb="-2px" mr="1" />
             Join guild to check access
           </>
         ),
@@ -93,7 +93,7 @@ const PolygonIDReward = ({ platform, withMotionImg }: RewardProps) => {
               isLoading || isValidating ? (
                 <Spinner boxSize="1em" />
               ) : (
-                <ArrowSquareIn />
+                <PiArrowSquareIn />
               )
             }
             iconSpacing="1"

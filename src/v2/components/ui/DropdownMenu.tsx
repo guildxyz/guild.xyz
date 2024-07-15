@@ -1,9 +1,6 @@
 "use client"
 
 import { cn } from "@/lib/utils"
-import { CaretRight } from "@phosphor-icons/react/dist/ssr/CaretRight"
-import { Check } from "@phosphor-icons/react/dist/ssr/Check"
-import { Dot } from "@phosphor-icons/react/dist/ssr/Dot"
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu"
 import {
   ComponentPropsWithoutRef,
@@ -11,6 +8,9 @@ import {
   HTMLAttributes,
   forwardRef,
 } from "react"
+import { PiCaretRight } from "react-icons/pi"
+import { PiCheck } from "react-icons/pi"
+import { PiDot } from "react-icons/pi"
 
 const DropdownMenu = DropdownMenuPrimitive.Root
 
@@ -40,7 +40,7 @@ const DropdownMenuSubTrigger = forwardRef<
     {...props}
   >
     {children}
-    <CaretRight weight="bold" className="ml-auto h-4 w-4" />
+    <PiCaretRight weight="bold" className="ml-auto h-4 w-4" />
   </DropdownMenuPrimitive.SubTrigger>
 ))
 DropdownMenuSubTrigger.displayName = DropdownMenuPrimitive.SubTrigger.displayName
@@ -112,7 +112,7 @@ const DropdownMenuCheckboxItem = forwardRef<
   >
     <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
       <DropdownMenuPrimitive.ItemIndicator>
-        <Check weight="bold" className="h-4 w-4" />
+        <PiCheck weight="bold" className="h-4 w-4" />
       </DropdownMenuPrimitive.ItemIndicator>
     </span>
     {children}
@@ -134,7 +134,7 @@ const DropdownMenuRadioItem = forwardRef<
   >
     <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
       <DropdownMenuPrimitive.ItemIndicator>
-        <Dot weight="bold" className="h-4 w-4 fill-current" />
+        <PiDot weight="bold" className="h-4 w-4 fill-current" />
       </DropdownMenuPrimitive.ItemIndicator>
     </span>
     {children}

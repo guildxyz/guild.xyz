@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/Tooltip"
 import { DisclosureState } from "@/hooks/useDisclosure"
 import { cn } from "@/lib/utils"
-import { LinkBreak } from "@phosphor-icons/react/dist/ssr/LinkBreak"
+import { PiLinkBreak } from "react-icons/pi"
 
 const DisconnectAccountButton = ({
   onConfirm,
@@ -44,7 +44,7 @@ const DisconnectAccountButton = ({
             aria-label="Disconnect account"
             onClick={onOpen}
           >
-            <LinkBreak weight="bold" className="h-3 w-3" />
+            <PiLinkBreak weight="bold" className="h-3 w-3" />
           </Button>
         </TooltipTrigger>
         <TooltipContent>

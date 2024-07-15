@@ -1,10 +1,10 @@
 import { Icon } from "@chakra-ui/react"
-import { Robot } from "@phosphor-icons/react/Robot"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import DataBlock from "components/common/DataBlock"
+import { PiRobot } from "react-icons/pi"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 import CompleteCaptcha from "./components/CompleteCaptcha"
 
@@ -16,7 +16,7 @@ const CaptchaRequirement = (props: RequirementProps): JSX.Element => {
 
   return (
     <Requirement
-      image={<Icon as={Robot} boxSize={6} />}
+      image={<Icon as={PiRobot} boxSize={6} />}
       footer={<CompleteCaptcha />}
       {...props}
     >

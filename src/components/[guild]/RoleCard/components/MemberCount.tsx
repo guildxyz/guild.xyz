@@ -17,13 +17,13 @@ import {
   TagRightIcon,
   Text,
 } from "@chakra-ui/react"
-import { Users } from "@phosphor-icons/react/Users"
 import { POPOVER_HEADER_STYLES } from "components/[guild]/Requirements/components/RequirementAccessIndicator"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useUser from "components/[guild]/hooks/useUser"
 import useActiveStatusUpdates from "hooks/useActiveStatusUpdates"
 import { PropsWithChildren } from "react"
+import { PiUsers } from "react-icons/pi"
 import MemberCountLastSyncTooltip, {
   SyncRoleButton,
 } from "./MemberCountLastSyncTooltip"
@@ -50,7 +50,7 @@ const MemberCount = ({
       size={size}
       {...rest}
     >
-      <TagLeftIcon as={Users} boxSize={iconSize} mr="1.5" />
+      <TagLeftIcon as={PiUsers} boxSize={iconSize} mr="1.5" />
       <TagLabel mb="-1px">
         {new Intl.NumberFormat("en", { notation: "compact" }).format(
           memberCount ?? 0

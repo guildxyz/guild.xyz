@@ -12,9 +12,9 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
-import { CaretDown } from "@phosphor-icons/react/CaretDown"
-import { Plus } from "@phosphor-icons/react/Plus"
 import CreateCampaignModal from "components/[guild]/CreateCampaignModal"
+import { PiCaretDown } from "react-icons/pi"
+import { PiPlus } from "react-icons/pi"
 import AddSolutionsButton from "solutions/components/AddSolutionsButton"
 import { useIsTabsStuck } from "./Tabs"
 import { useThemeContext } from "./ThemeContext"
@@ -32,7 +32,7 @@ const AddRewardAndCampaign = () => {
         <Menu placement="bottom-end" autoSelect={false}>
           <MenuButton
             as={IconButton}
-            icon={<CaretDown />}
+            icon={<PiCaretDown />}
             size="sm"
             variant="ghost"
             borderTopLeftRadius="0"
@@ -51,7 +51,7 @@ const AddRewardAndCampaign = () => {
             >
               <MenuItem
                 onClick={onOpen}
-                icon={<Icon as={Plus} mt="1" />}
+                icon={<Icon as={PiPlus} mt="1" />}
                 alignItems="start"
                 py={4}
               >

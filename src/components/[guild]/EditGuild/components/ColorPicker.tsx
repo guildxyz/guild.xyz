@@ -8,13 +8,13 @@ import {
   VStack,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { Palette } from "@phosphor-icons/react/Palette"
 import Color from "color"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import useDebouncedState from "hooks/useDebouncedState"
 import { useEffect, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
+import { PiPalette } from "react-icons/pi"
 
 type Props = {
   fieldName: string
@@ -82,7 +82,7 @@ const ColorPicker = ({ fieldName }: Props): JSX.Element => {
               )}
             />
             <Icon
-              as={Palette}
+              as={PiPalette}
               pos="absolute"
               pointerEvents={"none"}
               color={isIconLight ? "whiteAlpha.800" : "blackAlpha.800"}

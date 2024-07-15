@@ -4,13 +4,13 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
-import { Coin } from "@phosphor-icons/react/Coin"
-import { Pencil } from "@phosphor-icons/react/Pencil"
-import { TrashSimple } from "@phosphor-icons/react/TrashSimple"
-import { Wallet } from "@phosphor-icons/react/Wallet"
 import EditRewardAvailabilityMenuItem from "components/[guild]/AccessHub/components/EditRewardAvailabilityMenuItem"
 import PlatformCardMenu from "components/[guild]/RolePlatforms/components/PlatformCard/components/PlatformCardMenu"
 import useToast from "hooks/useToast"
+import { PiCoin } from "react-icons/pi"
+import { PiPencil } from "react-icons/pi"
+import { PiTrashSimple } from "react-icons/pi"
+import { PiWallet } from "react-icons/pi"
 import { GuildPlatform } from "types"
 import EditTokenModal from "./EditTokenModal"
 import FundPoolModal from "./FundPoolModal"
@@ -53,21 +53,25 @@ const TokenRewardCardEditMenu = ({
   return (
     <>
       <PlatformCardMenu>
-        <MenuItem icon={<Pencil />} onClick={editOnOpen}>
+        <MenuItem icon={<PiPencil />} onClick={editOnOpen}>
           Edit reward
         </MenuItem>
         <EditRewardAvailabilityMenuItem
           platformGuildId={guildPlatform.platformGuildId}
         />
         <MenuDivider />
-        <MenuItem icon={<Coin />} onClick={fundOnOpen}>
+        <MenuItem icon={<PiCoin />} onClick={fundOnOpen}>
           Fund pool
         </MenuItem>
-        <MenuItem icon={<Wallet />} onClick={withdrawOnOpen}>
+        <MenuItem icon={<PiWallet />} onClick={withdrawOnOpen}>
           Withdraw from pool
         </MenuItem>
         <MenuDivider />
-        <MenuItem icon={<TrashSimple />} onClick={deleteOnOpen} color={removeColor}>
+        <MenuItem
+          icon={<PiTrashSimple />}
+          onClick={deleteOnOpen}
+          color={removeColor}
+        >
           Remove reward
         </MenuItem>
       </PlatformCardMenu>

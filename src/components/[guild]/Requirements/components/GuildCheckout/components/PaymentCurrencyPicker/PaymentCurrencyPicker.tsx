@@ -11,11 +11,11 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { ArrowSquareOut } from "@phosphor-icons/react/ArrowSquareOut"
-import { CaretDown } from "@phosphor-icons/react/CaretDown"
 import Button from "components/common/Button"
 import { useSetAtom } from "jotai"
 import { useEffect } from "react"
+import { PiArrowSquareOut } from "react-icons/pi"
+import { PiCaretDown } from "react-icons/pi"
 import { SUPPORTED_CURRENCIES } from "utils/guildCheckout/constants"
 import shortenHex from "utils/shortenHex"
 import { useAccount } from "wagmi"
@@ -97,7 +97,7 @@ const PaymentCurrencyPicker = (): JSX.Element => {
                   </HStack>
                 )}
                 <Icon
-                  as={CaretDown}
+                  as={PiCaretDown}
                   boxSize={4}
                   transform={isOpen && "rotate(-180deg)"}
                   transition="transform .3s"
@@ -147,7 +147,7 @@ const PaymentCurrencyPicker = (): JSX.Element => {
                   <Button
                     size="sm"
                     variant="link"
-                    rightIcon={<Icon as={ArrowSquareOut} />}
+                    rightIcon={<Icon as={PiArrowSquareOut} />}
                     onClick={() => setIsAccountModalOpen(true)}
                   >
                     {shortenHex(address, 3)}

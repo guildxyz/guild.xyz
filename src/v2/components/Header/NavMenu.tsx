@@ -1,6 +1,7 @@
 "use client"
 
 import { cn } from "@/lib/utils"
+import { AnchorHTMLAttributes, ReactNode } from "Pireact"
 import {
   Book,
   Code,
@@ -16,11 +17,10 @@ import {
   Shield,
   UsersThree,
   XLogo,
-} from "@phosphor-icons/react/dist/ssr"
+} from "Pireact-icons/pi"
 import dynamic from "next/dynamic"
 import Link, { LinkProps } from "next/link"
 import { usePathname } from "next/navigation"
-import { AnchorHTMLAttributes, ReactNode } from "react"
 import { ThemeToggle } from "../ThemeToggle"
 import { Button } from "../ui/Button"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/Popover"

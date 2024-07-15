@@ -1,5 +1,5 @@
 import { Center, useColorModeValue } from "@chakra-ui/react"
-import { Question } from "@phosphor-icons/react/Question"
+import { PiQuestion } from "react-icons/pi"
 import { RewardDisplay } from "./RewardDisplay"
 
 const HiddenRewards = () => {
@@ -14,7 +14,7 @@ const HiddenRewards = () => {
           backgroundColor={rewardImageBgColor}
           borderRadius={"full"}
         >
-          <Question />
+          <PiQuestion />
         </Center>
       }
     />

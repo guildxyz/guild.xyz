@@ -1,8 +1,8 @@
-import { Buildings } from "@phosphor-icons/react/Buildings"
+import { PiBuildings } from "react-icons/pi"
 import { PlatformAsRewardRestrictions, RewardData } from "rewards/types"
 
 export const gatherData = {
-  icon: Buildings,
+  icon: PiBuildings,
   imageUrl: "/platforms/gather.png",
   name: "Gather",
   colorScheme: "GATHER_TOWN",

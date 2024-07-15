@@ -10,9 +10,9 @@ import {
   PopoverTrigger,
   Portal,
 } from "@chakra-ui/react"
-import { Chat } from "@phosphor-icons/react/Chat"
 import { IpGeodata } from "app/api/ip-geodata/route"
 import Button from "components/common/Button"
+import { PiChat } from "react-icons/pi"
 import useSWRImmutable from "swr/immutable"
 import { triggerChat } from "utils/intercom"
 
@@ -93,7 +93,7 @@ export const GeogatedCountryPopover = ({ children, isDisabled }) => {
               opacity="0.8"
             >
               reach out to us
-              <Icon as={Chat} ml="1" mb="-0.5" />
+              <Icon as={PiChat} ml="1" mb="-0.5" />
             </Button>
           </PopoverBody>
         </PopoverContent>

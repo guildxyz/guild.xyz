@@ -7,11 +7,11 @@ import {
   SimpleGrid,
   Stack,
 } from "@chakra-ui/react"
-import { StarHalf } from "@phosphor-icons/react/StarHalf"
 import Card from "components/common/Card"
 import ClientOnly from "components/common/ClientOnly"
 import useMembership from "components/explorer/hooks/useMembership"
 import dynamic from "next/dynamic"
+import { PiStarHalf } from "react-icons/pi"
 import PointsRewardCard from "rewards/Points/PointsRewardCard"
 import { TokenRewardCard } from "rewards/Token/TokenRewardCard"
 import { PlatformType } from "types"
@@ -132,7 +132,13 @@ const AccessHub = (): JSX.Element => {
             !accessedGuildTokens?.length && (
               <Card>
                 <Alert status="info" h="full">
-                  <Icon as={StarHalf} boxSize="5" mr="2" mt="1px" weight="regular" />
+                  <Icon
+                    as={PiStarHalf}
+                    boxSize="5"
+                    mr="2"
+                    mt="1px"
+                    weight="regular"
+                  />
                   <Stack>
                     <AlertTitle>
                       {!group ? "No accessed reward" : "No rewards yet"}

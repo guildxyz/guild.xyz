@@ -7,8 +7,8 @@ import {
   forwardRef,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { DotsThreeVertical } from "@phosphor-icons/react/DotsThreeVertical"
 import GuildAvatar from "components/common/GuildAvatar"
+import { PiDotsThreeVertical } from "react-icons/pi"
 import useSWRImmutable from "swr/immutable"
 import shortenHex from "utils/shortenHex"
 import { useActivityLog } from "../../ActivityLogContext"
@@ -90,7 +90,7 @@ const ClickableUserTag = ({ userId }: ClickableUserTagProps): JSX.Element => {
         </>
       }
     >
-      <UserTag address={address} cursor="pointer" rightIcon={DotsThreeVertical} />
+      <UserTag address={address} cursor="pointer" rightIcon={PiDotsThreeVertical} />
     </ClickableTagPopover>
   )
 }

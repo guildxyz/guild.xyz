@@ -1,5 +1,4 @@
 import { Tooltip } from "@chakra-ui/react"
-import { ArrowRight } from "@phosphor-icons/react/ArrowRight"
 import { RewardIcon } from "components/[guild]/RoleCard/components/Reward"
 import { RewardDisplay } from "components/[guild]/RoleCard/components/RewardDisplay"
 import { RewardProps } from "components/[guild]/RoleCard/components/types"
@@ -9,6 +8,7 @@ import Button from "components/common/Button"
 import { useClaimedReward } from "hooks/useClaimedReward"
 import dynamic from "next/dynamic"
 import Link from "next/link"
+import { PiArrowRight } from "react-icons/pi"
 import rewards from "rewards"
 import { claimTextButtonTooltipLabel } from "rewards/SecretText/TextCardButton"
 import { PlatformType } from "types"
@@ -71,7 +71,7 @@ const PoapReward = ({ platform: platform, withMotionImg }: RewardProps) => {
                 href={`/${urlName}/claim-poap/${platformGuildData.fancyId}`}
                 variant="link"
                 colorScheme="primary"
-                rightIcon={<ArrowRight />}
+                rightIcon={<PiArrowRight />}
                 iconSpacing="1"
                 maxW="full"
                 isDisabled={!isAvailable}

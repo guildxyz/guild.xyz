@@ -11,10 +11,10 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
-import { SignIn } from "@phosphor-icons/react/SignIn"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import { useSetAtom } from "jotai"
+import { PiSignIn } from "react-icons/pi"
 import useGuildPermission from "./hooks/useGuildPermission"
 import useUser from "./hooks/useUser"
 
@@ -49,7 +49,7 @@ const NoPermissionToPageFallback = ({ children }) => {
           </Stack>
           <Spacer />
           <Button
-            leftIcon={<SignIn />}
+            leftIcon={<PiSignIn />}
             colorScheme="white"
             onClick={() => setIsWalletSelectorModalOpen(true)}
           >

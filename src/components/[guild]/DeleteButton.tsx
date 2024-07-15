@@ -1,6 +1,6 @@
 import { ButtonProps, Icon, IconButton, Tooltip } from "@chakra-ui/react"
-import { Trash } from "@phosphor-icons/react/Trash"
 import { PropsWithChildren } from "react"
+import { PiTrash } from "react-icons/pi"
 
 type Props = {
   label: string
@@ -11,7 +11,7 @@ const DeleteButton = ({ label, onClick }: PropsWithChildren<Props>): JSX.Element
   <Tooltip label={label}>
     <IconButton
       aria-label={label}
-      icon={<Icon as={Trash} boxSize="1.1em" weight="bold" />}
+      icon={<Icon as={PiTrash} boxSize="1.1em" weight="bold" />}
       colorScheme="red"
       variant={"ghost"}
       minW={"44px"}

@@ -1,12 +1,12 @@
 import { walletSelectorModalAtom } from "@/components/Providers/atoms"
 import { Center, Collapse, Img, useColorModeValue } from "@chakra-ui/react"
-import { SignIn } from "@phosphor-icons/react/SignIn"
-import { X } from "@phosphor-icons/react/X"
 import ActionCard from "components/common/ActionCard"
 import Button from "components/common/Button"
 import { LinkButton } from "components/common/LinkMenuItem"
 import useToast from "hooks/useToast"
 import { atom, useAtom, useSetAtom } from "jotai"
+import { PiSignIn } from "react-icons/pi"
+import { PiX } from "react-icons/pi"
 import { useAccount } from "wagmi"
 import useMembershipUpdate from "../JoinModal/hooks/useMembershipUpdate"
 import useGuild from "../hooks/useGuild"
@@ -44,7 +44,7 @@ const LeaderboardAirdropFallbackCard = ({ guildPlatform }) => {
               borderRadius="full"
               boxSize="8"
             >
-              <X />
+              <PiX />
             </Center>
           }
           title={`You're not eligible to claim ${guildPlatform.platformGuildData.name}`}
@@ -101,7 +101,7 @@ const LeaderboardAirdropFallbackCard = ({ guildPlatform }) => {
             w={{ base: "full", sm: "auto" }}
             flexShrink="0"
             colorScheme="indigo"
-            leftIcon={<SignIn />}
+            leftIcon={<PiSignIn />}
             onClick={() => setIsWalletSelectorModalOpen(true)}
           >
             Sign in

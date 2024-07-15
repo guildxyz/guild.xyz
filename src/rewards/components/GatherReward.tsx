@@ -1,6 +1,4 @@
 import { Icon, Spinner, Text, Tooltip } from "@chakra-ui/react"
-import { ArrowSquareOut } from "@phosphor-icons/react/ArrowSquareOut"
-import { LockSimple } from "@phosphor-icons/react/LockSimple"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import { RewardIcon } from "components/[guild]/RoleCard/components/Reward"
 import { RewardDisplay } from "components/[guild]/RoleCard/components/RewardDisplay"
@@ -10,6 +8,8 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import { useMemo } from "react"
+import { PiArrowSquareOut } from "react-icons/pi"
+import { PiLockSimple } from "react-icons/pi"
 import rewards from "rewards"
 import ClaimGatherModal from "rewards/Gather/ClaimGatherModal"
 import useClaimGather from "rewards/Gather/hooks/useClaimGather"
@@ -59,7 +59,7 @@ const GatherReward = ({ platform, withMotionImg }: RewardProps) => {
       return {
         tooltipLabel: (
           <>
-            <Icon as={LockSimple} display="inline" mb="-2px" mr="1" />
+            <Icon as={PiLockSimple} display="inline" mb="-2px" mr="1" />
             Join guild to check access
           </>
         ),
@@ -105,7 +105,7 @@ const GatherReward = ({ platform, withMotionImg }: RewardProps) => {
                     target="_blank"
                     href={spaceUrl}
                     iconSpacing={1}
-                    rightIcon={<ArrowSquareOut />}
+                    rightIcon={<PiArrowSquareOut />}
                     maxW="full"
                   >
                     {platformGuildData.name ??
@@ -116,7 +116,7 @@ const GatherReward = ({ platform, withMotionImg }: RewardProps) => {
                     variant="link"
                     maxW="full"
                     iconSpacing={1}
-                    rightIcon={<ArrowSquareOut />}
+                    rightIcon={<PiArrowSquareOut />}
                     isDisabled={state.buttonProps.isDisabled}
                     onClick={onOpen}
                   >

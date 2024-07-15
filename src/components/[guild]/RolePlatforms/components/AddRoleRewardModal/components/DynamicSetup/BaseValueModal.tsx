@@ -8,13 +8,13 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react"
-import { CaretRight } from "@phosphor-icons/react/CaretRight"
 import LogicDivider from "components/[guild]/LogicDivider"
 import { useRequirementHandlerContext } from "components/[guild]/RequirementHandlerContext"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import DisplayCard from "components/common/DisplayCard"
 import { Modal } from "components/common/Modal"
 import AddRequirement from "components/create-guild/Requirements/components/AddRequirement"
+import { PiCaretRight } from "react-icons/pi"
 import { REQUIREMENT_PROVIDED_VALUES } from "requirements/requirementProvidedValues"
 
 type Props = {
@@ -78,7 +78,7 @@ const BaseValueModal = ({ isOpen, onClose, onSelect }: Props) => {
                           <RequirementDisplayComponent
                             requirement={req}
                             dynamicDisplay
-                            rightElement={<CaretRight />}
+                            rightElement={<PiCaretRight />}
                           />
                         </DisplayCard>
                       ))}

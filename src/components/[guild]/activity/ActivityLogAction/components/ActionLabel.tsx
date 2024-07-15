@@ -1,6 +1,6 @@
 import { Center, Icon, Text, Wrap } from "@chakra-ui/react"
-import { ArrowLeft } from "@phosphor-icons/react/ArrowLeft"
-import { ArrowRight } from "@phosphor-icons/react/ArrowRight"
+import { PiArrowLeft } from "react-icons/pi"
+import { PiArrowRight } from "react-icons/pi"
 import rewards from "rewards"
 import capitalize from "utils/capitalize"
 import { useActivityLog } from "../../ActivityLogContext"
@@ -127,7 +127,7 @@ const ActionLabel = (): JSX.Element => {
                 {!parentId && (
                   <>
                     <Center h={6}>
-                      <Icon as={ArrowLeft} />
+                      <Icon as={PiArrowLeft} />
                     </Center>
                     <ClickableUserTag userId={ids.user} />
                   </>
@@ -145,7 +145,7 @@ const ActionLabel = (): JSX.Element => {
                 {!parentId && (
                   <>
                     <Center h={6}>
-                      <Icon as={ArrowRight} />
+                      <Icon as={PiArrowRight} />
                     </Center>
                     <ClickableUserTag userId={ids.user} />
                   </>

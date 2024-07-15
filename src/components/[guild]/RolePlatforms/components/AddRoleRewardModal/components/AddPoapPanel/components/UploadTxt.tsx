@@ -1,7 +1,7 @@
-import { File } from "@phosphor-icons/react/File"
 import Button from "components/common/Button"
 import useDropzone from "hooks/useDropzone"
 import { useFormContext } from "react-hook-form"
+import { PiFile } from "react-icons/pi"
 import { ImportPoapForm } from "../AddPoapPanel"
 import { INVALID_LINKS_ERROR, validatePoapLinks } from "./UploadMintLinks"
 
@@ -26,7 +26,7 @@ const UploadTxt = () => {
     },
   })
 
-  const parseTxt = (file: File) => {
+  const parseTxt = (file: PiFile) => {
     const fileReader = new FileReader()
     fileReader.onload = () => {
       clearErrors("texts")
@@ -47,7 +47,7 @@ const UploadTxt = () => {
     <Button
       {...getRootProps()}
       as="label"
-      leftIcon={<File />}
+      leftIcon={<PiFile />}
       h={10}
       maxW="max-content"
     >

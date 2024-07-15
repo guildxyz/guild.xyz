@@ -1,12 +1,12 @@
 import { Box, HStack, Icon, Spinner, Text, Tooltip } from "@chakra-ui/react"
-import { Question } from "@phosphor-icons/react/Question"
-import { Shield } from "@phosphor-icons/react/Shield"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Switch from "components/common/Switch"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useState } from "react"
+import { PiQuestion } from "react-icons/pi"
+import { PiShield } from "react-icons/pi"
 import { GuildPlatform, PlatformGuildData } from "types"
 import fetcher from "utils/fetcher"
 
@@ -88,7 +88,7 @@ const DiscordCaptchaSwitch = ({ serverId }: Props): JSX.Element => {
           {isLoading ? (
             <Spinner size="xs" boxSize="0.8em" mr={2} p={0} />
           ) : (
-            <Icon as={Shield} boxSize="0.8em" mr={2} />
+            <Icon as={PiShield} boxSize="0.8em" mr={2} />
           )}
           <Text as="span">Discord CAPTCHA</Text>
           <Tooltip
@@ -97,7 +97,7 @@ const DiscordCaptchaSwitch = ({ serverId }: Props): JSX.Element => {
             hasArrow
             placement="top"
           >
-            <Icon as={Question} color="gray" />
+            <Icon as={PiQuestion} color="gray" />
           </Tooltip>
         </HStack>
         <Switch

@@ -1,11 +1,11 @@
 import { Link, Text } from "@chakra-ui/react"
-import { ArrowSquareOut } from "@phosphor-icons/react/ArrowSquareOut"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import Button from "components/common/Button"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
+import { PiArrowSquareOut } from "react-icons/pi"
 import { APP_DETAILS } from "./Web3InboxForm"
 
 const Web3InboxRequirement = (props: RequirementProps) => {
@@ -29,7 +29,7 @@ const Web3InboxRequirement = (props: RequirementProps) => {
             <Button
               size="xs"
               colorScheme="WEB3INBOX"
-              rightIcon={<ArrowSquareOut />}
+              rightIcon={<PiArrowSquareOut />}
               iconSpacing={1}
             >
               Subscribe

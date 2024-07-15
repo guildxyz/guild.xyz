@@ -1,7 +1,5 @@
 import { Fade, HStack, Icon, Text, useDisclosure } from "@chakra-ui/react"
 import { Schemas } from "@guildxyz/types"
-import { ArrowSquareIn } from "@phosphor-icons/react/ArrowSquareIn"
-import { ListPlus } from "@phosphor-icons/react/ListPlus"
 import RequirementConnectButton from "components/[guild]/Requirements/components/ConnectRequirementPlatformButton"
 import Requirement, {
   RequirementProps,
@@ -12,6 +10,8 @@ import Button from "components/common/Button"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import useDebouncedState from "hooks/useDebouncedState"
 import { useState } from "react"
+import { PiArrowSquareIn } from "react-icons/pi"
+import { PiListPlus } from "react-icons/pi"
 import SearchableVirtualListModal from "requirements/common/SearchableVirtualListModal"
 import { isAddress } from "viem"
 
@@ -78,7 +78,7 @@ const AllowlistRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
 
   return (
     <Requirement
-      image={<Icon as={ListPlus} boxSize={6} />}
+      image={<Icon as={PiListPlus} boxSize={6} />}
       footer={
         isEmail ? (
           <HStack>
@@ -95,7 +95,7 @@ const AllowlistRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
       {hideAllowlist ? (
         `${isEmail ? "email " : ""}allowlist`
       ) : (
-        <Button variant="link" rightIcon={<ArrowSquareIn />} onClick={onOpen}>
+        <Button variant="link" rightIcon={<PiArrowSquareIn />} onClick={onOpen}>
           {`${isEmail ? "email " : ""}allowlist`}
         </Button>
       )}

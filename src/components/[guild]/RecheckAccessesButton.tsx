@@ -13,14 +13,14 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react"
-import { ArrowsClockwise } from "@phosphor-icons/react/ArrowsClockwise"
-import { Check } from "@phosphor-icons/react/Check"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
 import { useAtom } from "jotai"
 import { atomWithStorage } from "jotai/utils"
 import { useEffect, useMemo, useState } from "react"
+import { PiArrowsClockwise } from "react-icons/pi"
+import { PiCheck } from "react-icons/pi"
 import GetRewardsJoinStep from "./JoinModal/components/progress/GetRewardsJoinStep"
 import GetRolesJoinStep from "./JoinModal/components/progress/GetRolesJoinStep"
 import SatisfyRequirementsJoinStep from "./JoinModal/components/progress/SatisfyRequirementsJoinStep"
@@ -124,10 +124,10 @@ const RecheckAccessesButton = ({
           aria-label="Re-check accesses"
           icon={
             isFinished ? (
-              <Check />
+              <PiCheck />
             ) : (
               <Icon
-                as={ArrowsClockwise}
+                as={PiArrowsClockwise}
                 animation={shouldBeLoading ? "rotate 1s infinite linear" : undefined}
               />
             )

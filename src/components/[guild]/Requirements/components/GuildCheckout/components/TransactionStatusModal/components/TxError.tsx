@@ -1,6 +1,6 @@
 import { Center, Flex, Icon, ModalBody, ModalFooter } from "@chakra-ui/react"
-import { XCircle } from "@phosphor-icons/react/XCircle"
 import { PropsWithChildren } from "react"
+import { PiXCircle } from "react-icons/pi"
 import TransactionModalCloseButton from "./TransactionModalCloseButton"
 
 const TxError = ({ children }: PropsWithChildren<unknown>): JSX.Element => (
@@ -9,7 +9,7 @@ const TxError = ({ children }: PropsWithChildren<unknown>): JSX.Element => (
       <Flex direction="column">
         <Center mb={10}>
           <Icon
-            as={XCircle}
+            as={PiXCircle}
             boxSize={36}
             color="red.500"
             sx={{

@@ -1,13 +1,13 @@
 "use client"
 
 import { usePrevious } from "@/hooks/usePrevious"
-import { MagnifyingGlass } from "@phosphor-icons/react/MagnifyingGlass"
-import { PushPin } from "@phosphor-icons/react/PushPin"
-import { Sparkle } from "@phosphor-icons/react/Sparkle"
 import { ActiveSection } from "app/explorer/types"
 import useDebouncedState from "hooks/useDebouncedState"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
+import { PiMagnifyingGlass } from "react-icons/pi"
+import { PiPushPin } from "react-icons/pi"
+import { PiSparkle } from "react-icons/pi"
 import { Input } from "../../../v2/components/ui/Input"
 import { ToggleGroup, ToggleGroupItem } from "../../../v2/components/ui/ToggleGroup"
 import { smoothScrollTo } from "./StickyBar"
@@ -49,7 +49,7 @@ export const GuildSearchBar = () => {
         value={search}
       />
       <div className="absolute left-4 flex h-12 items-center justify-center">
-        <MagnifyingGlass className="text-muted-foreground" />
+        <PiMagnifyingGlass className="text-muted-foreground" />
       </div>
       <ToggleGroup
         type="single"
@@ -64,7 +64,7 @@ export const GuildSearchBar = () => {
           className="space-x-2"
           onClick={() => smoothScrollTo(ActiveSection.ExploreGuilds)}
         >
-          <PushPin />
+          <PiPushPin />
           <span>featured</span>
         </ToggleGroupItem>
         <ToggleGroupItem
@@ -72,7 +72,7 @@ export const GuildSearchBar = () => {
           className="space-x-2"
           onClick={() => smoothScrollTo(ActiveSection.ExploreGuilds)}
         >
-          <Sparkle />
+          <PiSparkle />
           <span>newest</span>
         </ToggleGroupItem>
       </ToggleGroup>

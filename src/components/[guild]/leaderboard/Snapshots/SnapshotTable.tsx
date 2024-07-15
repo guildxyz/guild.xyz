@@ -16,11 +16,11 @@ import {
   Tr,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { MagnifyingGlass } from "@phosphor-icons/react/MagnifyingGlass"
 import { useVirtualizer } from "@tanstack/react-virtual"
 import CopyableAddress from "components/common/CopyableAddress"
 import useDebouncedState from "hooks/useDebouncedState"
 import { useMemo, useRef, useState } from "react"
+import { PiMagnifyingGlass } from "react-icons/pi"
 
 type Props = {
   snapshotData: {
@@ -66,7 +66,7 @@ const SnapshotTable = ({ snapshotData, chakraProps }: Props) => {
     <Stack gap={2}>
       <InputGroup>
         <InputLeftElement>
-          <Icon boxSize={4} as={MagnifyingGlass} />
+          <Icon boxSize={4} as={PiMagnifyingGlass} />
         </InputLeftElement>
         <Input
           placeholder={"Search addresses"}

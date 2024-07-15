@@ -14,11 +14,11 @@ import {
   ModalOverlay,
   Stack,
 } from "@chakra-ui/react"
-import { Coin } from "@phosphor-icons/react/Coin"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
+import { PiCoin } from "react-icons/pi"
 import { paymentSupportedChains } from "utils/guildCheckout/constants"
 import { useChainId } from "wagmi"
 import { Chains } from "wagmiConfig/chains"
@@ -71,7 +71,7 @@ const BuyPass = () => {
         data-test="payment-requirement-buy-button"
         colorScheme="blue"
         size="sm"
-        leftIcon={<Icon as={Coin} />}
+        leftIcon={<Icon as={PiCoin} />}
         borderRadius="lg"
         fontWeight="medium"
         onClick={onClick}

@@ -7,7 +7,6 @@ import {
   Text,
   Tooltip,
 } from "@chakra-ui/react"
-import { Download } from "@phosphor-icons/react/Download"
 import MemberCount from "components/[guild]/RoleCard/components/MemberCount"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Card from "components/common/Card"
@@ -15,6 +14,7 @@ import CardMotionWrapper from "components/common/CardMotionWrapper"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign } from "hooks/useSubmit"
 import { atom, useAtom } from "jotai"
+import { PiDownload } from "react-icons/pi"
 import fetcher from "utils/fetcher"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 import { ExportData } from "../useExports"
@@ -87,7 +87,7 @@ const DownloadExportButton = ({ filename }) => {
 
   return (
     <Tooltip
-      label={isLoading ? "Download starting..." : "Download export"}
+      label={isLoading ? "PiDownload starting..." : "PiDownload export"}
       shouldWrapChildren
       hasArrow
     >
@@ -95,9 +95,9 @@ const DownloadExportButton = ({ filename }) => {
         variant="ghost"
         colorScheme="blue"
         h="10"
-        icon={<Download />}
+        icon={<PiDownload />}
         onClick={() => onSubmit()}
-        aria-label={"Download export"}
+        aria-label={"PiDownload export"}
         isLoading={isLoading}
       />
     </Tooltip>

@@ -1,8 +1,8 @@
 import { Icon } from "@chakra-ui/react"
-import { Warning } from "@phosphor-icons/react/Warning"
 import Requirement from "components/[guild]/Requirements/components/Requirement"
 import DataBlock from "components/common/DataBlock"
 import { PropsWithChildren } from "react"
+import { PiWarning } from "react-icons/pi"
 import RequirementBaseCard from "./RequirementBaseCard"
 
 type Props = {
@@ -14,7 +14,7 @@ const UnsupportedRequirementTypeCard = ({
   children,
 }: PropsWithChildren<Props>) => (
   <RequirementBaseCard>
-    <Requirement image={<Icon as={Warning} boxSize={5} color="orange.300" />}>
+    <Requirement image={<Icon as={PiWarning} boxSize={5} color="orange.300" />}>
       {`Unsupported requirement type: `}
       <DataBlock>{type}</DataBlock>
     </Requirement>

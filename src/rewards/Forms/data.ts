@@ -1,8 +1,8 @@
-import { PencilSimpleLine } from "@phosphor-icons/react/PencilSimpleLine"
+import { PiPencilSimpleLine } from "react-icons/pi"
 import { PlatformAsRewardRestrictions, RewardData } from "rewards/types"
 
 export const formData = {
-  icon: PencilSimpleLine,
+  icon: PiPencilSimpleLine,
   name: "Form",
   colorScheme: "primary",
   gatedEntity: "",

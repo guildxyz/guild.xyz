@@ -1,8 +1,8 @@
 import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import { ButtonProps } from "@chakra-ui/react"
-import { ArrowSquareOut } from "@phosphor-icons/react/ArrowSquareOut"
 import Button from "components/common/Button"
 import useColorPalette from "hooks/useColorPalette"
+import { PiArrowSquareOut } from "react-icons/pi"
 import { EventSourcesKey } from "types"
 
 type Props = {
@@ -47,7 +47,7 @@ const JoinEventButton = ({
       as="a"
       href={url}
       target="_blank"
-      rightIcon={<ArrowSquareOut />}
+      rightIcon={<PiArrowSquareOut />}
       mt={3}
       colorScheme="primary"
       onClick={(event) => {

@@ -1,9 +1,9 @@
 "use client"
 
 import { cn } from "@/lib/utils"
-import { CaretDown } from "@phosphor-icons/react/dist/ssr/CaretDown"
 import * as AccordionPrimitive from "@radix-ui/react-accordion"
 import * as React from "react"
+import { PiCaretDown } from "react-icons/pi"
 
 const Accordion = AccordionPrimitive.Root
 export type AccordionProps = React.ComponentPropsWithoutRef<
@@ -36,7 +36,7 @@ const AccordionTrigger = React.forwardRef<
       {...props}
     >
       {children}
-      <CaretDown
+      <PiCaretDown
         weight="bold"
         className="h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200"
       />

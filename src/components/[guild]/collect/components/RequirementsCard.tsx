@@ -1,11 +1,11 @@
 import { Box, Icon, Stack, useColorModeValue, useDisclosure } from "@chakra-ui/react"
-import { Question } from "@phosphor-icons/react/Question"
 import RoleRequirements from "components/[guild]/Requirements"
 import Requirement from "components/[guild]/Requirements/components/Requirement"
 import { RoleRequirementsSectionHeader } from "components/[guild]/RoleCard/components/RoleRequirementsSection"
 import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { PropsWithChildren } from "react"
+import { PiQuestion } from "react-icons/pi"
 import { Role } from "types"
 
 type Props = {
@@ -34,7 +34,7 @@ const RequirementsCard = ({ role, children }: PropsWithChildren<Props>) => {
           {/* If the role is private, we can't display the requirements */}
           {!role ? (
             <Box w="full" p={5} pt={0}>
-              <Requirement image={<Icon as={Question} boxSize={5} />}>
+              <Requirement image={<Icon as={PiQuestion} boxSize={5} />}>
                 Some secret requirements
               </Requirement>
             </Box>

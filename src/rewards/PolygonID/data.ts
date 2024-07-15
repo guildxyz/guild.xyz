@@ -1,8 +1,8 @@
-import { Key } from "@phosphor-icons/react/Key"
+import { PiKey } from "react-icons/pi"
 import { PlatformAsRewardRestrictions, RewardData } from "rewards/types"
 
 export const polygonIdData = {
-  icon: Key,
+  icon: PiKey,
   imageUrl: "/requirementLogos/polygonId.svg",
   name: "PolygonID",
   colorScheme: "purple",

@@ -9,12 +9,12 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
-import { PencilSimple } from "@phosphor-icons/react/PencilSimple"
-import { TrashSimple } from "@phosphor-icons/react/TrashSimple"
 import PlatformCardMenu from "components/[guild]/RolePlatforms/components/PlatformCard/components/PlatformCardMenu"
 import Button from "components/common/Button"
 import { Alert } from "components/common/Modal"
 import { useRef } from "react"
+import { PiPencilSimple } from "react-icons/pi"
+import { PiTrashSimple } from "react-icons/pi"
 import useDeleteRoleGroup from "../hooks/useDeleteRoleGroup"
 import EditCampaignModal from "./EditCampaignModal"
 
@@ -35,11 +35,11 @@ const CampaignCardMenu = ({ groupId }: Props) => {
   return (
     <Box position="absolute" top={2} right={2}>
       <PlatformCardMenu>
-        <MenuItem icon={<PencilSimple />} onClick={onOpen}>
+        <MenuItem icon={<PiPencilSimple />} onClick={onOpen}>
           Edit page appearance
         </MenuItem>
         <MenuItem
-          icon={<TrashSimple />}
+          icon={<PiTrashSimple />}
           color={removeMenuItemColor}
           onClick={onDeleteOpen}
         >

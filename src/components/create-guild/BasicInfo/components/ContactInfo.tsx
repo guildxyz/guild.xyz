@@ -11,15 +11,15 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
-import { ArrowSquareOut } from "@phosphor-icons/react/ArrowSquareOut"
-import { Plus } from "@phosphor-icons/react/Plus"
-import { TrashSimple } from "@phosphor-icons/react/TrashSimple"
 import Button from "components/common/Button"
 import ClientOnly from "components/common/ClientOnly"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import { CreateGuildFormType } from "components/create-guild/CreateGuildForm"
 import { Controller, useFieldArray, useFormContext } from "react-hook-form"
+import { PiArrowSquareOut } from "react-icons/pi"
+import { PiPlus } from "react-icons/pi"
+import { PiTrashSimple } from "react-icons/pi"
 import { SelectOption } from "types"
 
 const contactTypeOptions: SelectOption[] = [
@@ -105,7 +105,7 @@ const ContactInfo = ({ showAddButton = true }: Props): JSX.Element => {
                     <InputRightElement>
                       <IconButton
                         variant="ghost"
-                        icon={<Icon as={TrashSimple} />}
+                        icon={<Icon as={PiTrashSimple} />}
                         size="xs"
                         rounded="full"
                         aria-label="Remove contact"
@@ -130,7 +130,7 @@ const ContactInfo = ({ showAddButton = true }: Props): JSX.Element => {
           id="add-contact-btn"
           variant="outline"
           borderStyle="dashed"
-          leftIcon={<Icon as={Plus} />}
+          leftIcon={<Icon as={PiPlus} />}
           onClick={() =>
             append({
               type: "EMAIL",
@@ -147,7 +147,7 @@ const ContactInfo = ({ showAddButton = true }: Props): JSX.Element => {
           Or{" "}
           <Link isExternal href="https://discord.gg/KUkghUdk2G">
             <Text as="span">join our Discord</Text>
-            <Icon ml={1} as={ArrowSquareOut} />
+            <Icon ml={1} as={PiArrowSquareOut} />
           </Link>
         </Text>
       )}

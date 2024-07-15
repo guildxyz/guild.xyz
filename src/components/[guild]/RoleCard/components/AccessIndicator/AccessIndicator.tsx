@@ -7,11 +7,6 @@ import {
   useBreakpointValue,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { CaretDown } from "@phosphor-icons/react/CaretDown"
-import { Check } from "@phosphor-icons/react/Check"
-import { LockSimple } from "@phosphor-icons/react/LockSimple"
-import { Warning } from "@phosphor-icons/react/Warning"
-import { X } from "@phosphor-icons/react/X"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import RecheckAccessesButton from "components/[guild]/RecheckAccessesButton"
 import { useRequirementErrorConfig } from "components/[guild]/Requirements/RequirementErrorConfigContext"
@@ -22,6 +17,11 @@ import useMembership, {
   useRoleMembership,
 } from "components/explorer/hooks/useMembership"
 import { useSetAtom } from "jotai"
+import { PiCaretDown } from "react-icons/pi"
+import { PiCheck } from "react-icons/pi"
+import { PiLockSimple } from "react-icons/pi"
+import { PiWarning } from "react-icons/pi"
+import { PiX } from "react-icons/pi"
 import AccessIndicatorUI, {
   ACCESS_INDICATOR_STYLES,
 } from "./components/AccessIndicatorUI"
@@ -63,8 +63,8 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
   if (!isMember)
     return (
       <Button
-        leftIcon={!isMobile && <LockSimple width={"0.9em"} height="0.9em" />}
-        rightIcon={isMobile && <LockSimple width={"0.9em"} height="0.9em" />}
+        leftIcon={!isMobile && <PiLockSimple width={"0.9em"} height="0.9em" />}
+        rightIcon={isMobile && <PiLockSimple width={"0.9em"} height="0.9em" />}
         size="sm"
         borderRadius="lg"
         onClick={openJoinModal}
@@ -80,7 +80,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
         <AccessIndicatorUI
           colorScheme="green"
           label="You have access"
-          icon={Check}
+          icon={PiCheck}
           flex="1 0 auto"
           borderTopRightRadius="0 !important"
           borderBottomRightRadius="0 !important"
@@ -96,7 +96,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
           iconSpacing="0"
           rightIcon={
             <Icon
-              as={CaretDown}
+              as={PiCaretDown}
               transform={isOpen && "rotate(-180deg)"}
               transition="transform .3s"
             />
@@ -123,7 +123,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
       <AccessIndicatorUI
         colorScheme="blue"
         label="Reconnect needed to check access"
-        icon={LockSimple}
+        icon={PiLockSimple}
         onClick={() => setIsAccountModalOpen(true)}
         cursor="pointer"
       />
@@ -134,7 +134,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
       <AccessIndicatorUI
         colorScheme="blue"
         label="Connect needed to check access"
-        icon={LockSimple}
+        icon={PiLockSimple}
         onClick={() => setIsAccountModalOpen(true)}
         cursor="pointer"
       />
@@ -145,7 +145,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
       <AccessIndicatorUI
         colorScheme="orange"
         label={errorTextFromConfig}
-        icon={Warning}
+        icon={PiWarning}
       />
     )
 
@@ -155,7 +155,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
         <AccessIndicatorUI
           colorScheme="orange"
           label="Couldn’t check access"
-          icon={Warning}
+          icon={PiWarning}
           flex="1 0 auto"
           borderTopRightRadius="0 !important"
           borderBottomRightRadius="0 !important"
@@ -183,7 +183,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
             ? ` (${accessedRequirementCount}/${role.anyOfNum})`
             : ""
         }`}
-        icon={X}
+        icon={PiX}
         flex="1 0 auto"
         borderTopRightRadius="0 !important"
         borderBottomRightRadius="0 !important"

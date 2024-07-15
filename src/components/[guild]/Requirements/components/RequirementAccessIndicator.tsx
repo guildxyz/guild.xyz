@@ -7,16 +7,16 @@ import {
   PopoverHeader,
   Text,
 } from "@chakra-ui/react"
-import { ArrowSquareIn } from "@phosphor-icons/react/ArrowSquareIn"
-import { Check } from "@phosphor-icons/react/Check"
-import { LockSimple } from "@phosphor-icons/react/LockSimple"
-import { Warning } from "@phosphor-icons/react/Warning"
-import { X } from "@phosphor-icons/react/X"
 import RecheckAccessesButton from "components/[guild]/RecheckAccessesButton"
 import Button from "components/common/Button"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import { useSetAtom } from "jotai"
 import dynamic from "next/dynamic"
+import { PiArrowSquareIn } from "react-icons/pi"
+import { PiCheck } from "react-icons/pi"
+import { PiLockSimple } from "react-icons/pi"
+import { PiWarning } from "react-icons/pi"
+import { PiX } from "react-icons/pi"
 import RequirementAccessIndicatorUI from "./RequirementAccessIndicatorUI"
 import { useRequirementContext } from "./RequirementContext"
 
@@ -53,7 +53,7 @@ const RequirementAccessIndicator = () => {
       <RequirementAccessIndicatorUI
         colorScheme={"green"}
         circleBgSwatch={{ light: 400, dark: 300 }}
-        icon={Check}
+        icon={PiCheck}
       >
         <PopoverHeader {...POPOVER_HEADER_STYLES}>
           <Text as="span" mr="2">
@@ -73,7 +73,7 @@ const RequirementAccessIndicator = () => {
       <RequirementAccessIndicatorUI
         colorScheme={"blue"}
         circleBgSwatch={{ light: 300, dark: 300 }}
-        icon={LockSimple}
+        icon={PiLockSimple}
         isAlwaysOpen={!hasRoleAccess}
       >
         <PopoverHeader {...POPOVER_HEADER_STYLES}>
@@ -102,7 +102,7 @@ const RequirementAccessIndicator = () => {
       <RequirementAccessIndicatorUI
         colorScheme={"orange"}
         circleBgSwatch={{ light: 300, dark: 300 }}
-        icon={Warning}
+        icon={PiWarning}
         isAlwaysOpen={!hasRoleAccess}
       >
         <PopoverHeader {...POPOVER_HEADER_STYLES}>
@@ -124,7 +124,7 @@ const RequirementAccessIndicator = () => {
     <RequirementAccessIndicatorUI
       colorScheme={"gray"}
       circleBgSwatch={{ light: 300, dark: 500 }}
-      icon={X}
+      icon={PiX}
       isAlwaysOpen={!hasRoleAccess}
     >
       <PopoverHeader {...POPOVER_HEADER_STYLES}>
@@ -146,7 +146,7 @@ const RequirementAccessIndicator = () => {
       <PopoverFooter {...POPOVER_FOOTER_STYLES}>
         <ButtonGroup size="sm">
           <Button
-            rightIcon={<Icon as={ArrowSquareIn} />}
+            rightIcon={<Icon as={PiArrowSquareIn} />}
             onClick={() => setIsAccountModalOpen(true)}
             variant="outline"
           >

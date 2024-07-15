@@ -1,6 +1,5 @@
 import { HStack, Text, useDisclosure } from "@chakra-ui/react"
 import { ImageData } from "@nouns/assets"
-import { ArrowSquareOut } from "@phosphor-icons/react/ArrowSquareOut"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
 import DynamicPurchaseRequirement from "components/[guild]/Requirements/components/GuildCheckout/DynamicPurchaseRequirement"
 import { GuildCheckoutProvider } from "components/[guild]/Requirements/components/GuildCheckout/components/GuildCheckoutContext"
@@ -14,6 +13,7 @@ import Button from "components/common/Button"
 import DataBlock from "components/common/DataBlock"
 import { env } from "env"
 import { Fragment } from "react"
+import { PiArrowSquareOut } from "react-icons/pi"
 import SearchableVirtualListModal from "requirements/common/SearchableVirtualListModal"
 import useSWRImmutable from "swr/immutable"
 import { Trait } from "types"
@@ -185,7 +185,7 @@ const NftRequirement = (props: RequirementProps) => {
           {` with a `}
           <Button
             variant="link"
-            rightIcon={<ArrowSquareOut />}
+            rightIcon={<PiArrowSquareOut />}
             iconSpacing={0.5}
             onClick={onOpen}
           >

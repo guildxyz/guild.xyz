@@ -5,9 +5,9 @@ import {
   TooltipTrigger,
 } from "@/components/ui/Tooltip"
 import { cn } from "@/lib/utils"
-import { Question } from "@phosphor-icons/react/dist/ssr/Question"
 import useUser from "components/[guild]/hooks/useUser"
 import { Fragment, useMemo } from "react"
+import { PiQuestion } from "react-icons/pi"
 import rewards from "rewards"
 import { PlatformName } from "types"
 import useDelegateVaults from "../hooks/useDelegateVaults"
@@ -67,7 +67,7 @@ const AccountConnections = () => {
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Question weight="bold" />
+                    <PiQuestion weight="bold" />
                   </TooltipTrigger>
                   <TooltipContent>
                     <p>Each of your addresses will be used for requirement checks</p>

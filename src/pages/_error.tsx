@@ -1,9 +1,9 @@
 import { IntercomProvider } from "@/components/Providers/IntercomProvider"
 import { Flex, Heading, Icon, Stack } from "@chakra-ui/react"
-import { ChatCircle } from "@phosphor-icons/react/ChatCircle"
-import { House } from "@phosphor-icons/react/House"
 import Button from "components/common/Button"
 import Head from "next/head"
+import { PiChatCircle } from "react-icons/pi"
+import { PiHouse } from "react-icons/pi"
 import NotFoundIcon from "static/avatars/58.svg"
 import { triggerChat } from "utils/intercom"
 
@@ -57,7 +57,7 @@ const Page = ({ statusCode }): JSX.Element => (
         <Button
           as="a"
           href="/explorer"
-          leftIcon={<House />}
+          leftIcon={<PiHouse />}
           colorScheme="indigo"
           iconSpacing={3}
           size="lg"
@@ -65,7 +65,7 @@ const Page = ({ statusCode }): JSX.Element => (
           Go to home page
         </Button>
         <Button
-          leftIcon={<ChatCircle />}
+          leftIcon={<PiChatCircle />}
           colorScheme="solid-gray"
           iconSpacing={3}
           size="lg"

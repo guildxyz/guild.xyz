@@ -1,12 +1,12 @@
 import { Circle, Icon, Spinner, Text } from "@chakra-ui/react"
-import { Upload } from "@phosphor-icons/react/Upload"
-import { X } from "@phosphor-icons/react/X"
 import { env } from "env"
 import usePinata from "hooks/usePinata"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
 import { PropsWithChildren, useCallback, useState } from "react"
 import { useDropzone } from "react-dropzone"
+import { PiUpload } from "react-icons/pi"
+import { PiX } from "react-icons/pi"
 import { useRequirementContext } from "./RequirementContext"
 
 type RequirementImageEditorProps = {
@@ -64,7 +64,7 @@ const RequirementImageEditor = ({
           cursor="pointer"
           onClick={() => onSave("")}
         >
-          <Icon as={X} boxSize={4} color="white" />
+          <Icon as={PiX} boxSize={4} color="white" />
         </Circle>
         {children}
       </>
@@ -94,7 +94,7 @@ const RequirementImageEditor = ({
         {...getRootProps()}
       >
         <input {...getInputProps()} hidden />
-        <Icon as={Upload} boxSize={4} color="white" />
+        <Icon as={PiUpload} boxSize={4} color="white" />
       </Circle>
       {children}
     </>

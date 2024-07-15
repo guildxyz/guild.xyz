@@ -14,8 +14,6 @@ import {
   Tr,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { CaretDown } from "@phosphor-icons/react/CaretDown"
-import { Function } from "@phosphor-icons/react/Function"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
 import Requirement, {
   RequirementProps,
@@ -23,6 +21,8 @@ import Requirement, {
 import { RequirementButton } from "components/[guild]/Requirements/components/RequirementButton"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import DataBlock from "components/common/DataBlock"
+import { PiCaretDown } from "react-icons/pi"
+import { PiFunction } from "react-icons/pi"
 import shortenHex from "utils/shortenHex"
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
@@ -33,14 +33,14 @@ const ContractStateRequirement = (props: RequirementProps) => {
 
   return (
     <Requirement
-      image={<Icon as={Function} boxSize={6} />}
+      image={<Icon as={PiFunction} boxSize={6} />}
       footer={
         <Stack direction={["column", "row"]} spacing={2} alignItems="start">
           <BlockExplorerUrl path="address" />
 
           <Popover placement="bottom">
             <PopoverTrigger>
-              <RequirementButton rightIcon={<Icon as={CaretDown} />}>
+              <RequirementButton rightIcon={<Icon as={PiCaretDown} />}>
                 View query
               </RequirementButton>
             </PopoverTrigger>

@@ -6,12 +6,12 @@ import {
   Text,
   Textarea,
 } from "@chakra-ui/react"
-import { File } from "@phosphor-icons/react/File"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import useDropzone from "hooks/useDropzone"
 import { PropsWithChildren, useState } from "react"
 import { useController, useFormContext, useWatch } from "react-hook-form"
+import { PiFile } from "react-icons/pi"
 import PublicRewardDataForm from "rewards/SecretText/SecretTextDataForm/components/PublicRewardDataForm"
 import Key from "static/icons/key.svg"
 
@@ -54,7 +54,7 @@ const UniqueTextDataForm = ({
 
   const texts = useWatch({ name: "texts" })
 
-  const parseTxt = (file: File) => {
+  const parseTxt = (file: PiFile) => {
     const fileReader = new FileReader()
     fileReader.onload = () => {
       setRegexError(null)
@@ -97,7 +97,7 @@ const UniqueTextDataForm = ({
             <Button
               {...getRootProps()}
               as="label"
-              leftIcon={<File />}
+              leftIcon={<PiFile />}
               cursor="pointer"
               h={10}
             >

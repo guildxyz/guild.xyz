@@ -9,12 +9,12 @@ import {
   MenuList,
   useDisclosure,
 } from "@chakra-ui/react"
-import { CaretDown } from "@phosphor-icons/react/CaretDown"
-import { ListNumbers } from "@phosphor-icons/react/ListNumbers"
-import { Plus } from "@phosphor-icons/react/Plus"
 import Button from "components/common/Button"
 import useIsStuck from "hooks/useIsStuck"
 import { useEffect, useRef } from "react"
+import { PiCaretDown } from "react-icons/pi"
+import { PiListNumbers } from "react-icons/pi"
+import { PiPlus } from "react-icons/pi"
 import RecheckAccessesButton from "../RecheckAccessesButton"
 import AddRoleDrawer from "./components/AddRoleDrawer"
 import OrderRolesModal from "./components/OrderRolesModal"
@@ -42,7 +42,7 @@ const AddAndOrderRoles = ({ setIsStuck = null }): JSX.Element => {
       <ButtonGroup isAttached size="sm" variant="ghost">
         <Button
           ref={addRoleButtonRef}
-          leftIcon={<Icon as={Plus} />}
+          leftIcon={<Icon as={PiPlus} />}
           onClick={onAddDrawerOpen}
           data-test="add-role-button"
         >
@@ -59,7 +59,7 @@ const AddAndOrderRoles = ({ setIsStuck = null }): JSX.Element => {
           <MenuButton
             isActive={isOrderModalOpen}
             as={IconButton}
-            icon={<CaretDown />}
+            icon={<PiCaretDown />}
             borderTopLeftRadius="0"
             borderBottomLeftRadius="0"
           ></MenuButton>
@@ -67,7 +67,7 @@ const AddAndOrderRoles = ({ setIsStuck = null }): JSX.Element => {
             <MenuItem
               ref={orderButtonRef}
               onClick={onOrderModalOpen}
-              icon={<ListNumbers />}
+              icon={<PiListNumbers />}
             >
               Reorder roles
             </MenuItem>

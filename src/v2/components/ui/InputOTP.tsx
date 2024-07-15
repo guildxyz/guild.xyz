@@ -1,9 +1,9 @@
 "use client"
 
 import { cn } from "@/lib/utils"
-import { Minus } from "@phosphor-icons/react/dist/ssr/Minus"
 import { OTPInput, OTPInputContext } from "input-otp"
 import { ComponentPropsWithoutRef, ElementRef, forwardRef, useContext } from "react"
+import { PiMinus } from "react-icons/pi"
 
 const InputOTP = forwardRef<
   ElementRef<typeof OTPInput>,
@@ -61,7 +61,7 @@ const InputOTPSeparator = forwardRef<
   ComponentPropsWithoutRef<"div">
 >(({ ...props }, ref) => (
   <div ref={ref} role="separator" {...props}>
-    <Minus weight="bold" />
+    <PiMinus weight="bold" />
   </div>
 ))
 InputOTPSeparator.displayName = "InputOTPSeparator"

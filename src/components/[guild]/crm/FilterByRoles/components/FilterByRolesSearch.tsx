@@ -6,8 +6,8 @@ import {
   InputLeftElement,
   InputRightElement,
 } from "@chakra-ui/react"
-import { MagnifyingGlass } from "@phosphor-icons/react/MagnifyingGlass"
 import { Dispatch, SetStateAction, useRef } from "react"
+import { PiMagnifyingGlass } from "react-icons/pi"
 
 type Props = {
   searchValue: string
@@ -26,7 +26,7 @@ const FilterByRolesSearch = ({ searchValue, setSearchValue }: Props) => {
   return (
     <InputGroup>
       <InputLeftElement h="8" w="auto">
-        <Icon size={10} as={MagnifyingGlass} />
+        <Icon size={10} as={PiMagnifyingGlass} />
       </InputLeftElement>
       <Input
         ref={inputRef}

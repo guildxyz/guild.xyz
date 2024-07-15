@@ -14,8 +14,6 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
-import { ArrowSquareOut } from "@phosphor-icons/react/ArrowSquareOut"
-import { Link as LinkIcon } from "@phosphor-icons/react/Link"
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import Requirement, {
   RequirementProps,
@@ -37,6 +35,8 @@ import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import NextLink from "next/link"
 import { useRef } from "react"
 import { useFormContext } from "react-hook-form"
+import { PiArrowSquareOut } from "react-icons/pi"
+import { PiLink } from "react-icons/pi"
 import fetcher from "utils/fetcher"
 
 export const VISIT_LINK_REGEX = new RegExp(/^(.*)(\[)(.+?)(\])(.*)$/)
@@ -102,7 +102,7 @@ const VisitLinkRequirement = ({ ...props }: RequirementProps) => {
 
   return (
     <Requirement
-      image={<Icon as={LinkIcon} boxSize={6} />}
+      image={<Icon as={PiLink} boxSize={6} />}
       {...props}
       showViewOriginal={false}
       footer={
@@ -110,7 +110,7 @@ const VisitLinkRequirement = ({ ...props }: RequirementProps) => {
           <ViewOriginalPopover>
             <HStack p={3} gap={4}>
               <RequirementImageCircle>
-                <RequirementImage image={<Icon as={LinkIcon} boxSize={6} />} />
+                <RequirementImage image={<Icon as={PiLink} boxSize={6} />} />
               </RequirementImageCircle>
               <Stack
                 direction={{ base: "column", md: "row" }}
@@ -199,7 +199,7 @@ const LeaveGuildToExternalLinkAlert = ({ isOpen, onClose, onVisit, url }) => {
               onClose()
             }}
             colorScheme="indigo"
-            rightIcon={<ArrowSquareOut />}
+            rightIcon={<PiArrowSquareOut />}
           >
             Visit Site
           </Button>

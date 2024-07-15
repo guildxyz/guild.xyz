@@ -1,8 +1,8 @@
-import { TelegramLogo } from "@phosphor-icons/react/TelegramLogo"
+import { PiTelegramLogo } from "react-icons/pi"
 import { PlatformAsRewardRestrictions, RewardData } from "rewards/types"
 
 export const telegramData = {
-  icon: TelegramLogo,
+  icon: PiTelegramLogo,
   imageUrl: "/platforms/telegram.png",
   name: "Telegram",
   colorScheme: "TELEGRAM",

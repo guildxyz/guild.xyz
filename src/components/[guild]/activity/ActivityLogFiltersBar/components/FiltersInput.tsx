@@ -6,11 +6,11 @@ import {
   Wrap,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { CaretDown } from "@phosphor-icons/react/CaretDown"
-import { X } from "@phosphor-icons/react/X"
 import * as combobox from "@zag-js/combobox"
 import { normalizeProps, useMachine } from "@zag-js/react"
 import { KeyboardEvent, useEffect, useRef, useState } from "react"
+import { PiCaretDown } from "react-icons/pi"
+import { PiX } from "react-icons/pi"
 import {
   SUPPORTED_SEARCH_OPTIONS,
   SupportedSearchOption,
@@ -149,7 +149,7 @@ const FiltersInput = (): JSX.Element => {
           {(activeFilters.length > 0 || inputValue.length > 0) && (
             <IconButton
               aria-label="Clear filters"
-              icon={<X />}
+              icon={<PiX />}
               size="sm"
               boxSize={6}
               minW={6}
@@ -172,7 +172,7 @@ const FiltersInput = (): JSX.Element => {
 
           <IconButton
             aria-label="Show filter options"
-            icon={<CaretDown />}
+            icon={<PiCaretDown />}
             size="sm"
             boxSize={6}
             minW={6}

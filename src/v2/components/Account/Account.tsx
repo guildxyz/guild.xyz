@@ -2,11 +2,11 @@
 
 import { useDisclosure } from "@/hooks/useDisclosure"
 import { cn } from "@/lib/utils"
-import { Bell } from "@phosphor-icons/react/Bell"
-import { SignIn } from "@phosphor-icons/react/dist/ssr/SignIn"
 import useUser from "components/[guild]/hooks/useUser"
 import useResolveAddress from "hooks/useResolveAddress"
 import { useSetAtom } from "jotai"
+import { PiBell } from "react-icons/pi"
+import { PiSignIn } from "react-icons/pi"
 import shortenHex from "utils/shortenHex"
 import { GuildAvatar } from "../GuildAvatar"
 import { usePostHogContext } from "../Providers/PostHogProvider"
@@ -32,7 +32,7 @@ export const Account = () => {
     return (
       <Card>
         <Button variant="ghost" onClick={() => setIsWalletSelectorModalOpen(true)}>
-          <SignIn weight="bold" className="mr-1" />
+          <PiSignIn weight="bold" className="mr-1" />
           Sign in
         </Button>
       </Card>
@@ -51,7 +51,7 @@ export const Account = () => {
               captureEvent("opened UserActivityLogPopover")
             }}
           >
-            <Bell weight="bold" />
+            <PiBell weight="bold" />
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-[min(100vw,theme(space.96))] px-0">

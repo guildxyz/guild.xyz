@@ -7,13 +7,13 @@ import {
   Portal,
   TagRightIcon,
 } from "@chakra-ui/react"
-import { Info } from "@phosphor-icons/react/Info"
-import { UserSwitch } from "@phosphor-icons/react/UserSwitch"
 import Button from "components/common/Button"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { PropsWithChildren, useMemo } from "react"
+import { PiInfo } from "react-icons/pi"
+import { PiUserSwitch } from "react-icons/pi"
 import fetcher from "utils/fetcher"
 import formatRelativeTimeFromNow, {
   DAY_IN_MS,
@@ -48,7 +48,7 @@ const MemberCountLastSyncTooltip = ({
     <Popover trigger="hover" placement="bottom" isLazy>
       <PopoverTrigger>
         <TagRightIcon
-          as={Info}
+          as={PiInfo}
           opacity={0}
           _groupHover={{ opacity: 1 }}
           transition={"opacity .2s"}
@@ -95,7 +95,7 @@ export const SyncRoleButton = ({ roleId }) => {
     <Button
       size="sm"
       variant="outline"
-      leftIcon={<UserSwitch />}
+      leftIcon={<PiUserSwitch />}
       borderRadius="lg"
       borderWidth="1.5px"
       onClick={onSubmit}

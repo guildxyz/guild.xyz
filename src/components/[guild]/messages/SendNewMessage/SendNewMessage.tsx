@@ -17,8 +17,6 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
-import { Chat } from "@phosphor-icons/react/Chat"
-import { PaperPlaneRight } from "@phosphor-icons/react/PaperPlaneRight"
 import { useIsTabsStuck } from "components/[guild]/Tabs"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import Button from "components/common/Button"
@@ -26,6 +24,8 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import { Modal } from "components/common/Modal"
 import dynamic from "next/dynamic"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
+import { PiChat } from "react-icons/pi"
+import { PiPaperPlaneRight } from "react-icons/pi"
 import { DAY_IN_MS } from "utils/formatRelativeTimeFromNow"
 import useGuildMessages from "../hooks/useGuildMessages"
 import useReachableUsers from "../hooks/useReachableUsers"
@@ -93,7 +93,7 @@ const SendNewMessage = (props: ButtonProps) => {
   return (
     <>
       <Button
-        leftIcon={<Chat />}
+        leftIcon={<PiChat />}
         onClick={onOpen}
         {...(!isStuck && {
           color: textColor,
@@ -201,7 +201,7 @@ const SendNewMessage = (props: ButtonProps) => {
               <Button
                 colorScheme="green"
                 flexShrink={0}
-                rightIcon={<PaperPlaneRight />}
+                rightIcon={<PiPaperPlaneRight />}
                 onClick={handleSubmit(onSubmit)}
                 isLoading={isLoading}
                 loadingText="Sending"

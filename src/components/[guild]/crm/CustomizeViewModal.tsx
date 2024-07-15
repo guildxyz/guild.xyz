@@ -10,11 +10,11 @@ import {
   Stack,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { DotsSixVertical } from "@phosphor-icons/react/DotsSixVertical"
 import { Column, Table } from "@tanstack/react-table"
 import { Modal } from "components/common/Modal"
 import { Reorder } from "framer-motion"
 import { useState } from "react"
+import { PiDotsSixVertical } from "react-icons/pi"
 import { Member } from "./useMembers"
 
 type Props = {
@@ -115,7 +115,7 @@ const ColumnSelector = ({ column, isDisabled }: SelectorProps) => {
         >
           {COLUMN_NAMES[column.id]}
         </Checkbox>
-        {!isDisabled && <DotsSixVertical />}
+        {!isDisabled && <PiDotsSixVertical />}
       </HStack>
       {!!column.columns.length && (
         <Stack pl="6" pt="1.5" spacing={1}>

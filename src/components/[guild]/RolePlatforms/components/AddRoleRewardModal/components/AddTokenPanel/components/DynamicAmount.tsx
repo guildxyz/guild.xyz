@@ -1,10 +1,10 @@
 import { Icon, Stack, Text } from "@chakra-ui/react"
-import { Star } from "@phosphor-icons/react/Star"
 import useGuildPlatform from "components/[guild]/hooks/useGuildPlatform"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import useTokenData from "hooks/useTokenData"
 import { ReactNode } from "react"
 import { useWatch } from "react-hook-form"
+import { PiStar } from "react-icons/pi"
 import DynamicTypeForm from "rewards/Token/DynamicTypeForm"
 import Token from "static/icons/token.svg"
 import ConversionInput from "./ConversionInput"
@@ -28,7 +28,7 @@ const DynamicAmount = () => {
       alt={selectedPointsPlatform?.platformGuildData?.name ?? "Point type image"}
     />
   ) : (
-    <Icon as={Star} />
+    <Icon as={PiStar} />
   )
 
   return (

@@ -7,9 +7,9 @@ import {
   ModalHeader,
   Text,
 } from "@chakra-ui/react"
-import { ArrowLeft } from "@phosphor-icons/react/ArrowLeft"
 import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import { ReactNode } from "react"
+import { PiArrowLeft } from "react-icons/pi"
 import rewards from "rewards"
 
 export const DefaultAddRewardPanelWrapper = ({
@@ -31,7 +31,7 @@ export const DefaultAddRewardPanelWrapper = ({
             aria-label="Back"
             size="sm"
             mb="-3px"
-            icon={<ArrowLeft size={20} />}
+            icon={<PiArrowLeft size={20} />}
             variant="ghost"
             onClick={onCancel ? onCancel : () => setStep("HOME")}
           />

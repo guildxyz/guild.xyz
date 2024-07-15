@@ -1,10 +1,10 @@
 import { MenuItem, useDisclosure } from "@chakra-ui/react"
-import { PencilSimple } from "@phosphor-icons/react/PencilSimple"
-import { Table } from "@phosphor-icons/react/Table"
 import RemovePlatformMenuItem from "components/[guild]/AccessHub/components/RemovePlatformMenuItem"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useGuildForm } from "components/[guild]/hooks/useGuildForms"
 import LinkMenuItem from "components/common/LinkMenuItem"
+import { PiPencilSimple } from "react-icons/pi"
+import { PiTable } from "react-icons/pi"
 import PlatformCardMenu from "../../components/[guild]/RolePlatforms/components/PlatformCard/components/PlatformCardMenu"
 import EditFormModal from "./EditFormModal"
 
@@ -26,13 +26,13 @@ const FormCardMenu = ({ platformGuildId }: Props): JSX.Element => {
   return (
     <>
       <PlatformCardMenu>
-        <MenuItem icon={<PencilSimple />} onClick={onOpen}>
+        <MenuItem icon={<PiPencilSimple />} onClick={onOpen}>
           Edit form
         </MenuItem>
 
         <LinkMenuItem
           href={`/${urlName}/forms/${formId}/responses`}
-          icon={<Table />}
+          icon={<PiTable />}
         >
           View responses
         </LinkMenuItem>

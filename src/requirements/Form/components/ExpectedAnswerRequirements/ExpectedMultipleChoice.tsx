@@ -1,10 +1,10 @@
 import { FormControl, FormLabel, HStack, Stack, Text } from "@chakra-ui/react"
-import { Check } from "@phosphor-icons/react/Check"
-import { Minus } from "@phosphor-icons/react/Minus"
-import { X } from "@phosphor-icons/react/X"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import RadioButtonGroup from "components/common/RadioButtonGroup"
 import { useFieldArray, useFormContext, useFormState } from "react-hook-form"
+import { PiCheck } from "react-icons/pi"
+import { PiMinus } from "react-icons/pi"
+import { PiX } from "react-icons/pi"
 
 export const ExpectedMultipleChoice = ({ field }) => {
   const { getValues } = useFormContext()
@@ -57,18 +57,18 @@ export const ExpectedMultipleChoice = ({ field }) => {
 
 const options = [
   {
-    label: <Check />,
+    label: <PiCheck />,
     value: "include",
     colorScheme: "green",
     tooltipLabel: "Must be selected",
   },
   {
-    label: <Minus />,
+    label: <PiMinus />,
     value: "ignore",
     tooltipLabel: "Doesn't matter if selected or not",
   },
   {
-    label: <X />,
+    label: <PiX />,
     value: "exclude",
     colorScheme: "red",
     tooltipLabel: "Must not be selected",

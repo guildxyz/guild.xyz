@@ -10,16 +10,16 @@ import {
   forwardRef,
   useColorModeValue,
 } from "@chakra-ui/react"
-import type { IconProps } from "@phosphor-icons/react"
-import { DotsThreeVertical } from "@phosphor-icons/react/DotsThreeVertical"
 import { ForwardRefExoticComponent, RefAttributes } from "react"
+import type { PiIconProps } from "react-icons/pi"
+import { PiDotsThreeVertical } from "react-icons/pi"
 import { useActivityLog } from "../../ActivityLogContext"
 import ClickableTagPopover from "./ClickableTagPopover"
 import FilterBy from "./ClickableTagPopover/components/FilterBy"
 
 type Props = ClickableGuildTagProps &
   Omit<TagProps, "colorScheme"> & {
-    rightIcon?: ForwardRefExoticComponent<IconProps & RefAttributes<SVGSVGElement>>
+    rightIcon?: ForwardRefExoticComponent<PiIconProps & RefAttributes<SVGSVGElement>>
   }
 
 const GuildTag = forwardRef<Props, "span">(
@@ -86,7 +86,7 @@ const ClickableGuildTag = ({ guildId }: ClickableGuildTagProps): JSX.Element => 
       />
     }
   >
-    <GuildTag guildId={guildId} cursor="pointer" rightIcon={DotsThreeVertical} />
+    <GuildTag guildId={guildId} cursor="pointer" rightIcon={PiDotsThreeVertical} />
   </ClickableTagPopover>
 )
 

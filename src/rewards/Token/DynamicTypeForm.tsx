@@ -1,11 +1,11 @@
 import { Circle, FormControl, Icon, useColorModeValue } from "@chakra-ui/react"
-import { ListNumbers } from "@phosphor-icons/react/ListNumbers"
 import CustomSnapshotForm from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/components/CustomSnapshotForm"
 import GuildPointsSnapshotForm from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/components/GuildPointsSnapshotForm"
 import { SnapshotOption } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/components/types"
 import RadioSelect from "components/common/RadioSelect"
 import { Option } from "components/common/RadioSelect/RadioSelect"
 import { useController, useFormContext } from "react-hook-form"
+import { PiListNumbers } from "react-icons/pi"
 import Star from "static/icons/star.svg"
 
 const DynamicTypeForm = () => {
@@ -38,7 +38,7 @@ const DynamicTypeForm = () => {
         "Upload a custom snapshot to assign unique numbers to users for reward calculation",
       leftComponent: (
         <Circle bg={circleBgColor} p={3}>
-          <Icon as={ListNumbers} />
+          <Icon as={PiListNumbers} />
         </Circle>
       ),
       children: <CustomSnapshotForm />,

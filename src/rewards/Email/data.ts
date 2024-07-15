@@ -1,8 +1,8 @@
-import { EnvelopeSimple } from "@phosphor-icons/react/EnvelopeSimple"
+import { PiEnvelopeSimple } from "react-icons/pi"
 import { PlatformAsRewardRestrictions, RewardData } from "rewards/types"
 
 export const emailData = {
-  icon: EnvelopeSimple,
+  icon: PiEnvelopeSimple,
   name: "Email",
   colorScheme: "blue",
   gatedEntity: "email",

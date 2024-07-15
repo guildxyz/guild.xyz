@@ -1,5 +1,5 @@
 import { Icon, Link } from "@chakra-ui/react"
-import { ArrowSquareOut } from "@phosphor-icons/react/ArrowSquareOut"
+import { PiArrowSquareOut } from "react-icons/pi"
 import { Requirement } from "types"
 
 type Props = {
@@ -15,7 +15,7 @@ export default function TwitterTweetLink({ requirement }: Props) {
       fontWeight="medium"
     >
       this tweet
-      <Icon as={ArrowSquareOut} mx="1" />
+      <Icon as={PiArrowSquareOut} mx="1" />
     </Link>
   )
 }

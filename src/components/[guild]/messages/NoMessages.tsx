@@ -1,7 +1,7 @@
 import { Link } from "@chakra-ui/next-js"
 import { HStack, Icon, Img, Stack, Text } from "@chakra-ui/react"
-import { ArrowSquareOut } from "@phosphor-icons/react/ArrowSquareOut"
 import Card from "components/common/Card"
+import { PiArrowSquareOut } from "react-icons/pi"
 import SendNewMessage from "./SendNewMessage"
 
 const NoMessages = () => (
@@ -21,7 +21,7 @@ const NoMessages = () => (
             You can send broadcast messages to the wallets of members with{" "}
             <Link href="https://web3inbox.com" colorScheme="blue" isExternal>
               Web3Inbox
-              <Icon as={ArrowSquareOut} ml={1} />
+              <Icon as={PiArrowSquareOut} ml={1} />
             </Link>
           </Text>
         </Stack>

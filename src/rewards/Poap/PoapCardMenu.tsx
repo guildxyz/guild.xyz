@@ -1,8 +1,8 @@
 import { MenuItem, useDisclosure } from "@chakra-ui/react"
-import { UploadSimple } from "@phosphor-icons/react/UploadSimple"
 import RemovePlatformMenuItem from "components/[guild]/AccessHub/components/RemovePlatformMenuItem"
 import PlatformCardMenu from "components/[guild]/RolePlatforms/components/PlatformCard/components/PlatformCardMenu"
 import useGuild from "components/[guild]/hooks/useGuild"
+import { PiUploadSimple } from "react-icons/pi"
 import UploadMintLinksModal from "./UploadMintLinksModal"
 
 type Props = {
@@ -20,7 +20,7 @@ const PoapCardMenu = ({ platformGuildId }: Props): JSX.Element => {
   return (
     <>
       <PlatformCardMenu>
-        <MenuItem icon={<UploadSimple />} onClick={onOpen}>
+        <MenuItem icon={<PiUploadSimple />} onClick={onOpen}>
           Upload mint links
         </MenuItem>
 

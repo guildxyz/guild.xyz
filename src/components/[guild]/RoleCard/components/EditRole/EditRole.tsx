@@ -11,7 +11,6 @@ import {
   VStack,
   useDisclosure,
 } from "@chakra-ui/react"
-import { PencilSimple } from "@phosphor-icons/react/PencilSimple"
 import { ApiRequirementHandlerProvider } from "components/[guild]/RequirementHandlerContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import DiscardAlert from "components/common/DiscardAlert"
@@ -24,6 +23,7 @@ import EditRequirements from "components/create-guild/Requirements/EditRequireme
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { useRef } from "react"
 import { FormProvider } from "react-hook-form"
+import { PiPencilSimple } from "react-icons/pi"
 import EditRoleFooter from "./components/EditRoleFooter"
 import EditRoleHeader from "./components/EditRoleHeader"
 import EditRolePlatforms from "./components/EditRolePlatforms"
@@ -72,7 +72,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
     <>
       <IconButton
         ref={btnRef}
-        icon={<Icon as={PencilSimple} />}
+        icon={<Icon as={PiPencilSimple} />}
         size="sm"
         rounded="full"
         aria-label="Edit role"

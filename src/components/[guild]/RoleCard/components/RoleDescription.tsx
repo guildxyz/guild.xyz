@@ -6,10 +6,10 @@ import {
   Icon,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { ArrowDown } from "@phosphor-icons/react/ArrowDown"
-import { ArrowUp } from "@phosphor-icons/react/ArrowUp"
 import Button from "components/common/Button"
 import { useEffect, useState } from "react"
+import { PiArrowDown } from "react-icons/pi"
+import { PiArrowUp } from "react-icons/pi"
 import parseDescription from "utils/parseDescription"
 import { RoleCardCollapseProps } from ".."
 
@@ -114,7 +114,7 @@ const CollapsableRoleDescription = ({
             onClick={onToggleExpanded}
             textTransform="uppercase"
             fontWeight="bold"
-            rightIcon={<Icon as={isExpanded ? ArrowUp : ArrowDown} />}
+            rightIcon={<Icon as={isExpanded ? PiArrowUp : PiArrowDown} />}
           >
             {isExpanded ? "Collapse" : "Click to expand"}
           </Button>

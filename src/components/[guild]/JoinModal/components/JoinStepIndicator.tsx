@@ -5,8 +5,8 @@ import {
   Spinner,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { Check } from "@phosphor-icons/react/Check"
-import { X } from "@phosphor-icons/react/X"
+import { PiCheck } from "react-icons/pi"
+import { PiX } from "react-icons/pi"
 
 export type JoinStepIndicatorProps =
   | { status: "INACTIVE" | "DONE" | "NO_ACCESS" | "LOADING" }
@@ -19,7 +19,7 @@ const JoinStepIndicator = (props: JoinStepIndicatorProps) => {
     case "DONE": {
       return (
         <Circle size="5" bg="green.500">
-          <Icon weight="bold" color="white" as={Check} boxSize="0.8em" />
+          <Icon weight="bold" color="white" as={PiCheck} boxSize="0.8em" />
         </Circle>
       )
     }
@@ -27,7 +27,7 @@ const JoinStepIndicator = (props: JoinStepIndicatorProps) => {
     case "NO_ACCESS": {
       return (
         <Circle size="5" bg="gray.500">
-          <Icon weight="bold" color="white" as={X} boxSize="0.7em" />
+          <Icon weight="bold" color="white" as={PiX} boxSize="0.7em" />
         </Circle>
       )
     }

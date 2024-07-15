@@ -9,8 +9,8 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { Question } from "@phosphor-icons/react/Question"
 import { PropsWithChildren } from "react"
+import { PiQuestion } from "react-icons/pi"
 import rewards from "rewards"
 import { PlatformName } from "types"
 
@@ -46,7 +46,7 @@ const RewardPreview = ({
             alignItems="center"
             justifyContent="center"
           >
-            <Icon as={rewards[type]?.icon ?? Question} size={6} />
+            <Icon as={rewards[type]?.icon ?? PiQuestion} size={6} />
           </Circle>
         )}
       </SkeletonCircle>

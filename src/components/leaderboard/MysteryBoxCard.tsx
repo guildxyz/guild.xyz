@@ -14,14 +14,14 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
-import { Check } from "@phosphor-icons/react/Check"
-import { Gift } from "@phosphor-icons/react/Gift"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Modal } from "components/common/Modal"
 import { useForm } from "react-hook-form"
+import { PiCheck } from "react-icons/pi"
+import { PiGift } from "react-icons/pi"
 import useClaimMysteryBox from "./hooks/useClaimMysteryBox"
 import useHasAlreadyClaimedMysteryBox from "./hooks/useHasAlreadyClaimedMysteryBox"
 
@@ -90,7 +90,7 @@ const MysteryBoxCard = () => {
             <Button
               colorScheme="white"
               onClick={onOpen}
-              leftIcon={alreadyClaimed ? <Check /> : <Gift />}
+              leftIcon={alreadyClaimed ? <PiCheck /> : <PiGift />}
               isDisabled={alreadyClaimed}
               w={{ base: "full", md: "max-content" }}
               minW="max-content"

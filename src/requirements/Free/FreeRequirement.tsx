@@ -1,11 +1,11 @@
-import { Icon } from "@chakra-ui/react"
-import type { Icon as PhosphorIcon } from "@phosphor-icons/react"
+import { PiIcon } from "@chakra-ui/react"
 import Requirement from "components/[guild]/Requirements/components/Requirement"
+import type { PiIcon as PhosphorIcon } from "react-icons/pi"
 import REQUIREMENTS from "requirements"
 
 const FreeRequirement = ({ ...rest }) => (
   <Requirement
-    image={<Icon as={REQUIREMENTS.FREE.icon as PhosphorIcon} boxSize={6} />}
+    image={<PiIcon as={REQUIREMENTS.FREE.icon as PhosphorIcon} boxSize={6} />}
     {...rest}
   >
     Open access

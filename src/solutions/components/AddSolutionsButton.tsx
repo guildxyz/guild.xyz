@@ -1,4 +1,3 @@
-import { Plus } from "@phosphor-icons/react/Plus"
 import {
   AddRewardProvider,
   useAddRewardContext,
@@ -6,6 +5,7 @@ import {
 import { useIsTabsStuck } from "components/[guild]/Tabs"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import Button from "components/common/Button"
+import { PiPlus } from "react-icons/pi"
 import AddSolutionsModal from "./AddSolutionsModal"
 
 const AddSolutionsButton = () => {
@@ -17,7 +17,7 @@ const AddSolutionsButton = () => {
   return (
     <>
       <Button
-        leftIcon={<Plus />}
+        leftIcon={<PiPlus />}
         onClick={onOpen}
         variant="ghost"
         size="sm"

@@ -1,7 +1,7 @@
 import { Icon, Img, SimpleGrid, Text } from "@chakra-ui/react"
-import { Plus } from "@phosphor-icons/react/Plus"
 import StyledSelect from "components/common/StyledSelect"
 import { useFormContext, useWatch } from "react-hook-form"
+import { PiPlus } from "react-icons/pi"
 import { EventSourcesKey, SelectOption } from "types"
 import EventInput, { eventSourceNames, logos } from "./EventInput"
 
@@ -42,7 +42,7 @@ const Events = () => {
           placeholder="Add more"
           value=""
           components={{
-            DropdownIndicator: () => <Icon as={Plus} pr={2} boxSize={6} />,
+            DropdownIndicator: () => <Icon as={PiPlus} pr={2} boxSize={6} />,
           }}
           size="lg"
         />

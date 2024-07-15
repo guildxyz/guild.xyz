@@ -1,8 +1,8 @@
-import { ArrowSquareOut } from "@phosphor-icons/react/ArrowSquareOut"
 import { useActivityLog } from "components/[guild]/activity/ActivityLogContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import { useRouter } from "next/router"
+import { PiArrowSquareOut } from "react-icons/pi"
 
 type Props = {
   label: string
@@ -21,7 +21,7 @@ const ViewInCRM = ({ label, queryKey, queryValue }: Props): JSX.Element => {
   return (
     <Button
       variant="ghost"
-      leftIcon={<ArrowSquareOut />}
+      leftIcon={<PiArrowSquareOut />}
       size="sm"
       borderRadius={0}
       isDisabled={isCRMDisabled}

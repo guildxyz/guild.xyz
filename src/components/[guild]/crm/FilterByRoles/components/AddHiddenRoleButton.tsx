@@ -10,7 +10,6 @@ import {
   ModalOverlay,
   useDisclosure,
 } from "@chakra-ui/react"
-import { Plus } from "@phosphor-icons/react/Plus"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
@@ -20,6 +19,7 @@ import Name from "components/create-guild/Name"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
+import { PiPlus } from "react-icons/pi"
 import getRandomInt from "utils/getRandomInt"
 import SetHiddenRoleRequirements from "./SetHiddenRoleRequirements"
 import useCreateHiddenRole from "./useCreateHiddenRole"
@@ -79,7 +79,7 @@ const AddHiddenRoleButton = (buttonProps) => {
 
   return (
     <>
-      <Button leftIcon={<Plus />} onClick={onOpen} size="sm" {...buttonProps}>
+      <Button leftIcon={<PiPlus />} onClick={onOpen} size="sm" {...buttonProps}>
         Create new
       </Button>
       <Modal

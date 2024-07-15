@@ -1,3 +1,4 @@
+import { ForwardRefExoticComponent, RefAttributes } from "Pireact"
 import {
   ArrowLeft,
   ArrowRight,
@@ -29,8 +30,7 @@ import {
   UserList,
   UserMinus,
   UserSwitch,
-} from "@phosphor-icons/react"
-import { ForwardRefExoticComponent, RefAttributes } from "react"
+} from "Pireact-icons/pi"
 
 export enum ACTION {
   // Guild

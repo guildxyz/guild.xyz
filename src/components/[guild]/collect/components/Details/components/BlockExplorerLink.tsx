@@ -1,6 +1,6 @@
 import { Link } from "@chakra-ui/next-js"
 import { Icon, Skeleton, Text } from "@chakra-ui/react"
-import { ArrowSquareOut } from "@phosphor-icons/react/ArrowSquareOut"
+import { PiArrowSquareOut } from "react-icons/pi"
 import shortenHex from "utils/shortenHex"
 import { CHAIN_CONFIG, Chain } from "wagmiConfig/chains"
 
@@ -28,7 +28,7 @@ const BlockExplorerLink = ({
         <Text as="span" fontSize="md" mr={1.5} colorScheme="gray" noOfLines={1}>
           {displayedAddress}
         </Text>
-        <Icon as={ArrowSquareOut} color="gray" />
+        <Icon as={PiArrowSquareOut} color="gray" />
       </Link>
     </Skeleton>
   )

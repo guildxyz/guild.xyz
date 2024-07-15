@@ -1,9 +1,9 @@
 import { Collapse, Icon, Tooltip } from "@chakra-ui/react"
-import { Question } from "@phosphor-icons/react/Question"
-import { Warning } from "@phosphor-icons/react/Warning"
 import useAllowance from "components/[guild]/Requirements/components/GuildCheckout/hooks/useAllowance"
 import Button from "components/common/Button"
 import useTokenData from "hooks/useTokenData"
+import { PiQuestion } from "react-icons/pi"
+import { PiWarning } from "react-icons/pi"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { useAccount } from "wagmi"
 import { Chain, Chains } from "wagmiConfig/chains"
@@ -47,12 +47,12 @@ const AllowanceButton = ({ chain, token, contract }: Props) => {
               ? "Allowing"
               : "Check your wallet"
         }
-        leftIcon={allowanceError ? <Icon as={Warning} /> : null}
+        leftIcon={allowanceError ? <Icon as={PiWarning} /> : null}
         rightIcon={
           <Tooltip
             label={`You have to give the Guild smart contracts permission to use your ${tokenName}. You only have to do this once per token.`}
           >
-            <Icon as={Question} />
+            <Icon as={PiQuestion} />
           </Tooltip>
         }
       >

@@ -9,9 +9,6 @@ import {
   Textarea,
   Tooltip,
 } from "@chakra-ui/react"
-import { ArrowCounterClockwise } from "@phosphor-icons/react/ArrowCounterClockwise"
-import { Check } from "@phosphor-icons/react/Check"
-import { File } from "@phosphor-icons/react/File"
 import { isValidAddress } from "components/[guild]/EditGuild/components/Admins/Admins"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
@@ -20,6 +17,9 @@ import useDropzone from "hooks/useDropzone"
 import useSubmit from "hooks/useSubmit"
 import { useRouter } from "next/router"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
+import { PiArrowCounterClockwise } from "react-icons/pi"
+import { PiCheck } from "react-icons/pi"
+import { PiFile } from "react-icons/pi"
 import fetcher from "utils/fetcher"
 import parseFromObject from "utils/parseFromObject"
 import { z } from "zod"
@@ -62,7 +62,7 @@ export default function AllowlistFormInputs({
 
   const requirementType = useWatch({ name: `${baseFieldPath}.type` })
 
-  const uploadFileToGcs = useSubmit(async (file: File) => {
+  const uploadFileToGcs = useSubmit(async (file: PiFile) => {
     const [data, body] = await Promise.all([
       fetcher(
         `${env.NEXT_PUBLIC_API.replace(
@@ -146,7 +146,7 @@ export default function AllowlistFormInputs({
                   shouldDirty: true,
                 })
               }}
-              leftIcon={<ArrowCounterClockwise />}
+              leftIcon={<PiArrowCounterClockwise />}
               iconSpacing={1}
             >
               Clear
@@ -160,7 +160,7 @@ export default function AllowlistFormInputs({
         >
           <Button
             as="label"
-            leftIcon={uploadFileToGcs.response ? <Check /> : <File />}
+            leftIcon={uploadFileToGcs.response ? <PiCheck /> : <PiFile />}
             h={10}
             maxW={56}
             cursor="pointer"
@@ -173,7 +173,7 @@ export default function AllowlistFormInputs({
             <input {...getInputProps()} hidden />
             <Text as="span" display="block" maxW={44} noOfLines={1}>
               {uploadFileToGcs.response
-                ? "File uploaded"
+                ? "PiFile uploaded"
                 : isDragActive
                   ? "Drop the file here"
                   : "Choose .csv"}

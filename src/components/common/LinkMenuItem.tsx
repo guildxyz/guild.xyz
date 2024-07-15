@@ -1,7 +1,7 @@
 import { ButtonProps, MenuItem, MenuItemProps, Spinner } from "@chakra-ui/react"
-import { ArrowRight } from "@phosphor-icons/react/ArrowRight"
 import Link, { LinkProps } from "next/link"
 import { useState } from "react"
+import { PiArrowRight } from "react-icons/pi"
 import Button from "./Button"
 
 const LinkMenuItem = ({ icon, children, ...rest }: MenuItemProps & LinkProps) => {
@@ -12,7 +12,7 @@ const LinkMenuItem = ({ icon, children, ...rest }: MenuItemProps & LinkProps) =>
       as={Link}
       onClick={() => setHasClicked(true)}
       icon={hasClicked ? <Spinner size="xs" /> : icon}
-      command={(<ArrowRight />) as any}
+      command={(<PiArrowRight />) as any}
       isDisabled={hasClicked}
       closeOnSelect={false}
       {...rest}
@@ -29,7 +29,7 @@ const LinkButton = ({ children, ...rest }: ButtonProps & LinkProps) => {
     <Button
       as={Link}
       onClick={() => setHasClicked(true)}
-      rightIcon={(<ArrowRight />) as any}
+      rightIcon={(<PiArrowRight />) as any}
       isLoading={hasClicked}
       loadingText={"Redirecting"}
       {...rest}

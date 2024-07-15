@@ -7,8 +7,6 @@ import {
   Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { ArrowSquareOut } from "@phosphor-icons/react/ArrowSquareOut"
-import { LockSimple } from "@phosphor-icons/react/LockSimple"
 import usePlatformAccessButton from "components/[guild]/AccessHub/components/usePlatformAccessButton"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import { ApiRequirementHandlerProvider } from "components/[guild]/RequirementHandlerContext"
@@ -20,6 +18,8 @@ import useMembership, {
 } from "components/explorer/hooks/useMembership"
 import { motion } from "framer-motion"
 import { useMemo, useState } from "react"
+import { PiArrowSquareOut } from "react-icons/pi"
+import { PiLockSimple } from "react-icons/pi"
 import rewards from "rewards"
 import GoogleCardWarning from "rewards/Google/GoogleCardWarning"
 import rewardComponents from "rewards/components"
@@ -69,7 +69,7 @@ const Reward = ({
       return {
         tooltipLabel: (
           <>
-            <Icon as={LockSimple} display="inline" mb="-2px" mr="1" />
+            <Icon as={PiLockSimple} display="inline" mb="-2px" mr="1" />
             Join guild to check access
           </>
         ),
@@ -113,7 +113,7 @@ const Reward = ({
               <Button
                 variant="link"
                 rightIcon={
-                  isValidating ? <Spinner boxSize="1em" /> : <ArrowSquareOut />
+                  isValidating ? <Spinner boxSize="1em" /> : <PiArrowSquareOut />
                 }
                 iconSpacing="1"
                 maxW="full"

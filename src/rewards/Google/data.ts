@@ -1,8 +1,8 @@
-import { GoogleLogo } from "@phosphor-icons/react/GoogleLogo"
+import { PiGoogleLogo } from "react-icons/pi"
 import { PlatformAsRewardRestrictions, RewardData } from "rewards/types"
 
 export const googleData = {
-  icon: GoogleLogo,
+  icon: PiGoogleLogo,
   imageUrl: "/platforms/google.png",
   name: "Google Workspace",
   colorScheme: "blue",

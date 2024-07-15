@@ -1,5 +1,5 @@
-import { WarningCircle } from "@phosphor-icons/react/dist/ssr/WarningCircle"
 import { PropsWithChildren, useEffect, useState } from "react"
+import { PiWarningCircle } from "react-icons/pi"
 import { Alert, AlertDescription, AlertTitle } from "./ui/Alert"
 import { Collapsible, CollapsibleContent } from "./ui/Collapsible"
 
@@ -34,7 +34,7 @@ const Error = <ErrorType,>({
     <Collapsible open={!!state.title}>
       <CollapsibleContent>
         <Alert variant="error" className="mb-6">
-          <WarningCircle weight="fill" className="size-6" />
+          <PiWarningCircle weight="fill" className="size-6" />
           <AlertTitle>{state.title}</AlertTitle>
           <AlertDescription>{state.description}</AlertDescription>
         </Alert>

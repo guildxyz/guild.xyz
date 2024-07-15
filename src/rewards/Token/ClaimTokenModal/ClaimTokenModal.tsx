@@ -15,7 +15,6 @@ import {
   Tooltip,
   VStack,
 } from "@chakra-ui/react"
-import { ArrowSquareOut } from "@phosphor-icons/react/ArrowSquareOut"
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import SwitchNetworkButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/SwitchNetworkButton"
 import useIsBalanceSufficient from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/hooks/useIsBalanceSufficient"
@@ -24,6 +23,7 @@ import Button from "components/common/Button"
 import { useCardBg } from "components/common/Card"
 import Image from "next/image"
 import { useMemo, useState } from "react"
+import { PiArrowSquareOut } from "react-icons/pi"
 import { claimTextButtonTooltipLabel } from "rewards/SecretText/TextCardButton"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import {
@@ -183,7 +183,7 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
                 onClick={(e) => e.stopPropagation()}
               >
                 restricted countries
-                <Icon as={ArrowSquareOut} ml="0.5" />
+                <Icon as={PiArrowSquareOut} ml="0.5" />
               </Link>
             </Text>
           </Checkbox>

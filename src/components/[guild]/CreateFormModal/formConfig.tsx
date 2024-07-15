@@ -1,11 +1,11 @@
 import { Schemas } from "@guildxyz/types"
-import { CheckSquare } from "@phosphor-icons/react/CheckSquare"
-import { NumberCircleFive } from "@phosphor-icons/react/NumberCircleFive"
-import { NumberSquareFive } from "@phosphor-icons/react/NumberSquareFive"
-import { RadioButton } from "@phosphor-icons/react/RadioButton"
-import { Textbox } from "@phosphor-icons/react/Textbox"
 import OptionIcon from "components/common/StyledSelect/components/CustomSelectOption/components/OptionIcon"
 import { ComponentType, ReactNode } from "react"
+import { PiCheckSquare } from "react-icons/pi"
+import { PiNumberCircleFive } from "react-icons/pi"
+import { PiNumberSquareFive } from "react-icons/pi"
+import { PiRadioButton } from "react-icons/pi"
+import { PiTextbox } from "react-icons/pi"
 import {
   ExpectedFieldDataProps,
   ExpectedMultipleChoiceDisplay,
@@ -45,7 +45,7 @@ const fieldTypes: {
   {
     label: "Short text",
     value: "SHORT_TEXT",
-    img: <OptionIcon as={Textbox} />,
+    img: <OptionIcon as={PiTextbox} />,
     DisplayComponent: ShortText,
     ExpectedAnswerComponent: ExpectedString,
     ExpectedAnswerDisplayComponent: ExpectedStringDisplay,
@@ -53,7 +53,7 @@ const fieldTypes: {
   {
     label: "Long text",
     value: "LONG_TEXT",
-    img: <OptionIcon as={Textbox} />,
+    img: <OptionIcon as={PiTextbox} />,
     DisplayComponent: LongText,
     ExpectedAnswerComponent: ExpectedString,
     ExpectedAnswerDisplayComponent: ExpectedStringDisplay,
@@ -61,7 +61,7 @@ const fieldTypes: {
   {
     label: "Number",
     value: "NUMBER",
-    img: <OptionIcon as={NumberSquareFive} />,
+    img: <OptionIcon as={PiNumberSquareFive} />,
     DisplayComponent: Number,
     ExpectedAnswerComponent: ExpectedNumber,
     ExpectedAnswerDisplayComponent: ExpectedStringDisplay,
@@ -69,7 +69,7 @@ const fieldTypes: {
   {
     label: "Single choice",
     value: "SINGLE_CHOICE",
-    img: <OptionIcon as={RadioButton} />,
+    img: <OptionIcon as={PiRadioButton} />,
     SetupComponent: ChoiceSetup,
     DisplayComponent: SingleChoice,
     ExpectedAnswerComponent: ExpectedSingleChoice,
@@ -78,7 +78,7 @@ const fieldTypes: {
   {
     label: "Multiple choice",
     value: "MULTIPLE_CHOICE",
-    img: <OptionIcon as={CheckSquare} />,
+    img: <OptionIcon as={PiCheckSquare} />,
     SetupComponent: ChoiceSetup,
     DisplayComponent: MultipleChoice,
     ExpectedAnswerComponent: ExpectedMultipleChoice,
@@ -87,7 +87,7 @@ const fieldTypes: {
   {
     label: "Rate",
     value: "RATE",
-    img: <OptionIcon as={NumberCircleFive} />,
+    img: <OptionIcon as={PiNumberCircleFive} />,
     SetupComponent: RateSetup,
     DisplayComponent: Rate,
     ExpectedAnswerComponent: ExpectedRate,

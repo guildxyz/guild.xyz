@@ -8,12 +8,12 @@ import {
   Tooltip,
   useDisclosure,
 } from "@chakra-ui/react"
-import { SignOut } from "@phosphor-icons/react/SignOut"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import { Alert } from "components/common/Modal"
 import useMembership from "components/explorer/hooks/useMembership"
 import { useRef } from "react"
+import { PiSignOut } from "react-icons/pi"
 import { useIsTabsStuck } from "../Tabs/Tabs"
 import { useThemeContext } from "../ThemeContext"
 import useLeaveGuild from "./hooks/useLeaveGuild"
@@ -36,7 +36,7 @@ const LeaveButton = ({ disableColoring = false }) => {
       <Tooltip label="Leave guild" hasArrow>
         <IconButton
           aria-label="Leave guild"
-          icon={<SignOut />}
+          icon={<PiSignOut />}
           onClick={onOpen}
           minW={"44px"}
           variant="ghost"

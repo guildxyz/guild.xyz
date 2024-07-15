@@ -2,13 +2,13 @@ import { Button } from "@/components/ui/Button"
 import { useToast } from "@/components/ui/hooks/useToast"
 import { useDisclosure } from "@/hooks/useDisclosure"
 import { cn } from "@/lib/utils"
-import { Warning } from "@phosphor-icons/react/dist/ssr/Warning"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useUser from "components/[guild]/hooks/useUser"
 import useMembership from "components/explorer/hooks/useMembership"
 import { motion } from "framer-motion"
 import { ReactNode } from "react"
+import { PiWarning } from "react-icons/pi"
 import rewards from "rewards"
 import { PlatformName } from "types"
 import useDisconnect from "../hooks/useDisconnect"
@@ -152,7 +152,7 @@ const ConnectPlatformButton = ({
       className={cn("ml-auto", PLATFORM_COLORS[type])}
     >
       {isReconnect && (
-        <Warning
+        <PiWarning
           weight="bold"
           className="mr-1 text-orange-400 data-[theme=dark]:text-orange-200"
         />

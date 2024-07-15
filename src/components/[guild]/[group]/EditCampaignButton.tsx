@@ -1,5 +1,5 @@
 import { IconButton, useDisclosure } from "@chakra-ui/react"
-import { GearSix } from "@phosphor-icons/react/GearSix"
+import { PiGearSix } from "react-icons/pi"
 import EditCampaignModal from "../AccessHub/components/CampaignCards/components/EditCampaignModal"
 import { useThemeContext } from "../ThemeContext"
 import useRoleGroup from "../hooks/useRoleGroup"
@@ -14,7 +14,7 @@ const EditCampaignButton = () => {
   return (
     <>
       <IconButton
-        icon={<GearSix />}
+        icon={<PiGearSix />}
         aria-label="Edit page"
         minW="44px"
         rounded="full"

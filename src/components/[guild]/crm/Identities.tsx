@@ -6,10 +6,10 @@ import {
   TagProps,
   Tooltip,
 } from "@chakra-ui/react"
-import { LockSimple } from "@phosphor-icons/react/LockSimple"
-import { Wallet } from "@phosphor-icons/react/Wallet"
 import { useCardBg } from "components/common/Card"
 import { PropsWithChildren, memo } from "react"
+import { PiLockSimple } from "react-icons/pi"
+import { PiWallet } from "react-icons/pi"
 import rewards from "rewards"
 import { PlatformAccountDetails, PlatformType, Rest } from "types"
 import shortenHex from "utils/shortenHex"
@@ -126,7 +126,7 @@ export const WalletTag = ({
       flexShrink={0}
       {...rest}
     >
-      <TagLeftIcon as={Wallet} mr="0" />
+      <TagLeftIcon as={PiWallet} mr="0" />
       <TagLabel ml="1">{children}</TagLabel>
       {rightElement}
     </Tag>
@@ -146,7 +146,7 @@ export const PrivateSocialsTag = ({ isOpen = false }) => (
       sx={{ "--stacked-margin-left": "-28px" }}
       transition={"margin .2s"}
     >
-      <TagLeftIcon as={LockSimple} mr="0" />
+      <TagLeftIcon as={PiLockSimple} mr="0" />
       {isOpen && <TagLabel ml="1">Private socials</TagLabel>}
     </Tag>
   </Tooltip>

@@ -1,5 +1,4 @@
 import { Box, Collapse, Spacer, Spinner, Stack, Tag } from "@chakra-ui/react"
-import { Plus } from "@phosphor-icons/react/Plus"
 import {
   AddRewardProvider,
   useAddRewardContext,
@@ -12,6 +11,7 @@ import AddCard from "components/common/AddCard"
 import Button from "components/common/Button"
 import Section from "components/common/Section"
 import { atom } from "jotai"
+import { PiPlus } from "react-icons/pi"
 import useAddRolePlatform from "../hooks/useAddRolePlatform"
 import ExistingRolePlatformCard from "./ExistingRolePlatformCard"
 
@@ -40,7 +40,7 @@ const EditRolePlatforms = ({ roleId }: Props) => {
           <Button
             variant="ghost"
             size="sm"
-            leftIcon={<Plus />}
+            leftIcon={<PiPlus />}
             rightIcon={<TransitioningPlatformIcons boxSize="4" />}
             onClick={onOpen}
           >

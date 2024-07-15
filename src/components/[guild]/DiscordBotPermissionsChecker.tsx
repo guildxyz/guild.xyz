@@ -11,14 +11,14 @@ import {
   UnorderedList,
   useDisclosure,
 } from "@chakra-ui/react"
-import { ArrowSquareOut } from "@phosphor-icons/react/ArrowSquareOut"
-import { Info } from "@phosphor-icons/react/Info"
 import Button from "components/common/Button"
 import DiscordRoleVideo from "components/common/DiscordRoleVideo"
 import { Modal } from "components/common/Modal"
 import { env } from "env"
 import { ActionToastOptions, useToastWithButton } from "hooks/useToast"
 import { useMemo, useRef, useState } from "react"
+import { PiArrowSquareOut } from "react-icons/pi"
+import { PiInfo } from "react-icons/pi"
 import useSWRImmutable from "swr/immutable"
 import { PlatformType } from "types"
 import fetcher from "utils/fetcher"
@@ -140,7 +140,7 @@ const DiscordBotPermissionsChecker = () => {
           isClosable: false,
           buttonProps: {
             children: "Fix problem",
-            leftIcon: <Info />,
+            leftIcon: <PiInfo />,
             onClick: onOpen,
           },
           secondButtonProps: {
@@ -241,7 +241,7 @@ const DiscordBotPermissionsChecker = () => {
           isClosable: false,
           buttonProps: {
             children: "Invite bot",
-            rightIcon: <ArrowSquareOut />,
+            rightIcon: <PiArrowSquareOut />,
             onClick: () =>
               window.open(
                 `https://discord.com/api/oauth2/authorize?client_id=${env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&permissions=268716145&scope=bot%20applications.commands`

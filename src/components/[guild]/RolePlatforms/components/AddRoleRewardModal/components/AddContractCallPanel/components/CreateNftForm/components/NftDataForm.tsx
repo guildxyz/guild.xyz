@@ -26,13 +26,6 @@ import {
   Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react"
-import {
-  ArrowSquareOut,
-  Clock,
-  Hash,
-  Plus,
-  TrashSimple,
-} from "@phosphor-icons/react"
 import StartEndTimeForm from "components/[guild]/RolePlatforms/components/EditRewardAvailabilityModal/components/StartEndTimeForm"
 import useGuildFee from "components/[guild]/collect/hooks/useGuildFee"
 import Button from "components/common/Button"
@@ -46,6 +39,13 @@ import {
   useFormContext,
   useWatch,
 } from "react-hook-form"
+import {
+  PiArrowSquareOut,
+  PiClock,
+  PiHash,
+  PiPlus,
+  PiTrashSimple,
+} from "react-icons/pi"
 import ChainPicker from "requirements/common/ChainPicker"
 import { ADDRESS_REGEX } from "utils/guildCheckout/constants"
 import { formatUnits } from "viem"
@@ -218,7 +218,7 @@ const NftDataForm = ({ isEditMode, submitButton }: Props) => {
                       <Flex justifyContent="end">
                         <IconButton
                           aria-label="Remove attribute"
-                          icon={<TrashSimple />}
+                          icon={<PiTrashSimple />}
                           colorScheme="red"
                           size="sm"
                           rounded="full"
@@ -232,7 +232,7 @@ const NftDataForm = ({ isEditMode, submitButton }: Props) => {
                 ))}
 
                 <Button
-                  leftIcon={<Plus />}
+                  leftIcon={<PiPlus />}
                   onClick={() =>
                     append({
                       name: "",
@@ -253,7 +253,7 @@ const NftDataForm = ({ isEditMode, submitButton }: Props) => {
               <CheckboxColorCard
                 colorScheme="indigo"
                 variant="outline"
-                icon={Hash}
+                icon={PiHash}
                 title="Limit supply"
                 description="Limit the total number of NFTs and the number each user can collect. First come, first served."
                 defaultChecked={
@@ -282,7 +282,7 @@ const NftDataForm = ({ isEditMode, submitButton }: Props) => {
                   isDisabled={pathname === "/create-guild"}
                   colorScheme="indigo"
                   variant="outline"
-                  icon={Clock}
+                  icon={PiClock}
                   title="Limit claiming time"
                   description="Set a claim period for the NFT."
                   defaultChecked={
@@ -372,7 +372,7 @@ const NftDataForm = ({ isEditMode, submitButton }: Props) => {
                   textDecoration="underline"
                 >
                   Learn more
-                  <Icon as={ArrowSquareOut} ml={0.5} />
+                  <Icon as={PiArrowSquareOut} ml={0.5} />
                 </Link>
               </FormHelperText>
 

@@ -14,9 +14,9 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext"
-import { ImageSquare } from "@phosphor-icons/react/ImageSquare"
 import Button from "components/common/Button"
 import { useRef, useState } from "react"
+import { PiImageSquare } from "react-icons/pi"
 import { INSERT_IMAGE_COMMAND } from "../../ImagesPlugin"
 
 const ImageEditor = (): JSX.Element => {
@@ -57,7 +57,7 @@ const ImageEditor = (): JSX.Element => {
           <IconButton
             onClick={onToggle}
             aria-label="Add image"
-            icon={<ImageSquare />}
+            icon={<PiImageSquare />}
           />
         </PopoverTrigger>
         <PopoverContent>

@@ -15,9 +15,9 @@ import {
   forwardRef,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { Funnel } from "@phosphor-icons/react/Funnel"
 import Button from "components/common/Button"
 import { memo } from "react"
+import { PiFunnel } from "react-icons/pi"
 import { Role } from "types"
 import pluralize from "utils/pluralize"
 import RoleTag from "../RoleTag"
@@ -225,7 +225,7 @@ const FilterByCrmRole = memo(({ roleId, setFilterValue, onFilter }: any) => {
   return (
     <Button
       variant="ghost"
-      leftIcon={<Funnel />}
+      leftIcon={<PiFunnel />}
       size="sm"
       borderRadius={0}
       onClick={onClick}

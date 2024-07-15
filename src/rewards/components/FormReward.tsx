@@ -1,5 +1,4 @@
 import { Skeleton, Tooltip } from "@chakra-ui/react"
-import { ArrowRight } from "@phosphor-icons/react/ArrowRight"
 import { RewardIcon } from "components/[guild]/RoleCard/components/Reward"
 import { RewardDisplay } from "components/[guild]/RoleCard/components/RewardDisplay"
 import { RewardProps } from "components/[guild]/RoleCard/components/types"
@@ -7,6 +6,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import { useGuildForm } from "components/[guild]/hooks/useGuildForms"
 import Button from "components/common/Button"
 import Link from "next/link"
+import { PiArrowRight } from "react-icons/pi"
 import { useUserFormSubmission } from "rewards/Forms/hooks/useFormSubmissions"
 
 const FormReward = ({ platform, withMotionImg }: RewardProps) => {
@@ -49,7 +49,7 @@ const FormReward = ({ platform, withMotionImg }: RewardProps) => {
                     : "#"
                 }
                 variant="link"
-                rightIcon={<ArrowRight />}
+                rightIcon={<PiArrowRight />}
                 iconSpacing="1"
                 maxW="full"
               >

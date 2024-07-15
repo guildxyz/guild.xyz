@@ -11,11 +11,11 @@ import {
   VStack,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { Trophy } from "@phosphor-icons/react/Trophy"
 import Card from "components/common/Card"
 import GuildAvatar from "components/common/GuildAvatar"
 import useResolveAddress from "hooks/useResolveAddress"
 import { useRouter } from "next/router"
+import { PiTrophy } from "react-icons/pi"
 import shortenHex from "utils/shortenHex"
 import useGuildPlatform from "../hooks/useGuildPlatform"
 
@@ -60,7 +60,7 @@ const LeaderboardUserCard = ({
   const TrophyIcon =
     position <= 3 ? (
       <Icon
-        as={Trophy}
+        as={PiTrophy}
         weight="fill"
         color={getTrophyColor(position)}
         boxSize={{ base: 8, sm: 10 }}

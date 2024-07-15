@@ -1,11 +1,11 @@
 import { Icon, Tooltip, useColorModeValue } from "@chakra-ui/react"
-import { Question } from "@phosphor-icons/react/Question"
-import { SealCheck } from "@phosphor-icons/react/SealCheck"
 import { useMintGuildPinContext } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import RewardCard from "components/common/RewardCard"
 import dynamic from "next/dynamic"
+import { PiQuestion } from "react-icons/pi"
+import { PiSealCheck } from "react-icons/pi"
 
 const DynamicMintGuildPin = dynamic(
   () =>
@@ -32,10 +32,10 @@ const GuildPinRewardCard = () => {
       data-test="guild-pin-reward-card"
       label={
         <>
-          <Icon as={SealCheck} mb="-2px" mr="1.5" />
+          <Icon as={PiSealCheck} mb="-2px" mr="1.5" />
           Guild.xyz
           <Tooltip label="This is a built in reward by Guild.xyz" hasArrow>
-            <Icon as={Question} mb="-2px" ml="1.5" />
+            <Icon as={PiQuestion} mb="-2px" ml="1.5" />
           </Tooltip>
         </>
       }
