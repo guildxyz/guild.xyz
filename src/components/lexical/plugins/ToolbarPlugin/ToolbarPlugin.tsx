@@ -34,7 +34,7 @@ import {
   ListBullets,
   ListNumbers,
   Quotes,
-  TextBolder,
+  TextB,
   TextHOne,
   TextHTwo,
   TextItalic,
@@ -410,7 +410,7 @@ const ToolbarPlugin = () => {
         isActive={isBold}
         isDisabled={isItalic}
         aria-label="Format Bold"
-        icon={<TextBolder />}
+        icon={<TextB />}
       />
       <IconButton
         onClick={() => {

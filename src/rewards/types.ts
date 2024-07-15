@@ -1,5 +1,5 @@
 import type { ThemingProps } from "@chakra-ui/react"
-import type { IconProps } from "@phosphor-icons/react"
+import { IconProps } from "@phosphor-icons/react/dist/lib/types"
 import type { RewardProps } from "components/[guild]/RoleCard/components/types"
 import type {
   ComponentType,

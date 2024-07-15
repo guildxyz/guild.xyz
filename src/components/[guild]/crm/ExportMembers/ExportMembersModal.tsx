@@ -9,7 +9,7 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
-import { ArchiveBox } from "@phosphor-icons/react"
+import { BoxArrowDown } from "@phosphor-icons/react"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import { SectionTitle } from "components/common/Section"
@@ -40,7 +40,7 @@ const ExportMembersModal = ({ isOpen, onClose }) => {
             onClick={startExport}
             isLoading={isStartExportLoading}
             loadingText="Starting export"
-            leftIcon={<ArchiveBox />}
+            leftIcon={<BoxArrowDown />}
             mb="8"
             variant="subtle"
             borderWidth={2}

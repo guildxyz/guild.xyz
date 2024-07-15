@@ -10,7 +10,8 @@ import {
   forwardRef,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { DotsThreeVertical, IconProps } from "@phosphor-icons/react"
+import { DotsThreeVertical } from "@phosphor-icons/react"
+import { IconProps } from "@phosphor-icons/react/dist/lib/types"
 import { ForwardRefExoticComponent, RefAttributes } from "react"
 import { useActivityLog } from "../../ActivityLogContext"
 import ClickableTagPopover from "./ClickableTagPopover"

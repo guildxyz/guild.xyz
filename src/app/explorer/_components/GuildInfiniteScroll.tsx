@@ -1,7 +1,7 @@
 "use client"
 
 import { GuildCardSkeleton, GuildCardWithLink } from "@/components/GuildCard"
-import { Spinner } from "@phosphor-icons/react"
+import { Spinner } from "@phosphor-icons/react/dist/ssr"
 import useUser from "components/[guild]/hooks/useUser"
 import { env } from "env"
 import { useFetcherWithSign } from "hooks/useFetcherWithSign"
@@ -95,6 +95,7 @@ export const GuildInfiniteScroll = ({
         <GuildCards guildData={renderedGuilds} />
       </section>
       <Spinner
+        weight="bold"
         className="invisible mx-auto size-8 animate-spin data-[active=true]:visible"
         data-active={isValidating || isLoading}
       />

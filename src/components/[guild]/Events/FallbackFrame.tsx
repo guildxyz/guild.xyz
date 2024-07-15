@@ -1,5 +1,5 @@
 import { Icon, Spinner, Text } from "@chakra-ui/react"
-import { IconProps } from "@phosphor-icons/react"
+import { IconProps } from "@phosphor-icons/react/dist/lib/types"
 import Card from "components/common/Card"
 import { ForwardRefExoticComponent } from "react"
 

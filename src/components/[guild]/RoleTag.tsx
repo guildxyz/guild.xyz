@@ -9,7 +9,7 @@ import {
   forwardRef,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { IconProps } from "@phosphor-icons/react"
+import { IconProps } from "@phosphor-icons/react/dist/lib/types"
 import { ForwardRefExoticComponent, RefAttributes, memo } from "react"
 
 type Props = {

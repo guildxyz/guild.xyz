@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils"
-import { ArrowSquareOut } from "@phosphor-icons/react/dist/ssr/ArrowSquareOut"
+import { ArrowSquareOut } from "@phosphor-icons/react/dist/ssr"
 import { Slot } from "@radix-ui/react-slot"
 import { type VariantProps, cva } from "class-variance-authority"
 import Link from "next/link"

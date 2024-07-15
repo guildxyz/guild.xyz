@@ -4,7 +4,7 @@ import { PLATFORM_COLORS } from "@/components/Account/components/AccountModal/co
 import { Button, ButtonProps } from "@/components/ui/Button"
 import { cn } from "@/lib/utils"
 import { useToast } from "@chakra-ui/react"
-import type { Icon } from "@phosphor-icons/react"
+import { Icon } from "@phosphor-icons/react/dist/lib/types"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useUser from "components/[guild]/hooks/useUser"

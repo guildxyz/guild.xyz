@@ -1,11 +1,10 @@
 "use client"
 
 import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
-import { Anchor } from "@/components/ui/Anchor"
-import { Button, buttonVariants } from "@/components/ui/Button"
+import { buttonVariants } from "@/components/ui/Button"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/ToggleGroup"
 import { cn } from "@/lib/utils"
-import { Plus } from "@phosphor-icons/react"
+import { Plus } from "@phosphor-icons/react/dist/ssr"
 import useIsStuck from "hooks/useIsStuck"
 import useScrollspy from "hooks/useScrollSpy"
 import { useAtom, useAtomValue, useSetAtom } from "jotai"
@@ -83,7 +82,7 @@ const CreateGuildLink = () => {
         ],
       })}
     >
-      <Plus />
+      <Plus weight="bold" />
       <span>Create guild</span>
     </Link>
   )

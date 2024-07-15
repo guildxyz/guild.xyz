@@ -1,4 +1,4 @@
-import { type Icon } from "@phosphor-icons/react"
+import { Icon } from "@phosphor-icons/react/dist/lib/types"
 import {
   ArrowSquareOut,
   CaretDown,

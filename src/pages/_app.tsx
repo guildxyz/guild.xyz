@@ -1,6 +1,6 @@
 import { Box, Progress, Slide, useColorMode } from "@chakra-ui/react"
 import { FuelProvider } from "@fuels/react"
-import { IconContext } from "@phosphor-icons/react"
+import { IconContext } from "@phosphor-icons/react/dist/lib/context"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { bugsnagStart } from "bugsnag"
 import AppErrorBoundary from "components/_app/AppErrorBoundary"
