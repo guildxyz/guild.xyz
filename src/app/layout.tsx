@@ -5,6 +5,7 @@ import { dystopian, inter } from "fonts"
 import type { Metadata } from "next"
 import { type ReactNode, Suspense } from "react"
 import "./globals.css"
+import { cn } from "@/lib/utils"
 
 interface RootLayoutProps {
   children: ReactNode
@@ -20,7 +21,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head />
-      <body className={clsx(dystopian.variable, inter.variable)}>
+      <body className={cn(dystopian.variable, inter.variable, "antialiased")}>
         <Providers>
           {children}
 
