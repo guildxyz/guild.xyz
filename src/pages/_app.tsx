@@ -32,7 +32,7 @@ import { LegacyPostHogProvider } from "components/_app/LegacyPostHogProvider"
 import { LegacyWeb3ConnectionManager } from "components/_app/LegacyWeb3ConnectionManager"
 import "wicg-inert"
 
-const DynamicReCAPTCHA = dynamic(() => import("components/common/ReCAPTCHA"))
+const DynamicReCAPTCHA = dynamic(() => import("v2/components/ReCAPTCHA"))
 
 const queryClient = new QueryClient()
 

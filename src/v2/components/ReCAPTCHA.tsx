@@ -1,3 +1,5 @@
+"use client"
+
 import { useSetAtom } from "jotai"
 import GoogleReCAPTCHA, { ReCAPTCHAProps } from "react-google-recaptcha"
 import { recaptchaAtom } from "utils/recaptcha"

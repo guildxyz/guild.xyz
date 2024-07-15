@@ -197,12 +197,12 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply min-h-screen bg-background font-sans text-foreground;
   }
 }
 
-/* Copy-pasted from custom-scrollbar.css just so we can use it everywhere */
 @layer utilities {
   .custom-scrollbar::-webkit-scrollbar,
   .custom-menu-list > div::-webkit-scrollbar {
@@ -240,4 +240,19 @@
     width: 0;
     height: 0;
   }
+}
+
+/*
+  Hides the default reCaptcha badge. We do indicate reCaptcha usage in the WalletSelectorModal
+  https://stackoverflow.com/questions/44543157/how-to-hide-the-google-invisible-recaptcha-badge#answer-44543771
+*/
+.grecaptcha-badge {
+  visibility: hidden;
+}
+
+/*
+  Make sure the captcha works inside modals...
+*/
+iframe[src*='/recaptcha'] {
+  pointer-events: all;
 }
