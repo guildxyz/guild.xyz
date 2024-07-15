@@ -9,6 +9,12 @@ const nextConfig = {
     tsconfigPath: process.env.TS_CONFIG_PATH,
   },
   webpack(config, options) {
+    console.log("OPTIMIZATION", config.optimization)
+    config.optimization = {
+      ...config.optimization,
+      usedExports: true
+    }
+
     config.module.rules.push({
       test: /\.svg$/,
       use: [
