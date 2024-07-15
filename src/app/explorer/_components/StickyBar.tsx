@@ -72,6 +72,7 @@ const CreateGuildLink = () => {
       href="/create-guild"
       prefetch={false}
       className={buttonVariants({
+        colorScheme: "secondary",
         variant: "ghost",
         size: "sm",
         className: [
