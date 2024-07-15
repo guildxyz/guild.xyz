@@ -8,6 +8,7 @@ import {
 import { Button, ButtonProps, buttonVariants } from "@/components/ui/Button"
 import {
   Dialog,
+  DialogBody,
   DialogCloseButton,
   DialogContent,
   DialogFooter,
@@ -217,84 +218,86 @@ const ConnectFarcasterButton = ({
             </DialogTitle>
           </DialogHeader>
 
-          <div className="flex flex-col justify-center">
-            {signedKeyRequest.isLoading ? (
-              <Skeleton className="aspect-square w-full" />
-            ) : (
-              !isMobile &&
-              url && (
-                <div className="overflow-hidden rounded-md border-2">
-                  <QRCodeSVG
-                    value={url}
-                    size={300}
-                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                  />
-                </div>
-              )
-            )}
+          <DialogBody>
+            <div className="flex flex-col justify-center">
+              {signedKeyRequest.isLoading ? (
+                <Skeleton className="aspect-square w-full" />
+              ) : (
+                !isMobile &&
+                url && (
+                  <div className="overflow-hidden rounded-md border-2">
+                    <QRCodeSVG
+                      value={url}
+                      size={300}
+                      style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                    />
+                  </div>
+                )
+              )}
 
-            <div className="mt-2 flex justify-center">
-              <p className="text-muted-foreground text-sm">
-                {isMobile
-                  ? "The link is active for "
-                  : "The QR code will be regenerated in "}
-                {seconds > 60
-                  ? `${Math.floor(seconds / 60)} minutes`
-                  : `${seconds} seconds`}
+              <div className="mt-2 flex justify-center">
+                <p className="text-muted-foreground text-sm">
+                  {isMobile
+                    ? "The link is active for "
+                    : "The QR code will be regenerated in "}
+                  {seconds > 60
+                    ? `${Math.floor(seconds / 60)} minutes`
+                    : `${seconds} seconds`}
+                </p>
+
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        size="xs"
+                        variant="ghost"
+                        className="w-6 px-0 text-muted-foreground"
+                        disabled={!shouldEnableRegenerateButton}
+                        isLoading={signedKeyRequest.isLoading}
+                        aria-label="Regenerate Farcaster QR code"
+                        onClick={() => {
+                          captureEvent("[farcaster] manual qr regeneration")
+                          onRegenerate()
+                        }}
+                      >
+                        <ArrowCounterClockwise weight="bold" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <span>Regenerate now</span>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+
+              <p className="text-center text-muted-foreground text-sm">
+                One Farcaster account can only be connected to{" "}
+                <strong>one Guild account</strong> at a time
               </p>
 
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      size="xs"
-                      variant="ghost"
-                      className="w-6 px-0 text-muted-foreground"
-                      disabled={!shouldEnableRegenerateButton}
-                      isLoading={signedKeyRequest.isLoading}
-                      aria-label="Regenerate Farcaster QR code"
-                      onClick={() => {
-                        captureEvent("[farcaster] manual qr regeneration")
-                        onRegenerate()
-                      }}
-                    >
-                      <ArrowCounterClockwise weight="bold" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <span>Regenerate now</span>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+              <hr className="mt-4" />
+
+              <Accordion type="single" collapsible>
+                <AccordionItem
+                  value="write-access"
+                  className="text-muted-foreground text-sm"
+                >
+                  <AccordionTrigger>
+                    Why does Guild request write access?
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <p>
+                      Guild is a Farcaster client. You can perform Farcaster actions,
+                      like follow, or recast to satisfy requirements. You can also
+                      perform these actions in external Farcaster clients, like
+                      Warpcast, but it will take some time for Guild to grant access
+                      based on actions in external clients
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
             </div>
-
-            <p className="text-center text-muted-foreground text-sm">
-              One Farcaster account can only be connected to{" "}
-              <strong>one Guild account</strong> at a time
-            </p>
-
-            <hr className="mt-4" />
-
-            <Accordion type="single" collapsible>
-              <AccordionItem
-                value="write-access"
-                className="text-muted-foreground text-sm"
-              >
-                <AccordionTrigger>
-                  Why does Guild request write access?
-                </AccordionTrigger>
-                <AccordionContent>
-                  <p>
-                    Guild is a Farcaster client. You can perform Farcaster actions,
-                    like follow, or recast to satisfy requirements. You can also
-                    perform these actions in external Farcaster clients, like
-                    Warpcast, but it will take some time for Guild to grant access
-                    based on actions in external clients
-                  </p>
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          </div>
+          </DialogBody>
 
           {isMobile && (
             <DialogFooter>

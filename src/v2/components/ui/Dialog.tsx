@@ -34,7 +34,7 @@ const DialogOverlay = forwardRef<
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName
 
 export const dialogContentVariants = cva(
-  "w-full mt-4 md:my-16 relative rounded-xl max-sm:rounded-b-none bg-card shadow-lg px-6 py-10 sm:px-10 duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 focus-visible:outline-none ring-ring focus-visible:ring-4 ring-offset-0",
+  "flex flex-col w-full mt-4 md:my-16 relative rounded-xl max-sm:rounded-b-none bg-card shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 focus-visible:outline-none ring-ring focus-visible:ring-4 ring-offset-0",
   {
     variants: {
       size: {
@@ -56,19 +56,22 @@ export const dialogContentVariants = cva(
 export interface DialogContentProps
   extends ComponentPropsWithoutRef<typeof DialogPrimitive.Content>,
     VariantProps<typeof dialogContentVariants> {
+  scrollBody?: boolean
   trapFocus?: FocusScopeProps["trapped"]
 }
 
 const DialogContent = forwardRef<
   ElementRef<typeof DialogPrimitive.Content>,
   DialogContentProps
->(({ size, trapFocus = true, className, children, ...props }, ref) => (
+>(({ size, trapFocus = true, className, scrollBody, children, ...props }, ref) => (
   <DialogPortal>
     <DialogOverlay>
       <FocusScope trapped={trapFocus} loop>
         <DialogPrimitive.Content
           ref={ref}
-          className={cn(dialogContentVariants({ size, className }))}
+          className={cn(dialogContentVariants({ size, className }), {
+            "max-h-[calc(100vh-2*theme(space.16))]": scrollBody,
+          })}
           {...props}
         >
           {children}
@@ -98,14 +101,34 @@ const DialogCloseButton = forwardRef<
 DialogCloseButton.displayName = DialogPrimitive.Close.displayName
 
 const DialogHeader = ({ className, ...props }: HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn("flex flex-col space-y-1.5 pb-9", className)} {...props} />
+  <div
+    className={cn("flex flex-col space-y-1.5 px-6 pt-10 pb-8 sm:px-10", className)}
+    {...props}
+  />
 )
 DialogHeader.displayName = "DialogHeader"
+
+interface DialogBodyProps extends HTMLAttributes<HTMLDivElement> {
+  scroll?: boolean
+}
+const DialogBody = ({ className, ...props }: DialogBodyProps) => (
+  <div
+    className={cn(
+      "flex flex-col px-6 pb-10 has-[~div]:pb-0 sm:px-10",
+      {
+        "custom-scrollbar flex-shrink-1 flex-grow-1 overflow-y-auto": scroll,
+      },
+      className
+    )}
+    {...props}
+  />
+)
+DialogBody.displayName = "DialogBody"
 
 const DialogFooter = ({ className, ...props }: HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      "flex flex-col-reverse pt-8 sm:flex-row sm:justify-end sm:space-x-2",
+      "flex flex-col-reverse px-6 pt-8 pb-10 sm:flex-row sm:justify-end sm:space-x-2 sm:px-10",
       className
     )}
     {...props}
@@ -146,6 +169,7 @@ export {
   DialogContent,
   DialogDescription,
   DialogFooter,
+  DialogBody,
   DialogHeader,
   DialogOverlay,
   DialogPortal,

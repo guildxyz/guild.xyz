@@ -14,6 +14,7 @@ import { anchorVariants } from "@/components/ui/Anchor"
 import { Button, ButtonProps } from "@/components/ui/Button"
 import {
   Dialog,
+  DialogBody,
   DialogCloseButton,
   DialogContent,
   DialogHeader,
@@ -52,7 +53,6 @@ const SharedSocials = () => {
 
   return (
     <Dialog>
-      {/* TODO: scrollBehavior="inside" (maybe we can do it here and don't need to abstract it into the component?) */}
       <DialogTrigger asChild>
         {!guildSharedSocial ? (
           <Button {...buttonProps}>
@@ -76,48 +76,52 @@ const SharedSocials = () => {
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent scrollBody>
         <DialogHeader>
           <DialogTitle>Shared account connections</DialogTitle>
         </DialogHeader>
 
-        <p className="mb-10">
-          Choose which guilds you'd like to share your profile with.{" "}
-          <a
-            href="https://help.guild.xyz/en/articles/8489031-privacy-for-members"
-            className={anchorVariants({
-              variant: "muted",
-              className: "font-semibold",
-            })}
-            target="_blank"
-          >
-            Learn more{" "}
-            <ArrowSquareOut weight="bold" className="-top-px relative inline" />
-          </a>
-        </p>
+        <DialogBody className="gap-10" scroll>
+          <p>
+            Choose which guilds you'd like to share your profile with.{" "}
+            <a
+              href="https://help.guild.xyz/en/articles/8489031-privacy-for-members"
+              className={anchorVariants({
+                variant: "muted",
+                className: "font-semibold",
+              })}
+              target="_blank"
+            >
+              Learn more{" "}
+              <ArrowSquareOut weight="bold" className="-top-px relative inline" />
+            </a>
+          </p>
 
-        <div className="flex flex-col gap-4">
-          {guildSharedSocial && (
-            <>
-              <ShareSocialsWithGuildSelect
-                key={guildSharedSocial.guildId}
-                guildId={guildSharedSocial.guildId}
-                sharedSocials={sharedSocials}
-              />
-              <hr className="border-border-muted" />
-            </>
-          )}
-          {restSharedSocials.map((sharedSocial) => (
-            <>
-              <ShareSocialsWithGuildSelect
-                key={sharedSocial.guildId}
-                guildId={sharedSocial.guildId}
-                sharedSocials={sharedSocials}
-              />
-              <hr className="border-border-muted" />
-            </>
-          ))}
-        </div>
+          <div className="flex flex-col gap-4">
+            {guildSharedSocial && (
+              <>
+                <ShareSocialsWithGuildSelect
+                  key={guildSharedSocial.guildId}
+                  guildId={guildSharedSocial.guildId}
+                  sharedSocials={sharedSocials}
+                />
+                <hr className="border-border-muted" />
+              </>
+            )}
+            {restSharedSocials.map((sharedSocial, i) => (
+              <>
+                <ShareSocialsWithGuildSelect
+                  key={sharedSocial.guildId}
+                  guildId={sharedSocial.guildId}
+                  sharedSocials={sharedSocials}
+                />
+                {i < sharedSocials.length - 1 && (
+                  <hr className="border-border-muted" />
+                )}
+              </>
+            ))}
+          </div>
+        </DialogBody>
 
         <DialogCloseButton />
       </DialogContent>

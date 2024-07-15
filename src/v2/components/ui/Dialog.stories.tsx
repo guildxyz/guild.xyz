@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react"
 import { ComponentProps } from "react"
 import {
   Dialog,
+  DialogBody,
   DialogCloseButton,
   DialogContent,
   DialogContentProps,
@@ -16,17 +17,19 @@ import {
 const DialogExample = ({
   size,
   longContent,
+  scrollBody,
   showHeader = true,
   showFooter,
 }: {
   size?: DialogContentProps["size"]
   longContent?: ComponentProps<typeof DynamicDialogContent>["longContent"]
+  scrollBody?: boolean
   showHeader?: boolean
   showFooter?: boolean
 }) => (
   <Dialog defaultOpen>
     <DialogTrigger>Open dialog</DialogTrigger>
-    <DialogContent size={size}>
+    <DialogContent size={size} scrollBody={scrollBody}>
       {showHeader && (
         <DialogHeader>
           <DialogTitle>Awesome dialog</DialogTitle>
@@ -34,7 +37,9 @@ const DialogExample = ({
         </DialogHeader>
       )}
 
-      <DynamicDialogContent longContent={longContent} />
+      <DialogBody scroll={scrollBody}>
+        <DynamicDialogContent longContent={longContent} />
+      </DialogBody>
 
       {showFooter && <DialogFooter>Sneaky dialog footer</DialogFooter>}
 
@@ -56,6 +61,7 @@ export const Default: Story = {
   args: {
     longContent: false,
     size: "md",
+    scrollBody: false,
     showHeader: true,
     showFooter: false,
   },

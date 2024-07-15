@@ -1,5 +1,6 @@
 import {
   Dialog,
+  DialogBody,
   DialogCloseButton,
   DialogContent,
   DialogHeader,
@@ -26,12 +27,14 @@ const NetworkModal = ({
         <DialogTitle>Supported networks</DialogTitle>
       </DialogHeader>
 
-      <p className="mb-4 text-muted-foreground">
-        It doesn't matter which supported chain you're connected to, it's only used
-        to know your address and sign messages so each will work equally.
-      </p>
+      <DialogBody className="gap-4">
+        <p className="text-muted-foreground">
+          It doesn't matter which supported chain you're connected to, it's only used
+          to know your address and sign messages so each will work equally.
+        </p>
 
-      <NetworkButtonsList networkChangeCallback={onClose} />
+        <NetworkButtonsList networkChangeCallback={onClose} />
+      </DialogBody>
     </DialogContent>
   </Dialog>
 )
