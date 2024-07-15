@@ -105,7 +105,7 @@ const SharedSocials = () => {
                   guildId={guildSharedSocial.guildId}
                   sharedSocials={sharedSocials}
                 />
-                <hr className="border-border-muted" />
+                <hr className="opacity-60" />
               </>
             )}
             {restSharedSocials.map((sharedSocial, i) => (
@@ -115,9 +115,7 @@ const SharedSocials = () => {
                   guildId={sharedSocial.guildId}
                   sharedSocials={sharedSocials}
                 />
-                {i < sharedSocials.length - 1 && (
-                  <hr className="border-border-muted" />
-                )}
+                {i < sharedSocials.length - 1 && <hr className="opacity-60" />}
               </>
             ))}
           </div>
