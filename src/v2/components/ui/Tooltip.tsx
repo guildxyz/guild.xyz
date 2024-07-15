@@ -1,21 +1,20 @@
 "use client"
 
-import * as TooltipPrimitive from "@radix-ui/react-tooltip"
-import * as React from "react"
-
 import { cn } from "@/lib/utils"
+import * as TooltipPrimitive from "@radix-ui/react-tooltip"
+import { ComponentPropsWithoutRef, ElementRef, FC, forwardRef } from "react"
 
 const TooltipProvider = TooltipPrimitive.Provider
 
-const Tooltip: React.FC<
-  React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Root>
-> = ({ ...props }) => <TooltipPrimitive.Root delayDuration={0} {...props} />
+const Tooltip: FC<ComponentPropsWithoutRef<typeof TooltipPrimitive.Root>> = ({
+  ...props
+}) => <TooltipPrimitive.Root delayDuration={0} {...props} />
 
 const TooltipTrigger = TooltipPrimitive.Trigger
 
-const TooltipContent = React.forwardRef<
-  React.ElementRef<typeof TooltipPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Content>
+const TooltipContent = forwardRef<
+  ElementRef<typeof TooltipPrimitive.Content>,
+  ComponentPropsWithoutRef<typeof TooltipPrimitive.Content>
 >(({ className, sideOffset = 4, children, ...props }, ref) => (
   <TooltipPrimitive.Content
     ref={ref}
