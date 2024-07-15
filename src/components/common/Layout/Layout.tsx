@@ -1,4 +1,4 @@
-import { Header } from "@/components/Header"
+// import { Header } from "@/components/Header"
 import {
   Box,
   BoxProps,
@@ -143,7 +143,7 @@ const Layout = ({
             )}
           </Box>
         )}
-        <Header />
+        <div>v1 header</div>
         <Container
           // to be above the absolutely positioned background box
           position="relative"
