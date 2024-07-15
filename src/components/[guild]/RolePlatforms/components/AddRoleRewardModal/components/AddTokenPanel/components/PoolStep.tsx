@@ -48,11 +48,13 @@ const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
     data: { logoURI: tokenLogo, decimals },
   } = useTokenData(chain, tokenAddress)
 
-  const { isBalanceSufficient } = useIsBalanceSufficient({
+  const { isBalanceSufficient: rawIsBalanceSufficient } = useIsBalanceSufficient({
     address: tokenAddress,
     chain: chain,
     amount: amount,
   })
+
+  const isBalanceSufficient = rawIsBalanceSufficient || amount === "0"
 
   const formattedAmount =
     !!amount && decimals ? parseUnits(amount, decimals) : BigInt(1)
@@ -157,11 +159,11 @@ const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
       </Stack>
 
       <Stack>
-        <Collapse in={!isOnCorrectChain}>
+        <Collapse in={!isOnCorrectChain && amount !== "0"}>
           <SwitchNetworkButton targetChainId={Number(Chains[chain])} />
         </Collapse>
 
-        <Collapse in={isOnCorrectChain && !skip}>
+        <Collapse in={isOnCorrectChain && amount !== "0"}>
           <AllowanceButton
             chain={chain}
             token={tokenAddress}
@@ -170,7 +172,10 @@ const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
         </Collapse>
 
         <Collapse
-          in={(!!allowance || skip || pickedCurrencyIsNative) && isOnCorrectChain}
+          in={
+            (!!allowance || pickedCurrencyIsNative) &&
+            (isOnCorrectChain || amount === "0")
+          }
         >
           <Button
             size="lg"
