@@ -1,8 +1,7 @@
 "use client"
 
 import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
-import { Anchor } from "@/components/ui/Anchor"
-import { Button, buttonVariants } from "@/components/ui/Button"
+import { buttonVariants } from "@/components/ui/Button"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/ToggleGroup"
 import { cn } from "@/lib/utils"
 import { Plus } from "@phosphor-icons/react"

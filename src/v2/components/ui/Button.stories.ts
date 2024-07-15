@@ -11,27 +11,40 @@ export default meta
 
 type Story = StoryObj<typeof Button>
 
-export const Primary: Story = {
+export const Solid: Story = {
   args: {
-    children: "Primary",
+    children: "Solid",
     size: "md",
+    variant: "solid",
+    colorScheme: "primary",
+    isLoading: false,
     disabled: false,
-    variant: "default",
   },
   argTypes: {
     size: {
       type: "string",
-      control: "radio",
+      control: "select",
       options: ["xs", "sm", "md", "lg", "xl"] satisfies ButtonProps["size"][],
     },
-    disabled: {
-      type: "boolean",
-      control: "boolean",
+    colorScheme: {
+      type: "string",
+      control: "select",
+      options: [
+        "primary",
+        "secondary",
+        "info",
+        "destructive",
+        "success",
+      ] satisfies ButtonProps["colorScheme"][],
     },
     variant: {
       control: {
         disable: true,
       },
+    },
+    disabled: {
+      type: "boolean",
+      control: "boolean",
     },
     asChild: {
       control: {
@@ -41,96 +54,35 @@ export const Primary: Story = {
   },
 }
 
-export const Secondary: Story = {
-  args: {
-    ...Primary.args,
-    variant: "secondary",
-    children: "Secondary",
-  },
-  argTypes: {
-    ...Primary.argTypes,
-  },
-}
-
 export const Outline: Story = {
   args: {
-    ...Primary.args,
+    ...Solid.args,
     variant: "outline",
     children: "Outline",
   },
   argTypes: {
-    ...Primary.argTypes,
+    ...Solid.argTypes,
   },
 }
 
 export const Ghost: Story = {
   args: {
-    ...Primary.args,
+    ...Solid.args,
     variant: "ghost",
     children: "Ghost",
   },
   argTypes: {
-    ...Primary.argTypes,
+    ...Solid.argTypes,
   },
 }
 
-export const Success: Story = {
+export const Subtle: Story = {
   args: {
-    ...Primary.args,
-    variant: "success",
-    children: "Success",
+    ...Solid.args,
+    variant: "subtle",
+    children: "Subtle",
   },
   argTypes: {
-    ...Primary.argTypes,
-  },
-}
-
-export const Destructive: Story = {
-  args: {
-    ...Primary.args,
-    variant: "destructive",
-    children: "Destructive",
-  },
-  argTypes: {
-    ...Primary.argTypes,
-  },
-}
-
-export const DestructiveGhost: Story = {
-  name: "Destructive ghost",
-  args: {
-    ...Primary.args,
-    variant: "destructive-ghost",
-    children: "Destructive ghost",
-  },
-  argTypes: {
-    ...Primary.argTypes,
-  },
-}
-
-export const Link: Story = {
-  args: {
-    ...Primary.args,
-    variant: "link",
-    children: "Link",
-  },
-  argTypes: {
-    ...Primary.argTypes,
-  },
-}
-
-export const Loading: Story = {
-  args: {
-    ...Primary.args,
-    isLoading: true,
-    loadingText: "Loading...",
-  },
-  argTypes: {
-    ...Primary.argTypes,
-    disabled: {
-      control: {
-        disable: true,
-      },
-    },
+    ...Solid.argTypes,
   },
 }

@@ -147,14 +147,14 @@ const ConnectPlatformButton = ({
       onClick={onConnect}
       isLoading={isLoading}
       disabled={!!response}
-      variant={isReconnect ? "secondary" : "default"}
+      colorScheme={isReconnect ? "secondary" : "primary"}
       size="sm"
       className={cn("ml-auto", PLATFORM_COLORS[type])}
     >
       {isReconnect && (
         <Warning
           weight="bold"
-          className="mr-1 text-orange-400 data-[theme=dark]:text-orange-200"
+          className="text-orange-400 data-[theme=dark]:text-orange-200"
         />
       )}
       {isReconnect ? "Reconnect" : "Connect"}

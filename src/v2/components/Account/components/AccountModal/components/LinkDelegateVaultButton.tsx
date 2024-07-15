@@ -13,7 +13,6 @@ const LinkDelegateVaultButton = ({
   return (
     <Button
       size="sm"
-      variant="secondary"
       onClick={() => {
         linkDelegations.onSubmit()
       }}
@@ -25,7 +24,6 @@ const LinkDelegateVaultButton = ({
         height={15}
         alt="Delegate.cash logo"
         src="/walletLogos/delegatecash.png"
-        className="mr-1.5"
       />
       Link {vaults.length > 1 ? vaults.length : ""} vault
       {vaults.length > 1 ? "s" : ""}

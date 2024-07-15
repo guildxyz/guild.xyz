@@ -33,7 +33,7 @@ const AnimatedLogo = dynamic(() => import("components/explorer/AnimatedLogo"), {
 export const NavMenu = () => (
   <Popover>
     <PopoverTrigger asChild>
-      <Button className="gap-2 rounded-2xl text-white" variant="ghost">
+      <Button className="rounded-2xl text-white" variant="ghost">
         <AnimatedLogo />
         <span className="font-bold font-display text-base">Guild</span>
         <List weight="bold" className="ml-1" />

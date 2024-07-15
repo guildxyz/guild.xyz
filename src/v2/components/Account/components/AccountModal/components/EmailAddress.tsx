@@ -218,7 +218,7 @@ const ConnectEmailButton = ({
                     <p className="text-center">
                       {`Enter the code we've sent to ${email} `}
                       <Button
-                        variant="secondary"
+                        variant="ghost"
                         className="relative top-0.5 size-5 rounded-full"
                         size="icon"
                         aria-label="Use different email address"
@@ -296,7 +296,7 @@ const ConnectEmailButton = ({
                 <Button
                   onClick={submit}
                   isLoading={verificationRequest.isLoading}
-                  variant="success"
+                  colorScheme="success"
                   className="w-full"
                 >
                   Send code
@@ -309,7 +309,7 @@ const ConnectEmailButton = ({
 
       <Button
         onClick={onOpen}
-        variant={emails?.pending ? "secondary" : "default"}
+        colorScheme={emails?.pending ? "secondary" : "primary"}
         size="sm"
         disabled={!!emails?.emailAddress && !emails?.pending}
         className={cn(

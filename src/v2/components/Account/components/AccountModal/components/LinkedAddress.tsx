@@ -139,7 +139,7 @@ const LinkedAddress = ({ addressData }: Props) => {
             )}
             <DropdownMenuItem
               onClick={onOpen}
-              className="text-destructive-ghost-foreground"
+              className="text-destructive-subtle-foreground"
             >
               <LinkBreak weight="bold" className="mr-1.5" />
               Disconnect
@@ -165,7 +165,7 @@ const LinkedAddress = ({ addressData }: Props) => {
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction asChild>
               <Button
-                variant="destructive"
+                colorScheme="destructive"
                 onClick={removeAddress}
                 isLoading={isDisconnectLoading}
                 loadingText={disconnectSignLoadingText || "Removing"}

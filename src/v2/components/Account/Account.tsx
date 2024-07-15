@@ -32,7 +32,7 @@ export const Account = () => {
     return (
       <Card>
         <Button variant="ghost" onClick={() => setIsWalletSelectorModalOpen(true)}>
-          <SignIn weight="bold" className="mr-1" />
+          <SignIn weight="bold" />
           Sign in
         </Button>
       </Card>

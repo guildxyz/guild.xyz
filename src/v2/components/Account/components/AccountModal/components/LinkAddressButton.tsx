@@ -19,7 +19,6 @@ const LinkAddressButton = (props: ButtonProps) => {
   return (
     <Button
       size="sm"
-      variant="secondary"
       onClick={() => {
         setAddressLinkParams({ userId: id, address })
         disconnect()
@@ -28,7 +27,7 @@ const LinkAddressButton = (props: ButtonProps) => {
       loadingText="Check your wallet"
       {...props}
     >
-      <Plus className="mr-1.5" weight="bold" />
+      <Plus weight="bold" />
       Link address
     </Button>
   )

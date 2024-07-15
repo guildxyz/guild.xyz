@@ -233,7 +233,7 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
           {shouldShowVerify && (
             <Button
               size="xl"
-              variant="success"
+              colorScheme="success"
               onClick={() => {
                 if (isAddressLink) {
                   return linkAddress.onSubmit(addressLinkParams)

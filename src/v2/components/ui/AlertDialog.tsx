@@ -106,7 +106,7 @@ const AlertDialogAction = forwardRef<
 >(({ className, ...props }, ref) => (
   <AlertDialogPrimitive.Action
     ref={ref}
-    className={cn(buttonVariants({ variant: "destructive" }), className)}
+    className={cn(buttonVariants({ colorScheme: "destructive" }), className)}
     {...props}
   />
 ))
@@ -118,11 +118,7 @@ const AlertDialogCancel = forwardRef<
 >(({ className, ...props }, ref) => (
   <AlertDialogPrimitive.Cancel
     ref={ref}
-    className={cn(
-      buttonVariants({ variant: "secondary" }),
-      "mt-2 sm:mt-0",
-      className
-    )}
+    className={cn(buttonVariants(), "mt-2 sm:mt-0", className)}
     {...props}
   />
 ))

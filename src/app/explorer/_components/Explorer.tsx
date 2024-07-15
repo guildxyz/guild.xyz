@@ -37,8 +37,8 @@ export const Explorer = ({ searchParams }: { searchParams: SearchParams }) => {
             <span>Sign in to view your guilds / create new ones</span>
           </div>
           <Button
-            className="space-x-2"
             onClick={() => setIsWalletSelectorModalOpen(true)}
+            colorScheme="primary"
           >
             <SignIn />
             <span className="text-md">Sign in</span>

@@ -25,11 +25,38 @@
     --primary-hover: 243 75% 59%;
     --primary-active: 245 58% 51%;
     --primary-foreground: 0 0% 100%;
+    --primary-subtle: 230 94% 82%;
+    --primary-subtle-foreground: var(--primary);
 
     --secondary: 0, 0%, 0%, 0.06;
     --secondary-hover: 0, 0%, 0%, 0.08;
     --secondary-active: 0, 0%, 0%, 0.16;
     --secondary-foreground: 220.9 39.3% 11%;
+    --secondary-subtle: 240 5% 65%;
+    --secondary-subtle-foreground: var(--foreground);
+
+    --info: 217 91 60%;
+    --info-hover: 221 83% 53%;
+    --info-active: 224 76% 48%;
+    --info-foreground: 0 0% 100%;
+    --info-subtle: 212 96% 78%;
+    --info-subtle-foreground: var(--info);
+
+    --destructive: 0 84% 60%;
+    --destructive-hover: 0 72% 51%;
+    --destructive-active: 0 74% 42%;
+    --destructive-foreground: 210 20% 98%;
+    --destructive-subtle: 0 94% 82%;
+    --destructive-subtle-foreground: var(--destructive);
+
+    --success: 142 71% 45%;
+    --success-hover: 142 76% 36%;
+    --success-active: 142 72% 29%;
+    --success-foreground: 0 0% 100%;
+    --success-subtle: 141 79% 85%;
+    --success-subtle-foreground: var(--success);
+
+    --banner: 240 4% 16%;
 
     --muted: 0 0% 100%;
     --muted-foreground: 240 5% 56%;
@@ -39,24 +66,11 @@
 
     --anchor-foreground: 221 83% 53%;
 
-    --destructive: 0 84% 60%;
-    --destructive-hover: 0 72% 51%;
-    --destructive-active: 0 74% 42%;
-    --destructive-foreground: 210 20% 98%;
-    --destructive-ghost-hover: 0, 96%, 89%, 0.16;
-    --destructive-ghost-active: 0, 96%, 89%, 0.24;
-    --destructive-ghost-foreground: 0 72% 51%;
-
-    --success: 142 71% 45%;
-    --success-hover: 142 76% 36%;
-    --success-active: 142 72% 29%;
-    --success-foreground: 0 0% 100%;
-
-    --banner: 240 4% 16%;
-
     --border: 240 5.9% 90%;
     --border-muted: 240 3% 93%;
+
     --input: var(--border);
+    
     --ring: 240, 0%, 45%, 25%;
 
     --toast-success: 137 64% 98%;
@@ -70,7 +84,6 @@
     --alert-info-icon: 217 91% 60%; /* TODO: --info-... CSS variables */
     --alert-warning: var(--toast-warning);
     --alert-warning-icon: 27 96% 61%;
-    /* TODO: should we call it error or destructive? */
     --alert-error: var(--toast-error);
     --alert-error-icon: 0 84% 60%;
 
@@ -124,15 +137,42 @@
     --tooltip: 240 5% 84%;
     --tooltip-foreground: 240 4% 16%;
 
-    --primary: 238.73 70% 63%;
+    --primary: 239 84% 67%;
     --primary-hover: 234 89% 74%;
     --primary-active: 230 94% 82%;
     --primary-foreground: 0 0% 100%;
+    --primary-subtle: 230 94% 82%;
+    --primary-subtle-foreground: var(--primary-subtle);
 
     --secondary: 0, 0%, 100%, 0.08;
     --secondary-hover: 0, 0%, 100%, 0.16;
     --secondary-active: 0, 0%, 100%, 0.24;
     --secondary-foreground: 0 0% 100%;
+    --secondary-subtle: 240 6% 90%;
+    --secondary-subtle-foreground: var(--foreground);
+
+    --info: 217 91 60%;
+    --info-hover: 213 94% 68%;
+    --info-active: 212 96% 78%;
+    --info-foreground: 0 0% 100%;
+    --info-subtle: 212 96% 78%;
+    --info-subtle-foreground: var(--info-subtle);
+
+    --destructive: 0 84% 60%;
+    --destructive-hover: 0 91% 71%;
+    --destructive-active: 0 94% 82%;
+    --destructive-foreground: 210 20% 98%;
+    --destructive-subtle: 0 94% 82%;
+    --destructive-subtle-foreground: var(--destructive-subtle);
+
+    --success: 142 71% 45%;
+    --success-hover: 142 69% 58%;
+    --success-active: 142 77% 73%;
+    --success-foreground: 0 0% 100%;
+    --success-subtle: 141 79% 85%;
+    --success-subtle-foreground: var(--success-subtle);
+
+    --banner: 240 3% 22%;
 
     --muted: 240 3% 13%;
     --muted-foreground: 240 5% 60%;
@@ -142,24 +182,11 @@
 
     --anchor-foreground: 213 94% 68%;
 
-    --destructive: 0 84% 60%;
-    --destructive-hover: 0 91% 71%;
-    --destructive-active: 0 94% 82%;
-    --destructive-foreground: 210 20% 98%;
-    --destructive-ghost-hover: 0, 96%, 89%, 0.16;
-    --destructive-ghost-active: 0, 96%, 89%, 0.24;
-    --destructive-ghost-foreground: 0 96% 89%;
-
-    --success: 142 71% 45%;
-    --success-hover: 142 69% 58%;
-    --success-active: 142 77% 73%;
-    --success-foreground: 0 0% 100%;
-
-    --banner: 240 3% 22%;
-
     --border: 240 3% 38%;
     --border-muted: 240 3% 28%;
+
     --input: var(--border);
+
     --ring: 240 0% 45%;
 
     --toast-success: 180 4% 35%;
@@ -174,7 +201,7 @@
     --alert-warning: var(--toast-warning);
     --alert-warning-icon: 32 98% 83%;
     --alert-error: var(--toast-error);
-    --alert-error-icon: 0 96% 89%;
+    --alert-error-icon: 0 94% 82%;
 
     --discord-hover: 234 89% 74%;
     --discord-active: 230 94% 82%;
