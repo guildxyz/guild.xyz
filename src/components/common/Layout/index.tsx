@@ -1,4 +1,4 @@
-import { Header } from "@/components/Header"
+// import { Header } from "@/components/Header"
 import LegacyLayout from "./Layout"
 import BackButton from "./components/BackButton"
 import Background from "./components/Background"
@@ -49,7 +49,7 @@ export const Layout = {
    * For specifing `maxWidth` property, use `sizes.container.<size>`
    */
   Root,
-  Header,
+  Header: () => <div>v2 header mock</div>,
   Footer,
   /** `NextHead` wrapper for page metadata */
   Head,
