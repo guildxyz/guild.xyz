@@ -102,7 +102,7 @@ DialogCloseButton.displayName = DialogPrimitive.Close.displayName
 
 const DialogHeader = ({ className, ...props }: HTMLAttributes<HTMLDivElement>) => (
   <div
-    className={cn("flex flex-col space-y-1.5 px-6 pt-10 pb-8 sm:px-10", className)}
+    className={cn("flex flex-col space-y-1.5 px-6 py-8 sm:px-10", className)}
     {...props}
   />
 )
@@ -142,10 +142,7 @@ const DialogTitle = forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Title
     ref={ref}
-    className={cn(
-      "font-bold font-display text-xl leading-none tracking-wide",
-      className
-    )}
+    className={cn("font-bold font-display text-xl tracking-wide", className)}
     {...props}
   />
 ))
