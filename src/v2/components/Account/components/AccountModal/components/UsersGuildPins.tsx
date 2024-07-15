@@ -26,7 +26,7 @@ const UsersGuildPins = () => {
       )}
 
       <div
-        className="invisible-scrollbar -mx-4 relative min-w-full overflow-x-auto"
+        className="-mx-4 invisible-scrollbar min-h-20 w-full overflow-x-scroll"
         style={{
           maskImage:
             "linear-gradient(to right, transparent 0px, black 16px, black calc(100% - 16px), transparent)",
