@@ -19,7 +19,6 @@ const LinkAddressButton = (props: ButtonProps) => {
   return (
     <Button
       size="sm"
-      colorScheme="secondary"
       onClick={() => {
         setAddressLinkParams({ userId: id, address })
         disconnect()

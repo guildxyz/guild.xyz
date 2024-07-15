@@ -216,7 +216,6 @@ const ConnectEmailButton = ({
                   <p className="text-center">
                     {`Enter the code we've sent to ${email} `}
                     <Button
-                      colorScheme="secondary"
                       variant="ghost"
                       className="relative top-0.5 size-5 rounded-full"
                       size="icon"
@@ -274,7 +273,6 @@ const ConnectEmailButton = ({
                           connect.isLoading ||
                           connect.isSigning
                         }
-                        colorScheme="secondary"
                         variant="ghost"
                         size="sm"
                         disabled={isResendButtonDisabled}

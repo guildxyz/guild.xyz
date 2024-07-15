@@ -191,7 +191,7 @@ const ConnectFarcasterButton = ({
         size="sm"
         disabled={farcasterProfiles?.length > 0}
         isLoading={signedKeyRequest.isLoading}
-        className="ml-auto bg-farcaster hover:bg-farcaster-hover active:bg-farcaster-active"
+        className="ml-auto bg-farcaster text-white hover:bg-farcaster-hover active:bg-farcaster-active"
         {...props}
       >
         Connect
@@ -248,7 +248,6 @@ const ConnectFarcasterButton = ({
                   <TooltipTrigger asChild>
                     <Button
                       size="xs"
-                      colorScheme="secondary"
                       variant="ghost"
                       className="w-6 px-0 text-muted-foreground"
                       disabled={!shouldEnableRegenerateButton}
@@ -304,7 +303,7 @@ const ConnectFarcasterButton = ({
                 target="_blank"
                 className={cn(
                   buttonVariants(),
-                  "w-full bg-farcaster hover:bg-farcaster-hover active:bg-farcaster-active"
+                  "w-full bg-farcaster text-white hover:bg-farcaster-hover active:bg-farcaster-active"
                 )}
               >
                 Connect Farcaster

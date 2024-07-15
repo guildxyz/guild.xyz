@@ -47,7 +47,6 @@ const SharedSocials = () => {
   const buttonProps = {
     size: "sm",
     variant: "ghost",
-    colorScheme: "secondary",
     className: "ml-auto -my-1",
   } satisfies ButtonProps
 
@@ -174,7 +173,6 @@ const ShareSocialsWithGuildSelect = ({
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
-            colorScheme="secondary"
             variant="ghost"
             size="sm"
             className={cn("ml-auto", {

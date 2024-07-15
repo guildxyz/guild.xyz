@@ -49,7 +49,7 @@ const buttonVariants = cva(
     ],
     defaultVariants: {
       variant: "solid",
-      colorScheme: "primary",
+      colorScheme: "secondary",
       size: "md",
     },
   }

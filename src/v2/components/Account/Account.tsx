@@ -31,11 +31,7 @@ export const Account = () => {
   if (!address)
     return (
       <Card>
-        <Button
-          colorScheme="secondary"
-          variant="ghost"
-          onClick={() => setIsWalletSelectorModalOpen(true)}
-        >
+        <Button variant="ghost" onClick={() => setIsWalletSelectorModalOpen(true)}>
           <SignIn weight="bold" />
           Sign in
         </Button>
@@ -47,7 +43,6 @@ export const Account = () => {
       <Popover open={isOpen} onOpenChange={setValue}>
         <PopoverTrigger asChild>
           <Button
-            colorScheme="secondary"
             variant="ghost"
             className="rounded-r-none border-border border-r"
             aria-label="Notifications"
@@ -65,7 +60,6 @@ export const Account = () => {
       </Popover>
 
       <Button
-        colorScheme="secondary"
         variant="ghost"
         onClick={() => setIsAccountModalOpen(true)}
         className="rounded-l-none"

@@ -9,7 +9,6 @@ const GoogleLoginButton = () => {
     <>
       <Button
         onClick={onOpen}
-        colorScheme="secondary"
         variant="ghost"
         borderWidth="2px"
         leftIcon={

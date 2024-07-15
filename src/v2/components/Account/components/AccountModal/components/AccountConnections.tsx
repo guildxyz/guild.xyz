@@ -74,11 +74,7 @@ const AccountConnections = () => {
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
-              <LinkAddressButton
-                colorScheme="secondary"
-                variant="ghost"
-                className="-my-1"
-              />
+              <LinkAddressButton variant="ghost" className="-my-1" />
             </div>
           ) : undefined
         }

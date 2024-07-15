@@ -36,7 +36,10 @@ export const Explorer = ({ searchParams }: { searchParams: SearchParams }) => {
             <Robot className="size-8 min-w-8 text-white" />
             <span>Sign in to view your guilds / create new ones</span>
           </div>
-          <Button onClick={() => setIsWalletSelectorModalOpen(true)}>
+          <Button
+            onClick={() => setIsWalletSelectorModalOpen(true)}
+            colorScheme="primary"
+          >
             <SignIn />
             <span className="text-md">Sign in</span>
           </Button>

@@ -141,7 +141,11 @@ const Web3Inbox = () => {
                 variant="silent"
                 href={message.url}
                 className={cn(
-                  buttonVariants({ variant: "ghost", size: "sm" }),
+                  buttonVariants({
+                    variant: "ghost",
+                    colorScheme: "primary",
+                    size: "sm",
+                  }),
                   "gap-2"
                 )}
               >
@@ -226,7 +230,7 @@ const SubscribeToMessages = () => {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button className="size-8 min-w-8 px-0">
+        <Button className="size-8 min-w-8 px-0" colorScheme="primary">
           <ArrowRight />
         </Button>
       </DialogTrigger>
@@ -243,6 +247,7 @@ const SubscribeToMessages = () => {
           onClick={performSubscribe}
           isLoading={isSigning || isRegistering || isSubscribing}
           loadingText={isSigning ? "Check your wallet" : "Subscribing"}
+          colorScheme="primary"
           className="w-full"
         >
           Sign to subscribe

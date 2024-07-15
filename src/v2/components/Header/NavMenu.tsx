@@ -33,11 +33,7 @@ const AnimatedLogo = dynamic(() => import("components/explorer/AnimatedLogo"), {
 export const NavMenu = () => (
   <Popover>
     <PopoverTrigger asChild>
-      <Button
-        className="rounded-2xl text-white"
-        colorScheme="secondary"
-        variant="ghost"
-      >
+      <Button className="rounded-2xl text-white" variant="ghost">
         <AnimatedLogo />
         <span className="ml-2 font-bold font-display text-base">Guild</span>
         <List weight="bold" className="ml-1" />
@@ -157,7 +153,6 @@ const NavButton = ({ href, children }: { href: string; children: ReactNode }) =>
   return (
     <Wrapper {...wrapperProps}>
       <Button
-        colorScheme="secondary"
         variant="ghost"
         className={cn(
           "h-10 w-full justify-start gap-2",
