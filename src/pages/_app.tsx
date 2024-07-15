@@ -3,7 +3,6 @@ import { FuelProvider } from "@fuels/react"
 import { IconContext } from "@phosphor-icons/react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { bugsnagStart } from "bugsnag"
-import AppErrorBoundary from "components/_app/AppErrorBoundary"
 import Chakra from "components/_app/Chakra"
 import ClientOnly from "components/common/ClientOnly"
 import { env } from "env"
@@ -31,6 +30,7 @@ import { Toaster } from "@/components/ui/Toaster"
 import { LegacyPostHogProvider } from "components/_app/LegacyPostHogProvider"
 import { LegacyWeb3ConnectionManager } from "components/_app/LegacyWeb3ConnectionManager"
 import "wicg-inert"
+import AppErrorBoundary from "@/components/AppErrorBoundary"
 
 const DynamicReCAPTCHA = dynamic(() => import("v2/components/ReCAPTCHA"))
 

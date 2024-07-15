@@ -14,6 +14,7 @@ import { shouldUseReCAPTCHAAtom } from "utils/recaptcha"
 import { WagmiProvider } from "wagmi"
 import { wagmiConfig } from "wagmiConfig"
 import { AccountModal } from "../Account/components/AccountModal"
+import AppErrorBoundary from "../AppErrorBoundary"
 import { Web3ConnectionManager } from "../Web3ConnectionManager"
 import { Toaster } from "../ui/Toaster"
 import { IntercomProvider } from "./IntercomProvider"
@@ -42,11 +43,13 @@ export function Providers({ children }: { children: ReactNode }) {
               <FuelProvider ui={false} fuelConfig={fuelConfig}>
                 <PostHogProvider>
                   <IntercomProvider>
-                    {children}
-                    <AccountModal />
-                    <Suspense>
-                      <Web3ConnectionManager />
-                    </Suspense>
+                    <AppErrorBoundary>
+                      {children}
+                      <AccountModal />
+                      <Suspense>
+                        <Web3ConnectionManager />
+                      </Suspense>
+                    </AppErrorBoundary>
                   </IntercomProvider>
                 </PostHogProvider>
               </FuelProvider>
