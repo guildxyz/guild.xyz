@@ -21,7 +21,7 @@ const DialogOverlay = React.forwardRef<
   <DialogPrimitive.Overlay
     ref={ref}
     className={cn(
-      "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 grid items-end justify-center overflow-y-auto bg-black/50 backdrop-blur-sm data-[state=closed]:animate-out data-[state=open]:animate-in sm:items-center",
+      "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 grid items-end justify-center overflow-y-auto bg-black/50 backdrop-blur-sm duration-200 data-[state=closed]:animate-out data-[state=open]:animate-in sm:items-center",
       className
     )}
     {...props}
@@ -60,8 +60,8 @@ const DialogContent = React.forwardRef<
   DialogContentProps
 >(({ size, trapFocus = true, className, children, ...props }, ref) => (
   <DialogPortal>
-    <FocusScope trapped={trapFocus} loop>
-      <DialogOverlay>
+    <DialogOverlay>
+      <FocusScope trapped={trapFocus} loop>
         <DialogPrimitive.Content
           ref={ref}
           className={cn(dialogContentVariants({ size, className }))}
@@ -69,8 +69,8 @@ const DialogContent = React.forwardRef<
         >
           {children}
         </DialogPrimitive.Content>
-      </DialogOverlay>
-    </FocusScope>
+      </FocusScope>
+    </DialogOverlay>
   </DialogPortal>
 ))
 DialogContent.displayName = DialogPrimitive.Content.displayName
