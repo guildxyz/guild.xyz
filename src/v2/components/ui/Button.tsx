@@ -81,7 +81,14 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
             })}
           />
         ) : null}
-        {isLoading ? loadingText : children}
+
+        {isLoading ? (
+          <span>{loadingText}</span>
+        ) : typeof children === "string" ? (
+          <span>{children}</span>
+        ) : (
+          children
+        )}
       </Comp>
     )
   }
