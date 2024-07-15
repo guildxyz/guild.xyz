@@ -112,6 +112,7 @@ const LinkedAddress = ({ addressData }: Props) => {
           <DropdownMenuTrigger asChild>
             <Button
               className="ml-auto size-8 rounded-full px-0"
+              colorScheme="secondary"
               variant="ghost"
               aria-label="Disconnect account"
             >

@@ -274,6 +274,7 @@ const ConnectEmailButton = ({
                           connect.isLoading ||
                           connect.isSigning
                         }
+                        colorScheme="secondary"
                         variant="ghost"
                         size="sm"
                         disabled={isResendButtonDisabled}

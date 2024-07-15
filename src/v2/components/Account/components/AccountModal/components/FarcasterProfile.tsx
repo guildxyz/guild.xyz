@@ -248,6 +248,7 @@ const ConnectFarcasterButton = ({
                   <TooltipTrigger asChild>
                     <Button
                       size="xs"
+                      colorScheme="secondary"
                       variant="ghost"
                       className="w-6 px-0 text-muted-foreground"
                       disabled={!shouldEnableRegenerateButton}

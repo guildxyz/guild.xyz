@@ -47,6 +47,7 @@ const SharedSocials = () => {
   const buttonProps = {
     size: "sm",
     variant: "ghost",
+    colorScheme: "secondary",
     className: "ml-auto -my-1",
   } satisfies ButtonProps
 
@@ -56,7 +57,7 @@ const SharedSocials = () => {
       <DialogTrigger asChild>
         {!guildSharedSocial ? (
           <Button {...buttonProps}>
-            <Shield weight="bold" className="mr-1" />
+            <Shield weight="bold" />
             {`Shared with ${pluralize(
               sharedSocials?.filter(
                 (sharedSocial) => sharedSocial.isShared !== false
@@ -66,12 +67,12 @@ const SharedSocials = () => {
           </Button>
         ) : guildSharedSocial.isShared !== false ? (
           <Button {...buttonProps}>
-            <ShieldCheck weight="bold" className="mr-1 text-primary" />
+            <ShieldCheck weight="bold" className="text-primary" />
             Shared with guild
           </Button>
         ) : (
           <Button {...buttonProps}>
-            <Shield weight="bold" className="mr-1" />
+            <Shield weight="bold" />
             Hidden to guild
           </Button>
         )}
@@ -173,9 +174,10 @@ const ShareSocialsWithGuildSelect = ({
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
+            colorScheme="secondary"
             variant="ghost"
             size="sm"
-            className={cn("ml-auto gap-1.5", {
+            className={cn("ml-auto", {
               "text-success": isSharedBoolean,
             })}
           >

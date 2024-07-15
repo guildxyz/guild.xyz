@@ -43,7 +43,7 @@ const WalletLinkHelperModal = () => {
 
         <Button onClick={() => setIsWalletLinkModalOpen(false)} className="w-full">
           Connect another wallet
-          <SignOut weight="bold" className="ml-1.5" />
+          <SignOut weight="bold" />
         </Button>
         <DialogCloseButton />
       </DialogContent>

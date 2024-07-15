@@ -154,7 +154,7 @@ const ConnectPlatformButton = ({
       {isReconnect && (
         <Warning
           weight="bold"
-          className="mr-1 text-orange-400 data-[theme=dark]:text-orange-200"
+          className="text-orange-400 data-[theme=dark]:text-orange-200"
         />
       )}
       {isReconnect ? "Reconnect" : "Connect"}

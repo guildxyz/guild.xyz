@@ -28,7 +28,7 @@ const LinkAddressButton = (props: ButtonProps) => {
       loadingText="Check your wallet"
       {...props}
     >
-      <Plus className="mr-1.5" weight="bold" />
+      <Plus weight="bold" />
       Link address
     </Button>
   )

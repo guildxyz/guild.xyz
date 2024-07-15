@@ -96,6 +96,7 @@ const AccountModal = () => {
 
                   {type === "EVM" ? (
                     <Button
+                      colorScheme="secondary"
                       variant="ghost"
                       onClick={() => openNetworkModal()}
                       size="xs"
@@ -127,6 +128,7 @@ const AccountModal = () => {
                     <Button
                       size="icon"
                       variant="outline"
+                      colorScheme="secondary"
                       className="ml-auto size-8"
                       onClick={handleLogout}
                       aria-label="Disconnect"

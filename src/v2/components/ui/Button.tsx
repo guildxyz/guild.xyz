@@ -5,7 +5,7 @@ import { type VariantProps, cva } from "class-variance-authority"
 import * as React from "react"
 
 const buttonVariants = cva(
-  "font-semibold inline-flex items-center justify-center whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-4 focus:ring-ring disabled:pointer-events-none disabled:opacity-50 rounded-xl text-base min-w-max",
+  "font-semibold inline-flex items-center justify-center whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-4 focus:ring-ring disabled:pointer-events-none disabled:opacity-50 rounded-xl text-base min-w-max gap-1.5",
   {
     variants: {
       variant: {
@@ -32,11 +32,11 @@ const buttonVariants = cva(
           "[--button-bg:var(--success)] [--button-bg-hover:var(--success-hover)] [--button-bg-active:var(--success-active)] [--button-foreground:var(--success-foreground)] [--button-bg-subtle:var(--success-subtle)] [--button-foreground-subtle:var(--success-subtle-foreground)]",
       },
       size: {
-        xs: "h-6 px-2 text-xs",
+        xs: "h-6 px-2 text-xs gap-1",
         sm: "h-8 px-3 text-sm",
         md: "h-11 px-4 py-2",
         lg: "h-12 px-6 py-4 text-lg",
-        xl: "h-14 px-6 py-4 text-lg",
+        xl: "h-14 px-6 py-4 text-lg gap-2",
         icon: "h-10 w-10",
       },
     },
@@ -88,14 +88,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {...props}
         disabled={isLoading || disabled}
       >
-        {isLoading ? (
-          <CircleNotch
-            weight="bold"
-            className={cn("animate-spin", {
-              "mr-1.5": !!loadingText,
-            })}
-          />
-        ) : null}
+        {isLoading ? <CircleNotch weight="bold" className="animate-spin" /> : null}
         {isLoading ? loadingText : children}
       </Comp>
     )

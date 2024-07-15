@@ -29,7 +29,7 @@ const NetworkButton = ({ chain, requestNetworkChange }: Props) => {
             onClick={requestNetworkChange}
             size="xl"
             colorScheme="secondary"
-            className={cn("w-full justify-start gap-2", {
+            className={cn("w-full justify-start", {
               "border-2": isCurrentChain,
             })}
           >

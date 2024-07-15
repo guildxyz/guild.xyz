@@ -21,7 +21,7 @@ type Props = {
 export const connectorButtonBaseProps = {
   colorScheme: "secondary",
   size: "xl",
-  className: "flex w-full justify-start gap-2",
+  className: "flex w-full justify-start",
 } satisfies ButtonProps
 
 const ConnectorButton = ({ connector, pendingConnector, connect, error }: Props) => {
