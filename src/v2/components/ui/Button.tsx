@@ -5,7 +5,7 @@ import { type VariantProps, cva } from "class-variance-authority"
 import { ButtonHTMLAttributes, forwardRef } from "react"
 
 const buttonVariants = cva(
-  "font-semibold inline-flex items-center justify-center whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-4 focus:ring-ring disabled:pointer-events-none disabled:opacity-50 rounded-xl text-base min-w-max",
+  "font-semibold inline-flex items-center justify-center whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-4 focus:ring-ring disabled:pointer-events-none disabled:opacity-50 rounded-xl text-base text-ellipsis overflow-hidden",
   {
     variants: {
       variant: {
@@ -81,7 +81,14 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
             })}
           />
         ) : null}
-        {isLoading ? loadingText : children}
+
+        {isLoading ? (
+          <span>{loadingText}</span>
+        ) : typeof children === "string" ? (
+          <span>{children}</span>
+        ) : (
+          children
+        )}
       </Comp>
     )
   }
