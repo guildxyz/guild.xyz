@@ -1,6 +1,7 @@
 "use client"
 
 import { cn } from "@/lib/utils"
+import { CheckCircle, type Icon, Info, WarningCircle } from "@phosphor-icons/react"
 import { X } from "@phosphor-icons/react/dist/ssr"
 import * as ToastPrimitives from "@radix-ui/react-toast"
 import { type VariantProps, cva } from "class-variance-authority"
@@ -29,14 +30,14 @@ const ToastViewport = forwardRef<
 ToastViewport.displayName = ToastPrimitives.Viewport.displayName
 
 const toastVariants = cva(
-  "bg-card text-foreground group pointer-events-auto relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-md p-4 pr-8 shadow-lg transition-transform data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-right-full data-[state=open]:sm:slide-in-from-right-full focus:outline-none focus-visible:ring-4 focus:ring-ring",
+  "bg-card text-foreground group pointer-events-auto relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-lg p-4 pr-8 shadow-lg transition-transform data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-right-full data-[state=open]:sm:slide-in-from-right-full focus:outline-none focus-visible:ring-4 focus:ring-ring",
   {
     variants: {
       variant: {
-        info: "bg-toast-info",
-        error: "bg-toast-error",
-        success: "bg-toast-success",
-        warning: "bg-toast-warning",
+        info: "bg-alert-info [--toast-icon:theme(colors.alert.info.icon)]",
+        error: "bg-alert-error [--toast-icon:theme(colors.alert.error.icon)]",
+        success: "bg-alert-success [--toast-icon:theme(colors.alert.success.icon)]",
+        warning: "bg-alert-warning [--toast-icon:theme(colors.alert.warning.icon)]",
       },
     },
     defaultVariants: {
@@ -44,6 +45,16 @@ const toastVariants = cva(
     },
   }
 )
+
+export const TOAST_ICONS = {
+  info: Info,
+  error: WarningCircle,
+  success: CheckCircle,
+  warning: WarningCircle,
+} as const satisfies Record<
+  NonNullable<VariantProps<typeof toastVariants>["variant"]>,
+  Icon
+>
 
 const Toast = forwardRef<
   ElementRef<typeof ToastPrimitives.Root>,

@@ -94,12 +94,6 @@ const config = {
           foreground: "hsl(var(--card-foreground))",
         },
         image: "hsl(var(--image))",
-        toast: {
-          success: "hsla(var(--toast-success))",
-          error: "hsla(var(--toast-error))",
-          warning: "hsla(var(--toast-warning))",
-          info: "hsla(var(--toast-info))",
-        },
         alert: {
           success: {
             DEFAULT: "hsla(var(--alert-success))",
