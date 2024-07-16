@@ -247,7 +247,7 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
               loadingText={!id ? "Looking for keypairs" : "Check your wallet"}
               className="mb-4 w-full"
             >
-              {isAddressLink ? "Link address" : "Verify address"}{" "}
+              {isAddressLink ? "Link address" : "Verify address"}
             </Button>
           )}
         </DialogBody>
