@@ -25,7 +25,7 @@ export function Toaster() {
               {IconComponent && (
                 <IconComponent
                   weight="fill"
-                  className="size-5 text-[--toast-icon]"
+                  className="size-5 shrink-0 text-[--toast-icon]"
                 />
               )}
 
