@@ -30,7 +30,6 @@
       "correctness": {
         "noInvalidUseBeforeDeclaration": "off",
         "noPrecisionLoss": "error",
-        "noUnusedVariables": "info",
         "useArrayLiterals": "off",
         "noConstAssign": "off",
         "noGlobalObjectCalls": "off",
@@ -55,6 +54,7 @@
         "noDefaultExport": "warn"
       },
       "suspicious": {
+        "noExplicitAny": "info",
         "noDuplicateClassMembers": "error",
         "noEmptyBlockStatements": "warn",
         "noExplicitAny": "off",
