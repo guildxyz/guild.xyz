@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils"
 import * as AvatarPrimitive from "@radix-ui/react-avatar"
+import NextImage from "next/image"
 import { ComponentPropsWithoutRef, ElementRef, forwardRef } from "react"
 
 const Avatar = forwardRef<
@@ -21,13 +22,17 @@ Avatar.displayName = AvatarPrimitive.Root.displayName
 
 const AvatarImage = forwardRef<
   ElementRef<typeof AvatarPrimitive.Image>,
-  ComponentPropsWithoutRef<typeof AvatarPrimitive.Image>
+  ComponentPropsWithoutRef<typeof NextImage & typeof AvatarPrimitive.Image>
 >(({ className, ...props }, ref) => (
   <AvatarPrimitive.Image
-    ref={ref}
     className={cn("aspect-square h-full w-full object-cover", className)}
+    asChild
+    ref={ref}
     {...props}
-  />
+  >
+    {/* @ts-expect-error: Required props are already enforced and passed down to `NextImage`. */}
+    <NextImage />
+  </AvatarPrimitive.Image>
 ))
 AvatarImage.displayName = AvatarPrimitive.Image.displayName
 
