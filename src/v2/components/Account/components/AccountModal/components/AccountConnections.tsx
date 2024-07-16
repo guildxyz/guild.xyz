@@ -45,16 +45,16 @@ const AccountConnections = () => {
       />
       <AccountSection className="mb-6">
         {orderedSocials.map((platform, i) => (
-          <>
+          <Fragment key={platform}>
             {platform === "EMAIL" ? (
-              <EmailAddress key="EMAIL" />
+              <EmailAddress />
             ) : platform === "FARCASTER" ? (
-              <FarcasterProfile key="FARCASTER" />
+              <FarcasterProfile />
             ) : (
-              <SocialAccount key={platform} type={platform} />
+              <SocialAccount type={platform} />
             )}
             {i < orderedSocials.length - 1 && <hr className="border-border-muted" />}
-          </>
+          </Fragment>
         ))}
       </AccountSection>
 
