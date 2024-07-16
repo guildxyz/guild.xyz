@@ -1,5 +1,5 @@
 import Bugsnag from "@bugsnag/js"
-import ErrorPage from "pages/_error"
+// import ErrorPage from "pages/_error"
 import { PropsWithChildren } from "react"
 import { ErrorBoundary } from "react-error-boundary"
 
@@ -18,7 +18,8 @@ const AppErrorBoundary = ({ children }: PropsWithChildren<unknown>) => (
         }
       })
     }}
-    fallback={<ErrorPage />}
+    // fallback={<ErrorPage />}
+    fallback={null}
   >
     {children}
   </ErrorBoundary>
