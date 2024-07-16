@@ -13,9 +13,7 @@ const PrimaryAddressBadge = ({ size }: Props): JSX.Element => (
   <TooltipProvider>
     <Tooltip>
       <TooltipTrigger asChild>
-        <Badge size={size} variant="secondary">
-          Primary
-        </Badge>
+        <Badge size={size}>Primary</Badge>
       </TooltipTrigger>
       <TooltipContent>
         <p>

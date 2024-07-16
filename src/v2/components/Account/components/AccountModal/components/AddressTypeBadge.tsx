@@ -26,7 +26,7 @@ const AddressTypeBadge = ({ type, size }: Props) => (
   <TooltipProvider>
     <Tooltip>
       <TooltipTrigger asChild>
-        <Badge size={size} variant="secondary" className="px-1">
+        <Badge size={size} className="px-1">
           <img src={TYPE_ICONS[type]} alt={TYPE_NAMES[type]} className="size-3" />
         </Badge>
       </TooltipTrigger>

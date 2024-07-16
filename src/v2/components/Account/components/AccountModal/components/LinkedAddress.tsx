@@ -83,7 +83,7 @@ const LinkedAddress = ({ addressData }: Props) => {
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Badge variant="secondary">
+                  <Badge>
                     <Image
                       width={15}
                       height={15}
@@ -100,8 +100,7 @@ const LinkedAddress = ({ addressData }: Props) => {
           )}
           {walletType !== "EVM" && <AddressTypeTag type={walletType} size="sm" />}
           {isCurrent && (
-            // TODO: colorScheme="blue"
-            <Badge size="sm" variant="secondary">
+            <Badge size="sm" colorScheme="blue">
               Current
             </Badge>
           )}

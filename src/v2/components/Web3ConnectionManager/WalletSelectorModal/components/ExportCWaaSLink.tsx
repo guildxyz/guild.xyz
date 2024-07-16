@@ -10,9 +10,7 @@ const ExportCWaaSLink = () => (
   >
     <img src={`/walletLogos/google.svg`} alt={`Google logo`} className="h-6" />
     Google
-    <Badge variant="secondary" className="ml-auto">
-      Deprecated
-    </Badge>
+    <Badge className="ml-auto">Deprecated</Badge>
   </Link>
 )
 

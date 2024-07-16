@@ -14,6 +14,7 @@ export const Default: Story = {
   args: {
     children: "Default",
     variant: "default",
+    colorScheme: "gray",
     size: "md",
   },
   argTypes: {
@@ -22,37 +23,15 @@ export const Default: Story = {
         disable: true,
       },
     },
+    colorScheme: {
+      type: "string",
+      control: "select",
+      options: ["gray", "blue"] satisfies BadgeProps["colorScheme"][],
+    },
     size: {
       type: "string",
-      control: "radio",
+      control: "select",
       options: ["sm", "md", "lg"] satisfies BadgeProps["size"][],
     },
   },
-}
-
-export const Secondary: Story = {
-  args: {
-    ...Default.args,
-    children: "Secondary",
-    variant: "secondary",
-  },
-  argTypes: Default.argTypes,
-}
-
-export const Destructive: Story = {
-  args: {
-    ...Default.args,
-    children: "Destructive",
-    variant: "destructive",
-  },
-  argTypes: Default.argTypes,
-}
-
-export const Outline: Story = {
-  args: {
-    ...Default.args,
-    children: "Outline",
-    variant: "outline",
-  },
-  argTypes: Default.argTypes,
 }

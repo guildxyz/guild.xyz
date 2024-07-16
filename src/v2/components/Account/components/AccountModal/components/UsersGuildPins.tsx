@@ -81,9 +81,7 @@ const GuildPin = ({
         <img src={image} alt={name} />
 
         <div className="-bottom-1 -translate-x-1/2 absolute left-1/2 flex rounded-lg border-2 border-card bg-card font-semibold">
-          <Badge variant="secondary" size="sm">
-            #{rank}
-          </Badge>
+          <Badge size="sm">#{rank}</Badge>
         </div>
       </div>
     </Link>

@@ -3,15 +3,15 @@ import { type VariantProps, cva } from "class-variance-authority"
 import { ElementRef, HTMLAttributes, forwardRef } from "react"
 
 const badgeVariants = cva(
-  "inline-flex items-center rounded-md border-2 px-2 transition-colors focus:outline-none focus-visible:ring-4 focus:ring-ring",
+  "inline-flex items-center rounded-md px-2 transition-colors focus:outline-none focus-visible:ring-4 focus:ring-ring",
   {
     variants: {
       variant: {
-        default: "border-transparent bg-primary text-primary-foreground shadow",
-        secondary: "border-transparent bg-secondary text-secondary-foreground",
-        destructive:
-          "border-transparent bg-destructive text-destructive-foreground shadow",
-        outline: "text-foreground",
+        default: "bg-[hsl(var(--badge-bg)/0.24)] text-[hsl(var(--badge-color))]",
+      },
+      colorScheme: {
+        gray: "[--badge-bg:var(--secondary-subtle)] [--badge-color:var(--secondary-subtle-foreground)]",
+        blue: "[--badge-bg:var(--info-subtle)] [--badge-color:var(--info-subtle-foreground)]",
       },
       size: {
         sm: "text-xs h-5",
@@ -19,8 +19,17 @@ const badgeVariants = cva(
         lg: "text-base h-8",
       },
     },
+    compoundVariants: [
+      {
+        variant: "default",
+        colorScheme: "gray",
+        className:
+          "bg-[hsl(var(--badge-bg)/0.12)] text-[hsl(var(--badge-color)/0.8)]",
+      },
+    ],
     defaultVariants: {
       variant: "default",
+      colorScheme: "gray",
       size: "md",
     },
   }
@@ -31,10 +40,10 @@ export interface BadgeProps
     VariantProps<typeof badgeVariants> {}
 
 const Badge = forwardRef<ElementRef<"div">, BadgeProps>(
-  ({ className, variant, size, ...props }, ref) => (
+  ({ className, variant, colorScheme, size, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn(badgeVariants({ variant, size }), className)}
+      className={cn(badgeVariants({ variant, colorScheme, size }), className)}
       {...props}
     />
   )
