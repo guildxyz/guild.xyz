@@ -1,16 +1,5 @@
-import { type Icon } from "@phosphor-icons/react"
-import {
-  ArrowSquareOut,
-  CaretDown,
-  Check,
-  Shield,
-  ShieldCheck,
-} from "@phosphor-icons/react/dist/ssr"
-import useGuild, { useSimpleGuild } from "components/[guild]/hooks/useGuild"
-import useUser from "components/[guild]/hooks/useUser"
-
-import { GuildLogo } from "@/components/GuildLogo"
 import { anchorVariants } from "@/components/ui/Anchor"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
 import { Button, ButtonProps } from "@/components/ui/Button"
 import {
   Dialog,
@@ -32,6 +21,16 @@ import { Separator } from "@/components/ui/Separator"
 import { Skeleton } from "@/components/ui/Skeleton"
 import { cn } from "@/lib/utils"
 import { UserProfile } from "@guildxyz/types"
+import { type Icon } from "@phosphor-icons/react"
+import {
+  ArrowSquareOut,
+  CaretDown,
+  Check,
+  Shield,
+  ShieldCheck,
+} from "@phosphor-icons/react/dist/ssr"
+import useGuild, { useSimpleGuild } from "components/[guild]/hooks/useGuild"
+import useUser from "components/[guild]/hooks/useUser"
 import { Fragment, useEffect } from "react"
 import pluralize from "utils/pluralize"
 import useEditSharedSocials from "../hooks/useEditSharedSocials"
@@ -159,12 +158,12 @@ const ShareSocialsWithGuildSelect = ({
 
   return (
     <div className="flex items-center gap-4">
-      {imageUrl ? (
-        <GuildLogo imageUrl={imageUrl} className="size-9" />
-      ) : (
-        <Skeleton className="size-9 shrink-0 rounded-full" />
-      )}
-
+      <Avatar className="size-9">
+        <AvatarImage src={imageUrl} alt="guild logo" width={48} height={48} />
+        <AvatarFallback>
+          <Skeleton className="size-full" />
+        </AvatarFallback>
+      </Avatar>
       {name?.length > 0 ? (
         <span className="overflow-hidden text-ellipsis font-bold text-lg">
           {name}
