@@ -38,7 +38,7 @@ const Nav = () => {
     <ToggleGroup
       type="single"
       className="gap-2"
-      size={isSearchStuck ? "sm" : "lg"}
+      size={isSearchStuck ? "sm" : "default"}
       variant={isNavStuck ? "default" : "mono"}
       onValueChange={(value) => value && setActiveSection(value as ActiveSection)}
       value={activeSection}
@@ -70,6 +70,7 @@ const CreateGuildLink = () => {
   return (
     <Link
       href="/create-guild"
+      aria-label="Create guild"
       prefetch={false}
       className={buttonVariants({
         variant: "ghost",
@@ -83,7 +84,7 @@ const CreateGuildLink = () => {
       })}
     >
       <Plus />
-      <span>Create guild</span>
+      <span className="hidden sm:inline-block">Create guild</span>
     </Link>
   )
 }
