@@ -49,7 +49,8 @@ const AvatarImage = forwardRef<
       ref={ref}
       {...props}
     >
-      <NextImage src={src} {...props} />
+      {/* @ts-expect-error: Required props are already enforced and passed down to `NextImage`. */}
+      <NextImage />
     </AvatarPrimitive.Image>
   )
 })
