@@ -31,7 +31,7 @@ import {
 import { Skeleton } from "@/components/ui/Skeleton"
 import { cn } from "@/lib/utils"
 import { UserProfile } from "@guildxyz/types"
-import { useEffect } from "react"
+import { Fragment, useEffect } from "react"
 import pluralize from "utils/pluralize"
 import useEditSharedSocials from "../hooks/useEditSharedSocials"
 
@@ -101,7 +101,6 @@ const SharedSocials = () => {
             {guildSharedSocial && (
               <>
                 <ShareSocialsWithGuildSelect
-                  key={guildSharedSocial.guildId}
                   guildId={guildSharedSocial.guildId}
                   sharedSocials={sharedSocials}
                 />
@@ -109,14 +108,13 @@ const SharedSocials = () => {
               </>
             )}
             {restSharedSocials.map((sharedSocial, i) => (
-              <>
+              <Fragment key={sharedSocial.guildId}>
                 <ShareSocialsWithGuildSelect
-                  key={sharedSocial.guildId}
                   guildId={sharedSocial.guildId}
                   sharedSocials={sharedSocials}
                 />
                 {i < sharedSocials.length - 1 && <hr className="opacity-60" />}
-              </>
+              </Fragment>
             ))}
           </div>
         </DialogBody>
