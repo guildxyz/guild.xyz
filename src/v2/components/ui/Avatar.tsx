@@ -17,7 +17,7 @@ const Avatar = forwardRef<
   <AvatarPrimitive.Root
     ref={ref}
     className={cn(
-      "relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full",
+      "relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-image",
       className
     )}
     {...props}
@@ -39,7 +39,7 @@ const AvatarImage = forwardRef<
       className={cn(
         "aspect-square h-full w-full object-cover",
         {
-          "size-1/2": typeof src === "string" && src.endsWith(".svg") && shrinkSvg,
+          "size-[40%]": typeof src === "string" && src.endsWith(".svg") && shrinkSvg,
         },
         className
       )}
