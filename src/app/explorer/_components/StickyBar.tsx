@@ -38,7 +38,7 @@ const Nav = () => {
     <ToggleGroup
       type="single"
       className="gap-2"
-      size={isSearchStuck ? "sm" : "default"}
+      size={isSearchStuck ? "sm" : "lg"}
       variant={isNavStuck ? "default" : "mono"}
       onValueChange={(value) => value && setActiveSection(value as ActiveSection)}
       value={activeSection}
@@ -76,7 +76,8 @@ const CreateGuildLink = () => {
         variant: "ghost",
         size: "sm",
         className: [
-          "gap-1.5",
+          // Temporarily, until we don't migrate the scrollable Tabs component
+          "min-h-11 w-11 gap-1.5 px-0 sm:min-h-0 sm:w-auto sm:px-3",
           {
             "text-white": !isNavStuck,
           },
