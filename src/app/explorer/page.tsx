@@ -10,7 +10,7 @@ import { ActiveSection } from "./types"
 
 export const metadata = {
   icons: {
-    other: [{ rel: "preload", url: "/banner.svg" }],
+    other: [{ rel: "preload", url: "/banner.svg", as: "image" }],
   },
 }
 

@@ -14,8 +14,20 @@ interface RootLayoutProps {
 
 export const metadata: Metadata = {
   title: "Guildhall",
+  applicationName: "Guildhall",
   description:
     "Automated membership management for the platforms your community already uses.",
+  icons: {
+    icon: "guild-icon.png",
+  },
+}
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: dark)", color: "#000000" },
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+  ],
+  colorScheme: "dark light",
 }
 
 export default function RootLayout({ children }: RootLayoutProps) {
