@@ -1,3 +1,4 @@
+import { accountModalAtom } from "@/components/Providers/atoms"
 import {
   ButtonGroup,
   GridItem,
@@ -25,7 +26,6 @@ import { useFormContext, useWatch } from "react-hook-form"
 import { PlatformType } from "types"
 import AddCard from "../AddCard"
 import CardMotionWrapper from "../CardMotionWrapper"
-import { accountModalAtom } from "../Layout/components/Account/components/AccountModal"
 import { Modal } from "../Modal"
 import GoogleDocCard, { GoogleSkeletonCard } from "./components/GoogleDocCard"
 import GoogleDocSetupCard from "./components/GoogleDocSetupCard"

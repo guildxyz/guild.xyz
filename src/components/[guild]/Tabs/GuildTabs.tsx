@@ -1,4 +1,4 @@
-import { usePostHogContext } from "components/_app/PostHogProvider"
+import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import { PlatformType } from "types"
 import { useAccessedGuildPoints } from "../AccessHub/hooks/useAccessedGuildPoints"
 import useGuild from "../hooks/useGuild"

@@ -1,5 +1,5 @@
+import { useYourGuilds } from "@/hooks/useYourGuilds"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { useYourGuilds } from "components/explorer/YourGuilds"
 import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import useMatchMutate from "hooks/useMatchMutate"
 import useShowErrorToast from "hooks/useShowErrorToast"

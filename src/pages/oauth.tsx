@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+import { usePostHogContext } from "@/components/Providers/PostHogProvider"
+import type { Message } from "@/hooks/useOauthPopupWindow"
 import AuthRedirect from "components/AuthRedirect"
-import { Message } from "components/[guild]/JoinModal/hooks/useOauthPopupWindow"
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useRouter } from "next/dist/client/router"
 import { useCallback, useEffect } from "react"

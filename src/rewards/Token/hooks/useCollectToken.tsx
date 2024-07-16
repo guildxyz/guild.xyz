@@ -1,5 +1,5 @@
+import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import useCustomPosthogEvents from "hooks/useCustomPosthogEvents"
 import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import useShowErrorToast from "hooks/useShowErrorToast"

@@ -1,6 +1,6 @@
+import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import { Box, ButtonGroup, Tooltip } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 
 const PaymentMethodButtons = () => {

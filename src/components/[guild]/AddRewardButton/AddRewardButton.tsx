@@ -1,41 +1,25 @@
 import { ModalOverlay, useDisclosure } from "@chakra-ui/react"
-import { Schemas, Visibility } from "@guildxyz/types"
 import { Plus } from "@phosphor-icons/react"
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import { atom, useAtomValue } from "jotai"
+import { useAtomValue } from "jotai"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { modalSizeForPlatform } from "rewards"
 import rewardComponents from "rewards/components"
-import { RoleFormType } from "types"
 import { AddRewardProvider, useAddRewardContext } from "../AddRewardContext"
 import { ClientStateRequirementHandlerProvider } from "../RequirementHandlerContext"
 import SelectRewardPanel from "../RolePlatforms/components/AddRoleRewardModal/SelectRewardPanel"
 import { useIsTabsStuck } from "../Tabs"
 import { useThemeContext } from "../ThemeContext"
 import SelectRolePanel from "./SelectRolePanel"
+import {
+  ADD_REWARD_FORM_DEFAULT_VALUES,
+  canCloseAddRewardModalAtom,
+} from "./constants"
 import { useAddRewardDiscardAlert } from "./hooks/useAddRewardDiscardAlert"
-
-export type AddRewardForm = {
-  // TODO: we could simplify the form - we don't need a rolePlatforms array here, we only need one rolePlatform
-  rolePlatforms: RoleFormType["rolePlatforms"][number][]
-  // TODO: use proper types, e.g. name & symbol shouldn't be required on this type
-  requirements?: Schemas["RequirementCreationPayload"][]
-  roleIds?: number[]
-  visibility: Visibility
-  roleName?: string // Name for role, if new role is created with reward
-}
-
-export const defaultValues: AddRewardForm = {
-  rolePlatforms: [],
-  requirements: [{ type: "FREE" }],
-  roleIds: [],
-  visibility: "PUBLIC",
-}
-
-export const canCloseAddRewardModalAtom = atom(true)
+import { AddRewardForm } from "./types"
 
 const AddRewardButton = () => {
   const [isAddRewardPanelDirty, setIsAddRewardPanelDirty] =
@@ -58,7 +42,7 @@ const AddRewardButton = () => {
   } = useAddRewardContext()
 
   const methods = useForm<AddRewardForm>({
-    defaultValues,
+    defaultValues: ADD_REWARD_FORM_DEFAULT_VALUES,
   })
 
   const visibility = useWatch({ name: "visibility", control: methods.control })
@@ -80,13 +64,13 @@ const AddRewardButton = () => {
     }
     if (isAddRewardPanelDirty) onDiscardAlertOpen()
     else {
-      methods.reset(defaultValues)
+      methods.reset(ADD_REWARD_FORM_DEFAULT_VALUES)
       onAddRewardModalClose()
     }
   }
 
   const closeAndClear = () => {
-    methods.reset(defaultValues)
+    methods.reset(ADD_REWARD_FORM_DEFAULT_VALUES)
     onAddRewardModalClose()
     setIsAddRewardPanelDirty(false)
   }
@@ -145,7 +129,7 @@ const AddRewardButton = () => {
                   setStep("SELECT_ROLE")
                 }}
                 onCancel={() => {
-                  methods.reset(defaultValues)
+                  methods.reset(ADD_REWARD_FORM_DEFAULT_VALUES)
                   setStep("HOME")
                 }}
                 skipSettings

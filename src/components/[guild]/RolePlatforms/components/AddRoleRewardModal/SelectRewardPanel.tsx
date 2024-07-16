@@ -1,3 +1,4 @@
+import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import {
   ModalBody,
   ModalCloseButton,
@@ -7,7 +8,6 @@ import {
 } from "@chakra-ui/react"
 import { PlatformName } from "@guildxyz/types"
 import { useAddRewardContext } from "components/[guild]/AddRewardContext"
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import PlatformsGrid from "components/create-guild/PlatformsGrid"
 import { PropsWithChildren } from "react"
 

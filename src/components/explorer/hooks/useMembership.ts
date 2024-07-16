@@ -1,5 +1,5 @@
+import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 
 export type Membership = {

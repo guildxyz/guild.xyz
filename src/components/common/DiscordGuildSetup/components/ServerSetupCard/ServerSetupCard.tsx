@@ -1,5 +1,5 @@
+import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import { Img, Skeleton, Stack, Text, VStack } from "@chakra-ui/react"
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import DiscordRoleVideo from "components/common/DiscordRoleVideo"

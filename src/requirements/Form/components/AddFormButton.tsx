@@ -1,9 +1,7 @@
 import { Button, Modal, ModalOverlay } from "@chakra-ui/react"
-import {
-  AddRewardForm,
-  defaultValues,
-} from "components/[guild]/AddRewardButton/AddRewardButton"
 import SelectRolePanel from "components/[guild]/AddRewardButton/SelectRolePanel"
+import { ADD_REWARD_FORM_DEFAULT_VALUES } from "components/[guild]/AddRewardButton/constants"
+import { AddRewardForm } from "components/[guild]/AddRewardButton/types"
 import {
   AddRewardProvider,
   useAddRewardContext,
@@ -16,7 +14,7 @@ const AddFormButton = ({ baseFieldPath, isDisabled }) => {
     useAddRewardContext()
 
   const methods = useForm<AddRewardForm>({
-    defaultValues,
+    defaultValues: ADD_REWARD_FORM_DEFAULT_VALUES,
   })
 
   const visibility = useWatch({ name: "visibility", control: methods.control })

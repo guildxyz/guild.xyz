@@ -1,3 +1,5 @@
+import { walletSelectorModalAtom } from "@/components/Providers/atoms"
+import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import {
   Box,
   Collapse,
@@ -13,12 +15,12 @@ import {
 } from "@chakra-ui/react"
 import { ArrowRight } from "@phosphor-icons/react"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import useShowErrorToast from "hooks/useShowErrorToast"
+import { useAtomValue } from "jotai"
 import dynamic from "next/dynamic"
 import { ComponentType, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
@@ -57,6 +59,7 @@ const customJoinStep: Partial<Record<Joinable, ComponentType<unknown>>> = {
 
 const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
   const { isWeb3Connected } = useWeb3ConnectionManager()
+  const isWalletSelectorModalOpen = useAtomValue(walletSelectorModalAtom)
   const { name, requiredPlatforms, featureFlags } = useGuild()
 
   const methods = useForm({
@@ -122,7 +125,13 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
   const dummyFinalFocusRef = useRef(null)
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} finalFocusRef={dummyFinalFocusRef}>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      finalFocusRef={dummyFinalFocusRef}
+      // So focus management works properly
+      trapFocus={!isWalletSelectorModalOpen}
+    >
       <ModalOverlay />
       <ModalContent>
         <FormProvider {...methods}>

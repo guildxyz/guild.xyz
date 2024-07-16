@@ -1,10 +1,8 @@
 import { ModalOverlay, useDisclosure } from "@chakra-ui/react"
-import {
-  AddRewardForm,
-  defaultValues,
-} from "components/[guild]/AddRewardButton/AddRewardButton"
 import SelectRolePanel from "components/[guild]/AddRewardButton/SelectRolePanel"
+import { ADD_REWARD_FORM_DEFAULT_VALUES } from "components/[guild]/AddRewardButton/constants"
 import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hooks/useAddRewardDiscardAlert"
+import { AddRewardForm } from "components/[guild]/AddRewardButton/types"
 import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import { ClientStateRequirementHandlerProvider } from "components/[guild]/RequirementHandlerContext"
 import DiscardAlert from "components/common/DiscardAlert"
@@ -21,7 +19,7 @@ const AddSolutionsModal = () => {
   const [solution, setSolution] = useState<SolutionName | null>()
 
   const methods = useForm<AddRewardForm>({
-    defaultValues,
+    defaultValues: ADD_REWARD_FORM_DEFAULT_VALUES,
   })
 
   const visibility = useWatch({ name: "visibility", control: methods.control })

@@ -1,3 +1,4 @@
+import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import {
   HStack,
   IconButton,
@@ -13,7 +14,6 @@ import {
 } from "@chakra-ui/react"
 import { Visibility } from "@guildxyz/types"
 import { ArrowLeft, Info } from "@phosphor-icons/react"
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import useCreateRRR, { SubmitData } from "hooks/useCreateRRR"
@@ -25,8 +25,8 @@ import rewardComponents from "rewards/components"
 import SelectRoleOrSetRequirements from "rewards/components/SelectRoleOrSetRequirements"
 import { RoleTypeToAddTo, useAddRewardContext } from "../AddRewardContext"
 import useGuild from "../hooks/useGuild"
-import { defaultValues } from "./AddRewardButton"
 import AvailabilitySetup from "./components/AvailabilitySetup"
+import { ADD_REWARD_FORM_DEFAULT_VALUES } from "./constants"
 
 const SelectRolePanel = ({
   onSuccess,
@@ -76,7 +76,8 @@ const SelectRolePanel = ({
   const { RewardPreview } = rewardComponents[selection] ?? {}
 
   const goBack = () => {
-    if (!rewards[selection].autoRewardSetup) methods.reset(defaultValues)
+    if (!rewards[selection].autoRewardSetup)
+      methods.reset(ADD_REWARD_FORM_DEFAULT_VALUES)
     setStep(selection === "POLYGON_ID" ? "HOME" : "REWARD_SETUP")
   }
 
