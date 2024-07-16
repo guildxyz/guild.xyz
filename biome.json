@@ -30,7 +30,7 @@
       "correctness": {
         "noInvalidUseBeforeDeclaration": "off",
         "noPrecisionLoss": "error",
-        "noUnusedVariables": "off",
+        "noUnusedVariables": "info",
         "useArrayLiterals": "off",
         "noConstAssign": "off",
         "noGlobalObjectCalls": "off",
@@ -39,7 +39,8 @@
         "noSetterReturn": "off",
         "noUndeclaredVariables": "off",
         "noUnreachable": "off",
-        "noUnreachableSuper": "off"
+        "noUnreachableSuper": "off",
+        "noUnusedImports": "error"
       },
       "style": {
         "noInferrableTypes": "error",
@@ -50,7 +51,8 @@
         "useDefaultParameterLast": "error",
         "noArguments": "error",
         "noVar": "error",
-        "useConst": "error"
+        "useConst": "error",
+        "noDefaultExport": "warn"
       },
       "suspicious": {
         "noDuplicateClassMembers": "error",
