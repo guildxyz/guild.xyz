@@ -1,5 +1,4 @@
 import { CircleWavyCheck, Users } from "@phosphor-icons/react"
-import Image from "next/image"
 import { GuildBase } from "types"
 import pluralize from "utils/pluralize"
 import { Anchor } from "./ui/Anchor"
@@ -26,7 +25,7 @@ export const GuildCard: React.FC<Props> = ({ guildData }) => (
         alt="guild logo"
         width={48}
         height={48}
-      ></AvatarImage>
+      />
       <AvatarFallback>
         <Skeleton className="size-full" />
       </AvatarFallback>
