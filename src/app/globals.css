@@ -21,7 +21,7 @@
     --tooltip: 0 0% 0%;
     --tooltip-foreground: 0 0% 100%;
 
-    --primary: 239 84% 67%;
+    --primary: 239 78% 65%;
     --primary-hover: 243 75% 59%;
     --primary-active: 245 58% 51%;
     --primary-foreground: 0 0% 100%;
@@ -59,7 +59,7 @@
     --banner: 240 4% 16%;
 
     --muted: 0 0% 100%;
-    --muted-foreground: 240 5% 56%;
+    --muted-foreground: 240 5% 46%;
 
     --accent: 240 5% 96%;
     --accent-foreground: 240 4% 16%;
