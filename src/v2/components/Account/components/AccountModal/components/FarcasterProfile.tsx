@@ -15,6 +15,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/Dialog"
+import { Separator } from "@/components/ui/Separator"
 import { Skeleton } from "@/components/ui/Skeleton"
 import {
   Tooltip,
@@ -275,7 +276,7 @@ const ConnectFarcasterButton = ({
                 <strong>one Guild account</strong> at a time
               </p>
 
-              <hr className="mt-4" />
+              <Separator className="mt-4" />
 
               <Accordion type="single" collapsible>
                 <AccordionItem

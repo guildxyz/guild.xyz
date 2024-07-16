@@ -28,6 +28,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/DropdownMenu"
+import { Separator } from "@/components/ui/Separator"
 import { Skeleton } from "@/components/ui/Skeleton"
 import { cn } from "@/lib/utils"
 import { UserProfile } from "@guildxyz/types"
@@ -104,7 +105,7 @@ const SharedSocials = () => {
                   guildId={guildSharedSocial.guildId}
                   sharedSocials={sharedSocials}
                 />
-                <hr className="opacity-60" />
+                <Separator className="opacity-60" />
               </>
             )}
             {restSharedSocials.map((sharedSocial, i) => (
@@ -113,7 +114,9 @@ const SharedSocials = () => {
                   guildId={sharedSocial.guildId}
                   sharedSocials={sharedSocials}
                 />
-                {i < sharedSocials.length - 1 && <hr className="opacity-60" />}
+                {i < sharedSocials.length - 1 && (
+                  <Separator className="opacity-60" />
+                )}
               </Fragment>
             ))}
           </div>

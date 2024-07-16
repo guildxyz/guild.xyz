@@ -1,3 +1,4 @@
+import { Separator } from "@/components/ui/Separator"
 import {
   Tooltip,
   TooltipContent,
@@ -53,7 +54,9 @@ const AccountConnections = () => {
             ) : (
               <SocialAccount type={platform} />
             )}
-            {i < orderedSocials.length - 1 && <hr className="border-border-muted" />}
+            {i < orderedSocials.length - 1 && (
+              <Separator className="bg-border-muted" />
+            )}
           </Fragment>
         ))}
       </AccountSection>
@@ -104,7 +107,9 @@ const AccountConnections = () => {
             .map((addressData, i) => (
               <Fragment key={addressData.address}>
                 <LinkedAddress addressData={addressData} />
-                {i < addresses.length - 1 && <hr className="border-border-muted" />}
+                {i < addresses.length - 1 && (
+                  <Separator className="bg-border-muted" />
+                )}
               </Fragment>
             ))
             .concat(

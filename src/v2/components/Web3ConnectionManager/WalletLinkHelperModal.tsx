@@ -10,6 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../ui/Dialog"
+import { Separator } from "../ui/Separator"
 
 const WalletLinkHelperModal = () => {
   const [isWalletLinkHelperModalOpen, setIsWalletLinkModalOpen] = useAtom(
@@ -38,9 +39,9 @@ const WalletLinkHelperModal = () => {
           </div>
 
           <div className="flex w-full items-center gap-4 py-4">
-            <hr className="w-full border-border" />
+            <Separator className="w-full" />
             <span className="font-bold text-muted-foreground text-xs">OR</span>
-            <hr className="w-full border-border" />
+            <Separator className="w-full" />
           </div>
 
           <Button onClick={() => setIsWalletLinkModalOpen(false)} className="w-full">

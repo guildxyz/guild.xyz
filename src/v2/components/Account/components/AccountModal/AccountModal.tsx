@@ -12,6 +12,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/Dialog"
+import { Separator } from "@/components/ui/Separator"
 import {
   Tooltip,
   TooltipContent,
@@ -148,7 +149,9 @@ const AccountModal = () => {
               </div>
 
               <AccountConnections />
-              <hr className="my-6" />
+
+              <Separator className="my-6" />
+
               <UsersGuildPins />
             </>
           ) : (
