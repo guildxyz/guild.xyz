@@ -40,7 +40,7 @@ export const Explorer = ({ searchParams }: { searchParams: SearchParams }) => {
             onClick={() => setIsWalletSelectorModalOpen(true)}
             colorScheme="primary"
           >
-            <SignIn />
+            <SignIn weight="bold" />
             <span className="text-md">Sign in</span>
           </Button>
         </Card>

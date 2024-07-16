@@ -62,7 +62,7 @@ export const GuildSearchBar = () => {
           className="space-x-2"
           onClick={() => smoothScrollTo(ActiveSection.ExploreGuilds)}
         >
-          <PushPin />
+          <PushPin weight="bold" />
           <span>featured</span>
         </ToggleGroupItem>
         <ToggleGroupItem
@@ -70,7 +70,7 @@ export const GuildSearchBar = () => {
           className="space-x-2"
           onClick={() => smoothScrollTo(ActiveSection.ExploreGuilds)}
         >
-          <Sparkle />
+          <Sparkle weight="bold" />
           <span>newest</span>
         </ToggleGroupItem>
       </ToggleGroup>
