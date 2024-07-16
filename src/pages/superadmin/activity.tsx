@@ -42,7 +42,7 @@ const ActivityLog = (): JSX.Element => {
           bottom: 0,
           left: 0,
           right: 0,
-          bg: `linear-gradient(to top right, ${bgColor} ${bgLinearPercentage}, transparent), url('/banner.png ')`,
+          bg: `linear-gradient(to top right, ${bgColor} ${bgLinearPercentage}, transparent), url('/banner.svg ')`,
           bgSize: { base: "auto 100%", sm: "auto 115%" },
           bgRepeat: "no-repeat",
           bgPosition: "top 10px right 0px",

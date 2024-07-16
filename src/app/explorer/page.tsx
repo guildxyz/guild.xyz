@@ -10,7 +10,7 @@ import { ActiveSection } from "./types"
 
 export const metadata = {
   icons: {
-    other: [{ rel: "preload", url: "/banner.png" }],
+    other: [{ rel: "preload", url: "/banner.svg" }],
   },
 }
 
@@ -51,7 +51,7 @@ const Page = async ({ searchParams }: { searchParams: SearchParams }) => {
             <Layout.Headline title="Guildhall" />
           </div>
           <Layout.Banner>
-            <div className="absolute inset-0 bg-[auto_115%] bg-[right_top_10px] bg-[url('/banner.png')] bg-no-repeat opacity-10" />
+            <div className="absolute inset-0 bg-[auto_115%] bg-[right_top_10px] bg-[url('/banner.svg')] bg-no-repeat opacity-10" />
             <div className="absolute inset-0 bg-gradient-to-tr from-50% from-banner to-transparent" />
           </Layout.Banner>
         </Layout.Hero>

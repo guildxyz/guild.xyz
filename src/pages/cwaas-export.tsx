@@ -20,7 +20,7 @@ const CWaaSExportPage = () => {
             bottom: 0,
             left: 0,
             right: 0,
-            bg: `radial-gradient(circle at bottom, transparent 5%, ${bgColor}), url('/banner.png ')`,
+            bg: `radial-gradient(circle at bottom, transparent 5%, ${bgColor}), url('/banner.svg ')`,
             bgSize: { base: "auto 100%", sm: "auto 115%" },
             bgPosition: "top 5px right 0px",
             opacity: 0.06,
