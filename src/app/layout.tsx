@@ -21,7 +21,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head />
-      <body className={cn(dystopian.variable, inter.variable, "antialiased")}>
+      <body className={cn(dystopian.variable, inter.variable)}>
         <Providers>
           {children}
 
