@@ -37,7 +37,7 @@ const Nav = () => {
   return (
     <ToggleGroup
       type="single"
-      className="flex gap-2"
+      className="gap-2"
       size={isSearchStuck ? "sm" : "default"}
       variant={isNavStuck ? "default" : "mono"}
       onValueChange={(value) => value && setActiveSection(value as ActiveSection)}
