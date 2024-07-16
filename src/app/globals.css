@@ -70,7 +70,7 @@
     --border-muted: 240 3% 93%;
 
     --input: var(--border);
-    
+
     --ring: 240, 0%, 45%, 25%;
 
     --alert-success: 137 64% 98%;
@@ -216,7 +216,7 @@
   }
 
   body {
-    @apply min-h-screen bg-background font-sans text-foreground;
+    @apply min-h-screen bg-background font-sans text-foreground antialiased;
   }
 }
 
