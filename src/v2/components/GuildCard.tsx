@@ -22,7 +22,7 @@ export const GuildCard: React.FC<Props> = ({ guildData }) => (
     <Avatar className="row-span-2 size-12">
       <AvatarImage
         src={guildData.imageUrl}
-        alt="guild logo"
+        alt={`${guildData.name} logo`}
         width={48}
         height={48}
       />
