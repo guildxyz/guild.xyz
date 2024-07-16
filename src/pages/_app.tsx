@@ -1,4 +1,3 @@
-import { Box, Progress, Slide, useColorMode } from "@chakra-ui/react"
 import { FuelProvider } from "@fuels/react"
 import { IconContext } from "@phosphor-icons/react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
@@ -12,8 +11,6 @@ import useOAuthResultToast from "hooks/useOAuthResultToast"
 import { useAtomValue } from "jotai"
 import type { AppProps } from "next/app"
 import dynamic from "next/dynamic"
-import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
 import { SWRConfig } from "swr"
 import { fetcherForSWR } from "utils/fetcher"
 import { shouldUseReCAPTCHAAtom } from "utils/recaptcha"
@@ -31,6 +28,7 @@ import { LegacyPostHogProvider } from "components/_app/LegacyPostHogProvider"
 import { LegacyWeb3ConnectionManager } from "components/_app/LegacyWeb3ConnectionManager"
 import "wicg-inert"
 import AppErrorBoundary from "@/components/AppErrorBoundary"
+import RouteChangeIndicator from "components/_app/RouteChangeIndicator"
 
 const DynamicReCAPTCHA = dynamic(() => import("v2/components/ReCAPTCHA"))
 
@@ -42,33 +40,9 @@ const App = ({
   Component,
   pageProps,
 }: AppProps<{ cookies: string }>): JSX.Element => {
-  const router = useRouter()
   const shouldUseReCAPTCHA = useAtomValue(shouldUseReCAPTCHAAtom)
 
-  const [isRouteChangeInProgress, setIsRouteChangeInProgress] = useState(false)
-  const { colorMode } = useColorMode()
-
   useOAuthResultToast()
-
-  useEffect(() => {
-    let previousPathname = null
-
-    const handleRouteChangeStart = (url: string) => {
-      const pathname = url.split("?")[0]
-      if (previousPathname !== pathname) setIsRouteChangeInProgress(true)
-      previousPathname = pathname
-    }
-    const handleRouteChangeComplete = () => setIsRouteChangeInProgress(false)
-
-    router.events.on("routeChangeStart", handleRouteChangeStart)
-    router.events.on("routeChangeComplete", handleRouteChangeComplete)
-
-    return () => {
-      router.events.off("routeChangeStart", handleRouteChangeStart)
-      router.events.off("routeChangeComplete", handleRouteChangeComplete)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   return (
     <>
@@ -89,25 +63,7 @@ const App = ({
       )}
 
       <Chakra cookies={pageProps.cookies}>
-        {isRouteChangeInProgress ? (
-          <Slide
-            direction="top"
-            in={isRouteChangeInProgress}
-            initial="0.3s"
-            style={{ zIndex: 2000 }}
-          >
-            <Box position="relative" w="100%" h="5px" zIndex={2}>
-              <Progress
-                isIndeterminate
-                w="100%"
-                bg={colorMode === "light" ? "blue.50" : null}
-                position="fixed"
-                size="xs"
-                transition="width .3s"
-              />
-            </Box>
-          </Slide>
-        ) : null}
+        <RouteChangeIndicator />
 
         <IconContext.Provider
           value={{
