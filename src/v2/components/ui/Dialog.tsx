@@ -24,9 +24,8 @@ const DialogOverlay = forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Overlay
     ref={ref}
-    // z-1400 comes from Chakra UI, we should update it to z-50 once we use this new Dialog component everywhere
     className={cn(
-      "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-[1400] grid items-end justify-center overflow-y-auto bg-black/50 backdrop-blur-sm duration-200 data-[state=closed]:animate-out data-[state=open]:animate-in sm:items-center",
+      "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-modal grid items-end justify-center overflow-y-auto bg-black/50 backdrop-blur-sm duration-200 data-[state=closed]:animate-out data-[state=open]:animate-in sm:items-center",
       className
     )}
     {...props}

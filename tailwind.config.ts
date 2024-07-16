@@ -183,6 +183,14 @@ const config = {
         "collapse-open": "collapse-open 200ms ease-out",
         "collapse-closed": "collapse-closed 200ms ease-out",
       },
+      zIndex: {
+        // Using these from Chakra UI until we use both design systems at the same time
+        overlay: "1300",
+        modal: "1400",
+        popover: "1500",
+        toast: "1700",
+        tooltip: "1800", 
+      }
     },
   },
   plugins: [require("tailwindcss-animate")],
