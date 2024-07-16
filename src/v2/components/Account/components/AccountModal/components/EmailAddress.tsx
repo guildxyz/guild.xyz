@@ -326,7 +326,7 @@ const ConnectEmailButton = ({
             {/* TODO: maybe move this out to a CSS variable? */}
             <Warning
               weight="bold"
-              className="mr-1 text-orange-400 data-[theme=dark]:text-orange-200"
+              className="mr-1 text-orange-400 dark:text-orange-200"
             />
             Verify
           </>

@@ -152,10 +152,7 @@ const ConnectPlatformButton = ({
       className={cn("ml-auto", PLATFORM_COLORS[type])}
     >
       {isReconnect && (
-        <Warning
-          weight="bold"
-          className="text-orange-400 data-[theme=dark]:text-orange-200"
-        />
+        <Warning weight="bold" className="text-orange-400 dark:text-orange-200" />
       )}
       {isReconnect ? "Reconnect" : "Connect"}
     </Button>
