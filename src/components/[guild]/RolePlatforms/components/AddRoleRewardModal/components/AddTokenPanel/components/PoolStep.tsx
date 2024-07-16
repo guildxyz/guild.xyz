@@ -10,7 +10,7 @@ import {
   Text,
 } from "@chakra-ui/react"
 import { useTokenRewards } from "components/[guild]/AccessHub/hooks/useTokenRewards"
-import { canCloseAddRewardModalAtom } from "components/[guild]/AddRewardButton/AddRewardButton"
+import { canCloseAddRewardModalAtom } from "components/[guild]/AddRewardButton/constants"
 import SwitchNetworkButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/SwitchNetworkButton"
 import useAllowance from "components/[guild]/Requirements/components/GuildCheckout/hooks/useAllowance"
 import Button from "components/common/Button"

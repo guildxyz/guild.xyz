@@ -25,8 +25,8 @@ import rewardComponents from "rewards/components"
 import SelectRoleOrSetRequirements from "rewards/components/SelectRoleOrSetRequirements"
 import { RoleTypeToAddTo, useAddRewardContext } from "../AddRewardContext"
 import useGuild from "../hooks/useGuild"
-import { defaultValues } from "./AddRewardButton"
 import AvailabilitySetup from "./components/AvailabilitySetup"
+import { ADD_REWARD_FORM_DEFAULT_VALUES } from "./constants"
 
 const SelectRolePanel = ({
   onSuccess,
@@ -76,7 +76,8 @@ const SelectRolePanel = ({
   const { RewardPreview } = rewardComponents[selection] ?? {}
 
   const goBack = () => {
-    if (!rewards[selection].autoRewardSetup) methods.reset(defaultValues)
+    if (!rewards[selection].autoRewardSetup)
+      methods.reset(ADD_REWARD_FORM_DEFAULT_VALUES)
     setStep(selection === "POLYGON_ID" ? "HOME" : "REWARD_SETUP")
   }
 
