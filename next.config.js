@@ -93,6 +93,7 @@ const nextConfig = {
   },
   experimental: {
     scrollRestoration: true,
+    bundlePagesExternals: true,
     optimizePackageImports: [
       "@phosphor-icons/react",
       "@phosphor-icons/react/dist/ssr",
