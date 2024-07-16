@@ -10,11 +10,14 @@ export default function manifest(): MetadataRoute.Manifest {
     background_color: "#000",
     display: "standalone",
     start_url: "/",
-    icons: {
-      src: `guild-icon.png`,
-      sizes: `64x64`,
-      type: "image/png",
-      purpose: "maskable any",
-    },
+    icons: [
+      {
+        src: `guild-icon.png`,
+        sizes: `64x64`,
+        type: "image/png",
+        // @ts-ignore: "maskable any" is not typed out as an option
+        purpose: "maskable any",
+      },
+    ],
   }
 }
