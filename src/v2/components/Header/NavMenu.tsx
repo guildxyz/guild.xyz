@@ -153,7 +153,7 @@ const NavButton = ({ href, children }: { href: string; children: ReactNode }) =>
   return (
     <Wrapper {...wrapperProps}>
       <Button
-        variant="ghost"
+        variant={pathname === href ? "solid" : "ghost"}
         className={cn(
           "h-10 w-full justify-start gap-2",
           pathname === href ? "font-semibold" : "font-normal"
