@@ -1,6 +1,6 @@
 import { Icon, Img, SimpleGrid, Text } from "@chakra-ui/react"
+import { Plus } from "@phosphor-icons/react"
 import StyledSelect from "components/common/StyledSelect"
-import { Plus } from "phosphor-react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { EventSourcesKey, SelectOption } from "types"
 import EventInput, { eventSourceNames, logos } from "./EventInput"

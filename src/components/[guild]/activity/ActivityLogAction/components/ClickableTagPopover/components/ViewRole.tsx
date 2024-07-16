@@ -1,7 +1,7 @@
+import { ArrowSquareOut } from "@phosphor-icons/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import { useRouter } from "next/router"
-import { ArrowSquareOut } from "phosphor-react"
 import { useState } from "react"
 
 type Props = {

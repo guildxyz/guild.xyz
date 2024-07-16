@@ -5,7 +5,7 @@ import {
   Spinner,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { Check, X } from "phosphor-react"
+import { Check, X } from "@phosphor-icons/react"
 
 export type JoinStepIndicatorProps =
   | { status: "INACTIVE" | "DONE" | "NO_ACCESS" | "LOADING" }

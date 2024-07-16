@@ -6,8 +6,8 @@ import {
   Icon,
   useColorModeValue,
 } from "@chakra-ui/react"
+import { ArrowDown, ArrowUp } from "@phosphor-icons/react"
 import Button from "components/common/Button"
-import { ArrowDown, ArrowUp } from "phosphor-react"
 import { useEffect, useState } from "react"
 import parseDescription from "utils/parseDescription"
 import { RoleCardCollapseProps } from ".."

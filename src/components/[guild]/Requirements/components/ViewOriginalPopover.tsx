@@ -5,7 +5,7 @@ import {
   PopoverTrigger,
   Portal,
 } from "@chakra-ui/react"
-import { CaretDown } from "phosphor-react"
+import { CaretDown } from "@phosphor-icons/react"
 import { PropsWithChildren } from "react"
 import { RequirementButton } from "./RequirementButton"
 

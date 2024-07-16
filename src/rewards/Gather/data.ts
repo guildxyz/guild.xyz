@@ -1,4 +1,4 @@
-import { Buildings } from "phosphor-react"
+import { Buildings } from "@phosphor-icons/react"
 import { PlatformAsRewardRestrictions, RewardData } from "rewards/types"
 
 export const gatherData = {

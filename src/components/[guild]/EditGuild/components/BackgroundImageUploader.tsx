@@ -1,10 +1,10 @@
 import { FormControl, FormLabel, Progress, Wrap } from "@chakra-ui/react"
+import { File } from "@phosphor-icons/react"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import useDropzone, { ERROR_MESSAGES } from "hooks/useDropzone"
 import { Uploader } from "hooks/usePinata/usePinata"
-import { File } from "phosphor-react"
 import { useState } from "react"
 import RemoveBackgroundImage from "./RemoveBackgroundImage"
 

@@ -1,9 +1,9 @@
+import { Plus } from "@phosphor-icons/react"
 import useUser from "components/[guild]/hooks/useUser"
 import { walletSelectorModalAtom } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
 import { atom, useSetAtom } from "jotai"
-import { Plus } from "phosphor-react"
 
 export type AddressLinkParams = {
   userId?: number
