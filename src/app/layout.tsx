@@ -6,6 +6,7 @@ import type { Metadata } from "next"
 import { type ReactNode, Suspense } from "react"
 import "./globals.css"
 import { cn } from "@/lib/utils"
+import NextTopLoader from "nextjs-toploader"
 
 interface RootLayoutProps {
   children: ReactNode
@@ -22,6 +23,8 @@ export default function RootLayout({ children }: RootLayoutProps) {
     <html lang="en" suppressHydrationWarning>
       <head />
       <body className={cn(dystopian.variable, inter.variable)}>
+        <NextTopLoader showSpinner={false} color="#eff6ff" height={3} />
+
         <Providers>
           {children}
 

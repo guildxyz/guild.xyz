@@ -28,7 +28,7 @@ import { LegacyPostHogProvider } from "components/_app/LegacyPostHogProvider"
 import { LegacyWeb3ConnectionManager } from "components/_app/LegacyWeb3ConnectionManager"
 import "wicg-inert"
 import AppErrorBoundary from "@/components/AppErrorBoundary"
-import RouteChangeIndicator from "components/_app/RouteChangeIndicator"
+import NextTopLoader from "nextjs-toploader"
 
 const DynamicReCAPTCHA = dynamic(() => import("v2/components/ReCAPTCHA"))
 
@@ -62,9 +62,9 @@ const App = ({
         />
       )}
 
-      <Chakra cookies={pageProps.cookies}>
-        <RouteChangeIndicator />
+      <NextTopLoader showSpinner={false} color="#eff6ff" height={3} />
 
+      <Chakra cookies={pageProps.cookies}>
         <IconContext.Provider
           value={{
             color: "currentColor",

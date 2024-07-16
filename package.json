@@ -88,6 +88,7 @@
     "mini-svg-data-uri": "^1.4.4",
     "next": "^14.2.4",
     "next-themes": "^0.3.0",
+    "nextjs-toploader": "^1.6.12",
     "papaparse": "^5.4.1",
     "posthog-js": "^1.139.3",
     "qrcode.react": "^3.1.0",
