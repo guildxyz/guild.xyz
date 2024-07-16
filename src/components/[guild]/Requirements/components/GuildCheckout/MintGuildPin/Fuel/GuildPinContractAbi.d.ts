@@ -13,7 +13,6 @@ import type {
   BN,
   BigNumberish,
   Bytes,
-  Contract,
   EvmAddress,
   FunctionFragment,
   Interface,

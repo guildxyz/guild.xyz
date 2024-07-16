@@ -1,6 +1,5 @@
 import { Providers } from "@/components/Providers"
 import { PostHogPageViews } from "@/components/Providers/PostHogPageViews"
-import clsx from "clsx"
 import { dystopian, inter } from "fonts"
 import type { Metadata } from "next"
 import { type ReactNode, Suspense } from "react"
