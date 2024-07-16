@@ -34,7 +34,7 @@ const GuildLogo = ({ imageUrl, className }: Props) => {
             alt="Guild logo"
             width={48}
             height={48}
-            objectFit="cover"
+            className="object-cover"
           />
         ))}
     </div>
