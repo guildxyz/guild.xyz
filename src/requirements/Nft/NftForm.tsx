@@ -49,7 +49,7 @@ type NftRequirementTypeOption = {
   value: "AMOUNT" | "ATTRIBUTE" | "CUSTOM_ID"
 }
 
-const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
+const _ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
 const nftRequirementTypeOptions: Array<NftRequirementTypeOption> = [
   {
@@ -73,7 +73,7 @@ export const traitsSupportedChains: Chain[] = [
   "ARBITRUM",
 ]
 
-const customFilterOption = (candidate, input) =>
+const _customFilterOption = (candidate, input) =>
   candidate.label.toLowerCase().includes(input?.toLowerCase()) ||
   candidate.value.toLowerCase() === input?.toLowerCase()
 

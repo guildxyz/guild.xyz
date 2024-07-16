@@ -86,7 +86,7 @@ const handler: NextApiHandler<TopCollectorsResponse> = async (req, res) => {
 
       pageKey = newOwners.pageKey
       if (pageKey) searchParams.set("pageKey", pageKey)
-    } catch (alchemyApiError) {
+    } catch (_alchemyApiError) {
       return res.status(500).json({ error: "Couldn't fetch NFT owners" })
     }
   } while (pageKey)

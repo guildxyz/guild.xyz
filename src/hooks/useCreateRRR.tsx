@@ -105,7 +105,7 @@ const useCreateRRR = ({ onSuccess }: { onSuccess?: (res) => void }) => {
 
       try {
         createdRole = await createRole(emptyRole)
-      } catch (error) {
+      } catch (_error) {
         showErrorToast("Failed to create role")
         return
       }

@@ -54,7 +54,7 @@ const SolutionsPanel = ({
 
   const { startSessionRecording } = usePostHogContext()
 
-  const isMobile = useBreakpointValue({ base: true, md: false })
+  const _isMobile = useBreakpointValue({ base: true, md: false })
 
   const onSelectReward = (platform: PlatformName) => {
     if (platform === "CONTRACT_CALL") startSessionRecording()

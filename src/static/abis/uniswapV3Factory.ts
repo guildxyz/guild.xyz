@@ -1,4 +1,4 @@
-const UNISWAP_V3_FACTORY_ABI = [
+const _UNISWAP_V3_FACTORY_ABI = [
   { inputs: [], stateMutability: "nonpayable", type: "constructor" },
   {
     anonymous: false,

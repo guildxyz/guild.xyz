@@ -70,7 +70,7 @@ function getOAuthURL(
 const useConnectPlatform = (
   platformName: PlatformName,
   onSuccess?: () => void,
-  isReauth?: boolean, // Temporary, once /connect works without it, we can remove this
+  _isReauth?: boolean, // Temporary, once /connect works without it, we can remove this
   authLevel: AuthLevel = "membership",
   disconnectFromExistingUser?: boolean
 ) => {

@@ -16,7 +16,7 @@ const checkSpaceAccess = async (req: NextApiRequest, res: NextApiResponse) => {
         errorMessage === "Unable to access your account." ? "APIKeyError" : "Error"
       res.status(500).json({ type: errorType })
     }
-  } catch (error) {
+  } catch (_error) {
     res.status(500).json({ type: "Error" })
   }
 }

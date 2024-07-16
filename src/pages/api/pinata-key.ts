@@ -85,7 +85,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         message: `Method ${req.method} is not allowed.`,
       })
     }
-  } catch (error) {
+  } catch (_error) {
     res.status(500).json({ message: "Failed to generate Pinata JWT" })
   }
 }

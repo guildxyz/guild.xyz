@@ -1,7 +1,7 @@
 const tryToParseJSON = (jsonString: any) => {
   try {
     return jsonString === "undefined" ? undefined : JSON.parse(jsonString ?? "")
-  } catch (e) {
+  } catch (_e) {
     return undefined
   }
 }

@@ -75,7 +75,7 @@ const ConversionInput = ({
     }
   }
 
-  const tokenPreviewChange = (valueAsString, valueAsNumber) => {
+  const tokenPreviewChange = (_valueAsString, valueAsNumber) => {
     if (conversionLocked) {
       const pointPreviewValue = parseFloat(
         (valueAsNumber * multiplier).toFixed(

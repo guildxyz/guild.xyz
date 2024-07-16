@@ -66,7 +66,7 @@ const getDecimals = async (chain: Chain, tokenAddress: string) => {
 }
 
 const getGuildFee = async (
-  guildId: number,
+  _guildId: number,
   sellToken: string,
   chainId: number,
   nativeCurrencyPriceInUSD: number,
