@@ -18,7 +18,7 @@ const handler: NextApiHandler = async (
   try {
     await res.revalidate("/leaderboard")
     return res.json({ revalidated: true })
-  } catch (_err) {
+  } catch (err) {
     return res.status(500).send("Error revalidating")
   }
 }

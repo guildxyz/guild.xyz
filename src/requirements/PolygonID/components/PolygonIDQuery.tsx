@@ -91,7 +91,7 @@ function tryParseJSON(jsonString) {
     if (o && typeof o === "object") {
       return o
     }
-  } catch (_e) {}
+  } catch (e) {}
 
   return false
 }
@@ -103,7 +103,7 @@ function tryStringifyJSON(jsonObject) {
     if (typeof jsonObject !== "object") return jsonObject
 
     return JSON.stringify(jsonObject, null, 2)
-  } catch (_e) {}
+  } catch (e) {}
 
   return ""
 }

@@ -269,7 +269,7 @@ const handler = async (req, _) => {
         ],
       }
     )
-  } catch (_e: any) {}
+  } catch (e: any) {}
 }
 
 export default handler

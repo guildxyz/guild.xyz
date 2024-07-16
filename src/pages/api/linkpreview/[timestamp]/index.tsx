@@ -164,7 +164,7 @@ const handler = async (req, _) => {
         ],
       }
     )
-  } catch (_e: any) {
+  } catch (e: any) {
     return new Response(`Failed to generate the image`, {
       status: 500,
     })

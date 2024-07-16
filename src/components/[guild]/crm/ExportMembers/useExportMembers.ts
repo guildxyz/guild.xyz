@@ -25,7 +25,7 @@ const useExportMembers = (mutate) => {
         })
         mutate((prevExports) => (!prevExports ? [res] : [res, ...prevExports]))
       },
-      onError: (_err) => {
+      onError: (err) => {
         toast({
           status: "error",
           title: "Couldn't start export",

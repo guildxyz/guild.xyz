@@ -49,7 +49,7 @@ const CrmMenu = ({ table }: Props) => {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const _customizeButtonProps = {
+  const customizeButtonProps = {
     leftIcon: <Sliders />,
     icon: <Sliders />,
     onClick: onCustomizeOpen,

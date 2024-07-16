@@ -1,6 +1,8 @@
 "use client"
 
 import { useYourGuilds } from "@/hooks/useYourGuilds"
+import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
+import { GuildBase } from "types"
 import {
   GuildCardSkeleton,
   GuildCardWithLink,

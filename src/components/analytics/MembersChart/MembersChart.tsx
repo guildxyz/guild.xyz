@@ -174,7 +174,7 @@ const MembersChart = () => {
               hideTicks
               orientation="bottom"
               labelProps={{ fill: "var(--chakra-colors-chakra-body-text)" }}
-              tickLabelProps={(_value, index, ticks) => ({
+              tickLabelProps={(value, index, ticks) => ({
                 textAnchor:
                   index === 0
                     ? "start"
