@@ -21,7 +21,6 @@ import dynamic from "next/dynamic"
 import Link, { LinkProps } from "next/link"
 import { usePathname } from "next/navigation"
 import { AnchorHTMLAttributes, ReactNode } from "react"
-import { ThemeToggle } from "../ThemeToggle"
 import { Button } from "../ui/Button"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/Popover"
 
@@ -114,10 +113,10 @@ export const NavMenu = () => (
         </NavGroup>
       </nav>
 
-      <div className="flex items-center justify-between bg-card-secondary px-7 py-4 text-foreground text-sm">
+      {/* <div className="flex items-center justify-between bg-card-secondary px-7 py-4 text-foreground text-sm">
         <span>Theme:</span>
         <ThemeToggle />
-      </div>
+      </div> */}
     </PopoverContent>
   </Popover>
 )
