@@ -4,7 +4,6 @@
  */
 
 import { cn } from "@/lib/utils"
-import { useTheme } from "next-themes"
 import Image from "next/image"
 
 const IMAGE_QUALITY = 70 as const
@@ -15,8 +14,6 @@ type Props = {
 }
 
 const GuildLogo = ({ imageUrl, className }: Props) => {
-  const { resolvedTheme } = useTheme()
-
   return (
     <div
       className={cn(
@@ -34,7 +31,7 @@ const GuildLogo = ({ imageUrl, className }: Props) => {
             alt="Guild logo"
             width={48}
             height={48}
-            className="object-cover"
+            className="aspect-square object-cover"
           />
         ))}
     </div>
