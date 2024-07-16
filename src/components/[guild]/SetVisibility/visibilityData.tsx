@@ -1,6 +1,11 @@
 import { Visibility } from "@guildxyz/types"
+import {
+  Detective,
+  EyeSlash,
+  GlobeHemisphereEast,
+  IconProps,
+} from "@phosphor-icons/react"
 import { Option } from "components/common/RadioSelect/RadioSelect"
-import { Detective, EyeSlash, GlobeHemisphereEast, IconProps } from "phosphor-react"
 import PrivateVisibilityOptions from "./components/PrivateVisibilityOptions"
 
 export const VISIBILITY_DATA: Record<

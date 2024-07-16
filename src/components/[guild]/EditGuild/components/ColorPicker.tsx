@@ -8,11 +8,11 @@ import {
   VStack,
   useColorModeValue,
 } from "@chakra-ui/react"
+import { Palette } from "@phosphor-icons/react"
 import Color from "color"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import useDebouncedState from "hooks/useDebouncedState"
-import { Palette } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 

@@ -1,6 +1,6 @@
 import { FormControl, FormLabel, Select, Text, Tooltip } from "@chakra-ui/react"
+import { Info } from "@phosphor-icons/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import { Info } from "phosphor-react"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { Rest } from "types"

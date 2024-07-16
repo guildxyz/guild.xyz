@@ -25,9 +25,9 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
+import { Check, Question, Users } from "@phosphor-icons/react"
 import Card from "components/common/Card"
 import { Modal } from "components/common/Modal"
-import { Check, Question, Users } from "phosphor-react"
 import RoleTag from "../RoleTag"
 import useGuild from "../hooks/useGuild"
 import { Message as MessageType } from "./hooks/useGuildMessages"

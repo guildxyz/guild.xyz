@@ -1,4 +1,5 @@
 import { HStack, Icon, forwardRef } from "@chakra-ui/react"
+import { Warning } from "@phosphor-icons/react"
 import {
   CreatableSelect,
   GroupBase,
@@ -9,7 +10,6 @@ import {
 import CopyableAddress from "components/common/CopyableAddress"
 import StyledSelect from "components/common/StyledSelect"
 import CustomMenuList from "components/common/StyledSelect/components/CustomMenuList"
-import { Warning } from "phosphor-react"
 import { PropsWithChildren, useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { useEnsAddress } from "wagmi"

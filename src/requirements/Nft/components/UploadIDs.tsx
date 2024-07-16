@@ -1,6 +1,6 @@
+import { File } from "@phosphor-icons/react"
 import Button from "components/common/Button"
 import useDropzone from "hooks/useDropzone"
-import { File } from "phosphor-react"
 
 export const INVALID_TOKEN_IDS_ERROR = {
   type: "validate",

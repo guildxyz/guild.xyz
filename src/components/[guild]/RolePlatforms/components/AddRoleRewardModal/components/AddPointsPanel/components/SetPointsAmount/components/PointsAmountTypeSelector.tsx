@@ -9,8 +9,8 @@ import {
   Portal,
   Text,
 } from "@chakra-ui/react"
+import { CaretDown, Lightning } from "@phosphor-icons/react"
 import Button from "components/common/Button"
-import { CaretDown, Lightning } from "phosphor-react"
 
 const PointsAmountTypeSelector = ({ type, setType }) => {
   const options = [

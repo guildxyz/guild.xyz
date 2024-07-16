@@ -8,8 +8,8 @@ import {
   Tbody,
   useDisclosure,
 } from "@chakra-ui/react"
+import { CaretDown } from "@phosphor-icons/react"
 import Button from "components/common/Button"
-import { CaretDown } from "phosphor-react"
 import { PropsWithChildren } from "react"
 
 type Props = {

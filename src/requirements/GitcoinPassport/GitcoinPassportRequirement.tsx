@@ -14,6 +14,7 @@ import {
   Tr,
   useColorModeValue,
 } from "@chakra-ui/react"
+import { CaretDown } from "@phosphor-icons/react"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
@@ -21,7 +22,6 @@ import { RequirementButton } from "components/[guild]/Requirements/components/Re
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import DataBlock from "components/common/DataBlock"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
-import { CaretDown } from "phosphor-react"
 import { scorers } from "./components/Score"
 import SetupPassport from "./components/SetupPassport"
 

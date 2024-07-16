@@ -1,8 +1,8 @@
 import { MenuItem, useDisclosure } from "@chakra-ui/react"
+import { Clock } from "@phosphor-icons/react"
 import EditRewardAvailabilityModal from "components/[guild]/RolePlatforms/components/EditRewardAvailabilityModal"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useToast from "hooks/useToast"
-import { Clock } from "phosphor-react"
 import { PlatformName, PlatformType } from "types"
 import useEditRolePlatform from "../hooks/useEditRolePlatform"
 

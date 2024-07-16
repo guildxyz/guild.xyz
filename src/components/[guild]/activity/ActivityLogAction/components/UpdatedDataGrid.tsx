@@ -7,7 +7,7 @@ import {
   useBreakpointValue,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { ArrowDown, ArrowRight } from "phosphor-react"
+import { ArrowDown, ArrowRight } from "@phosphor-icons/react"
 
 type Props = {
   before: JSX.Element

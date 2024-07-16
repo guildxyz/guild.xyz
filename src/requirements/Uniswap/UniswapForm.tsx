@@ -12,10 +12,10 @@ import {
   Tooltip,
 } from "@chakra-ui/react"
 import { consts } from "@guildxyz/types"
+import { Question } from "@phosphor-icons/react"
 import Button from "components/common/Button"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import { Question } from "phosphor-react"
 import { useCallback, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import ChainPicker from "requirements/common/ChainPicker"

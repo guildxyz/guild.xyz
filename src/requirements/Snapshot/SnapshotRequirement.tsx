@@ -7,6 +7,7 @@ import {
   PopoverTrigger,
   Portal,
 } from "@chakra-ui/react"
+import { CaretDown } from "@phosphor-icons/react"
 import DataBlockWithDate from "components/[guild]/Requirements/components/DataBlockWithDate"
 import Requirement, {
   RequirementProps,
@@ -14,7 +15,6 @@ import Requirement, {
 import { RequirementButton } from "components/[guild]/Requirements/components/RequirementButton"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import DataBlock from "components/common/DataBlock"
-import { CaretDown } from "phosphor-react"
 import useSWRImmutable from "swr/immutable"
 import pluralize from "utils/pluralize"
 import SnapshotSpaceLink from "./components/SnapshotSpaceLink"

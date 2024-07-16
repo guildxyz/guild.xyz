@@ -25,19 +25,6 @@ import {
 } from "@lexical/rich-text"
 import { $isAtNodeEnd, $wrapNodes } from "@lexical/selection"
 import { $getNearestNodeOfType, mergeRegister } from "@lexical/utils"
-import Button from "components/common/Button"
-import {
-  $createParagraphNode,
-  $getSelection,
-  $isRangeSelection,
-  CAN_REDO_COMMAND,
-  CAN_UNDO_COMMAND,
-  FORMAT_TEXT_COMMAND,
-  LexicalEditor,
-  REDO_COMMAND,
-  SELECTION_CHANGE_COMMAND,
-  UNDO_COMMAND,
-} from "lexical"
 import {
   ArrowClockwise,
   ArrowCounterClockwise,
@@ -52,7 +39,20 @@ import {
   TextHTwo,
   TextItalic,
   TextT,
-} from "phosphor-react"
+} from "@phosphor-icons/react"
+import Button from "components/common/Button"
+import {
+  $createParagraphNode,
+  $getSelection,
+  $isRangeSelection,
+  CAN_REDO_COMMAND,
+  CAN_UNDO_COMMAND,
+  FORMAT_TEXT_COMMAND,
+  LexicalEditor,
+  REDO_COMMAND,
+  SELECTION_CHANGE_COMMAND,
+  UNDO_COMMAND,
+} from "lexical"
 import { useCallback, useEffect, useRef, useState } from "react"
 import ImageEditor from "./components/ImageEditor"
 import LinkEditor from "./components/LinkEditor"
