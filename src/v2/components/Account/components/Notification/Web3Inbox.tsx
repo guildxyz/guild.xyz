@@ -80,10 +80,7 @@ const Web3Inbox = () => {
     isSubscribedLoading,
   } = useInbox()
 
-  if (!isWeb3ClientReady || isMessagesLoading || isSubscribedLoading)
-    return <Web3InboxSkeleton />
-
-  if (!isSubscribed) {
+  if (!isSubscribedLoading && !isSubscribed) {
     return (
       <div className="flex items-center gap-4 px-4">
         <MessageImage className="size-6 min-w-6" />
@@ -99,9 +96,12 @@ const Web3Inbox = () => {
     )
   }
 
+  if (!isWeb3ClientReady || isMessagesLoading || isSubscribedLoading)
+    return <Web3InboxSkeleton />
+
   if (messages?.length) {
     return messages.map((message) => (
-      <Dialog>
+      <Dialog key={message.id}>
         <DialogTrigger asChild>
           <div
             className="flex cursor-pointer items-center px-4 py-2 hover:bg-accent"
@@ -139,7 +139,7 @@ const Web3Inbox = () => {
             <p>{message.body}</p>
           </DialogBody>
 
-          <DialogFooter className="flex flex-row items-center justify-between">
+          <DialogFooter className="flex w-full flex-row items-center justify-between sm:justify-between">
             <time className="text-muted-foreground text-xs">
               {toDateTimeString(message.sentAt)}
             </time>
@@ -150,7 +150,6 @@ const Web3Inbox = () => {
                 className={cn(
                   buttonVariants({
                     variant: "ghost",
-                    colorScheme: "primary",
                     size: "sm",
                   }),
                   "gap-2"
@@ -237,28 +236,33 @@ const SubscribeToMessages = () => {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button className="size-8 min-w-8 px-0" colorScheme="primary">
+        <Button className="size-8 min-w-8 px-0" colorScheme="info">
           <ArrowRight />
         </Button>
       </DialogTrigger>
       <DialogContent>
-        <DialogTitle>Subscribe to messages</DialogTitle>
-        <DialogDescription className="my-8 text-card-foreground">
-          Guild admins can send broadcast messages to your wallet through{" "}
-          <Anchor href="https://web3inbox.com" variant="highlighted" showExternal>
-            Web3Inbox
-          </Anchor>
-          . Sign a message to start receiving them!
-        </DialogDescription>
-        <Button
-          onClick={performSubscribe}
-          isLoading={isSigning || isRegistering || isSubscribing}
-          loadingText={isSigning ? "Check your wallet" : "Subscribing"}
-          colorScheme="primary"
-          className="w-full"
-        >
-          Sign to subscribe
-        </Button>
+        <DialogHeader>
+          <DialogTitle>Subscribe to messages</DialogTitle>
+        </DialogHeader>
+
+        <DialogBody className="gap-8">
+          <p>
+            Guild admins can send broadcast messages to your wallet through{" "}
+            <Anchor href="https://web3inbox.com" variant="highlighted" showExternal>
+              Web3Inbox
+            </Anchor>
+            . Sign a message to start receiving them!
+          </p>
+          <Button
+            onClick={performSubscribe}
+            isLoading={isSigning || isRegistering || isSubscribing}
+            loadingText={isSigning ? "Check your wallet" : "Subscribing"}
+            colorScheme="info"
+            className="w-full"
+          >
+            Sign to subscribe
+          </Button>
+        </DialogBody>
       </DialogContent>
     </Dialog>
   )
