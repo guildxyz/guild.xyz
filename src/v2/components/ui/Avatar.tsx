@@ -21,20 +21,18 @@ const Avatar = forwardRef<
 Avatar.displayName = AvatarPrimitive.Root.displayName
 
 export interface AvatarImageProps
-  extends ComponentPropsWithoutRef<typeof NextImage> {
-  shrinkSvg?: boolean
-}
+  extends ComponentPropsWithoutRef<typeof NextImage> {}
 
 const AvatarImage = forwardRef<
   ElementRef<typeof AvatarPrimitive.Image>,
   AvatarImageProps
->(({ className, shrinkSvg = true, src, ...props }, ref) => {
+>(({ className, src, ...props }, ref) => {
   return (
     <AvatarPrimitive.Image
       className={cn(
         "aspect-square h-full w-full object-cover",
         {
-          "size-[40%]": typeof src === "string" && src.endsWith(".svg") && shrinkSvg,
+          "size-[40%]": typeof src === "string" && src.match("guildLogos"),
         },
         className
       )}

@@ -159,7 +159,7 @@ const ShareSocialsWithGuildSelect = ({
   return (
     <div className="flex items-center gap-4">
       <Avatar className="size-9">
-        <AvatarImage src={imageUrl} alt="guild logo" width={48} height={48} />
+        <AvatarImage src={imageUrl} alt="guild logo" width={36} height={36} />
         <AvatarFallback>
           <Skeleton className="size-full" />
         </AvatarFallback>
