@@ -70,7 +70,7 @@
     --border-muted: 240 3% 93%;
 
     --input: var(--border);
-    
+
     --ring: 240, 0%, 45%, 25%;
 
     --alert-success: 137 64% 98%;
@@ -132,7 +132,7 @@
     --tooltip: 240 5% 84%;
     --tooltip-foreground: 240 4% 16%;
 
-    --primary: 239 84% 67%;
+    --primary: 239 78% 65%;
     --primary-hover: 234 89% 74%;
     --primary-active: 230 94% 82%;
     --primary-foreground: 0 0% 100%;
