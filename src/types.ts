@@ -645,7 +645,6 @@ type RoleFormType = Partial<
     rolePlatforms: Array<
       Partial<Omit<RolePlatform, "guildPlatform">> & {
         guildPlatform?: GuildPlatformWithOptionalId
-        guildPlatformIndex?: number
       }
     >
   } & { name: string }
