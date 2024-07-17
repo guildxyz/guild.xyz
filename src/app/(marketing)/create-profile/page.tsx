@@ -1,5 +1,7 @@
 import { Layout } from "@/components/Layout"
+import svgToTinyDataUri from "mini-svg-data-uri"
 import type { Metadata } from "next"
+import { GuildPassInvite } from "./_components/GuildPassInvite"
 
 export const metadata: Metadata = {
   title: "Create profile",
@@ -7,20 +9,37 @@ export const metadata: Metadata = {
 
 const Page = () => {
   return (
-    <Layout.Root>
+    <Layout.Root className="relative min-h-screen">
+      <div
+        className="-z-10 absolute inset-0 stroke-blue-500"
+        style={{
+          background: `radial-gradient(ellipse at center, transparent -250%, hsl(var(--background)) 80%), url("${svgToTinyDataUri(
+            `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="30" height="30" fill="none" stroke="#666"><path d="M0 .5H31.5V32"/></svg>`
+          )}")`,
+        }}
+      />
       <Layout.Hero>
         <Layout.Header />
-        <Layout.Headline title="Create profile" />
-        <Layout.Banner>
-          <div className="absolute inset-0 bg-[auto_115%] bg-[right_top_10px] bg-[url('/banner.svg')] bg-no-repeat opacity-10" />
-          <div className="absolute inset-0 bg-gradient-to-tr from-50% from-banner to-transparent" />
+        <Layout.Banner
+          offset={206}
+          className="border-border border-b border-dashed bg-muted"
+        >
+          <div className="absolute inset-0 bg-[auto_115%] bg-[top_5px_right_0] bg-[url('/banner.svg')] bg-repeat opacity-10" />
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "radial-gradient(circle at bottom, transparent 5%, hsl(var(--muted)))",
+            }}
+          />
         </Layout.Banner>
       </Layout.Hero>
 
-      <Layout.Main>main content</Layout.Main>
+      <Layout.Main>
+        <GuildPassInvite />
+      </Layout.Main>
     </Layout.Root>
   )
 }
 
-// biome-ignore lint/style/noDefaultExport: page route
 export default Page

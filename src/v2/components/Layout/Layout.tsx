@@ -7,8 +7,12 @@ import { PropsWithChildren, ReactNode, forwardRef } from "react"
  * Root
  * -----------------------------------------------------------------------------------------------*/
 
-const Root = ({ children }: PropsWithChildren) => (
-  <div className="flex min-h-screen flex-col">{children}</div>
+export interface RootProps extends React.HTMLAttributes<HTMLDivElement> {}
+
+const Root = ({ children, ...props }: RootProps) => (
+  <div className="flex min-h-screen flex-col" {...props}>
+    {children}
+  </div>
 )
 
 /* -------------------------------------------------------------------------------------------------
@@ -81,7 +85,7 @@ const Banner = ({ children, offset = 112, className }: BannerProps) => (
  * -----------------------------------------------------------------------------------------------*/
 
 const Main = ({ children }: PropsWithChildren) => (
-  <main>
+  <main className="relative">
     <PageContainer>{children}</PageContainer>
   </main>
 )
