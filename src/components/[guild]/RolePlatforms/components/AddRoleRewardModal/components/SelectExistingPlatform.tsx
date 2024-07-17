@@ -4,7 +4,7 @@ import LogicDivider from "components/[guild]/LogicDivider"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { DISPLAY_CARD_INTERACTIVITY_STYLES } from "components/common/DisplayCard"
 import { useState } from "react"
-import { useWatch } from "react-hook-form"
+import { useFormContext, useWatch } from "react-hook-form"
 import rewards, { PlatformAsRewardRestrictions } from "rewards"
 import rewardComponents from "rewards/components"
 import { PlatformType, Requirement, RoleFormType, RolePlatform } from "types"
@@ -31,20 +31,31 @@ const SelectExistingPlatform = ({ onClose, onSelect }: Props) => {
     name: "rolePlatforms",
   })
 
+  const roleId = useWatch<RoleFormType, "id">({
+    name: "id",
+  })
+  const { getValues } = useFormContext()
+
   const roleVisibility = useWatch<RoleFormType, "visibility">({ name: "visibility" })
 
   const filteredPlatforms = guildPlatforms
-    ? guildPlatforms.filter(
-        (guildPlatform) =>
-          (rewards[PlatformType[guildPlatform.platformId]].asRewardRestriction ===
-            PlatformAsRewardRestrictions.MULTIPLE_ROLES ||
-            !alreadyUsedRolePlatforms?.includes(guildPlatform.id)) &&
-          // not added to the role yet
-          !!rolePlatforms &&
-          !rolePlatforms.find(
-            (rolePlatform: any) => rolePlatform.guildPlatformId === guildPlatform.id
-          )
-      )
+    ? guildPlatforms.filter((guildPlatform) => {
+        const canBeUsedInMultipleRoles =
+          rewards[PlatformType[guildPlatform.platformId]].asRewardRestriction ===
+          PlatformAsRewardRestrictions.MULTIPLE_ROLES
+        const alreadyUsedInCurrentRole = roleId
+          ? !!roles
+              ?.find((role) => role.id === roleId)
+              ?.rolePlatforms?.find((rp) => rp.guildPlatformId === guildPlatform.id)
+          : false
+        const alreadyUsedInAnyRole = alreadyUsedRolePlatforms?.includes(
+          guildPlatform.id
+        )
+
+        return canBeUsedInMultipleRoles
+          ? !alreadyUsedInCurrentRole
+          : !alreadyUsedInAnyRole
+      })
     : []
 
   const { targetRoleId } = useAddRewardContext()
