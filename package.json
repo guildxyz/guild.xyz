@@ -77,6 +77,8 @@
     "clsx": "^2.1.1",
     "color": "^4.2.3",
     "colorthief": "^2.3.2",
+    "embla-carousel-autoplay": "^8.1.6",
+    "embla-carousel-react": "^8.1.6",
     "events": "^3.3.0",
     "framer-motion": "^7.10.3",
     "fuels": "^0.89.1",

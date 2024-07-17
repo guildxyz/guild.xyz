@@ -85,7 +85,7 @@ const Banner = ({ children, offset = 112, className }: BannerProps) => (
  * -----------------------------------------------------------------------------------------------*/
 
 const Main = ({ children }: PropsWithChildren) => (
-  <main className="relative">
+  <main>
     <PageContainer>{children}</PageContainer>
   </main>
 )
