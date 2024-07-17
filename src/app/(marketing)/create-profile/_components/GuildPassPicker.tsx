@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/Card"
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/Carousel"
 import { cn } from "@/lib/utils"
 import Autoplay from "embla-carousel-autoplay"
+import { GuildPassScene } from "./GuildPassScene"
 
 interface Benefit {
   title: string
@@ -105,7 +106,9 @@ export const GuildPassPicker = () => {
               key={title}
             >
               <article className="relative flex h-full flex-col items-center pb-6 text-center">
-                <div className="mb-4 h-48 w-full outline">canvas</div>
+                <div className="mb-4 h-48 w-full">
+                  <GuildPassScene />
+                </div>
                 <div className="px-2">
                   <h2 className="font-extrabold text-lg">{title}</h2>
                   <strong className="font-extrabold text-lg text-orange-500">

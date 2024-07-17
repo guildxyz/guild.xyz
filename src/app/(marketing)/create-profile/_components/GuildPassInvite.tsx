@@ -3,13 +3,16 @@ import { Card } from "@/components/ui/Card"
 import { Input } from "@/components/ui/Input"
 import { Label } from "@/components/ui/Label"
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr"
+import { GuildPassScene } from "./GuildPassScene"
 
 const INVITE_HANDLE_ID = "invite-handle"
 
 export const GuildPassInvite = () => {
   return (
     <Card className="mx-auto max-w-lg bg-gradient-to-b from-card to-card-secondary p-8">
-      <div className="mb-12 h-48 w-full outline">canvas placeholder</div>
+      <div className="mb-12 h-48 w-full">
+        <GuildPassScene />
+      </div>
       <h1 className="mb-14 text-pretty text-center font-bold text-2xl leading-none tracking-tighter">
         Claim your Guild Pass and begin an epic adventure!
       </h1>
