@@ -21,14 +21,14 @@ export const ExpectedMultipleChoiceDisplay = ({
   rejectedAnswers,
 }: ExpectedFieldDataProps) => (
   <Wrap mt="1" spacing={1}>
-    {acceptedAnswers.map((value) => (
+    {acceptedAnswers?.map((value) => (
       <Tooltip key={value} label="Must be selected" hasArrow>
         <Tag variant="subtle" colorScheme="green">
           {value}
         </Tag>
       </Tooltip>
     ))}
-    {rejectedAnswers.map((value) => (
+    {rejectedAnswers?.map((value) => (
       <Tooltip key={value} label="Must not be selected" hasArrow>
         <Tag variant="subtle" colorScheme="red">
           {value}
