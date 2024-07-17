@@ -5,7 +5,8 @@ import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { AnimatePresence } from "framer-motion"
 import { useFieldArray } from "react-hook-form"
 import AddExpectedAnswerModal from "./AddExpectedAnswerModal"
-import ExpectedAnswerCard, { ExpectedFieldDataProps } from "./ExpectedAnswerCard"
+import { ExpectedAnswerCard } from "./ExpectedAnswerCard"
+import { ExpectedFieldDataProps } from "./types"
 
 type FieldData = {
   id: string
