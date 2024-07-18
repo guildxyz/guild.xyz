@@ -97,7 +97,8 @@ const SUBSCRIPTIONS = [
 
 export const GuildPassPicker = () => {
   const [api, setApi] = useState<CarouselApi>()
-  const { selectedIndex, scrollSnaps, onDotButtonClick } = useCarouselDotButton(api)
+  const { selectedIndex, scrollSnaps, onCarouselDotButtonClick } =
+    useCarouselDotButton(api)
   const carouselPlugins = useRef([
     Autoplay({ delay: 4000, stopOnInteraction: true }),
   ])
@@ -146,7 +147,7 @@ export const GuildPassPicker = () => {
         {scrollSnaps.map((_, index) => (
           <CarouselDotButton
             key={index}
-            onClick={() => onDotButtonClick(index)}
+            onClick={() => onCarouselDotButtonClick(index)}
             isActive={index === selectedIndex}
           />
         ))}

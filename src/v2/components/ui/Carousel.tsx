@@ -262,7 +262,7 @@ export const useCarouselDotButton = (
   const [selectedIndex, setSelectedIndex] = React.useState(0)
   const [scrollSnaps, setScrollSnaps] = React.useState<number[]>([])
 
-  const onDotButtonClick = React.useCallback(
+  const onCarouselDotButtonClick = React.useCallback(
     (index: number) => {
       if (!api) return
       api.scrollTo(index)
@@ -289,7 +289,7 @@ export const useCarouselDotButton = (
   return {
     selectedIndex,
     scrollSnaps,
-    onDotButtonClick,
+    onCarouselDotButtonClick,
   }
 }
 
