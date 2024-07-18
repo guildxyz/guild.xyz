@@ -7,7 +7,7 @@ import * as THREE from "three"
 function GuildPass(props: ThreeElements["mesh"]) {
   return (
     <mesh {...props} scale={4} rotation={new THREE.Euler(0.0, 0.1, 0.0)}>
-      <boxGeometry args={[1.8, 1.0, 0.1]} />
+      <boxGeometry args={[1.4, 0.6, 0.1]} />
       <meshStandardMaterial color="orange" wireframe />
     </mesh>
   )
@@ -25,7 +25,7 @@ export const GuildPassScene = () => {
         intensity={Math.PI}
       />
       <pointLight position={[-10, -10, -10]} decay={0} intensity={Math.PI} />
-      <Float floatIntensity={6}>
+      <Float floatIntensity={6} speed={2.4}>
         <GuildPass position={[0, 0, 0]} />
       </Float>
     </Canvas>
