@@ -1,6 +1,7 @@
 "use client"
 
 import { ArrowLeft, ArrowRight } from "@phosphor-icons/react"
+import { EmblaCarouselType } from "embla-carousel"
 import useEmblaCarousel, { type UseEmblaCarouselType } from "embla-carousel-react"
 import * as React from "react"
 
@@ -249,8 +250,81 @@ const CarouselNext = React.forwardRef<
 })
 CarouselNext.displayName = "CarouselNext"
 
+type UseCarouselDotButton = {
+  selectedIndex: number
+  scrollSnaps: number[]
+  onDotButtonClick: (index: number) => void
+}
+
+export const useCarouselDotButton = (
+  api: EmblaCarouselType | undefined
+): UseCarouselDotButton => {
+  const [selectedIndex, setSelectedIndex] = React.useState(0)
+  const [scrollSnaps, setScrollSnaps] = React.useState<number[]>([])
+
+  const onDotButtonClick = React.useCallback(
+    (index: number) => {
+      if (!api) return
+      api.scrollTo(index)
+    },
+    [api]
+  )
+
+  const onInit = React.useCallback((api: EmblaCarouselType) => {
+    setScrollSnaps(api.scrollSnapList())
+  }, [])
+
+  const onSelect = React.useCallback((api: EmblaCarouselType) => {
+    setSelectedIndex(api.selectedScrollSnap())
+  }, [])
+
+  React.useEffect(() => {
+    if (!api) return
+
+    onInit(api)
+    onSelect(api)
+    api.on("reInit", onInit).on("reInit", onSelect).on("select", onSelect)
+  }, [api, onInit, onSelect])
+
+  return {
+    selectedIndex,
+    scrollSnaps,
+    onDotButtonClick,
+  }
+}
+
+type PropType = React.ComponentPropsWithRef<"button"> & {
+  isActive?: boolean
+}
+
+const CarouselDotButton: React.FunctionComponent<PropType> = ({
+  children,
+  className,
+  isActive = false,
+  ...restProps
+}) => {
+  return (
+    <Button
+      variant="unstyled"
+      size="icon"
+      className={cn(
+        "size-3 rounded-full bg-accent",
+        {
+          "bg-foreground": isActive,
+        },
+        className
+      )}
+      {...restProps}
+    >
+      {children}
+    </Button>
+  )
+}
+CarouselDotButton.displayName = "CarouselDotButton"
+
 export {
   type CarouselApi,
+  CarouselDotButton,
   Carousel,
   CarouselContent,
   CarouselItem,

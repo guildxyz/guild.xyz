@@ -1,10 +1,19 @@
 "use client"
 
+import { Button } from "@/components/ui/Button"
 import { Card } from "@/components/ui/Card"
-import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/Carousel"
+import {
+  Carousel,
+  CarouselApi,
+  CarouselContent,
+  CarouselDotButton,
+  CarouselItem,
+  useCarouselDotButton,
+} from "@/components/ui/Carousel"
 import { Separator } from "@/components/ui/Separator"
 import { cn } from "@/lib/utils"
 import Autoplay from "embla-carousel-autoplay"
+import { useRef, useState } from "react"
 import { GuildPassScene } from "./GuildPassScene"
 
 interface Benefit {
@@ -87,18 +96,21 @@ const SUBSCRIPTIONS = [
 ] as const satisfies Subscription[]
 
 export const GuildPassPicker = () => {
+  const [api, setApi] = useState<CarouselApi>()
+  const { selectedIndex, scrollSnaps, onDotButtonClick } = useCarouselDotButton(api)
+  const carouselPlugins = useRef([
+    Autoplay({ delay: 4000, stopOnInteraction: true }),
+  ])
+
   return (
-    <Card className="mx-auto max-w-3lg bg-gradient-to-b from-card to-card-secondary">
+    <Card className="mx-auto flex max-w-3lg flex-col bg-gradient-to-b from-card to-card-secondary">
       <h1 className="mt-8 mb-14 text-center font-bold text-2xl leading-none tracking-tighter">
         Choose your pass
       </h1>
       <Carousel
         className="cursor-grab active:cursor-grabbing"
-        plugins={[
-          Autoplay({
-            delay: 4000,
-          }),
-        ]}
+        setApi={setApi}
+        plugins={carouselPlugins.current}
       >
         <CarouselContent className="md:-ml-0 md:justify-center">
           {SUBSCRIPTIONS.map(({ title, description, pricing }, i) => (
@@ -115,6 +127,9 @@ export const GuildPassPicker = () => {
                   <p className="max-w-xs text-balance pt-2 text-muted-foreground text-sm">
                     {description}
                   </p>
+                  <Button colorScheme="primary" className="mt-6 w-full md:hidden">
+                    Purchase
+                  </Button>
                 </div>
                 {i < SUBSCRIPTIONS.length - 1 && (
                   <Separator
@@ -127,6 +142,15 @@ export const GuildPassPicker = () => {
           ))}
         </CarouselContent>
       </Carousel>
+      <div className="mb-4 space-x-3 self-center md:hidden">
+        {scrollSnaps.map((_, index) => (
+          <CarouselDotButton
+            key={index}
+            onClick={() => onDotButtonClick(index)}
+            isActive={index === selectedIndex}
+          />
+        ))}
+      </div>
       <div className="space-y-4 border-border border-t-2 bg-muted p-8">
         <h2 className="text-center font-bold text-muted-foreground text-xl leading-none tracking-tighter">
           Benefits
