@@ -45,7 +45,6 @@ const AddSolutionsModal = () => {
     if (existingGuildPlatform)
       rolePlatformToAdd.guildPlatformId = existingGuildPlatform.id
 
-    console.log("Setting rolePlatforms.0 to:", rolePlatformToAdd)
     methods.setValue("rolePlatforms.0", {
       ...rolePlatformToAdd,
       visibility,

@@ -60,12 +60,12 @@ const AddRoleRewardModal = ({ onAdd }: Props) => {
     if (existingGuildPlatform) {
       rolePlatformWithVisibility.guildPlatformId = existingGuildPlatform.id
       setSelectedExistingRolePlatform(rolePlatformWithVisibility)
-      onClose()
       onEditRolePlatformModalOpen()
     } else {
       onAdd(rolePlatformWithVisibility)
-      onClose()
     }
+
+    onClose()
   }
 
   const handleClose = () => {
