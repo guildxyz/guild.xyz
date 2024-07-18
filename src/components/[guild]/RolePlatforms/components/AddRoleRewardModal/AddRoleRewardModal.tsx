@@ -47,9 +47,13 @@ const AddRoleRewardModal = ({ onAdd }: Props) => {
     )
 
     /**
-     * We display all Discord servers (even the ones which are already used in the current Guild as a reward) in `DiscordGuildSetup`, but in case the user picks a server which is already added to the guild, we only need to send its `guildPlatformId` to our API, and not the actual `guildPlatform` object, so we add that ID here.
+     * We display all Discord servers (even the ones which are already used in the current Guild as a reward)
+     * in `DiscordGuildSetup`, but in case the user picks a server which is already added to the guild,
+     * we only need to send its `guildPlatformId` to our API, and not the actual `guildPlatform` object,
+     * so we add that ID here.
      *
-     * We don't delete the `guildPlatform` object, because we use stuff like server name from it later in the code, just adding `guildPlatformId`, so our API won't try to create a new reward entity.
+     * We don't delete the `guildPlatform` object, because we use stuff like server name from it later
+     * in the code, just adding `guildPlatformId`, so our API won't try to create a new reward entity.
      *
      * Maybe we should think about a refactor here later.
      */
