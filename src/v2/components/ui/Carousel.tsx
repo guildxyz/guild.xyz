@@ -253,7 +253,7 @@ CarouselNext.displayName = "CarouselNext"
 type UseCarouselDotButton = {
   selectedIndex: number
   scrollSnaps: number[]
-  onDotButtonClick: (index: number) => void
+  onCarouselDotButtonClick: (index: number) => void
 }
 
 export const useCarouselDotButton = (
