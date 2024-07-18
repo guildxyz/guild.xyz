@@ -1,7 +1,7 @@
 import { Layout } from "@/components/Layout"
 import svgToTinyDataUri from "mini-svg-data-uri"
 import type { Metadata } from "next"
-import { OnboardingStepper } from "./_components/OnboardingStepper"
+import { OnboardingDriver } from "./_components/OnboardingDriver"
 
 export const metadata: Metadata = {
   title: "Create profile",
@@ -33,7 +33,7 @@ const Page = () => {
       </Layout.Hero>
       <Layout.Main>
         <div className="my-8">
-          <OnboardingStepper />
+          <OnboardingDriver />
         </div>
       </Layout.Main>
     </Layout.Root>
