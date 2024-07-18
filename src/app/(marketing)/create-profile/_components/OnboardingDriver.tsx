@@ -1,5 +1,6 @@
 "use client"
 
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/ToggleGroup"
 import { useState } from "react"
 import { ClaimPass } from "./ClaimPass"
 import { PurchasePass } from "./PurchasePass"
@@ -8,8 +9,22 @@ import { StartProfile } from "./StartProfile"
 const progressionPanes = [ClaimPass, PurchasePass, StartProfile] as const
 
 export const OnboardingDriver = () => {
-  const [progressionIndex, setProgressionIndex] = useState(2)
+  const [progressionIndex, setProgressionIndex] = useState(0)
   const OnboardingCard = progressionPanes[progressionIndex]
 
-  return <OnboardingCard />
+  return (
+    <>
+      <ToggleGroup
+        className="fixed bottom-4 left-4 z-10"
+        type="single"
+        value={progressionIndex.toString()}
+        onValueChange={(value) => setProgressionIndex(Number.parseInt(value))}
+      >
+        {progressionPanes.map((pane, index) => (
+          <ToggleGroupItem value={index.toString()}>{pane.name}</ToggleGroupItem>
+        ))}
+      </ToggleGroup>
+      <OnboardingCard />
+    </>
+  )
 }
