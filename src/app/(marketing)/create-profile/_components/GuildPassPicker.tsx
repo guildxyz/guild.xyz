@@ -154,13 +154,7 @@ export const GuildPassPicker = () => {
                 "flex w-full justify-between": didUserSelect,
               })}
             >
-              <h2
-                className={cn("font-extrabold text-lg", {
-                  "font-normal": didUserSelect,
-                })}
-              >
-                {title}
-              </h2>
+              <h2 className="font-extrabold text-lg">{title}</h2>
               <strong
                 className={cn("font-extrabold text-lg text-orange-500", {
                   "font-normal text-foreground": didUserSelect,
