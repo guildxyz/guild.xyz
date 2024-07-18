@@ -12,7 +12,7 @@ import {
   ExpectedMultipleChoiceDisplay,
   ExpectedRateDisplay,
   ExpectedStringDisplay,
-} from "requirements/Form/components/ExpectedAnswerCardView"
+} from "requirements/Form/components/ExpectedAnswerCardDisplay"
 import { ExpectedMultipleChoice } from "requirements/Form/components/ExpectedAnswerRequirements/ExpectedMultipleChoice"
 import ExpectedNumber from "requirements/Form/components/ExpectedAnswerRequirements/ExpectedNumber"
 import ExpectedRate from "requirements/Form/components/ExpectedAnswerRequirements/ExpectedRate"
