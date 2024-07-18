@@ -7,7 +7,7 @@ import { GuildPassScene } from "./GuildPassScene"
 
 const INVITE_HANDLE_ID = "invite-handle"
 
-export const GuildPassInvite = () => {
+export const ClaimPass = () => {
   return (
     <Card className="mx-auto max-w-lg bg-gradient-to-b from-card to-card-secondary p-8">
       <div className="mb-12 h-48 w-full">

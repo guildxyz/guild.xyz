@@ -48,7 +48,7 @@ const SUBSCRIPTIONS = [
   },
 ] as const satisfies Subscription[]
 
-export const GuildPassPicker = () => {
+export const PurchasePass = () => {
   const [api, setApi] = useState<CarouselApi>()
   const [activeIndex, setActiveIndex] = useState<number>()
   const didUserSelect = activeIndex !== undefined

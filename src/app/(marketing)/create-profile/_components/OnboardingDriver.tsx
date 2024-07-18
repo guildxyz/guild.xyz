@@ -1,13 +1,14 @@
 "use client"
 
 import { useState } from "react"
-import { GuildPassInvite } from "../_components/GuildPassInvite"
-import { GuildPassPicker } from "../_components/GuildPassPicker"
+import { ClaimPass } from "./ClaimPass"
+import { PurchasePass } from "./PurchasePass"
+import { StartProfile } from "./StartProfile"
 
-const progressionPanes = [GuildPassInvite, GuildPassPicker] as const
+const progressionPanes = [ClaimPass, PurchasePass, StartProfile] as const
 
 export const OnboardingDriver = () => {
-  const [progressionIndex, setProgressionIndex] = useState(1)
+  const [progressionIndex, setProgressionIndex] = useState(2)
   const OnboardingCard = progressionPanes[progressionIndex]
 
   return <OnboardingCard />
