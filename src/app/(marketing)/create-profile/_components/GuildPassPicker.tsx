@@ -117,7 +117,7 @@ export const GuildPassPicker = () => {
           {SUBSCRIPTIONS.map(({ title, description, pricing }, i) => (
             <CarouselItem className="select-none md:basis-1/3 md:pl-0" key={title}>
               <article className="relative flex h-full flex-col items-center pb-6 text-center">
-                <div className="mb-4 h-48 w-full">
+                <div className="h-48 w-full">
                   <GuildPassScene />
                 </div>
                 <div className="px-4">
