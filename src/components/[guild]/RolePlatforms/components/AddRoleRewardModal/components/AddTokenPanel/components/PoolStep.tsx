@@ -38,7 +38,7 @@ const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
   const { chainId, address: userAddress } = useAccount()
   const {
     field: { value: amount },
-  } = useController({ name: "amount" })
+  } = useController({ name: "amount", defaultValue: "1" })
 
   const [skip, setSkip] = useState(false)
 
@@ -116,6 +116,8 @@ const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
     setSkip(!skip)
   }
 
+  const willDepositTokens = !!amount ? parseFloat(amount) > 0 : false
+
   return (
     <Stack gap={5}>
       <Text colorScheme="gray">
@@ -159,11 +161,11 @@ const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
       </Stack>
 
       <Stack>
-        <Collapse in={!isOnCorrectChain && amount !== "0"}>
+        <Collapse in={!isOnCorrectChain && willDepositTokens}>
           <SwitchNetworkButton targetChainId={Number(Chains[chain])} />
         </Collapse>
 
-        <Collapse in={isOnCorrectChain && amount !== "0"}>
+        <Collapse in={isOnCorrectChain && willDepositTokens}>
           <AllowanceButton
             chain={chain}
             token={tokenAddress}
@@ -174,7 +176,7 @@ const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
         <Collapse
           in={
             (!!allowance || pickedCurrencyIsNative) &&
-            (isOnCorrectChain || amount === "0")
+            (isOnCorrectChain || !willDepositTokens)
           }
         >
           <Button
