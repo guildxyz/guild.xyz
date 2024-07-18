@@ -5,11 +5,12 @@ import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hoo
 import { AddRewardForm } from "components/[guild]/AddRewardButton/types"
 import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import { ClientStateRequirementHandlerProvider } from "components/[guild]/RequirementHandlerContext"
+import useGuild from "components/[guild]/hooks/useGuild"
 import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
 import { useMemo, useState } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
-import { modalSizeForPlatform } from "rewards"
+import { AddRewardPanelProps, modalSizeForPlatform } from "rewards"
 import rewardsComponents from "rewards/components"
 import { SolutionName, solutions } from "solutions"
 import SolutionsPanel from "./SolutionsPanel"
@@ -24,16 +25,38 @@ const AddSolutionsModal = () => {
 
   const visibility = useWatch({ name: "visibility", control: methods.control })
 
-  const handleAddReward = (createdRolePlatform: any) => {
-    const { roleName = null, requirements = null, ...rest } = createdRolePlatform
+  const { guildPlatforms } = useGuild()
+  const handleAddReward = (
+    createdRolePlatform: Parameters<AddRewardPanelProps["onAdd"]>[0]
+  ) => {
+    const {
+      roleName = null,
+      requirements = null,
+      ...rolePlatformToAdd
+    } = createdRolePlatform
+
+    const existingGuildPlatform = guildPlatforms?.find(
+      (gp) =>
+        gp.platformId === createdRolePlatform.guildPlatform?.platformId &&
+        gp.platformGuildId === createdRolePlatform.guildPlatform?.platformGuildId
+    )
+
+    // See the comment about this in AddRoleRewardModal
+    if (existingGuildPlatform)
+      rolePlatformToAdd.guildPlatformId = existingGuildPlatform.id
+
+    console.log("Setting rolePlatforms.0 to:", rolePlatformToAdd)
     methods.setValue("rolePlatforms.0", {
-      ...rest,
+      ...rolePlatformToAdd,
       visibility,
     })
+
     if (roleName) methods.setValue("roleName", roleName)
+
     if (Array.isArray(requirements) && requirements.length > 0) {
       methods.setValue("requirements", requirements)
     }
+
     setStep("SELECT_ROLE")
   }
 
