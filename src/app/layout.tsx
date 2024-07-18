@@ -2,6 +2,7 @@ import { dystopian, inter } from "fonts"
 import type { Metadata } from "next"
 import { type ReactNode } from "react"
 import "./globals.css"
+import { TooltipProvider } from "@/components/ui/Tooltip"
 import { cn } from "@/lib/utils"
 import { ThemeProvider } from "next-themes"
 
@@ -28,7 +29,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <TooltipProvider>{children}</TooltipProvider>
         </ThemeProvider>
       </body>
     </html>
