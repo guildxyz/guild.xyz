@@ -36,8 +36,8 @@ const TokenAmountStep = ({ onContinue }: { onContinue: () => void }) => {
 
   const platformForToken = tokenPlatforms?.find(
     (guildPlatform) =>
-      guildPlatform.platformGuildData?.chain === chain &&
-      guildPlatform.platformGuildData?.tokenAddress?.toLowerCase() ===
+      guildPlatform.platformGuildData.chain === chain &&
+      guildPlatform.platformGuildData.tokenAddress.toLowerCase() ===
         address?.toLowerCase()
   )
 
