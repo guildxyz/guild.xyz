@@ -15,7 +15,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip
 import { cn } from "@/lib/utils"
 import { ArrowLeft, Info } from "@phosphor-icons/react"
 import Autoplay from "embla-carousel-autoplay"
-import { useEffect, useRef, useState } from "react"
+import { useRef, useState } from "react"
 import { Benefits } from "./Benefits"
 import { GuildPassScene } from "./GuildPassScene"
 
@@ -53,13 +53,13 @@ export const GuildPassPicker = () => {
   const carouselPlugins = useRef([
     Autoplay({ delay: 4000, stopOnInteraction: true }),
   ])
-
-  useEffect(() => {
-    if (!api || activeIndex === undefined) {
-      return
-    }
-    api.scrollTo(activeIndex)
-  }, [api, activeIndex])
+  // useEffect(() => {
+  //   if (!api || activeIndex === undefined) {
+  //     return
+  //   }
+  // api.scrollTo(activeIndex)
+  // }, [api, activeIndex])
+  console.log(activeIndex, didUserSelect)
 
   return (
     <Card
@@ -69,7 +69,7 @@ export const GuildPassPicker = () => {
       )}
     >
       <div className="mt-8 mb-14 px-8">
-        {activeIndex !== undefined ? (
+        {didUserSelect ? (
           <Button
             onClick={() => setActiveIndex(undefined)}
             className="h-10 pl-0"
@@ -86,53 +86,45 @@ export const GuildPassPicker = () => {
         )}
       </div>
       <Carousel
-        className="cursor-pointer active:cursor-grabbing"
+        className={cn("cursor-pointer active:cursor-grabbing md:hidden", {
+          hidden: didUserSelect,
+        })}
         setApi={setApi}
         plugins={carouselPlugins.current}
       >
-        <CarouselContent className="md:-ml-0 md:justify-center">
+        <CarouselContent>
           {SUBSCRIPTIONS.map(({ title, description, pricing }, i) => (
             <CarouselItem
-              className={
-                "select-none from-accent hover:bg-gradient-to-t md:basis-1/3 md:pl-0"
-              }
+              className="select-none"
               key={title}
               onClick={() => setActiveIndex(i)}
             >
-              <article className="relative flex h-full flex-col items-center pb-6 text-center">
+              <article className="flex h-full flex-col items-center pb-6 text-center">
                 <div className="h-48 w-full">
                   <GuildPassScene />
                 </div>
                 <div className="px-4">
-                  <h2
-                    className={cn("font-extrabold text-lg", {
-                      "text-purple-500": i === activeIndex,
-                    })}
-                  >
-                    {title}
-                  </h2>
+                  <h2 className="font-extrabold text-lg">{title}</h2>
                   <strong className="font-extrabold text-lg text-orange-500">
                     {pricing}
                   </strong>
                   <p className="max-w-xs text-balance pt-2 text-muted-foreground text-sm">
                     {description}
                   </p>
-                  <Button colorScheme="primary" className="mt-6 w-full md:hidden">
+                  <Button colorScheme="primary" className="mt-6 w-full">
                     Purchase
                   </Button>
                 </div>
-                {i < SUBSCRIPTIONS.length - 1 && (
-                  <Separator
-                    orientation="vertical"
-                    className="absolute right-0 hidden bg-[none] bg-gradient-to-t from-border to-60% md:block"
-                  />
-                )}
               </article>
             </CarouselItem>
           ))}
         </CarouselContent>
       </Carousel>
-      <div className="mb-4 space-x-3 self-center md:hidden">
+      <div
+        className={cn("mb-4 space-x-3 self-center md:hidden", {
+          hidden: didUserSelect,
+        })}
+      >
         {scrollSnaps.map((_, i) => (
           <CarouselDotButton
             key={i}
@@ -141,7 +133,46 @@ export const GuildPassPicker = () => {
           />
         ))}
       </div>
-      <div className="space-y-4 border-border border-t-2 bg-muted p-8">
+      <div
+        className={cn("relative hidden items-end md:flex", { flex: didUserSelect })}
+      >
+        {SUBSCRIPTIONS.map(({ title, description, pricing }, i) => (
+          <article
+            className={cn(
+              "relative flex h-full cursor-pointer select-none flex-col items-center from-accent pb-6 text-center hover:bg-gradient-to-t",
+              {
+                "absolute opacity-0": didUserSelect && activeIndex !== i,
+                "w-full cursor-auto hover:bg-none": activeIndex === i,
+              }
+            )}
+            key={title}
+            onClick={() => setActiveIndex(i)}
+          >
+            <div className="h-48">
+              <GuildPassScene />
+            </div>
+            <div className="px-4">
+              <h2 className="font-extrabold text-lg">{title}</h2>
+              <strong className="font-extrabold text-lg text-orange-500">
+                {pricing}
+              </strong>
+              <p className="max-w-xs text-balance pt-2 text-muted-foreground text-sm">
+                {description}
+              </p>
+            </div>
+            {i < SUBSCRIPTIONS.length - 1 && (
+              <Separator
+                orientation="vertical"
+                className={cn(
+                  "absolute right-0 block bg-[none] bg-gradient-to-t from-border to-60%",
+                  didUserSelect && "opacity-0"
+                )}
+              />
+            )}
+          </article>
+        ))}
+      </div>
+      <div className="space-y-4 border-border border-t bg-muted p-8">
         {didUserSelect ? (
           <div className="space-y-4 font-semibold">
             <div className="flex items-center justify-between">
@@ -149,7 +180,7 @@ export const GuildPassPicker = () => {
                 1. Verification
                 <Tooltip>
                   <TooltipTrigger>
-                    <Info weight="bold" />
+                    <Info weight="bold" className="text-muted-foreground" />
                   </TooltipTrigger>
                   <TooltipContent>
                     We have to collect your personal details for legal reasons. They
