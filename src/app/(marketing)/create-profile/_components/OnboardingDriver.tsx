@@ -21,7 +21,9 @@ export const OnboardingDriver = () => {
         onValueChange={(value) => setProgressionIndex(Number.parseInt(value))}
       >
         {progressionPanes.map((pane, index) => (
-          <ToggleGroupItem value={index.toString()}>{pane.name}</ToggleGroupItem>
+          <ToggleGroupItem value={index.toString()} key={pane.name}>
+            {pane.name}
+          </ToggleGroupItem>
         ))}
       </ToggleGroup>
       <OnboardingCard />

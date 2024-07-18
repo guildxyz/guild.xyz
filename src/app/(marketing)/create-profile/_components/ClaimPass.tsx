@@ -14,11 +14,11 @@ export const ClaimPass = () => {
       <h1 className="mb-14 text-pretty text-center font-bold text-2xl leading-none tracking-tighter">
         Claim your Guild Pass and begin an epic adventure!
       </h1>
-      <Label className="space-x-2">
+      <Label className="space-y-3">
         <div>Invite handle</div>
-        <Input className="my-1 bg-card-secondary" />
+        <Input className="bg-card-secondary" />
       </Label>
-      <p className="text-muted-foreground">Guild Pass is invite only</p>
+      <p className="mt-3 text-muted-foreground">Guild Pass is invite only</p>
       <Button colorScheme="success" className="mt-10 w-full">
         Continue
         <ArrowRight />
