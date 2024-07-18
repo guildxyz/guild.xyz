@@ -17,7 +17,7 @@ export const StartProfile = () => {
       </h1>
       <Avatar className="mb-12 size-36 self-center">
         <AvatarFallback>
-          <User />
+          <User size={32} />
         </AvatarFallback>
       </Avatar>
 
