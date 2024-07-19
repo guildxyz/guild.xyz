@@ -44,7 +44,7 @@ const Page = () => {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <h1 className="whitespace-nowrap font-bold text-3xl tracking-tighter">
+            <h1 className="whitespace-nowrap font-bold text-4xl leading-normal tracking-tight">
               Maximillian Xiaohua Longname
             </h1>
             <CircleWavyCheck
@@ -52,12 +52,12 @@ const Page = () => {
               className="relative size-6 fill-yellow-500"
             />
           </div>
-          <div className="text-muted-foreground">@stephaniexixo11</div>
-          <p className="mt-6 max-w-md text-pretty text-center text-md text-muted-foreground">
+          <div className="text-lg text-muted-foreground">@stephaniexixo11</div>
+          <p className="mt-6 max-w-md text-pretty text-center text-lg text-muted-foreground">
             This is a description that perfectly matches the 80 character description
             limit.
           </p>
-          <div className="mt-8 flex justify-center gap-4">
+          <div className="mt-8 flex h-12 items-center justify-center gap-8">
             <div className="flex flex-col items-center leading-tight">
               <div className="font-bold text-lg">3232</div>
               <div className="text-muted-foreground">Guildmates</div>
