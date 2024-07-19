@@ -61,11 +61,11 @@ export const PurchasePass = () => {
   return (
     <Card
       className={cn(
-        "mx-auto flex max-w-3lg flex-col bg-gradient-to-b from-card to-card-secondary",
+        "mx-auto flex max-w-3lg flex-col bg-gradient-to-b from-card to-card-secondary shadow-2xl",
         didUserSelect && "max-w-md"
       )}
     >
-      <div className="mt-8 mb-14 px-8">
+      <div className="mt-8 mb-4 px-8">
         {didUserSelect ? (
           <Button
             onClick={() => setActiveIndex(undefined)}
@@ -73,11 +73,11 @@ export const PurchasePass = () => {
             size="lg"
             variant="unstyled"
           >
-            <ArrowLeft />
-            Purchase Pass
+            <ArrowLeft weight="bold" />
+            <span className="font-bold font-display">Purchase Pass</span>
           </Button>
         ) : (
-          <h1 className="h-10 text-center font-bold text-2xl leading-none tracking-tighter">
+          <h1 className="h-10 text-center font-bold font-display text-2xl leading-none tracking-tight">
             Choose your pass
           </h1>
         )}
@@ -93,7 +93,7 @@ export const PurchasePass = () => {
           {SUBSCRIPTIONS.map(({ title, description, pricing }, i) => (
             <CarouselItem className="select-none" key={title}>
               <article className="flex h-full flex-col items-center pb-6 text-center">
-                <div className="h-48 w-full">
+                <div className="mb-2 h-48 w-full">
                   <GuildPassScene />
                 </div>
                 <div className="px-4">
@@ -146,7 +146,7 @@ export const PurchasePass = () => {
             key={title}
             onClick={() => setActiveIndex(i)}
           >
-            <div className="h-48">
+            <div className="mb-2 h-48">
               <GuildPassScene />
             </div>
             <div
@@ -157,7 +157,7 @@ export const PurchasePass = () => {
               <h2 className="font-extrabold text-lg">{title}</h2>
               <strong
                 className={cn("font-extrabold text-lg text-orange-500", {
-                  "font-normal text-foreground": didUserSelect,
+                  "font-bold text-foreground": didUserSelect,
                 })}
               >
                 {didUserSelect ? pricingShort : pricing}
@@ -183,7 +183,7 @@ export const PurchasePass = () => {
           </article>
         ))}
       </div>
-      <div className="space-y-4 border-border border-t bg-muted p-8">
+      <div className="space-y-4 border-border border-t bg-background p-8">
         {didUserSelect ? (
           <div className="space-y-4">
             <div className="flex items-center justify-between">

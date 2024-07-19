@@ -67,9 +67,12 @@ export const Benefits = () => {
       <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
         {BENEFITS.map(({ title, description, isAvailable }) => (
           <Card
-            className={cn("flex items-center gap-4 border-2 p-5", {
-              "bg- relative border-dotted": !isAvailable,
-            })}
+            className={cn(
+              "flex items-center gap-4 border-2 border-transparent p-5",
+              {
+                "bg- relative border-border border-dotted": !isAvailable,
+              }
+            )}
             key={title}
           >
             {isAvailable || (
@@ -77,7 +80,12 @@ export const Benefits = () => {
                 Soon
               </div>
             )}
-            <div className="flex aspect-square min-w-14 items-center justify-center rounded-xl bg-card-secondary">
+            <div
+              className={cn(
+                "flex aspect-square min-w-12 items-center justify-center rounded-xl bg-card-secondary",
+                { "bg-muted": !isAvailable }
+              )}
+            >
               #
             </div>
             <div className="space-y-1">

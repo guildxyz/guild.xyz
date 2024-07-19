@@ -13,10 +13,10 @@ export const StartProfile = () => {
   const [startMethod, setStartMethod] = useState<"farcaster">()
   return (
     <Card className="mx-auto flex max-w-sm flex-col gap-3 bg-gradient-to-b from-card to-card-secondary p-8">
-      <h1 className="mb-10 text-pretty text-center font-bold text-2xl leading-none tracking-tighter">
+      <h1 className="mb-10 text-pretty text-center font-bold font-display text-2xl leading-none tracking-tight">
         Start your Guild Profile!
       </h1>
-      <Avatar className="mb-8 size-36 self-center">
+      <Avatar className="mb-8 size-36 self-center border bg-background">
         <AvatarFallback>
           <User size={32} />
         </AvatarFallback>
