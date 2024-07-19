@@ -62,7 +62,7 @@ export const PurchasePass = () => {
     <Card
       className={cn(
         "mx-auto flex max-w-3lg flex-col bg-gradient-to-b from-card to-card-secondary shadow-2xl",
-        didUserSelect && "max-w-md"
+        { "max-w-md": didUserSelect }
       )}
     >
       <div className="mt-8 mb-4 px-8">
@@ -132,55 +132,60 @@ export const PurchasePass = () => {
       </div>
 
       <div
-        className={cn("relative hidden items-end lg:flex", { flex: didUserSelect })}
+        className={cn("relative hidden items-end lg:flex", {
+          flex: didUserSelect,
+        })}
       >
         {SUBSCRIPTIONS.map(({ title, description, pricing, pricingShort }, i) => (
-          <article
+          <button
+            onClick={() => setActiveIndex(i)}
             className={cn(
-              "relative flex h-full cursor-pointer select-none flex-col items-center from-accent pb-6 text-center hover:bg-gradient-to-t",
+              "relative w-full from-accent outline-none hover:bg-gradient-to-t focus-visible:bg-gradient-to-t",
               {
                 "-z-10 absolute opacity-0": didUserSelect && activeIndex !== i,
                 "w-full cursor-auto hover:bg-none": activeIndex === i,
               }
             )}
             key={title}
-            onClick={() => setActiveIndex(i)}
+            disabled={didUserSelect}
           >
-            <div className="mb-2 h-48">
-              <GuildPassScene />
-            </div>
-            <div
-              className={cn("px-8", {
-                "flex w-full justify-between": didUserSelect,
-              })}
-            >
-              <h2 className="font-extrabold text-lg">{title}</h2>
-              <strong
-                className={cn("font-extrabold text-lg text-orange-500", {
-                  "font-bold text-foreground": didUserSelect,
+            <article className="flex flex-col items-center pb-6 text-center">
+              <div className="mb-2 h-48">
+                <GuildPassScene />
+              </div>
+              <div
+                className={cn("px-8", {
+                  "flex w-full justify-between": didUserSelect,
                 })}
               >
-                {didUserSelect ? pricingShort : pricing}
-              </strong>
-              <p
-                className={cn(
-                  "max-w-xs text-balance pt-2 text-muted-foreground text-sm",
-                  { hidden: didUserSelect }
-                )}
-              >
-                {description}
-              </p>
-            </div>
-            {i < SUBSCRIPTIONS.length - 1 && (
-              <Separator
-                orientation="vertical"
-                className={cn(
-                  "absolute right-0 block bg-[none] bg-gradient-to-t from-border to-60%",
-                  { "opacity-0": didUserSelect }
-                )}
-              />
-            )}
-          </article>
+                <h2 className="font-extrabold text-lg">{title}</h2>
+                <strong
+                  className={cn("font-extrabold text-lg text-orange-500", {
+                    "font-bold text-foreground": didUserSelect,
+                  })}
+                >
+                  {didUserSelect ? pricingShort : pricing}
+                </strong>
+                <p
+                  className={cn(
+                    "max-w-xs text-balance pt-2 text-muted-foreground text-sm",
+                    { hidden: didUserSelect }
+                  )}
+                >
+                  {description}
+                </p>
+              </div>
+              {i < SUBSCRIPTIONS.length - 1 && (
+                <Separator
+                  orientation="vertical"
+                  className={cn(
+                    "absolute right-0 block bg-[none] bg-gradient-to-t from-border to-60%",
+                    { "opacity-0": didUserSelect }
+                  )}
+                />
+              )}
+            </article>
+          </button>
         ))}
       </div>
       <div className="space-y-4 border-border border-t bg-background p-8">
