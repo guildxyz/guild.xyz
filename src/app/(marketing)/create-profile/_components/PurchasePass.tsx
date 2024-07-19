@@ -206,7 +206,7 @@ export const PurchasePass = () => {
               </div>
               <Button colorScheme="primary">Start</Button>
             </div>
-            <Separator />
+            <Separator variant="muted" />
 
             {SUBSCRIPTIONS[activeIndex].title === "Lifetime Pass" ? (
               <div className="flex flex-col gap-3">
