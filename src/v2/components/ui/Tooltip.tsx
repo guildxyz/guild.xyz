@@ -10,7 +10,21 @@ const Tooltip: FC<ComponentPropsWithoutRef<typeof TooltipPrimitive.Root>> = ({
   ...props
 }) => <TooltipPrimitive.Root delayDuration={0} {...props} />
 
-const TooltipTrigger = TooltipPrimitive.Trigger
+const TooltipTrigger = forwardRef<
+  ElementRef<typeof TooltipPrimitive.Trigger>,
+  ComponentPropsWithoutRef<typeof TooltipPrimitive.Trigger>
+>(({ className, children, ...props }, ref) => (
+  <TooltipPrimitive.Trigger
+    ref={ref}
+    className={cn(
+      "rounded outline-none focus-visible:ring-4 focus-visible:ring-ring",
+      className
+    )}
+    {...props}
+  >
+    {children}
+  </TooltipPrimitive.Trigger>
+))
 
 const TooltipContent = forwardRef<
   ElementRef<typeof TooltipPrimitive.Content>,
