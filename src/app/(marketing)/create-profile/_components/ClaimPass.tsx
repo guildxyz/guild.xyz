@@ -11,7 +11,7 @@ export const ClaimPass = () => {
       <div className="mb-12 h-48 w-full">
         <GuildPassScene />
       </div>
-      <h1 className="mb-14 text-pretty text-center font-bold text-2xl leading-none tracking-tighter">
+      <h1 className="mb-14 text-pretty text-center font-extrabold text-2xl leading-none tracking-tighter">
         Claim your Guild Pass and begin an epic adventure!
       </h1>
       <Label className="space-y-3">
