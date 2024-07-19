@@ -45,7 +45,7 @@ export const StartProfile = () => {
           <Button colorScheme="primary" onClick={() => setStartMethod("farcaster")}>
             Connect Farcaster
           </Button>
-          <Button variant="subtle">
+          <Button variant="ghost">
             I don't have a Farcaster profile
             <ArrowRight />
           </Button>
