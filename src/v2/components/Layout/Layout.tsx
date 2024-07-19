@@ -1,59 +1,36 @@
 import { cn } from "@/lib/utils"
-import { Slot } from "@radix-ui/react-slot"
-import clsx from "clsx"
-import { PropsWithChildren, ReactNode, forwardRef } from "react"
+import { PropsWithChildren, ReactNode } from "react"
+import { PageContainer } from "./PageContainer"
 
 /* -------------------------------------------------------------------------------------------------
- * Root
+ * Layout
  * -----------------------------------------------------------------------------------------------*/
 
-export interface RootProps extends React.HTMLAttributes<HTMLDivElement> {}
+export interface LayoutProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-const Root = ({ children, ...props }: RootProps) => (
+const Layout = ({ children, ...props }: LayoutProps) => (
   <div className="flex min-h-screen flex-col" {...props}>
     {children}
   </div>
 )
 
 /* -------------------------------------------------------------------------------------------------
- * PageContainer
+ * LayoutHero
  * -----------------------------------------------------------------------------------------------*/
 
-export interface PageContainerProps extends React.HTMLAttributes<HTMLDivElement> {
-  asChild?: boolean
-}
-
-const PageContainer = forwardRef<HTMLDivElement, PageContainerProps>(
-  ({ children, className, asChild = false }, ref) => {
-    const Comp = asChild ? Slot : "div"
-    return (
-      <Comp
-        className={clsx("mx-auto max-w-screen-lg px-4 sm:px-8 md:px-10", className)}
-        ref={ref}
-      >
-        {children}
-      </Comp>
-    )
-  }
-)
-
-/* -------------------------------------------------------------------------------------------------
- * Hero
- * -----------------------------------------------------------------------------------------------*/
-
-const Hero = ({ children }: PropsWithChildren) => (
+const LayoutHero = ({ children }: PropsWithChildren) => (
   <div className="relative">{children}</div>
 )
 
 /* -------------------------------------------------------------------------------------------------
- * Headline
+ * LayoutHeadline
  * -----------------------------------------------------------------------------------------------*/
 
-interface HeadlineProps {
+interface LayoutHeadlineProps {
   title: ReactNode
 }
 
-const Headline = ({ title }: HeadlineProps) => (
+const LayoutHeadline = ({ title }: LayoutHeadlineProps) => (
   <PageContainer>
     <h1 className="pt-9 pb-14 font-bold font-display text-4xl text-white tracking-tight sm:text-5xl">
       {title}
@@ -62,39 +39,48 @@ const Headline = ({ title }: HeadlineProps) => (
 )
 
 /* -------------------------------------------------------------------------------------------------
- * Banner
+ * LayoutBannerBackground
  * -----------------------------------------------------------------------------------------------*/
 
-interface BannerProps extends PropsWithChildren {
-  offset?: number
+interface LayoutBannerBackgroundProps {
   className?: string
 }
 
-const Banner = ({ children, offset = 112, className }: BannerProps) => (
+const LayoutBannerBackground = ({ className }: LayoutBannerBackgroundProps) => (
+  <div className={cn("absolute inset-0 bg-banner", className)} />
+)
+
+/* -------------------------------------------------------------------------------------------------
+ * LayoutBanner
+ * -----------------------------------------------------------------------------------------------*/
+
+interface LayoutBannerProps extends PropsWithChildren {
+  className?: string
+}
+
+const LayoutBanner = ({ children, className }: LayoutBannerProps) => (
   <div
-    className={"-z-10 absolute inset-0 overflow-hidden"}
-    style={{ bottom: -offset }}
+    className={cn("-z-10 -bottom-48 absolute inset-0 overflow-hidden", className)}
   >
-    <div className={cn("absolute inset-0 bg-banner", className)} />
     {children}
   </div>
 )
 
 /* -------------------------------------------------------------------------------------------------
- * Main
+ * LayoutMain
  * -----------------------------------------------------------------------------------------------*/
 
-const Main = ({ children }: PropsWithChildren) => (
+const LayoutMain = ({ children }: PropsWithChildren) => (
   <main>
     <PageContainer>{children}</PageContainer>
   </main>
 )
 
 /* -------------------------------------------------------------------------------------------------
- * Footer
+ * LayoutFooter
  * -----------------------------------------------------------------------------------------------*/
 
-const Footer = ({ children }: PropsWithChildren) => (
+const LayoutFooter = ({ children }: PropsWithChildren) => (
   <footer className="mt-auto">
     <PageContainer>{children}</PageContainer>
   </footer>
@@ -102,4 +88,12 @@ const Footer = ({ children }: PropsWithChildren) => (
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export { Banner, Footer, Headline, Hero, Main, PageContainer, Root }
+export {
+  LayoutBanner,
+  LayoutBannerBackground,
+  LayoutFooter,
+  LayoutHeadline,
+  LayoutHero,
+  LayoutMain,
+  Layout,
+}
