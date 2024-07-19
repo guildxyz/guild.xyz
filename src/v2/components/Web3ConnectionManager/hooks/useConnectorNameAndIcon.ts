@@ -35,8 +35,9 @@ const useConnectorNameAndIcon = (connectorParam?: Connector) => {
   const connector = connectorParam ?? evmConnectorFromHook
 
   const { resolvedTheme } = useTheme()
+  // Added a "light" fallback since we can't detect the Chakra color theme here.
   const connectorIcon =
-    CUSTOM_CONNECTOR_ICONS[connector?.id]?.[resolvedTheme] ??
+    CUSTOM_CONNECTOR_ICONS[connector?.id]?.[resolvedTheme ?? "light"] ??
     connector?.icon ??
     (isFuelConnected ? "/walletLogos/fuel.svg" : null)
 
