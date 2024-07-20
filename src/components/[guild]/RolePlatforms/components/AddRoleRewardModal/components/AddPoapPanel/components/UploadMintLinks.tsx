@@ -1,8 +1,10 @@
 import { FormControl, FormLabel, Stack, Text, Textarea } from "@chakra-ui/react"
+import { File } from "@phosphor-icons/react"
+import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import useDropzone from "hooks/useDropzone"
 import { useFormContext, useWatch } from "react-hook-form"
 import { ImportPoapForm } from "../AddPoapPanel"
-import UploadTxt from "./UploadTxt"
 
 const LEGACY_POAP_MINT_LINK_BASE = "http://poap.xyz/claim/"
 const POAP_MINT_LINK_BASE = "http://poap.xyz/mint/"
@@ -22,7 +24,7 @@ export const validatePoapLinks = (links: string[]) =>
         )
     )
 
-export const INVALID_LINKS_ERROR = {
+const INVALID_LINKS_ERROR = {
   type: "validate",
   message: "Your list includes invalid mint links!",
 }
@@ -80,4 +82,57 @@ const UploadMintLinks = ({ isOptional }: Props) => {
     </FormControl>
   )
 }
+
+const UploadTxt = () => {
+  const { setValue, setError, clearErrors } = useFormContext<ImportPoapForm>()
+
+  const { isDragActive, getRootProps, getInputProps } = useDropzone({
+    multiple: false,
+    accept: { "text/plain": [".txt"] },
+    onDrop: (accepted, fileRejections) => {
+      clearErrors("texts")
+
+      if (fileRejections?.length > 0) {
+        setError("texts", {
+          type: "validate",
+          message: fileRejections[0].errors[0].message,
+        })
+        return
+      }
+
+      if (accepted.length > 0) parseTxt(accepted[0])
+    },
+  })
+
+  const parseTxt = (file: File) => {
+    const fileReader = new FileReader()
+    fileReader.onload = () => {
+      clearErrors("texts")
+      const lines = fileReader.result?.toString()?.split("\n")
+
+      if (!validatePoapLinks(lines)) {
+        setError("texts", INVALID_LINKS_ERROR)
+        return
+      }
+
+      setValue("texts", lines)
+    }
+
+    fileReader.readAsText(file)
+  }
+
+  return (
+    <Button
+      {...getRootProps()}
+      as="label"
+      leftIcon={<File />}
+      h={10}
+      maxW="max-content"
+    >
+      <input {...getInputProps()} hidden />
+      {isDragActive ? "Drop the file here" : "Upload .txt"}
+    </Button>
+  )
+}
+
 export default UploadMintLinks

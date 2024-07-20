@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import { useAccount, useProvider, useWallet } from "@fuels/react"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -11,6 +10,7 @@ import parseFuelAddress from "utils/parseFuelAddress"
 import { useMintGuildPinContext } from "../../../MintGuildPinContext"
 import type { ClaimParametersInput, GuildActionInput } from "../GuildPinContractAbi"
 import { GuildPinContractAbi__factory } from "../GuildPinContractAbi_factory"
+import { FUEL_FAKE_CHAIN_ID, FUEL_GUILD_PIN_CONTRACT_ID_0X } from "./constants"
 import useFuelGuildPinFee from "./useFuelGuildPinFee"
 
 type FuelMintData = {
@@ -27,10 +27,6 @@ type FuelMintData = {
   contractAddress: string
   signature: string
 }
-
-export const FUEL_GUILD_PIN_CONTRACT_ID_0X =
-  "0xb67efb48d800c5f5394163f5b5b4a9e6b06dc5c9e5fc3a49fa73e6b84bc3863b"
-export const FUEL_FAKE_CHAIN_ID = 123456789
 
 const useMintFuelGuildPin = () => {
   const { captureEvent } = usePostHogContext()

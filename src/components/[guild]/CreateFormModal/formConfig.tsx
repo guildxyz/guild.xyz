@@ -9,15 +9,15 @@ import {
 import OptionIcon from "components/common/StyledSelect/components/CustomSelectOption/components/OptionIcon"
 import { ComponentType, ReactNode } from "react"
 import {
-  ExpectedFieldDataProps,
   ExpectedMultipleChoiceDisplay,
   ExpectedRateDisplay,
   ExpectedStringDisplay,
-} from "requirements/Form/components/ExpectedAnswerCard"
+} from "requirements/Form/components/ExpectedAnswerCardDisplay"
 import { ExpectedMultipleChoice } from "requirements/Form/components/ExpectedAnswerRequirements/ExpectedMultipleChoice"
 import ExpectedNumber from "requirements/Form/components/ExpectedAnswerRequirements/ExpectedNumber"
 import ExpectedRate from "requirements/Form/components/ExpectedAnswerRequirements/ExpectedRate"
 import ExpectedSingleChoice from "requirements/Form/components/ExpectedAnswerRequirements/ExpectedSingleChoice"
+import { ExpectedFieldDataProps } from "requirements/Form/components/types"
 import ExpectedString from "../../../requirements/Form/components/ExpectedAnswerRequirements/ExpectedString"
 import { CreateForm } from "../RolePlatforms/components/AddRoleRewardModal/components/AddFormPanel"
 import { MultipleChoice, SingleChoice } from "./components/Display/Choice"
