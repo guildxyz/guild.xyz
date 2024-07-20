@@ -29,9 +29,6 @@ yarn-error.log*
 
 .vercel
 
-cypress/screenshots
-cypress/videos
-
 .idea
 *.tsbuildinfo
 
