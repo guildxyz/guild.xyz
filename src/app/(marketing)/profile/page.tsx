@@ -33,7 +33,7 @@ const Page = () => {
             <div className="relative mb-12 flex items-center justify-center">
               <ChartContainer
                 config={{}}
-                className="-rotate-90 absolute aspect-square min-h-56"
+                className="-scale-x-100 absolute aspect-square min-h-56 rotate-90"
               >
                 <RadialBarChart
                   data={chartData}
