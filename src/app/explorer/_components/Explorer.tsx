@@ -9,9 +9,9 @@ import { GuildSearchBar } from "app/explorer/_components/GuildSearchBar"
 import { YourGuilds } from "app/explorer/_components/YourGuilds"
 import useIsStuck from "hooks/useIsStuck"
 import { useSetAtom } from "jotai"
+import Image from "next/image"
 import { Suspense } from "react"
 import { SearchParams } from "types"
-import Robot from "/public/landing/robot.svg"
 import { isSearchStuckAtom } from "../atoms"
 import { ActiveSection } from "../types"
 import { GuildInfiniteScroll } from "./GuildInfiniteScroll"
@@ -33,7 +33,13 @@ export const Explorer = ({ searchParams }: { searchParams: SearchParams }) => {
       ) : (
         <Card className="mt-2 mb-8 flex flex-col items-stretch justify-between gap-8 p-6 font-semibold sm:flex-row sm:items-center">
           <div className="flex items-center gap-4">
-            <Robot className="size-8 min-w-8 text-white" />
+            <Image
+              src="/landing/robot.svg"
+              width={32}
+              height={32}
+              alt="Guild Robot icon"
+              className="size-8 min-w-8"
+            />
             <span>Sign in to view your guilds / create new ones</span>
           </div>
           <Button

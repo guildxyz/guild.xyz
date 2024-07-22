@@ -30,8 +30,6 @@ import Image from "next/image"
 import { useState } from "react"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 import { useAccount, useSignMessage } from "wagmi"
-import MessageImage from "/public/img/message.svg"
-import guildNotificationImage from "/public/requirementLogos/guild.png"
 import { Web3InboxSkeleton } from "./Web3InboxSkeleton"
 
 const WEB3_INBOX_INIT_PARAMS = {
@@ -82,7 +80,13 @@ const Web3Inbox = () => {
   if (!isSubscribedLoading && !isSubscribed) {
     return (
       <div className="flex items-center gap-4 px-4">
-        <MessageImage className="size-6 min-w-6" />
+        <Image
+          src="/img/message.svg"
+          width={24}
+          height={24}
+          alt="Message icon"
+          className="size-6 min-w-6"
+        />
         <div className="flex flex-col">
           <h4 className="font-semibold">Subscribe to messages</h4>
           <p className="text-muted-foreground text-sm leading-normal">
@@ -107,7 +111,7 @@ const Web3Inbox = () => {
             key={message.id}
           >
             <div className="relative mr-4 aspect-square min-w-10 rounded-full">
-              <Image src={guildNotificationImage} alt="Guild castle" fill />
+              <Image src="/requirementLogos/guild.png" alt="Guild castle" fill />
             </div>
             <div className="flex flex-col">
               <h4 className="font-semibold">{message.title}</h4>
@@ -124,7 +128,7 @@ const Web3Inbox = () => {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Image
-                src={guildNotificationImage}
+                src="/requirementLogos/guild.png"
                 alt="Guild castle"
                 placeholder="blur"
                 width={32}
