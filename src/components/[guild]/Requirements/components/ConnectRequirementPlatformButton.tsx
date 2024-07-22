@@ -104,7 +104,7 @@ const ConnectRequirementPlatformButton = ({
       onClick={onConnect}
       isLoading={isLoading}
       loadingText={loadingText}
-      className={cn(PLATFORM_COLORS[platform], className)}
+      className={cn(PLATFORM_COLORS[platform], "text-white", className)}
       {...props}
     >
       {!!IconComponent && <IconComponent />}
