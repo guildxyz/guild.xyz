@@ -39,7 +39,7 @@ export const GuildCard: React.FC<Props> = ({ guildData }) => (
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger
-              className="relative px-1"
+              className="relative px-1 pt-1"
               aria-label="verified checkmark"
             >
               <CheckMark />
