@@ -71,6 +71,8 @@ export const env = createEnv({
     NEXT_PUBLIC_GOOGLE_CLIENT_ID: z.string(),
     NEXT_PUBLIC_GOOGLE_SERVICE_ACCOUNT_EMAIL: z.string(),
     NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID: z.string(),
+    // E2E
+    NEXT_PUBLIC_E2E_WALLET_MNEMONIC: z.string(),
   },
   runtimeEnv: {
     NEXT_PUBLIC_API: process.env.NEXT_PUBLIC_API,
@@ -131,5 +133,7 @@ export const env = createEnv({
 
     WAAS_VIEM_URL: process.env.WAAS_VIEM_URL,
     WAAS_WEB_URL: process.env.WAAS_WEB_URL,
+
+    NEXT_PUBLIC_E2E_WALLET_MNEMONIC: process.env.NEXT_PUBLIC_E2E_WALLET_MNEMONIC,
   },
 })
