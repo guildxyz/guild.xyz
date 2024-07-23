@@ -180,7 +180,7 @@ export const wagmiConfig = createConfig({
     [blastSepolia.id]: http(),
     [oasisSapphire.id]: http(),
     [sepolia.id]: http(
-      env.NEXT_PUBLIC_E2E_WALLET_MNEMONIC
+      process.env.NEXT_PUBLIC_E2E_WALLET_MNEMONIC
         ? "http://localhost:8545"
         : "https://ethereum-sepolia-rpc.publicnode.com"
     ),
@@ -196,10 +196,14 @@ export const wagmiConfig = createConfig({
   },
   ssr: true,
   connectors:
-    typeof navigator !== "undefined" && navigator.userAgent.includes("GUILD_E2E")
+    typeof navigator !== "undefined" &&
+    navigator.userAgent.includes("GUILD_E2E") &&
+    process.env.NEXT_PUBLIC_E2E_WALLET_MNEMONIC
       ? [
           mock({
-            accounts: [mnemonicToAccount(env.NEXT_PUBLIC_E2E_WALLET_MNEMONIC)],
+            accounts: [
+              mnemonicToAccount(process.env.NEXT_PUBLIC_E2E_WALLET_MNEMONIC),
+            ],
             features: {
               reconnect: true,
             },
