@@ -1,4 +1,9 @@
-import { Header } from "@/components/Header"
-import { Banner, Footer, Headline, Hero, Main, Root } from "./Layout"
-
-export const Layout = { Root, Headline, Banner, Hero, Footer, Main, Header }
+export { Header as LayoutHeader } from "@/components/Header"
+export {
+  LayoutBanner,
+  LayoutFooter,
+  LayoutHeadline,
+  LayoutHero,
+  LayoutMain,
+  Layout,
+} from "./Layout"
