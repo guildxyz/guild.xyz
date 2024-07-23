@@ -17,7 +17,7 @@ const TooltipTrigger = forwardRef<
   <TooltipPrimitive.Trigger
     ref={ref}
     className={cn(
-      "rounded outline-none focus-visible:ring-4 focus-visible:ring-ring",
+      "outline-none focus-visible:ring-4 focus-visible:ring-ring",
       className
     )}
     {...props}
