@@ -36,3 +36,10 @@ yarn-error.log*
 storybook-static
 
 bun.lockb
+
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
+/playwright/results
+/playwright/keyPair.json

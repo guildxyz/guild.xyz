@@ -34,7 +34,9 @@
     "api/**/*.ts",
     ".next/types/**/*.ts",
     "tailwind.config.ts",
-    "scripts/detectCircularDependencies.ts"
+    "scripts/detectCircularDependencies.ts",
+    "playwright.config.ts",
+    "playwright/**/*.ts"
   ],
   "exclude": ["node_modules", ".next", "out"]
 }

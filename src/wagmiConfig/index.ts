@@ -191,10 +191,13 @@ export const wagmiConfig = createConfig({
     [mint.id]: http(),
   },
   ssr: true,
-  connectors: process.env.NEXT_PUBLIC_MOCK_CONNECTOR
+  connectors: process.env.NEXT_PUBLIC_E2E_WALLET_MNEMONIC
     ? [
         mock({
           accounts: [mnemonicToAccount(process.env.NEXT_PUBLIC_E2E_WALLET_MNEMONIC)],
+          features: {
+            reconnect: true,
+          },
         }),
       ]
     : [

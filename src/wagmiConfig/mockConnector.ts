@@ -64,19 +64,21 @@ export function mock(
 
       let currentChainId = await this.getChainId()
       if (chainId && currentChainId !== chainId) {
-        const chain = await this.switchChain({ chainId })
-        currentChainId = chain.id
+        const chain = await this.switchChain?.({ chainId })
+
+        if (chain) currentChainId = chain.id
       }
 
       connected = true
+      await config.storage?.setItem("mock.connected", true)
 
       return { accounts, chainId: currentChainId }
     },
     async disconnect() {
+      await config.storage?.removeItem("mock.connected")
       connected = false
     },
     async getAccounts() {
-      if (!connected) throw new Error("Connector is not connected")
       const provider = await this.getProvider()
       const accounts = await provider.request({ method: "eth_accounts" })
       return accounts.map((x) => getAddress(x))
@@ -88,7 +90,10 @@ export function mock(
     },
     async isAuthorized() {
       if (!features.reconnect) return false
-      if (!connected) return false
+
+      const connectedLocal = await config.storage?.getItem("mock.connected")
+      if (!connectedLocal) return false
+
       const accounts = await this.getAccounts()
       return !!accounts.length
     },
@@ -180,10 +185,10 @@ export function mock(
 
       return custom({ request })({ retryCount: 0 })
     },
-    async getClient({ chainId }) {
+    async getClient({ chainId } = {}) {
       const client = createWalletClient({
         transport: http(
-          config.chains.find((c) => c.id === chainId).rpcUrls.default.http[0]
+          config.chains.find((c) => c.id === chainId)?.rpcUrls.default.http[0]
         ),
         account: parameters.accounts[0],
       }) as Client

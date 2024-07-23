@@ -10,7 +10,7 @@
     "attributePosition": "auto"
   },
   "files": {
-    "include": ["src"],
+    "include": ["src", "playwright"],
     "ignore": ["node_modules", ".next", "public", ".out", "package-lock.json"]
   },
   "organizeImports": {

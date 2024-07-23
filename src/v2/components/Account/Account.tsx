@@ -31,7 +31,11 @@ export const Account = () => {
   if (!address)
     return (
       <Card>
-        <Button variant="ghost" onClick={() => setIsWalletSelectorModalOpen(true)}>
+        <Button
+          variant="ghost"
+          onClick={() => setIsWalletSelectorModalOpen(true)}
+          data-testid="sign-in-button"
+        >
           <SignIn weight="bold" />
           Sign in
         </Button>
@@ -39,7 +43,7 @@ export const Account = () => {
     )
 
   return (
-    <Card className="flex items-center">
+    <Card className="flex items-center" data-testid="account-card">
       <Popover open={isOpen} onOpenChange={setValue}>
         <PopoverTrigger asChild>
           <Button
