@@ -20,6 +20,7 @@ import Autoplay from "embla-carousel-autoplay"
 import { useRef, useState } from "react"
 import { Benefits } from "./Benefits"
 import { GuildPassScene } from "./GuildPassScene"
+import { OnboardingChain } from "./types"
 
 interface Subscription {
   title: string
@@ -50,7 +51,7 @@ const SUBSCRIPTIONS = [
   },
 ] as const satisfies Subscription[]
 
-export const PurchasePass = () => {
+export const PurchasePass: OnboardingChain = () => {
   const [api, setApi] = useState<CarouselApi>()
   const [activeIndex, setActiveIndex] = useState<number>()
   const didUserSelect = activeIndex !== undefined

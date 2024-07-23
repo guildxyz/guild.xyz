@@ -16,6 +16,7 @@ import { AvatarFallback } from "@radix-ui/react-avatar"
 import { useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { z } from "zod"
+import { OnboardingChain } from "./types"
 
 const formSchema = z.object({
   name: z.string(),
@@ -23,7 +24,7 @@ const formSchema = z.object({
 })
 
 // TODO: use ConnectFarcasterButton
-export const StartProfile = () => {
+export const StartProfile: OnboardingChain = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {

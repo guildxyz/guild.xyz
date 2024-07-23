@@ -14,12 +14,13 @@ import { ArrowRight } from "@phosphor-icons/react/dist/ssr"
 import { FormProvider, useForm } from "react-hook-form"
 import { z } from "zod"
 import { GuildPassScene } from "./GuildPassScene"
+import { OnboardingChain } from "./types"
 
 const formSchema = z.object({
   inviteHandle: z.string(),
 })
 
-export const ClaimPass = () => {
+export const ClaimPass: OnboardingChain = ({ dispatchChainAction }) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -28,6 +29,7 @@ export const ClaimPass = () => {
   })
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values)
+    dispatchChainAction("next")
   }
 
   return (
