@@ -1,4 +1,13 @@
-import { Layout } from "@/components/Layout"
+import {
+  Layout,
+  LayoutBanner,
+  LayoutFooter,
+  LayoutHeader,
+  LayoutHeadline,
+  LayoutHero,
+  LayoutMain,
+} from "@/components/Layout"
+import { LayoutBannerBackground } from "@/components/Layout/Layout"
 import { Anchor } from "@/components/ui/Anchor"
 import { env } from "env"
 import { unstable_serialize as infinite_unstable_serialize } from "swr/infinite"
@@ -44,23 +53,24 @@ const Page = async ({ searchParams }: { searchParams: SearchParams }) => {
       }}
     >
       <HeaderBackground />
-      <Layout.Root>
-        <Layout.Hero>
-          <Layout.Header />
+      <Layout>
+        <LayoutHero>
+          <LayoutHeader />
           <div id={ActiveSection.YourGuilds}>
-            <Layout.Headline title="Guildhall" />
+            <LayoutHeadline title="Guildhall" />
           </div>
-          <Layout.Banner>
+          <LayoutBanner>
+            <LayoutBannerBackground />
             <div className="absolute inset-0 bg-[auto_115%] bg-[right_top_10px] bg-[url('/banner.svg')] bg-no-repeat opacity-10" />
             <div className="absolute inset-0 bg-gradient-to-tr from-50% from-banner to-transparent" />
-          </Layout.Banner>
-        </Layout.Hero>
+          </LayoutBanner>
+        </LayoutHero>
 
-        <Layout.Main>
+        <LayoutMain>
           <Explorer searchParams={searchParams} />
-        </Layout.Main>
+        </LayoutMain>
 
-        <Layout.Footer>
+        <LayoutFooter>
           <p className="my-8 text-center text-muted-foreground text-sm">
             {`This website is `}
             <Anchor
@@ -79,8 +89,8 @@ const Page = async ({ searchParams }: { searchParams: SearchParams }) => {
               Guild SDK
             </Anchor>
           </p>
-        </Layout.Footer>
-      </Layout.Root>
+        </LayoutFooter>
+      </Layout>
     </ExplorerSWRProvider>
   )
 }
