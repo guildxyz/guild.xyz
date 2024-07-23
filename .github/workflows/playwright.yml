@@ -3,7 +3,7 @@ on:
   deployment_status:
 jobs:
   test:
-    if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success' && contains(github.event.deployment_status.deployment_url, "storybook")
+    if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success' && contains(github.event.deployment_status.deployment_url, "guild-xyz-storybook")
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
