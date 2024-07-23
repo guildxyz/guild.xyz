@@ -146,10 +146,10 @@ export const PurchasePass = () => {
             value={title}
             onClick={() => setActiveIndex(i)}
             className={cn(
-              "relative w-full from-accent outline-none hover:bg-gradient-to-t focus-visible:bg-gradient-to-t focus-visible:ring-4 focus-visible:ring-ring",
+              "relative w-full select-none from-accent outline-none hover:bg-gradient-to-t focus-visible:bg-gradient-to-t focus-visible:ring-4 focus-visible:ring-ring",
               {
                 "-z-10 absolute opacity-0": didUserSelect && activeIndex !== i,
-                "w-full cursor-auto hover:bg-none focus-visible:bg-none focus-visible:ring-0":
+                "w-full cursor-auto select-text hover:bg-none focus-visible:bg-none focus-visible:ring-0":
                   activeIndex === i,
               }
             )}
