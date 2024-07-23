@@ -149,7 +149,7 @@ export const PurchasePass = () => {
               "relative w-full from-accent outline-none hover:bg-gradient-to-t focus-visible:bg-gradient-to-t focus-visible:ring-4 focus-visible:ring-ring",
               {
                 "-z-10 absolute opacity-0": didUserSelect && activeIndex !== i,
-                "w-full cursor-auto focus-visible:bg-none focus-visible:ring-0":
+                "w-full cursor-auto hover:bg-none focus-visible:bg-none focus-visible:ring-0":
                   activeIndex === i,
               }
             )}
