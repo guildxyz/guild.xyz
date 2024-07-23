@@ -10,7 +10,7 @@
     "attributePosition": "auto"
   },
   "files": {
-    "include": ["src", "playwright"],
+    "include": ["src", "playwright", "playwright.config.ts"],
     "ignore": ["node_modules", ".next", "public", ".out", "package-lock.json"]
   },
   "organizeImports": {

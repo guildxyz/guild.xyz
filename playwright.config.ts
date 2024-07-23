@@ -1,6 +1,6 @@
 import { defineConfig, devices } from "@playwright/test"
 
-const baseURL = "http://localhost:3000";
+const baseURL = "http://localhost:3000"
 
 export default defineConfig({
   testDir: "./playwright",
@@ -10,18 +10,26 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: process.env.CI ? "github" : "html",
   outputDir: "playwright/results/",
-  
+
   use: {
     baseURL,
     trace: "on-first-retry",
   },
 
   projects: [
-    { name: "auth-setup", testMatch: /auth\.setup\.ts/ },
+    {
+      name: "auth-setup",
+      testMatch: /auth\.setup\.ts/,
+      use: {
+        ...devices["Desktop Chrome"],
+        userAgent: `${devices["Desktop Chrome"].userAgent} GUILD_E2E`,
+      },
+    },
     {
       name: "chromium",
       use: {
         ...devices["Desktop Chrome"],
+        userAgent: `${devices["Desktop Chrome"].userAgent} GUILD_E2E`,
       },
       dependencies: ["auth-setup"],
     },
@@ -56,7 +64,7 @@ export default defineConfig({
   ],
 
   webServer: {
-    command: 'npm run start',
+    command: "npm run start",
     url: baseURL,
     reuseExistingServer: !process.env.CI,
   },

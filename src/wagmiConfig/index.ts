@@ -179,7 +179,11 @@ export const wagmiConfig = createConfig({
     [blast.id]: http(),
     [blastSepolia.id]: http(),
     [oasisSapphire.id]: http(),
-    [sepolia.id]: http("https://ethereum-sepolia-rpc.publicnode.com"),
+    [sepolia.id]: http(
+      env.NEXT_PUBLIC_E2E_WALLET_MNEMONIC
+        ? "http://localhost:8545"
+        : "https://ethereum-sepolia-rpc.publicnode.com"
+    ),
     [astarZkEVM.id]: http(),
     [coreDao.id]: http(),
     [liskSepolia.id]: http(),
@@ -191,43 +195,44 @@ export const wagmiConfig = createConfig({
     [mint.id]: http(),
   },
   ssr: true,
-  connectors: process.env.NEXT_PUBLIC_E2E_WALLET_MNEMONIC
-    ? [
-        mock({
-          accounts: [mnemonicToAccount(process.env.NEXT_PUBLIC_E2E_WALLET_MNEMONIC)],
-          features: {
-            reconnect: true,
-          },
-        }),
-      ]
-    : [
-        injected(),
-        coinbaseWallet({
-          appName: "Guild.xyz",
-          appLogoUrl: "https://guild.xyz/guild-icon.png",
-          version: "4",
-        }),
-        walletConnect({
-          projectId: env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
-          showQrModal: true,
-          qrModalOptions: {
-            explorerRecommendedWalletIds: [
-              "971e689d0a5be527bac79629b4ee9b925e82208e5168b733496a09c0faed0709", // OKX
-              "107bb20463699c4e614d3a2fb7b961e66f48774cb8f6d6c1aee789853280972c", // Bitcoin.com
-              "541d5dcd4ede02f3afaf75bf8e3e4c4f1fb09edb5fa6c4377ebf31c2785d9adf", // Ronin
-              "4622a2b2d6af1c9844944291e5e7351a6aa24cd7b23099efac1b2fd875da31a0", // Trust
-            ],
-            themeVariables: {
-              "--wcm-z-index": "10001",
-              "--w3m-z-index": "10001",
-            } as any, // casting it, so `--wcm-z-index` is accepted
-          },
-        }),
-        safe({
-          allowedDomains: [/gnosis-safe\.io$/, /app\.safe\.global$/],
-          debug: false,
-        }),
-      ],
+  connectors:
+    typeof navigator !== "undefined" && navigator.userAgent.includes("GUILD_E2E")
+      ? [
+          mock({
+            accounts: [mnemonicToAccount(env.NEXT_PUBLIC_E2E_WALLET_MNEMONIC)],
+            features: {
+              reconnect: true,
+            },
+          }),
+        ]
+      : [
+          injected(),
+          coinbaseWallet({
+            appName: "Guild.xyz",
+            appLogoUrl: "https://guild.xyz/guild-icon.png",
+            version: "4",
+          }),
+          walletConnect({
+            projectId: env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
+            showQrModal: true,
+            qrModalOptions: {
+              explorerRecommendedWalletIds: [
+                "971e689d0a5be527bac79629b4ee9b925e82208e5168b733496a09c0faed0709", // OKX
+                "107bb20463699c4e614d3a2fb7b961e66f48774cb8f6d6c1aee789853280972c", // Bitcoin.com
+                "541d5dcd4ede02f3afaf75bf8e3e4c4f1fb09edb5fa6c4377ebf31c2785d9adf", // Ronin
+                "4622a2b2d6af1c9844944291e5e7351a6aa24cd7b23099efac1b2fd875da31a0", // Trust
+              ],
+              themeVariables: {
+                "--wcm-z-index": "10001",
+                "--w3m-z-index": "10001",
+              } as any, // casting it, so `--wcm-z-index` is accepted
+            },
+          }),
+          safe({
+            allowedDomains: [/gnosis-safe\.io$/, /app\.safe\.global$/],
+            debug: false,
+          }),
+        ],
 })
 
 export const COINBASE_INJECTED_WALLET_ID = "com.coinbase.wallet"
