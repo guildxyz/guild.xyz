@@ -71,6 +71,7 @@ export const env = createEnv({
     NEXT_PUBLIC_GOOGLE_CLIENT_ID: z.string(),
     NEXT_PUBLIC_GOOGLE_SERVICE_ACCOUNT_EMAIL: z.string(),
     NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID: z.string(),
+
     // E2E
     NEXT_PUBLIC_E2E_WALLET_MNEMONIC: z.string(),
   },
