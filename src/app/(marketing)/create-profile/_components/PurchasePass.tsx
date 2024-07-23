@@ -8,11 +8,15 @@ import { useState } from "react"
 import { OnboardingChain } from "../types"
 import { GuildPassScene } from "./GuildPassScene"
 
-export const PurchasePass: OnboardingChain = ({ dispatchChainAction, data }) => {
+export const PurchasePass: OnboardingChain = ({
+  dispatchChainAction,
+  chainData,
+}) => {
   const [didUserPurchase, setDidUserPurchase] = useState(false)
-  if (!data.chosenSubscription) throw new Error("Subscription data was not provided")
+  if (!chainData.chosenSubscription)
+    throw new Error("Subscription data was not provided")
 
-  const { title, pricingShort } = data.chosenSubscription
+  const { title, pricingShort } = chainData.chosenSubscription
 
   return (
     <Card className="mx-auto flex max-w-md flex-col bg-gradient-to-b from-card to-card-secondary shadow-2xl">

@@ -55,7 +55,10 @@ export const OnboardingDriver = () => {
         <Button onClick={() => dispatchChainAction("previous")}>previous</Button>
         <Button onClick={() => dispatchChainAction("next")}>next</Button>
       </div>
-      <OnboardingCard dispatchChainAction={dispatchChainAction} data={chainData} />
+      <OnboardingCard
+        dispatchChainAction={dispatchChainAction}
+        chainData={chainData}
+      />
     </>
   )
 }
