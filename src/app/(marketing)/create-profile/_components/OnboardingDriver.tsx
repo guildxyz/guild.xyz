@@ -27,7 +27,7 @@ export const OnboardingDriver = () => {
   const OnboardingCard = chains[chainIndex]
 
   const dispatchChainAction: DispatchChainAction = (action, data) => {
-    if (data) setChainData((prev) => ({ prev, ...data }))
+    setChainData((prev) => ({ ...prev, ...data }))
     if (action === "next" && chains.length > chainIndex + 1) {
       setChainIndex((prev) => prev + 1)
       return
