@@ -8,7 +8,7 @@ import { forwardRef } from "react"
  * Layout
  * -----------------------------------------------------------------------------------------------*/
 
-export interface LayoutProps extends React.HTMLAttributes<HTMLDivElement> {}
+interface LayoutProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 const Layout = ({ children, ...props }: LayoutProps) => (
   <div className="flex min-h-screen flex-col" {...props}>
@@ -94,9 +94,9 @@ const LayoutBanner = ({ children, className }: LayoutBannerProps) => (
  * LayoutMain
  * -----------------------------------------------------------------------------------------------*/
 
-const LayoutMain = ({ children }: PropsWithChildren) => (
+const LayoutMain = ({ children, ...props }: LayoutContainerProps) => (
   <main>
-    <LayoutContainer>{children}</LayoutContainer>
+    <LayoutContainer {...props}>{children}</LayoutContainer>
   </main>
 )
 
@@ -104,9 +104,9 @@ const LayoutMain = ({ children }: PropsWithChildren) => (
  * LayoutFooter
  * -----------------------------------------------------------------------------------------------*/
 
-const LayoutFooter = ({ children }: PropsWithChildren) => (
+const LayoutFooter = ({ children, ...props }: LayoutContainerProps) => (
   <footer className="mt-auto">
-    <LayoutContainer>{children}</LayoutContainer>
+    <LayoutContainer {...props}>{children}</LayoutContainer>
   </footer>
 )
 
