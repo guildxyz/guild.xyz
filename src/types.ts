@@ -2,6 +2,7 @@ import {
   FarcasterProfile,
   Logic,
   Schemas,
+  SocialLinks,
   UserProfile,
   Visibility,
   schemas,
@@ -573,21 +574,7 @@ type GuildPlatform = {
 
 type GuildPlatformWithOptionalId = Omit<GuildPlatform, "id"> & { id?: number }
 
-const supportedSocialLinks = [
-  "TWITTER",
-  "LENS",
-  "YOUTUBE",
-  "SPOTIFY",
-  "MIRROR",
-  "MEDIUM",
-  "SUBSTACK",
-  "SNAPSHOT",
-  "SOUND",
-  "WEBSITE",
-  "GITHUB",
-] as const
-type SocialLinkKey = (typeof supportedSocialLinks)[number]
-type SocialLinks = Partial<Record<SocialLinkKey, string>>
+type SocialLinkKey = keyof SocialLinks
 
 const guildTags = ["VERIFIED", "FEATURED"] as const
 type GuildTags = (typeof guildTags)[number]
@@ -645,7 +632,6 @@ type RoleFormType = Partial<
     rolePlatforms: Array<
       Partial<Omit<RolePlatform, "guildPlatform">> & {
         guildPlatform?: GuildPlatformWithOptionalId
-        guildPlatformIndex?: number
       }
     >
   } & { name: string }
@@ -761,7 +747,7 @@ type DetailedPinLeaderboardUserData = {
 
 type SearchParams = { [key: string]: string | string[] | undefined }
 
-export { supportedEventSources, supportedSocialLinks, ValidationMethod }
+export { supportedEventSources, ValidationMethod }
 export type {
   BaseUser,
   ClientStateRequirementCreateResponse,

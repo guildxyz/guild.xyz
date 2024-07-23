@@ -10,12 +10,12 @@ import {
 import Section from "components/common/Section"
 import useTopCollectors from "../../hooks/useTopCollectors"
 import { useCollectNftContext } from "../CollectNftContext"
-import Collector, { CollectorSkeleton } from "./components/Collector"
+import { Collector, CollectorSkeleton } from "./components/Collector"
 
 const TopCollectors = () => {
   const { isLegacy } = useCollectNftContext()
   const { data, isValidating, error } = useTopCollectors()
-  const shownCollectors = data?.topCollectors?.slice(0, 39)
+  const shownCollectors = data?.topCollectors?.slice(0, 39) ?? []
   const bgColor = useColorModeValue(
     "var(--chakra-colors-gray-100)",
     "var(--chakra-colors-gray-800)"
@@ -52,7 +52,7 @@ const TopCollectors = () => {
             <CollectorSkeleton key={i} />
           ))}
         </SimpleGrid>
-      ) : data && !data.topCollectors.length ? (
+      ) : data && !data.topCollectors?.length ? (
         <Text w="full" colorScheme="gray">
           No collectors yet
         </Text>
@@ -69,7 +69,7 @@ const TopCollectors = () => {
               <Collector
                 key={address}
                 address={address}
-                balance={!isLegacy && balance}
+                balance={!isLegacy ? balance : undefined}
               />
             ))}
           </SimpleGrid>

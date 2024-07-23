@@ -7,10 +7,10 @@ import useNftRanges from "../../CollectNft/hooks/useNftRanges"
 
 type Props = {
   address: string
-  balance: number
+  balance?: number
 }
 
-const Collector = ({ address, balance }: Props): JSX.Element => {
+const Collector = ({ address, balance }: Props) => {
   const domain = useResolveAddress(address)
 
   if (!address) return null
@@ -37,12 +37,15 @@ const Collector = ({ address, balance }: Props): JSX.Element => {
   )
 }
 
-const CollectorBalance = ({ balance }) => {
+const CollectorBalance = ({
+  balance,
+}: { balance: NonNullable<Props["balance"]> }) => {
   const ranges = useNftRanges()
 
+  const maxRangeValue = ranges?.at(-1)?.max ?? 0
+  const reversedRanges = [...ranges].reverse()
   const rangeIcon =
-    ranges?.at(-1)?.max >= 10 &&
-    ranges?.find((r) => r.min <= balance && r.max >= balance)?.icon
+    maxRangeValue >= 10 && reversedRanges.find((r) => r.min <= balance)?.icon
 
   return (
     <Text
@@ -66,5 +69,4 @@ const CollectorSkeleton = () => (
   </VStack>
 )
 
-export default Collector
-export { CollectorSkeleton }
+export { Collector, CollectorSkeleton }

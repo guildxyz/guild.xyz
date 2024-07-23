@@ -1,7 +1,7 @@
 import { useWallet } from "@fuels/react"
 import useSWRImmutable from "swr/immutable"
 import { GuildPinContractAbi__factory } from "../GuildPinContractAbi_factory"
-import { FUEL_GUILD_PIN_CONTRACT_ID_0X } from "./useMintFuelGuildPin"
+import { FUEL_GUILD_PIN_CONTRACT_ID_0X } from "./constants"
 
 const useFuelGuildPinFee = () => {
   const { wallet } = useWallet()

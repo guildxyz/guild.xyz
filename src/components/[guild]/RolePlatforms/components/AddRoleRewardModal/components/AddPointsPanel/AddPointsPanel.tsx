@@ -64,18 +64,8 @@ const AddPointsPanel = ({ onAdd, onCancel }: AddRewardPanelProps) => {
 
   const onSubmit = (data: AddPointsFormType) => {
     onAdd({
-      ...(selectedExistingId
+      ...(selectedExistingId === CREATE_NEW_OPTION
         ? {
-            guildPlatformId: selectedExistingId,
-            // have to send these in this case too so the validator doesn't throw an error
-            guildPlatform: {
-              platformName: "POINTS",
-              platformId: PlatformType.POINTS,
-              platformGuildId: "",
-              platformGuildData: {},
-            } as any,
-          }
-        : {
             guildPlatform: {
               platformName: "POINTS",
               platformId: PlatformType.POINTS,
@@ -85,6 +75,16 @@ const AddPointsPanel = ({ onAdd, onCancel }: AddRewardPanelProps) => {
                 imageUrl: data.imageUrl,
               } satisfies PlatformGuildData["POINTS"],
             },
+          }
+        : {
+            guildPlatformId: selectedExistingId,
+            // have to send these in this case too so the validator doesn't throw an error
+            guildPlatform: {
+              platformName: "POINTS",
+              platformId: PlatformType.POINTS,
+              platformGuildId: "",
+              platformGuildData: {},
+            } as any,
           }),
       isNew: true,
       roleId: targetRoleId,

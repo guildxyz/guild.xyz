@@ -9,7 +9,7 @@ import { useFormContext, useWatch } from "react-hook-form"
 import ChainPicker from "requirements/common/ChainPicker"
 import TokenPicker from "requirements/common/TokenPicker"
 import { ERC20_SUPPORTED_CHAINS } from "utils/guildCheckout/constants"
-import { AddTokenFormType } from "../AddTokenPanel"
+import { AddTokenFormType } from "../types"
 
 const SetTokenStep = ({ onContinue }: { onContinue: () => void }) => {
   const chain = useWatch({ name: `chain` })
