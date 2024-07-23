@@ -84,7 +84,10 @@ interface LayoutBannerProps extends PropsWithChildren {
 
 const LayoutBanner = ({ children, className }: LayoutBannerProps) => (
   <div
-    className={cn("-z-10 -bottom-48 absolute inset-0 overflow-hidden", className)}
+    className={cn(
+      "-z-10 -bottom-28 absolute inset-x-0 top-0 overflow-hidden",
+      className
+    )}
   >
     {children}
   </div>
