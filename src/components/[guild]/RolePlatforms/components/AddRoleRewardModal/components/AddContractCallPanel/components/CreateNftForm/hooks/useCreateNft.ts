@@ -1,7 +1,7 @@
+import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import { datetimeLocalToIsoString } from "components/[guild]/RolePlatforms/components/EditRewardAvailabilityModal/components/StartEndTimeForm"
 import { guildNftRewardMetadataSchema } from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import { env } from "env"
 import pinFileToIPFS from "hooks/usePinata/utils/pinataUpload"
 import useShowErrorToast from "hooks/useShowErrorToast"

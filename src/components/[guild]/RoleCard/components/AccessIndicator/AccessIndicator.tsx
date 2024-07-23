@@ -1,3 +1,4 @@
+import { accountModalAtom } from "@/components/Providers/atoms"
 import {
   Box,
   Divider,
@@ -13,7 +14,6 @@ import { useRequirementErrorConfig } from "components/[guild]/Requirements/Requi
 import useGuild from "components/[guild]/hooks/useGuild"
 import useRequirements from "components/[guild]/hooks/useRequirements"
 import Button from "components/common/Button"
-import { accountModalAtom } from "components/common/Layout/components/Account/components/AccountModal"
 import useMembership, {
   useRoleMembership,
 } from "components/explorer/hooks/useMembership"

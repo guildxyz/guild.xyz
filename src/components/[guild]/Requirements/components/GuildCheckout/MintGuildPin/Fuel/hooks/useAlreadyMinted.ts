@@ -4,7 +4,7 @@ import useUser from "components/[guild]/hooks/useUser"
 import useSWRImmutable from "swr/immutable"
 import type { GuildActionInput } from "../GuildPinContractAbi"
 import { GuildPinContractAbi__factory } from "../GuildPinContractAbi_factory"
-import { FUEL_GUILD_PIN_CONTRACT_ID_0X } from "./useMintFuelGuildPin"
+import { FUEL_GUILD_PIN_CONTRACT_ID_0X } from "./constants"
 
 const useAlreadyMinted = () => {
   const { id: userId } = useUser()

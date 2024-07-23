@@ -42,7 +42,7 @@ const ConnectPolygonID = (props: ButtonProps) => {
     if (!errorType) onClose()
   }, [errorType, onClose])
 
-  if (!userId || (!!reqAccess && !errorType)) return null
+  if (!userId || (!!reqAccess?.access && !errorType)) return null
 
   return (
     <>

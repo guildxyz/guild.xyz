@@ -1,3 +1,4 @@
+import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import {
   Accordion,
   AccordionButton,
@@ -20,13 +21,12 @@ import {
 import { Star } from "@phosphor-icons/react"
 import useEditRolePlatform from "components/[guild]/AccessHub/hooks/useEditRolePlatform"
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
-import { AddTokenFormType } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/AddTokenPanel"
 import ConversionInput from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/components/ConversionInput"
+import { AddTokenFormType } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/types"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPlatform from "components/[guild]/hooks/useGuildPlatform"
 import useRequirements from "components/[guild]/hooks/useRequirements"
 import SnapshotModal from "components/[guild]/leaderboard/Snapshots/SnapshotModal"
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import { SectionTitle } from "components/common/Section"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"

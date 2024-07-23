@@ -1,3 +1,4 @@
+import { useYourGuilds } from "@/hooks/useYourGuilds"
 import {
   Circle,
   HStack,
@@ -10,7 +11,6 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import { DotsThreeVertical, IconProps } from "@phosphor-icons/react"
-import { useYourGuilds } from "components/explorer/YourGuilds"
 import { ForwardRefExoticComponent, RefAttributes } from "react"
 import { useActivityLog } from "../../ActivityLogContext"
 import ClickableTagPopover from "./ClickableTagPopover"

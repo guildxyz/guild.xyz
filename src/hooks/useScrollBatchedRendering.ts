@@ -5,6 +5,7 @@ interface CommonProps {
   batchSize: number
   disableRendering: boolean
   setElementCount: Dispatch<SetStateAction<number>>
+  offsetPixel?: number
 }
 
 interface WithScrollTarget extends CommonProps {
@@ -19,14 +20,16 @@ export function useScrollBatchedRendering({
   scrollTarget,
   disableRendering,
   setElementCount,
+  offsetPixel = 0,
 }: WithScrollTarget) {
-  const localScrollTarget = useRef<HTMLElement>(null)
+  const localScrollTarget = useRef<HTMLElement | null>(null)
 
   useScrollEffect(() => {
     const target = scrollTarget === undefined ? localScrollTarget : scrollTarget
     if (
       !target.current ||
-      target.current.getBoundingClientRect().bottom > window.innerHeight ||
+      target.current.getBoundingClientRect().bottom - offsetPixel >
+        window.innerHeight ||
       disableRendering
     ) {
       return

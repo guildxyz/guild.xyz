@@ -1,6 +1,6 @@
+import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import { useUserPublic } from "@/hooks/useUserPublic"
 import { useWallet } from "@fuels/react"
-import { useUserPublic } from "components/[guild]/hooks/useUser"
-import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { Account } from "fuels"
 import useLocalStorage from "hooks/useLocalStorage"
 import useTimeInaccuracy from "hooks/useTimeInaccuracy"

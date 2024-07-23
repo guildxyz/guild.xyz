@@ -2,6 +2,8 @@ import {
   FarcasterProfile,
   Logic,
   Schemas,
+  SocialLinks,
+  UserProfile,
   Visibility,
   schemas,
 } from "@guildxyz/types"
@@ -118,11 +120,6 @@ type PlatformAccountDetails = {
   username?: string
 }
 
-type SharedSocial = {
-  guildId: number
-  isShared: boolean
-}
-
 type UserAddress = {
   address: `0x${string}`
   userId: number
@@ -136,7 +133,7 @@ type User = {
   id: number
   addresses: UserAddress[]
   platformUsers: PlatformAccountDetails[]
-  sharedSocials: SharedSocial[]
+  sharedSocials: UserProfile["sharedSocials"]
   publicKey?: string
   isSuperAdmin: boolean
 
@@ -577,21 +574,7 @@ type GuildPlatform = {
 
 type GuildPlatformWithOptionalId = Omit<GuildPlatform, "id"> & { id?: number }
 
-const supportedSocialLinks = [
-  "TWITTER",
-  "LENS",
-  "YOUTUBE",
-  "SPOTIFY",
-  "MIRROR",
-  "MEDIUM",
-  "SUBSTACK",
-  "SNAPSHOT",
-  "SOUND",
-  "WEBSITE",
-  "GITHUB",
-] as const
-type SocialLinkKey = (typeof supportedSocialLinks)[number]
-type SocialLinks = Partial<Record<SocialLinkKey, string>>
+type SocialLinkKey = keyof SocialLinks
 
 const guildTags = ["VERIFIED", "FEATURED"] as const
 type GuildTags = (typeof guildTags)[number]
@@ -649,7 +632,6 @@ type RoleFormType = Partial<
     rolePlatforms: Array<
       Partial<Omit<RolePlatform, "guildPlatform">> & {
         guildPlatform?: GuildPlatformWithOptionalId
-        guildPlatformIndex?: number
       }
     >
   } & { name: string }
@@ -763,7 +745,9 @@ type DetailedPinLeaderboardUserData = {
   pins: LeaderboardPinData[]
 }
 
-export { supportedEventSources, supportedSocialLinks, ValidationMethod }
+type SearchParams = { [key: string]: string | string[] | undefined }
+
+export { supportedEventSources, ValidationMethod }
 export type {
   BaseUser,
   ClientStateRequirementCreateResponse,
@@ -807,4 +791,5 @@ export type {
   User,
   UserAddress,
   WalletError,
+  SearchParams,
 }

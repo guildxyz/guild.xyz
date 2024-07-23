@@ -1,12 +1,14 @@
-import { ButtonProps, Icon } from "@chakra-ui/react"
+import { ConnectEmailButton } from "@/components/Account/components/AccountModal/components/EmailAddress"
+import { ConnectFarcasterButton } from "@/components/Account/components/AccountModal/components/FarcasterProfile"
+import { PLATFORM_COLORS } from "@/components/Account/components/AccountModal/components/SocialAccount"
+import { Button, ButtonProps } from "@/components/ui/Button"
+import { cn } from "@/lib/utils"
+import { useToast } from "@chakra-ui/react"
+import type { Icon } from "@phosphor-icons/react"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useUser from "components/[guild]/hooks/useUser"
-import Button from "components/common/Button"
-import { ConnectEmailButton } from "components/common/Layout/components/Account/components/AccountModal/components/SocialAccount/EmailAddress"
-import { ConnectFarcasterButton } from "components/common/Layout/components/Account/components/AccountModal/components/SocialAccount/FarcasterProfile"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
-import useToast from "hooks/useToast"
 import REQUIREMENTS from "requirements"
 import { RequirementType } from "requirements/types"
 import rewards from "rewards"
@@ -66,9 +68,11 @@ const RequirementConnectButton = (props: ButtonProps) => {
     <ButtonComponent
       isReconnection={isReconnection}
       onSuccess={onSuccess}
-      leftIcon={<Icon as={rewards[platform]?.icon} />}
       size="xs"
-      iconSpacing="1"
+      // TODO: find a better solution for handling the icon
+      {...(platform === "EMAIL" || platform === "FARCASTER"
+        ? undefined
+        : { icon: rewards[platform]?.icon })}
       {...props}
     />
   )
@@ -77,8 +81,14 @@ const RequirementConnectButton = (props: ButtonProps) => {
 const ConnectRequirementPlatformButton = ({
   onSuccess,
   isReconnection,
+  icon: IconComponent,
+  className,
   ...props
-}: ButtonProps & { onSuccess: () => void; isReconnection?: boolean }) => {
+}: ButtonProps & {
+  onSuccess: () => void
+  isReconnection?: boolean
+  icon?: Icon
+}) => {
   const { type } = useRequirementContext()
 
   const platform = requirementTypeToPlatformName(type)
@@ -94,9 +104,10 @@ const ConnectRequirementPlatformButton = ({
       onClick={onConnect}
       isLoading={isLoading}
       loadingText={loadingText}
-      colorScheme={rewards[platform]?.colorScheme}
+      className={cn(PLATFORM_COLORS[platform], "text-white", className)}
       {...props}
     >
+      {!!IconComponent && <IconComponent />}
       {`${isReconnection ? "Reconnect" : "Connect"} ${
         rewards[platform]?.name === "X" ? "" : rewards[platform]?.name
       }`}

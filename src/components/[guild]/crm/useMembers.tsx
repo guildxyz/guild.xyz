@@ -1,10 +1,10 @@
+import { useUserPublic } from "@/hooks/useUserPublic"
 import useActiveStatusUpdates from "hooks/useActiveStatusUpdates"
 import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import { useCallback, useMemo } from "react"
 import useSWRInfinite from "swr/infinite"
 import { PlatformAccountDetails } from "types"
 import useGuild from "../hooks/useGuild"
-import { useUserPublic } from "../hooks/useUser"
 import { sortAccounts } from "./Identities"
 
 type CrmRole = {

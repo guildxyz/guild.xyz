@@ -1,6 +1,6 @@
+import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import { Schemas } from "@guildxyz/types"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { RolePlatform } from "types"

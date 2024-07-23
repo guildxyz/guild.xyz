@@ -1,6 +1,6 @@
+import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import { useUserPublic } from "@/hooks/useUserPublic"
 import { useWallet } from "@fuels/react"
-import { useUserPublic } from "components/[guild]/hooks/useUser"
-import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import useTimeInaccuracy from "hooks/useTimeInaccuracy"
 import { fetcherWithSign, fuelFetcherWithSign } from "utils/fetcher"
 import { useChainId, usePublicClient, useWalletClient } from "wagmi"

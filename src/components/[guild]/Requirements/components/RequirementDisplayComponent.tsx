@@ -1,6 +1,6 @@
+import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import { Icon } from "@chakra-ui/react"
 import { Question, Warning } from "@phosphor-icons/react"
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import DataBlock from "components/common/DataBlock"
 import { PropsWithChildren } from "react"
 import { ErrorBoundary } from "react-error-boundary"

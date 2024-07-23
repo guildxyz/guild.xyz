@@ -1,5 +1,5 @@
+import useUsersGuildPins from "@/hooks/useUsersGuildPins"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
-import useUsersGuildPins from "hooks/useUsersGuildPins"
 import { useAccount } from "wagmi"
 import PinLeaderboardUserCard, {
   PinLeaderboardUserCardSkeleton,
