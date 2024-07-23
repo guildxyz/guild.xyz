@@ -3,7 +3,8 @@ on:
   deployment_status:
 jobs:
   test:
-    if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success' && !contains(github.event.deployment_status.deployment_url, 'guild-xyz-storybook')
+    if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success'
+    # && !contains(github.event.deployment_status.deployment_url, 'guild-xyz-storybook')
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
@@ -11,6 +12,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: lts/*
+      - name: Install dependencies
+        run: npm ci
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
       - name: Run Playwright tests
