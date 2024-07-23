@@ -13,6 +13,7 @@ import {
 import { Separator } from "@/components/ui/Separator"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip"
 import { cn } from "@/lib/utils"
+import { DotLottiePlayer } from "@dotlottie/react-player"
 import { ArrowLeft, Info } from "@phosphor-icons/react"
 import Autoplay from "embla-carousel-autoplay"
 import { useRef, useState } from "react"
@@ -52,6 +53,7 @@ export const PurchasePass = () => {
   const [api, setApi] = useState<CarouselApi>()
   const [activeIndex, setActiveIndex] = useState<number>()
   const didUserSelect = activeIndex !== undefined
+  const [didUserPurchase, setDidUserPurchase] = useState(false)
   const { selectedIndex, scrollSnaps, onCarouselDotButtonClick } =
     useCarouselDotButton(api)
   const carouselPlugins = useRef([
@@ -151,7 +153,15 @@ export const PurchasePass = () => {
           >
             <article className="flex flex-col items-center pb-6 text-center">
               <div className="mb-2 h-48">
-                <GuildPassScene />
+                {didUserSelect && didUserPurchase ? (
+                  <DotLottiePlayer
+                    autoplay
+                    src="/success_lottie.json"
+                    className="size-full"
+                  />
+                ) : (
+                  <GuildPassScene />
+                )}
               </div>
               <div
                 className={cn("px-8", {
@@ -204,7 +214,9 @@ export const PurchasePass = () => {
                   </TooltipContent>
                 </Tooltip>
               </div>
-              <Button colorScheme="primary">Start</Button>
+              <Button colorScheme="primary" onClick={() => setDidUserPurchase(true)}>
+                Start
+              </Button>
             </div>
             <Separator variant="muted" />
 
