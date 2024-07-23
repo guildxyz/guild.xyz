@@ -1,4 +1,11 @@
-import { Layout } from "@/components/Layout"
+import {
+  Layout,
+  LayoutBanner,
+  LayoutHeader,
+  LayoutHero,
+  LayoutMain,
+} from "@/components/Layout"
+import { LayoutBannerBackground } from "@/components/Layout/Layout"
 import svgToTinyDataUri from "mini-svg-data-uri"
 import type { Metadata } from "next"
 import { OnboardingDriver } from "./_components/OnboardingDriver"
@@ -9,7 +16,7 @@ export const metadata: Metadata = {
 
 const Page = () => {
   return (
-    <Layout.Root className="relative min-h-screen">
+    <Layout className="relative min-h-screen">
       <div
         className="-z-10 absolute inset-0"
         style={{
@@ -18,9 +25,10 @@ const Page = () => {
           )}")`,
         }}
       />
-      <Layout.Hero>
-        <Layout.Header />
-        <Layout.Banner offset={206} className="border-border border-b border-dashed">
+      <LayoutHero>
+        <LayoutHeader />
+        <LayoutBanner className="-bottom-[206px] border-border border-b border-dashed">
+          <LayoutBannerBackground />
           <div className="absolute inset-0 bg-[auto_115%] bg-[top_5px_right_0] bg-[url('/banner.svg')] bg-repeat opacity-10" />
           <div
             className="absolute inset-0"
@@ -29,14 +37,14 @@ const Page = () => {
                 "radial-gradient(circle at bottom, transparent 5%, hsl(var(--banner)))",
             }}
           />
-        </Layout.Banner>
-      </Layout.Hero>
-      <Layout.Main>
+        </LayoutBanner>
+      </LayoutHero>
+      <LayoutMain>
         <div className="my-8">
           <OnboardingDriver />
         </div>
-      </Layout.Main>
-    </Layout.Root>
+      </LayoutMain>
+    </Layout>
   )
 }
 
