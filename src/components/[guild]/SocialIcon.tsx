@@ -34,6 +34,7 @@ const icons: Record<
   SOUND: "/requirementLogos/sound.png",
   WEBSITE: GlobeHemisphereEast,
   GITHUB: "/platforms/github.png",
+  WARPCAST: "/img/warpcast.svg",
 }
 
 const colors: Record<SocialLinkKey, { bg: string; icon: string }> = {
@@ -48,6 +49,7 @@ const colors: Record<SocialLinkKey, { bg: string; icon: string }> = {
   SOUND: { bg: "black", icon: "white" },
   WEBSITE: { bg: "gray.900", icon: "white" },
   GITHUB: { bg: "#202328", icon: "white" },
+  WARPCAST: { bg: "FARCASTER.500", icon: "white" },
 }
 const sizes: Record<Size, { bg: number; icon: number }> = {
   sm: {

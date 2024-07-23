@@ -321,6 +321,7 @@ export const HIDDEN_ACTIONS: ACTION[] = [
   ACTION.UpdateDescription,
   ACTION.UpdateLogic,
   ACTION.UpdateTheme,
+  ACTION.SendReward,
 ]
 
 export const USER_ACTIONS: ACTION[] = [
@@ -337,7 +338,6 @@ export const USER_ACTIONS: ACTION[] = [
   ACTION.OptIn,
   ACTION.OptOut,
   ACTION.KickFromGuild,
-  ACTION.SendReward,
   ACTION.RevokeReward,
   ACTION.SubmitForm,
 ]

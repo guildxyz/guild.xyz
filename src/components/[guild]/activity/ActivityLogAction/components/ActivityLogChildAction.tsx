@@ -35,11 +35,23 @@ const ActivityLogChildAction = (): JSX.Element => {
         />
       )}
 
-      {children?.map((childAction) => (
-        <ActivityLogActionProvider key={childAction.id} action={childAction}>
-          <ActivityLogChildAction />
-        </ActivityLogActionProvider>
-      ))}
+      {children?.map((childAction) => {
+        /**
+         * We don't want to display "send reward" actions to the user, so we just render its children here
+         */
+        if (childAction.action === ACTION.SendReward)
+          return childAction.children?.map((ca) => (
+            <ActivityLogActionProvider key={ca.id} action={ca}>
+              <ActivityLogChildAction />
+            </ActivityLogActionProvider>
+          ))
+
+        return (
+          <ActivityLogActionProvider key={childAction.id} action={childAction}>
+            <ActivityLogChildAction />
+          </ActivityLogActionProvider>
+        )
+      })}
     </ActivityLogChildActionLayout>
   )
 }

@@ -14,7 +14,7 @@ import { useEffect, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import useRolePlatformsOfReward from "rewards/Token/hooks/useRolePlatformsOfReward"
 import { PlatformType } from "types"
-import { AddTokenFormType, TokenRewardType } from "../AddTokenPanel"
+import { AddTokenFormType, TokenRewardType } from "../types"
 import DynamicAmount from "./DynamicAmount"
 
 const TokenAmountStep = ({ onContinue }: { onContinue: () => void }) => {
@@ -34,7 +34,7 @@ const TokenAmountStep = ({ onContinue }: { onContinue: () => void }) => {
     (gp) => gp.platformId === PlatformType.ERC20
   )
 
-  const platformForToken = tokenPlatforms.find(
+  const platformForToken = tokenPlatforms?.find(
     (guildPlatform) =>
       guildPlatform.platformGuildData.chain === chain &&
       guildPlatform.platformGuildData.tokenAddress.toLowerCase() ===
