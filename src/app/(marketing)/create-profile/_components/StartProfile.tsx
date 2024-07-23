@@ -37,7 +37,7 @@ export const StartProfile = () => {
 
   const [startMethod, setStartMethod] = useState<"farcaster">()
   return (
-    <Card className="mx-auto flex max-w-sm flex-col gap-3 bg-gradient-to-b from-card to-card-secondary p-8">
+    <Card className="mx-auto flex max-w-md flex-col gap-3 bg-gradient-to-b from-card to-card-secondary p-8">
       <h1 className="mb-10 text-pretty text-center font-bold font-display text-2xl leading-none tracking-tight">
         Start your Guild Profile!
       </h1>
