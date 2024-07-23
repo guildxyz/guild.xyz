@@ -1,5 +1,13 @@
 import type { Meta, StoryFn } from "@storybook/react"
-import { Layout } from "."
+import {
+  Layout,
+  LayoutBanner,
+  LayoutFooter,
+  LayoutHeadline,
+  LayoutHero,
+  LayoutMain,
+} from "."
+import { LayoutBannerBackground } from "./Layout"
 
 const meta: Meta = {
   title: "Design system/Layout",
@@ -11,12 +19,14 @@ const meta: Meta = {
 export default meta
 
 export const Static: StoryFn = () => (
-  <Layout.Root>
-    <Layout.Hero>
-      <Layout.Banner />
-      <Layout.Headline title="Layout title" />
-    </Layout.Hero>
-    <Layout.Main>Page contents</Layout.Main>
-    <Layout.Footer />
-  </Layout.Root>
+  <Layout>
+    <LayoutHero>
+      <LayoutBanner>
+        <LayoutBannerBackground />
+      </LayoutBanner>
+      <LayoutHeadline title="Layout title" />
+    </LayoutHero>
+    <LayoutMain>Page contents</LayoutMain>
+    <LayoutFooter />
+  </Layout>
 )
