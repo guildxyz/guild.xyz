@@ -1,6 +1,7 @@
-import { CircleWavyCheck, Users } from "@phosphor-icons/react"
+import { Users } from "@phosphor-icons/react"
 import { GuildBase } from "types"
 import pluralize from "utils/pluralize"
+import { CheckMark } from "./CheckMark"
 import { Anchor } from "./ui/Anchor"
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/Avatar"
 import { Badge } from "./ui/Badge"
@@ -38,17 +39,10 @@ export const GuildCard: React.FC<Props> = ({ guildData }) => (
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger
-              className="relative rounded-full p-1 outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              aria-label="verified"
+              className="relative px-1"
+              aria-label="verified checkmark"
             >
-              <div
-                className="absolute inset-2 rounded-full bg-white"
-                aria-hidden="true"
-              />
-              <CircleWavyCheck
-                weight="fill"
-                className="relative size-5 fill-blue-500"
-              />
+              <CheckMark />
             </TooltipTrigger>
             <TooltipContent>
               This guild is verified by <code>Guild.xyz</code>
