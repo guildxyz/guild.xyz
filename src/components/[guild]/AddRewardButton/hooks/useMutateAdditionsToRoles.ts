@@ -48,7 +48,7 @@ const useMutateAdditionsToRoles = () => {
           { method: "GET", body: {} },
         ]),
         (prevRequirements) => [
-          ...prevRequirements.filter((req) => !reqIdsToDelete.includes(req.id)),
+          ...prevRequirements?.filter((req) => !reqIdsToDelete.includes(req.id)),
           ...createdRequirementsOnRole,
         ],
         { revalidate: false }

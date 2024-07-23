@@ -70,12 +70,14 @@ const CreateGuildLink = () => {
   return (
     <Link
       href="/create-guild"
+      aria-label="Create guild"
       prefetch={false}
       className={buttonVariants({
         variant: "ghost",
         size: "sm",
         className: [
-          "gap-1.5",
+          // Temporarily, until we don't migrate the scrollable Tabs component
+          "min-h-11 w-11 gap-1.5 px-0 sm:min-h-0 sm:w-auto sm:px-3",
           {
             "text-white": !isNavStuck,
           },
@@ -83,7 +85,7 @@ const CreateGuildLink = () => {
       })}
     >
       <Plus />
-      <span>Create guild</span>
+      <span className="hidden sm:inline-block">Create guild</span>
     </Link>
   )
 }

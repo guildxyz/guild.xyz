@@ -109,8 +109,12 @@ const preprocessRequirement = (
     processedRequirement.type === "CONTRACT" &&
     Array.isArray(processedRequirement.data?.params)
   ) {
-    processedRequirement.data.params = requirement.data.params.map(
-      (param) => param.value
+    processedRequirement.data.params = requirement.data.params.map((param) =>
+      typeof param !== "string" &&
+      typeof param !== "number" &&
+      typeof param !== "boolean"
+        ? param.value
+        : param
     )
   }
 

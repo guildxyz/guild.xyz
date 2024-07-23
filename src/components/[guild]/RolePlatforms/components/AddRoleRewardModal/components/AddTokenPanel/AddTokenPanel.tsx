@@ -20,39 +20,11 @@ import { FormProvider, useForm } from "react-hook-form"
 import { AddRewardPanelProps } from "rewards"
 import { PlatformGuildData, PlatformType } from "types"
 import { ERC20_CONTRACTS } from "utils/guildCheckout/constants"
-import { Chain } from "wagmiConfig/chains"
 import DefaultAddRewardPanelWrapper from "../../DefaultAddRewardPanelWrapper"
 import PoolStep from "./components/PoolStep"
 import SetTokenStep from "./components/SetTokenStep"
 import TokenAmountStep from "./components/TokenAmountStep"
-
-export enum TokenRewardType {
-  DYNAMIC_SNAPSHOT = "DYNAMIC_SNAPSHOT",
-  DYNAMIC_POINTS = "DYNAMIC_POINTS",
-  STATIC = "STATIC",
-}
-
-export type AddTokenFormType = {
-  poolId: number
-  multiplier: number
-  addition: number
-  chain: Chain
-  contractAddress: `0x${string}`
-  tokenAddress: `0x${string}`
-  name: string
-  description: string
-  imageUrl: string
-  data: {
-    guildPlatformId: number
-  }
-  snapshotId: number
-  type: TokenRewardType
-  staticValue?: number
-  snapshotRequirement?: Extract<
-    Schemas["RequirementCreationPayload"],
-    { type: "GUILD_SNAPSHOT" }
-  >
-}
+import { AddTokenFormType, TokenRewardType } from "./types"
 
 const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
   const methods = useForm<AddTokenFormType>({
@@ -85,8 +57,8 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
     const platform = accessedTokens.find(
       (guildPlatform) =>
         guildPlatform.platformId === PlatformType.ERC20 &&
-        guildPlatform.platformGuildData.chain === _data.chain &&
-        guildPlatform.platformGuildData.tokenAddress.toLowerCase() ===
+        guildPlatform.platformGuildData?.chain === _data.chain &&
+        guildPlatform.platformGuildData?.tokenAddress?.toLowerCase() ===
           _data.tokenAddress?.toLowerCase()
     )
 
@@ -171,7 +143,7 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
             <Step
               key={index}
               style={{ width: "100%", height: "100%" }}
-              onClick={activeStep > index ? () => setActiveStep(index) : null}
+              onClick={activeStep > index ? () => setActiveStep(index) : undefined}
             >
               <StepIndicator>
                 <StepStatus
@@ -185,7 +157,7 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
                 w="full"
                 mt={1}
                 minH={index === steps.length - 1 ? 0 : 12}
-                _hover={activeStep > index && { cursor: "pointer" }}
+                _hover={activeStep > index ? { cursor: "pointer" } : undefined}
               >
                 <StepTitle>{step.title}</StepTitle>
                 <Collapse
