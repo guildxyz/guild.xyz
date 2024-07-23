@@ -3,10 +3,12 @@
 import {
   Layout,
   LayoutBanner,
+  LayoutFooter,
   LayoutHeader,
   LayoutHero,
   LayoutMain,
 } from "@/components/Layout"
+import { Anchor } from "@/components/ui/Anchor"
 import { Avatar, AvatarFallback } from "@/components/ui/Avatar"
 import { AvatarGroup } from "@/components/ui/AvatarGroup"
 import { Badge } from "@/components/ui/Badge"
@@ -15,9 +17,11 @@ import { Card } from "@/components/ui/Card"
 import { ChartContainer } from "@/components/ui/Chart"
 import { Progress } from "@/components/ui/Progress"
 import { Separator } from "@/components/ui/Separator"
-import { CaretDown, CircleWavyCheck, Users } from "@phosphor-icons/react"
+import { ArrowRight, CircleWavyCheck } from "@phosphor-icons/react/dist/ssr"
 import { RadialBar, RadialBarChart } from "recharts"
 import { ActivityChart } from "./_components/ActivityChart"
+import { ContributionCard } from "./_components/ContributionCard"
+import { RecentActivity } from "./_components/RecentActivity"
 
 const chartData = [{ experience: 1, fill: "hsl(var(--primary))" }]
 
@@ -33,7 +37,7 @@ const Page = () => {
       </LayoutHero>
       <LayoutMain>
         <div className="mt-24">
-          <div className="flex flex-col items-center">
+          <div className="mb-24 flex flex-col items-center">
             <div className="relative mb-12 flex items-center justify-center">
               <ChartContainer
                 config={{}}
@@ -88,12 +92,11 @@ const Page = () => {
               </div>
             </div>
           </div>
-          <Separator className="mt-16 mb-8" />
           <h2 className="mb-3 font-bold text-lg">Experience</h2>
-          <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+          <div className="mb-16 grid grid-cols-1 gap-3 md:grid-cols-2">
             <Card className="p-6">
-              <div className="grid grid-cols-[auto_1fr] grid-rows-[auto_auto_auto] items-center gap-x-6 gap-y-2">
-                <div className="row-span-3 flex size-12 items-center justify-center place-self-center rounded-xl bg-primary font-extrabold text-xl shadow-lg">
+              <div className="grid grid-cols-[auto_1fr] grid-rows-[auto_auto_auto] items-center gap-x-3 gap-y-2">
+                <div className="row-span-3 flex size-12 items-center justify-center place-self-center self-start rounded-xl bg-primary font-extrabold text-xl shadow-lg">
                   22
                 </div>
                 <div className="flex flex-col justify-between gap-2 sm:flex-row">
@@ -115,7 +118,6 @@ const Page = () => {
               <ActivityChart />
             </Card>
           </div>
-          <Separator className="my-8" />
           <h2 className="mb-3 font-bold text-lg">Top contributions</h2>
           <div className="grid grid-cols-1 gap-3">
             <ContributionCard />
@@ -125,49 +127,29 @@ const Page = () => {
               See more involvement
             </Button>
           </div>
+          <div className="mt-8">
+            <h2 className="mb-3 font-bold text-lg">Recent activity</h2>
+            <RecentActivity />
+            <p className="mt-2 font-semibold text-muted-foreground">
+              ... only last 20 actions are shown
+            </p>
+          </div>
         </div>
-        <Separator className="mt-8 mb-32" />
       </LayoutMain>
+      <LayoutFooter>
+        <p className="mt-24 mb-12 text-center font-medium text-muted-foreground">
+          Guild Profiles are currently in invite only early access, only available to{" "}
+          <Anchor
+            href={"#"}
+            className="inline-flex items-center gap-1"
+            variant="muted"
+          >
+            Subscribers
+            <ArrowRight />
+          </Anchor>
+        </p>
+      </LayoutFooter>
     </Layout>
-  )
-}
-const ContributionCard = () => {
-  return (
-    <Card className="flex border-2">
-      <div className="relative h-full w-10 bg-border">
-        <div className="-translate-x-1/2 -rotate-90 absolute bottom-1/2 left-1/2 flex translate-y-1/2 items-center gap-1">
-          <Avatar size="sm">
-            <AvatarFallback>#</AvatarFallback>
-          </Avatar>
-          <div className="max-w-12 truncate font-bold font-display">Guild</div>
-        </div>
-      </div>
-      <div className="grid w-full grid-cols-[auto_1fr] items-center gap-4 p-6 md:grid-cols-[auto_auto_1fr]">
-        <Avatar className="size-16 sm:size-20">
-          <AvatarFallback>#</AvatarFallback>
-        </Avatar>
-        <div>
-          <div className="font-extrabold text-muted-foreground text-xs uppercase">
-            TOP ROLE
-          </div>
-          <h3 className="mb-1 font-bold font-display text-xl tracking-tight">
-            Enter Farcaster
-          </h3>
-          <div className="flex items-center gap-2 text-muted-foreground">
-            <Users weight="bold" className="min-w-4" />
-            <p className="line-clamp-1 text-sm">Only 3.4% of users have this role</p>
-          </div>
-        </div>
-        <div className="col-span-2 flex w-full flex-col gap-2 justify-self-end md:col-span-1 md:w-auto md:flex-row md:items-center">
-          <Separator className="mb-2 md:hidden" />
-          <div className="font-extrabold text-muted-foreground text-xs uppercase">
-            COLLECTION:
-          </div>
-          <AvatarGroup imageUrls={["", "", ""]} count={87} size="lg" />
-          <CaretDown weight="bold" className="ml-2 hidden size-5 md:block" />
-        </div>
-      </div>
-    </Card>
   )
 }
 
