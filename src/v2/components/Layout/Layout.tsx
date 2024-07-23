@@ -1,6 +1,8 @@
 import { cn } from "@/lib/utils"
+import { Slot } from "@radix-ui/react-slot"
+import clsx from "clsx"
 import { PropsWithChildren, ReactNode } from "react"
-import { PageContainer } from "./PageContainer"
+import { forwardRef } from "react"
 
 /* -------------------------------------------------------------------------------------------------
  * Layout
@@ -12,6 +14,28 @@ const Layout = ({ children, ...props }: LayoutProps) => (
   <div className="flex min-h-screen flex-col" {...props}>
     {children}
   </div>
+)
+
+/* -------------------------------------------------------------------------------------------------
+ * LayoutContainer
+ * -----------------------------------------------------------------------------------------------*/
+
+interface LayoutContainerProps extends React.HTMLAttributes<HTMLDivElement> {
+  asChild?: boolean
+}
+
+const LayoutContainer = forwardRef<HTMLDivElement, LayoutContainerProps>(
+  ({ children, className, asChild = false }, ref) => {
+    const Comp = asChild ? Slot : "div"
+    return (
+      <Comp
+        className={clsx("mx-auto max-w-screen-lg px-4 sm:px-8 md:px-10", className)}
+        ref={ref}
+      >
+        {children}
+      </Comp>
+    )
+  }
 )
 
 /* -------------------------------------------------------------------------------------------------
@@ -31,11 +55,11 @@ interface LayoutHeadlineProps {
 }
 
 const LayoutHeadline = ({ title }: LayoutHeadlineProps) => (
-  <PageContainer>
+  <LayoutContainer>
     <h1 className="pt-9 pb-14 font-bold font-display text-4xl text-white tracking-tight sm:text-5xl">
       {title}
     </h1>
-  </PageContainer>
+  </LayoutContainer>
 )
 
 /* -------------------------------------------------------------------------------------------------
@@ -72,7 +96,7 @@ const LayoutBanner = ({ children, className }: LayoutBannerProps) => (
 
 const LayoutMain = ({ children }: PropsWithChildren) => (
   <main>
-    <PageContainer>{children}</PageContainer>
+    <LayoutContainer>{children}</LayoutContainer>
   </main>
 )
 
@@ -82,7 +106,7 @@ const LayoutMain = ({ children }: PropsWithChildren) => (
 
 const LayoutFooter = ({ children }: PropsWithChildren) => (
   <footer className="mt-auto">
-    <PageContainer>{children}</PageContainer>
+    <LayoutContainer>{children}</LayoutContainer>
   </footer>
 )
 
@@ -95,5 +119,6 @@ export {
   LayoutHeadline,
   LayoutHero,
   LayoutMain,
+  LayoutContainer,
   Layout,
 }
