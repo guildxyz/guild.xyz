@@ -31,8 +31,8 @@ const DynamicEditCampaignButton = dynamic(
 const DynamicAddAndOrderRoles = dynamic(
   () => import("components/[guild]/AddAndOrderRoles")
 )
-const DynamicAddRewardButton = dynamic(
-  () => import("components/[guild]/AddRewardButton")
+const DynamicAddSolutionsButton = dynamic(
+  () => import("solutions/components/AddSolutionsButton")
 )
 const DynamicRecheckAccessesButton = dynamic(() =>
   import("components/[guild]/RecheckAccessesButton").then(
@@ -91,7 +91,7 @@ const GroupPage = (): JSX.Element => {
             ) : isAddRoleStuck ? (
               <DynamicAddAndOrderRoles />
             ) : (
-              <DynamicAddRewardButton />
+              <DynamicAddSolutionsButton />
             )}
           </HStack>
         </Flex>

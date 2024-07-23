@@ -11,7 +11,7 @@ import { useFormContext, useWatch } from "react-hook-form"
 import ControlledNumberInput from "requirements/WalletActivity/components/ControlledNumberInput"
 import Token from "static/icons/token.svg"
 import { MIN_TOKEN_AMOUNT } from "utils/guildCheckout/constants"
-import { AddTokenFormType } from "../AddTokenPanel"
+import { AddTokenFormType } from "../types"
 
 const StaticAmount = () => {
   const { control } = useFormContext<AddTokenFormType>()

@@ -9,13 +9,13 @@ import {
   InputRightElement,
   SimpleGrid,
 } from "@chakra-ui/react"
-import { SocialLinks as SocialLinksType } from "@guildxyz/types"
+import { SocialLinks as SocialLinksType, consts } from "@guildxyz/types"
 import { Plus } from "@phosphor-icons/react"
 import SocialIcon from "components/[guild]/SocialIcon"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import { useFormContext, useWatch } from "react-hook-form"
-import { SelectOption, SocialLinkKey, supportedSocialLinks } from "types"
+import { SelectOption, SocialLinkKey } from "types"
 import capitalize from "utils/capitalize"
 import { z } from "zod"
 import { EditGuildForm } from "../EditGuildDrawer"
@@ -31,10 +31,11 @@ const socialLinkUserPaths = {
   SNAPSHOT: "",
   SOUND: "",
   SUBSTACK: "",
+  WARPCAST: "https://warpcast.com/",
   WEBSITE: "",
 } as const satisfies Record<SocialLinkKey, string>
 
-const socialLinkOptions = supportedSocialLinks.map((socialLink) => ({
+const socialLinkOptions = consts.SocialLinks.map((socialLink) => ({
   label: capitalize(socialLink.toLowerCase()),
   value: socialLink,
   img: <SocialIcon type={socialLink} size="sm" />,

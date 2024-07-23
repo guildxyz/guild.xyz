@@ -19,7 +19,7 @@ import { useFormContext, useWatch } from "react-hook-form"
 import Star from "static/icons/star.svg"
 import { PlatformGuildData, PlatformType, SelectOption } from "types"
 import ExistingPointsTypeSelect from "../../AddPointsPanel/components/ExistingPointsTypeSelect"
-import { AddTokenFormType } from "../AddTokenPanel"
+import { AddTokenFormType } from "../types"
 
 const SnapshotSelector = () => {
   const { onClose, onOpen, isOpen } = useDisclosure()
