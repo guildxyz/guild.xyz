@@ -10,8 +10,8 @@ import { forwardRef } from "react"
 
 interface LayoutProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-const Layout = ({ children, ...props }: LayoutProps) => (
-  <div className="flex min-h-screen flex-col" {...props}>
+const Layout = ({ children, className, ...props }: LayoutProps) => (
+  <div className={cn("flex min-h-screen flex-col", className)} {...props}>
     {children}
   </div>
 )
