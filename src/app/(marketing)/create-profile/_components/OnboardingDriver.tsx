@@ -3,29 +3,37 @@
 import { Button } from "@/components/ui/Button"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/ToggleGroup"
 import { useState } from "react"
+import { SUBSCRIPTIONS } from "../constants"
+import { ChainData, DispatchChainAction, OnboardingChain } from "../types"
+import { ChoosePass } from "./ChoosePass"
 import { ClaimPass } from "./ClaimPass"
 import { PurchasePass } from "./PurchasePass"
 import { StartProfile } from "./StartProfile"
-import { ChainAction, OnboardingChain } from "./types"
 
-const progressionChains: OnboardingChain[] = [
+const chains: OnboardingChain[] = [
   ClaimPass,
+  ChoosePass,
   PurchasePass,
   StartProfile,
 ] as const
 
 export const OnboardingDriver = () => {
-  const [progressionIndex, setProgressionIndex] = useState(1)
-  const OnboardingCard = progressionChains[progressionIndex]
+  const [chainIndex, setChainIndex] = useState(0)
+  // TODO: remove default chosen subscription, as it is only there for debug
+  // purposes
+  const [chainData, setChainData] = useState<Partial<ChainData>>({
+    chosenSubscription: SUBSCRIPTIONS[0],
+  })
+  const OnboardingCard = chains[chainIndex]
 
-  const dispatchChainAction = (action: ChainAction) => {
-    if (action === "next" && progressionChains.length > progressionIndex + 1) {
-      setProgressionIndex((prev) => prev + 1)
+  const dispatchChainAction: DispatchChainAction = (action, data) => {
+    if (data) setChainData((prev) => ({ prev, ...data }))
+    if (action === "next" && chains.length > chainIndex + 1) {
+      setChainIndex((prev) => prev + 1)
       return
     }
-    if (action === "previous" && 0 < progressionIndex) {
-      setProgressionIndex((prev) => prev - 1)
-      return
+    if (action === "previous" && 0 < chainIndex) {
+      setChainIndex((prev) => prev - 1)
     }
   }
 
@@ -34,12 +42,10 @@ export const OnboardingDriver = () => {
       <ToggleGroup
         className="fixed bottom-4 left-4 z-10"
         type="single"
-        value={progressionIndex.toString()}
-        onValueChange={(value) =>
-          value && setProgressionIndex(Number.parseInt(value))
-        }
+        value={chainIndex.toString()}
+        onValueChange={(value) => value && setChainIndex(Number.parseInt(value))}
       >
-        {progressionChains.map((pane, index) => (
+        {chains.map((pane, index) => (
           <ToggleGroupItem value={index.toString()} key={pane.name}>
             {pane.name}
           </ToggleGroupItem>
@@ -49,7 +55,7 @@ export const OnboardingDriver = () => {
         <Button onClick={() => dispatchChainAction("previous")}>previous</Button>
         <Button onClick={() => dispatchChainAction("next")}>next</Button>
       </div>
-      <OnboardingCard dispatchChainAction={dispatchChainAction} />
+      <OnboardingCard dispatchChainAction={dispatchChainAction} data={chainData} />
     </>
   )
 }

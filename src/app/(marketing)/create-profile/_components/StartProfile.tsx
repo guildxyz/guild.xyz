@@ -16,7 +16,7 @@ import { AvatarFallback } from "@radix-ui/react-avatar"
 import { useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { z } from "zod"
-import { OnboardingChain } from "./types"
+import { OnboardingChain } from "../types"
 
 const formSchema = z.object({
   name: z.string(),

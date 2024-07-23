@@ -13,8 +13,8 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr"
 import { FormProvider, useForm } from "react-hook-form"
 import { z } from "zod"
+import { OnboardingChain } from "../types"
 import { GuildPassScene } from "./GuildPassScene"
-import { OnboardingChain } from "./types"
 
 const formSchema = z.object({
   inviteHandle: z.string(),
