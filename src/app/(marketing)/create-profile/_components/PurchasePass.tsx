@@ -13,7 +13,9 @@ import {
 import { Separator } from "@/components/ui/Separator"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip"
 import { cn } from "@/lib/utils"
+import { DotLottiePlayer } from "@dotlottie/react-player"
 import { ArrowLeft, Info } from "@phosphor-icons/react"
+import { ToggleGroup, ToggleGroupItem } from "@radix-ui/react-toggle-group"
 import Autoplay from "embla-carousel-autoplay"
 import { useRef, useState } from "react"
 import { Benefits } from "./Benefits"
@@ -52,6 +54,7 @@ export const PurchasePass = () => {
   const [api, setApi] = useState<CarouselApi>()
   const [activeIndex, setActiveIndex] = useState<number>()
   const didUserSelect = activeIndex !== undefined
+  const [didUserPurchase, setDidUserPurchase] = useState(false)
   const { selectedIndex, scrollSnaps, onCarouselDotButtonClick } =
     useCarouselDotButton(api)
   const carouselPlugins = useRef([
@@ -131,27 +134,39 @@ export const PurchasePass = () => {
         ))}
       </div>
 
-      <div
+      <ToggleGroup
+        type="single"
         className={cn("relative hidden items-end lg:flex", {
           flex: didUserSelect,
         })}
+        tabIndex={didUserSelect ? -1 : 0}
       >
         {SUBSCRIPTIONS.map(({ title, description, pricing, pricingShort }, i) => (
-          <button
+          <ToggleGroupItem
+            value={title}
             onClick={() => setActiveIndex(i)}
             className={cn(
-              "relative w-full from-accent outline-none hover:bg-gradient-to-t focus-visible:bg-gradient-to-t",
+              "relative w-full select-none from-accent outline-none hover:bg-gradient-to-t focus-visible:bg-gradient-to-t focus-visible:ring-4 focus-visible:ring-ring",
               {
                 "-z-10 absolute opacity-0": didUserSelect && activeIndex !== i,
-                "w-full cursor-auto hover:bg-none": activeIndex === i,
+                "w-full cursor-auto select-text hover:bg-none focus-visible:bg-none focus-visible:ring-0":
+                  activeIndex === i,
               }
             )}
             key={title}
-            disabled={didUserSelect}
+            tabIndex={didUserSelect ? -1 : 0}
           >
             <article className="flex flex-col items-center pb-6 text-center">
               <div className="mb-2 h-48">
-                <GuildPassScene />
+                {didUserSelect && didUserPurchase ? (
+                  <DotLottiePlayer
+                    autoplay
+                    src="/success_lottie.json"
+                    className="size-full"
+                  />
+                ) : (
+                  <GuildPassScene />
+                )}
               </div>
               <div
                 className={cn("px-8", {
@@ -185,9 +200,9 @@ export const PurchasePass = () => {
                 />
               )}
             </article>
-          </button>
+          </ToggleGroupItem>
         ))}
-      </div>
+      </ToggleGroup>
       <div className="space-y-4 border-border border-t bg-background p-8">
         {didUserSelect ? (
           <div className="space-y-4">
@@ -204,7 +219,9 @@ export const PurchasePass = () => {
                   </TooltipContent>
                 </Tooltip>
               </div>
-              <Button colorScheme="primary">Start</Button>
+              <Button colorScheme="primary" onClick={() => setDidUserPurchase(true)}>
+                Start
+              </Button>
             </div>
             <Separator variant="muted" />
 
