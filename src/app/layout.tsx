@@ -1,11 +1,10 @@
-import { Providers } from "@/components/Providers"
-import { PostHogPageViews } from "@/components/Providers/PostHogPageViews"
 import { dystopian, inter } from "fonts"
 import type { Metadata } from "next"
-import { type ReactNode, Suspense } from "react"
+import { type ReactNode } from "react"
 import "./globals.css"
+import { TooltipProvider } from "@/components/ui/Tooltip"
 import { cn } from "@/lib/utils"
-import NextTopLoader from "nextjs-toploader"
+import { ThemeProvider } from "next-themes"
 
 interface RootLayoutProps {
   children: ReactNode
@@ -21,16 +20,17 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head />
+
       <body className={cn(dystopian.variable, inter.variable)}>
-        <NextTopLoader showSpinner={false} color="#eff6ff" height={3} />
-
-        <Providers>
-          {children}
-
-          <Suspense>
-            <PostHogPageViews />
-          </Suspense>
-        </Providers>
+        <ThemeProvider
+          attribute="data-theme"
+          storageKey="chakra-ui-color-mode"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <TooltipProvider>{children}</TooltipProvider>
+        </ThemeProvider>
       </body>
     </html>
   )

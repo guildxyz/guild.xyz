@@ -9,6 +9,7 @@ const LinkMenuItem = ({ icon, children, ...rest }: MenuItemProps & LinkProps) =>
 
   return (
     <MenuItem
+      // @ts-ignore TODO: Investigate, it is unclear where this error comes from
       as={Link}
       onClick={() => setHasClicked(true)}
       icon={hasClicked ? <Spinner size="xs" /> : icon}
