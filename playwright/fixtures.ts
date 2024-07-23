@@ -33,8 +33,6 @@ export const test = base.extend<Fixtures>({
       }
     } = JSON.parse(fs.readFileSync(keyPairPath, "utf8"))
 
-    console.log("DEBUG: importedKeyPairData", importedKeyPairData)
-
     await pageWithKeyPair.page.addInitScript(
       async ({ importedKeyPairData, userId }) => {
         const importedPublicKey = await crypto.subtle.importKey(
