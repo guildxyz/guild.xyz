@@ -17,7 +17,7 @@ import { DotLottiePlayer } from "@dotlottie/react-player"
 import { ArrowLeft, Info } from "@phosphor-icons/react"
 import { ToggleGroup, ToggleGroupItem } from "@radix-ui/react-toggle-group"
 import Autoplay from "embla-carousel-autoplay"
-import { useRef, useState } from "react"
+import { useMemo, useState } from "react"
 import { Benefits } from "./Benefits"
 import { GuildPassScene } from "./GuildPassScene"
 import { OnboardingChain } from "./types"
@@ -56,11 +56,13 @@ export const PurchasePass: OnboardingChain = () => {
   const [activeIndex, setActiveIndex] = useState<number>()
   const didUserSelect = activeIndex !== undefined
   const [didUserPurchase, setDidUserPurchase] = useState(false)
+  const [autoplay, setAutoPlay] = useState(true)
   const { selectedIndex, scrollSnaps, onCarouselDotButtonClick } =
     useCarouselDotButton(api)
-  const carouselPlugins = useRef([
-    Autoplay({ delay: 4000, stopOnInteraction: true }),
-  ])
+  const carouselPlugins = useMemo(
+    () => [Autoplay({ delay: 4000, stopOnInteraction: true, active: autoplay })],
+    [autoplay]
+  )
 
   return (
     <Card
@@ -91,7 +93,7 @@ export const PurchasePass: OnboardingChain = () => {
           hidden: didUserSelect,
         })}
         setApi={setApi}
-        plugins={carouselPlugins.current}
+        plugins={carouselPlugins}
       >
         <CarouselContent>
           {SUBSCRIPTIONS.map(({ title, description, pricing }, i) => (
@@ -129,7 +131,10 @@ export const PurchasePass: OnboardingChain = () => {
         {scrollSnaps.map((_, i) => (
           <CarouselDotButton
             key={i}
-            onClick={() => onCarouselDotButtonClick(i)}
+            onClick={() => {
+              setAutoPlay(false)
+              onCarouselDotButtonClick(i)
+            }}
             isActive={i === selectedIndex}
           />
         ))}
