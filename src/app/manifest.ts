@@ -7,7 +7,7 @@ export default function manifest(): MetadataRoute.Manifest {
     description:
       "Automated membership management for the platforms your community already uses.",
     theme_color: "#fff",
-    background_color: "#000",
+    background_color: "#6062eb",
     display: "standalone",
     start_url: "/",
     icons: [
