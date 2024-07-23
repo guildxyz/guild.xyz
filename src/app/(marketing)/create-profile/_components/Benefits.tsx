@@ -70,7 +70,8 @@ export const Benefits = () => {
             className={cn(
               "flex items-center gap-4 border-2 border-transparent p-5",
               {
-                "bg- relative border-border border-dotted shadow-none": !isAvailable,
+                "relative border-border border-dotted bg-transparent shadow-none":
+                  !isAvailable,
               }
             )}
             key={title}
