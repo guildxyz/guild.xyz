@@ -13,6 +13,8 @@ jobs:
           node-version: lts/*
       - name: Install Playwright
         run: npm install -g @playwright/test
+      - name: Copy Playwright to the local node_modules
+        run: mv /usr/local/lib/node_modules/@playwright/test ./node_modules
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
       - name: Run Playwright tests
