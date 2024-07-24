@@ -226,6 +226,7 @@ export const GUILD_PIN_CONTRACTS = {
   LINEA: "0x4205e56a69a0130a9e0828d45d0c84e45340a196",
   CYBER: "0x13ec6b98362e43add08f7cc4f6befd02fa52ee01",
   MINT: "0x13ec6b98362e43add08f7cc4f6befd02fa52ee01",
+  MODE: "0x13ec6b98362e43add08f7cc4f6befd02fa52ee01",
   SEPOLIA: "0xac49ee0c3bda5f851eac9a3184a21041e9afe379",
 } as const satisfies Partial<Record<Chain, `0x${string}`>>
 
