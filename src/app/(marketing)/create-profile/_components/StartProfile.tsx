@@ -1,3 +1,4 @@
+import { ConnectFarcasterButton } from "@/components/Account/components/AccountModal/components/FarcasterProfile"
 import { Avatar } from "@/components/ui/Avatar"
 import { Button } from "@/components/ui/Button"
 import { Card } from "@/components/ui/Card"
@@ -16,6 +17,7 @@ import { AvatarFallback } from "@radix-ui/react-avatar"
 import { useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { z } from "zod"
+import FarcasterImage from "/src/static/socialIcons/farcaster.svg"
 import { OnboardingChain } from "../types"
 
 const formSchema = z.object({
@@ -89,9 +91,15 @@ export const StartProfile: OnboardingChain = () => {
         </FormProvider>
       ) : (
         <>
-          <Button colorScheme="primary" onClick={() => setStartMethod("farcaster")}>
-            Connect Farcaster
-          </Button>
+          <ConnectFarcasterButton
+            className="ml-0 w-full gap-2"
+            size="md"
+            onClick={() => setStartMethod("farcaster")}
+          >
+            <FarcasterImage />
+            Connect farcaster
+          </ConnectFarcasterButton>
+
           <Button variant="ghost">
             I don't have a Farcaster profile
             <ArrowRight weight="bold" />
