@@ -19,12 +19,7 @@ import {
 } from "@/components/ui/Form"
 import { Input } from "@/components/ui/Input"
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/InputOTP"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/Tooltip"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip"
 import { useToast } from "@/components/ui/hooks/useToast"
 import { useDisclosure } from "@/hooks/useDisclosure"
 import { cn } from "@/lib/utils"
@@ -266,32 +261,30 @@ const ConnectEmailButton = ({
 
             <DialogFooter className="pt-2">
               {shouldShowPinEntry ? (
-                <TooltipProvider>
-                  <Tooltip open={!isResendButtonDisabled ? false : undefined}>
-                    <TooltipTrigger asChild>
-                      <Button
-                        onClick={submit}
-                        isLoading={
-                          verificationRequest.isLoading ||
-                          connect.isLoading ||
-                          connect.isSigning
-                        }
-                        variant="ghost"
-                        size="sm"
-                        disabled={isResendButtonDisabled}
-                        className="w-full rounded-lg"
-                      >
-                        Resend code
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>
-                        Check if you received the first code before requesting a new
-                        one (check in the spam as well)
-                      </p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
+                <Tooltip open={!isResendButtonDisabled ? false : undefined}>
+                  <TooltipTrigger asChild>
+                    <Button
+                      onClick={submit}
+                      isLoading={
+                        verificationRequest.isLoading ||
+                        connect.isLoading ||
+                        connect.isSigning
+                      }
+                      variant="ghost"
+                      size="sm"
+                      disabled={isResendButtonDisabled}
+                      className="w-full rounded-lg"
+                    >
+                      Resend code
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>
+                      Check if you received the first code before requesting a new
+                      one (check in the spam as well)
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
               ) : (
                 <Button
                   onClick={submit}
