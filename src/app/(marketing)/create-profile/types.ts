@@ -12,5 +12,5 @@ export type DispatchChainAction = (
 
 export type OnboardingChain = FunctionComponent<{
   dispatchChainAction: DispatchChainAction
-  data: Partial<ChainData>
+  chainData: Partial<ChainData>
 }>
