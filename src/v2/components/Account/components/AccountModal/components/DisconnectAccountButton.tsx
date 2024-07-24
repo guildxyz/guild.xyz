@@ -9,12 +9,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/AlertDialog"
 import { Button, ButtonProps } from "@/components/ui/Button"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/Tooltip"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip"
 import { DisclosureState } from "@/hooks/useDisclosure"
 import { cn } from "@/lib/utils"
 import { LinkBreak } from "@phosphor-icons/react/dist/ssr"
@@ -35,24 +30,22 @@ const DisconnectAccountButton = ({
   state: DisclosureState
 }) => (
   <>
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button
-            className={cn("size-8 rounded-full px-0", className)}
-            colorScheme="destructive"
-            variant="ghost"
-            aria-label="Disconnect account"
-            onClick={onOpen}
-          >
-            <LinkBreak weight="bold" className="h-3 w-3" />
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent>
-          <span>Disconnect account</span>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Button
+          className={cn("size-8 rounded-full px-0", className)}
+          colorScheme="destructive"
+          variant="ghost"
+          aria-label="Disconnect account"
+          onClick={onOpen}
+        >
+          <LinkBreak weight="bold" className="h-3 w-3" />
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent>
+        <span>Disconnect account</span>
+      </TooltipContent>
+    </Tooltip>
 
     <AlertDialog open={isOpen}>
       <AlertDialogContent onEscapeKeyDown={onClose}>
