@@ -121,14 +121,6 @@ const useMintGuildPin = () => {
       account: walletClient.account,
     })
 
-    if (process.env.NEXT_PUBLIC_MOCK_CONNECTOR) {
-      toastWithTweetButton({
-        title: "GUILD_PIN_E2E_TEST_SUCCESS",
-        tweetText: "",
-      })
-      return Promise.resolve()
-    }
-
     const hash = await walletClient.writeContract({
       ...request,
       account: walletClient.account,

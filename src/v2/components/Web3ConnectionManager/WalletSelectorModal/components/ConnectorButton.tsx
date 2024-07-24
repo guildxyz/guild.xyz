@@ -52,6 +52,7 @@ const ConnectorButton = ({ connector, pendingConnector, connect, error }: Props)
         !error
       }
       loadingText={`${connectorName} - connecting...`}
+      data-testid={`${connector.id}-connector-button`}
     >
       {connectorIcon ? (
         <div className="flex size-6 items-center justify-center">
