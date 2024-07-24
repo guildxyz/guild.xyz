@@ -1,5 +1,6 @@
 import { Card } from "@/components/ui/Card"
 import { cn } from "@/lib/utils"
+import Image from "next/image"
 import { BENEFITS } from "../constants"
 
 export const Benefits = () => {
@@ -12,7 +13,7 @@ export const Benefits = () => {
         All passes provide the same benefits
       </p>
       <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
-        {BENEFITS.map(({ title, description, isAvailable }) => (
+        {BENEFITS.map(({ title, description, isAvailable, image }) => (
           <Card
             className={cn(
               "flex items-center gap-4 border-2 border-transparent p-5",
@@ -34,7 +35,7 @@ export const Benefits = () => {
                 { "bg-muted": !isAvailable }
               )}
             >
-              #
+              <Image src={image} alt="" width={28} height={28} />
             </div>
             <div className="space-y-1">
               <h3 className="font-semibold">{title}</h3>
