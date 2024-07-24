@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/Button"
-import { Card } from "@/components/ui/Card"
 import { Separator } from "@/components/ui/Separator"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip"
 import { DotLottiePlayer } from "@dotlottie/react-player"
@@ -19,11 +18,11 @@ export const PurchasePass: OnboardingChain = ({
   const { title, pricingShort } = chainData.chosenSubscription
 
   return (
-    <Card className="mx-auto flex max-w-md flex-col bg-gradient-to-b from-card to-card-secondary shadow-2xl">
+    <div className="w-[28rem]">
       <div className="mt-8 mb-4 px-8">
         <Button
           onClick={() => dispatchChainAction("previous")}
-          className="h-10 pl-0"
+          className="h-auto p-0"
           size="lg"
           variant="unstyled"
         >
@@ -100,6 +99,6 @@ export const PurchasePass: OnboardingChain = ({
           )}
         </div>
       </div>
-    </Card>
+    </div>
   )
 }
