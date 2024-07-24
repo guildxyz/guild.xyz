@@ -35,10 +35,10 @@ export const StartProfile: OnboardingChain = () => {
   // const farcasterProfile = farcasterProfiles.at(0)
   const [farcasterProfile, setFarcasterProfile] = useState<FarcasterProfile>()
   const [method, setMethod] = useState<CreateMethod>()
+  const [isFCLoading, setIsFCLoading] = useState(false)
 
   useEffect(() => {
     if (method !== CreateMethod.FillByFarcaster) return
-
     const mockedFarcasterProfile: FarcasterProfile = {
       username: "mocked farcaster username",
       userId: 3428402797897,
@@ -48,12 +48,21 @@ export const StartProfile: OnboardingChain = () => {
     }
     setTimeout(() => {
       setFarcasterProfile(mockedFarcasterProfile)
+      setIsFCLoading(false)
     }, 1000)
   }, [method])
+
   useEffect(() => {
     if (!farcasterProfile || method !== CreateMethod.FillByFarcaster) return
-    form.setValue("name", farcasterProfile.username ?? "", { shouldValidate: true })
+    form.setValue(
+      "name",
+      farcasterProfile.username ?? form.getValues()?.name ?? "",
+      { shouldValidate: true }
+    )
     form.setValue("username", farcasterProfile.userId.toString(), {
+      shouldValidate: true,
+    })
+    form.setValue("profileImageUrl", farcasterProfile.avatar, {
       shouldValidate: true,
     })
   }, [farcasterProfile, method])
@@ -74,79 +83,93 @@ export const StartProfile: OnboardingChain = () => {
   }
 
   return (
-    <div className="flex w-[28rem] flex-col gap-3 p-8">
+    <div className="w-[28rem] space-y-3 p-8">
       <h1 className="mb-10 text-pretty text-center font-bold font-display text-2xl leading-none tracking-tight">
         Start your Guild Profile!
       </h1>
 
-      <Avatar className="mb-8 size-36 self-center border bg-card-secondary">
-        <AvatarImage
-          src={farcasterProfile?.avatar}
-          width={144}
-          height={144}
-        ></AvatarImage>
-        <AvatarFallback>
-          <User size={32} />
-        </AvatarFallback>
-      </Avatar>
+      <FormProvider {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-3">
+          <FormField
+            control={form.control}
+            name="profileImageUrl"
+            render={({ field }) => (
+              <Avatar className="mb-8 size-36 self-center border bg-card-secondary">
+                <AvatarImage
+                  src={field.value}
+                  width={144}
+                  height={144}
+                ></AvatarImage>
+                <AvatarFallback>
+                  <User size={32} />
+                </AvatarFallback>
+              </Avatar>
+            )}
+          />
 
-      {method === undefined ? (
-        <>
-          <ConnectFarcasterButton
-            className="ml-0 w-full gap-2"
-            size="md"
-            onClick={() => setMethod(CreateMethod.FillByFarcaster)}
-          >
-            <FarcasterImage />
-            Connect farcaster
-          </ConnectFarcasterButton>
+          {method === undefined || isFCLoading ? (
+            <>
+              <ConnectFarcasterButton
+                className="ml-0 w-full gap-2"
+                size="md"
+                isLoading={isFCLoading}
+                onClick={() => {
+                  setMethod(CreateMethod.FillByFarcaster)
+                  setIsFCLoading(true)
+                }}
+              >
+                <FarcasterImage />
+                Connect farcaster
+              </ConnectFarcasterButton>
 
-          <Button variant="ghost">
-            I don't have a Farcaster profile
-            <ArrowRight weight="bold" />
-          </Button>
-        </>
-      ) : (
-        <FormProvider {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="" {...field} />
-                  </FormControl>
-                  <FormErrorMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="username"
-              render={({ field }) => (
-                <FormItem className="pb-2">
-                  <FormLabel aria-required="true">Handle</FormLabel>
-                  <FormControl>
-                    <Input placeholder="" required {...field} />
-                  </FormControl>
-                  <FormErrorMessage />
-                </FormItem>
-              )}
-            />
-            <Button
-              className="w-full"
-              type="submit"
-              colorScheme="success"
-              onClick={() => setMethod(CreateMethod.FromBlank)}
-              disabled={!form.formState.isValid}
-            >
-              Start my profile
-            </Button>
-          </form>
-        </FormProvider>
-      )}
+              <Button
+                variant="ghost"
+                onClick={() => setMethod(CreateMethod.FromBlank)}
+              >
+                I don't have a Farcaster profile
+                <ArrowRight weight="bold" />
+              </Button>
+            </>
+          ) : (
+            <>
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="" {...field} />
+                    </FormControl>
+                    <FormErrorMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="username"
+                render={({ field }) => (
+                  <FormItem className="pb-2">
+                    <FormLabel aria-required="true">Handle</FormLabel>
+                    <FormControl>
+                      <Input placeholder="" required {...field} />
+                    </FormControl>
+                    <FormErrorMessage />
+                  </FormItem>
+                )}
+              />
+              <Button
+                className="w-full"
+                type="submit"
+                colorScheme="success"
+                disabled={!form.formState.isValid}
+              >
+                Start my profile
+              </Button>
+            </>
+          )}
+        </form>
+      </FormProvider>
     </div>
   )
 }
