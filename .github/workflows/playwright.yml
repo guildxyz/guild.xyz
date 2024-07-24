@@ -1,6 +1,11 @@
 name: Playwright Tests
 on:
   deployment_status:
+  workflow_dispatch:
+
+concurrency:
+  group: "playwright"
+
 jobs:
   test:
     if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success'
