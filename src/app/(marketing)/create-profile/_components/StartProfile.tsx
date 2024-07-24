@@ -20,8 +20,22 @@ import FarcasterImage from "/src/static/socialIcons/farcaster.svg"
 import { OnboardingChain } from "../types"
 
 const formSchema = z.object({
-  name: z.string(),
-  handle: z.string(),
+  name: z.string().max(100, { message: "Name cannot exceed 100 characters" }),
+  username: z
+    .string()
+    .min(1, { message: "Handle is required" })
+    .max(100, { message: "Handle cannot exceed 100 characters" })
+    .superRefine((value, ctx) => {
+      const pattern = /^[\w\-.]+$/
+      const isValid = pattern.test(value)
+      if (!isValid) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message:
+            "Handle must only contain either alphanumeric, hyphen, underscore or dot characters",
+        })
+      }
+    }),
 })
 
 // TODO: use ConnectFarcasterButton
@@ -30,9 +44,11 @@ export const StartProfile: OnboardingChain = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      handle: "",
+      username: "",
     },
+    mode: "onTouched",
   })
+
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values)
   }
@@ -67,12 +83,12 @@ export const StartProfile: OnboardingChain = () => {
             />
             <FormField
               control={form.control}
-              name="handle"
+              name="username"
               render={({ field }) => (
                 <FormItem className="pb-2">
-                  <FormLabel>Handle</FormLabel>
+                  <FormLabel aria-required="true">Handle</FormLabel>
                   <FormControl>
-                    <Input placeholder="" {...field} />
+                    <Input placeholder="" required {...field} />
                   </FormControl>
                   <FormErrorMessage />
                 </FormItem>
@@ -83,6 +99,7 @@ export const StartProfile: OnboardingChain = () => {
               type="submit"
               colorScheme="success"
               onClick={() => setStartMethod(undefined)}
+              disabled={!form.formState.isValid}
             >
               Start my profile
             </Button>
