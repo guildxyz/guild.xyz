@@ -7,12 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/Avatar"
 import { Badge } from "./ui/Badge"
 import { Card } from "./ui/Card"
 import { Skeleton } from "./ui/Skeleton"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "./ui/Tooltip"
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/Tooltip"
 
 type Props = {
   guildData: GuildBase
@@ -36,19 +31,17 @@ export const GuildCard: React.FC<Props> = ({ guildData }) => (
         {guildData.name}
       </h3>
       {guildData.tags.includes("VERIFIED") && (
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger
-              className="relative px-1 pt-1"
-              aria-label="verified checkmark"
-            >
-              <CheckMark />
-            </TooltipTrigger>
-            <TooltipContent>
-              This guild is verified by <code>Guild.xyz</code>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger
+            className="relative px-1 pt-1"
+            aria-label="verified checkmark"
+          >
+            <CheckMark />
+          </TooltipTrigger>
+          <TooltipContent>
+            This guild is verified by <code>Guild.xyz</code>
+          </TooltipContent>
+        </Tooltip>
       )}
     </div>
     <div className="flex gap-2">
