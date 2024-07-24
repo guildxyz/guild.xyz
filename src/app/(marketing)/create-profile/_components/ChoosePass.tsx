@@ -10,8 +10,7 @@ import {
 } from "@/components/ui/Carousel"
 import { Separator } from "@/components/ui/Separator"
 import { ToggleGroup, ToggleGroupItem } from "@radix-ui/react-toggle-group"
-import Autoplay from "embla-carousel-autoplay"
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useState } from "react"
 import { SUBSCRIPTIONS } from "../constants"
 import { OnboardingChain } from "../types"
 import { Benefits } from "./Benefits"
@@ -20,13 +19,8 @@ import { GuildPassScene } from "./GuildPassScene"
 export const ChoosePass: OnboardingChain = ({ dispatchChainAction }) => {
   const [api, setApi] = useState<CarouselApi>()
   const [subscriptionIndex, setSubscriptionIndex] = useState<number>()
-  const [autoplay, setAutoPlay] = useState(true)
   const { selectedIndex, scrollSnaps, onCarouselDotButtonClick } =
     useCarouselDotButton(api)
-  const carouselPlugins = useMemo(
-    () => [Autoplay({ delay: 4000, stopOnInteraction: true, active: autoplay })],
-    [autoplay]
-  )
   useEffect(() => {
     if (subscriptionIndex === undefined) return
     dispatchChainAction("next", {
@@ -42,7 +36,9 @@ export const ChoosePass: OnboardingChain = ({ dispatchChainAction }) => {
       <Carousel
         className={"cursor-pointer active:cursor-grabbing lg:hidden"}
         setApi={setApi}
-        plugins={carouselPlugins}
+        opts={{
+          startIndex: 1,
+        }}
       >
         <CarouselContent>
           {SUBSCRIPTIONS.map(({ title, description, pricing }, i) => (
@@ -76,10 +72,7 @@ export const ChoosePass: OnboardingChain = ({ dispatchChainAction }) => {
         {scrollSnaps.map((_, i) => (
           <CarouselDotButton
             key={i}
-            onClick={() => {
-              setAutoPlay(false)
-              onCarouselDotButtonClick(i)
-            }}
+            onClick={() => onCarouselDotButtonClick(i)}
             isActive={i === selectedIndex}
           />
         ))}
