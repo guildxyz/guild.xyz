@@ -29,9 +29,6 @@ const useWithdrawPool = (chain: Chain, poolId: bigint, onSuccess: () => void) =>
       console.error(error)
     },
     onSuccess: () => {
-      if (process.env.NEXT_PUBLIC_MOCK_CONNECTOR) {
-        return
-      }
       captureEvent("Funds withdrawn from pool", { ...postHogOptions })
       onSuccess()
     },
