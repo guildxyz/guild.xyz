@@ -4,7 +4,6 @@ on:
 jobs:
   test:
     if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success'
-    # && !contains(github.event.deployment_status.target_url, 'guild-xyz-storybook')
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
@@ -12,8 +11,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: lts/*
-      - name: Debug
-        run: echo "${{ github.event.deployment_status.target_url }}"
       - name: Install dependencies
         run: npm ci
       - name: Install Playwright Browsers
