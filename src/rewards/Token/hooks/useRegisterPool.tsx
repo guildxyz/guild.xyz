@@ -36,10 +36,6 @@ const useRegisterPool = (
       console.error(error)
     },
     onSuccess: (_, events) => {
-      if (process.env.NEXT_PUBLIC_MOCK_CONNECTOR) {
-        return
-      }
-
       const poolRegisteredEvent = findEvent<
         typeof tokenRewardPoolAbi,
         "PoolRegistered"
