@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/Button"
-import { Card } from "@/components/ui/Card"
 import {
   FormControl,
   FormDescription,
@@ -33,7 +32,7 @@ export const ClaimPass: OnboardingChain = ({ dispatchChainAction }) => {
   }
 
   return (
-    <Card className="mx-auto max-w-md bg-gradient-to-b from-card to-card-secondary p-8">
+    <div className="max-w-md p-8">
       <div className="mb-12 h-48 w-full">
         <GuildPassScene />
       </div>
@@ -63,6 +62,6 @@ export const ClaimPass: OnboardingChain = ({ dispatchChainAction }) => {
           </Button>
         </form>
       </FormProvider>
-    </Card>
+    </div>
   )
 }

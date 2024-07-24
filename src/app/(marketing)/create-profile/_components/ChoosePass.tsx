@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/Button"
-import { Card } from "@/components/ui/Card"
 import {
   Carousel,
   CarouselApi,
@@ -29,7 +28,7 @@ export const ChoosePass: OnboardingChain = ({ dispatchChainAction }) => {
   }, [subscriptionIndex])
 
   return (
-    <Card className="mx-auto flex max-w-3lg flex-col bg-gradient-to-b from-card to-card-secondary shadow-2xl">
+    <div className="max-w-screen-lg">
       <h1 className="mt-8 mb-4 h-10 text-center font-bold font-display text-2xl leading-none tracking-tight ">
         Choose your pass
       </h1>
@@ -114,6 +113,6 @@ export const ChoosePass: OnboardingChain = ({ dispatchChainAction }) => {
       <div className="space-y-4 border-border border-t bg-background p-8">
         <Benefits />
       </div>
-    </Card>
+    </div>
   )
 }

@@ -1,6 +1,5 @@
 import { Avatar } from "@/components/ui/Avatar"
 import { Button } from "@/components/ui/Button"
-import { Card } from "@/components/ui/Card"
 import {
   FormControl,
   FormErrorMessage,
@@ -38,7 +37,7 @@ export const StartProfile: OnboardingChain = () => {
 
   const [startMethod, setStartMethod] = useState<"farcaster">()
   return (
-    <Card className="mx-auto flex max-w-md flex-col gap-3 bg-gradient-to-b from-card to-card-secondary p-8">
+    <div className="flex w-[28rem] flex-col gap-3 p-8">
       <h1 className="mb-10 text-pretty text-center font-bold font-display text-2xl leading-none tracking-tight">
         Start your Guild Profile!
       </h1>
@@ -98,6 +97,6 @@ export const StartProfile: OnboardingChain = () => {
           </Button>
         </>
       )}
-    </Card>
+    </div>
   )
 }
