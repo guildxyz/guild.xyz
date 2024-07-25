@@ -1,6 +1,6 @@
+import { ConnectFarcasterButton } from "@/components/Account/components/AccountModal/components/FarcasterProfile"
 import { Avatar } from "@/components/ui/Avatar"
 import { Button } from "@/components/ui/Button"
-import { Card } from "@/components/ui/Card"
 import {
   FormControl,
   FormErrorMessage,
@@ -16,28 +16,46 @@ import { AvatarFallback } from "@radix-ui/react-avatar"
 import { useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { z } from "zod"
+import FarcasterImage from "/src/static/socialIcons/farcaster.svg"
+import { OnboardingChain } from "../types"
 
 const formSchema = z.object({
-  name: z.string(),
-  handle: z.string(),
+  name: z.string().max(100, { message: "Name cannot exceed 100 characters" }),
+  username: z
+    .string()
+    .min(1, { message: "Handle is required" })
+    .max(100, { message: "Handle cannot exceed 100 characters" })
+    .superRefine((value, ctx) => {
+      const pattern = /^[\w\-.]+$/
+      const isValid = pattern.test(value)
+      if (!isValid) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message:
+            "Handle must only contain either alphanumeric, hyphen, underscore or dot characters",
+        })
+      }
+    }),
 })
 
 // TODO: use ConnectFarcasterButton
-export const StartProfile = () => {
+export const StartProfile: OnboardingChain = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      handle: "",
+      username: "",
     },
+    mode: "onTouched",
   })
+
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values)
   }
 
   const [startMethod, setStartMethod] = useState<"farcaster">()
   return (
-    <Card className="mx-auto flex max-w-md flex-col gap-3 bg-gradient-to-b from-card to-card-secondary p-8">
+    <div className="flex w-[28rem] flex-col gap-3 p-8">
       <h1 className="mb-10 text-pretty text-center font-bold font-display text-2xl leading-none tracking-tight">
         Start your Guild Profile!
       </h1>
@@ -65,12 +83,12 @@ export const StartProfile = () => {
             />
             <FormField
               control={form.control}
-              name="handle"
+              name="username"
               render={({ field }) => (
                 <FormItem className="pb-2">
-                  <FormLabel>Handle</FormLabel>
+                  <FormLabel aria-required="true">Handle</FormLabel>
                   <FormControl>
-                    <Input placeholder="" {...field} />
+                    <Input placeholder="" required {...field} />
                   </FormControl>
                   <FormErrorMessage />
                 </FormItem>
@@ -81,6 +99,7 @@ export const StartProfile = () => {
               type="submit"
               colorScheme="success"
               onClick={() => setStartMethod(undefined)}
+              disabled={!form.formState.isValid}
             >
               Start my profile
             </Button>
@@ -88,15 +107,21 @@ export const StartProfile = () => {
         </FormProvider>
       ) : (
         <>
-          <Button colorScheme="primary" onClick={() => setStartMethod("farcaster")}>
-            Connect Farcaster
-          </Button>
+          <ConnectFarcasterButton
+            className="ml-0 w-full gap-2"
+            size="md"
+            onClick={() => setStartMethod("farcaster")}
+          >
+            <FarcasterImage />
+            Connect farcaster
+          </ConnectFarcasterButton>
+
           <Button variant="ghost">
             I don't have a Farcaster profile
             <ArrowRight weight="bold" />
           </Button>
         </>
       )}
-    </Card>
+    </div>
   )
 }

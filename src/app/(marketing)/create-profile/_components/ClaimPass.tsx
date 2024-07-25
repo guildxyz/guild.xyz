@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/Button"
-import { Card } from "@/components/ui/Card"
 import {
   FormControl,
   FormDescription,
@@ -13,13 +12,14 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr"
 import { FormProvider, useForm } from "react-hook-form"
 import { z } from "zod"
+import { OnboardingChain } from "../types"
 import { GuildPassScene } from "./GuildPassScene"
 
 const formSchema = z.object({
   inviteHandle: z.string(),
 })
 
-export const ClaimPass = () => {
+export const ClaimPass: OnboardingChain = ({ dispatchChainAction }) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -28,10 +28,11 @@ export const ClaimPass = () => {
   })
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values)
+    dispatchChainAction("next")
   }
 
   return (
-    <Card className="mx-auto max-w-md bg-gradient-to-b from-card to-card-secondary p-8">
+    <div className="max-w-md p-8">
       <div className="mb-12 h-48 w-full">
         <GuildPassScene />
       </div>
@@ -61,6 +62,6 @@ export const ClaimPass = () => {
           </Button>
         </form>
       </FormProvider>
-    </Card>
+    </div>
   )
 }

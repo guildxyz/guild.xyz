@@ -29,9 +29,6 @@ yarn-error.log*
 
 .vercel
 
-cypress/screenshots
-cypress/videos
-
 .idea
 *.tsbuildinfo
 
@@ -39,3 +36,9 @@ cypress/videos
 storybook-static
 
 bun.lockb
+
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
+/playwright/results

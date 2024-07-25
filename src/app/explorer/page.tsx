@@ -29,14 +29,14 @@ const Page = async ({ searchParams }: { searchParams: SearchParams }) => {
   const [ssrFeaturedGuilds, ssrNewestGuilds] = await Promise.all([
     fetch(`${env.NEXT_PUBLIC_API.replace("/v1", "")}${featuredPath}`, {
       next: {
-        revalidate: 300,
+        revalidate: 600,
       },
     })
       .then((res) => res.json())
       .catch((_) => []),
     fetch(`${env.NEXT_PUBLIC_API.replace("/v1", "")}${newestPath}`, {
       next: {
-        revalidate: 300,
+        revalidate: 600,
       },
     })
       .then((res) => res.json())

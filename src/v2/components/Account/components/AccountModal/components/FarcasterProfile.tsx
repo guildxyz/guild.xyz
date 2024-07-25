@@ -17,12 +17,7 @@ import {
 } from "@/components/ui/Dialog"
 import { Separator } from "@/components/ui/Separator"
 import { Skeleton } from "@/components/ui/Skeleton"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/Tooltip"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip"
 import { useToast } from "@/components/ui/hooks/useToast"
 import { useDisclosure } from "@/hooks/useDisclosure"
 import { cn } from "@/lib/utils"
@@ -69,6 +64,8 @@ const FarcasterProfile = () => {
 const ConnectFarcasterButton = ({
   onSuccess,
   isReconnection: _,
+  className,
+  children,
   ...props
 }: ButtonProps & { onSuccess?: () => void; isReconnection?: boolean }) => {
   const { captureEvent } = usePostHogContext()
@@ -193,10 +190,13 @@ const ConnectFarcasterButton = ({
         size="sm"
         disabled={farcasterProfiles?.length > 0}
         isLoading={signedKeyRequest.isLoading}
-        className="ml-auto bg-farcaster text-white hover:bg-farcaster-hover active:bg-farcaster-active"
+        className={cn(
+          "ml-auto bg-farcaster text-white hover:bg-farcaster-hover active:bg-farcaster-active",
+          className
+        )}
         {...props}
       >
-        Connect
+        {children ?? "Connect"}
       </Button>
 
       <Dialog open={isOpen}>
@@ -246,29 +246,27 @@ const ConnectFarcasterButton = ({
                     : `${seconds} seconds`}
                 </p>
 
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        size="xs"
-                        variant="ghost"
-                        className="w-6 px-0 text-muted-foreground"
-                        disabled={!shouldEnableRegenerateButton}
-                        isLoading={signedKeyRequest.isLoading}
-                        aria-label="Regenerate Farcaster QR code"
-                        onClick={() => {
-                          captureEvent("[farcaster] manual qr regeneration")
-                          onRegenerate()
-                        }}
-                      >
-                        <ArrowCounterClockwise weight="bold" />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <span>Regenerate now</span>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      size="xs"
+                      variant="ghost"
+                      className="w-6 px-0 text-muted-foreground"
+                      disabled={!shouldEnableRegenerateButton}
+                      isLoading={signedKeyRequest.isLoading}
+                      aria-label="Regenerate Farcaster QR code"
+                      onClick={() => {
+                        captureEvent("[farcaster] manual qr regeneration")
+                        onRegenerate()
+                      }}
+                    >
+                      <ArrowCounterClockwise weight="bold" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <span>Regenerate now</span>
+                  </TooltipContent>
+                </Tooltip>
               </div>
 
               <p className="text-center text-muted-foreground text-sm">

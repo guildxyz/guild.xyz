@@ -137,6 +137,7 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
         onPointerDownOutside={conditionalOnClose}
         onEscapeKeyDown={conditionalOnClose}
         trapFocus={!isWalletConnectModalActive}
+        data-testid="connect-wallet-dialog"
       >
         <DialogHeader className="flex-row items-center gap-1.5">
           <DialogTitle className="-mt-1">
@@ -246,6 +247,7 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
               }
               loadingText={!id ? "Looking for keypairs" : "Check your wallet"}
               className="mb-4 w-full"
+              data-testid="verify-address-button"
             >
               {isAddressLink ? "Link address" : "Verify address"}
             </Button>

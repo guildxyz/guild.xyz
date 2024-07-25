@@ -182,15 +182,6 @@ const useSubmitTransaction = (
         return
       }
 
-      if (process.env.NEXT_PUBLIC_MOCK_CONNECTOR) {
-        setTxHash(
-          "0x0000000000000000000000000000000000000000000000000000000000000000"
-        )
-        setTxSuccess(true)
-        onSuccess({} as TransactionReceipt, [])
-        return
-      }
-
       // TODO: properly type this
       writeContract(contractCallConfig as WriteContractParameters)
     },

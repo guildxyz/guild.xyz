@@ -1,10 +1,5 @@
 import { Separator } from "@/components/ui/Separator"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/Tooltip"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip"
 import { cn } from "@/lib/utils"
 import { Question } from "@phosphor-icons/react/dist/ssr"
 import useUser from "components/[guild]/hooks/useUser"
@@ -67,16 +62,14 @@ const AccountConnections = () => {
         titleRightElement={
           addresses?.length > 1 ? (
             <div className="flex w-full items-center justify-between">
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Question weight="bold" />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Each of your addresses will be used for requirement checks</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Question weight="bold" />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Each of your addresses will be used for requirement checks</p>
+                </TooltipContent>
+              </Tooltip>
               <LinkAddressButton variant="ghost" className="-my-1" />
             </div>
           ) : undefined

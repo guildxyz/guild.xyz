@@ -104,9 +104,10 @@
     --polygonid: 259 59% 59%;
     --polygonid-hover: 258 50% 52%;
     --polygonid-active: 256 44% 42%;
-    --farcaster: 238 76% 69%;
-    --farcaster-hover: 239 75% 64%;
-    --farcaster-active: 239 75% 58%;
+
+    --farcaster: 261 55% 61%;
+    --farcaster-hover: 261 55% 55%;
+    --farcaster-active: 239 75% 50%;
 
     --sm: 640px;
     --md: 768px;
