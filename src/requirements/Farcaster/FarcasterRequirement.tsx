@@ -48,13 +48,7 @@ const FarcasterFollowUser = (props: RequirementProps) => {
 
   return (
     <Requirement
-      footer={
-        !isFarcasterConnected ? (
-          <RequirementConnectButton />
-        ) : access === false ? (
-          <FarcasterAction />
-        ) : undefined
-      }
+      footer={<FarcasterAction />}
       image={farcasterUser?.pfp_url || "/requirementLogos/farcaster.png"}
       {...props}
     >
@@ -107,13 +101,7 @@ const FarcasterLikeRecast = (props: RequirementProps) => {
 
   return (
     <Requirement
-      footer={
-        !isFarcasterConnected ? (
-          <RequirementConnectButton />
-        ) : access === false ? (
-          <FarcasterAction />
-        ) : undefined
-      }
+      footer={<FarcasterAction />}
       image={REQUIREMENTS.FARCASTER_LIKE.icon.toString()}
       {...props}
     >

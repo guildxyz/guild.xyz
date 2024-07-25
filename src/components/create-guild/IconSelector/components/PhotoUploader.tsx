@@ -1,4 +1,4 @@
-import { FormControl, FormLabel, HStack } from "@chakra-ui/react"
+import { ButtonProps, FormControl, FormLabel, HStack } from "@chakra-ui/react"
 import { File } from "@phosphor-icons/react"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
@@ -14,6 +14,10 @@ type Props = {
   minW?: number
   minH?: number
   onGeneratedBlobChange?: (objectURL: string) => void
+  label?: string
+  showImgPreview?: boolean
+  buttonProps?: ButtonProps
+  buttonLabel?: string
 }
 
 type FileWithWidthandHeight = File & { width: number; height: number }
@@ -62,6 +66,10 @@ const PhotoUploader = ({
   minW,
   minH,
   onGeneratedBlobChange,
+  label = "Upload custom image",
+  showImgPreview = true,
+  buttonProps,
+  buttonLabel = "Choose image",
 }: Props): JSX.Element => {
   const { setValue } = useFormContext()
   const imageUrl = useWatch({ name: "imageUrl" })
@@ -116,14 +124,16 @@ const PhotoUploader = ({
 
   return (
     <FormControl isInvalid={!!fileRejections?.[0]}>
-      <FormLabel>Upload custom image</FormLabel>
+      <FormLabel>{label}</FormLabel>
 
       <HStack>
-        <GuildLogo
-          imageUrl={!imageUrl?.match("guildLogos") ? imageUrl : null}
-          size={"48px"}
-          bgColor="gray.100"
-        />
+        {showImgPreview && (
+          <GuildLogo
+            imageUrl={!imageUrl?.match("guildLogos") ? imageUrl : null}
+            size={"48px"}
+            bgColor="gray.100"
+          />
+        )}
         <Button
           {...getRootProps()}
           as="label"
@@ -132,9 +142,10 @@ const PhotoUploader = ({
           fontWeight="medium"
           isLoading={isUploading}
           cursor="pointer"
+          {...buttonProps}
         >
           <input {...getInputProps()} hidden />
-          {isDragActive ? "Drop the file here" : "Choose image"}
+          {isDragActive ? "Drop the file here" : buttonLabel}
         </Button>
       </HStack>
       <FormErrorMessage>

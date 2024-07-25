@@ -6,7 +6,7 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 
-type Action =
+type Action = { isDelete?: boolean } & (
   | {
       type: "follow"
       targetFid: number
@@ -15,8 +15,12 @@ type Action =
       type: "like" | "recast"
       castId: string
     }
+)
 
-export default function useFarcasterAction(roleId: number) {
+export default function useFarcasterAction(
+  roleId?: number,
+  onSuccess?: (action: Action) => void
+) {
   const { farcasterProfiles, id } = useUser()
   const fetcherWithSign = useFetcherWithSign()
   const { triggerMembershipUpdate } = useMembershipUpdate()
@@ -39,10 +43,12 @@ export default function useFarcasterAction(roleId: number) {
         `/v2/users/${id}/farcaster-profiles/${
           farcasterProfiles[0].fid
         }/${actionType}/${encodeURIComponent(actionValue)}`,
-        { method: "POST" },
+        { method: action.isDelete ? "DELETE" : "POST" },
       ])
 
-      triggerMembershipUpdate({ roleIds: [roleId] })
+      if (roleId) {
+        triggerMembershipUpdate({ roleIds: [roleId] })
+      }
 
       return action
     },
@@ -60,6 +66,7 @@ export default function useFarcasterAction(roleId: number) {
             </>
           ),
         })
+        onSuccess?.(action)
       },
       onError: (error) => {
         showErrorToast(error)

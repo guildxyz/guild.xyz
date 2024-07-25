@@ -15,6 +15,7 @@ type Props = {
     | "ACTIVITY"
     | "ANALYTICS"
     | "MESSAGES"
+    | "CONTESTS"
 } & TabsProps
 
 const GuildTabs = ({ activeTab, ...rest }: Props): JSX.Element => {
@@ -58,6 +59,11 @@ const GuildTabs = ({ activeTab, ...rest }: Props): JSX.Element => {
           Leaderboard
         </TabButton>
       )}
+
+      <TabButton href={`/${urlName}/contests`} isActive={activeTab === "CONTESTS"}>
+        Contests
+      </TabButton>
+
       {(activeTab === "EVENTS" || hasEvents) && (
         <TabButton
           href={`/${urlName}/events`}
