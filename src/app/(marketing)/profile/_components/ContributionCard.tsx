@@ -3,8 +3,7 @@ import { AvatarGroup } from "@/components/ui/AvatarGroup"
 import { Button } from "@/components/ui/Button"
 import { Card } from "@/components/ui/Card"
 import { Separator } from "@/components/ui/Separator"
-import { CaretDown } from "@phosphor-icons/react"
-import { Users } from "@phosphor-icons/react/dist/ssr"
+import { CaretDown, Users } from "@phosphor-icons/react/dist/ssr"
 
 export const ContributionCard = () => {
   return (

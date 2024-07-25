@@ -1,5 +1,3 @@
-"use client"
-
 import {
   Layout,
   LayoutBanner,
@@ -14,18 +12,19 @@ import { AvatarGroup } from "@/components/ui/AvatarGroup"
 import { Badge } from "@/components/ui/Badge"
 import { Button } from "@/components/ui/Button"
 import { Card } from "@/components/ui/Card"
-import { ChartContainer } from "@/components/ui/Chart"
 import { Progress } from "@/components/ui/Progress"
 import { Separator } from "@/components/ui/Separator"
 import { ArrowRight, CircleWavyCheck } from "@phosphor-icons/react/dist/ssr"
-import { RadialBar, RadialBarChart } from "recharts"
-import { ActivityChart } from "./_components/ActivityChart"
-import { ContributionCard } from "./_components/ContributionCard"
-import { RecentActivity } from "./_components/RecentActivity"
+import { ActivityChart } from "../_components/ActivityChart"
+import { CircularProgressBar } from "../_components/CircularProgressBar"
+import { ContributionCard } from "../_components/ContributionCard"
+import { RecentActivity } from "../_components/RecentActivity"
 
-const chartData = [{ experience: 1, fill: "hsl(var(--primary))" }]
-
-const Page = () => {
+const Page = async ({
+  params: { username },
+}: {
+  params: { username: string }
+}) => {
   return (
     <Layout>
       <LayoutHero>
@@ -39,20 +38,7 @@ const Page = () => {
         <div className="mt-24">
           <div className="mb-24 flex flex-col items-center">
             <div className="relative mb-12 flex items-center justify-center">
-              <ChartContainer
-                config={{}}
-                className="-scale-x-100 absolute aspect-square min-h-56 rotate-90"
-              >
-                <RadialBarChart
-                  data={chartData}
-                  startAngle={0}
-                  endAngle={280}
-                  innerRadius={105}
-                  outerRadius={115}
-                >
-                  <RadialBar dataKey="experience" cornerRadius={10} />
-                </RadialBarChart>
-              </ChartContainer>
+              <CircularProgressBar />
               <Avatar className="size-48">
                 <AvatarFallback>#</AvatarFallback>
               </Avatar>

@@ -109,7 +109,7 @@
     "react-markdown": "^8.0.7",
     "react-papaparse": "^4.4.0",
     "react-window": "^1.8.8",
-    "recharts": "^2.12.7",
+    "recharts": "^2.13.0-alpha.4",
     "remark-gfm": "^4.0.0",
     "slugify": "^1.6.5",
     "swr": "^2.2.4",
