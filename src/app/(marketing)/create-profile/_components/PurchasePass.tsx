@@ -11,7 +11,10 @@ export const PurchasePass: OnboardingChain = ({
   dispatchChainAction,
   chainData,
 }) => {
-  const [didUserPurchase, setDidUserPurchase] = useState(false)
+  const [didPurchase, setDidPurchase] = useState(false)
+  const [didAllowEth, setDidAllowEth] = useState(false)
+  const [didVerify, setDidVerify] = useState(false)
+
   if (!chainData.chosenSubscription)
     throw new Error("Subscription data was not provided")
 
@@ -32,7 +35,7 @@ export const PurchasePass: OnboardingChain = ({
       </div>
       <article className="flex flex-col items-center pb-6 text-center">
         <div className="mb-2 h-48">
-          {didUserPurchase ? (
+          {didPurchase ? (
             <DotLottiePlayer
               autoplay
               src="/success_lottie.json"
@@ -64,7 +67,11 @@ export const PurchasePass: OnboardingChain = ({
                 </TooltipContent>
               </Tooltip>
             </div>
-            <Button colorScheme="primary" onClick={() => setDidUserPurchase(true)}>
+            <Button
+              colorScheme="primary"
+              onClick={() => setDidVerify(true)}
+              disabled={didVerify}
+            >
               Start
             </Button>
           </div>
@@ -81,18 +88,34 @@ export const PurchasePass: OnboardingChain = ({
                 <div>Total</div>
                 <div>---</div>
               </div>
-              <Button colorScheme="info" className="w-full" disabled>
+              <Button
+                colorScheme="info"
+                className="w-full"
+                disabled={!didVerify || didAllowEth}
+                onClick={() => {
+                  setDidAllowEth(true)
+                }}
+              >
                 Allow Guild to use your ETH
                 <Info />
               </Button>
-              <Button variant="subtle" className="w-full" disabled>
+              <Button
+                variant="subtle"
+                className="w-full"
+                disabled={!didVerify || !didAllowEth}
+                onClick={() => setDidPurchase(true)}
+              >
                 Purchase
               </Button>
             </div>
           ) : (
             <div className="flex items-center justify-between font-semibold">
               2. Complete payment
-              <Button colorScheme="primary" disabled>
+              <Button
+                colorScheme="primary"
+                disabled={!didVerify}
+                onClick={() => setDidPurchase(true)}
+              >
                 Go to stripe
               </Button>
             </div>

@@ -19,7 +19,7 @@ const chains: OnboardingChain[] = [
 ] as const
 
 export const OnboardingDriver = () => {
-  const [chainIndex, setChainIndex] = useState(0)
+  const [chainIndex, setChainIndex] = useState(1)
   // TODO: remove default chosen subscription, as it is only there for debug
   // purposes
   const [chainData, setChainData] = useState<Partial<ChainData>>({
