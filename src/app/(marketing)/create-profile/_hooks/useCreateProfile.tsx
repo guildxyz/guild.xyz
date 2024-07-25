@@ -1,5 +1,4 @@
 import { useToast } from "@/components/ui/hooks/useToast"
-import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import { useRouter } from "next/navigation"
 import fetcher from "utils/fetcher"
@@ -9,7 +8,6 @@ import { profileSchema } from "../schemas"
 export const useCreateProfile = () => {
   const router = useRouter()
   const { toast } = useToast()
-  const triggerConfetti = useJsConfetti()
 
   const createProfile = async (signedValidation: SignedValidation) =>
     fetcher(`/v2/profiles`, {
@@ -19,19 +17,19 @@ export const useCreateProfile = () => {
 
   const submitWithSign = useSubmitWithSign<unknown>(createProfile, {
     onSuccess: (response) => {
-      triggerConfetti()
       toast({
         variant: "success",
         title: "Successfully created profile",
       })
       // router.push(`/profile/${response.username}`)
     },
-    onError: (error) =>
+    onError: (response) => {
       toast({
         variant: "error",
         title: "Failed to create profile",
-        description: error?.message,
-      }),
+        description: response.error,
+      })
+    },
   })
   return {
     ...submitWithSign,

@@ -11,12 +11,16 @@ import {
   FormLabel,
 } from "@/components/ui/Form"
 import { Input } from "@/components/ui/Input"
+import { useToast } from "@/components/ui/hooks/useToast"
+import { cn } from "@/lib/utils"
 // import useUser from "components/[guild]/hooks/useUser"
 import { FarcasterProfile } from "@guildxyz/types"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { User } from "@phosphor-icons/react"
+import { Spinner, UploadSimple, User } from "@phosphor-icons/react"
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr"
 import { AvatarFallback, AvatarImage } from "@radix-ui/react-avatar"
+import useDropzone from "hooks/useDropzone"
+import usePinata from "hooks/usePinata"
 import { useEffect, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { z } from "zod"
@@ -36,6 +40,7 @@ export const StartProfile: OnboardingChain = () => {
   const [farcasterProfile, setFarcasterProfile] = useState<FarcasterProfile>()
   const [method, setMethod] = useState<CreateMethod>()
   const [isFCLoading, setIsFCLoading] = useState(false)
+  const { toast } = useToast()
 
   useEffect(() => {
     if (method !== CreateMethod.FillByFarcaster) return
@@ -78,8 +83,53 @@ export const StartProfile: OnboardingChain = () => {
 
   const createProfile = useCreateProfile()
   async function onSubmit(values: z.infer<typeof profileSchema>) {
-    // createProfile.onSubmit(values)
+    createProfile.onSubmit(values)
     console.log("onSubmit", values)
+  }
+
+  const { isUploading, onUpload } = usePinata({
+    control: form.control,
+    fieldToSetOnSuccess: "profileImageUrl",
+    onError: (error) => {
+      toast({
+        variant: "error",
+        title: "Failed to upload file",
+        description: error,
+      })
+    },
+  })
+
+  const [uploadProgress, setUploadProgress] = useState(0)
+  const { isDragActive, fileRejections, getRootProps } = useDropzone({
+    multiple: false,
+    noClick: false,
+    maxSizeMb: 4,
+    onDrop: (acceptedFiles) => {
+      if (!acceptedFiles[0]) return
+      onUpload({
+        data: [acceptedFiles[0]],
+        onProgress: setUploadProgress,
+      })
+    },
+  })
+
+  useEffect(() => {
+    for (const { errors, file } of fileRejections) {
+      for (const error of errors) {
+        toast({
+          variant: "error",
+          title: `Failed to upload file "${file.name}"`,
+          description: error.message,
+        })
+      }
+    }
+  }, [fileRejections])
+
+  let avatarFallBackIcon = <User size={32} />
+  if (isDragActive) {
+    avatarFallBackIcon = <UploadSimple size={32} className="animate-wiggle" />
+  } else if (isUploading || (uploadProgress !== 0 && uploadProgress !== 1)) {
+    avatarFallBackIcon = <Spinner size={32} className="animate-spin" />
   }
 
   return (
@@ -94,16 +144,23 @@ export const StartProfile: OnboardingChain = () => {
             control={form.control}
             name="profileImageUrl"
             render={({ field }) => (
-              <Avatar className="mb-8 size-36 self-center border bg-card-secondary">
-                <AvatarImage
-                  src={field.value}
-                  width={144}
-                  height={144}
-                ></AvatarImage>
-                <AvatarFallback>
-                  <User size={32} />
-                </AvatarFallback>
-              </Avatar>
+              <Button
+                variant="unstyled"
+                className={cn(
+                  "mb-8 size-36 self-center rounded-full border-2 border-dotted",
+                  { "border-solid": field.value }
+                )}
+                {...getRootProps()}
+              >
+                <Avatar className="size-36 bg-card-secondary">
+                  <AvatarImage
+                    src={field.value}
+                    width={144}
+                    height={144}
+                  ></AvatarImage>
+                  <AvatarFallback>{avatarFallBackIcon}</AvatarFallback>
+                </Avatar>
+              </Button>
             )}
           />
 
@@ -162,6 +219,7 @@ export const StartProfile: OnboardingChain = () => {
                 className="w-full"
                 type="submit"
                 colorScheme="success"
+                isLoading={createProfile.isLoading}
                 disabled={!form.formState.isValid}
               >
                 Start my profile
