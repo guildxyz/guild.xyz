@@ -1,15 +1,14 @@
-import { Button, Modal, ModalOverlay } from "@chakra-ui/react"
-import SelectRolePanel from "components/[guild]/AddRewardButton/SelectRolePanel"
+import { Button } from "@chakra-ui/react"
 import { ADD_REWARD_FORM_DEFAULT_VALUES } from "components/[guild]/AddRewardButton/constants"
 import { AddRewardForm } from "components/[guild]/AddRewardButton/types"
 import {
   AddRewardProvider,
   useAddRewardContext,
 } from "components/[guild]/AddRewardContext"
-import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
+import { FormProvider, useForm, useWatch } from "react-hook-form"
 import CreateFormModal from "./CreateFormModal"
 
-const AddFormButton = ({ baseFieldPath, isDisabled }) => {
+const AddFormButton = ({ isDisabled }) => {
   const { setSelection, step, setStep, isOpen, onOpen, onClose } =
     useAddRewardContext()
 
@@ -27,17 +26,6 @@ const AddFormButton = ({ baseFieldPath, isDisabled }) => {
     onOpen()
     setStep("REWARD_SETUP")
     setSelection("FORM")
-  }
-
-  const { setValue } = useFormContext()
-
-  const handleSuccess = (res: any) => {
-    const formId =
-      res?.platformGuildData?.formId ??
-      res?.createdGuildPlatforms?.[0]?.platformGuildData?.formId
-    setValue(`${baseFieldPath}.data.id`, formId, {
-      shouldDirty: true,
-    })
   }
 
   return (
@@ -73,19 +61,6 @@ const AddFormButton = ({ baseFieldPath, isDisabled }) => {
             setStep("SELECT_ROLE")
           }}
         />
-      )}
-
-      {step === "SELECT_ROLE" && (
-        <Modal
-          isOpen={isOpen}
-          onClose={onClose}
-          size={"2xl"}
-          scrollBehavior="inside"
-          colorScheme="dark"
-        >
-          <ModalOverlay />
-          <SelectRolePanel onSuccess={handleSuccess} />
-        </Modal>
       )}
     </FormProvider>
   )
