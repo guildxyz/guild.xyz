@@ -5,15 +5,11 @@ import useLocalStorage from "hooks/useLocalStorage"
 import useTimeInaccuracy from "hooks/useTimeInaccuracy"
 import { useCallback, useState } from "react"
 import useSWR from "swr"
-import { ValidationMethod } from "types"
-import { UnauthorizedProviderError, createPublicClient, trim } from "viem"
 import { useChainId, usePublicClient, useWalletClient } from "wagmi"
-import { wagmiConfig } from "wagmiConfig"
-import { Chain, Chains, supportedChains } from "wagmiConfig/chains"
 import { DEFAULT_MESSAGE, DEFAULT_SIGN_LOADING_TEXT } from "./constants"
 import { fuelSign } from "./fuelSign"
 import { SignProps, UseSubmitOptions, Validation } from "./types"
-import { createMessageParams, getMessage, signWithKeyPair } from "./utils"
+import { getMessage, sign } from "./utils"
 import gnosisSafeSignCallback from "./utils/gnosisSafeSignCallback"
 
 type FetcherFunction<ResponseType> = ({
@@ -206,109 +202,6 @@ const useSubmitWithSign = <ResponseType>(
     ...options,
     keyPair: keyPair?.keyPair,
   })
-}
-
-const chainsOfAddressWithDeployedContract = async (
-  address: `0x${string}`
-): Promise<Chain[]> => {
-  const LOCALSTORAGE_KEY = `chainsWithByteCode_${address.toLowerCase()}`
-  const chainsWithByteCodeFromLocalstorage = localStorage.getItem(LOCALSTORAGE_KEY)
-
-  if (chainsWithByteCodeFromLocalstorage) {
-    const parsed = JSON.parse(chainsWithByteCodeFromLocalstorage)
-
-    if (Array.isArray(parsed))
-      return parsed.filter((c) => supportedChains.includes(c))
-  }
-
-  const res = await Promise.all(
-    wagmiConfig.chains.map(async (chain) => {
-      const publicClient = createPublicClient({
-        chain,
-        transport: wagmiConfig._internal.transports[chain.id],
-      })
-
-      const bytecode = await publicClient
-        .getBytecode({
-          address,
-        })
-        .catch(() => null)
-
-      return [Chains[chain.id], bytecode && trim(bytecode) !== "0x"] as const
-    })
-  ).then((results) => [
-    ...new Set(
-      results
-        .filter(([, hasContract]) => !!hasContract)
-        .map(([chainName]) => chainName as Chain)
-    ),
-  ])
-
-  localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(res))
-
-  return res
-}
-
-export const sign = async ({
-  walletClient,
-  address,
-  payload,
-  chainId,
-  keyPair,
-  forcePrompt,
-  msg = DEFAULT_MESSAGE,
-  ts,
-  getMessageToSign = getMessage,
-}: SignProps): Promise<[string, Validation]> => {
-  const params = createMessageParams(address, ts ?? Date.now(), msg, payload)
-  let sig = null
-
-  if (!!keyPair && !forcePrompt) {
-    params.method = ValidationMethod.KEYPAIR
-    sig = await signWithKeyPair(keyPair, params)
-  } else {
-    const walletChains = await chainsOfAddressWithDeployedContract(address)
-    const walletChainId =
-      walletChains.length > 0 ? Chains[walletChains[0]] : undefined
-
-    if (walletChainId) {
-      if (walletClient.chain.id !== walletChainId) {
-        await walletClient.switchChain({ id: walletChainId })
-      }
-      params.chainId = `${walletChainId}`
-    }
-
-    const isSmartContract = walletChains.length > 0
-
-    params.method = isSmartContract
-      ? ValidationMethod.EIP1271
-      : ValidationMethod.STANDARD
-
-    params.chainId ||= chainId || `${walletClient.chain.id}`
-
-    if (walletClient?.account?.type === "local") {
-      // For local accounts, such as CWaaS, we request the signature on the account. Otherwise it sends a personal_sign to the rpc
-      sig = await walletClient.account.signMessage({
-        message: getMessageToSign(params),
-      })
-    } else {
-      sig = await walletClient
-        .signMessage({
-          account: address,
-          message: getMessageToSign(params),
-        })
-        .catch((error) => {
-          if (error instanceof UnauthorizedProviderError) {
-            throw new Error(
-              "Your wallet is not connected. It might be because your browser locked it after a period of time."
-            )
-          }
-          throw error
-        })
-    }
-  }
-
-  return [payload, { params, sig }]
 }
 
 export default useSubmit
