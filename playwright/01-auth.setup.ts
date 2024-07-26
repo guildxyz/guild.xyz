@@ -28,7 +28,7 @@ setup("authenticate", async ({ page }) => {
   const signInDialog = await page.getByRole("dialog", {
     name: "Connect to Guild",
   })
-  expect(signInDialog).toBeVisible()
+  await expect(signInDialog).toBeVisible()
 
   await page.getByTestId("mock-connector-button").click()
   await page.getByTestId("verify-address-button").click()
