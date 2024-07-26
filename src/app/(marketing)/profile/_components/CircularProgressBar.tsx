@@ -6,24 +6,27 @@ import { RadialBar, RadialBarChart } from "recharts"
 const chartData = [{ experience: 1, fill: "hsl(var(--primary))" }]
 
 export const CircularProgressBar = () => {
+  const size = 224
+  const strokeWidth = 10
   return (
     <ChartContainer
       config={{}}
-      className="-scale-x-100 absolute aspect-square min-h-56 rotate-90"
+      className="-scale-x-100 absolute aspect-square rotate-90"
+      style={{ minHeight: size }}
     >
       <RadialBarChart
         data={chartData}
         startAngle={0}
         endAngle={280}
-        innerRadius={105}
-        outerRadius={115}
+        innerRadius={106}
+        outerRadius={116}
       >
         <circle
           className="stroke-muted"
-          cx={224 >> 1}
-          cy={224 >> 1}
-          r={103}
-          strokeWidth={13}
+          cx={size >> 1}
+          cy={size >> 1}
+          r={(size >> 1) - (strokeWidth >> 1) - 1}
+          strokeWidth={strokeWidth}
           fill="none"
         />
         <RadialBar dataKey="experience" cornerRadius={10} />
