@@ -20,6 +20,28 @@ import { CircularProgressBar } from "../_components/CircularProgressBar"
 import { ContributionCard } from "../_components/ContributionCard"
 import { RecentActivity } from "../_components/RecentActivity"
 
+function generatePolygonClipPath(sides: number): string {
+  const angle = (2 * Math.PI) / sides
+  const path = Array.from({ length: sides }, (_, i) => {
+    const x = 50 + 50 * Math.cos(i * angle)
+    const y = 50 + 50 * Math.sin(i * angle)
+    return `${x}% ${y}%`
+  }).join(", ")
+
+  return `polygon(${path}, round 10px)`
+}
+
+const LevelPolygon = () => {
+  return (
+    <div
+      className="absolute right-0 bottom-0 flex size-12 items-center justify-center bg-primary-subtle font-extrabold text-xl shadow-lg"
+      style={{ clipPath: generatePolygonClipPath(5) }}
+    >
+      22
+    </div>
+  )
+}
+
 async function getProfileData(username: string) {
   // const req = `https://api.guild.xyz/v2/profiles/${username}`
   // const res = await fetch(req)
@@ -87,9 +109,7 @@ const Page = async ({
                 <AvatarFallback>#</AvatarFallback>
               </Avatar>
               <CircularProgressBar />
-              <div className="absolute right-0 bottom-0 flex size-12 items-center justify-center rounded-xl bg-primary font-extrabold text-xl shadow-lg">
-                22
-              </div>
+              <LevelPolygon />
             </div>
             <h1 className="text-center font-bold text-4xl leading-normal tracking-tight">
               {profile.name}
