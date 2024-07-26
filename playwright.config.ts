@@ -1,7 +1,11 @@
+import path from "node:path"
 import { defineConfig, devices } from "@playwright/test"
+import dotenv from "dotenv"
+dotenv.config({ path: path.resolve(__dirname, ".env.local") })
 
 const baseURL = process.env.DEPLOYMENT_URL || "http://localhost:3000"
 
+// biome-ignore lint/style/noDefaultExport: <explanation>
 export default defineConfig({
   testDir: "./playwright",
   fullyParallel: true,
@@ -33,39 +37,17 @@ export default defineConfig({
       },
       dependencies: ["auth-setup"],
     },
-    // {
-    //   name: "firefox",
-    //   use: {
-    //     ...devices["Desktop Firefox"],
-    //   },
-    //   dependencies: ["auth-setup"],
-    // },
-    // {
-    //   name: "webkit",
-    //   use: {
-    //     ...devices["Desktop Safari"],
-    //   },
-    //   dependencies: ["auth-setup"],
-    // },
-    // {
-    //   name: "Mobile Chrome",
-    //   use: {
-    //     ...devices["Pixel 5"],
-    //   },
-    //   dependencies: ["auth-setup"],
-    // },
-    // {
-    //   name: "Mobile Safari",
-    //   use: {
-    //     ...devices["iPhone 12"],
-    //   },
-    //   dependencies: ["auth-setup"],
-    // },
   ],
 
-  webServer: {
-    command: process.env.CI ? "" : "npm run start",
-    url: baseURL,
-    reuseExistingServer: true,
-  },
+  webServer: [
+    {
+      command: `anvil --fork-url=${process.env.NEXT_PUBLIC_ANVIL_FORK_URL} --fork-block-number=${process.env.NEXT_PUBLIC_ANVIL_FORK_BLOCK_NUMBER} -m='${process.env.NEXT_PUBLIC_E2E_WALLET_MNEMONIC}'`,
+      port: 8545,
+    },
+    {
+      command: process.env.CI ? "" : "npm run start",
+      url: baseURL,
+      reuseExistingServer: true,
+    },
+  ],
 })
