@@ -23,6 +23,8 @@ jobs:
       - name: Run Playwright tests
         env:
           DEPLOYMENT_URL: ${{ github.event.deployment_status.target_url }}
+          ANVIL_FORK_URL: ${{ secrets.ANVIL_FORK_URL }}
+          NEXT_PUBLIC_E2E_WALLET_MNEMONIC: ${{ secrets.E2E_WALLET_MNEMONIC }}
         run: npm run test
       - uses: actions/upload-artifact@v4
         if: ${{ failure() }}
