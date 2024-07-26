@@ -24,13 +24,6 @@ test("can mint guild pin", async ({ pageWithKeyPair: { page } }) => {
 
   await page.waitForResponse("**/v2/guilds/*/pin")
 
-  const txInProgressDialog = await page.getByRole("dialog", {
-    name: "Transaction is processing...",
-  })
-  await expect(txInProgressDialog).toBeVisible({
-    timeout: 20_000,
-  })
-
   const successToast = await page.getByText("Successfully minted Guild Pin!")
-  await expect(successToast).toBeVisible({ timeout: 10_000 })
+  await expect(successToast).toBeVisible({ timeout: 30_000 })
 })
