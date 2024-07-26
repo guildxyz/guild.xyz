@@ -7,7 +7,7 @@ import {
   LayoutMain,
 } from "@/components/Layout"
 import { Anchor } from "@/components/ui/Anchor"
-import { Avatar, AvatarFallback } from "@/components/ui/Avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
 import { AvatarGroup } from "@/components/ui/AvatarGroup"
 import { Badge } from "@/components/ui/Badge"
 import { Button } from "@/components/ui/Button"
@@ -20,11 +20,36 @@ import { CircularProgressBar } from "../_components/CircularProgressBar"
 import { ContributionCard } from "../_components/ContributionCard"
 import { RecentActivity } from "../_components/RecentActivity"
 
+async function getProfileData(username: string) {
+  const req = `https://api.guild.xyz/v2/profiles/${username}`
+  console.log(req)
+  const res = await fetch(req)
+  if (!res.ok) {
+    throw new Error("Failed to fetch profile data")
+  }
+  return res.json() as Promise<Profile>
+}
+
+// TODO: try get this from the backend if not possible write zod validation
+interface Profile {
+  id: number
+  userId: number
+  username: string
+  name: string
+  bio: null | string
+  profileImageUrl: null | string
+  backgroundImageUrl: null | string
+  createdAt: string
+  updatedAt: string
+}
+
 const Page = async ({
   params: { username },
 }: {
   params: { username: string }
 }) => {
+  const profile = await getProfileData(username)
+
   return (
     <Layout>
       <LayoutHero>
@@ -38,25 +63,30 @@ const Page = async ({
         <div className="mt-24">
           <div className="mb-24 flex flex-col items-center">
             <div className="relative mb-12 flex items-center justify-center">
-              <CircularProgressBar />
               <Avatar className="size-48">
+                <AvatarImage
+                  src={profile.profileImageUrl ?? ""}
+                  alt="profile"
+                  width={192}
+                  height={192}
+                />
                 <AvatarFallback>#</AvatarFallback>
               </Avatar>
+              <CircularProgressBar />
               <div className="absolute right-0 bottom-0 flex size-12 items-center justify-center rounded-xl bg-primary font-extrabold text-xl shadow-lg">
                 22
               </div>
             </div>
             <h1 className="text-center font-bold text-4xl leading-normal tracking-tight">
-              Maximillian Xiaohua Longname
+              {profile.name}
               <CircleWavyCheck
                 weight="fill"
                 className="ml-4 inline size-6 fill-yellow-500"
               />
             </h1>
-            <div className="text-lg text-muted-foreground">@stephaniexixo11</div>
+            <div className="text-lg text-muted-foreground">@{profile.username}</div>
             <p className="mt-6 max-w-md text-pretty text-center text-lg text-muted-foreground">
-              This is a description that perfectly matches the 80 character
-              description limit.
+              {profile.bio ?? "Write your bio"}
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-x-8 gap-y-6">
               <div className="flex flex-col items-center leading-tight">
