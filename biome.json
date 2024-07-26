@@ -75,7 +75,7 @@
       "nursery": {
         "useSortedClasses": "info"
       },
-      "performance": { "noBarrelFile": "warn", "noDelete": "error" }
+      "performance": { "noBarrelFile": "warn" }
     }
   },
   "javascript": {
