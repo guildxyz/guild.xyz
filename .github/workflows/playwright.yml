@@ -20,6 +20,8 @@ jobs:
         run: npm ci
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
       - name: Run Playwright tests
         env:
           DEPLOYMENT_URL: ${{ github.event.deployment_status.target_url }}
