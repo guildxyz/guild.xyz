@@ -4,7 +4,7 @@ import { GUILD_PIN_MAINTENANCE } from "components/[guild]/Requirements/component
 import { useMintGuildPinContext } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
-import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
+import { UseSubmitOptions } from "hooks/useSubmit/types"
 import { useToastWithButton, useToastWithTweetButton } from "hooks/useToast"
 import { useRouter } from "next/router"
 import { useState } from "react"

@@ -1,6 +1,7 @@
 import { env } from "env"
 import { sign } from "hooks/useSubmit"
-import { FuelSignProps, SignProps, fuelSign } from "hooks/useSubmit/useSubmit"
+import { fuelSign } from "hooks/useSubmit/fuelSign"
+import { FuelSignProps, SignProps } from "hooks/useSubmit/types"
 import { pushToIntercomSetting } from "./intercom"
 
 const SIG_HEADER_NAME = "x-guild-sig"

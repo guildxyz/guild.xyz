@@ -1,7 +1,7 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
-import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
+import { UseSubmitOptions } from "hooks/useSubmit/types"
 import useToast from "hooks/useToast"
 import fetcher from "utils/fetcher"
 

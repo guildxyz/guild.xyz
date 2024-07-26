@@ -1,34 +1,20 @@
 import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { useUserPublic } from "@/hooks/useUserPublic"
 import { useWallet } from "@fuels/react"
-import { Account } from "fuels"
 import useLocalStorage from "hooks/useLocalStorage"
 import useTimeInaccuracy from "hooks/useTimeInaccuracy"
-import randomBytes from "randombytes"
 import { useCallback, useState } from "react"
 import useSWR from "swr"
 import { ValidationMethod } from "types"
-import {
-  PublicClient,
-  UnauthorizedProviderError,
-  WalletClient,
-  createPublicClient,
-  keccak256,
-  stringToBytes,
-  trim,
-} from "viem"
+import { UnauthorizedProviderError, createPublicClient, trim } from "viem"
 import { useChainId, usePublicClient, useWalletClient } from "wagmi"
 import { wagmiConfig } from "wagmiConfig"
 import { Chain, Chains, supportedChains } from "wagmiConfig/chains"
+import { DEFAULT_MESSAGE, DEFAULT_SIGN_LOADING_TEXT } from "./constants"
+import { fuelSign } from "./fuelSign"
+import { SignProps, UseSubmitOptions, Validation } from "./types"
+import { createMessageParams, getMessage, signWithKeyPair } from "./utils"
 import gnosisSafeSignCallback from "./utils/gnosisSafeSignCallback"
-
-export type UseSubmitOptions<ResponseType = void> = {
-  onSuccess?: (response: ResponseType) => void
-  onError?: (error: any) => void
-
-  // Use catefully! If this is set to true, a .onSubmit() call can reject!
-  allowThrow?: boolean
-}
 
 type FetcherFunction<ResponseType> = ({
   signedPayload,
@@ -82,15 +68,6 @@ const useSubmit = <DataType, ResponseType>(
   }
 }
 
-export type SignedValidation = { signedPayload: string; validation: Validation }
-
-export type Validation = {
-  params: MessageParams
-  sig: string
-}
-
-const DEFAULT_MESSAGE = "Please sign this message"
-
 const signCallbacks = [
   {
     domain: "safe.global",
@@ -98,31 +75,6 @@ const signCallbacks = [
     loadingText: "Safe transaction in progress",
   },
 ]
-
-export type MessageParams = {
-  msg: string
-  addr: string
-  method: ValidationMethod
-  chainId?: string
-  hash?: string
-  nonce: string
-  ts: string
-}
-
-const getMessage = ({
-  msg,
-  addr,
-  method,
-  chainId,
-  hash,
-  nonce,
-  ts,
-}: MessageParams) =>
-  `${msg}\n\nAddress: ${addr}\nMethod: ${method}${
-    chainId ? `\nChainId: ${chainId}` : ""
-  }${hash ? `\nHash: ${hash}` : ""}\nNonce: ${nonce}\nTimestamp: ${ts}`
-
-const DEFAULT_SIGN_LOADING_TEXT = "Check your wallet"
 
 const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
   fetch: FetcherFunction<ResponseType>,
@@ -254,71 +206,6 @@ const useSubmitWithSign = <ResponseType>(
     ...options,
     keyPair: keyPair?.keyPair,
   })
-}
-
-type SignBaseProps = {
-  address: `0x${string}`
-  payload: string
-  chainId?: string
-  forcePrompt: boolean
-  keyPair?: CryptoKeyPair
-  msg?: string
-  ts?: number
-  getMessageToSign?: (params: MessageParams) => string
-}
-
-export type SignProps = SignBaseProps & {
-  publicClient: PublicClient
-  walletClient: WalletClient
-}
-
-export type FuelSignProps = SignBaseProps & { wallet: Account }
-
-const createMessageParams = (
-  address: `0x${string}`,
-  ts: number,
-  msg: string,
-  payload: string
-): MessageParams => ({
-  addr: address.toLowerCase(),
-  nonce: randomBytes(32).toString("hex"),
-  ts: ts.toString(),
-  hash: payload !== "{}" ? keccak256(stringToBytes(payload)) : undefined,
-  method: null,
-  msg,
-  chainId: undefined,
-})
-
-const signWithKeyPair = (keyPair: CryptoKeyPair, params: MessageParams) =>
-  window.crypto.subtle
-    .sign(
-      { name: "ECDSA", hash: "SHA-512" },
-      keyPair.privateKey,
-      Buffer.from(getMessage(params))
-    )
-    .then((signatureBuffer) => Buffer.from(signatureBuffer).toString("hex"))
-
-export const fuelSign = async ({
-  wallet,
-  address,
-  payload,
-  keyPair,
-  forcePrompt,
-  msg = DEFAULT_MESSAGE,
-  ts,
-}: FuelSignProps): Promise<[string, Validation]> => {
-  const params = createMessageParams(address, ts, msg, payload)
-  let sig = null
-
-  if (!!keyPair && !forcePrompt) {
-    params.method = ValidationMethod.KEYPAIR
-    sig = await signWithKeyPair(keyPair, params)
-  } else {
-    params.method = ValidationMethod.FUEL
-    sig = await wallet.signMessage(getMessage(params))
-  }
-
-  return [payload, { params, sig }]
 }
 
 const chainsOfAddressWithDeployedContract = async (
