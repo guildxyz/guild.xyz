@@ -200,7 +200,7 @@ const VirtualRequirements = memo(
           <Box ref={rowRef} paddingRight={PARENT_PADDING}>
             <RequirementDisplayComponent requirement={requirements[index]} />
             {index < requirements.length - 1 && <LogicDivider logic={role.logic} />}
-            {role.hiddenRequirements && (
+            {index === requirements.length - 1 && role.hiddenRequirements && (
               <>
                 <LogicDivider logic={role.logic} />
                 <SomeSecretRequirements roleId={role.id} />
