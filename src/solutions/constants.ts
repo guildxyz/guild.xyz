@@ -18,7 +18,7 @@ export const categories = [
     value: "memberships",
   },
   {
-    label: "NFT",
+    label: "NFTs",
     value: "nft",
   },
   {
