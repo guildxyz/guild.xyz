@@ -16,6 +16,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import { GuildContact, Schemas } from "@guildxyz/types"
+import { zodResolver } from "@hookform/resolvers/zod"
 import UrlName from "components/[guild]/EditGuild/components/UrlName"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -39,6 +40,7 @@ import { FormProvider, useForm } from "react-hook-form"
 import { EventSourcesKey, GuildTags } from "types"
 import handleSubmitDirty from "utils/handleSubmitDirty"
 import { Chain } from "wagmiConfig/chains"
+import { z } from "zod"
 import LeaveButton from "../LeaveButton"
 import useGuildPermission from "../hooks/useGuildPermission"
 import useUser from "../hooks/useUser"
@@ -59,6 +61,33 @@ type Props = {
   isOpen: boolean
   onClose: () => void
 }
+
+const eventSourcesSchema = z
+  .object({
+    EVENTBRITE: z
+      .string()
+      .url()
+      .regex(/(.)+eventbrite\.com\/e\/(.)+/)
+      .transform((url) => url.replace(/\/+$/, ""))
+      .optional()
+      .nullable(),
+    LUMA: z
+      .string()
+      .url()
+      .regex(/(.)+lu\.ma\/(u|user)\/(.)+/)
+      .transform((url) => url.replace(/\/+$/, ""))
+      .optional()
+      .nullable(),
+    LINK3: z
+      .string()
+      .url()
+      .regex(/(.)+link3\.to\/(.)+/)
+      .transform((url) => url.replace(/\/+$/, ""))
+      .optional()
+      .nullable(),
+    DISCORD: z.string().url().optional().nullable(),
+  })
+  .optional()
 
 const DynamicFeatureFlags = dynamic(() => import("./components/FeatureFlags"))
 
@@ -130,6 +159,13 @@ const EditGuildDrawer = ({
   const methods = useForm<EditGuildForm>({
     mode: "all",
     defaultValues,
+    resolver: zodResolver(
+      z
+        .object({
+          eventSources: eventSourcesSchema,
+        })
+        .passthrough() // So we don't validate the other keys with Zod (yet)
+    ),
   })
   const { control, reset, formState } = methods
 

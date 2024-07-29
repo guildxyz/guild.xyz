@@ -21,7 +21,7 @@ const eventSourceNames: Record<EventSourcesKey, string> = {
   EVENTBRITE: "Eventbrite",
   LINK3: "Link3",
   LUMA: "lu.ma",
-  DISCORD: "Diiscord",
+  DISCORD: "Discord",
 }
 
 const logos: Record<EventSourcesKey, string> = {
@@ -33,17 +33,8 @@ const logos: Record<EventSourcesKey, string> = {
 
 const placeholders: Record<Exclude<EventSourcesKey, "DISCORD">, string> = {
   EVENTBRITE: "https://www.eventbrite.com/e/...",
-  LUMA: "https://lu.ma/u/...",
+  LUMA: "https://lu.ma/user/...",
   LINK3: "https://link3.to/e/...",
-}
-
-const validators: Record<
-  Exclude<EventSourcesKey, "DISCORD">,
-  (value?: string) => true | string
-> = {
-  EVENTBRITE: (url) => !!url.match(/(.)+eventbrite\.com\/e\/(.)+/) || "Invalid URL",
-  LUMA: (url) => !!url.match(/(.)+lu\.ma\/u\/(.)+/) || "Invalid URL",
-  LINK3: (url) => !!url.match(/(.)+link3\.to\/(.)+/) || "Invalid URL",
 }
 
 const EventInput = ({ eventSource }: Props) => {
@@ -70,7 +61,6 @@ const EventInput = ({ eventSource }: Props) => {
         <Input
           {...register(`eventSources.${eventSource}`, {
             required: "This field is required.",
-            validate: validators[eventSource],
           })}
           size={"lg"}
           placeholder={placeholders[eventSource]}
@@ -83,6 +73,7 @@ const EventInput = ({ eventSource }: Props) => {
             onClick={() =>
               setValue(`eventSources.${eventSource}`, undefined, {
                 shouldDirty: true,
+                shouldValidate: true,
               })
             }
           />
