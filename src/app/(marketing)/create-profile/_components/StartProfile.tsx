@@ -1,6 +1,8 @@
 "use client"
 
 import { ConnectFarcasterButton } from "@/components/Account/components/AccountModal/components/FarcasterProfile"
+import { walletSelectorModalAtom } from "@/components/Providers/atoms"
+import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { Avatar } from "@/components/ui/Avatar"
 import { Button } from "@/components/ui/Button"
 import {
@@ -13,14 +15,15 @@ import {
 import { Input } from "@/components/ui/Input"
 import { useToast } from "@/components/ui/hooks/useToast"
 import { cn } from "@/lib/utils"
-// import useUser from "components/[guild]/hooks/useUser"
-import { FarcasterProfile } from "@guildxyz/types"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Spinner, UploadSimple, User } from "@phosphor-icons/react"
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr"
 import { AvatarFallback, AvatarImage } from "@radix-ui/react-avatar"
+import { Slot } from "@radix-ui/react-slot"
+import useUser from "components/[guild]/hooks/useUser"
 import useDropzone from "hooks/useDropzone"
 import usePinata from "hooks/usePinata"
+import { useSetAtom } from "jotai"
 import { useEffect, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { z } from "zod"
@@ -35,27 +38,13 @@ enum CreateMethod {
 }
 
 export const StartProfile: OnboardingChain = () => {
-  // const farcasterProfiles = useUser().farcasterProfiles || []
-  // const farcasterProfile = farcasterProfiles.at(0)
-  const [farcasterProfile, setFarcasterProfile] = useState<FarcasterProfile>()
-  const [method, setMethod] = useState<CreateMethod>()
-  const [isFCLoading, setIsFCLoading] = useState(false)
-  const { toast } = useToast()
+  const { address } = useWeb3ConnectionManager()
+  const setIsWalletSelectorModalOpen = useSetAtom(walletSelectorModalAtom)
 
-  useEffect(() => {
-    if (method !== CreateMethod.FillByFarcaster) return
-    const mockedFarcasterProfile: FarcasterProfile = {
-      username: "mocked farcaster username",
-      userId: 3428402797897,
-      avatar: "https://picsum.photos/128",
-      fid: 98798739222,
-      createdAt: new Date("2008"),
-    }
-    setTimeout(() => {
-      setFarcasterProfile(mockedFarcasterProfile)
-      setIsFCLoading(false)
-    }, 1000)
-  }, [method])
+  const { farcasterProfiles = [], isLoading: isUserLoading } = useUser()
+  const farcasterProfile = farcasterProfiles.at(0)
+  const [method, setMethod] = useState<CreateMethod>()
+  const { toast } = useToast()
 
   useEffect(() => {
     if (!farcasterProfile || method !== CreateMethod.FillByFarcaster) return
@@ -64,9 +53,6 @@ export const StartProfile: OnboardingChain = () => {
       farcasterProfile.username ?? form.getValues()?.name ?? "",
       { shouldValidate: true }
     )
-    form.setValue("username", farcasterProfile.userId.toString(), {
-      shouldValidate: true,
-    })
     form.setValue("profileImageUrl", farcasterProfile.avatar, {
       shouldValidate: true,
     })
@@ -146,6 +132,7 @@ export const StartProfile: OnboardingChain = () => {
             render={({ field }) => (
               <Button
                 variant="unstyled"
+                type="button"
                 className={cn(
                   "mb-8 size-36 self-center rounded-full border-2 border-dotted",
                   { "border-solid": field.value }
@@ -164,20 +151,29 @@ export const StartProfile: OnboardingChain = () => {
             )}
           />
 
-          {method === undefined || isFCLoading ? (
+          {method === undefined ? (
             <>
-              <ConnectFarcasterButton
-                className="ml-0 w-full gap-2"
-                size="md"
-                isLoading={isFCLoading}
-                onClick={() => {
-                  setMethod(CreateMethod.FillByFarcaster)
-                  setIsFCLoading(true)
-                }}
-              >
-                <FarcasterImage />
-                Connect farcaster
-              </ConnectFarcasterButton>
+              {farcasterProfile ? (
+                <Button
+                  className="ml-0 w-full gap-2 bg-farcaster hover:bg-farcaster-hover active:bg-farcaster-active"
+                  size="md"
+                  onClick={() => setMethod(CreateMethod.FillByFarcaster)}
+                >
+                  <FarcasterImage />
+                  Fill using Farcaster
+                </Button>
+              ) : (
+                <Slot onClick={() => address || setIsWalletSelectorModalOpen(true)}>
+                  <ConnectFarcasterButton
+                    className="ml-0 w-full gap-2"
+                    size="md"
+                    isLoading={isUserLoading}
+                  >
+                    <FarcasterImage />
+                    Connect farcaster
+                  </ConnectFarcasterButton>
+                </Slot>
+              )}
 
               <Button
                 variant="ghost"
