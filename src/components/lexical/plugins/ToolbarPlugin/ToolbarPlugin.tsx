@@ -57,6 +57,7 @@ import { useCallback, useEffect, useRef, useState } from "react"
 import ImageEditor from "./components/ImageEditor"
 import LinkEditor from "./components/LinkEditor"
 import { LOW_PRIORITY } from "./constants"
+import { getSelectedNode } from "./utils"
 
 const supportedBlockTypes = [
   "paragraph",
