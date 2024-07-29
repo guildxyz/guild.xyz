@@ -23,7 +23,7 @@ import {
   $createQuoteNode,
   $isHeadingNode,
 } from "@lexical/rich-text"
-import { $isAtNodeEnd, $wrapNodes } from "@lexical/selection"
+import { $wrapNodes } from "@lexical/selection"
 import { $getNearestNodeOfType, mergeRegister } from "@lexical/utils"
 import {
   ArrowClockwise,
@@ -56,8 +56,8 @@ import {
 import { useCallback, useEffect, useRef, useState } from "react"
 import ImageEditor from "./components/ImageEditor"
 import LinkEditor from "./components/LinkEditor"
-
-export const LOW_PRIORITY = 1
+import { LOW_PRIORITY } from "./constants"
+import { getSelectedNode } from "./utils"
 
 const supportedBlockTypes = [
   "paragraph",
@@ -92,25 +92,6 @@ const blockTypeToBlockIcon: Record<
   paragraph: TextT,
   quote: Quotes,
   code: Code,
-}
-
-export const getSelectedNode = (selection) => {
-  const anchor = selection.anchor
-  const focus = selection.focus
-  const anchorNode = selection.anchor.getNode()
-  const focusNode = selection.focus.getNode()
-
-  if (anchorNode === focusNode) {
-    return anchorNode
-  }
-
-  const isBackward = selection.isBackward()
-
-  if (isBackward) {
-    return $isAtNodeEnd(focus) ? anchorNode : focusNode
-  } else {
-    return $isAtNodeEnd(anchor) ? focusNode : anchorNode
-  }
 }
 
 const BlockOptionsMenuList = ({

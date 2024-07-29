@@ -15,10 +15,8 @@ import {
 import { Info, Users } from "@phosphor-icons/react"
 import AccessHub from "components/[guild]/AccessHub"
 import { useAccessedGuildPlatforms } from "components/[guild]/AccessHub/AccessHub"
-import {
-  EditGuildDrawerProvider,
-  useEditGuildDrawer,
-} from "components/[guild]/EditGuild/EditGuildDrawerContext"
+import { useEditGuildDrawer } from "components/[guild]/EditGuild/EditGuildDrawerContext"
+import { EditGuildDrawerProvider } from "components/[guild]/EditGuild/EditGuildDrawerProvider"
 import GuildName from "components/[guild]/GuildName"
 import JoinButton from "components/[guild]/JoinButton"
 import JoinModalProvider from "components/[guild]/JoinModal/JoinModalProvider"
