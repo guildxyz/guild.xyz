@@ -1,11 +1,12 @@
 import {
   Box,
   Collapse,
+  Icon,
   SlideFade,
   VStack,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { Logic } from "@guildxyz/types"
+import { Question } from "@phosphor-icons/react"
 import React, {
   Fragment,
   memo,
@@ -15,13 +16,14 @@ import React, {
   useRef,
 } from "react"
 import { VariableSizeList } from "react-window"
-import { Requirement, Role } from "types"
+import { Role } from "types"
 import LogicDivider from "../LogicDivider"
 import { RoleCardCollapseProps } from "../RoleCard"
 import useRequirements from "../hooks/useRequirements"
 import AnyOfHeader from "./components/AnyOfHeader"
 import ExpandRequirementsButton from "./components/ExpandRequirementsButton"
-import { RequirementSkeleton } from "./components/Requirement"
+import HiddenRequirementAccessIndicator from "./components/HiddenRequirementAccessIndicator"
+import RequirementComponent, { RequirementSkeleton } from "./components/Requirement"
 import RequirementDisplayComponent from "./components/RequirementDisplayComponent"
 
 type Props = {
@@ -40,14 +42,9 @@ const RoleRequirements = ({
   descriptionRef,
   initialRequirementsRef,
 }: Props) => {
-  const { data, isLoading } = useRequirements(role?.id)
+  const { data: requirements, isLoading } = useRequirements(role?.id)
 
-  const requirements =
-    role.hiddenRequirements || data?.length === 0
-      ? [...(data ?? []), { roleId: role.id, visibility: "HIDDEN" } as Requirement]
-      : data
-
-  const isVirtualList = requirements?.length > VIRTUAL_LIST_REQUIREMENT_LIMIT
+  const isVirtualList = (requirements?.length ?? 0) > VIRTUAL_LIST_REQUIREMENT_LIMIT
   const sliceIndex = (requirements?.length ?? 0) - 3
   const shownRequirements = (requirements ?? []).slice(0, 3)
   const hiddenRequirements =
@@ -72,13 +69,10 @@ const RoleRequirements = ({
         {role.logic === "ANY_OF" && <AnyOfHeader anyOfNum={role.anyOfNum} />}
         <VStack ref={initialRequirementsRef} spacing={0} w="full" p={5} pt={0}>
           {/* Checking !data here too, so we don't show a loading state when we have data from the public request, but the authenticated request is still loading */}
-          {isLoading && !data ? (
+          {isLoading && !requirements ? (
             <RoleRequirementsSkeleton />
           ) : isVirtualList ? (
-            <VirtualRequirements
-              {...{ isExpanded, requirements, descriptionRef }}
-              logic={role.logic}
-            />
+            <VirtualRequirements {...{ isExpanded, descriptionRef }} role={role} />
           ) : (
             <>
               <VStack ref={initialRequirementsRef} spacing={0} w="full">
@@ -95,6 +89,15 @@ const RoleRequirements = ({
                     )}
                   </SlideFade>
                 ))}
+                {(role.hiddenRequirements || requirements?.length === 0) &&
+                  !hiddenRequirements.length && (
+                    <>
+                      {shownRequirements.length > 0 && (
+                        <LogicDivider logic={role.logic} />
+                      )}
+                      <SomeSecretRequirements roleId={role.id} />
+                    </>
+                  )}
               </VStack>
               <Collapse
                 in={isExpanded}
@@ -110,6 +113,13 @@ const RoleRequirements = ({
                     )}
                   </React.Fragment>
                 ))}
+
+                {role.hiddenRequirements && (
+                  <>
+                    <LogicDivider logic={role.logic} />
+                    <SomeSecretRequirements roleId={role.id} />
+                  </>
+                )}
               </Collapse>
             </>
           )}
@@ -144,15 +154,15 @@ const RoleRequirements = ({
 const VirtualRequirements = memo(
   ({
     isExpanded,
-    requirements,
-    logic,
+    role,
     descriptionRef,
   }: {
     isExpanded: boolean
-    requirements: Requirement[]
-    logic: Logic
+    role: Role
     descriptionRef?: MutableRefObject<HTMLDivElement>
   }) => {
+    const { data: requirements } = useRequirements(role.id)
+
     const listRef = useRef(null)
     const rowHeights = useRef<Record<number, number>>({})
     const expandedHeight = useMemo(() => {
@@ -183,11 +193,19 @@ const VirtualRequirements = memo(
         }
       }, [rowRef, index])
 
+      if (!requirements?.length) return <RoleRequirementsSkeleton />
+
       return (
         <Box style={style}>
           <Box ref={rowRef} paddingRight={PARENT_PADDING}>
             <RequirementDisplayComponent requirement={requirements[index]} />
-            {index < requirements?.length - 1 && <LogicDivider logic={logic} />}
+            {index < requirements.length - 1 && <LogicDivider logic={role.logic} />}
+            {role.hiddenRequirements && (
+              <>
+                <LogicDivider logic={role.logic} />
+                <SomeSecretRequirements roleId={role.id} />
+              </>
+            )}
           </Box>
         </Box>
       )
@@ -199,7 +217,7 @@ const VirtualRequirements = memo(
           ref={listRef}
           width={`calc(100% + ${PARENT_PADDING})`}
           height={isExpanded ? expandedHeight : 275}
-          itemCount={requirements.length}
+          itemCount={role.requirements.length}
           itemSize={(i) => Math.max(rowHeights.current[i] ?? 0, 106)}
           className="custom-scrollbar"
           style={{
@@ -214,6 +232,15 @@ const VirtualRequirements = memo(
       </Box>
     )
   }
+)
+
+const SomeSecretRequirements = ({ roleId }: { roleId: number }) => (
+  <RequirementComponent
+    image={<Icon as={Question} boxSize={5} />}
+    rightElement={<HiddenRequirementAccessIndicator roleId={roleId} />}
+  >
+    Some secret requirements
+  </RequirementComponent>
 )
 
 const RoleRequirementsSkeleton = () => (
