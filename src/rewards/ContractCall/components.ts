@@ -3,10 +3,8 @@ import { AddRewardPanelLoadingSpinner } from "rewards/components/AddRewardPanelL
 import { RewardComponentsData } from "rewards/types"
 import ContractCallCardMenu from "./ContractCallCardMenu"
 import ContractCallRewardCardButton from "./ContractCallRewardCardButton"
-import useContractCallCardProps from "./useContractCallCardProps"
 
 export default {
-  cardPropsHook: useContractCallCardProps,
   cardButton: ContractCallRewardCardButton,
   cardMenuComponent: ContractCallCardMenu,
   AddRewardPanel: dynamic(

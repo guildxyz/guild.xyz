@@ -3,10 +3,8 @@ import { AddRewardPanelLoadingSpinner } from "rewards/components/AddRewardPanelL
 import { RewardComponentsData } from "rewards/types"
 import SecretTextCardMenu from "./SecretTextCardMenu"
 import TextCardButton from "./TextCardButton"
-import useSecretTextCardProps from "./useSecretTextCardProps"
 
 export default {
-  cardPropsHook: useSecretTextCardProps,
   cardButton: TextCardButton,
   cardMenuComponent: SecretTextCardMenu,
   AddRewardPanel: dynamic(

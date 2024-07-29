@@ -3,10 +3,8 @@ import { AddRewardPanelLoadingSpinner } from "rewards/components/AddRewardPanelL
 import { RewardComponentsData } from "rewards/types"
 import PolygonIDCardButton from "./PolygonIDCardButton"
 import PolygonIDCardMenu from "./PolygonIDCardMenu"
-import usePolygonIDCardProps from "./usePolygonIDCardProps"
 
 export default {
-  cardPropsHook: usePolygonIDCardProps,
   cardButton: PolygonIDCardButton,
   cardMenuComponent: PolygonIDCardMenu,
   AddRewardPanel: dynamic(

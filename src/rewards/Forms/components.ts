@@ -3,10 +3,8 @@ import { AddRewardPanelLoadingSpinner } from "rewards/components/AddRewardPanelL
 import { RewardComponentsData } from "rewards/types"
 import FormCardLinkButton from "./FormCardLinkButton"
 import FormCardMenu from "./FormCardMenu"
-import useFormCardProps from "./useFormCardProps"
 
 export default {
-  cardPropsHook: useFormCardProps,
   cardButton: FormCardLinkButton,
   cardMenuComponent: FormCardMenu,
   RoleCardComponent: dynamic(() => import("rewards/components/FormReward"), {

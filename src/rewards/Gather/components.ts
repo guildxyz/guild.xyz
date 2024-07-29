@@ -3,10 +3,8 @@ import { AddRewardPanelLoadingSpinner } from "rewards/components/AddRewardPanelL
 import { RewardComponentsData } from "rewards/types"
 import GatherCardButton from "./GatherCardButton"
 import GatherCardMenu from "./GatherCardMenu"
-import useGatherCardProps from "./useGatherCardProps"
 
 export default {
-  cardPropsHook: useGatherCardProps,
   cardButton: GatherCardButton,
   cardMenuComponent: GatherCardMenu,
   RoleCardComponent: dynamic(() => import("rewards/components/GatherReward"), {

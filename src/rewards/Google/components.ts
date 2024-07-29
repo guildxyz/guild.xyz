@@ -4,10 +4,8 @@ import { RewardComponentsData } from "rewards/types"
 import GoogleCardMenu from "./GoogleCardMenu"
 import GoogleCardSettings from "./GoogleCardSettings"
 import GoogleCardWarning from "./GoogleCardWarning"
-import useGoogleCardProps from "./useGoogleCardProps"
 
 export default {
-  cardPropsHook: useGoogleCardProps,
   cardSettingsComponent: GoogleCardSettings,
   cardMenuComponent: GoogleCardMenu,
   cardWarningComponent: GoogleCardWarning,

@@ -12,6 +12,7 @@ import Button from "components/common/Button"
 import { useFormContext, useWatch } from "react-hook-form"
 import { CAPACITY_TIME_PLATFORMS } from "rewards"
 import NftAvailabilityTags from "rewards/ContractCall/components/NftAvailabilityTags"
+import { cardPropsHooks } from "rewards/cardPropsHooks"
 import rewardComponents from "rewards/components"
 import {
   GuildPlatformWithOptionalId,
@@ -58,8 +59,9 @@ const NewRolePlatformCard = ({ rolePlatform, remove }: Props) => {
     guildPlatform.platformGuildData.function ===
       ContractCallFunction.DEPRECATED_SIMPLE_CLAIM
 
-  const { cardPropsHook: useCardProps, cardSettingsComponent } =
-    rewardComponents[type]
+  const { cardSettingsComponent } =
+    rewardComponents[type as keyof typeof rewardComponents]
+  const useCardProps = cardPropsHooks[type as keyof typeof cardPropsHooks]
 
   return (
     <RolePlatformProvider

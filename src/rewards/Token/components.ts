@@ -2,10 +2,8 @@ import dynamic from "next/dynamic"
 import { AddRewardPanelLoadingSpinner } from "rewards/components/AddRewardPanelLoadingSpinner"
 import { RewardComponentsData } from "rewards/types"
 import ClaimTokenButton from "./ClaimTokenButton"
-import useTokenCardProps from "./hooks/useTokenCardProps"
 
 export default {
-  cardPropsHook: useTokenCardProps,
   cardButton: ClaimTokenButton,
   AddRewardPanel: dynamic(
     () =>

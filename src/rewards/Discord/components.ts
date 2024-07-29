@@ -3,10 +3,8 @@ import { AddRewardPanelLoadingSpinner } from "rewards/components/AddRewardPanelL
 import { RewardComponentsData } from "rewards/types"
 import DiscordCardMenu from "./DiscordCardMenu"
 import DiscordCardSettings from "./DiscordCardSettings"
-import useDiscordCardProps from "./useDiscordCardProps"
 
 export default {
-  cardPropsHook: useDiscordCardProps,
   cardSettingsComponent: DiscordCardSettings,
   cardMenuComponent: DiscordCardMenu,
   AddRewardPanel: dynamic(
