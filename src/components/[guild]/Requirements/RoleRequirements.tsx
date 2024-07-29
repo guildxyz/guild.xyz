@@ -47,7 +47,7 @@ const RoleRequirements = ({
   const isVirtualList = (requirements?.length ?? 0) > VIRTUAL_LIST_REQUIREMENT_LIMIT
   const sliceIndex = (requirements?.length ?? 0) - 3
   const shownRequirements = (requirements ?? []).slice(0, 3)
-  const hiddenRequirements =
+  const notShownRequirements =
     sliceIndex > 0 ? (requirements ?? []).slice(-sliceIndex) : []
 
   const shadowColor = useColorModeValue(
@@ -90,7 +90,7 @@ const RoleRequirements = ({
                   </SlideFade>
                 ))}
                 {(role.hiddenRequirements || requirements?.length === 0) &&
-                  !hiddenRequirements.length && (
+                  !notShownRequirements.length && (
                     <>
                       {shownRequirements.length > 0 && (
                         <LogicDivider logic={role.logic} />
@@ -104,11 +104,11 @@ const RoleRequirements = ({
                 animateOpacity={false}
                 style={{ width: "100%" }}
               >
-                {hiddenRequirements.map((requirement, i) => (
+                {notShownRequirements.map((requirement, i) => (
                   <React.Fragment key={i}>
                     {i === 0 && <LogicDivider logic={role.logic} />}
                     <RequirementDisplayComponent requirement={requirement} />
-                    {i < hiddenRequirements.length - 1 && (
+                    {i < notShownRequirements.length - 1 && (
                       <LogicDivider logic={role.logic} />
                     )}
                   </React.Fragment>
@@ -124,11 +124,11 @@ const RoleRequirements = ({
             </>
           )}
 
-          {hiddenRequirements.length > 0 && onToggleExpanded && (
+          {notShownRequirements.length > 0 && onToggleExpanded && (
             <>
               <ExpandRequirementsButton
                 logic={role.logic}
-                hiddenRequirements={hiddenRequirements.length}
+                notShownRequirements={notShownRequirements.length}
                 isRequirementsExpanded={isExpanded}
                 onToggleExpanded={onToggleExpanded}
               />
