@@ -60,12 +60,12 @@ export type RewardComponentsData = {
 
 export type CardSetting = () => JSX.Element
 export type RewardPreview = ComponentType<PropsWithChildren>
-export type AddRewardPanel = ComponentType<AddRewardPanelProps>
-export type RoleCard = ComponentType<RewardProps>
+// export type AddRewardPanel = ComponentType<AddRewardPanelProps>
+// export type RoleCard = ComponentType<RewardProps>
 // TODO: refactor so that props are properly typed out
-export type CardMenu = (props: any) => JSX.Element
-export type CardWarning = (props: any) => JSX.Element
-export type CardButton = (props: any) => JSX.Element
+// export type CardMenu = (props: any) => JSX.Element
+// export type CardWarning = (props: any) => JSX.Element
+// export type CardButton = (props: any) => JSX.Element
 
 export type RewardComponentMap<T> = Readonly<Partial<Record<PlatformName, T>>>
 
