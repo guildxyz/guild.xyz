@@ -13,12 +13,7 @@ import {
   DialogTitle,
 } from "@/components/ui/Dialog"
 import { Separator } from "@/components/ui/Separator"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/Tooltip"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip"
 import { useDisclosure } from "@/hooks/useDisclosure"
 import { useUserPublic } from "@/hooks/useUserPublic"
 import { LinkBreak, SignOut } from "@phosphor-icons/react/dist/ssr"
@@ -128,24 +123,22 @@ const AccountModal = () => {
                   />
                 </div>
 
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        size="icon"
-                        variant="outline"
-                        className="ml-auto size-8"
-                        onClick={handleLogout}
-                        aria-label="Disconnect"
-                      >
-                        <SignOut weight="bold" className="size-3" />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <span>Disconnect</span>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      size="icon"
+                      variant="outline"
+                      className="ml-auto size-8"
+                      onClick={handleLogout}
+                      aria-label="Disconnect"
+                    >
+                      <SignOut weight="bold" className="size-3" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <span>Disconnect</span>
+                  </TooltipContent>
+                </Tooltip>
               </div>
 
               <AccountConnections />

@@ -28,6 +28,7 @@ import { LegacyPostHogProvider } from "components/_app/LegacyPostHogProvider"
 import { LegacyWeb3ConnectionManager } from "components/_app/LegacyWeb3ConnectionManager"
 import "wicg-inert"
 import AppErrorBoundary from "@/components/AppErrorBoundary"
+import { TooltipProvider } from "@/components/ui/Tooltip"
 import NextTopLoader from "nextjs-toploader"
 
 const DynamicReCAPTCHA = dynamic(() => import("v2/components/ReCAPTCHA"))
@@ -65,38 +66,40 @@ const App = ({
       <NextTopLoader showSpinner={false} color="#eff6ff" height={3} />
 
       <Chakra cookies={pageProps.cookies}>
-        <IconContext.Provider
-          value={{
-            color: "currentColor",
-            size: "1em",
-            weight: "bold",
-            mirrored: false,
-          }}
-        >
-          <SWRConfig value={{ fetcher: fetcherForSWR }}>
-            <WagmiProvider config={wagmiConfig} reconnectOnMount={false}>
-              <QueryClientProvider client={queryClient}>
-                <FuelProvider ui={false} fuelConfig={fuelConfig}>
-                  <LegacyPostHogProvider>
-                    <IntercomProvider>
-                      <AppErrorBoundary>
-                        <Component {...pageProps} />
-                      </AppErrorBoundary>
+        <TooltipProvider>
+          <IconContext.Provider
+            value={{
+              color: "currentColor",
+              size: "1em",
+              weight: "bold",
+              mirrored: false,
+            }}
+          >
+            <SWRConfig value={{ fetcher: fetcherForSWR }}>
+              <WagmiProvider config={wagmiConfig} reconnectOnMount={false}>
+                <QueryClientProvider client={queryClient}>
+                  <FuelProvider ui={false} fuelConfig={fuelConfig}>
+                    <LegacyPostHogProvider>
+                      <IntercomProvider>
+                        <AppErrorBoundary>
+                          <Component {...pageProps} />
+                        </AppErrorBoundary>
 
-                      <ClientOnly>
-                        <AccountModal />
-                      </ClientOnly>
-                    </IntercomProvider>
+                        <ClientOnly>
+                          <AccountModal />
+                        </ClientOnly>
+                      </IntercomProvider>
 
-                    <LegacyWeb3ConnectionManager />
-                  </LegacyPostHogProvider>
-                </FuelProvider>
-              </QueryClientProvider>
-            </WagmiProvider>
-          </SWRConfig>
+                      <LegacyWeb3ConnectionManager />
+                    </LegacyPostHogProvider>
+                  </FuelProvider>
+                </QueryClientProvider>
+              </WagmiProvider>
+            </SWRConfig>
 
-          <Toaster />
-        </IconContext.Provider>
+            <Toaster />
+          </IconContext.Provider>
+        </TooltipProvider>
       </Chakra>
     </>
   )

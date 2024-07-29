@@ -77,6 +77,10 @@ export const TokenApiURLs: Record<Chain, string[]> = {
   TAIKO: [],
   KLAYTN: [],
   MINT: [],
+  SEI: [],
+  FILECOIN: [],
+  ROOTSTOCK: [],
+  MODE: [],
 }
 
 const fetchTokens = async ([_, chain]) =>

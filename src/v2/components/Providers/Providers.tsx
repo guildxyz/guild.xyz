@@ -16,6 +16,7 @@ import { wagmiConfig } from "wagmiConfig"
 import { AccountModal } from "../Account/components/AccountModal"
 import { Web3ConnectionManager } from "../Web3ConnectionManager"
 import { Toaster } from "../ui/Toaster"
+import { TooltipProvider } from "../ui/Tooltip"
 import { IntercomProvider } from "./IntercomProvider"
 import { PostHogProvider } from "./PostHogProvider"
 
@@ -35,25 +36,27 @@ export function Providers({ children }: { children: ReactNode }) {
         enableSystem
         disableTransitionOnChange
       >
-        <SWRConfig value={{ fetcher: fetcherForSWR }}>
-          <WagmiProvider config={wagmiConfig} reconnectOnMount={false}>
-            <QueryClientProvider client={queryClient}>
-              <FuelProvider ui={false} fuelConfig={fuelConfig}>
-                <PostHogProvider>
-                  <IntercomProvider>
-                    {children}
-                    <AccountModal />
-                    <Suspense>
-                      <Web3ConnectionManager />
-                    </Suspense>
-                  </IntercomProvider>
-                </PostHogProvider>
-              </FuelProvider>
-            </QueryClientProvider>
-          </WagmiProvider>
-        </SWRConfig>
+        <TooltipProvider>
+          <SWRConfig value={{ fetcher: fetcherForSWR }}>
+            <WagmiProvider config={wagmiConfig} reconnectOnMount={false}>
+              <QueryClientProvider client={queryClient}>
+                <FuelProvider ui={false} fuelConfig={fuelConfig}>
+                  <PostHogProvider>
+                    <IntercomProvider>
+                      {children}
+                      <AccountModal />
+                      <Suspense>
+                        <Web3ConnectionManager />
+                      </Suspense>
+                    </IntercomProvider>
+                  </PostHogProvider>
+                </FuelProvider>
+              </QueryClientProvider>
+            </WagmiProvider>
+          </SWRConfig>
 
-        <Toaster />
+          <Toaster />
+        </TooltipProvider>
       </ThemeProvider>
 
       {shouldUseReCAPTCHA && (

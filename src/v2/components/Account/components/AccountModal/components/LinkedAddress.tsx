@@ -21,12 +21,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/DropdownMenu"
 import { Skeleton } from "@/components/ui/Skeleton"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/Tooltip"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip"
 import { useDisclosure } from "@/hooks/useDisclosure"
 import {
   CircleNotch,
@@ -80,23 +75,21 @@ const LinkedAddress = ({ addressData }: Props) => {
             className="mr-0.5 font-bold text-sm"
           />
           {isDelegated && (
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Badge>
-                    <Image
-                      width={15}
-                      height={15}
-                      src={`/walletLogos/delegatecash.png`}
-                      alt="Delegate cash logo"
-                    />
-                  </Badge>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <span>Delegate.cash</span>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Badge>
+                  <Image
+                    width={15}
+                    height={15}
+                    src={`/walletLogos/delegatecash.png`}
+                    alt="Delegate cash logo"
+                  />
+                </Badge>
+              </TooltipTrigger>
+              <TooltipContent>
+                <span>Delegate.cash</span>
+              </TooltipContent>
+            </Tooltip>
           )}
           {walletType !== "EVM" && <AddressTypeTag type={walletType} size="sm" />}
           {isCurrent && (

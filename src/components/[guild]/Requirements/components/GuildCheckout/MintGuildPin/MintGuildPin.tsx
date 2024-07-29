@@ -56,6 +56,7 @@ const MintGuildPin = (): JSX.Element => {
         hasArrow
       >
         <Button
+          data-testid="mint-guild-pin-button"
           isDisabled={GUILD_PIN_MAINTENANCE}
           onClick={
             GUILD_PIN_MAINTENANCE
