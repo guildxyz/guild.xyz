@@ -7,9 +7,8 @@ import { useCallback, useState } from "react"
 import useSWR from "swr"
 import { useChainId, usePublicClient, useWalletClient } from "wagmi"
 import { DEFAULT_MESSAGE, DEFAULT_SIGN_LOADING_TEXT } from "./constants"
-import { fuelSign } from "./fuelSign"
 import { SignProps, UseSubmitOptions, Validation } from "./types"
-import { getMessage, sign } from "./utils"
+import { fuelSign, getMessage, sign } from "./utils"
 import gnosisSafeSignCallback from "./utils/gnosisSafeSignCallback"
 
 type FetcherFunction<ResponseType> = ({

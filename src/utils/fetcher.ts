@@ -1,6 +1,6 @@
 import { env } from "env"
-import { fuelSign } from "hooks/useSubmit/fuelSign"
 import { FuelSignProps, SignProps } from "hooks/useSubmit/types"
+import { fuelSign } from "hooks/useSubmit/utils"
 import { sign } from "hooks/useSubmit/utils"
 import { pushToIntercomSetting } from "./intercom"
 
