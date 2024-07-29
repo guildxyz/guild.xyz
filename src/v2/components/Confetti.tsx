@@ -15,11 +15,11 @@ const doubleConfetti = (confetti: TCanvasConfettiInstance) => {
   const defaultsPerBarrage: confetti.Options[] = [
     {
       origin: { x: -0.05 },
-      angle: 60,
+      angle: 50,
     },
     {
       origin: { x: 1.05 },
-      angle: 120,
+      angle: 130,
     },
   ] as const
 
@@ -71,10 +71,12 @@ export const useConfetti = () => {
 
 export const ConfettiProvider = ({ children }: PropsWithChildren) => {
   const confettiRef = useRef<TCanvasConfettiInstance>()
+  const audioRef = useRef<HTMLAudioElement>(null)
   const onInitHandler = ({ confetti }: { confetti: TCanvasConfettiInstance }) => {
     const confettiClosure = async (...args: Parameters<typeof confetti>) => {
       if (args[0] === undefined) {
         doubleConfetti(confetti)
+        audioRef.current?.play()
         return null
       }
       return confetti()
@@ -93,6 +95,7 @@ export const ConfettiProvider = ({ children }: PropsWithChildren) => {
           resize: true,
         }}
       />
+      <audio ref={audioRef} src="sfx/confetti-party-popper.mp3" />
     </ConfettiContext.Provider>
   )
 }
