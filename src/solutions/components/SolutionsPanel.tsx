@@ -25,6 +25,7 @@ import {
   categories,
   engagement,
   memberships,
+  nft,
   sybil,
   tokens,
 } from "solutions"
@@ -77,6 +78,7 @@ const SolutionsPanel = ({
     sybil: sybil.filter(
       (solution) => showPolygonId || solution.handlerParam !== "POLYGON_ID"
     ),
+    nft,
     tokens,
   }
 
