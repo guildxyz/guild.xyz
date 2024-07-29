@@ -1,13 +1,12 @@
 import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import { Icon } from "@chakra-ui/react"
-import { Question, Warning } from "@phosphor-icons/react"
+import { Warning } from "@phosphor-icons/react"
 import DataBlock from "components/common/DataBlock"
 import { PropsWithChildren } from "react"
 import { ErrorBoundary } from "react-error-boundary"
 import { REQUIREMENT_DISPLAY_COMPONENTS } from "requirements/requirementDisplayComponents"
 import { Requirement as RequirementType, Rest } from "types"
 import { CHAIN_CONFIG } from "wagmiConfig/chains"
-import HiddenRequirementAccessIndicator from "./HiddenRequirementAccessIndicator"
 import Requirement from "./Requirement"
 import RequirementAccessIndicator from "./RequirementAccessIndicator"
 import { RequirementProvider, useRequirementContext } from "./RequirementContext"
@@ -22,18 +21,6 @@ const RequirementDisplayComponent = ({
   rightElement = <RequirementAccessIndicator />,
   ...rest
 }: Props) => {
-  if (requirement.visibility === "HIDDEN")
-    return (
-      <Requirement
-        image={<Icon as={Question} boxSize={5} />}
-        rightElement={
-          <HiddenRequirementAccessIndicator roleId={requirement.roleId} />
-        }
-      >
-        Some secret requirements
-      </Requirement>
-    )
-
   const RequirementComponent = REQUIREMENT_DISPLAY_COMPONENTS[requirement.type]
 
   if (!!requirement.chain && !CHAIN_CONFIG[requirement.chain])
