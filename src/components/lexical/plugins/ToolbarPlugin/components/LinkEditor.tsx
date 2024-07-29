@@ -21,7 +21,8 @@ import { $getSelection, $isRangeSelection, SELECTION_CHANGE_COMMAND } from "lexi
 import { useCallback, useEffect, useRef, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { ensureUrlProtocol } from "utils/ensureUrlProtocol"
-import { LOW_PRIORITY, getSelectedNode } from "../ToolbarPlugin"
+import { LOW_PRIORITY } from "../ToolbarPlugin/constants"
+import { getSelectedNode } from "../ToolbarPlugin/utils"
 
 type LinkEditorProps = {
   isOpen: boolean
