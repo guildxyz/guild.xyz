@@ -1,7 +1,7 @@
 import { Skeleton, Tooltip } from "@chakra-ui/react"
 import { ArrowRight } from "@phosphor-icons/react"
-import { RewardIcon } from "components/[guild]/RoleCard/components/Reward"
 import { RewardDisplay } from "components/[guild]/RoleCard/components/RewardDisplay"
+import { RewardIcon } from "components/[guild]/RoleCard/components/RewardIcon"
 import { RewardProps } from "components/[guild]/RoleCard/components/types"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useGuildForm } from "components/[guild]/hooks/useGuildForms"
