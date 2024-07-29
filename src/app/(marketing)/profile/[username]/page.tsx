@@ -43,27 +43,30 @@ const LevelPolygon = () => {
 }
 
 async function getProfileData(username: string) {
-  // const req = `https://api.guild.xyz/v2/profiles/${username}`
-  // const res = await fetch(req)
-  // if (!res.ok) {
-  //   throw new Error("Failed to fetch profile data")
-  // }
-  // return res.json() as Promise<Profile>
-  //
-  // mocking for the time being
-  const res = {
-    id: 4,
-    userId: 6027190,
-    username: "durumm",
-    name: "durum",
-    bio: null,
-    profileImageUrl:
-      "https://guild-xyz.mypinata.cloud/ipfs/QmWGdo6FkjSz22oDZFMJysx3hGKoVqtzTWVMx9tTSP7jvi",
-    backgroundImageUrl: null,
-    createdAt: "2024-07-25T10:04:20.781Z",
-    updatedAt: "2024-07-25T10:04:20.781Z",
+  const req = `https://api.guild.xyz/v2/profiles/${username}`
+  try {
+    const res = await fetch(req)
+    if (!res.ok) {
+      throw new Error("Failed to fetch profile data")
+    }
+    return res.json() as Promise<Profile>
+  } catch (e) {
+    // mocking for the time being if fetch fails
+    console.error(e)
+    const res = {
+      id: 4,
+      userId: 6027190,
+      username: "durumm",
+      name: "durum",
+      bio: null,
+      profileImageUrl:
+        "https://guild-xyz.mypinata.cloud/ipfs/QmWGdo6FkjSz22oDZFMJysx3hGKoVqtzTWVMx9tTSP7jvi",
+      backgroundImageUrl: null,
+      createdAt: "2024-07-25T10:04:20.781Z",
+      updatedAt: "2024-07-25T10:04:20.781Z",
+    }
+    return res
   }
-  return res
 }
 
 // TODO: try get this from the backend if not possible write zod validation
