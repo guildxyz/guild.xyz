@@ -1,6 +1,5 @@
 import dynamic from "next/dynamic"
 import { AddRewardPanelLoadingSpinner } from "rewards/components/AddRewardPanelLoadingSpinner"
-import LoadingRewardPreview from "rewards/components/LoadingRewardPreview"
 import { RewardComponentsData } from "rewards/types"
 import FormCardLinkButton from "./FormCardLinkButton"
 import FormCardMenu from "./FormCardMenu"
@@ -23,8 +22,4 @@ export default {
       loading: AddRewardPanelLoadingSpinner,
     }
   ),
-  RewardPreview: dynamic(() => import("rewards/components/FormPreview"), {
-    ssr: false,
-    loading: LoadingRewardPreview,
-  }),
 } satisfies RewardComponentsData

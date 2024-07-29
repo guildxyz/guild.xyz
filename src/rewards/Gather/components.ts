@@ -1,6 +1,5 @@
 import dynamic from "next/dynamic"
 import { AddRewardPanelLoadingSpinner } from "rewards/components/AddRewardPanelLoadingSpinner"
-import LoadingRewardPreview from "rewards/components/LoadingRewardPreview"
 import { RewardComponentsData } from "rewards/types"
 import GatherCardButton from "./GatherCardButton"
 import GatherCardMenu from "./GatherCardMenu"
@@ -12,10 +11,6 @@ export default {
   cardMenuComponent: GatherCardMenu,
   RoleCardComponent: dynamic(() => import("rewards/components/GatherReward"), {
     ssr: false,
-  }),
-  RewardPreview: dynamic(() => import("rewards/components/GatherPreview"), {
-    ssr: false,
-    loading: LoadingRewardPreview,
   }),
   AddRewardPanel: dynamic(
     () =>

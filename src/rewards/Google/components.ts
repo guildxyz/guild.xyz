@@ -1,6 +1,5 @@
 import dynamic from "next/dynamic"
 import { AddRewardPanelLoadingSpinner } from "rewards/components/AddRewardPanelLoadingSpinner"
-import LoadingRewardPreview from "rewards/components/LoadingRewardPreview"
 import { RewardComponentsData } from "rewards/types"
 import GoogleCardMenu from "./GoogleCardMenu"
 import GoogleCardSettings from "./GoogleCardSettings"
@@ -22,8 +21,4 @@ export default {
       loading: AddRewardPanelLoadingSpinner,
     }
   ),
-  RewardPreview: dynamic(() => import("rewards/components/GooglePreview"), {
-    ssr: false,
-    loading: LoadingRewardPreview,
-  }),
 } satisfies RewardComponentsData

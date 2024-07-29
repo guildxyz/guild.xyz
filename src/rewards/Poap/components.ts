@@ -1,5 +1,4 @@
 import dynamic from "next/dynamic"
-import LoadingRewardPreview from "rewards/components/LoadingRewardPreview"
 import { RewardComponentsData } from "rewards/types"
 import PoapCardButton from "./PoapCardButton"
 import PoapCardMenu from "./PoapCardMenu"
@@ -18,10 +17,6 @@ export default {
       ssr: false,
     }
   ),
-  RewardPreview: dynamic(() => import("rewards/components/PoapPreview"), {
-    ssr: false,
-    loading: LoadingRewardPreview,
-  }),
   RoleCardComponent: dynamic(() => import("rewards/components/PoapReward"), {
     ssr: false,
   }),

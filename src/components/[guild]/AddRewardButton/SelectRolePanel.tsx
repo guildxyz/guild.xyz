@@ -21,7 +21,7 @@ import useToast from "hooks/useToast"
 import { useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import rewards, { CAPACITY_TIME_PLATFORMS } from "rewards"
-import rewardComponents from "rewards/components"
+import { RewardPreviews } from "rewards/RewardPreviews"
 import SelectRoleOrSetRequirements from "rewards/components/SelectRoleOrSetRequirements"
 import { RoleTypeToAddTo, useAddRewardContext } from "../AddRewardContext"
 import useGuild from "../hooks/useGuild"
@@ -73,7 +73,9 @@ const SelectRolePanel = ({
   const isAddRewardButtonDisabled =
     activeTab === RoleTypeToAddTo.NEW_ROLE ? !requirements?.length : !roleIds?.length
 
-  const { RewardPreview } = rewardComponents[selection] ?? {}
+  const RewardPreview = RewardPreviews.hasOwnProperty(selection)
+    ? RewardPreviews[selection as keyof typeof RewardPreviews]
+    : null
 
   const goBack = () => {
     if (!rewards[selection].autoRewardSetup)
@@ -100,31 +102,33 @@ const SelectRolePanel = ({
             <Text>{`Add ${rewards[selection]?.name} reward`}</Text>
           </HStack>
 
-          <RewardPreview>
-            {CAPACITY_TIME_PLATFORMS.includes(selection) && (
-              <AvailabilitySetup
-                platformType={rolePlatform?.guildPlatform?.platformName}
-                rolePlatform={rolePlatform}
-                defaultValues={{
-                  /**
-                   * If the user doesn't upload mint links for a POAP, we should
-                   * fallback to undefined, since 0 is not a valid value here
-                   */
-                  capacity:
-                    rolePlatform?.guildPlatform?.platformGuildData?.texts?.length ||
-                    undefined,
-                  /** POAPs have default startTime and endTime */
-                  startTime: rolePlatform?.startTime,
-                  endTime: rolePlatform?.endTime,
-                }}
-                onDone={({ capacity, startTime, endTime }) => {
-                  methods.setValue(`rolePlatforms.0.capacity`, capacity)
-                  methods.setValue(`rolePlatforms.0.startTime`, startTime)
-                  methods.setValue(`rolePlatforms.0.endTime`, endTime)
-                }}
-              />
-            )}
-          </RewardPreview>
+          {RewardPreview && (
+            <RewardPreview>
+              {CAPACITY_TIME_PLATFORMS.includes(selection) && (
+                <AvailabilitySetup
+                  platformType={rolePlatform?.guildPlatform?.platformName}
+                  rolePlatform={rolePlatform}
+                  defaultValues={{
+                    /**
+                     * If the user doesn't upload mint links for a POAP, we should
+                     * fallback to undefined, since 0 is not a valid value here
+                     */
+                    capacity:
+                      rolePlatform?.guildPlatform?.platformGuildData?.texts
+                        ?.length || undefined,
+                    /** POAPs have default startTime and endTime */
+                    startTime: rolePlatform?.startTime,
+                    endTime: rolePlatform?.endTime,
+                  }}
+                  onDone={({ capacity, startTime, endTime }) => {
+                    methods.setValue(`rolePlatforms.0.capacity`, capacity)
+                    methods.setValue(`rolePlatforms.0.startTime`, startTime)
+                    methods.setValue(`rolePlatforms.0.endTime`, endTime)
+                  }}
+                />
+              )}
+            </RewardPreview>
+          )}
         </Stack>
       </ModalHeader>
 

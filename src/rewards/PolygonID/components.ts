@@ -1,6 +1,5 @@
 import dynamic from "next/dynamic"
 import { AddRewardPanelLoadingSpinner } from "rewards/components/AddRewardPanelLoadingSpinner"
-import LoadingRewardPreview from "rewards/components/LoadingRewardPreview"
 import { RewardComponentsData } from "rewards/types"
 import PolygonIDCardButton from "./PolygonIDCardButton"
 import PolygonIDCardMenu from "./PolygonIDCardMenu"
@@ -20,10 +19,6 @@ export default {
       loading: AddRewardPanelLoadingSpinner,
     }
   ),
-  RewardPreview: dynamic(() => import("rewards/components/PolygonIDPreview"), {
-    ssr: false,
-    loading: LoadingRewardPreview,
-  }),
   RoleCardComponent: dynamic(() => import("rewards/components/PolygonIDReward"), {
     ssr: false,
   }),
