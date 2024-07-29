@@ -12,6 +12,7 @@ import {
   palm,
   scrollAlpha,
   taikoKatlaTestnet,
+  world,
   x1,
 } from "static/customChains"
 // import type { Chain as ViemChain } from "viem"
@@ -698,6 +699,14 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/networkLogos/mode.svg",
     },
   },
+  WORLD_CHAIN: {
+    ...generateChainConfig(world, ETH_ICON),
+    iconUrl: "/networkLogos/world.svg",
+    blockExplorerIconUrl: {
+      light: "/networkLogos/world.svg",
+      dark: "/networkLogos/world.svg",
+    },
+  },
 }
 
 enum Chains {
@@ -766,6 +775,7 @@ enum Chains {
   FILECOIN = filecoin.id,
   ROOTSTOCK = rootstock.id,
   MODE = mode.id,
+  WORLD_CHAIN = world.id,
 }
 
 export type Chain = keyof typeof Chains

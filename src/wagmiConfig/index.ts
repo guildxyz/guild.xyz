@@ -11,6 +11,7 @@ import {
   ontology,
   palm,
   taikoKatlaTestnet,
+  world,
   x1,
 } from "static/customChains"
 import {
@@ -186,6 +187,7 @@ export const wagmiConfig = IS_TEST
         filecoin,
         rootstock,
         mode,
+        world,
       ],
       transports: {
         [mainnet.id]: http(),
@@ -249,6 +251,7 @@ export const wagmiConfig = IS_TEST
         [filecoin.id]: http(),
         [rootstock.id]: http(),
         [mode.id]: http(),
+        [world.id]: http(),
       },
       ssr: true,
       connectors: [
