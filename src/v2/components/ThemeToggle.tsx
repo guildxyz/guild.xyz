@@ -27,12 +27,13 @@ export function ThemeToggle() {
         }
       }}
       aria-label="Toggle between themes"
+      variant="ghost"
     >
       <ToggleGroupItem
         value="light"
         aria-label="Toggle light mode"
         size="icon"
-        variant="primary"
+        variant="ghost"
         className="size-8"
       >
         <Sun weight="bold" />
@@ -41,7 +42,6 @@ export function ThemeToggle() {
         value="dark"
         aria-label="Toggle dark mode"
         size="icon"
-        variant="primary"
         className="size-8"
       >
         <Moon weight="bold" />
@@ -50,7 +50,6 @@ export function ThemeToggle() {
         value="system"
         aria-label="Toggle system default"
         size="icon"
-        variant="primary"
         className="size-8"
       >
         <Desktop weight="bold" />
