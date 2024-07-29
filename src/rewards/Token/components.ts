@@ -17,7 +17,4 @@ export default {
       loading: AddRewardPanelLoadingSpinner,
     }
   ),
-  RoleCardComponent: dynamic(() => import("rewards/components/TokenReward"), {
-    ssr: false,
-  }),
 } satisfies RewardComponentsData

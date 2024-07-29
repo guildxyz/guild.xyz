@@ -19,7 +19,4 @@ export default {
       loading: AddRewardPanelLoadingSpinner,
     }
   ),
-  RoleCardComponent: dynamic(() => import("rewards/components/PolygonIDReward"), {
-    ssr: false,
-  }),
 } satisfies RewardComponentsData

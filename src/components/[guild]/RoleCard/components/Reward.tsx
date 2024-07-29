@@ -1,12 +1,4 @@
-import {
-  Circle,
-  Icon,
-  Img,
-  Spinner,
-  Text,
-  Tooltip,
-  useColorModeValue,
-} from "@chakra-ui/react"
+import { Icon, Spinner, Text, Tooltip } from "@chakra-ui/react"
 import { ArrowSquareOut, LockSimple } from "@phosphor-icons/react"
 import usePlatformAccessButton from "components/[guild]/AccessHub/components/usePlatformAccessButton"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
@@ -17,15 +9,14 @@ import Button from "components/common/Button"
 import useMembership, {
   useRoleMembership,
 } from "components/explorer/hooks/useMembership"
-import { motion } from "framer-motion"
-import { useMemo, useState } from "react"
-import rewards from "rewards"
+import { useMemo } from "react"
 import GoogleCardWarning from "rewards/Google/GoogleCardWarning"
-import rewardComponents from "rewards/components"
+import { RoleCards } from "rewards/RoleCards"
 import { PlatformType, RolePlatform } from "types"
 import capitalize from "utils/capitalize"
 import { RewardDisplay } from "./RewardDisplay"
-import { RewardIconProps, RewardProps } from "./types"
+import { RewardIcon } from "./RewardIcon"
+import { RewardProps } from "./types"
 
 const getRewardLabel = (platform: RolePlatform) => {
   switch (platform.guildPlatform.platformId) {
@@ -148,73 +139,6 @@ const Reward = ({
   )
 }
 
-const MotionImg = motion(Img)
-const MotionCircle = motion(Circle)
-
-const RewardIcon = ({
-  rolePlatformId,
-  guildPlatform,
-  withMotionImg = true,
-  transition,
-}: RewardIconProps) => {
-  const [doIconFallback, setDoIconFallback] = useState(false)
-  const props = {
-    src:
-      guildPlatform.platformGuildData?.imageUrl ??
-      rewards[PlatformType[guildPlatform.platformId]].imageUrl,
-    alt: guildPlatform.platformGuildName,
-    boxSize: 6,
-    rounded: "full",
-    onError: () => {
-      setDoIconFallback(true)
-    },
-  }
-
-  const motionElementProps = {
-    layoutId: `${rolePlatformId}_reward_img`,
-    transition: { type: "spring", duration: 0.5, ...transition },
-  }
-  const circleBgColor = useColorModeValue("gray.700", "gray.600")
-  const circleProps = {
-    bgColor: circleBgColor,
-    boxSize: 6,
-  }
-
-  if (doIconFallback || !props.src) {
-    if (withMotionImg) {
-      return (
-        <MotionCircle {...motionElementProps} {...circleProps}>
-          <Icon
-            as={rewards[PlatformType[guildPlatform.platformId]].icon}
-            color="white"
-            boxSize={3}
-          />
-        </MotionCircle>
-      )
-    }
-    return (
-      <Circle {...circleProps}>
-        <Icon
-          as={rewards[PlatformType[guildPlatform.platformId]].icon}
-          color="white"
-          boxSize={3}
-        />
-      </Circle>
-    )
-  }
-
-  return (
-    <Circle as="picture">
-      <source srcSet={rewards[PlatformType[guildPlatform.platformId]].imageUrl} />
-      {withMotionImg ? (
-        <MotionImg {...motionElementProps} {...props} />
-      ) : (
-        <Img {...props} />
-      )}
-    </Circle>
-  )
-}
-
 const RewardWrapper = ({ platform, ...props }: RewardProps) => {
   const { guildPlatforms } = useGuild()
 
@@ -226,16 +150,17 @@ const RewardWrapper = ({ platform, ...props }: RewardProps) => {
 
   const platformWithGuildPlatform = { ...platform, guildPlatform }
 
-  const Component =
-    rewardComponents[PlatformType[guildPlatform?.platformId]].RoleCardComponent ??
-    Reward
+  const rewardName = PlatformType[guildPlatform?.platformId]
+  const RoleCard = RoleCards.hasOwnProperty(rewardName)
+    ? RoleCards[rewardName as keyof typeof RoleCards]
+    : Reward
 
   return (
     <ApiRequirementHandlerProvider roleId={platformWithGuildPlatform.roleId}>
-      <Component platform={platformWithGuildPlatform} {...props} />
+      <RoleCard platform={platformWithGuildPlatform} {...props} />
     </ApiRequirementHandlerProvider>
   )
 }
 
-export { Reward, RewardIcon, getRewardLabel }
+export { Reward, getRewardLabel }
 export default RewardWrapper

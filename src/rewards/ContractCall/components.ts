@@ -19,10 +19,4 @@ export default {
       loading: AddRewardPanelLoadingSpinner,
     }
   ),
-  RoleCardComponent: dynamic(
-    () => import("rewards/ContractCall/ContractCallReward"),
-    {
-      ssr: false,
-    }
-  ),
 } satisfies RewardComponentsData

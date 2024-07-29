@@ -9,9 +9,6 @@ export default {
   cardPropsHook: useFormCardProps,
   cardButton: FormCardLinkButton,
   cardMenuComponent: FormCardMenu,
-  RoleCardComponent: dynamic(() => import("rewards/components/FormReward"), {
-    ssr: false,
-  }),
   AddRewardPanel: dynamic(
     () =>
       import(

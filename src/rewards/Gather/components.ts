@@ -9,9 +9,6 @@ export default {
   cardPropsHook: useGatherCardProps,
   cardButton: GatherCardButton,
   cardMenuComponent: GatherCardMenu,
-  RoleCardComponent: dynamic(() => import("rewards/components/GatherReward"), {
-    ssr: false,
-  }),
   AddRewardPanel: dynamic(
     () =>
       import(
