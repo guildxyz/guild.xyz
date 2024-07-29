@@ -1,34 +1,11 @@
-import { useDisclosure } from "@chakra-ui/react"
-import dynamic from "next/dynamic"
-import { PropsWithChildren, createContext, useContext } from "react"
-import useGuild from "../hooks/useGuild"
-import useGuildPermission from "../hooks/useGuildPermission"
+import { createContext, useContext } from "react"
 
-const EditGuildDrawerContext = createContext<{
+export const EditGuildDrawerContext = createContext<{
   isOpen: boolean
   onOpen: () => void
   onClose: () => void
 }>(undefined)
 
-const DynamicEditGuildDrawer = dynamic(() => import("./EditGuildDrawer"))
-
-const EditGuildDrawerProvider = ({
-  children,
-}: PropsWithChildren<unknown>): JSX.Element => {
-  const { isDetailed } = useGuild()
-  const { isAdmin } = useGuildPermission()
-  const { isOpen, onOpen, onClose } = useDisclosure()
-
-  return (
-    <EditGuildDrawerContext.Provider value={{ isOpen, onOpen, onClose }}>
-      {children}
-      {isAdmin && isDetailed && (
-        <DynamicEditGuildDrawer isOpen={isOpen} onClose={onClose} />
-      )}
-    </EditGuildDrawerContext.Provider>
-  )
-}
-
 const useEditGuildDrawer = () => useContext(EditGuildDrawerContext)
 
-export { EditGuildDrawerProvider, useEditGuildDrawer }
+export { useEditGuildDrawer }
