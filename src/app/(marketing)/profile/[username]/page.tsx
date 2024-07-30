@@ -95,7 +95,7 @@ const Page = async ({
             <p className="mt-6 max-w-md text-pretty text-center text-lg text-muted-foreground">
               {profile.bio}
             </p>
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-x-8 gap-y-6">
+            <div className="mt-8 grid grid-cols-[repeat(3,auto)] gap-x-8 gap-y-6 sm:grid-cols-[repeat(5,auto)]">
               <div className="flex flex-col items-center leading-tight">
                 <div className="font-bold text-lg">3232</div>
                 <div className="text-muted-foreground">Guildmates</div>
@@ -106,7 +106,7 @@ const Page = async ({
                 <div className="text-muted-foreground">Followers</div>
               </div>
               <Separator orientation="vertical" className="hidden h-12 sm:block" />
-              <div className="flex items-center gap-2">
+              <div className="col-span-3 flex items-center gap-2 place-self-center sm:col-span-1">
                 <AvatarGroup imageUrls={["", ""]} count={8} />
                 <div className="text-muted-foreground leading-tight">
                   Followed by <span className="font-bold">Hoho</span>,<br />
