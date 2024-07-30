@@ -1,9 +1,12 @@
 "use client"
 
+import { walletSelectorModalAtom } from "@/components/Providers/atoms"
+import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { Button } from "@/components/ui/Button"
 import { cardClassName } from "@/components/ui/Card"
 import { cn } from "@/lib/utils"
-import { useState } from "react"
+import { useSetAtom } from "jotai"
+import { useEffect, useState } from "react"
 import { SUBSCRIPTIONS } from "../constants"
 import { ChainData, DispatchChainAction, OnboardingChain } from "../types"
 import { ChoosePass } from "./ChoosePass"
@@ -19,7 +22,17 @@ const chains: OnboardingChain[] = [
 ] as const
 
 export const OnboardingDriver = () => {
-  const [chainIndex, setChainIndex] = useState(0)
+  const [chainIndex, setChainIndex] = useState(3)
+  const { address } = useWeb3ConnectionManager()
+  const setIsWalletSelectorModalOpen = useSetAtom(walletSelectorModalAtom)
+
+  useEffect(() => {
+    if (!address) {
+      setChainIndex(0)
+      setIsWalletSelectorModalOpen(true)
+    }
+  }, [address, setIsWalletSelectorModalOpen])
+
   // TODO: remove default chosen subscription, as it is only there for debug
   // purposes
   const [chainData, setChainData] = useState<Partial<ChainData>>({
