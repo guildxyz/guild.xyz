@@ -28,7 +28,7 @@ export const ContributionCard = () => {
             Enter Farcaster
           </h3>
           <div className="flex items-center gap-2 text-muted-foreground">
-            <Users weight="bold" className="min-w-4" />
+            <Users weight="bold" className="min-w-min" />
             <p className="line-clamp-1 text-sm">Only 3.4% of users have this role</p>
           </div>
         </div>

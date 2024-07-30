@@ -43,23 +43,19 @@ export const RecentActivity = () => {
             <div className="px-5 py-6">
               <h3 className="font-bold">
                 Acquire the{" "}
-                <Badge>
+                <Badge className="whitespace-nowrap">
                   <Rocket weight="fill" className="mr-1" />
                   Enter Farcaster
                 </Badge>{" "}
                 role
               </h3>
-              <div className="mt-1.5 flex flex-col sm:flex-row sm:items-center sm:gap-2">
+              <div className="mt-1.5 flex flex-wrap items-center gap-2">
                 <p className="text-muted-foreground">2 hours ago</p>
                 <Circle
                   className="hidden size-1.5 text-muted-foreground sm:block"
                   weight="fill"
                 />
-                <Badge
-                  colorScheme="blue"
-                  className="self-start sm:self-center"
-                  size="sm"
-                >
+                <Badge colorScheme="blue" size="sm">
                   +5 XP
                 </Badge>
               </div>
