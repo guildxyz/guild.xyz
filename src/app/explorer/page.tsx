@@ -19,7 +19,8 @@ import { ActiveSection } from "./types"
 
 export const metadata = {
   icons: {
-    other: [{ rel: "preload", url: "/banner.svg" }],
+    // @ts-ignore: "as" prop not typed out.
+    other: [{ rel: "preload", url: "/banner.svg", as: "image" }],
   },
 }
 

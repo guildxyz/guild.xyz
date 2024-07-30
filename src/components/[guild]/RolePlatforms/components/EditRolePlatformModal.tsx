@@ -11,7 +11,7 @@ import { Modal } from "components/common/Modal"
 import { createContext, useContext, useRef, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import rewards from "rewards"
-import rewardComponents from "rewards/components"
+import { cardSettings } from "rewards/CardSettings"
 import { PlatformType, RoleFormType, RolePlatform } from "types"
 import { RolePlatformProvider } from "./RolePlatformProvider"
 
@@ -43,8 +43,8 @@ const EditRolePlatformModal = ({
     rolePlatform.guildPlatform?.platformGuildName ??
     rewards[PlatformType[rolePlatform.guildPlatform.platformId]].name
 
-  const { cardSettingsComponent: SettingsComponent } =
-    rewardComponents[PlatformType[rolePlatform?.guildPlatform?.platformId]]
+  const SettingsComponent =
+    cardSettings[PlatformType[rolePlatform?.guildPlatform?.platformId]]
 
   return (
     <Modal

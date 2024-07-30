@@ -26,7 +26,7 @@ const ServerSetupCard = ({ onSubmit, serverId }: Props): JSX.Element => {
   const revalidatePermissions = useSubmit(() =>
     mutate().then((newPermissions) => {
       if (newPermissions?.hasAllPermissions && newPermissions?.isRoleOrderOk) {
-        onSubmit()
+        onSubmit?.()
       }
       return newPermissions
     })
@@ -86,8 +86,8 @@ const ServerSetupCard = ({ onSubmit, serverId }: Props): JSX.Element => {
               colorScheme="DISCORD"
               onClick={() => {
                 captureEvent("[discord setup] rechecking role order")
-                revalidatePermissions.onSubmit().then(({ isRoleOrderOk }) => {
-                  if (!isRoleOrderOk) {
+                revalidatePermissions.onSubmit().then((res) => {
+                  if (!res?.isRoleOrderOk) {
                     start()
                   }
                 })

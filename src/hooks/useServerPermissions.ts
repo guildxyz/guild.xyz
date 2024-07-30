@@ -26,11 +26,15 @@ export type PermissionsResponse = {
 function mapPermissions(permissions: PermissionsResponse) {
   const permissionsArray = Object.values(permissions.permissions)
 
-  // Only checking that it is not on the bottom
+  /**
+   * If there are only 2 roles (everyone and Guild.xyz Bot), then we can accept the default role order
+   * Otherwise, we check if there's at least one role below the Guild.xyz Bot role
+   */
   const isRoleOrderOk =
     // TODO: Checking by roleName feels sketchy, maybe we could return a flag for each entry, which indicates the relevant role
+    permissions.roleOrders.length === 2 ||
     permissions.roleOrders.find(({ roleName }) => roleName === GUILD_BOT_ROLE_NAME)
-      .rolePosition !== 1
+      ?.rolePosition !== 1
 
   return {
     ...permissions,

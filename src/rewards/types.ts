@@ -14,8 +14,6 @@ import type {
   RoleFormType,
 } from "types"
 
-export type CardSettingsComponent = () => JSX.Element
-
 export enum PlatformAsRewardRestrictions {
   /**
    * @example
@@ -50,15 +48,16 @@ export type RewardData = {
 }
 
 export type RewardComponentsData = {
-  cardPropsHook?: CardPropsHook
-  cardSettingsComponent?: CardSettingsComponent
   cardMenuComponent?: (props: any) => JSX.Element
   cardWarningComponent?: (props: any) => JSX.Element
   cardButton?: (props: any) => JSX.Element
   AddRewardPanel?: ComponentType<AddRewardPanelProps>
-  RewardPreview?: ComponentType<PropsWithChildren>
   RoleCardComponent?: ComponentType<RewardProps>
 }
+
+export type CardSetting = () => JSX.Element
+export type RewardPreview = ComponentType<PropsWithChildren>
+export type RewardComponentMap<T> = Readonly<Partial<Record<PlatformName, T>>>
 
 export type Rewards = Readonly<Record<PlatformName, RewardData>>
 export type RewardComponents = Readonly<Record<PlatformName, RewardComponentsData>>

@@ -14,7 +14,7 @@ import OptionImage from "components/common/StyledSelect/components/CustomSelectO
 import useToast from "hooks/useToast"
 import dynamic from "next/dynamic"
 import { FormProvider, useForm } from "react-hook-form"
-import rewardComponents from "rewards/components"
+import { cardPropsHooks } from "rewards/cardPropsHooks"
 import { PlatformType, Requirement, RolePlatform } from "types"
 
 const DynamicSetup = dynamic(
@@ -57,10 +57,8 @@ const EditDynamicRewardModal = ({
   })
 
   const rewardName = rolePlatform.guildPlatform.platformGuildData.name
-
   const propsHook =
-    rewardComponents[PlatformType[rolePlatform.guildPlatform.platformId]]
-      ?.cardPropsHook
+    cardPropsHooks[PlatformType[rolePlatform.guildPlatform.platformId]]
 
   const { image = null } = propsHook ? propsHook(rolePlatform.guildPlatform) : {}
   const ImageComponent =
