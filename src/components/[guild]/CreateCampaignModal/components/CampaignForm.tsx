@@ -76,6 +76,7 @@ const CampaignForm = ({ iconUploader }: Props) => {
         <Switch
           {...hideFromGuildPageField}
           title="Show on Guild page"
+          description="The page will remain public, but it won't be displayed on your guild's home page"
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             hideFromGuildPageOnChange(!e.target.checked)
           }
