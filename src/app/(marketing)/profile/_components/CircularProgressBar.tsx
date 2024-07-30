@@ -5,7 +5,7 @@ import { RadialBar, RadialBarChart } from "recharts"
 
 const chartData = [{ experience: 1, fill: "hsl(var(--primary))" }]
 
-export const CircularProgressBar = () => {
+export const CircularProgressBar = ({ progress }: { progress: number }) => {
   const size = 224
   const strokeWidth = 10
   return (
@@ -17,7 +17,7 @@ export const CircularProgressBar = () => {
       <RadialBarChart
         data={chartData}
         startAngle={0}
-        endAngle={280}
+        endAngle={360 * progress}
         innerRadius={106}
         outerRadius={116}
       >

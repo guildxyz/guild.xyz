@@ -18,6 +18,7 @@ import { ArrowRight, CircleWavyCheck } from "@phosphor-icons/react/dist/ssr"
 import { ActivityChart } from "../_components/ActivityChart"
 import { CircularProgressBar } from "../_components/CircularProgressBar"
 import { ContributionCard } from "../_components/ContributionCard"
+import { EditProfile } from "../_components/EditProfile"
 import { LevelBadge } from "../_components/LevelBadge"
 import { RecentActivity } from "../_components/RecentActivity"
 import { Profile } from "./types"
@@ -55,7 +56,7 @@ const Page = async ({
   params: { username: string }
 }) => {
   const profile = await getProfileData(username)
-  const level = 100
+  const level = 50
 
   return (
     <Layout>
@@ -68,7 +69,8 @@ const Page = async ({
       </LayoutHero>
       <LayoutMain>
         <div className="mt-24">
-          <div className="mb-24 flex flex-col items-center">
+          <div className="relative mb-24 flex flex-col items-center">
+            <EditProfile />
             <div className="relative mb-12 flex items-center justify-center">
               <Avatar className="size-48">
                 <AvatarImage
@@ -79,7 +81,7 @@ const Page = async ({
                 />
                 <AvatarFallback>#</AvatarFallback>
               </Avatar>
-              <CircularProgressBar />
+              <CircularProgressBar progress={0.1} />
               <LevelBadge level={level} className="absolute right-0 bottom-0" />
             </div>
             <h1 className="text-center font-bold text-4xl leading-normal tracking-tight">
