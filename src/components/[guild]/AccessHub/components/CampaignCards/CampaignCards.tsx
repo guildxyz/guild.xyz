@@ -3,10 +3,15 @@ import {
   HStack,
   Img,
   SkeletonCircle,
+  Tag,
+  TagLabel,
+  TagLeftIcon,
   Text,
+  Tooltip,
+  VStack,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { ArrowRight, Plus } from "@phosphor-icons/react"
+import { ArrowRight, EyeSlash, Plus } from "@phosphor-icons/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import Button from "components/common/Button"
@@ -36,11 +41,21 @@ const CampaignCards = () => {
 
   if (!groups?.length || !!query.group) return null
 
+  const renderedGroups = isAdmin
+    ? groups
+    : groups.filter((group) => !group.hideFromGuildPage)
+
   return (
     <>
-      {groups.map(({ id, imageUrl, name, urlName }) => {
-        const groupHasRoles = roles.some((role) => role.groupId === id)
+      {renderedGroups.map(({ id, imageUrl, name, urlName, hideFromGuildPage }) => {
+        const groupHasRoles = roles?.some((role) => role.groupId === id)
         if (!isAdmin && !groupHasRoles) return null
+
+        let campaignImage = ""
+        if (typeof imageUrl === "string" && imageUrl.length > 0)
+          campaignImage = imageUrl
+        else if (typeof guildImageUrl === "string" && guildImageUrl.length > 0)
+          campaignImage = guildImageUrl
 
         return (
           <ColorCard
@@ -55,7 +70,7 @@ const CampaignCards = () => {
             {isAdmin && <DynamicCampaignCardMenu groupId={id} />}
 
             <HStack spacing={3} minHeight={10} mb={5}>
-              {imageUrl?.length > 0 || guildImageUrl?.length > 0 ? (
+              {campaignImage.length > 0 ? (
                 <Circle
                   overflow={"hidden"}
                   borderRadius="full"
@@ -64,21 +79,31 @@ const CampaignCards = () => {
                   position="relative"
                   bgColor={imageBgColor}
                 >
-                  {imageUrl?.match("guildLogos") ? (
-                    <Img src={imageUrl} alt="Guild logo" boxSize="40%" />
+                  {campaignImage.match("guildLogos") ? (
+                    <Img src={campaignImage} alt="Guild logo" boxSize="40%" />
                   ) : (
-                    <Image
-                      src={imageUrl || guildImageUrl}
-                      alt={name}
-                      fill
-                      sizes="2.5rem"
-                    />
+                    <Image src={campaignImage} alt={name} fill sizes="2.5rem" />
                   )}
                 </Circle>
               ) : (
                 <SkeletonCircle size="10" />
               )}
-              <Text fontWeight="bold">{name}</Text>
+
+              <VStack alignItems="start">
+                <Text fontWeight="bold">{name}</Text>
+                {hideFromGuildPage && (
+                  <Tooltip
+                    label="This page is hidden from your guild's home page"
+                    hasArrow
+                    placement="bottom"
+                  >
+                    <Tag>
+                      <TagLeftIcon as={EyeSlash} />
+                      <TagLabel>Hidden</TagLabel>
+                    </Tag>
+                  </Tooltip>
+                )}
+              </VStack>
             </HStack>
 
             {groupHasRoles ? (
