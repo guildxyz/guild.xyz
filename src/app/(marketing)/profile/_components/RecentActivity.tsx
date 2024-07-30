@@ -17,7 +17,7 @@ export const RecentActivity = () => {
       <ToggleGroup
         type="single"
         variant="primary"
-        className="mb-4"
+        className="mb-4 gap-1.5"
         onValueChange={(value) =>
           value && setActivityFilter(value as (typeof ACTIVITY_FILTERS)[number])
         }

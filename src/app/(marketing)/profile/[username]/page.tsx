@@ -123,7 +123,7 @@ const Page = async ({
             </h1>
             <div className="text-lg text-muted-foreground">@{profile.username}</div>
             <p className="mt-6 max-w-md text-pretty text-center text-lg text-muted-foreground">
-              {profile.bio ?? "Write your bio"}
+              {profile.bio}
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-x-8 gap-y-6">
               <div className="flex flex-col items-center leading-tight">
