@@ -16,6 +16,7 @@ export const RecentActivity = () => {
     <>
       <ToggleGroup
         type="single"
+        colorScheme="primary"
         variant="subtle"
         className="mb-4"
         onValueChange={(value) =>
