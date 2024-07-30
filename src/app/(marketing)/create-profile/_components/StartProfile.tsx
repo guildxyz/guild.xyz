@@ -1,7 +1,7 @@
 "use client"
 
 import { ConnectFarcasterButton } from "@/components/Account/components/AccountModal/components/FarcasterProfile"
-import { Avatar } from "@/components/ui/Avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
 import { Button } from "@/components/ui/Button"
 import {
   FormControl,
@@ -16,7 +16,6 @@ import { cn } from "@/lib/utils"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Spinner, UploadSimple, User } from "@phosphor-icons/react"
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr"
-import { AvatarFallback, AvatarImage } from "@radix-ui/react-avatar"
 import useUser from "components/[guild]/hooks/useUser"
 import useDropzone from "hooks/useDropzone"
 import usePinata from "hooks/usePinata"
@@ -126,6 +125,7 @@ export const StartProfile: OnboardingChain = () => {
               <Button
                 variant="unstyled"
                 type="button"
+                disabled={method === undefined}
                 className={cn(
                   "mb-8 size-36 self-center rounded-full border-2 border-dotted",
                   { "border-solid": field.value }
@@ -133,12 +133,17 @@ export const StartProfile: OnboardingChain = () => {
                 {...getRootProps()}
               >
                 <Avatar className="size-36 bg-card-secondary">
-                  <AvatarImage
-                    src={field.value}
-                    width={144}
-                    height={144}
-                  ></AvatarImage>
-                  <AvatarFallback>{avatarFallBackIcon}</AvatarFallback>
+                  {field.value && (
+                    <AvatarImage
+                      src={field.value}
+                      width={144}
+                      height={144}
+                      alt="profile avatar"
+                    />
+                  )}
+                  <AvatarFallback className="bg-card-secondary">
+                    {avatarFallBackIcon}
+                  </AvatarFallback>
                 </Avatar>
               </Button>
             )}
