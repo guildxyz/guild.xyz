@@ -39,7 +39,7 @@ const Nav = () => {
       type="single"
       className="gap-2"
       size={isSearchStuck ? "sm" : "lg"}
-      variant={isNavStuck ? "ghost" : "mono"}
+      variant={isNavStuck ? "default" : "mono"}
       onValueChange={(value) => value && setActiveSection(value as ActiveSection)}
       value={activeSection}
     >
