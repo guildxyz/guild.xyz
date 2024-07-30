@@ -646,6 +646,7 @@ type Group = {
   type?: string
   position?: number
   guildId: number
+  hideFromGuildPage: boolean
 }
 
 type SelectOption<T = string> = {
