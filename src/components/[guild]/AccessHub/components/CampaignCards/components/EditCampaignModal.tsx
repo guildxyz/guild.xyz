@@ -26,7 +26,7 @@ type Props = {
 
 const EditCampaignModal = ({ groupId, onSuccess, ...modalProps }: Props) => {
   const group = useRoleGroup(groupId)
-  const { name, imageUrl, description } = group ?? {}
+  const { name, imageUrl, description, hideFromGuildPage } = group ?? {}
 
   const methods = useForm<CampaignFormType>({
     mode: "all",
@@ -34,6 +34,7 @@ const EditCampaignModal = ({ groupId, onSuccess, ...modalProps }: Props) => {
       name,
       imageUrl: imageUrl ?? "",
       description: description ?? "",
+      hideFromGuildPage,
     },
   })
   const { handleSubmit } = methods
