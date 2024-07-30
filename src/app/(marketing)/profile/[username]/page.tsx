@@ -18,29 +18,9 @@ import { ArrowRight, CircleWavyCheck } from "@phosphor-icons/react/dist/ssr"
 import { ActivityChart } from "../_components/ActivityChart"
 import { CircularProgressBar } from "../_components/CircularProgressBar"
 import { ContributionCard } from "../_components/ContributionCard"
+import { LevelBadge } from "../_components/LevelBadge"
 import { RecentActivity } from "../_components/RecentActivity"
-
-function generatePolygonClipPath(sides: number): string {
-  const angle = (2 * Math.PI) / sides
-  const path = Array.from({ length: sides }, (_, i) => {
-    const x = 50 + 50 * Math.cos(i * angle)
-    const y = 50 + 50 * Math.sin(i * angle)
-    return `${x}% ${y}%`
-  }).join(", ")
-
-  return `polygon(${path}, round 10px)`
-}
-
-const LevelPolygon = () => {
-  return (
-    <div
-      className="absolute right-0 bottom-0 flex size-12 items-center justify-center bg-primary-subtle font-extrabold text-xl shadow-lg"
-      style={{ clipPath: generatePolygonClipPath(5) }}
-    >
-      22
-    </div>
-  )
-}
+import { Profile } from "./types"
 
 async function getProfileData(username: string) {
   const req = `https://api.guild.xyz/v2/profiles/${username}`
@@ -69,25 +49,13 @@ async function getProfileData(username: string) {
   }
 }
 
-// TODO: try get this from the backend if not possible write zod validation
-interface Profile {
-  id: number
-  userId: number
-  username: string
-  name: string
-  bio: null | string
-  profileImageUrl: null | string
-  backgroundImageUrl: null | string
-  createdAt: string
-  updatedAt: string
-}
-
 const Page = async ({
   params: { username },
 }: {
   params: { username: string }
 }) => {
   const profile = await getProfileData(username)
+  const level = 100
 
   return (
     <Layout>
@@ -112,7 +80,7 @@ const Page = async ({
                 <AvatarFallback>#</AvatarFallback>
               </Avatar>
               <CircularProgressBar />
-              <LevelPolygon />
+              <LevelBadge level={level} className="absolute right-0 bottom-0" />
             </div>
             <h1 className="text-center font-bold text-4xl leading-normal tracking-tight">
               {profile.name}
@@ -149,9 +117,10 @@ const Page = async ({
           <div className="mb-16 grid grid-cols-1 gap-3 md:grid-cols-2">
             <Card className="p-6">
               <div className="grid grid-cols-[auto_1fr] grid-rows-[auto_auto_auto] items-center gap-x-3 gap-y-2">
-                <div className="row-span-3 flex size-12 items-center justify-center place-self-center self-start rounded-xl bg-primary font-extrabold text-xl shadow-lg">
-                  22
-                </div>
+                <LevelBadge
+                  level={level}
+                  className="row-span-3 size-14 self-start justify-self-center"
+                />
                 <div className="flex flex-col justify-between gap-2 sm:flex-row">
                   <h3 className="font-bold">Champion</h3>
                   <p className="text-muted-foreground">1322 / 9999 XP</p>

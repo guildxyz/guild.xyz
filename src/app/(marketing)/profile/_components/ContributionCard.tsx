@@ -38,7 +38,7 @@ export const ContributionCard = () => {
             COLLECTION:
           </div>
           <AvatarGroup imageUrls={["", "", ""]} count={87} size="lg" />
-          <Button size="icon" variant="ghost" className="ml-2 hidden md:block">
+          <Button size="icon" variant="ghost" className="ml-2 hidden md:flex">
             <CaretDown weight="bold" className="size-5" />
           </Button>
         </div>
