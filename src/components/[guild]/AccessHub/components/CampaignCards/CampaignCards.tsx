@@ -93,7 +93,7 @@ const CampaignCards = () => {
                 <Text fontWeight="bold">{name}</Text>
                 {hideFromGuildPage && (
                   <Tooltip
-                    label="This page is hidden from your guild's home page"
+                    label="Members don't see this, they can only access this page by visiting it's link directly"
                     hasArrow
                     placement="bottom"
                   >

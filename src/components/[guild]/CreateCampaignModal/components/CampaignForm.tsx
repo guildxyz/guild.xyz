@@ -72,11 +72,11 @@ const CampaignForm = ({ iconUploader }: Props) => {
         <Textarea placeholder="Optional" {...register("description")} size="lg" />
       </FormControl>
 
-      <FormControl>
+      <FormControl pt="2">
         <Switch
           {...hideFromGuildPageField}
-          title="Show on Guild page"
-          description="The page will remain public, but it won't be displayed on your guild's home page"
+          title="Show on home page"
+          description="If turned off, the page will only be accessible by visiting it's link directly"
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             hideFromGuildPageOnChange(!e.target.checked)
           }
