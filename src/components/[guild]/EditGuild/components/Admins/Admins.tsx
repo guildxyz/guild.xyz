@@ -29,7 +29,7 @@ import { ADDRESS_REGEX } from "utils/guildCheckout/constants"
 import shortenHex from "utils/shortenHex"
 import { useEnsAddress } from "wagmi"
 import { mainnet } from "wagmi/chains"
-import TransferOwnership from "../TransferOwnership"
+import TransferOwnership from "../TransferOwnership/TransferOwnership"
 
 export const isValidAddress = (address: string) =>
   ADDRESS_REGEX.test(address) || FUEL_ADDRESS_REGEX.test(address)

@@ -17,7 +17,7 @@ import { Modal } from "components/common/Modal"
 import { useMintGuildPinContext } from "../../MintGuildPinContext"
 import AlphaTag from "../../components/AlphaTag"
 import GuildPinImage from "../../components/GuildPinImage"
-import { GUILD_PIN_MAINTENANCE } from "../MintGuildPin"
+import { GUILD_PIN_MAINTENANCE } from "../constants"
 import FuelGuildPinFees from "./FuelGuildPinFees"
 import MintFuelGuildPinButton from "./MintFuelGuildPinButton"
 

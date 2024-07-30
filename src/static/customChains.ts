@@ -402,3 +402,31 @@ export const mint = {
   },
   testnet: false,
 } as const satisfies Chain
+
+export const world = {
+  id: 480,
+  name: "World Chain",
+  nativeCurrency: {
+    decimals: 18,
+    name: "Ether",
+    symbol: "ETH",
+  },
+  rpcUrls: {
+    default: {
+      http: ["https://raas-backend.alchemy.com/rpc/worldchain-mainnet/rollup"],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: "Blockscout",
+      url: "https://worldchain-mainnet-explorer.alchemy.com",
+    },
+  },
+  contracts: {
+    multicall3: {
+      address: "0xca11bde05977b3631167028862be2a173976ca11",
+      blockCreated: 306795,
+    },
+  },
+  testnet: false,
+} as const satisfies Chain

@@ -12,6 +12,7 @@ import {
   palm,
   scrollAlpha,
   taikoKatlaTestnet,
+  world,
   x1,
 } from "static/customChains"
 // import type { Chain as ViemChain } from "viem"
@@ -34,6 +35,7 @@ import {
   cyber,
   evmos,
   fantom,
+  filecoin,
   gnosis,
   goerli,
   harmonyOne,
@@ -46,6 +48,7 @@ import {
   manta,
   mantle,
   metis,
+  mode,
   moonbeam,
   moonriver,
   opBNB,
@@ -54,8 +57,10 @@ import {
   polygon,
   polygonZkEvm,
   ronin,
+  rootstock,
   scroll,
   scrollSepolia,
+  sei,
   sepolia,
   shimmer,
   taiko,
@@ -659,6 +664,49 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/networkLogos/mint.svg",
     },
   },
+  SEI: {
+    ...generateChainConfig(sei, "/networkLogos/sei.svg"),
+    iconUrl: "/networkLogos/sei.svg",
+    blockExplorerIconUrl: {
+      light: "/explorerLogos/seitrace.svg",
+      dark: "/explorerLogos/seitrace.svg",
+    },
+  },
+  FILECOIN: {
+    ...generateChainConfig(filecoin, "/networkLogos/filecoin.svg"),
+    iconUrl: "/networkLogos/filecoin.svg",
+    blockExplorerIconUrl: {
+      light: "/networkLogos/filecoin.svg",
+      dark: "/networkLogos/filecoin.svg",
+    },
+  },
+  ROOTSTOCK: {
+    ...generateChainConfig(
+      rootstock,
+      "https://assets.coingecko.com/coins/images/1/standard/bitcoin.png"
+    ),
+    iconUrl: "/networkLogos/rootstock.svg",
+    blockExplorerIconUrl: {
+      light: "/networkLogos/rootstock.svg",
+      dark: "/networkLogos/rootstock.svg",
+    },
+  },
+  MODE: {
+    ...generateChainConfig(mode, ETH_ICON),
+    iconUrl: "/networkLogos/mode.svg",
+    blockExplorerIconUrl: {
+      light: "/networkLogos/mode.svg",
+      dark: "/networkLogos/mode.svg",
+    },
+  },
+  WORLD_CHAIN: {
+    ...generateChainConfig(world, ETH_ICON),
+    iconUrl: "/networkLogos/world.svg",
+    blockExplorerIconUrl: {
+      light: "/networkLogos/world.svg",
+      dark: "/networkLogos/world.svg",
+    },
+  },
 }
 
 enum Chains {
@@ -723,6 +771,11 @@ enum Chains {
   TAIKO = taiko.id,
   KLAYTN = klaytn.id,
   MINT = mint.id,
+  SEI = sei.id,
+  FILECOIN = filecoin.id,
+  ROOTSTOCK = rootstock.id,
+  MODE = mode.id,
+  WORLD_CHAIN = world.id,
 }
 
 export type Chain = keyof typeof Chains

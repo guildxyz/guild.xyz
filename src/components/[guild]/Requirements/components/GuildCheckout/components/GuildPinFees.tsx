@@ -27,7 +27,7 @@ const GuildPinFees = (): JSX.Element => {
           <PriceFallback pickedCurrency={symbol} error={guildPinFeeError}>
             <Text as="span">
               <Skeleton isLoaded={!isGuildPinFeeLoading}>
-                <Text as="span">
+                <Text as="span" data-testid="guild-pin-fee">
                   {guildPinFeeInFloat
                     ? `${Number(guildPinFeeInFloat.toFixed(5))} `
                     : "0.00 "}

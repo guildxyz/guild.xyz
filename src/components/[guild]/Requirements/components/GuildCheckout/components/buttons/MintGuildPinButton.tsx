@@ -56,6 +56,7 @@ const MintGuildPinButton = (): JSX.Element => {
 
   return (
     <Button
+      data-testid="big-mint-guild-pin-button"
       size="lg"
       isDisabled={isDisabled}
       isLoading={isLoading}

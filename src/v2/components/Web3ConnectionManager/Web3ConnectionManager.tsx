@@ -1,4 +1,4 @@
-import useAutoReconnect from "@/hooks/useAutoReconnect"
+import { useAutoReconnect } from "@/hooks/useAutoReconnect"
 import { useAtom } from "jotai"
 import { walletSelectorModalAtom } from "../Providers/atoms"
 import { PlatformMergeErrorAlert } from "./PlatformMergeErrorAlert"

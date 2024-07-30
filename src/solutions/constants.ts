@@ -18,6 +18,10 @@ export const categories = [
     value: "memberships",
   },
   {
+    label: "NFTs",
+    value: "nft",
+  },
+  {
     label: "Tokens",
     value: "tokens",
   },
@@ -78,6 +82,17 @@ export const memberships: SolutionCardData[] = [
 
 export const tokens: SolutionCardData[] = [
   {
+    title: "Token liquidity program",
+    description: "Reward users with points for providing liquidity to your token",
+    imageUrl: "/solutions/liquidity.png",
+    bgImageUrl: "/solutions/liquidity-bg.jpg",
+    handlerType: "solution",
+    handlerParam: "LIQUIDITY",
+  },
+]
+
+export const nft: SolutionCardData[] = [
+  {
     title: "NFT Drop",
     description:
       "Launch NFT sales or open editions with specific collection requirements",
@@ -85,14 +100,6 @@ export const tokens: SolutionCardData[] = [
     bgImageUrl: "/solutions/nft-bg.jpg",
     handlerType: "reward",
     handlerParam: "CONTRACT_CALL",
-  },
-  {
-    title: "Token liquidity program",
-    description: "Reward users with points for providing liquidity to your token",
-    imageUrl: "/solutions/liquidity.png",
-    bgImageUrl: "/solutions/liquidity-bg.jpg",
-    handlerType: "solution",
-    handlerParam: "LIQUIDITY",
   },
 ]
 

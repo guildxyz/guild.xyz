@@ -9,7 +9,7 @@ import { StoredKeyPair, setKeyPairToIdb } from "utils/keyPair"
 import { recaptchaAtom, shouldUseReCAPTCHAAtom } from "utils/recaptcha"
 import { checksumAddress } from "viem"
 import useSubmit from "./useSubmit"
-import { MessageParams, SignProps, UseSubmitOptions } from "./useSubmit/useSubmit"
+import { MessageParams, SignProps, UseSubmitOptions } from "./useSubmit/types"
 
 function getSiweMessage({
   addr,

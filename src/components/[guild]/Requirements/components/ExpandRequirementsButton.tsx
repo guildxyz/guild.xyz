@@ -6,14 +6,14 @@ import Button from "components/common/Button"
 
 type Props = {
   logic: Logic
-  hiddenRequirements: number
+  notShownRequirements: number
   isRequirementsExpanded: boolean
   onToggleExpanded: (event: React.MouseEvent<HTMLElement>) => void
 }
 
 const ExpandRequirementsButton = ({
   logic,
-  hiddenRequirements,
+  notShownRequirements,
   isRequirementsExpanded,
   onToggleExpanded,
 }: Props): JSX.Element => {
@@ -47,7 +47,7 @@ const ExpandRequirementsButton = ({
         >
           {isRequirementsExpanded
             ? "Collapse"
-            : `${formattedLogic[logic]} ${hiddenRequirements} more`}
+            : `${formattedLogic[logic]} ${notShownRequirements} more`}
         </Button>
       </Flex>
       <Divider

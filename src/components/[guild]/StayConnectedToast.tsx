@@ -21,7 +21,10 @@ const useStayConnectedToast = (onClick: () => void) => {
     useLocalStorage(`hasSeenAddContactInfoToast-${id}`, false)
 
   const showAddContactInfoToast = useCallback(() => {
+    if (!!toastIdRef.current) return
+
     setHasSeenAddContactInfoToast(true)
+
     toastIdRef.current = toastWithButton({
       id: CONTACT_TOAST_ID,
       status: "info",
