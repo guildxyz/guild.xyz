@@ -1,3 +1,4 @@
+// TODO: replace these with the incoming backend validators
 import { z } from "zod"
 export const profileSchema = z.object({
   name: z
@@ -6,8 +7,8 @@ export const profileSchema = z.object({
     .optional(),
   username: z
     .string()
-    .min(1, { message: "Handle is required" })
-    .max(100, { message: "Handle cannot exceed 100 characters" })
+    .min(1, { message: "Username is required" })
+    .max(100, { message: "Username cannot exceed 100 characters" })
     .superRefine((value, ctx) => {
       const pattern = /^[\w\-.]+$/
       const isValid = pattern.test(value)
@@ -15,7 +16,7 @@ export const profileSchema = z.object({
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message:
-            "Handle must only contain either alphanumeric, hyphen, underscore or dot characters",
+            "Username must only contain either alphanumeric, hyphen, underscore or dot characters",
         })
       }
     }),

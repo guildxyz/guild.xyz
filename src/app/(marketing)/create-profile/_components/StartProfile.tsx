@@ -183,7 +183,7 @@ export const StartProfile: OnboardingChain = () => {
                 name="username"
                 render={({ field }) => (
                   <FormItem className="pb-2">
-                    <FormLabel aria-required="true">Handle</FormLabel>
+                    <FormLabel aria-required="true">Username</FormLabel>
                     <FormControl>
                       <Input placeholder="" required {...field} />
                     </FormControl>
