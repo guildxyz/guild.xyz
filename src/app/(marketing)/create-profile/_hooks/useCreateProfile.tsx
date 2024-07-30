@@ -25,7 +25,7 @@ export const useCreateProfile = () => {
       })
       confetti.current?.()
       // @ts-ignore: TODO: either acquire types from backend, or type them here
-      router.push(`/profile/${response.username}`)
+      router.replace(`/profile/${response.username}`)
     },
     onError: (response) => {
       toast({
