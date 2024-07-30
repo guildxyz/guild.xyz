@@ -1,8 +1,6 @@
 "use client"
 
 import { ConnectFarcasterButton } from "@/components/Account/components/AccountModal/components/FarcasterProfile"
-import { walletSelectorModalAtom } from "@/components/Providers/atoms"
-import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { Avatar } from "@/components/ui/Avatar"
 import { Button } from "@/components/ui/Button"
 import {
@@ -19,11 +17,9 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { Spinner, UploadSimple, User } from "@phosphor-icons/react"
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr"
 import { AvatarFallback, AvatarImage } from "@radix-ui/react-avatar"
-import { Slot } from "@radix-ui/react-slot"
 import useUser from "components/[guild]/hooks/useUser"
 import useDropzone from "hooks/useDropzone"
 import usePinata from "hooks/usePinata"
-import { useSetAtom } from "jotai"
 import { useEffect, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { z } from "zod"
@@ -38,9 +34,6 @@ enum CreateMethod {
 }
 
 export const StartProfile: OnboardingChain = () => {
-  const { address } = useWeb3ConnectionManager()
-  const setIsWalletSelectorModalOpen = useSetAtom(walletSelectorModalAtom)
-
   const { farcasterProfiles = [], isLoading: isUserLoading } = useUser()
   const farcasterProfile = farcasterProfiles.at(0)
   const [method, setMethod] = useState<CreateMethod>()
@@ -163,16 +156,10 @@ export const StartProfile: OnboardingChain = () => {
                   Fill using Farcaster
                 </Button>
               ) : (
-                <Slot onClick={() => address || setIsWalletSelectorModalOpen(true)}>
-                  <ConnectFarcasterButton
-                    className="ml-0 w-full gap-2"
-                    size="md"
-                    isLoading={isUserLoading}
-                  >
-                    <FarcasterImage />
-                    Connect farcaster
-                  </ConnectFarcasterButton>
-                </Slot>
+                <ConnectFarcasterButton className="ml-0 w-full gap-2" size="md">
+                  <FarcasterImage />
+                  Connect farcaster
+                </ConnectFarcasterButton>
               )}
 
               <Button
