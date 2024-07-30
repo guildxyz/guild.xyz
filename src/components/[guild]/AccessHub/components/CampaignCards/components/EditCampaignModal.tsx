@@ -15,13 +15,14 @@ import { Modal } from "components/common/Modal"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import { FormProvider, useForm } from "react-hook-form"
+import { Group } from "types"
 import useEditRoleGroup from "../hooks/useEditRoleGroup"
 
 type Props = {
   isOpen: boolean
   onClose: () => void
   groupId: number
-  onSuccess: () => void
+  onSuccess: (res: Group) => void
 }
 
 const EditCampaignModal = ({ groupId, onSuccess, ...modalProps }: Props) => {
