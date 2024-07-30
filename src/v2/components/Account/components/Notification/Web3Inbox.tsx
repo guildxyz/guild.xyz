@@ -148,7 +148,7 @@ const Web3Inbox = () => {
             </time>
             {message.url && (
               <Anchor
-                variant="silent"
+                variant="unstyled"
                 href={message.url}
                 className={cn(
                   buttonVariants({

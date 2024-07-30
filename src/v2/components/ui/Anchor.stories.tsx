@@ -57,11 +57,11 @@ export const Highlighted: Story = {
   },
 }
 
-export const Silent: Story = {
+export const Unstyled: Story = {
   args: {
     ...Default.args,
-    variant: "silent",
-    children: "Silent",
+    variant: "unstyled",
+    children: "Unstyled",
   },
   argTypes: {
     ...Default.argTypes,
