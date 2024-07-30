@@ -21,7 +21,7 @@ export const profileSchema = z.object({
     }),
   bio: z
     .string()
-    .max(1000, { message: "Bio cannot exceed 500 characters" })
+    .max(1000, { message: "Bio cannot exceed 1000 characters" })
     .optional(),
   profileImageUrl: z
     .string()
