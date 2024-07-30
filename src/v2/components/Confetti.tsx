@@ -61,27 +61,29 @@ const doubleConfetti = (confetti: TCanvasConfettiInstance) => {
   }
 }
 
-const ConfettiContext = createContext<
-  MutableRefObject<TCanvasConfettiInstance | undefined>
->({} as MutableRefObject<TCanvasConfettiInstance | undefined>)
+const ConfettiContext = createContext<MutableRefObject<ConfettiPlayer>>(
+  {} as MutableRefObject<ConfettiPlayer>
+)
 
 export const useConfetti = () => {
-  return { confetti: useContext(ConfettiContext) }
+  return { confettiPlayer: useContext(ConfettiContext) }
 }
 
+type ConfettiType = "Confetti from left and right"
+type ConfettiPlayer = (type: ConfettiType) => void
+
 export const ConfettiProvider = ({ children }: PropsWithChildren) => {
-  const confettiRef = useRef<TCanvasConfettiInstance>()
+  const confettiRef = useRef<ConfettiPlayer>(() => {
+    return
+  })
   const audioRef = useRef<HTMLAudioElement>(null)
   const onInitHandler = ({ confetti }: { confetti: TCanvasConfettiInstance }) => {
-    const confettiClosure = async (...args: Parameters<typeof confetti>) => {
-      if (args[0] === undefined) {
+    const confettiClosure: ConfettiPlayer = (type) => {
+      if (type === "Confetti from left and right") {
         doubleConfetti(confetti)
         audioRef.current?.play()
-        return null
       }
-      return confetti()
     }
-    confettiClosure.reset = confetti.reset
     confettiRef.current = confettiClosure
   }
   return (

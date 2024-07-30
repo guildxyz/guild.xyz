@@ -9,7 +9,7 @@ import { profileSchema } from "../schemas"
 export const useCreateProfile = () => {
   const router = useRouter()
   const { toast } = useToast()
-  const { confetti } = useConfetti()
+  const { confettiPlayer } = useConfetti()
 
   const createProfile = async (signedValidation: SignedValidation) =>
     fetcher(`/v2/profiles`, {
@@ -23,7 +23,7 @@ export const useCreateProfile = () => {
         variant: "success",
         title: "Successfully created profile",
       })
-      confetti.current?.()
+      confettiPlayer.current("Confetti from left and right")
       // @ts-ignore: TODO: either acquire types from backend, or type them here
       router.replace(`/profile/${response.username}`)
     },

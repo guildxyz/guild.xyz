@@ -33,13 +33,16 @@ enum CreateMethod {
 }
 
 export const StartProfile: OnboardingChain = () => {
-  const { farcasterProfiles = [], isLoading: isUserLoading } = useUser()
+  const { farcasterProfiles = [] } = useUser()
   const farcasterProfile = farcasterProfiles.at(0)
-  const [method, setMethod] = useState<CreateMethod>()
+  const [method, setMethod] = useState<CreateMethod | undefined>(
+    farcasterProfile ? CreateMethod.FillByFarcaster : undefined
+  )
   const { toast } = useToast()
 
   useEffect(() => {
-    if (!farcasterProfile || method !== CreateMethod.FillByFarcaster) return
+    if (!farcasterProfile) return
+    setMethod(CreateMethod.FillByFarcaster)
     form.setValue(
       "name",
       farcasterProfile.username ?? form.getValues()?.name ?? "",
@@ -48,7 +51,7 @@ export const StartProfile: OnboardingChain = () => {
     form.setValue("profileImageUrl", farcasterProfile.avatar, {
       shouldValidate: true,
     })
-  }, [farcasterProfile, method])
+  }, [farcasterProfile])
 
   const form = useForm<z.infer<typeof profileSchema>>({
     resolver: zodResolver(profileSchema),
@@ -62,7 +65,6 @@ export const StartProfile: OnboardingChain = () => {
   const createProfile = useCreateProfile()
   async function onSubmit(values: z.infer<typeof profileSchema>) {
     createProfile.onSubmit(values)
-    console.log("onSubmit", values)
   }
 
   const { isUploading, onUpload } = usePinata({
@@ -78,10 +80,9 @@ export const StartProfile: OnboardingChain = () => {
   })
 
   const [uploadProgress, setUploadProgress] = useState(0)
-  const { isDragActive, fileRejections, getRootProps } = useDropzone({
+  const { isDragActive, getRootProps } = useDropzone({
     multiple: false,
     noClick: false,
-    maxSizeMb: 4,
     onDrop: (acceptedFiles) => {
       if (!acceptedFiles[0]) return
       onUpload({
@@ -89,19 +90,14 @@ export const StartProfile: OnboardingChain = () => {
         onProgress: setUploadProgress,
       })
     },
+    onError: (error) => {
+      toast({
+        variant: "error",
+        title: `Failed to upload file`,
+        description: error.message,
+      })
+    },
   })
-
-  useEffect(() => {
-    for (const { errors, file } of fileRejections) {
-      for (const error of errors) {
-        toast({
-          variant: "error",
-          title: `Failed to upload file "${file.name}"`,
-          description: error.message,
-        })
-      }
-    }
-  }, [fileRejections])
 
   let avatarFallBackIcon = <User size={32} />
   if (isDragActive) {
@@ -151,22 +147,14 @@ export const StartProfile: OnboardingChain = () => {
 
           {method === undefined ? (
             <>
-              {farcasterProfile ? (
-                <Button
-                  className="ml-0 w-full gap-2 bg-farcaster hover:bg-farcaster-hover active:bg-farcaster-active"
-                  size="md"
-                  onClick={() => setMethod(CreateMethod.FillByFarcaster)}
-                >
-                  <FarcasterImage />
-                  Fill using Farcaster
-                </Button>
-              ) : (
-                <ConnectFarcasterButton className="ml-0 w-full gap-2" size="md">
-                  <FarcasterImage />
-                  Connect farcaster
-                </ConnectFarcasterButton>
-              )}
-
+              <ConnectFarcasterButton
+                className="ml-0 w-full gap-2"
+                size="md"
+                disabled={!!farcasterProfile}
+              >
+                <FarcasterImage />
+                Connect farcaster
+              </ConnectFarcasterButton>
               <Button
                 variant="ghost"
                 onClick={() => setMethod(CreateMethod.FromBlank)}
