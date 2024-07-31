@@ -98,7 +98,7 @@ const Page = async ({
             </div>
             <h1 className="text-center font-bold text-4xl leading-normal tracking-tight">
               {profile.name}
-              <CheckMark className="ml-4 inline size-6 fill-yellow-500" size={24} />
+              <CheckMark className="ml-2 inline size-6 fill-yellow-500" />
             </h1>
             <div className="text-lg text-muted-foreground">@{profile.username}</div>
             <p className="mt-6 max-w-md text-pretty text-center text-lg text-muted-foreground">
