@@ -6,7 +6,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/Chart"
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
+import { Bar, BarChart, XAxis } from "recharts"
 
 const chartData = [
   { date: "2024-06-19", experience: 341 },
@@ -64,7 +64,6 @@ export function ActivityChart() {
           right: 12,
         }}
       >
-        <CartesianGrid vertical={false} />
         <XAxis
           dataKey="date"
           tickLine={false}
