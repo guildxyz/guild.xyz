@@ -1,33 +1,32 @@
 import type { Meta, StoryObj } from "@storybook/react"
 import { ComponentProps, FunctionComponent } from "react"
-import { Toggle } from "./Toggle"
-import { ToggleGroup } from "./ToggleGroup"
+import { ToggleGroup, ToggleGroupItem } from "./ToggleGroup"
 
 const items = ["Alpha", "Beta", "Gamma", "Delta"] as const
 
-const ToggleGroupStory: FunctionComponent<ComponentProps<typeof ToggleGroup>> = (
+const ToggleGroupExample: FunctionComponent<ComponentProps<typeof ToggleGroup>> = (
   props
 ) => {
   return (
     <ToggleGroup {...props}>
       {items.map((item, _) => (
-        <Toggle value={item} key={item}>
+        <ToggleGroupItem value={item} key={item}>
           {item}
-        </Toggle>
+        </ToggleGroupItem>
       ))}
     </ToggleGroup>
   )
 }
 
-const meta: Meta<typeof ToggleGroupStory> = {
+const meta: Meta<typeof ToggleGroupExample> = {
   title: "Design system/ToggleGroup",
-  component: ToggleGroupStory,
+  component: ToggleGroupExample,
 }
 
 export default meta
 
-type Story = StoryObj<typeof ToggleGroupStory>
-type ToggleGroupProps = Parameters<typeof ToggleGroupStory>[0]
+type Story = StoryObj<typeof ToggleGroupExample>
+type ToggleGroupProps = Parameters<typeof ToggleGroupExample>[0]
 
 export const Default: Story = {
   args: {
