@@ -7,15 +7,18 @@ import {
   Textarea,
 } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import Switch from "components/common/Switch"
 import IconSelector from "components/create-guild/IconSelector"
 import { GUILD_NAME_REGEX } from "components/create-guild/Name"
 import { Uploader } from "hooks/usePinata/usePinata"
-import { useFormContext } from "react-hook-form"
+import { ChangeEvent } from "react"
+import { useController, useFormContext } from "react-hook-form"
 
 export type CampaignFormType = {
   imageUrl?: string
   name: string
   description?: string
+  hideFromGuildPage?: boolean
 }
 
 type Props = {
@@ -24,9 +27,18 @@ type Props = {
 
 const CampaignForm = ({ iconUploader }: Props) => {
   const {
+    control,
     register,
     formState: { errors },
   } = useFormContext<CampaignFormType>()
+
+  const {
+    field: {
+      value: hideFromGuildPage,
+      onChange: hideFromGuildPageOnChange,
+      ...hideFromGuildPageField
+    },
+  } = useController({ control, name: "hideFromGuildPage" })
 
   return (
     <Stack spacing={6}>
@@ -57,11 +69,19 @@ const CampaignForm = ({ iconUploader }: Props) => {
 
       <FormControl>
         <FormLabel>Description</FormLabel>
-        <Textarea
-          placeholder="Optional"
-          {...register("description")}
-          size="lg"
-        ></Textarea>
+        <Textarea placeholder="Optional" {...register("description")} size="lg" />
+      </FormControl>
+
+      <FormControl pt="2">
+        <Switch
+          {...hideFromGuildPageField}
+          title="Show on home page"
+          description="If turned off, the page will only be accessible by visiting it's link directly"
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            hideFromGuildPageOnChange(!e.target.checked)
+          }
+          isChecked={!hideFromGuildPage}
+        />
       </FormControl>
     </Stack>
   )

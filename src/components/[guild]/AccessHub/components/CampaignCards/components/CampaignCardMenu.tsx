@@ -35,7 +35,7 @@ const CampaignCardMenu = ({ groupId }: Props) => {
     <Box position="absolute" top={2} right={2}>
       <PlatformCardMenu>
         <MenuItem icon={<PencilSimple />} onClick={onOpen}>
-          Edit page appearance
+          Customize page
         </MenuItem>
         <MenuItem
           icon={<TrashSimple />}

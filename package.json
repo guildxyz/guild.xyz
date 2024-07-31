@@ -5,6 +5,7 @@
   "scripts": {
     "prepare": "npm run snyk-protect && husky install",
     "dev": "next dev",
+    "dev:turbo": "next dev --turbo",
     "build": "NODE_OPTIONS='--max-old-space-size=4096' TS_CONFIG_PATH='./tsconfig.build.json' next build",
     "start": "next start",
     "type-check": "tsc --pretty --noEmit --incremental false --project './tsconfig.build.json'",
@@ -30,7 +31,7 @@
     "@emotion/styled": "^11.11.0",
     "@fuels/connectors": "^0.5.0",
     "@fuels/react": "^0.20.0",
-    "@guildxyz/types": "1.9.28",
+    "@guildxyz/types": "^1.9.30",
     "@hcaptcha/react-hcaptcha": "^1.4.4",
     "@hookform/resolvers": "^3.3.4",
     "@lexical/code": "^0.12.0",

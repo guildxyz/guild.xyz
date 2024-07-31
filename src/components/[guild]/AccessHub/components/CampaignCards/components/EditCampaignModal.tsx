@@ -15,18 +15,19 @@ import { Modal } from "components/common/Modal"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import { FormProvider, useForm } from "react-hook-form"
+import { Group } from "types"
 import useEditRoleGroup from "../hooks/useEditRoleGroup"
 
 type Props = {
   isOpen: boolean
   onClose: () => void
   groupId: number
-  onSuccess: () => void
+  onSuccess: (res: Group) => void
 }
 
 const EditCampaignModal = ({ groupId, onSuccess, ...modalProps }: Props) => {
   const group = useRoleGroup(groupId)
-  const { name, imageUrl, description } = group ?? {}
+  const { name, imageUrl, description, hideFromGuildPage } = group ?? {}
 
   const methods = useForm<CampaignFormType>({
     mode: "all",
@@ -34,6 +35,7 @@ const EditCampaignModal = ({ groupId, onSuccess, ...modalProps }: Props) => {
       name,
       imageUrl: imageUrl ?? "",
       description: description ?? "",
+      hideFromGuildPage,
     },
   })
   const { handleSubmit } = methods
