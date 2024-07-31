@@ -13,6 +13,7 @@ import {
 import { Input } from "@/components/ui/Input"
 import { useToast } from "@/components/ui/hooks/useToast"
 import { cn } from "@/lib/utils"
+import { Schemas } from "@guildxyz/types"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Spinner, UploadSimple, User } from "@phosphor-icons/react"
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr"
@@ -21,7 +22,6 @@ import useDropzone from "hooks/useDropzone"
 import usePinata from "hooks/usePinata"
 import { useEffect, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import { z } from "zod"
 import FarcasterImage from "/src/static/socialIcons/farcaster.svg"
 import { useCreateProfile } from "../_hooks/useCreateProfile"
 import { profileSchema } from "../schemas"
@@ -53,7 +53,7 @@ export const StartProfile: OnboardingChain = () => {
     })
   }, [farcasterProfile])
 
-  const form = useForm<z.infer<typeof profileSchema>>({
+  const form = useForm<Schemas["ProfileCreation"]>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
       name: "",
@@ -63,7 +63,7 @@ export const StartProfile: OnboardingChain = () => {
   })
 
   const createProfile = useCreateProfile()
-  async function onSubmit(values: z.infer<typeof profileSchema>) {
+  async function onSubmit(values: Schemas["ProfileCreation"]) {
     createProfile.onSubmit(values)
   }
 

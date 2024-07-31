@@ -65,8 +65,11 @@ const SharedSocials = () => {
             )}`}
           </Button>
         ) : guildSharedSocial.isShared !== false ? (
-          <Button {...buttonProps}>
-            <ShieldCheck weight="bold" className="text-primary" />
+          <Button
+            {...buttonProps}
+            className={cn(buttonProps.className, "text-success")}
+          >
+            <ShieldCheck weight="bold" />
             Shared with guild
           </Button>
         ) : (
@@ -165,9 +168,7 @@ const ShareSocialsWithGuildSelect = ({
         </AvatarFallback>
       </Avatar>
       {name?.length > 0 ? (
-        <span className="overflow-hidden text-ellipsis font-bold text-lg">
-          {name}
-        </span>
+        <span className="line-clamp-1 break-all font-bold text-lg">{name}</span>
       ) : (
         <Skeleton className="h-7 w-[80%]" />
       )}
@@ -177,7 +178,7 @@ const ShareSocialsWithGuildSelect = ({
           <Button
             variant="ghost"
             size="sm"
-            className={cn("ml-auto", {
+            className={cn("ml-auto shrink-0", {
               "text-success": isSharedBoolean,
             })}
           >
