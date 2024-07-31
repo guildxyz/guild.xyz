@@ -197,6 +197,9 @@ export const EditProfile = (profile: Schemas["ProfileUpdate"]) => {
               />
             </DialogBody>
             <DialogFooter>
+              <Button colorScheme="destructive" type="submit">
+                Delete profile
+              </Button>
               <Button
                 colorScheme="success"
                 type="submit"
