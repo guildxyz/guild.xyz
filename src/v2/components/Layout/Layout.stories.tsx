@@ -1,4 +1,5 @@
 import type { Meta, StoryFn } from "@storybook/react"
+import { ThemeProvider } from "next-themes"
 import {
   Layout,
   LayoutBanner,
@@ -7,13 +8,21 @@ import {
   LayoutHero,
   LayoutMain,
 } from "."
-import { LayoutBannerBackground } from "./Layout"
+import { NavMenu } from "../Header/NavMenu"
+import { LayoutTitle } from "./Layout"
 
 const meta: Meta = {
-  title: "Design system/Layout",
+  title: "Guild UI/Layout",
   parameters: {
     layout: "fullscreen",
   },
+  decorators: [
+    (Story) => (
+      <ThemeProvider>
+        <Story />
+      </ThemeProvider>
+    ),
+  ],
 }
 
 export default meta
@@ -21,10 +30,14 @@ export default meta
 export const Static: StoryFn = () => (
   <Layout>
     <LayoutHero>
-      <LayoutBanner>
-        <LayoutBannerBackground />
-      </LayoutBanner>
-      <LayoutHeadline title="Layout title" />
+      <LayoutBanner />
+      <header className="relative flex h-16 w-full items-center justify-between p-2">
+        <NavMenu />
+      </header>
+      <LayoutHeadline>
+        <div className="size-20 rounded-full bg-background"></div>
+        <LayoutTitle>Layout title</LayoutTitle>
+      </LayoutHeadline>
     </LayoutHero>
     <LayoutMain>Page contents</LayoutMain>
     <LayoutFooter />
