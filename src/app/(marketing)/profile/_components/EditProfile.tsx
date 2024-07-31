@@ -186,7 +186,7 @@ export const EditProfile = (profile: Schemas["ProfileUpdate"]) => {
                 control={form.control}
                 name="bio"
                 render={({ field }) => (
-                  <FormItem className="pb-2">
+                  <FormItem className="">
                     <FormLabel>Bio</FormLabel>
                     <FormControl>
                       <Textarea placeholder="" className="max-h-12" {...field} />
