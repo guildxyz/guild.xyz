@@ -1,3 +1,4 @@
+import { CheckMark } from "@/components/CheckMark"
 import {
   Layout,
   LayoutBanner,
@@ -15,7 +16,7 @@ import { Card } from "@/components/ui/Card"
 import { Progress } from "@/components/ui/Progress"
 import { Separator } from "@/components/ui/Separator"
 import { Schemas } from "@guildxyz/types"
-import { ArrowRight, CircleWavyCheck } from "@phosphor-icons/react/dist/ssr"
+import { ArrowRight } from "@phosphor-icons/react/dist/ssr"
 import { ActivityChart } from "../_components/ActivityChart"
 import { CircularProgressBar } from "../_components/CircularProgressBar"
 import { ContributionCard } from "../_components/ContributionCard"
@@ -87,10 +88,7 @@ const Page = async ({
             </div>
             <h1 className="text-center font-bold text-4xl leading-normal tracking-tight">
               {profile.name}
-              <CircleWavyCheck
-                weight="fill"
-                className="ml-4 inline size-6 fill-yellow-500"
-              />
+              <CheckMark className="ml-4 inline size-6 fill-yellow-500" size={24} />
             </h1>
             <div className="text-lg text-muted-foreground">@{profile.username}</div>
             <p className="mt-6 max-w-md text-pretty text-center text-lg text-muted-foreground">
