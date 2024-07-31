@@ -13,6 +13,7 @@ import {
 import { Input } from "@/components/ui/Input"
 import { useToast } from "@/components/ui/hooks/useToast"
 import { cn } from "@/lib/utils"
+import { profileSchema } from "@/lib/validations/profileSchema"
 import { Schemas } from "@guildxyz/types"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Spinner, UploadSimple, User } from "@phosphor-icons/react"
@@ -24,7 +25,6 @@ import { useEffect, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import FarcasterImage from "/src/static/socialIcons/farcaster.svg"
 import { useCreateProfile } from "../_hooks/useCreateProfile"
-import { profileSchema } from "../schemas"
 import { OnboardingChain } from "../types"
 
 enum CreateMethod {
