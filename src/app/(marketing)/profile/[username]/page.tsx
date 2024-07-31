@@ -21,6 +21,7 @@ import { ArrowRight } from "@phosphor-icons/react/dist/ssr"
 import { ActivityChart } from "../_components/ActivityChart"
 import { CircularProgressBar } from "../_components/CircularProgressBar"
 import { ContributionCard } from "../_components/ContributionCard"
+import { EditContributions } from "../_components/EditContributions"
 import { EditProfile } from "../_components/EditProfile"
 import { LevelBadge } from "../_components/LevelBadge"
 import { OperatedGuildCard } from "../_components/OperatedGuildCard"
@@ -152,7 +153,10 @@ const Page = async ({
           </div>
           <h2 className="mb-3 font-bold text-lg">Operated guilds</h2>
           <OperatedGuildCard />
-          <h2 className="mt-8 mb-3 font-bold text-lg">Top contributions</h2>
+          <div className="mt-8 mb-3 flex items-center justify-between">
+            <h2 className="font-bold text-lg">Top contributions</h2>
+            <EditContributions />
+          </div>
           <div className="grid grid-cols-1 gap-3">
             <ContributionCard />
             <ContributionCard />
@@ -165,7 +169,7 @@ const Page = async ({
             <h2 className="mb-3 font-bold text-lg">Recent activity</h2>
             <RecentActivity />
             <p className="mt-2 font-semibold text-muted-foreground">
-              ... only last 20 actions are shown
+              &hellip; only last 20 actions are shown
             </p>
           </div>
         </div>
