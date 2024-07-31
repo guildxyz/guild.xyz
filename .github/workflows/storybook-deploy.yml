@@ -3,7 +3,7 @@ name: Build and Publish storybook to GitHub Pages
 on:
   push:
     branches:
-      - "main"
+      - "add-storybook-gh-action"
 jobs:
   deploy:
     environment:
