@@ -1,4 +1,3 @@
-// TODO: replace these with the incoming backend validators
 import { z } from "zod"
 export const profileSchema = z.object({
   name: z
