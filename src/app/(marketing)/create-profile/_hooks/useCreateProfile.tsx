@@ -1,10 +1,10 @@
 import { useConfetti } from "@/components/Confetti"
 import { useToast } from "@/components/ui/hooks/useToast"
+import { profileSchema } from "@/lib/validations/profileSchema"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import { useRouter } from "next/navigation"
 import fetcher from "utils/fetcher"
 import { z } from "zod"
-import { profileSchema } from "../schemas"
 
 export const useCreateProfile = () => {
   const router = useRouter()
