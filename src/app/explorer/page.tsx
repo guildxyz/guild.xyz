@@ -8,7 +8,6 @@ import {
   LayoutMain,
   LayoutTitle,
 } from "@/components/Layout"
-import { Anchor } from "@/components/ui/Anchor"
 import { env } from "env"
 import { unstable_serialize as infinite_unstable_serialize } from "swr/infinite"
 import { SearchParams } from "types"
@@ -72,26 +71,7 @@ const Page = async ({ searchParams }: { searchParams: SearchParams }) => {
           <Explorer searchParams={searchParams} />
         </LayoutMain>
 
-        <LayoutFooter>
-          <p className="my-8 text-center text-muted-foreground text-sm">
-            {`This website is `}
-            <Anchor
-              href="https://github.com/guildxyz/guild.xyz"
-              target="_blank"
-              showExternal
-            >
-              open source
-            </Anchor>
-            {`, and built on the `}
-            <Anchor
-              target="_blank"
-              href="https://www.npmjs.com/package/@guildxyz/sdk"
-              showExternal
-            >
-              Guild SDK
-            </Anchor>
-          </p>
-        </LayoutFooter>
+        <LayoutFooter />
       </Layout>
     </ExplorerSWRProvider>
   )

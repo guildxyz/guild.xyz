@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils"
 import { Slot } from "@radix-ui/react-slot"
 import { HTMLAttributes, forwardRef } from "react"
+import { Anchor } from "../ui/Anchor"
 
 const Layout = ({ children, ...props }: HTMLAttributes<HTMLDivElement>) => (
   <div className="flex min-h-screen flex-col" {...props}>
@@ -82,9 +83,28 @@ const LayoutMain = ({ children, className, ...props }: LayoutContainerProps) => 
   </LayoutContainer>
 )
 
-const LayoutFooter = ({ children, className, ...props }: LayoutContainerProps) => (
+const LayoutFooter = ({ className, ...props }: LayoutContainerProps) => (
   <LayoutContainer className={cn("mt-auto", className)} {...props} asChild>
-    <footer>{children}</footer>
+    <footer>
+      <p className="my-8 text-center text-muted-foreground text-sm">
+        {`This website is `}
+        <Anchor
+          href="https://github.com/guildxyz/guild.xyz"
+          target="_blank"
+          showExternal
+        >
+          open source
+        </Anchor>
+        {`, and built on the `}
+        <Anchor
+          target="_blank"
+          href="https://www.npmjs.com/package/@guildxyz/sdk"
+          showExternal
+        >
+          Guild SDK
+        </Anchor>
+      </p>
+    </footer>
   </LayoutContainer>
 )
 
