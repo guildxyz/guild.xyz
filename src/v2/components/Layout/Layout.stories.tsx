@@ -35,7 +35,7 @@ export const Static: StoryFn = () => (
         <NavMenu />
       </header>
       <LayoutHeadline>
-        <div className="size-20 rounded-full bg-background"></div>
+        <div className="size-14 rounded-full bg-background sm:size-20"></div>
         <LayoutTitle>Layout title</LayoutTitle>
       </LayoutHeadline>
     </LayoutHero>
