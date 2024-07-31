@@ -1,10 +1,10 @@
 import { Providers } from "@/components/Providers"
 import { PostHogPageViews } from "@/components/Providers/PostHogPageViews"
 import { dystopian, inter } from "fonts"
-import type { Metadata } from "next"
 import { type ReactNode, Suspense } from "react"
 import "./globals.css"
 import { cn } from "@/lib/utils"
+import type { Metadata, Viewport } from "next"
 import NextTopLoader from "nextjs-toploader"
 
 interface RootLayoutProps {
@@ -13,8 +13,20 @@ interface RootLayoutProps {
 
 export const metadata: Metadata = {
   title: "Guildhall",
+  applicationName: "Guildhall",
   description:
     "Automated membership management for the platforms your community already uses.",
+  icons: {
+    icon: "guild-icon.png",
+  },
+}
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: dark)", color: "#27272a" },
+    { media: "(prefers-color-scheme: light)", color: "#f4f4f5" },
+  ],
+  colorScheme: "dark light",
 }
 
 export default function RootLayout({ children }: RootLayoutProps) {

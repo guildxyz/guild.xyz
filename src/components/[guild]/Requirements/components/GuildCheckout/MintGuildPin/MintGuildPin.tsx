@@ -26,8 +26,7 @@ import TransactionStatusModal from "../components/TransactionStatusModal"
 import GuildPinOpenseaLink from "../components/TransactionStatusModal/components/GuildPinOpenseaLink"
 import MintGuildPinButton from "../components/buttons/MintGuildPinButton"
 import SwitchNetworkButton from "../components/buttons/SwitchNetworkButton"
-
-export const GUILD_PIN_MAINTENANCE = false
+import { GUILD_PIN_MAINTENANCE } from "./constants"
 
 const DynamicActivateGuildPinModal = dynamic(
   () => import("./components/ActivateGuildPinModal")
@@ -56,6 +55,7 @@ const MintGuildPin = (): JSX.Element => {
         hasArrow
       >
         <Button
+          data-testid="mint-guild-pin-button"
           isDisabled={GUILD_PIN_MAINTENANCE}
           onClick={
             GUILD_PIN_MAINTENANCE

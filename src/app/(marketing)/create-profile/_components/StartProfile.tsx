@@ -1,5 +1,7 @@
+"use client"
+
 import { ConnectFarcasterButton } from "@/components/Account/components/AccountModal/components/FarcasterProfile"
-import { Avatar } from "@/components/ui/Avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
 import { Button } from "@/components/ui/Button"
 import {
   FormControl,
@@ -9,39 +11,50 @@ import {
   FormLabel,
 } from "@/components/ui/Form"
 import { Input } from "@/components/ui/Input"
+import { useToast } from "@/components/ui/hooks/useToast"
+import { cn } from "@/lib/utils"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { User } from "@phosphor-icons/react"
+import { Spinner, UploadSimple, User } from "@phosphor-icons/react"
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr"
-import { AvatarFallback } from "@radix-ui/react-avatar"
-import { useState } from "react"
+import useUser from "components/[guild]/hooks/useUser"
+import useDropzone from "hooks/useDropzone"
+import usePinata from "hooks/usePinata"
+import { useEffect, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { z } from "zod"
 import FarcasterImage from "/src/static/socialIcons/farcaster.svg"
+import { useCreateProfile } from "../_hooks/useCreateProfile"
+import { profileSchema } from "../schemas"
 import { OnboardingChain } from "../types"
 
-const formSchema = z.object({
-  name: z.string().max(100, { message: "Name cannot exceed 100 characters" }),
-  username: z
-    .string()
-    .min(1, { message: "Handle is required" })
-    .max(100, { message: "Handle cannot exceed 100 characters" })
-    .superRefine((value, ctx) => {
-      const pattern = /^[\w\-.]+$/
-      const isValid = pattern.test(value)
-      if (!isValid) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message:
-            "Handle must only contain either alphanumeric, hyphen, underscore or dot characters",
-        })
-      }
-    }),
-})
+enum CreateMethod {
+  FillByFarcaster,
+  FromBlank,
+}
 
-// TODO: use ConnectFarcasterButton
 export const StartProfile: OnboardingChain = () => {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const { farcasterProfiles = [] } = useUser()
+  const farcasterProfile = farcasterProfiles.at(0)
+  const [method, setMethod] = useState<CreateMethod | undefined>(
+    farcasterProfile ? CreateMethod.FillByFarcaster : undefined
+  )
+  const { toast } = useToast()
+
+  useEffect(() => {
+    if (!farcasterProfile) return
+    setMethod(CreateMethod.FillByFarcaster)
+    form.setValue(
+      "name",
+      farcasterProfile.username ?? form.getValues()?.name ?? "",
+      { shouldValidate: true }
+    )
+    form.setValue("profileImageUrl", farcasterProfile.avatar, {
+      shouldValidate: true,
+    })
+  }, [farcasterProfile])
+
+  const form = useForm<z.infer<typeof profileSchema>>({
+    resolver: zodResolver(profileSchema),
     defaultValues: {
       name: "",
       username: "",
@@ -49,79 +62,148 @@ export const StartProfile: OnboardingChain = () => {
     mode: "onTouched",
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
+  const createProfile = useCreateProfile()
+  async function onSubmit(values: z.infer<typeof profileSchema>) {
+    createProfile.onSubmit(values)
   }
 
-  const [startMethod, setStartMethod] = useState<"farcaster">()
+  const { isUploading, onUpload } = usePinata({
+    control: form.control,
+    fieldToSetOnSuccess: "profileImageUrl",
+    onError: (error) => {
+      toast({
+        variant: "error",
+        title: "Failed to upload file",
+        description: error,
+      })
+    },
+  })
+
+  const [uploadProgress, setUploadProgress] = useState(0)
+  const { isDragActive, getRootProps } = useDropzone({
+    multiple: false,
+    noClick: false,
+    onDrop: (acceptedFiles) => {
+      if (!acceptedFiles[0]) return
+      onUpload({
+        data: [acceptedFiles[0]],
+        onProgress: setUploadProgress,
+      })
+    },
+    onError: (error) => {
+      toast({
+        variant: "error",
+        title: `Failed to upload file`,
+        description: error.message,
+      })
+    },
+  })
+
+  let avatarFallBackIcon = <User size={32} />
+  if (isDragActive) {
+    avatarFallBackIcon = <UploadSimple size={32} className="animate-wiggle" />
+  } else if (isUploading || (uploadProgress !== 0 && uploadProgress !== 1)) {
+    avatarFallBackIcon = <Spinner size={32} className="animate-spin" />
+  }
+
   return (
-    <div className="flex w-[28rem] flex-col gap-3 p-8">
+    <div className="w-[28rem] space-y-3 p-8">
       <h1 className="mb-10 text-pretty text-center font-bold font-display text-2xl leading-none tracking-tight">
         Start your Guild Profile!
       </h1>
-      <Avatar className="mb-8 size-36 self-center border bg-card-secondary">
-        <AvatarFallback>
-          <User size={32} />
-        </AvatarFallback>
-      </Avatar>
 
-      {startMethod ? (
-        <FormProvider {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="" {...field} />
-                  </FormControl>
-                  <FormErrorMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="username"
-              render={({ field }) => (
-                <FormItem className="pb-2">
-                  <FormLabel aria-required="true">Handle</FormLabel>
-                  <FormControl>
-                    <Input placeholder="" required {...field} />
-                  </FormControl>
-                  <FormErrorMessage />
-                </FormItem>
-              )}
-            />
-            <Button
-              className="w-full"
-              type="submit"
-              colorScheme="success"
-              onClick={() => setStartMethod(undefined)}
-              disabled={!form.formState.isValid}
-            >
-              Start my profile
-            </Button>
-          </form>
-        </FormProvider>
-      ) : (
-        <>
-          <ConnectFarcasterButton
-            className="ml-0 w-full gap-2"
-            size="md"
-            onClick={() => setStartMethod("farcaster")}
-          >
-            <FarcasterImage />
-            Connect farcaster
-          </ConnectFarcasterButton>
+      <FormProvider {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-3">
+          <FormField
+            control={form.control}
+            name="profileImageUrl"
+            render={({ field }) => (
+              <Button
+                variant="unstyled"
+                type="button"
+                disabled={method === undefined}
+                className={cn(
+                  "mb-8 size-36 self-center rounded-full border-2 border-dotted",
+                  { "border-solid": field.value }
+                )}
+                {...getRootProps()}
+              >
+                <Avatar className="size-36 bg-card-secondary">
+                  {field.value && (
+                    <AvatarImage
+                      src={field.value}
+                      width={144}
+                      height={144}
+                      alt="profile avatar"
+                    />
+                  )}
+                  <AvatarFallback className="bg-card-secondary">
+                    {avatarFallBackIcon}
+                  </AvatarFallback>
+                </Avatar>
+              </Button>
+            )}
+          />
 
-          <Button variant="ghost">
-            I don't have a Farcaster profile
-            <ArrowRight weight="bold" />
-          </Button>
-        </>
-      )}
+          {method === undefined ? (
+            <>
+              <ConnectFarcasterButton
+                className="ml-0 w-full gap-2"
+                size="md"
+                disabled={!!farcasterProfile}
+              >
+                <FarcasterImage />
+                Connect farcaster
+              </ConnectFarcasterButton>
+              <Button
+                variant="ghost"
+                onClick={() => setMethod(CreateMethod.FromBlank)}
+              >
+                I don't have a Farcaster profile
+                <ArrowRight weight="bold" />
+              </Button>
+            </>
+          ) : (
+            <>
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="" {...field} />
+                    </FormControl>
+                    <FormErrorMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="username"
+                render={({ field }) => (
+                  <FormItem className="pb-2">
+                    <FormLabel aria-required="true">Username</FormLabel>
+                    <FormControl>
+                      <Input placeholder="" required {...field} />
+                    </FormControl>
+                    <FormErrorMessage />
+                  </FormItem>
+                )}
+              />
+              <Button
+                className="w-full"
+                type="submit"
+                colorScheme="success"
+                isLoading={createProfile.isLoading}
+                disabled={!form.formState.isValid}
+              >
+                Start my profile
+              </Button>
+            </>
+          )}
+        </form>
+      </FormProvider>
     </div>
   )
 }

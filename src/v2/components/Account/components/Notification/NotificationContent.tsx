@@ -34,7 +34,7 @@ export const NotificationContent = () => {
       )}
       <div className="px-4">
         <Anchor
-          variant="silent"
+          variant="unstyled"
           className={cn(
             buttonVariants({ variant: "ghost", size: "md" }),
             "w-full gap-2"

@@ -1,6 +1,6 @@
 import { HStack, Link, VStack, Wrap } from "@chakra-ui/react"
 import { NoteBlank } from "@phosphor-icons/react"
-import { EditGuildDrawerProvider } from "components/[guild]/EditGuild/EditGuildDrawerContext"
+import { EditGuildDrawerProvider } from "components/[guild]/EditGuild/EditGuildDrawerProvider"
 import EventCard from "components/[guild]/Events/EventCard"
 import FallbackFrame from "components/[guild]/Events/FallbackFrame"
 import GuildName from "components/[guild]/GuildName"
