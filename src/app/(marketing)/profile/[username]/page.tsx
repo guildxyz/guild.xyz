@@ -14,14 +14,15 @@ import { Button } from "@/components/ui/Button"
 import { Card } from "@/components/ui/Card"
 import { Progress } from "@/components/ui/Progress"
 import { Separator } from "@/components/ui/Separator"
+import { Schemas } from "@guildxyz/types"
 import { ArrowRight, CircleWavyCheck } from "@phosphor-icons/react/dist/ssr"
 import { ActivityChart } from "../_components/ActivityChart"
 import { CircularProgressBar } from "../_components/CircularProgressBar"
 import { ContributionCard } from "../_components/ContributionCard"
 import { EditProfile } from "../_components/EditProfile"
 import { LevelBadge } from "../_components/LevelBadge"
+import { OperatedGuildCard } from "../_components/OperatedGuildCard"
 import { RecentActivity } from "../_components/RecentActivity"
-import { Profile } from "./types"
 
 async function getProfileData(username: string) {
   const req = `https://api.guild.xyz/v2/profiles/${username}`
@@ -30,7 +31,7 @@ async function getProfileData(username: string) {
     if (!res.ok) {
       throw new Error("Failed to fetch profile data")
     }
-    return res.json() as Promise<Profile>
+    return res.json() as Promise<Schemas["Profile"]>
   } catch (e) {
     // mocking for the time being if fetch fails
     console.error(e)
@@ -142,7 +143,9 @@ const Page = async ({
               <ActivityChart />
             </Card>
           </div>
-          <h2 className="mb-3 font-bold text-lg">Top contributions</h2>
+          <h2 className="mb-3 font-bold text-lg">Operated guilds</h2>
+          <OperatedGuildCard />
+          <h2 className="mt-8 mb-3 font-bold text-lg">Top contributions</h2>
           <div className="grid grid-cols-1 gap-3">
             <ContributionCard />
             <ContributionCard />

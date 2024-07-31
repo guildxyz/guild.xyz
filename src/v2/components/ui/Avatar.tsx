@@ -15,6 +15,7 @@ export const avatarVariants = cva(
         lg: "size-12",
         xl: "size-16",
         "2xl": "size-20",
+        "3xl": "size-28",
       },
     },
     defaultVariants: {
