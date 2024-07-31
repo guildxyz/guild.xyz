@@ -93,13 +93,21 @@ const nextConfig = {
   },
   experimental: {
     scrollRestoration: true,
-    bundlePagesExternals: true,
+    bundlePagesExternals: process.env.NODE_ENV !== "development",
     optimizePackageImports: [
       "@phosphor-icons/react",
       "@phosphor-icons/react/dist/ssr",
       "@fuels/react",
       "fuels",
     ],
+    turbo: {
+      rules: {
+        "*.svg": {
+          loaders: ["@svgr/webpack"],
+          as: "*.js"
+        }
+      }
+    }
   },
   async rewrites() {
     return {
