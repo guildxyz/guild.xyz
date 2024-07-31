@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/Button"
 import { Card } from "@/components/ui/Card"
 import { Progress } from "@/components/ui/Progress"
 import { Separator } from "@/components/ui/Separator"
+import { Skeleton } from "@/components/ui/Skeleton"
 import { Schemas } from "@guildxyz/types"
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr"
 import { ActivityChart } from "../_components/ActivityChart"
@@ -72,7 +73,13 @@ const Page = async ({
       <LayoutMain>
         <div className="mt-24">
           <div className="relative mb-24 flex flex-col items-center">
-            <EditProfile />
+            <EditProfile
+              profileImageUrl={profile.profileImageUrl}
+              name={profile.name}
+              bio={profile.bio ?? undefined}
+              backgroundImageUrl={profile.backgroundImageUrl ?? undefined}
+              username={profile.username}
+            />
             <div className="relative mb-12 flex items-center justify-center">
               <Avatar className="size-48">
                 <AvatarImage
@@ -81,7 +88,9 @@ const Page = async ({
                   width={192}
                   height={192}
                 />
-                <AvatarFallback>#</AvatarFallback>
+                <AvatarFallback>
+                  <Skeleton className="size-full" />
+                </AvatarFallback>
               </Avatar>
               <CircularProgressBar progress={0.1} />
               <LevelBadge level={level} className="absolute right-0 bottom-0" />
