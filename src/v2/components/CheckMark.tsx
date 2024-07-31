@@ -4,7 +4,7 @@ import { ComponentProps } from "react"
 
 export const CheckMark = ({
   className,
-  props,
+  ...props
 }: ComponentProps<typeof CircleWavyCheck>) => {
   return (
     <CircleWavyCheck
