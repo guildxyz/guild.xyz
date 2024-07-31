@@ -1,5 +1,9 @@
 name: Build and Publish storybook to GitHub Pages
 
+permissions:
+  id-token: write
+  pages: write
+
 on:
   push:
     branches:
