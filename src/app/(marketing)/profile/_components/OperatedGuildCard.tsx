@@ -8,8 +8,8 @@ import Image from "next/image"
 
 export const OperatedGuildCard = () => {
   return (
-    <Card className="flex">
-      <div className="relative w-1/3">
+    <Card className="flex flex-col sm:flex-row">
+      <div className="relative w-full sm:w-1/3">
         <div className="absolute inset-0 bg-black" />
         <Image
           className="absolute inset-0 size-full object-cover opacity-30"
@@ -18,7 +18,7 @@ export const OperatedGuildCard = () => {
           width={419}
           height={233}
         />
-        <div className="relative flex h-full flex-col items-center justify-center gap-3">
+        <div className="relative flex h-full flex-col items-center justify-center gap-3 py-8">
           <Avatar size="3xl">
             <AvatarImage
               src="https://guild.xyz/_next/image?url=https%3A%2F%2Fguild-xyz.mypinata.cloud%2Fipfs%2FQmQXeY1ZEtnLGqFPuJ4RZthYz8nKdTLhLVxBRfHGXweamx&w=256&q=70"
@@ -36,7 +36,7 @@ export const OperatedGuildCard = () => {
           </h3>
         </div>
       </div>
-      <div className="grid grow grid-cols-2 justify-stretch gap-2 px-6 py-5">
+      <div className="grid grow justify-stretch gap-2 px-6 py-5 sm:grid-cols-2">
         {Array(6).fill(
           <Card className="flex items-center gap-2 bg-secondary p-5 font-extrabold text-lg">
             <User weight="bold" className="min-w-min" />
