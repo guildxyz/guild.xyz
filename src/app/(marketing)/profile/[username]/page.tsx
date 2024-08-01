@@ -80,6 +80,7 @@ const Page = async ({
               bio={profile.bio ?? undefined}
               backgroundImageUrl={profile.backgroundImageUrl ?? undefined}
               username={profile.username}
+              id={profile.id}
             />
             <div className="relative mb-12 flex items-center justify-center">
               <Avatar className="size-48">

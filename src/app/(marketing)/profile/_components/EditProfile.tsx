@@ -33,6 +33,7 @@ import usePinata from "hooks/usePinata"
 import Image from "next/image"
 import { useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
+import { useDeleteProfile } from "../_hooks/useDeleteProfile"
 
 export const EditProfile = (profile: Schemas["ProfileUpdate"]) => {
   const form = useForm<Schemas["ProfileUpdate"]>({
@@ -78,6 +79,15 @@ export const EditProfile = (profile: Schemas["ProfileUpdate"]) => {
       })
     },
   })
+
+  const deleteProfile = useDeleteProfile()
+  const deleteProfileHandler = async () => {
+    console.log("deleting profile")
+    // values: Pick<Schemas["ProfileCreation"], "username">
+    if (profile.username) {
+      deleteProfile.onSubmit(profile)
+    }
+  }
 
   return (
     <Dialog>
@@ -197,7 +207,11 @@ export const EditProfile = (profile: Schemas["ProfileUpdate"]) => {
               />
             </DialogBody>
             <DialogFooter>
-              <Button colorScheme="destructive" type="submit">
+              <Button
+                colorScheme="destructive"
+                type="button"
+                onClick={deleteProfileHandler}
+              >
                 Delete profile
               </Button>
               <Button
