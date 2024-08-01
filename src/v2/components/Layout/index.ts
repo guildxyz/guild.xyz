@@ -1,8 +1,9 @@
-export { Header as LayoutHeader } from "@/components/Header"
+// biome-ignore lint/performance/noBarrelFile: <explanation>
 export {
   LayoutBanner,
   LayoutFooter,
   LayoutHeadline,
+  LayoutTitle,
   LayoutHero,
   LayoutMain,
   Layout,

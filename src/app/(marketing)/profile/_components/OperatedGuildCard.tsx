@@ -8,8 +8,8 @@ import Image from "next/image"
 
 export const OperatedGuildCard = () => {
   return (
-    <Card className="flex">
-      <div className="relative w-1/3">
+    <Card className="flex flex-col md:flex-row">
+      <div className="relative w-full px-4 py-8 md:w-1/3">
         <div className="absolute inset-0 bg-black" />
         <Image
           className="absolute inset-0 size-full object-cover opacity-30"
@@ -36,7 +36,7 @@ export const OperatedGuildCard = () => {
           </h3>
         </div>
       </div>
-      <div className="grid grow grid-cols-2 justify-stretch gap-2 px-6 py-5">
+      <div className="grid grow justify-stretch gap-2 px-6 py-5 md:grid-cols-2">
         {Array(6).fill(
           <Card className="flex items-center gap-2 bg-secondary p-5 font-extrabold text-lg">
             <User weight="bold" className="min-w-min" />

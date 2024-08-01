@@ -144,7 +144,10 @@ export const EditProfile = (
                         <Button size="icon" variant="ghost">
                           <ImageIcon weight="bold" size={24} />
                         </Button>
-                        <Separator orientation="vertical" className="h-6 w-0.5" />
+                        <Separator
+                          orientation="vertical"
+                          className="h-6 w-0.5 bg-white/50"
+                        />
                         <Button size="icon" variant="ghost">
                           <Eyedropper weight="bold" size={24} />
                         </Button>
@@ -165,7 +168,7 @@ export const EditProfile = (
                       )}
                       {...getRootProps()}
                     >
-                      <Avatar className="size-36 bg-card-secondary">
+                      <Avatar className="size-36 bg-muted">
                         {field.value && (
                           <AvatarImage
                             src={field.value}
@@ -174,7 +177,7 @@ export const EditProfile = (
                             alt="profile avatar"
                           />
                         )}
-                        <AvatarFallback className="bg-card-secondary">
+                        <AvatarFallback className="bg-muted">
                           <User size={38} />
                         </AvatarFallback>
                       </Avatar>
@@ -190,7 +193,7 @@ export const EditProfile = (
                   <FormItem className="pb-2">
                     <FormLabel>Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="" {...field} />
+                      <Input placeholder="" variant="muted" {...field} />
                     </FormControl>
                     <FormErrorMessage />
                   </FormItem>
@@ -203,7 +206,7 @@ export const EditProfile = (
                   <FormItem className="pb-2">
                     <FormLabel aria-required="true">Username</FormLabel>
                     <FormControl>
-                      <Input placeholder="" required {...field} />
+                      <Input placeholder="" variant="muted" required {...field} />
                     </FormControl>
                     <FormErrorMessage />
                   </FormItem>
@@ -216,7 +219,11 @@ export const EditProfile = (
                   <FormItem className="">
                     <FormLabel>Bio</FormLabel>
                     <FormControl>
-                      <Textarea placeholder="" className="max-h-12" {...field} />
+                      <Textarea
+                        placeholder=""
+                        className="max-h-12 bg-muted"
+                        {...field}
+                      />
                     </FormControl>
                     <FormErrorMessage />
                   </FormItem>
