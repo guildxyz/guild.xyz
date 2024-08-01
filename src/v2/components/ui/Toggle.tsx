@@ -10,24 +10,22 @@ const toggleVariants = cva(
   {
     variants: {
       variant: {
-        default:
+        secondary:
           "text-secondary-foreground hover:bg-secondary data-[state=on]:bg-secondary active:bg-secondary-hover",
         primary:
-          "bg-transparent hover:bg-accent/50 hover:text-accent-foreground data-[state=on]:bg-primary data-[state=on]:text-primary-foreground",
+          "hover:bg-secondary-hover active:bg-secondary-active data-[state=on]:bg-primary data-[state=on]:text-primary-foreground bg-secondary text-secondary-foreground",
         mono: "text-white hover:bg-white/10 data-[state=on]:bg-white/15 hover:text-white data-[state=on]:text-white",
-        outline:
-          "border border-input bg-transparent hover:bg-accent/50 hover:text-accent-foreground",
       },
       size: {
-        default: "h-10 px-3",
         sm: "h-8 px-2.5",
+        md: "h-10 px-3",
         lg: "h-11 px-5 font-semibold text-base",
         icon: "size-9",
       },
     },
     defaultVariants: {
-      variant: "default",
-      size: "default",
+      variant: "secondary",
+      size: "md",
     },
   }
 )
