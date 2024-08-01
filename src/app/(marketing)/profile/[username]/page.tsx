@@ -1,9 +1,9 @@
 import { CheckMark } from "@/components/CheckMark"
+import { Header } from "@/components/Header"
 import {
   Layout,
   LayoutBanner,
   LayoutFooter,
-  LayoutHeader,
   LayoutHero,
   LayoutMain,
 } from "@/components/Layout"
@@ -65,7 +65,7 @@ const Page = async ({
   return (
     <Layout>
       <LayoutHero>
-        <LayoutHeader />
+        <Header />
         <LayoutBanner className="-bottom-[500px]">
           <div className="absolute inset-0 bg-[url('/banner.svg')] opacity-10" />
           <div className="absolute inset-0 bg-gradient-to-t from-background" />

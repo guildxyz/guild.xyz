@@ -194,11 +194,14 @@ const config = {
         modal: "1400",
         popover: "1500",
         toast: "1700",
-        tooltip: "1800",
-      }
+        tooltip: "1800", 
+      },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [
+    require("tailwindcss-animate"),
+    require('@tailwindcss/typography')
+  ],
 } satisfies Config
 
 export default config

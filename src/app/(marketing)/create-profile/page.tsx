@@ -1,11 +1,5 @@
-import {
-  Layout,
-  LayoutBanner,
-  LayoutHeader,
-  LayoutHero,
-  LayoutMain,
-} from "@/components/Layout"
-import { LayoutBannerBackground } from "@/components/Layout/Layout"
+import { Header } from "@/components/Header"
+import { Layout, LayoutBanner, LayoutHero, LayoutMain } from "@/components/Layout"
 import svgToTinyDataUri from "mini-svg-data-uri"
 import type { Metadata } from "next"
 import { OnboardingDriver } from "./_components/OnboardingDriver"
@@ -26,9 +20,8 @@ const Page = () => {
         }}
       />
       <LayoutHero>
-        <LayoutHeader />
+        <Header />
         <LayoutBanner className="-bottom-[206px] border-border border-b border-dashed">
-          <LayoutBannerBackground />
           <div className="absolute inset-0 bg-[auto_115%] bg-[top_5px_right_0] bg-[url('/banner.svg')] bg-repeat opacity-10" />
           <div
             className="absolute inset-0"
