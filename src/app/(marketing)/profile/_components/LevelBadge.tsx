@@ -38,9 +38,7 @@ export const LevelBadge = ({ level, className }: LevelBadgeProps) => {
     RANKS[Math.min(Math.floor((level / MAX_LEVEL) * RANKS.length), RANKS.length - 1)]
 
   return (
-    <div
-      className={cn("relative grid size-12 place-items-center shadow-lg", className)}
-    >
+    <div className={cn("relative grid size-12 place-items-center", className)}>
       <div className="size-full rounded-full" style={{ background: rank.color }} />
       <div className="absolute select-none font-extrabold text-xl">{level}</div>
     </div>
