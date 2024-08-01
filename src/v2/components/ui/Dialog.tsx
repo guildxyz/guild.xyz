@@ -34,17 +34,17 @@ const DialogOverlay = forwardRef<
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName
 
 export const dialogContentVariants = cva(
-  "flex flex-col w-full mt-4 md:my-16 relative rounded-xl max-sm:rounded-b-none bg-card shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 focus-visible:outline-none ring-ring focus-visible:ring-4 ring-offset-0",
+  "flex flex-col mt-4 md:my-16 relative rounded-xl max-sm:rounded-b-none bg-card shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 focus-visible:outline-none ring-ring focus-visible:ring-4 ring-offset-0",
   {
     variants: {
       size: {
-        sm: "max-w-sm",
-        md: "max-w-md",
-        lg: "max-w-lg",
-        xl: "max-w-xl",
-        "2xl": "max-w-2xl",
-        "3xl": "max-w-3xl",
-        "4xl": "max-w-4xl",
+        sm: "w-[min(theme(maxWidth.sm),_100vw)]",
+        md: "w-[min(theme(maxWidth.md),_100vw)]",
+        lg: "w-[min(theme(maxWidth.lg),_100vw)]",
+        xl: "w-[min(theme(maxWidth.xl),_100vw)]",
+        "2xl": "w-[min(theme(maxWidth.2xl),_100vw)]",
+        "3xl": "w-[min(theme(maxWidth.3xl),_100vw)]",
+        "4xl": "w-[min(theme(maxWidth.4xl),_100vw)]",
       },
     },
     defaultVariants: {
