@@ -175,7 +175,7 @@ const Page = async ({
         </div>
       </LayoutMain>
       <LayoutFooter>
-        <p className="mt-24 mb-12 text-center font-medium text-muted-foreground">
+        <p className="mb-12 text-center font-medium text-muted-foreground">
           Guild Profiles are currently in invite only early access, only available to{" "}
           <Anchor
             href={"#"}
