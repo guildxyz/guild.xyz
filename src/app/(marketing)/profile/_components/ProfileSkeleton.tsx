@@ -1,10 +1,5 @@
-import {
-  Layout,
-  LayoutBanner,
-  LayoutHeader,
-  LayoutHero,
-  LayoutMain,
-} from "@/components/Layout"
+import { Header } from "@/components/Header"
+import { Layout, LayoutBanner, LayoutHero, LayoutMain } from "@/components/Layout"
 import { Card } from "@/components/ui/Card"
 import { Separator } from "@/components/ui/Separator"
 import { Skeleton } from "@/components/ui/Skeleton"
@@ -13,7 +8,7 @@ export const ProfileSkeleton = () => {
   return (
     <Layout>
       <LayoutHero>
-        <LayoutHeader />
+        <Header />
         <LayoutBanner className="-bottom-[500px]">
           <div className="absolute inset-0 bg-[url('/banner.svg')] opacity-10" />
           <div className="absolute inset-0 bg-gradient-to-t from-background" />
