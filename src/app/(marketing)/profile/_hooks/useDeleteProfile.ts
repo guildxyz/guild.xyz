@@ -1,12 +1,14 @@
 import { useToast } from "@/components/ui/hooks/useToast"
 import { Schemas } from "@guildxyz/types"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
+import { useRouter } from "next/navigation"
 import fetcher from "utils/fetcher"
 
 type Payload = Partial<Pick<Schemas["Profile"], "username" | "id">>
 
 export const useDeleteProfile = () => {
   const { toast } = useToast()
+  const router = useRouter()
 
   const createProfile = async (signedValidation: SignedValidation) => {
     const { username, id } = JSON.parse(signedValidation.signedPayload) as Payload
@@ -16,9 +18,9 @@ export const useDeleteProfile = () => {
     })
   }
 
-  const submitWithSign = useSubmitWithSign<Payload>(createProfile, {
-    onSuccess: (response) => {
-      console.log(response)
+  const submitWithSign = useSubmitWithSign<object>(createProfile, {
+    onSuccess: () => {
+      router.replace("/create-profile")
       toast({
         variant: "success",
         title: "Successfully deleted profile",

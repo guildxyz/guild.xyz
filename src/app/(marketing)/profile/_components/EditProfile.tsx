@@ -7,6 +7,7 @@ import {
   DialogBody,
   DialogCloseButton,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -23,6 +24,8 @@ import { Input } from "@/components/ui/Input"
 import { Separator } from "@/components/ui/Separator"
 import { Textarea } from "@/components/ui/Textarea"
 import { toast } from "@/components/ui/hooks/useToast"
+import { useDisclosure } from "@/hooks/useDisclosure"
+import { useUserPublic } from "@/hooks/useUserPublic"
 import { cn } from "@/lib/utils"
 import { profileSchema } from "@/lib/validations/profileSchema"
 import { Schemas } from "@guildxyz/types"
@@ -34,8 +37,12 @@ import Image from "next/image"
 import { useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { useDeleteProfile } from "../_hooks/useDeleteProfile"
+import { EditProfilePayload, useEditProfile } from "../_hooks/useEditProfile"
 
-export const EditProfile = (profile: Schemas["ProfileUpdate"]) => {
+export const EditProfile = (
+  profile: EditProfilePayload & Pick<Schemas["Profile"], "userId">
+) => {
+  const { id: publicUserId } = useUserPublic()
   const form = useForm<Schemas["ProfileUpdate"]>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
@@ -44,8 +51,13 @@ export const EditProfile = (profile: Schemas["ProfileUpdate"]) => {
     mode: "onTouched",
   })
 
+  const disclosure = useDisclosure()
+  const editProfile = useEditProfile()
   async function onSubmit(values: Schemas["ProfileUpdate"]) {
     console.log("edit profile submit", values)
+    await editProfile.onSubmit({ ...values, id: profile.id })
+    if (editProfile.error) return
+    disclosure.onClose()
   }
 
   const { isUploading, onUpload } = usePinata({
@@ -89,8 +101,12 @@ export const EditProfile = (profile: Schemas["ProfileUpdate"]) => {
     }
   }
 
+  if (publicUserId !== profile.userId) {
+    return
+  }
+
   return (
-    <Dialog>
+    <Dialog onOpenChange={disclosure.setValue} open={disclosure.isOpen}>
       <DialogTrigger asChild>
         <Button className="-top-8 absolute right-0" variant="solid">
           <Pencil weight="bold" />
@@ -100,6 +116,7 @@ export const EditProfile = (profile: Schemas["ProfileUpdate"]) => {
       <DialogContent size="lg" className="bg-background">
         <DialogHeader>
           <DialogTitle>Edit profile</DialogTitle>
+          <DialogDescription />
           <DialogCloseButton />
         </DialogHeader>
         <FormProvider {...form}>
@@ -210,11 +227,13 @@ export const EditProfile = (profile: Schemas["ProfileUpdate"]) => {
               <Button
                 colorScheme="destructive"
                 type="button"
+                isLoading={deleteProfile.isLoading}
                 onClick={deleteProfileHandler}
               >
                 Delete profile
               </Button>
               <Button
+                isLoading={editProfile.isLoading}
                 colorScheme="success"
                 type="submit"
                 disabled={!form.formState.isValid}
