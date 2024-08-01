@@ -33,7 +33,7 @@ export const EditContributions = (
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="solid" size="icon">
+        <Button variant="solid" size="icon" className="rounded-full">
           <Pencil weight="bold" />
         </Button>
       </DialogTrigger>
