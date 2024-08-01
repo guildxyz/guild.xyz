@@ -18,6 +18,7 @@ export function ThemeToggle() {
 
   return (
     <ToggleGroup
+      size="icon"
       type="single"
       value={chakraColorMode || theme}
       onValueChange={(selected) => {
@@ -31,27 +32,23 @@ export function ThemeToggle() {
       <ToggleGroupItem
         value="light"
         aria-label="Toggle light mode"
-        size="icon"
-        variant="primary"
-        className="size-8"
+        className="size-8 data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
       >
         <Sun weight="bold" />
       </ToggleGroupItem>
+
       <ToggleGroupItem
         value="dark"
         aria-label="Toggle dark mode"
-        size="icon"
-        variant="primary"
-        className="size-8"
+        className="size-8 data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
       >
         <Moon weight="bold" />
       </ToggleGroupItem>
+
       <ToggleGroupItem
         value="system"
         aria-label="Toggle system default"
-        size="icon"
-        variant="primary"
-        className="size-8"
+        className="size-8 data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
       >
         <Desktop weight="bold" />
       </ToggleGroupItem>

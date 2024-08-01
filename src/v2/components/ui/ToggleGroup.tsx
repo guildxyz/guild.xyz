@@ -13,8 +13,8 @@ import {
 } from "react"
 
 const ToggleGroupContext = createContext<VariantProps<typeof toggleVariants>>({
-  size: "default",
-  variant: "default",
+  size: "md",
+  variant: "secondary",
 })
 
 const ToggleGroup = forwardRef<
