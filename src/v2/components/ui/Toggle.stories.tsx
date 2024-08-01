@@ -49,19 +49,3 @@ export const Mono: Story = {
     children: "Mono",
   },
 }
-
-export const PrimaryGhost: Story = {
-  ...Default,
-  args: {
-    variant: "primary-ghost",
-    children: "Primary ghost",
-  },
-}
-
-export const Outline: Story = {
-  ...Default,
-  args: {
-    variant: "outline",
-    children: "Outline",
-  },
-}

@@ -46,9 +46,7 @@ export const Default: Story = {
       options: [
         "secondary",
         "primary",
-        "primary-ghost",
         "mono",
-        "outline",
       ] satisfies ToggleGroupProps["variant"][],
     },
     size: {
