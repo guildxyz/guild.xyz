@@ -257,6 +257,30 @@
     width: 0;
     height: 0;
   }
+
+  .prose-counters {
+    counter-reset: main-counter;
+  }
+
+  .prose-counters section:not(:first-child) {
+    counter-increment: main-counter;
+  }
+
+  .prose-counters ol li::marker {
+    content: counter(main-counter) ". ";
+  }
+
+  .prose-counters ol li ol {
+    counter-reset: sub-counter;
+  }
+
+  .prose-counters ol li ol li {
+    counter-increment: sub-counter;
+  }
+
+  .prose-counters ol li ol li::marker {
+    content: counter(main-counter) "." counter(sub-counter) " ";
+  }
 }
 
 /*
