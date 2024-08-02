@@ -140,7 +140,7 @@ const GuildPage = (): JSX.Element => {
             ) : (
               <div
                 className={cn("h-full w-full", {
-                  // TODO: don't use Chakra CSS variables
+                  // TODO: rework ThemeContext & don't use Chakra related colors
                   "opacity-50": textColor !== "primary.800",
                 })}
                 style={{
@@ -200,7 +200,6 @@ const GuildPage = (): JSX.Element => {
                 )}
               </Badge>
             </div>
-            {/* TODO: verified icon */}
 
             {isAdmin && isDetailed && <DynamicEditGuildButton />}
           </LayoutHeadline>
@@ -213,7 +212,6 @@ const GuildPage = (): JSX.Element => {
                   textColor === "primary.800",
               })}
             >
-              {/* TODO: remove Chakra related stuff from parseDescription */}
               {description && parseDescription(description)}
               {Object.keys(socialLinks ?? {}).length > 0 && (
                 <div className="mt-3 flex flex-wrap items-center gap-3">
