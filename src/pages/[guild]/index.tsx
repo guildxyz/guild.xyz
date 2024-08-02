@@ -1,3 +1,4 @@
+import { CheckMark } from "@/components/CheckMark"
 import { Header } from "@/components/Header"
 import {
   Layout,
@@ -10,10 +11,11 @@ import {
 import { LayoutContainer, LayoutFooter } from "@/components/Layout/Layout"
 import { Anchor } from "@/components/ui/Anchor"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
+import { Badge } from "@/components/ui/Badge"
 import { Skeleton } from "@/components/ui/Skeleton"
 import { cn } from "@/lib/utils"
 import { Box, Center, HStack, Heading, Spinner } from "@chakra-ui/react"
-import {} from "@phosphor-icons/react"
+import { Users } from "@phosphor-icons/react/dist/ssr"
 import AccessHub from "components/[guild]/AccessHub"
 import { useAccessedGuildPlatforms } from "components/[guild]/AccessHub/AccessHub"
 import { useEditGuildDrawer } from "components/[guild]/EditGuild/EditGuildDrawerContext"
@@ -150,14 +152,14 @@ const GuildPage = (): JSX.Element => {
 
           <Header />
 
-          <LayoutContainer className="-mb-8 mt-6">
+          <LayoutContainer className="-mb-14 mt-6">
             <BackButton />
           </LayoutContainer>
 
-          <LayoutHeadline>
+          <LayoutHeadline className="pt-8">
             {imageUrl && (
               <Avatar
-                className={cn("row-span-2 size-14 lg:size-[72px]", {
+                className={cn("row-span-2 size-20 md:size-24", {
                   // TODO rework ThemeContext & use a non-Chakra CSS variable
                   "bg-[var(--chakra-colors-primary-800)]":
                     textColor === "primary.800",
@@ -166,23 +168,38 @@ const GuildPage = (): JSX.Element => {
                 <AvatarImage
                   src={imageUrl}
                   alt={`${name} logo`}
-                  width={48}
-                  height={48}
+                  width={96}
+                  height={96}
                 />
                 <AvatarFallback>
                   <Skeleton className="size-full" />
                 </AvatarFallback>
               </Avatar>
             )}
-            <LayoutTitle
-              className={cn({
-                // TODO rework ThemeContext & use a non-Chakra CSS variable
-                "text-[var(--chakra-colors-primary-800)]":
-                  textColor === "primary.800",
-              })}
-            >
-              {name}
-            </LayoutTitle>
+            <div className="flex flex-col gap-1">
+              <div className="flex items-start gap-1 sm:gap-1.5">
+                <LayoutTitle
+                  className={cn(
+                    "line-clamp-1 break-all leading-tight sm:leading-tight",
+                    {
+                      // TODO rework ThemeContext & use a non-Chakra CSS variable
+                      "text-[var(--chakra-colors-primary-800)]":
+                        textColor === "primary.800",
+                    }
+                  )}
+                >
+                  {name} long name
+                </LayoutTitle>
+                <CheckMark className="mt-2.5 size-5 shrink-0 sm:mt-4 sm:size-6" />
+              </div>
+
+              <Badge>
+                <Users weight="bold" />
+                {new Intl.NumberFormat("en", { notation: "compact" }).format(
+                  memberCount ?? 0
+                )}
+              </Badge>
+            </div>
             {/* TODO: verified icon */}
 
             {isAdmin && isDetailed && <DynamicEditGuildButton />}
