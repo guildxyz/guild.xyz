@@ -1,12 +1,12 @@
+import bustInSilhouette from "@public/apple_emojis/bust-in-silhouette.png"
+import compass from "@public/apple_emojis/compass.png"
+import peopleWithBunnyEars from "@public/apple_emojis/people-with-bunny-ears.png"
+import sparkles from "@public/apple_emojis/sparkles.png"
+import speechBalloon from "@public/apple_emojis/speech-balloon.png"
+import star from "@public/apple_emojis/star.png"
+import technologist from "@public/apple_emojis/technologist.png"
+import unlocked from "@public/apple_emojis/unlocked.png"
 import { StaticImageData } from "next/image"
-import bustInSilhouette from "/public/apple_emojis/bust-in-silhouette.png"
-import compass from "/public/apple_emojis/compass.png"
-import peopleWithBunnyEars from "/public/apple_emojis/people-with-bunny-ears.png"
-import sparkles from "/public/apple_emojis/sparkles.png"
-import speechBalloon from "/public/apple_emojis/speech-balloon.png"
-import star from "/public/apple_emojis/star.png"
-import technologist from "/public/apple_emojis/technologist.png"
-import unlocked from "/public/apple_emojis/unlocked.png"
 
 export const SUBSCRIPTIONS = [
   {

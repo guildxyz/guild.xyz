@@ -1,5 +1,6 @@
 "use client"
 
+import FarcasterImage from "@/../static/socialIcons/farcaster.svg"
 import { ConnectFarcasterButton } from "@/components/Account/components/AccountModal/components/FarcasterProfile"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
 import { Button } from "@/components/ui/Button"
@@ -23,7 +24,6 @@ import useDropzone from "hooks/useDropzone"
 import usePinata from "hooks/usePinata"
 import { useEffect, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import FarcasterImage from "/src/static/socialIcons/farcaster.svg"
 import { useCreateProfile } from "../_hooks/useCreateProfile"
 import { OnboardingChain } from "../types"
 
@@ -152,7 +152,9 @@ export const StartProfile: OnboardingChain = () => {
                 size="md"
                 disabled={!!farcasterProfile}
               >
-                <FarcasterImage />
+                <div className="size-6">
+                  <FarcasterImage />
+                </div>
                 Connect farcaster
               </ConnectFarcasterButton>
               <Button
