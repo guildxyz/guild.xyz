@@ -128,11 +128,6 @@ const GuildPage = (): JSX.Element => {
     <>
       <Head>
         <meta name="theme-color" content={localThemeColor} />
-        <title>{name}</title>
-        <meta property="og:title" content={name} />
-        <link rel="shortcut icon" href={imageUrl ?? "/guild-icon.png"} />
-        <meta name="description" content={description} />
-        <meta property="og:description" content={description} />
       </Head>
 
       {featureFlags?.includes("ONGOING_ISSUES") && <DynamicOngoingIssuesBanner />}
@@ -355,14 +350,18 @@ const GuildPageWrapper = ({ fallback }: Props): JSX.Element => {
 
   return (
     <>
-      <LinkPreviewHead
-        path={fallback ? Object.values(fallback)[0].urlName : guild.urlName}
-      />
+      <LinkPreviewHead path={Object.values(fallback)[0].urlName} />
       <Head>
-        <title>{fallback ? Object.values(fallback)[0].name : guild.name}</title>
+        <title>{Object.values(fallback)[0].name}</title>
+        <meta property="og:title" content={Object.values(fallback)[0].name} />
+        <link
+          rel="shortcut icon"
+          href={Object.values(fallback)[0].imageUrl ?? "/guild-icon.png"}
+        />
+        <meta name="description" content={Object.values(fallback)[0].description} />
         <meta
-          property="og:title"
-          content={fallback ? Object.values(fallback)[0].name : guild.name}
+          property="og:description"
+          content={Object.values(fallback)[0].description}
         />
       </Head>
       <SWRConfig value={fallback && { fallback }}>
