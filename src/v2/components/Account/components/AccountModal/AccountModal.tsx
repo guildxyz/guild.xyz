@@ -139,8 +139,8 @@ const AccountModal = () => {
                             Purchase history
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
-                          <DropdownMenuLabel className="mt-3 px-4 text-muted-foreground">
-                            Connected with MetaMask
+                          <DropdownMenuLabel className="mt-3 flex px-4 text-muted-foreground">
+                            Connected with {connectorName}
                           </DropdownMenuLabel>
                           <DropdownMenuItem
                             className="flex items-center gap-2 px-4 font-semibold"
