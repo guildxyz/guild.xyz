@@ -1,3 +1,17 @@
+import { Header } from "@/components/Header"
+import {
+  Layout,
+  LayoutBanner,
+  LayoutHeadline,
+  LayoutHero,
+  LayoutMain,
+  LayoutTitle,
+} from "@/components/Layout"
+import { LayoutContainer } from "@/components/Layout/Layout"
+import { Anchor } from "@/components/ui/Anchor"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
+import { Skeleton } from "@/components/ui/Skeleton"
+import { cn } from "@/lib/utils"
 import {
   Box,
   Center,
@@ -5,19 +19,16 @@ import {
   HStack,
   Heading,
   Icon,
-  Link,
   Spinner,
   Tag,
   TagLeftIcon,
   Text,
-  Wrap,
 } from "@chakra-ui/react"
 import { Info, Users } from "@phosphor-icons/react"
 import AccessHub from "components/[guild]/AccessHub"
 import { useAccessedGuildPlatforms } from "components/[guild]/AccessHub/AccessHub"
 import { useEditGuildDrawer } from "components/[guild]/EditGuild/EditGuildDrawerContext"
 import { EditGuildDrawerProvider } from "components/[guild]/EditGuild/EditGuildDrawerProvider"
-import GuildName from "components/[guild]/GuildName"
 import JoinButton from "components/[guild]/JoinButton"
 import JoinModalProvider from "components/[guild]/JoinModal/JoinModalProvider"
 import LeaveButton from "components/[guild]/LeaveButton"
@@ -30,8 +41,6 @@ import GuildTabs from "components/[guild]/Tabs/GuildTabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
-import GuildLogo from "components/common/GuildLogo"
-import Layout from "components/common/Layout"
 import BackButton from "components/common/Layout/components/BackButton"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
@@ -40,6 +49,7 @@ import useUniqueMembers from "hooks/useUniqueMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
 import Head from "next/head"
+import Image from "next/image"
 import ErrorPage from "pages/_error"
 import { useEffect } from "react"
 import { MintPolygonIDProofProvider } from "rewards/PolygonID/components/MintPolygonIDProofProvider"
@@ -118,130 +128,193 @@ const GuildPage = (): JSX.Element => {
     <>
       <Head>
         <meta name="theme-color" content={localThemeColor} />
+        <title>{name}</title>
+        <meta property="og:title" content={name} />
+        <link rel="shortcut icon" href={imageUrl ?? "/guild-icon.png"} />
+        <meta name="description" content={description} />
+        <meta property="og:description" content={description} />
       </Head>
 
       {featureFlags?.includes("ONGOING_ISSUES") && <DynamicOngoingIssuesBanner />}
 
-      <Layout
-        title={<GuildName {...{ name, tags }} />}
-        ogTitle={name}
-        textColor={textColor}
-        ogDescription={description}
-        description={
-          (description || Object.keys(socialLinks ?? {}).length > 0) && (
-            <>
+      <Layout>
+        <LayoutHero>
+          <LayoutBanner>
+            {localBackgroundImage ? (
+              <Image
+                src={localBackgroundImage}
+                alt="Guild background image"
+                priority
+                fill
+                sizes="100vw"
+                style={{
+                  filter: "brightness(30%)",
+                  objectFit: "cover",
+                }}
+              />
+            ) : (
+              <div
+                className={cn("h-full w-full", {
+                  // TODO: don't use Chakra CSS variables
+                  "opacity-50": textColor !== "primary.800",
+                })}
+                style={{
+                  backgroundColor: localThemeColor,
+                }}
+              ></div>
+            )}
+          </LayoutBanner>
+
+          <Header />
+
+          <LayoutContainer className="-mb-8 mt-6">
+            <BackButton />
+          </LayoutContainer>
+
+          <LayoutHeadline>
+            {imageUrl && (
+              <Avatar
+                className={cn("row-span-2 size-14 lg:size-[72px]", {
+                  // TODO rework ThemeContext & use a non-Chakra CSS variable
+                  "bg-[var(--chakra-colors-primary-800)]":
+                    textColor === "primary.800",
+                })}
+              >
+                <AvatarImage
+                  src={imageUrl}
+                  alt={`${name} logo`}
+                  width={48}
+                  height={48}
+                />
+                <AvatarFallback>
+                  <Skeleton className="size-full" />
+                </AvatarFallback>
+              </Avatar>
+            )}
+            <LayoutTitle
+              className={cn({
+                // TODO rework ThemeContext & use a non-Chakra CSS variable
+                "text-[var(--chakra-colors-primary-800)]":
+                  textColor === "primary.800",
+              })}
+            >
+              {name}
+            </LayoutTitle>
+            {/* TODO: verified icon */}
+
+            {isAdmin && isDetailed && <DynamicEditGuildButton />}
+          </LayoutHeadline>
+
+          {(description || Object.keys(socialLinks ?? {}).length > 0) && (
+            <LayoutContainer
+              className={cn("mt-6 font-semibold text-white", {
+                // TODO rework ThemeContext & use a non-Chakra CSS variable
+                "text-[var(--chakra-colors-primary-800)]":
+                  textColor === "primary.800",
+              })}
+            >
+              {/* TODO: remove Chakra related stuff from parseDescription */}
               {description && parseDescription(description)}
               {Object.keys(socialLinks ?? {}).length > 0 && (
-                <Wrap w="full" spacing={3} mt="3">
-                  {Object.entries(socialLinks).map(([type, link]) => {
+                <div className="mt-3 flex flex-wrap items-center gap-3">
+                  {Object.entries(socialLinks ?? {}).map(([type, link]) => {
                     const prettyLink = link
                       .replace(/(http(s)?:\/\/)*(www\.)*/i, "")
                       .replace(/\?.*/, "") // trim query params
                       .replace(/\/+$/, "") // trim ending slash
 
                     return (
-                      <HStack key={type} spacing={1.5} maxW="full">
+                      <div key={type} className="flex items-center gap-1.5">
                         <SocialIcon type={type as SocialLinkKey} size="sm" />
-                        <Link
+                        <Anchor
                           href={link?.startsWith("http") ? link : `https://${link}`}
-                          isExternal
-                          fontSize="sm"
-                          fontWeight="semibold"
-                          color={textColor}
-                          noOfLines={1}
+                          className={cn("font-semibold text-sm text-white", {
+                            // TODO rework ThemeContext & use a non-Chakra CSS variable
+                            "text-[var(--chakra-colors-primary-800)]":
+                              textColor === "primary.800",
+                          })}
                         >
                           {prettyLink}
-                        </Link>
-                      </HStack>
+                        </Anchor>
+                      </div>
                     )
                   })}
-                </Wrap>
+                </div>
               )}
-            </>
-          )
-        }
-        image={
-          <GuildLogo
-            imageUrl={imageUrl}
-            size={{ base: "56px", lg: "72px" }}
-            mt={{ base: 1, lg: 2 }}
-            bgColor={textColor === "primary.800" ? "primary.800" : "transparent"}
+            </LayoutContainer>
+          )}
+        </LayoutHero>
+
+        <LayoutMain>
+          <GuildTabs
+            activeTab="HOME"
+            rightElement={
+              <HStack>
+                {isMember && !isAdmin && <DynamicRecheckAccessesButton />}
+                {!isMember ? (
+                  <JoinButton />
+                ) : !isAdmin ? (
+                  <LeaveButton />
+                ) : (
+                  <DynamicAddRewardAndCampaign />
+                )}
+              </HStack>
+            }
           />
-        }
-        imageUrl={imageUrl}
-        background={localThemeColor}
-        backgroundImage={localBackgroundImage}
-        action={isAdmin && isDetailed && <DynamicEditGuildButton />}
-        backButton={<BackButton />}
-      >
-        <GuildTabs
-          activeTab="HOME"
-          rightElement={
-            <HStack>
-              {isMember && !isAdmin && <DynamicRecheckAccessesButton />}
-              {!isMember ? (
-                <JoinButton />
-              ) : !isAdmin ? (
-                <LeaveButton />
-              ) : (
-                <DynamicAddRewardAndCampaign />
-              )}
-            </HStack>
-          }
-        />
 
-        <AccessHub />
+          <AccessHub />
 
-        <Section
-          title={
-            (isAdmin || isMember || !!accessedGuildPlatforms?.length) && "Roles"
-          }
-          titleRightElement={
-            isAdmin && (
-              <Box my="-2 !important" ml="auto !important">
-                <DynamicAddAndOrderRoles />
-              </Box>
-            )
-          }
-          mb="10"
-        >
-          <Roles />
-        </Section>
-        {/* we'll remove Members section completely, just keeping it for admins for now because of the Members exporter */}
-        {isAdmin && (
-          <>
-            <Divider my={10} />
-            <Section
-              title="Members"
-              titleRightElement={
-                <HStack justifyContent="space-between" w="full" my="-2 !important">
-                  <Tag maxH={6} pt={0.5}>
-                    <TagLeftIcon as={Users} />
-                    {isLoading ? (
-                      <Spinner size="xs" />
-                    ) : (
-                      new Intl.NumberFormat("en", {
-                        notation: "compact",
-                      }).format(memberCount ?? 0) ?? 0
-                    )}
-                  </Tag>
-                  {isAdmin && <DynamicMembersExporter />}
-                </HStack>
-              }
-            >
-              <Box>
-                {isAdmin && <DynamicActiveStatusUpdates />}
+          <Section
+            title={
+              (isAdmin || isMember || !!accessedGuildPlatforms?.length) && "Roles"
+            }
+            titleRightElement={
+              isAdmin && (
+                <Box my="-2 !important" ml="auto !important">
+                  <DynamicAddAndOrderRoles />
+                </Box>
+              )
+            }
+            mb="10"
+          >
+            <Roles />
+          </Section>
+          {/* we'll remove Members section completely, just keeping it for admins for now because of the Members exporter */}
+          {isAdmin && (
+            <>
+              <Divider my={10} />
+              <Section
+                title="Members"
+                titleRightElement={
+                  <HStack justifyContent="space-between" w="full" my="-2 !important">
+                    <Tag maxH={6} pt={0.5}>
+                      <TagLeftIcon as={Users} />
+                      {isLoading ? (
+                        <Spinner size="xs" />
+                      ) : (
+                        new Intl.NumberFormat("en", {
+                          notation: "compact",
+                        }).format(memberCount ?? 0) ?? 0
+                      )}
+                    </Tag>
+                    {isAdmin && <DynamicMembersExporter />}
+                  </HStack>
+                }
+              >
+                <Box>
+                  {isAdmin && <DynamicActiveStatusUpdates />}
 
-                <Members members={members} />
-                <Text mt="6" colorScheme={"gray"}>
-                  <Icon as={Info} mr="2" mb="-2px" />
-                  Members section is only visible to admins and is under rework,
-                  until then only admins are shown
-                </Text>
-              </Box>
-            </Section>
-          </>
-        )}
+                  <Members members={members} />
+                  <Text mt="6" colorScheme={"gray"}>
+                    <Icon as={Info} mr="2" mb="-2px" />
+                    Members section is only visible to admins and is under rework,
+                    until then only admins are shown
+                  </Text>
+                </Box>
+              </Section>
+            </>
+          )}
+        </LayoutMain>
       </Layout>
 
       {isAdmin && <DynamicDiscordBotPermissionsChecker />}
