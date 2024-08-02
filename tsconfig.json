@@ -25,7 +25,8 @@
     "strictNullChecks": true,
     "paths": {
       "@/*": ["./v2/*"],
-      "@public/*": ["../public/*"]
+      "@public/*": ["../public/*"],
+      "@app/*": ["./app/*"]
     }
   },
   "include": [
