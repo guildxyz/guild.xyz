@@ -109,7 +109,7 @@ const AccountModal = () => {
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex w-full flex-col gap-1">
-                    <h3 className="font-bold">
+                    <h3 className="flex items-center font-bold">
                       {guildProfile.name}
                       <CheckMark className="ml-2 inline-block fill-yellow-500" />
                     </h3>
