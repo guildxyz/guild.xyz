@@ -136,15 +136,13 @@ type User = {
   sharedSocials: UserProfile["sharedSocials"]
   publicKey?: string
   isSuperAdmin: boolean
-
   captchaVerifiedSince: Date
-
+  guildProfile: Schemas["Profile"] | null
   emails: {
     emailAddress: string
     pending: boolean
     createdAt: Date
   }
-
   farcasterProfiles: FarcasterProfile[]
 }
 

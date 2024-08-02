@@ -12,9 +12,11 @@ import { GuildAvatar } from "../GuildAvatar"
 import { usePostHogContext } from "../Providers/PostHogProvider"
 import { accountModalAtom, walletSelectorModalAtom } from "../Providers/atoms"
 import { useWeb3ConnectionManager } from "../Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/Avatar"
 import { Button } from "../ui/Button"
 import { Card } from "../ui/Card"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/Popover"
+import { Skeleton } from "../ui/Skeleton"
 import { NotificationContent } from "./components/Notification/NotificationContent"
 
 export const Account = () => {
@@ -24,7 +26,7 @@ export const Account = () => {
   const { isOpen, setValue } = useDisclosure()
 
   const domainName = useResolveAddress(address)
-  const { addresses } = useUser()
+  const { addresses, guildProfile } = useUser()
   const linkedAddressesCount = (addresses?.length ?? 1) - 1
   const { captureEvent } = usePostHogContext()
 
@@ -68,25 +70,49 @@ export const Account = () => {
         onClick={() => setIsAccountModalOpen(true)}
         className="rounded-l-none"
       >
-        <div className="flex items-center gap-3">
-          <div className="flex flex-col items-end gap-0">
-            <span
-              className={cn("font-semibold text-base", {
-                "font-bold text-sm": linkedAddressesCount > 0,
-              })}
-            >
-              {domainName || `${shortenHex(address, 3)}`}
-            </span>
-            {linkedAddressesCount > 0 && (
-              <span className="font-medium text-muted-foreground text-xs">
-                {`+ ${linkedAddressesCount} address${
-                  linkedAddressesCount > 1 ? "es" : ""
-                }`}
-              </span>
-            )}
+        {guildProfile ? (
+          <div className="flex items-center gap-3 pr-1">
+            <Avatar size="sm">
+              {guildProfile.profileImageUrl && (
+                <AvatarImage
+                  src={guildProfile.profileImageUrl}
+                  alt="profile avatar"
+                  width={32}
+                  height={32}
+                />
+              )}
+              <AvatarFallback>
+                <Skeleton className="size-full" />
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex flex-col items-start">
+              <div className="max-w-24 truncate font-bold text-sm">
+                {guildProfile.name}
+              </div>
+              <div className="text-muted-foreground text-xs">1922/2000 XP</div>
+            </div>
           </div>
-          <GuildAvatar address={address} className="size-4" />
-        </div>
+        ) : (
+          <div className="flex items-center gap-3">
+            <div className="flex flex-col items-end gap-0">
+              <span
+                className={cn("font-semibold text-base", {
+                  "font-bold text-sm": linkedAddressesCount > 0,
+                })}
+              >
+                {domainName || `${shortenHex(address, 3)}`}
+              </span>
+              {linkedAddressesCount > 0 && (
+                <span className="font-medium text-muted-foreground text-xs">
+                  {`+ ${linkedAddressesCount} address${
+                    linkedAddressesCount > 1 ? "es" : ""
+                  }`}
+                </span>
+              )}
+            </div>
+            <GuildAvatar address={address} className="size-4" />
+          </div>
+        )}
       </Button>
     </Card>
   )
