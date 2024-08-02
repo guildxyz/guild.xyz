@@ -193,7 +193,13 @@ const GuildPage = (): JSX.Element => {
                 <CheckMark className="mt-2.5 size-5 shrink-0 sm:mt-4 sm:size-6" />
               </div>
 
-              <Badge>
+              <Badge
+                className={cn("text-white", {
+                  // TODO rework ThemeContext & use a non-Chakra CSS variable
+                  "text-[var(--chakra-colors-primary-800)]":
+                    textColor === "primary.800",
+                })}
+              >
                 <Users weight="bold" />
                 {new Intl.NumberFormat("en", { notation: "compact" }).format(
                   memberCount ?? 0
