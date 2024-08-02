@@ -64,7 +64,7 @@ const AddPointsPanel = ({ onAdd, onCancel }: AddRewardPanelProps) => {
 
   const onSubmit = (data: AddPointsFormType) => {
     onAdd({
-      ...(selectedExistingId === CREATE_NEW_OPTION
+      ...(!selectedExistingId || selectedExistingId === CREATE_NEW_OPTION
         ? {
             guildPlatform: {
               platformName: "POINTS",
