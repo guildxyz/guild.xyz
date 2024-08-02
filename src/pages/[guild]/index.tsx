@@ -7,24 +7,13 @@ import {
   LayoutMain,
   LayoutTitle,
 } from "@/components/Layout"
-import { LayoutContainer } from "@/components/Layout/Layout"
+import { LayoutContainer, LayoutFooter } from "@/components/Layout/Layout"
 import { Anchor } from "@/components/ui/Anchor"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
 import { Skeleton } from "@/components/ui/Skeleton"
 import { cn } from "@/lib/utils"
-import {
-  Box,
-  Center,
-  Divider,
-  HStack,
-  Heading,
-  Icon,
-  Spinner,
-  Tag,
-  TagLeftIcon,
-  Text,
-} from "@chakra-ui/react"
-import { Info, Users } from "@phosphor-icons/react"
+import { Box, Center, HStack, Heading, Spinner } from "@chakra-ui/react"
+import {} from "@phosphor-icons/react"
 import AccessHub from "components/[guild]/AccessHub"
 import { useAccessedGuildPlatforms } from "components/[guild]/AccessHub/AccessHub"
 import { useEditGuildDrawer } from "components/[guild]/EditGuild/EditGuildDrawerContext"
@@ -32,7 +21,6 @@ import { EditGuildDrawerProvider } from "components/[guild]/EditGuild/EditGuildD
 import JoinButton from "components/[guild]/JoinButton"
 import JoinModalProvider from "components/[guild]/JoinModal/JoinModalProvider"
 import LeaveButton from "components/[guild]/LeaveButton"
-import Members from "components/[guild]/Members"
 import { MintGuildPinProvider } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import Roles from "components/[guild]/Roles"
 import SocialIcon from "components/[guild]/SocialIcon"
@@ -274,42 +262,12 @@ const GuildPage = (): JSX.Element => {
           >
             <Roles />
           </Section>
-          {/* we'll remove Members section completely, just keeping it for admins for now because of the Members exporter */}
-          {isAdmin && (
-            <>
-              <Divider my={10} />
-              <Section
-                title="Members"
-                titleRightElement={
-                  <HStack justifyContent="space-between" w="full" my="-2 !important">
-                    <Tag maxH={6} pt={0.5}>
-                      <TagLeftIcon as={Users} />
-                      {isLoading ? (
-                        <Spinner size="xs" />
-                      ) : (
-                        new Intl.NumberFormat("en", {
-                          notation: "compact",
-                        }).format(memberCount ?? 0) ?? 0
-                      )}
-                    </Tag>
-                    {isAdmin && <DynamicMembersExporter />}
-                  </HStack>
-                }
-              >
-                <Box>
-                  {isAdmin && <DynamicActiveStatusUpdates />}
 
-                  <Members members={members} />
-                  <Text mt="6" colorScheme={"gray"}>
-                    <Icon as={Info} mr="2" mb="-2px" />
-                    Members section is only visible to admins and is under rework,
-                    until then only admins are shown
-                  </Text>
-                </Box>
-              </Section>
-            </>
-          )}
+          {isAdmin && <DynamicMembersExporter />}
+          {isAdmin && <DynamicActiveStatusUpdates />}
         </LayoutMain>
+
+        <LayoutFooter />
       </Layout>
 
       {isAdmin && <DynamicDiscordBotPermissionsChecker />}
