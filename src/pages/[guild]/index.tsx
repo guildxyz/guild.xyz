@@ -188,7 +188,7 @@ const GuildPage = (): JSX.Element => {
                     }
                   )}
                 >
-                  {name} long name
+                  {name}
                 </LayoutTitle>
                 <CheckMark className="mt-2.5 size-5 shrink-0 sm:mt-4 sm:size-6" />
               </div>
