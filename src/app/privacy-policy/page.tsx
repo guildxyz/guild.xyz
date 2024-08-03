@@ -17,7 +17,7 @@ const Page = (): JSX.Element => (
     <LayoutHero className="pb-28">
       <Header />
       <LayoutHeadline className="max-w-screen-md">
-        <LayoutTitle>Privacy Policy</LayoutTitle>
+        <LayoutTitle className="text-foreground">Privacy Policy</LayoutTitle>
       </LayoutHeadline>
     </LayoutHero>
 
