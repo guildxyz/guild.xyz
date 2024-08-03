@@ -21,6 +21,7 @@ const Page = (): JSX.Element => (
         <LayoutTitle>Terms of Use</LayoutTitle>
       </LayoutHeadline>
     </LayoutHero>
+
     <LayoutMain className="prose prose-counters flex max-w-screen-md flex-col gap-8 prose-headings:font-display prose-headings:text-foreground prose-li:text-foreground text-foreground marker:text-foreground">
       <section>
         <h2>Welcome to Guild.xyz!</h2>
