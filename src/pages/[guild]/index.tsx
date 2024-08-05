@@ -34,7 +34,6 @@ import BackButton from "components/common/Layout/components/BackButton"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
 import useMembership from "components/explorer/hooks/useMembership"
-import useUniqueMembers from "hooks/useUniqueMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
 import Head from "next/head"
@@ -81,10 +80,7 @@ const GuildPage = (): JSX.Element => {
     name,
     description,
     imageUrl,
-    admins,
     memberCount,
-    roles,
-    isLoading,
     socialLinks,
     tags,
     featureFlags,
@@ -94,12 +90,6 @@ const GuildPage = (): JSX.Element => {
   const { isAdmin } = useGuildPermission()
   const { isMember } = useMembership()
   const { onOpen } = useEditGuildDrawer()
-
-  // Passing the admin addresses here to make sure that we render all admin avatars in the members list
-  const members = useUniqueMembers(
-    roles,
-    admins?.map((admin) => admin.address)
-  )
 
   const { localThemeColor, localBackgroundImage } = useThemeContext()
 
@@ -142,7 +132,7 @@ const GuildPage = (): JSX.Element => {
                 style={{
                   backgroundColor: localThemeColor,
                 }}
-              ></div>
+              />
             )}
           </LayoutBanner>
 
@@ -171,7 +161,9 @@ const GuildPage = (): JSX.Element => {
                 <LayoutTitle className="line-clamp-1 break-all leading-tight sm:leading-tight">
                   {name}
                 </LayoutTitle>
-                <CheckMark className="mt-2.5 size-5 shrink-0 sm:mt-4 sm:size-6" />
+                {tags?.includes("VERIFIED") && (
+                  <CheckMark className="mt-2.5 size-5 shrink-0 sm:mt-4 sm:size-6" />
+                )}
               </div>
 
               <Badge className="text-banner-foreground">
