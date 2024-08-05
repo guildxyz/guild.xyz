@@ -13,6 +13,7 @@ import { Anchor } from "@/components/ui/Anchor"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
 import { Badge } from "@/components/ui/Badge"
 import { Skeleton } from "@/components/ui/Skeleton"
+import { cn } from "@/lib/utils"
 import { Box, Center, HStack, Heading, Spinner } from "@chakra-ui/react"
 import { Users } from "@phosphor-icons/react/dist/ssr"
 import AccessHub from "components/[guild]/AccessHub"
@@ -91,7 +92,7 @@ const GuildPage = (): JSX.Element => {
   const { isMember } = useMembership()
   const { onOpen } = useEditGuildDrawer()
 
-  const { localThemeColor, localBackgroundImage } = useThemeContext()
+  const { avatarBg, localThemeColor, localBackgroundImage } = useThemeContext()
 
   const accessedGuildPlatforms = useAccessedGuildPlatforms()
 
@@ -112,7 +113,7 @@ const GuildPage = (): JSX.Element => {
       {featureFlags?.includes("ONGOING_ISSUES") && <DynamicOngoingIssuesBanner />}
 
       <Layout>
-        <LayoutHero>
+        <LayoutHero className="pb-28">
           <LayoutBanner>
             {localBackgroundImage ? (
               <Image
@@ -144,7 +145,7 @@ const GuildPage = (): JSX.Element => {
 
           <LayoutHeadline className="pt-8">
             {imageUrl && (
-              <Avatar className="row-span-2 size-20 bg-banner-foreground md:size-24">
+              <Avatar className={cn("row-span-2 size-20 md:size-24", avatarBg)}>
                 <AvatarImage
                   src={imageUrl}
                   alt={`${name} logo`}
@@ -206,7 +207,7 @@ const GuildPage = (): JSX.Element => {
           )}
         </LayoutHero>
 
-        <LayoutMain>
+        <LayoutMain className="-top-16">
           <GuildTabs
             activeTab="HOME"
             rightElement={

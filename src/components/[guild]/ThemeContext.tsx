@@ -20,6 +20,7 @@ const ThemeContext = createContext<{
   setLocalBackgroundImage: Dispatch<SetStateAction<string>>
   textColor: string
   buttonColorScheme: string
+  avatarBg: string
 } | null>(null)
 
 const ThemeProvider = memo(({ children }: PropsWithChildren<any>): JSX.Element => {
@@ -59,6 +60,8 @@ const ThemeProvider = memo(({ children }: PropsWithChildren<any>): JSX.Element =
     .hsl()
     .array()
   const bannerOpacity = textColor === "primary.800" ? 1 : 0.5
+  const avatarBg =
+    textColor === "primary.800" ? "bg-banner-foreground" : "bg-transparent"
 
   return (
     <ThemeContext.Provider
@@ -69,6 +72,7 @@ const ThemeProvider = memo(({ children }: PropsWithChildren<any>): JSX.Element =
         setLocalBackgroundImage,
         textColor,
         buttonColorScheme,
+        avatarBg,
       }}
     >
       <style>
