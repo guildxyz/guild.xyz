@@ -19,12 +19,14 @@ const contributionFetcher = async (url: string) => {
   }))
 }
 
+type ParsedContribution = Awaited<ReturnType<typeof contributionFetcher>>[number]
+
 export const useContribution = (profileIdOrUsername: number | string) => {
   // const {id: userId} = useUserPublic()
   // const {data: memberships} = useSWR<Membership>(`/v2/users/${userId}/memberships`, fetcher)
   // console.log(memberships)
-  const { isLoading: isContributionLoading, data: contributionData } = useSWR<
-    Awaited<ReturnType<typeof contributionFetcher>>
-  >(`/v2/profiles/${profileIdOrUsername}/contributions`, contributionFetcher)
-  return contributionData
+  return useSWR<ParsedContribution[]>(
+    `/v2/profiles/${profileIdOrUsername}/contributions`,
+    contributionFetcher
+  )
 }

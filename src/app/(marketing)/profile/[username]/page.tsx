@@ -33,6 +33,7 @@ import { LevelBadge } from "../_components/LevelBadge"
 import { OperatedGuildCard } from "../_components/OperatedGuildCard"
 import { ProfileSkeleton } from "../_components/ProfileSkeleton"
 import { RecentActivity } from "../_components/RecentActivity"
+import { useContribution } from "../_hooks/useContribution"
 import { profileAtom } from "./atoms"
 
 // async function getProfileData(username: string) {
@@ -72,6 +73,7 @@ const Page = ({
     fetcherForSWR
   )
   const [profile, setProfile] = useAtom(profileAtom)
+  const contribution = useContribution(username)
   const level = 0
 
   useEffect(() => {
@@ -178,9 +180,11 @@ const Page = ({
             <EditContributions />
           </div>
           <div className="grid grid-cols-1 gap-3">
-            <ContributionCard />
-            <ContributionCard />
-            <ContributionCard />
+            {contribution.data?.map(({ roles, guild }) =>
+              roles.map((role) => (
+                <ContributionCard role={role} guild={guild} key={role.id} />
+              ))
+            )}
             <Button size="sm" variant="outline" className="place-self-center">
               See more involvement
             </Button>
