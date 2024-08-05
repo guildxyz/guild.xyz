@@ -1,160 +1,138 @@
-import { Link } from "@chakra-ui/next-js"
+import { Header } from "@/components/Header"
 import {
-  Heading,
-  ListItem,
-  OrderedList,
-  Stack,
-  Table,
-  Tbody,
-  Td,
-  Text,
-  Th,
-  Thead,
-  Tr,
-  UnorderedList,
-} from "@chakra-ui/react"
-import Layout from "components/common/Layout"
+  Layout,
+  LayoutHeadline,
+  LayoutHero,
+  LayoutMain,
+  LayoutTitle,
+} from "@/components/Layout"
+import { Anchor } from "@/components/ui/Anchor"
+
+export const metadata = {
+  title: "Privacy Policy",
+}
 
 const Page = (): JSX.Element => (
-  <Layout title="Privacy Policy" maxWidth="container.md">
-    <Stack
-      spacing={8}
-      sx={{
-        h2: {
-          fontFamily: "display",
-          fontSize: "2xl",
-          mb: 6,
-        },
-        p: {
-          lineHeight: 1.75,
-          mb: 4,
-        },
-        "p dfn": {
-          fontWeight: "bold",
-        },
-        "ol, ul": {
-          pl: 4,
-        },
-        li: {
-          lineHeight: 1.75,
-          mb: 4,
-        },
-        "li ul, li ol": {
-          mb: 4,
-        },
-      }}
-    >
+  <Layout>
+    <LayoutHero className="pb-28">
+      <Header />
+      <LayoutHeadline className="max-w-screen-md">
+        <LayoutTitle className="text-foreground">Privacy Policy</LayoutTitle>
+      </LayoutHeadline>
+    </LayoutHero>
+
+    <LayoutMain className="prose flex max-w-screen-md flex-col prose-headings:font-display prose-headings:text-foreground prose-li:text-foreground text-foreground marker:text-foreground">
       <section>
-        <Heading as="h2">Welcome to Guild.xyz!</Heading>
-        <Text>
+        <h2>Welcome to Guild.xyz!</h2>
+        <p>
           Guild.xyz is an online platform for automated membership management of
           communities based on blockchain. This notice summarizes how we collect, use
           and safeguard the information you provide to us and what choices you have
           with respect to your privacy.
-        </Text>
-        <Text>
+        </p>
+        <p>
           This notice applies to the data processing of Z Gen Kibernetika Korlátolt
           Felelősségű Társaság (registered seat: 6720 Szeged, Kelemen László utca
           11., company registration number: Cg.06-09-025397, tax number:
           26787015-2-06) ("Us") and its relevant Affiliates (as specified below) in
-          relation to our Services and our Website available at
-          <Link href="/" colorScheme="blue">
+          relation to our Services and our Website available at{" "}
+          <Anchor href="/" variant="highlighted">
             https://guild.xyz/
-          </Link>
+          </Anchor>
           .
-        </Text>
+        </p>
 
-        <Text>
+        <p>
           As a Customer, Guild Admin or Subscriber of our Services, the collection,
           use and sharing of your personal data is subject to this notice. Please
           note that this notice does not apply to any Third-Party Platforms connected
           with your profile via the Services, or to the privacy practices of any
           Guilds that you join. Unless defined otherwise, capitalized terms in this
           notice will have the same meaning as in the Terms of Use.
-        </Text>
+        </p>
       </section>
       <section>
-        <Heading as="h2">What type of data do we collect?</Heading>
-        <Text>
+        <h2>What type of data do we collect?</h2>
+        <p>
           When you use our Services, we need to process some information about you to
           make our Services work and to evaluate how you use our Services. This
           information may include personal data about you, such as:
-        </Text>
+        </p>
 
-        <OrderedList type="a">
-          <ListItem>
+        <ol type="a">
+          <li>
             <b>Registration data</b>: When you create your profile, we will request
             certain information about you, such as your public wallet address, a
             social media ID or you email address. If you do not provide this
             information, you may not be able to enjoy all features of the Services
-          </ListItem>
+          </li>
 
-          <ListItem>
+          <li>
             <b>Social account information</b>: If you decide to connect a certain
             third-party account with our platform, by providing your credentials and
             authorizing the relevant platform to share certain data with us, we will
             access and process such data relating to your social account. Such data
             may include:
-            <Table my={4} borderWidth={1}>
-              <Thead>
-                <Tr>
-                  <Th>Third-party Platform</Th>
-                  <Th>Scope of data</Th>
-                </Tr>
-              </Thead>
+            <table className="my-4">
+              <thead>
+                <tr>
+                  <th>Third-party Platform</th>
+                  <th>Scope of data</th>
+                </tr>
+              </thead>
 
-              <Tbody>
-                <Tr>
-                  <Td>Discord</Td>
-                  <Td>
+              <tbody>
+                <tr>
+                  <td>Discord</td>
+                  <td>
                     Username, avatar, banner, the discord servers you have joined,
                     and specific discord server information (such as nickname,
                     avatar, roles etc.)
-                  </Td>
-                </Tr>
+                  </td>
+                </tr>
 
-                <Tr>
-                  <Td>Twitter</Td>
-                  <Td>
+                <tr>
+                  <td>Twitter</td>
+                  <td>
                     Twitter account information (such as your name, profile picture
                     and description), information about your posts and followers, the
                     lists you have created or are a member of
-                  </Td>
-                </Tr>
+                  </td>
+                </tr>
 
-                <Tr>
-                  <Td>Google</Td>
-                  <Td>
+                <tr>
+                  <td>Google</td>
+                  <td>
                     Email address and profile information (including any information
                     you have made publicly available)
-                  </Td>
-                </Tr>
+                  </td>
+                </tr>
 
-                <Tr>
-                  <Td>GitHub</Td>
-                  <Td>
+                <tr>
+                  <td>GitHub</td>
+                  <td>
                     User profile data, public and private repositories, commit
                     statuses, repository invitations, collaborators, deployment
                     statuses, and repository webhooks
-                  </Td>
-                </Tr>
-              </Tbody>
-            </Table>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
             Whether or not you will share such information with us is entirely up to
             you. Upon your consent, we may also share such information with the
             Guilds selected by you.
-          </ListItem>
+          </li>
 
-          <ListItem>
+          <li>
             <b>Membership information</b>: When you create or join a Guild, we will
             process information about your Roles, Rewards as well as any Requirements
             that you have set or completed. Such data is necessary for us to provide
             the Services. Please note that this information will also be available
             for others you collaborate with, in particular for the relevant Guilds
             that you have joined and with whom you decide to share your Profile.
-          </ListItem>
+          </li>
 
-          <ListItem>
+          <li>
             <b>Blockchain information</b>: Depending on your choices, you may enter
             into different transactions with others via our platform. In such cases,
             information about your transactions (such as the public address of your
@@ -162,15 +140,15 @@ const Page = (): JSX.Element => (
             block number, timestamp and other input data) that may also include
             personal data about you may be stored on a blockchain through the
             execution of smart contracts.
-          </ListItem>
+          </li>
 
-          <ListItem>
+          <li>
             <b>Content that you upload to the Services</b>: You may also upload
             content to the Services, such as your profile picture and background.
             Such content may include personal data about you.
-          </ListItem>
+          </li>
 
-          <ListItem>
+          <li>
             <b>Billing and subscription information</b>: If you subscribe to a paid
             Service, you need to provide certain billing information (such as your
             name, address and VAT number). You will also be required to provide
@@ -178,133 +156,131 @@ const Page = (): JSX.Element => (
             our secure payment processing service providers, Stripe Inc and Coinbase
             Ireland Limited. This data is necessary to provide you with our
             Subscription Services.
-          </ListItem>
+          </li>
 
-          <ListItem>
+          <li>
             <b>Other information</b>: You may decide to share further information,
             including personal data, with us when you contact us, provide feedback to
             us regarding the Services or otherwise communicate with us. It is solely
             your decision to share any other data with us during such communications,
             so our processing of such data will be based on your consent.
-          </ListItem>
+          </li>
 
-          <ListItem>
+          <li>
             <b>Information about your use of the Services</b>: As most websites and
             services provided through the Internet, we gather certain information and
             store it in log files when you interact with our Services. This
             information includes internet protocol (IP) address, as well as browser
             type and browser version, operating system, screen resolution and device
             type.
-          </ListItem>
+          </li>
 
-          <ListItem>
+          <li>
             <b>Cookie information</b>: When you access our websites and Services, we
             use cookies and other information gathering technologies for a variety of
             purposes. These technologies may provide us with personal data,
             information about devices and networks you utilize to access our website,
             and other information regarding your interactions. For detailed
             information about the use of cookies, please see our Cookie Notice
-          </ListItem>
-        </OrderedList>
+          </li>
+        </ol>
       </section>
       <section>
-        <Heading as="h2">Why do we process your data?</Heading>
-        <Text>
+        <h2>Why do we process your data?</h2>
+        <p>
           We may process your personal data for several purposes. How we use your
           personal data depends on your on how you use the Services and your
           preferences you have communicated to us.
-        </Text>
-        <OrderedList type="a">
-          <ListItem>
+        </p>
+        <ol type="a">
+          <li>
             <b>Services</b>: We will use some of your personal data for the provision
             and maintenance of your profile, and for authentication purposes. E.g. We
             use your public digital wallet address to enable you to login to our
             Services.
-          </ListItem>
-          <ListItem>
+          </li>
+          <li>
             <b>Billing</b>: We will process certain information, such as financial
             data for billing purposes, i.e. to complete transactions, and send you
             purchase confirmations and invoices.
-          </ListItem>
-          <ListItem>
+          </li>
+          <li>
             <b>Customer support</b>: If needed, we use data (which can include your
             communications) to investigate, respond to and resolve complaints
             relating to our Services.
-          </ListItem>
-          <ListItem>
+          </li>
+          <li>
             <b>Developing Services</b>: We use analytics to better understand the
             behavior of our users to grow our business. For this purpose, we collect
             certain information, such as how often our Services are used, and the
             events that occur while using our websites. We use this aggregate
             information to identify usage patterns and trends.
-          </ListItem>
-          <ListItem>
+          </li>
+          <li>
             <b>Communication</b>: We may send you information regarding the Services,
             such as administrative messages, to your email address or public wallet
             address provided to us. Upon your consent, we may also enable
             communications between you and others through our Services.
-          </ListItem>
-          <ListItem>
+          </li>
+          <li>
             <b>Marketing</b>: Upon your consent, we may use your email address to
             send you marketing communications and to provide you with updates about
             our services and products.
-          </ListItem>
-          <ListItem>
+          </li>
+          <li>
             <b>Security</b>: We use information about you to secure your profile,
             verify accounts, to monitor suspicious or fraudulent activity and to
             identify violations of our Terms of Use or Master Subscription Agreement.
-          </ListItem>
-          <ListItem>
+          </li>
+          <li>
             <b>Protecting our legitimate business interests and legal rights</b>:
             Where required by law or where we believe it is necessary to protect our
             legal rights, interests and the interests of others, we use information
             about you in connection with legal claims, compliance, regulatory, and
             audit functions, and disclosures in connection with the acquisition,
             merger or sale of our business.
-          </ListItem>
-          <ListItem>
+          </li>
+          <li>
             <b>Other</b>: We may also process your data for any other purposes for
             which we obtain your consent where necessary or otherwise in accordance
             applicable law and this policy.
-          </ListItem>
-        </OrderedList>
+          </li>
+        </ol>
       </section>
       <section>
-        <Heading as="h2">
-          What is the legal basis of our data processing? (for EEA users)
-        </Heading>
-        <Text>
+        <h2>What is the legal basis of our data processing? (for EEA users)</h2>
+        <p>
           If you are an individual in the European Economic Area (EEA), we collect
           and process information about you only where we have legal bases for doing
           so under applicable EU laws. This means we collect and use your information
           only where:
-        </Text>
-        <UnorderedList>
-          <ListItem>
+        </p>
+        <ul>
+          <li>
             It is necessary in order to provide you the Services, including to set up
             and maintain your profile and to provide customer support;
-          </ListItem>
-          <ListItem>
+          </li>
+          <li>
             It satisfies a legitimate interest (which is not overridden by your data
             protection interests), such as for research and development, and to
             protect our legal rights and interests;
-          </ListItem>
-          <ListItem>You give us consent to do so for a specific purpose;</ListItem>
-          <ListItem>It is needed to comply with a legal obligation.</ListItem>
-        </UnorderedList>
+          </li>
+          <li>You give us consent to do so for a specific purpose;</li>
+          <li>It is needed to comply with a legal obligation.</li>
+        </ul>
       </section>
 
       <section>
-        <Heading as="h2">Do we share your data with third parties?</Heading>
-        <Text>
+        <h2>Do we share your data with third parties?</h2>
+        <p>
           We never sell your personal data to third parties. However, in certain
           cases we need to share your personal data with our Affiliates and third
           parties. In any case, we will share your personal data only in accordance
           with applicable laws and this notice, and in the following cases:
-        </Text>
+        </p>
 
-        <OrderedList type="a">
-          <ListItem>
+        <ol type="a">
+          <li>
             <b>Guild owners</b>: Depending on your use of the Services, you may
             decide to share certain personal data with others. In particular, if you
             join a Guild, the Administrators of the relevant Guild may get access to
@@ -313,16 +289,16 @@ const Page = (): JSX.Element => (
             enhanced details with our Subscribers. If you have any questions about
             the data processing practices of the relevant Guild, you should consult
             their Privacy Policy.
-          </ListItem>
+          </li>
 
-          <ListItem>
+          <li>
             <b>Public blockchain</b>: When you initiate a blockchain transaction,
             then your data will be shared with the blockchain so that a verifiable
             proof is created of your transaction, your membership or attendance of
             certain events.
-          </ListItem>
+          </li>
 
-          <ListItem>
+          <li>
             Third-party service providers: In certain cases, we use third party data
             providers. For example, we may outsource billing and payment transactions
             to third parties, we may engage hosting service providers, IT providers,
@@ -331,66 +307,66 @@ const Page = (): JSX.Element => (
             <br />
             Currently, these third parties include the following providers:
             <br />
-            <UnorderedList>
-              <ListItem>
+            <ul>
+              <li>
                 <b>Google LLC</b>, for data hosting,
-              </ListItem>
-              <ListItem>
+              </li>
+              <li>
                 <b>Ipfs</b>, for storing and sharing files,,
-              </ListItem>
-              <ListItem>
+              </li>
+              <li>
                 <b>Posthog Inc</b>, for product analytics,,
-              </ListItem>
-              <ListItem>
+              </li>
+              <li>
                 <b>Datadog Inc</b>, to monitor, troubleshoot and optimize application
                 performance,,
-              </ListItem>
-              <ListItem>
+              </li>
+              <li>
                 <b>Intercom R&D Unlimited Company</b> for customer communications,
                 and,
-              </ListItem>
-              <ListItem>
+              </li>
+              <li>
                 <b>Plausible</b>, for data analytics.
-              </ListItem>
-            </UnorderedList>
-            <Text>
+              </li>
+            </ul>
+            <p>
               If you purchase through our website, depending on the payment method
               you choose, your payment and subscription information will be processed
               by:
-            </Text>
-            <UnorderedList>
-              <ListItem>
+            </p>
+            <ul>
+              <li>
                 <b>Stripe Inc</b>, in accordance with its{" "}
-                <Link href="https://stripe.com/privacy" colorScheme="blue">
+                <Anchor href="https://stripe.com/privacy" variant="highlighted">
                   Privacy Policy
-                </Link>
+                </Anchor>
                 , or
-              </ListItem>
-              <ListItem>
+              </li>
+              <li>
                 <b>Coinbase Ireland Limited</b>, in accordance with its{" "}
-                <Link
+                <Anchor
                   href="https://www.coinbase.com/legal/privacy"
-                  colorScheme="blue"
+                  variant="highlighted"
                 >
                   Privacy Policy
-                </Link>
+                </Anchor>
                 .
-              </ListItem>
-            </UnorderedList>
+              </li>
+            </ul>
             In the case of certain transactions, your transaction data may also be
             stored on the blockchain as specified in section b) above.
-          </ListItem>
+          </li>
 
-          <ListItem>
+          <li>
             <b>Professional advisors</b>: We may share your data with professional
             advisers acting as service providers, processors, controllers, or joint
             controllers - including lawyers, bankers, auditors, and insurers who
             provide consultancy, banking, legal, insurance and accounting services,
             and to the extent we are legally obliged to share or have a legitimate
             interest in sharing your data.
-          </ListItem>
+          </li>
 
-          <ListItem>
+          <li>
             <b>Legal compliance</b>: We may transmit personal data if the applicable
             legal provisions so require, or when such action is necessary to comply
             with any laws, e.g. with criminal authorities if we are required to
@@ -398,21 +374,21 @@ const Page = (): JSX.Element => (
             the protection of our rights and interests, to protect your safety or the
             safety of others or to investigate fraud, in accordance with the
             applicable laws.
-          </ListItem>
+          </li>
 
-          <ListItem>
+          <li>
             <b>During a change to our business</b>: If we are involved in a merger,
             acquisition, bankruptcy, dissolution, reorganisation, sale of some or all
             of our assets, or a similar transaction or proceeding, or steps in
             contemplation of such activities, certain information may be shared or
             transferred, subject to standard confidentiality arrangements.
-          </ListItem>
-        </OrderedList>
+          </li>
+        </ol>
       </section>
 
       <section>
-        <Heading as="h2">Do we share your data with third parties?</Heading>
-        <Text>
+        <h2>Do we share your data with third parties?</h2>
+        <p>
           Our website and Services are hosted by Google, in Switzerland. If you
           access our website or Services from any other region of the world with laws
           or other requirements governing personal data collection, use, or
@@ -421,12 +397,12 @@ const Page = (): JSX.Element => (
           transferring your data outside of the European Economic Area, and you agree
           to have your data transferred to and processed in different jurisdictions,
           such as the United States.
-        </Text>
+        </p>
       </section>
 
       <section>
-        <Heading as="h2">How long will we retain your data?</Heading>
-        <Text>
+        <h2>How long will we retain your data?</h2>
+        <p>
           We will retain your personal data as long as it is needed to fulfil the
           purposes specified above (for example, to provide you with our Services),
           unless a longer retention period is required or permitted by law (such as
@@ -434,80 +410,78 @@ const Page = (): JSX.Element => (
           when we have no ongoing legitimate business need to process your personal
           data, we will either delete or anonymize it in accordance with our deletion
           policy.
-        </Text>
-        <Text>
+        </p>
+        <p>
           With respect to the data stored on the public blockchain, due to the
           immutable nature of the blockchain, your transaction data that may also
           include your public wallet address may not be modified or deleted.
-        </Text>
+        </p>
       </section>
 
       <section>
-        <Heading as="h2">You data privacy rights</Heading>
-        <Text>You may ask us to:</Text>
-        <UnorderedList>
-          <ListItem>
+        <h2>You data privacy rights</h2>
+        <p>You may ask us to:</p>
+        <ul>
+          <li>
             provide information to you about the personal data that we or our
             processors process about you,
-          </ListItem>
-          <ListItem>correct inaccuracies or amend your personal data,</ListItem>
-          <ListItem>
+          </li>
+          <li>correct inaccuracies or amend your personal data,</li>
+          <li>
             stop processing your personal data and/or to stop sending you marketing
             communications,
-          </ListItem>
-          <ListItem>delete your personal data.</ListItem>
-        </UnorderedList>
+          </li>
+          <li>delete your personal data.</li>
+        </ul>
 
-        <Text>
+        <p>
           If you are from a country where the General Data Protection Regulation of
           the EU (GDPR) applies, you may have additional rights such as:
-        </Text>
+        </p>
 
-        <UnorderedList>
-          <ListItem>
+        <ul>
+          <li>
             In certain circumstances, you may have a broader right to erasure of your
             personal data. For example, if it is no longer necessary in relation to
             the purposes for which it was originally collected. Please note, however,
             that we may need to retain certain information for record keeping
             purposes, to complete transactions or to comply with our legal
             obligations.
-          </ListItem>
-          <ListItem>
+          </li>
+          <li>
             You may have the right to request that we restrict processing of your
             personal data in certain circumstances (for example, where you believe
             that the personal data we hold about you is inaccurate or unlawfully
             held).
-          </ListItem>
-          <ListItem>
+          </li>
+          <li>
             In certain circumstances, you may have the right to be provided with your
             personal data in a structured, machine readable and commonly used format
             and to request that we transfer the personal data to another data
             controller without hindrance.
-          </ListItem>
-        </UnorderedList>
+          </li>
+        </ul>
       </section>
 
       <section>
-        <Heading as="h2">
-          Who is responsible for the processing of your data?
-        </Heading>
-        <Text>
+        <h2>Who is responsible for the processing of your data?</h2>
+        <p>
           Guild.xyz services are provided by Z Gen Kibernetika Korlátolt Felelősségű
           Társaság (registered seat: 6720 Szeged, Kelemen László utca 11., company
           registration number: Cg.06-09-025397, tax number: 26787015-2-06) and it
           acts as a data controller with respect to the processing of your data.
-        </Text>
-        <Text>
+        </p>
+        <p>
           Where you decide that you would like to share data with a Guild, then they
           will be considered as a data controller with respect to their processing.
           To learn more about their data processing practices, you should consult the
           Privacy Policy of the relevant Guild.
-        </Text>
+        </p>
       </section>
 
       <section>
-        <Heading as="h2">Children’ privacy</Heading>
-        <Text>
+        <h2>Children’ privacy</h2>
+        <p>
           Our Site and the Service are not directed to anyone under the age of 18.
           The Site does not knowingly collect or solicit information from anyone
           under the age of 18, or allow anyone under the age of 18 to sign up for the
@@ -515,15 +489,15 @@ const Page = (): JSX.Element => (
           anyone under the age of 18 without the consent of a parent or guardian, we
           will delete that information as soon as possible. If you believe we have
           collected such information, please contact us at{" "}
-          <Link href="mailto:help@guild.xyz" colorScheme="blue">
+          <Anchor href="mailto:help@guild.xyz" variant="highlighted">
             help@guild.xyz
-          </Link>
-        </Text>
+          </Anchor>
+        </p>
       </section>
 
       <section>
-        <Heading as="h2">Changes</Heading>
-        <Text>
+        <h2>Changes</h2>
+        <p>
           We reserve the right to change this notice from time to time. Changes will
           be published on this website and any material changes will go into effect
           eights days following such notification. We encourage you to periodically
@@ -532,21 +506,21 @@ const Page = (): JSX.Element => (
           be bound by such changes to this notice. Your only remedy, if you do not
           accept the terms of notice, is to discontinue use of our Website and
           Services.
-        </Text>
+        </p>
       </section>
 
       <section>
-        <Heading as="h2">Any further questions?</Heading>
-        <Text>
+        <h2>Any further questions?</h2>
+        <p>
           If you have any further questions in relation to the processing of your
           data, please contact{" "}
-          <Link href="mailto:help@guild.xyz" colorScheme="blue">
+          <Anchor href="mailto:help@guild.xyz" variant="highlighted">
             help@guild.xyz
-          </Link>
+          </Anchor>
           .
-        </Text>
+        </p>
       </section>
-    </Stack>
+    </LayoutMain>
   </Layout>
 )
 

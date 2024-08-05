@@ -81,6 +81,7 @@ export const TokenApiURLs: Record<Chain, string[]> = {
   FILECOIN: [],
   ROOTSTOCK: [],
   MODE: [],
+  LISK: ["https://static.optimism.io/optimism.tokenlist.json"],
 }
 
 const fetchTokens = async ([_, chain]) =>
@@ -99,7 +100,7 @@ const fetchTokens = async ([_, chain]) =>
         ? [
             {
               ...CHAIN_CONFIG[chain].nativeCurrency,
-              logoURI: CHAIN_CONFIG[chain].iconUrl,
+              logoURI: CHAIN_CONFIG[chain].nativeCurrency.iconUrl,
               address: NULL_ADDRESS,
             },
           ].concat(finalTokenArray)
