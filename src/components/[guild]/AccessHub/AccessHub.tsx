@@ -108,7 +108,6 @@ const AccessHub = (): JSX.Element => {
             md: "repeat(auto-fit, minmax(250px, .5fr))",
           }}
           gap={4}
-          mb={10}
         >
           <CampaignCards />
 

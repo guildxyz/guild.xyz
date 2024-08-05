@@ -14,7 +14,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
 import { Badge } from "@/components/ui/Badge"
 import { Skeleton } from "@/components/ui/Skeleton"
 import { cn } from "@/lib/utils"
-import { Box, Center, HStack, Heading, Spinner } from "@chakra-ui/react"
+import { Center, Heading, Spinner } from "@chakra-ui/react"
 import { Users } from "@phosphor-icons/react/dist/ssr"
 import AccessHub from "components/[guild]/AccessHub"
 import { useAccessedGuildPlatforms } from "components/[guild]/AccessHub/AccessHub"
@@ -27,13 +27,11 @@ import { MintGuildPinProvider } from "components/[guild]/Requirements/components
 import Roles from "components/[guild]/Roles"
 import SocialIcon from "components/[guild]/SocialIcon"
 import useStayConnectedToast from "components/[guild]/StayConnectedToast"
-import GuildTabs from "components/[guild]/Tabs/GuildTabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import BackButton from "components/common/Layout/components/BackButton"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
-import Section from "components/common/Section"
 import useMembership from "components/explorer/hooks/useMembership"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
@@ -113,7 +111,7 @@ const GuildPage = (): JSX.Element => {
       {featureFlags?.includes("ONGOING_ISSUES") && <DynamicOngoingIssuesBanner />}
 
       <Layout>
-        <LayoutHero className="pb-28">
+        <LayoutHero>
           <LayoutBanner>
             {localBackgroundImage ? (
               <Image
@@ -207,40 +205,23 @@ const GuildPage = (): JSX.Element => {
           )}
         </LayoutHero>
 
-        <LayoutMain className="-top-16">
-          <GuildTabs
-            activeTab="HOME"
-            rightElement={
-              <HStack>
-                {isMember && !isAdmin && <DynamicRecheckAccessesButton />}
-                {!isMember ? (
-                  <JoinButton />
-                ) : !isAdmin ? (
-                  <LeaveButton />
-                ) : (
-                  <DynamicAddRewardAndCampaign />
-                )}
-              </HStack>
-            }
-          />
+        <LayoutMain className="flex flex-col items-start gap-8">
+          <div className="flex w-full flex-col gap-2">
+            {!isMember ? (
+              <JoinButton />
+            ) : !isAdmin ? (
+              <LeaveButton />
+            ) : (
+              <DynamicAddRewardAndCampaign />
+            )}
 
-          <AccessHub />
+            <AccessHub />
+          </div>
 
-          <Section
-            title={
-              (isAdmin || isMember || !!accessedGuildPlatforms?.length) && "Roles"
-            }
-            titleRightElement={
-              isAdmin && (
-                <Box my="-2 !important" ml="auto !important">
-                  <DynamicAddAndOrderRoles />
-                </Box>
-              )
-            }
-            mb="10"
-          >
+          <div className="flex w-full flex-col gap-2">
+            {isAdmin && <DynamicAddAndOrderRoles />}
             <Roles />
-          </Section>
+          </div>
 
           {isAdmin && <DynamicMembersExporter />}
           {isAdmin && <DynamicActiveStatusUpdates />}

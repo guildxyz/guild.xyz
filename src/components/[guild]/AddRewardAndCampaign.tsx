@@ -25,7 +25,7 @@ const AddRewardAndCampaign = () => {
 
   return (
     <>
-      <ButtonGroup isAttached>
+      <ButtonGroup isAttached ml="auto">
         <AddSolutionsButton />
         <Divider orientation="vertical" h="8" />
         <Menu placement="bottom-end" autoSelect={false}>
