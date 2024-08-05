@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { EventSourcesKey } from "types"
-import { EditGuildForm } from "../../EditGuildDrawer"
+import { EditGuildForm } from "../../types"
 
 type Props = {
   eventSource: EventSourcesKey

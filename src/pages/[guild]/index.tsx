@@ -1,4 +1,3 @@
-import { CheckMark } from "@/components/CheckMark"
 import { Header } from "@/components/Header"
 import {
   Layout,
@@ -6,18 +5,14 @@ import {
   LayoutHeadline,
   LayoutHero,
   LayoutMain,
-  LayoutTitle,
 } from "@/components/Layout"
 import { LayoutContainer, LayoutFooter } from "@/components/Layout/Layout"
 import { Anchor } from "@/components/ui/Anchor"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
-import { Badge } from "@/components/ui/Badge"
-import { Skeleton } from "@/components/ui/Skeleton"
-import { cn } from "@/lib/utils"
+import {} from "@/components/ui/Avatar"
 import { Center, Heading, Spinner } from "@chakra-ui/react"
-import { Users } from "@phosphor-icons/react/dist/ssr"
 import AccessHub from "components/[guild]/AccessHub"
 import { GuildPageBanner } from "components/[guild]/GuildPageBanner"
+import { GuildPageImageAndName } from "components/[guild]/GuildPageImageAndName"
 import JoinButton from "components/[guild]/JoinButton"
 import JoinModalProvider from "components/[guild]/JoinModal/JoinModalProvider"
 import LeaveButton from "components/[guild]/LeaveButton"
@@ -87,7 +82,7 @@ const GuildPage = (): JSX.Element => {
   const { isAdmin } = useGuildPermission()
   const { isMember } = useMembership()
 
-  const { avatarBg, localThemeColor } = useThemeContext()
+  const { localThemeColor } = useThemeContext()
 
   useStayConnectedToast()
 
@@ -112,36 +107,7 @@ const GuildPage = (): JSX.Element => {
           </LayoutContainer>
 
           <LayoutHeadline className="pt-8">
-            {imageUrl && (
-              <Avatar className={cn("row-span-2 size-20 md:size-24", avatarBg)}>
-                <AvatarImage
-                  src={imageUrl}
-                  alt={`${name} logo`}
-                  width={96}
-                  height={96}
-                />
-                <AvatarFallback>
-                  <Skeleton className="size-full" />
-                </AvatarFallback>
-              </Avatar>
-            )}
-            <div className="flex flex-col gap-1">
-              <div className="flex items-start gap-1 sm:gap-1.5">
-                <LayoutTitle className="line-clamp-1 break-all leading-tight sm:leading-tight">
-                  {name}
-                </LayoutTitle>
-                {tags?.includes("VERIFIED") && (
-                  <CheckMark className="mt-2.5 size-5 shrink-0 sm:mt-4 sm:size-6" />
-                )}
-              </div>
-
-              <Badge className="text-banner-foreground">
-                <Users weight="bold" />
-                {new Intl.NumberFormat("en", { notation: "compact" }).format(
-                  memberCount ?? 0
-                )}
-              </Badge>
-            </div>
+            <GuildPageImageAndName />
 
             {isAdmin && isDetailed ? (
               <DynamicEditGuildButton />
