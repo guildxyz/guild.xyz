@@ -1,3 +1,5 @@
+"use client"
+
 import { CheckMark } from "@/components/CheckMark"
 import { Header } from "@/components/Header"
 import {
@@ -18,6 +20,10 @@ import { Separator } from "@/components/ui/Separator"
 import { Skeleton } from "@/components/ui/Skeleton"
 import { Schemas } from "@guildxyz/types"
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr"
+import { useAtom } from "jotai"
+import { useEffect } from "react"
+import useSWR from "swr"
+import { fetcherForSWR } from "utils/fetcher"
 import { ActivityChart } from "../_components/ActivityChart"
 import { CircularProgressBar } from "../_components/CircularProgressBar"
 import { ContributionCard } from "../_components/ContributionCard"
@@ -25,42 +31,56 @@ import { EditContributions } from "../_components/EditContributions"
 import { EditProfile } from "../_components/EditProfile"
 import { LevelBadge } from "../_components/LevelBadge"
 import { OperatedGuildCard } from "../_components/OperatedGuildCard"
+import { ProfileSkeleton } from "../_components/ProfileSkeleton"
 import { RecentActivity } from "../_components/RecentActivity"
+import { profileAtom } from "./atoms"
 
-async function getProfileData(username: string) {
-  const req = `https://api.guild.xyz/v2/profiles/${username}`
-  try {
-    const res = await fetch(req)
-    if (!res.ok) {
-      throw new Error("Failed to fetch profile data")
-    }
-    return res.json() as Promise<Schemas["Profile"]>
-  } catch (e) {
-    // mocking for the time being if fetch fails
-    console.error(e)
-    const res = {
-      id: 4,
-      userId: 6027190,
-      username: "durumm",
-      name: "durum",
-      bio: null,
-      profileImageUrl:
-        "https://guild-xyz.mypinata.cloud/ipfs/QmWGdo6FkjSz22oDZFMJysx3hGKoVqtzTWVMx9tTSP7jvi",
-      backgroundImageUrl: null,
-      createdAt: "2024-07-25T10:04:20.781Z",
-      updatedAt: "2024-07-25T10:04:20.781Z",
-    }
-    return res
-  }
-}
+// async function getProfileData(username: string) {
+//   const req = `https://api.guild.xyz/v2/profiles/${username}`
+//   try {
+//     const res = await fetch(req)
+//     if (!res.ok) {
+//       throw new Error("Failed to fetch profile data")
+//     }
+//     return res.json() as Promise<Schemas["Profile"]>
+//   } catch (e) {
+//     // mocking for the time being if fetch fails
+//     console.error(e)
+//     const res = {
+//       id: 4,
+//       userId: 6027190,
+//       username: "durumm",
+//       name: "durum",
+//       bio: null,
+//       profileImageUrl:
+//         "https://guild-xyz.mypinata.cloud/ipfs/QmWGdo6FkjSz22oDZFMJysx3hGKoVqtzTWVMx9tTSP7jvi",
+//       backgroundImageUrl: null,
+//       createdAt: "2024-07-25T10:04:20.781Z",
+//       updatedAt: "2024-07-25T10:04:20.781Z",
+//     }
+//     return res
+//   }
+// }
 
-const Page = async ({
+const Page = ({
   params: { username },
 }: {
   params: { username: string }
 }) => {
-  const profile = await getProfileData(username)
-  const level = 50
+  const { data: fetchedProfile, isLoading } = useSWR<Schemas["Profile"]>(
+    `/v2/profiles/${username}`,
+    fetcherForSWR
+  )
+  const [profile, setProfile] = useAtom(profileAtom)
+  const level = 0
+
+  useEffect(() => {
+    setProfile(fetchedProfile)
+  }, [fetchedProfile, setProfile])
+
+  if (!profile || isLoading) {
+    return <ProfileSkeleton />
+  }
 
   return (
     <Layout>
