@@ -2,8 +2,9 @@ import { Guild, Role, Schemas } from "@guildxyz/types"
 import useSWR from "swr"
 import fetcher from "utils/fetcher"
 
-const contributionFetcher = async (url: string) => {
-  const contributions = (await fetcher(url)) as Schemas["ProfileContribution"][]
+export const parsedContributionFetcher = async (
+  contributions: { roleId: number; guildId: number }[]
+) => {
   const roleRequests = contributions.map(({ roleId, guildId }) =>
     fetcher(`/v2/guilds/${guildId}/roles/${roleId}`)
   ) as Promise<Role>[]
@@ -19,13 +20,23 @@ const contributionFetcher = async (url: string) => {
   }))
 }
 
-type ParsedContribution = Awaited<ReturnType<typeof contributionFetcher>>[number]
+const contributionFetcher = async (url: string) => {
+  const contributions = (await fetcher(url)) as Schemas["ProfileContribution"][]
+  return parsedContributionFetcher(contributions)
+}
 
-export const useContribution = (profileIdOrUsername: number | string) => {
+export type ParsedContribution = Awaited<
+  ReturnType<typeof parsedContributionFetcher>
+>[number]
+
+export const useContribution = ({
+  profileIdOrUsername,
+}: { profileIdOrUsername: number | string; fetchAll?: boolean }) => {
   // const {id: userId} = useUserPublic()
   // const {data: memberships} = useSWR<Membership>(`/v2/users/${userId}/memberships`, fetcher)
   // console.log(memberships)
-  return useSWR<ParsedContribution[]>(
+
+  return useSWR(
     `/v2/profiles/${profileIdOrUsername}/contributions`,
     contributionFetcher
   )

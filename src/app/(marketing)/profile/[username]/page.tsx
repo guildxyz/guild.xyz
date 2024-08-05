@@ -34,7 +34,7 @@ import { OperatedGuildCard } from "../_components/OperatedGuildCard"
 import { ProfileSkeleton } from "../_components/ProfileSkeleton"
 import { RecentActivity } from "../_components/RecentActivity"
 import { useContribution } from "../_hooks/useContribution"
-import { profileAtom } from "./atoms"
+import { contributionsAtom, profileAtom } from "./atoms"
 
 // async function getProfileData(username: string) {
 //   const req = `https://api.guild.xyz/v2/profiles/${username}`
@@ -73,8 +73,15 @@ const Page = ({
     fetcherForSWR
   )
   const [profile, setProfile] = useAtom(profileAtom)
-  const contribution = useContribution(username)
+  const [contributions, setContributions] = useAtom(contributionsAtom)
+  const fetchedContribution = useContribution({ profileIdOrUsername: username })
   const level = 0
+
+  useEffect(() => {
+    if (fetchedContribution.data) {
+      setContributions(fetchedContribution.data)
+    }
+  }, [fetchedContribution.data, setContributions])
 
   useEffect(() => {
     setProfile(fetchedProfile)
@@ -180,7 +187,7 @@ const Page = ({
             <EditContributions />
           </div>
           <div className="grid grid-cols-1 gap-3">
-            {contribution.data?.map(({ roles, guild }) =>
+            {contributions?.map(({ roles, guild }) =>
               roles.map((role) => (
                 <ContributionCard role={role} guild={guild} key={role.id} />
               ))
