@@ -137,13 +137,13 @@ const GuildPage = (): JSX.Element => {
             )}
           </LayoutBanner>
 
-          <Header />
+          <Header className="mb-10" />
 
-          <LayoutContainer className="-mb-14 mt-6">
+          <LayoutContainer className="-mb-16 mt-8">
             <BackButton />
           </LayoutContainer>
 
-          <LayoutHeadline className="pt-8">
+          <LayoutHeadline className="pt-12">
             {imageUrl && (
               <Avatar className={cn("row-span-2 size-20 md:size-24", avatarBg)}>
                 <AvatarImage

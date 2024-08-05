@@ -27,7 +27,6 @@ const BackButton = ({ href, children }: PropsWithChildren<Props>) => {
       size="sm"
       leftIcon={<ArrowLeft />}
       alignSelf="flex-start"
-      mb="6"
     >
       {children ?? "Go back to explorer"}
     </Button>
