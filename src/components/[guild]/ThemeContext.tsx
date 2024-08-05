@@ -53,6 +53,13 @@ const ThemeProvider = memo(({ children }: PropsWithChildren<any>): JSX.Element =
   const buttonColorScheme =
     textColor === "whiteAlpha.900" ? "whiteAlpha" : "blackAlpha"
 
+  const bannerForegroundHSL = createColor(
+    generatedColors["--chakra-colors-primary-800"]
+  )
+    .hsl()
+    .array()
+  const bannerOpacity = textColor === "primary.800" ? 1 : 0.5
+
   return (
     <ThemeContext.Provider
       value={{
@@ -67,7 +74,9 @@ const ThemeProvider = memo(({ children }: PropsWithChildren<any>): JSX.Element =
       <style>
         {`:root, [data-theme] {${Object.entries(generatedColors ?? {})
           .map(([key, value]) => `${key}: ${value};`)
-          .join("")}}`}
+          .join("")}
+          ${textColor === "primary.800" ? `--banner-foreground:${bannerForegroundHSL[0].toFixed(2)} ${bannerForegroundHSL[1].toFixed(2)}% ${bannerForegroundHSL[2].toFixed(2)}%` : ""};--banner-opacity:${bannerOpacity};
+          }`}
       </style>
       {children}
     </ThemeContext.Provider>

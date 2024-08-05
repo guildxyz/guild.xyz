@@ -13,7 +13,6 @@ import { Anchor } from "@/components/ui/Anchor"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
 import { Badge } from "@/components/ui/Badge"
 import { Skeleton } from "@/components/ui/Skeleton"
-import { cn } from "@/lib/utils"
 import { Box, Center, HStack, Heading, Spinner } from "@chakra-ui/react"
 import { Users } from "@phosphor-icons/react/dist/ssr"
 import AccessHub from "components/[guild]/AccessHub"
@@ -102,7 +101,7 @@ const GuildPage = (): JSX.Element => {
     admins?.map((admin) => admin.address)
   )
 
-  const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
+  const { localThemeColor, localBackgroundImage } = useThemeContext()
 
   const accessedGuildPlatforms = useAccessedGuildPlatforms()
 
@@ -139,10 +138,7 @@ const GuildPage = (): JSX.Element => {
               />
             ) : (
               <div
-                className={cn("h-full w-full", {
-                  // TODO: rework ThemeContext & don't use Chakra related colors
-                  "opacity-50": textColor !== "primary.800",
-                })}
+                className="h-full w-full opacity-banner"
                 style={{
                   backgroundColor: localThemeColor,
                 }}
@@ -158,13 +154,7 @@ const GuildPage = (): JSX.Element => {
 
           <LayoutHeadline className="pt-8">
             {imageUrl && (
-              <Avatar
-                className={cn("row-span-2 size-20 md:size-24", {
-                  // TODO rework ThemeContext & use a non-Chakra CSS variable
-                  "bg-[var(--chakra-colors-primary-800)]":
-                    textColor === "primary.800",
-                })}
-              >
+              <Avatar className="row-span-2 size-20 bg-banner-foreground md:size-24">
                 <AvatarImage
                   src={imageUrl}
                   alt={`${name} logo`}
@@ -178,28 +168,13 @@ const GuildPage = (): JSX.Element => {
             )}
             <div className="flex flex-col gap-1">
               <div className="flex items-start gap-1 sm:gap-1.5">
-                <LayoutTitle
-                  className={cn(
-                    "line-clamp-1 break-all leading-tight sm:leading-tight",
-                    {
-                      // TODO rework ThemeContext & use a non-Chakra CSS variable
-                      "text-[var(--chakra-colors-primary-800)]":
-                        textColor === "primary.800",
-                    }
-                  )}
-                >
+                <LayoutTitle className="line-clamp-1 break-all leading-tight sm:leading-tight">
                   {name}
                 </LayoutTitle>
                 <CheckMark className="mt-2.5 size-5 shrink-0 sm:mt-4 sm:size-6" />
               </div>
 
-              <Badge
-                className={cn("text-white", {
-                  // TODO rework ThemeContext & use a non-Chakra CSS variable
-                  "text-[var(--chakra-colors-primary-800)]":
-                    textColor === "primary.800",
-                })}
-              >
+              <Badge className="text-banner-foreground">
                 <Users weight="bold" />
                 {new Intl.NumberFormat("en", { notation: "compact" }).format(
                   memberCount ?? 0
@@ -211,13 +186,7 @@ const GuildPage = (): JSX.Element => {
           </LayoutHeadline>
 
           {(description || Object.keys(socialLinks ?? {}).length > 0) && (
-            <LayoutContainer
-              className={cn("mt-6 font-semibold text-white", {
-                // TODO rework ThemeContext & use a non-Chakra CSS variable
-                "text-[var(--chakra-colors-primary-800)]":
-                  textColor === "primary.800",
-              })}
-            >
+            <LayoutContainer className="mt-6 font-semibold">
               {description && parseDescription(description)}
               {Object.keys(socialLinks ?? {}).length > 0 && (
                 <div className="mt-3 flex flex-wrap items-center gap-3">
@@ -232,11 +201,7 @@ const GuildPage = (): JSX.Element => {
                         <SocialIcon type={type as SocialLinkKey} size="sm" />
                         <Anchor
                           href={link?.startsWith("http") ? link : `https://${link}`}
-                          className={cn("font-semibold text-sm text-white", {
-                            // TODO rework ThemeContext & use a non-Chakra CSS variable
-                            "text-[var(--chakra-colors-primary-800)]":
-                              textColor === "primary.800",
-                          })}
+                          className="font-semibold text-banner-foreground text-sm"
                         >
                           {prettyLink}
                         </Anchor>
