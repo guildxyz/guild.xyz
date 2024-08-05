@@ -17,6 +17,7 @@ import { cn } from "@/lib/utils"
 import { Center, Heading, Spinner } from "@chakra-ui/react"
 import { Users } from "@phosphor-icons/react/dist/ssr"
 import AccessHub from "components/[guild]/AccessHub"
+import { GuildPageBanner } from "components/[guild]/GuildPageBanner"
 import JoinButton from "components/[guild]/JoinButton"
 import JoinModalProvider from "components/[guild]/JoinModal/JoinModalProvider"
 import LeaveButton from "components/[guild]/LeaveButton"
@@ -34,7 +35,6 @@ import useMembership from "components/explorer/hooks/useMembership"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
 import Head from "next/head"
-import Image from "next/image"
 import ErrorPage from "pages/_error"
 import { useEffect } from "react"
 import { MintPolygonIDProofProvider } from "rewards/PolygonID/components/MintPolygonIDProofProvider"
@@ -87,7 +87,7 @@ const GuildPage = (): JSX.Element => {
   const { isAdmin } = useGuildPermission()
   const { isMember } = useMembership()
 
-  const { avatarBg, localThemeColor, localBackgroundImage } = useThemeContext()
+  const { avatarBg, localThemeColor } = useThemeContext()
 
   useStayConnectedToast()
 
@@ -102,26 +102,7 @@ const GuildPage = (): JSX.Element => {
       <Layout>
         <LayoutHero>
           <LayoutBanner>
-            {localBackgroundImage ? (
-              <Image
-                src={localBackgroundImage}
-                alt="Guild background image"
-                priority
-                fill
-                sizes="100vw"
-                style={{
-                  filter: "brightness(30%)",
-                  objectFit: "cover",
-                }}
-              />
-            ) : (
-              <div
-                className="h-full w-full opacity-banner"
-                style={{
-                  backgroundColor: localThemeColor,
-                }}
-              />
-            )}
+            <GuildPageBanner />
           </LayoutBanner>
 
           <Header />
