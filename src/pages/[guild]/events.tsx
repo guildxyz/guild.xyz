@@ -1,6 +1,5 @@
 import { HStack, Link, VStack, Wrap } from "@chakra-ui/react"
 import { NoteBlank } from "@phosphor-icons/react"
-import { EditGuildDrawerProvider } from "components/[guild]/EditGuild/EditGuildDrawerProvider"
 import EventCard from "components/[guild]/Events/EventCard"
 import FallbackFrame from "components/[guild]/Events/FallbackFrame"
 import GuildName from "components/[guild]/GuildName"
@@ -131,9 +130,7 @@ const GuildEvents = (): JSX.Element => {
 const GuildEventsWrapper = ({ fallback }): JSX.Element => (
   <SWRConfig value={fallback && { fallback }}>
     <ThemeProvider>
-      <EditGuildDrawerProvider>
-        <GuildEvents />
-      </EditGuildDrawerProvider>
+      <GuildEvents />
     </ThemeProvider>
   </SWRConfig>
 )

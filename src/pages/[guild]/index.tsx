@@ -17,9 +17,6 @@ import { cn } from "@/lib/utils"
 import { Center, Heading, Spinner } from "@chakra-ui/react"
 import { Users } from "@phosphor-icons/react/dist/ssr"
 import AccessHub from "components/[guild]/AccessHub"
-import { useAccessedGuildPlatforms } from "components/[guild]/AccessHub/AccessHub"
-import { useEditGuildDrawer } from "components/[guild]/EditGuild/EditGuildDrawerContext"
-import { EditGuildDrawerProvider } from "components/[guild]/EditGuild/EditGuildDrawerProvider"
 import JoinButton from "components/[guild]/JoinButton"
 import JoinModalProvider from "components/[guild]/JoinModal/JoinModalProvider"
 import LeaveButton from "components/[guild]/LeaveButton"
@@ -32,6 +29,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import BackButton from "components/common/Layout/components/BackButton"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
+import Section from "components/common/Section"
 import useMembership from "components/explorer/hooks/useMembership"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
@@ -88,19 +86,10 @@ const GuildPage = (): JSX.Element => {
 
   const { isAdmin } = useGuildPermission()
   const { isMember } = useMembership()
-  const { onOpen } = useEditGuildDrawer()
 
   const { avatarBg, localThemeColor, localBackgroundImage } = useThemeContext()
 
-  const accessedGuildPlatforms = useAccessedGuildPlatforms()
-
-  useStayConnectedToast(() => {
-    onOpen()
-    setTimeout(() => {
-      const addContactBtn = document.getElementById("add-contact-btn")
-      if (addContactBtn) addContactBtn.focus()
-    }, 200)
-  })
+  useStayConnectedToast()
 
   return (
     <>
@@ -173,7 +162,13 @@ const GuildPage = (): JSX.Element => {
               </Badge>
             </div>
 
-            {isAdmin && isDetailed && <DynamicEditGuildButton />}
+            {isAdmin && isDetailed ? (
+              <DynamicEditGuildButton />
+            ) : !isMember ? (
+              <JoinButton />
+            ) : (
+              <LeaveButton />
+            )}
           </LayoutHeadline>
 
           {(description || Object.keys(socialLinks ?? {}).length > 0) && (
@@ -206,22 +201,17 @@ const GuildPage = (): JSX.Element => {
         </LayoutHero>
 
         <LayoutMain className="flex flex-col items-start gap-8">
-          <div className="flex w-full flex-col gap-2">
-            {!isMember ? (
-              <JoinButton />
-            ) : !isAdmin ? (
-              <LeaveButton />
-            ) : (
-              <DynamicAddRewardAndCampaign />
-            )}
-
+          <Section
+            titleRightElement={isAdmin ? <DynamicAddRewardAndCampaign /> : undefined}
+          >
             <AccessHub />
-          </div>
+          </Section>
 
-          <div className="flex w-full flex-col gap-2">
-            {isAdmin && <DynamicAddAndOrderRoles />}
+          <Section
+            titleRightElement={isAdmin ? <DynamicAddAndOrderRoles /> : undefined}
+          >
             <Roles />
-          </div>
+          </Section>
 
           {isAdmin && <DynamicMembersExporter />}
           {isAdmin && <DynamicActiveStatusUpdates />}
@@ -287,9 +277,7 @@ const GuildPageWrapper = ({ fallback }: Props): JSX.Element => {
           <MintGuildPinProvider>
             <MintPolygonIDProofProvider>
               <JoinModalProvider>
-                <EditGuildDrawerProvider>
-                  <GuildPage />
-                </EditGuildDrawerProvider>
+                <GuildPage />
               </JoinModalProvider>
             </MintPolygonIDProofProvider>
           </MintGuildPinProvider>

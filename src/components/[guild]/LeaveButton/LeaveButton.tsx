@@ -38,9 +38,10 @@ const LeaveButton = ({ disableColoring = false }) => {
           aria-label="Leave guild"
           icon={<SignOut />}
           onClick={onOpen}
-          minW={"44px"}
+          minW="44px"
           variant="ghost"
           rounded="full"
+          ml="auto"
           {...(!isStuck &&
             !disableColoring && {
               color: textColor,

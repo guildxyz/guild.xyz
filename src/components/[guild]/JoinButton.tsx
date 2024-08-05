@@ -11,7 +11,14 @@ const JoinButton = (): JSX.Element => {
   })
 
   return (
-    <Button h="10" flexShrink="0" onClick={openJoinModal} colorScheme="green">
+    <Button
+      h="10"
+      w="max-content"
+      ml="auto"
+      flexShrink="0"
+      onClick={openJoinModal}
+      colorScheme="green"
+    >
       {buttonText}
     </Button>
   )

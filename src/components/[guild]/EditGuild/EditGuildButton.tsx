@@ -1,11 +1,12 @@
 import { IconButton } from "@chakra-ui/react"
 import { GearSix } from "@phosphor-icons/react"
+import { useRouter } from "next/router"
 import { useThemeContext } from "../ThemeContext"
-import { useEditGuildDrawer } from "./EditGuildDrawerContext"
+import useGuild from "../hooks/useGuild"
 
 const EditGuildButton = (): JSX.Element => {
-  const { onOpen } = useEditGuildDrawer()
-
+  const router = useRouter()
+  const { urlName } = useGuild()
   const { textColor, buttonColorScheme } = useThemeContext()
 
   return (
@@ -16,7 +17,7 @@ const EditGuildButton = (): JSX.Element => {
       rounded="full"
       colorScheme={buttonColorScheme}
       color={textColor}
-      onClick={onOpen}
+      onClick={() => router.push(`/${urlName}/dashboard`)}
       ml="auto"
     />
   )

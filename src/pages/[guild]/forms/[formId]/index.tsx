@@ -1,6 +1,5 @@
 import { Box, Icon } from "@chakra-ui/react"
 import { Question } from "@phosphor-icons/react"
-import { EditGuildDrawerProvider } from "components/[guild]/EditGuild/EditGuildDrawerProvider"
 import JoinModalProvider from "components/[guild]/JoinModal/JoinModalProvider"
 import useActiveMembershipUpdate from "components/[guild]/JoinModal/hooks/useActiveMembershipUpdate"
 import RoleRequirements from "components/[guild]/Requirements"
@@ -101,9 +100,7 @@ const FormPageWrapper = ({ fallback, formId }): JSX.Element => (
   <SWRConfig value={fallback && { fallback }}>
     <ThemeProvider>
       <JoinModalProvider>
-        <EditGuildDrawerProvider>
-          <FormPage formId={formId} />
-        </EditGuildDrawerProvider>
+        <FormPage formId={formId} />
       </JoinModalProvider>
     </ThemeProvider>
   </SWRConfig>
