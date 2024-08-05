@@ -97,7 +97,7 @@ export const ConfettiProvider = ({ children }: PropsWithChildren) => {
           resize: true,
         }}
       />
-      <audio ref={audioRef} src="sfx/confetti-party-popper.mp3" />
+      <audio ref={audioRef} src="/sfx/confetti-party-popper.mp3" />
     </ConfettiContext.Provider>
   )
 }
