@@ -12,10 +12,7 @@ import {
 import { Anchor } from "@/components/ui/Anchor"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
 import { AvatarGroup } from "@/components/ui/AvatarGroup"
-import { Badge } from "@/components/ui/Badge"
 import { Button } from "@/components/ui/Button"
-import { Card } from "@/components/ui/Card"
-import { Progress } from "@/components/ui/Progress"
 import { Separator } from "@/components/ui/Separator"
 import { Skeleton } from "@/components/ui/Skeleton"
 import { Schemas } from "@guildxyz/types"
@@ -24,7 +21,6 @@ import { useAtom } from "jotai"
 import { useEffect } from "react"
 import useSWR from "swr"
 import { fetcherForSWR } from "utils/fetcher"
-import { ActivityChart } from "../_components/ActivityChart"
 import { CircularProgressBar } from "../_components/CircularProgressBar"
 import { ContributionCard } from "../_components/ContributionCard"
 import { EditContributions } from "../_components/EditContributions"
@@ -144,7 +140,7 @@ const Page = ({
               </div>
             </div>
           </div>
-          <h2 className="mb-3 font-bold text-lg">Experience</h2>
+          {/* <h2 className="mb-3 font-bold text-lg">Experience</h2>
           <div className="mb-16 grid grid-cols-1 gap-3 md:grid-cols-2">
             <Card className="p-6">
               <div className="grid grid-cols-[auto_1fr] grid-rows-[auto_auto_auto] items-center gap-x-3 gap-y-2">
@@ -170,7 +166,7 @@ const Page = ({
               </div>
               <ActivityChart />
             </Card>
-          </div>
+          </div> */}
           <h2 className="mb-3 font-bold text-lg">Operated guilds</h2>
           <OperatedGuildCard />
           <div className="mt-8 mb-3 flex items-center justify-between">
