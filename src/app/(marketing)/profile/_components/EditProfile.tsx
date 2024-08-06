@@ -202,7 +202,7 @@ export const EditProfile = (profile: Schemas["ProfileUpdate"]) => {
                   </FormItem>
                 )}
               />
-              <Separator className="mt-8 mb-4" />
+              <Separator className="mt-8 mb-4 bg-border-muted" />
               <div>
                 <p className="mb-2 font-medium">Danger zone</p>
                 <Button
