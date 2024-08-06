@@ -1,4 +1,3 @@
-import { useUserPublic } from "@/hooks/useUserPublic"
 import { MembershipResult } from "@guildxyz/types"
 import useSWR from "swr"
 import fetcher from "utils/fetcher"
@@ -18,8 +17,7 @@ const contributionFetcher = async (url: string) => {
   return parsedContributionFetcher(linearMemberships)
 }
 
-export const useAllContribution = () => {
-  const { id: userId } = useUserPublic()
+export const useAllContribution = (userId: number) => {
   return useSWR(
     userId ? `/v2/users/${userId}/memberships` : null,
     contributionFetcher

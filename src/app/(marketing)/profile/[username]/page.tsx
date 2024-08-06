@@ -184,7 +184,7 @@ const Page = ({
           <OperatedGuildCard />
           <div className="mt-8 mb-3 flex items-center justify-between">
             <h2 className="font-bold text-lg">Top contributions</h2>
-            <EditContributions />
+            {profile && <EditContributions userId={profile.userId} />}
           </div>
           <div className="grid grid-cols-1 gap-3">
             {contributions?.map(({ roles, guild }) =>
