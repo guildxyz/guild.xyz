@@ -37,13 +37,16 @@ export const OperatedGuildCard = () => {
         </div>
       </div>
       <div className="grid grow justify-stretch gap-2 px-6 py-5 md:grid-cols-2">
-        {Array(6).fill(
-          <Card className="flex items-center gap-2 bg-secondary p-5 font-extrabold text-lg">
+        {Array.from({ length: 6 }, (_, i) => (
+          <Card
+            className="flex items-center gap-2 bg-secondary p-5 font-extrabold text-lg"
+            key={i}
+          >
             <User weight="bold" className="min-w-min" />
             123k
             <span className="text-muted-foreground">members</span>
           </Card>
-        )}
+        ))}
       </div>
     </Card>
   )

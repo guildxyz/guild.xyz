@@ -193,11 +193,9 @@ const Page = ({
             )}
           </div>
           <div className="grid grid-cols-1 gap-3">
-            {contributions?.map(({ roles, guild }) =>
-              roles.map((role) => (
-                <ContributionCard role={role} guild={guild} key={role.id} />
-              ))
-            )}
+            {contributions?.map(({ role, guild, contribution }) => (
+              <ContributionCard role={role} guild={guild} key={contribution.id} />
+            ))}
             <Button size="sm" variant="outline" className="place-self-center">
               See more involvement
             </Button>
