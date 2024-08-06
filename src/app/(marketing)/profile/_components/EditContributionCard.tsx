@@ -6,7 +6,10 @@ import { Separator } from "@/components/ui/Separator"
 import { Guild, Role } from "@guildxyz/types"
 import { CaretDown, Users } from "@phosphor-icons/react/dist/ssr"
 
-export const ContributionCard = ({ guild, role }: { guild: Guild; role: Role }) => {
+export const EditContributionCard = ({
+  guild,
+  role,
+}: { guild: Guild; role: Role }) => {
   return (
     <Card
       className="flex flex-col border-2 md:flex-row"

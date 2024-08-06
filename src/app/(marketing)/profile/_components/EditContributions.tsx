@@ -29,11 +29,13 @@ import { FormProvider, useForm } from "react-hook-form"
 import { contributionsAtom } from "../[username]/atoms"
 import { useAllContribution } from "../_hooks/useAllContribution"
 import { ParsedContribution } from "../_hooks/useContribution"
+import { ProfileId, useEditContribution } from "../_hooks/useEditContribution"
 import { ContributionCard } from "./ContributionCard"
 
 export const EditContributions = ({
   userId,
-}: Pick<Schemas["Profile"], "userId">) => {
+  profileId,
+}: ProfileId & Pick<Schemas["Profile"], "userId">) => {
   const form = useForm<Schemas["ProfileContributionUpdate"]>({
     // resolver: zodResolver(profileSchema),
     // defaultValues: {
@@ -60,7 +62,9 @@ export const EditContributions = ({
   // }, [roles, form])
 
   const [contributions, setContributions] = useAtom(contributionsAtom)
+  const editContribution = useEditContribution({ profileId })
   async function onSubmit(values: Schemas["ProfileContributionUpdate"]) {
+    editContribution.onSubmit(values)
     console.log("edit contributions submit", values)
   }
 
@@ -126,7 +130,7 @@ export const EditContributions = ({
                     name="roleId"
                     render={({ field }) => (
                       <FormItem className="pb-2">
-                        <FormLabel>Role</FormLabel>
+                        <FormLabel aria-disabled={!roles}>Role</FormLabel>
                         <Select
                           onValueChange={field.onChange}
                           disabled={!roles}
@@ -154,7 +158,7 @@ export const EditContributions = ({
                     colorScheme="success"
                     type="submit"
                     className="self-end"
-                    disabled={!form.formState.isValid}
+                    disabled={!form.watch("roleId") || !form.watch("guildId")}
                   >
                     Add
                   </Button>

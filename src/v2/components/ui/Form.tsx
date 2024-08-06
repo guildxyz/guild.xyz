@@ -96,7 +96,7 @@ const FormLabel = forwardRef<
   return (
     <Label
       ref={ref}
-      className={cn("group text-md", className)}
+      className={cn("group text-md aria-disabled:text-muted-foreground", className)}
       htmlFor={formItemId}
       {...props}
     >

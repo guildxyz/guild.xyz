@@ -18,6 +18,7 @@ import { Card } from "@/components/ui/Card"
 import { Progress } from "@/components/ui/Progress"
 import { Separator } from "@/components/ui/Separator"
 import { Skeleton } from "@/components/ui/Skeleton"
+import { useUserPublic } from "@/hooks/useUserPublic"
 import { Schemas } from "@guildxyz/types"
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr"
 import { useAtom } from "jotai"
@@ -76,6 +77,9 @@ const Page = ({
   const [contributions, setContributions] = useAtom(contributionsAtom)
   const fetchedContribution = useContribution({ profileIdOrUsername: username })
   const level = 0
+
+  const { id: publicUserId } = useUserPublic()
+  const isProfileOwner = profile?.userId && publicUserId === profile.userId
 
   useEffect(() => {
     if (fetchedContribution.data) {
@@ -184,7 +188,9 @@ const Page = ({
           <OperatedGuildCard />
           <div className="mt-8 mb-3 flex items-center justify-between">
             <h2 className="font-bold text-lg">Top contributions</h2>
-            {profile && <EditContributions userId={profile.userId} />}
+            {isProfileOwner && profile && (
+              <EditContributions userId={profile.userId} profileId={profile.id} />
+            )}
           </div>
           <div className="grid grid-cols-1 gap-3">
             {contributions?.map(({ roles, guild }) =>
