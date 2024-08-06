@@ -11,11 +11,16 @@ import {
 import { LayoutContainer, LayoutFooter } from "@/components/Layout/Layout"
 import { Anchor } from "@/components/ui/Anchor"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
-import { Badge } from "@/components/ui/Badge"
 import { Skeleton } from "@/components/ui/Skeleton"
 import { cn } from "@/lib/utils"
-import { Box, Center, HStack, Heading, Spinner } from "@chakra-ui/react"
-import { Users } from "@phosphor-icons/react/dist/ssr"
+import {
+  Box,
+  Center,
+  HStack,
+  Heading,
+  Spinner,
+  useColorModeValue,
+} from "@chakra-ui/react"
 import AccessHub from "components/[guild]/AccessHub"
 import { useAccessedGuildPlatforms } from "components/[guild]/AccessHub/AccessHub"
 import { useEditGuildDrawer } from "components/[guild]/EditGuild/EditGuildDrawerContext"
@@ -24,6 +29,7 @@ import JoinButton from "components/[guild]/JoinButton"
 import JoinModalProvider from "components/[guild]/JoinModal/JoinModalProvider"
 import LeaveButton from "components/[guild]/LeaveButton"
 import { MintGuildPinProvider } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
+import MemberCount from "components/[guild]/RoleCard/components/MemberCount"
 import Roles from "components/[guild]/Roles"
 import SocialIcon from "components/[guild]/SocialIcon"
 import useStayConnectedToast from "components/[guild]/StayConnectedToast"
@@ -92,7 +98,9 @@ const GuildPage = (): JSX.Element => {
   const { isMember } = useMembership()
   const { onOpen } = useEditGuildDrawer()
 
-  const { avatarBg, localThemeColor, localBackgroundImage } = useThemeContext()
+  const { avatarBg, textColor, localThemeColor, localBackgroundImage } =
+    useThemeContext()
+  const memberCountBg = useColorModeValue("blackAlpha.50", "whiteAlpha.200")
 
   const accessedGuildPlatforms = useAccessedGuildPlatforms()
 
@@ -167,12 +175,12 @@ const GuildPage = (): JSX.Element => {
                 )}
               </div>
 
-              <Badge className="text-banner-foreground">
-                <Users weight="bold" />
-                {new Intl.NumberFormat("en", { notation: "compact" }).format(
-                  memberCount ?? 0
-                )}
-              </Badge>
+              <MemberCount
+                memberCount={memberCount ?? 0}
+                bgColor={memberCountBg}
+                color={textColor}
+                maxW="max-content"
+              />
             </div>
 
             {isAdmin && isDetailed && <DynamicEditGuildButton />}
