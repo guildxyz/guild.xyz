@@ -13,14 +13,7 @@ import { Anchor } from "@/components/ui/Anchor"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
 import { Skeleton } from "@/components/ui/Skeleton"
 import { cn } from "@/lib/utils"
-import {
-  Box,
-  Center,
-  HStack,
-  Heading,
-  Spinner,
-  useColorModeValue,
-} from "@chakra-ui/react"
+import { Box, Center, HStack, Heading, Spinner } from "@chakra-ui/react"
 import AccessHub from "components/[guild]/AccessHub"
 import { useAccessedGuildPlatforms } from "components/[guild]/AccessHub/AccessHub"
 import { useEditGuildDrawer } from "components/[guild]/EditGuild/EditGuildDrawerContext"
@@ -98,9 +91,13 @@ const GuildPage = (): JSX.Element => {
   const { isMember } = useMembership()
   const { onOpen } = useEditGuildDrawer()
 
-  const { avatarBg, textColor, localThemeColor, localBackgroundImage } =
-    useThemeContext()
-  const memberCountBg = useColorModeValue("blackAlpha.50", "whiteAlpha.200")
+  const {
+    avatarBg,
+    textColor,
+    localThemeColor,
+    localBackgroundImage,
+    buttonColorScheme,
+  } = useThemeContext()
 
   const accessedGuildPlatforms = useAccessedGuildPlatforms()
 
@@ -177,7 +174,7 @@ const GuildPage = (): JSX.Element => {
 
               <MemberCount
                 memberCount={memberCount ?? 0}
-                bgColor={memberCountBg}
+                bgColor={`${buttonColorScheme}.200`}
                 color={textColor}
                 maxW="max-content"
               />
