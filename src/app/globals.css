@@ -57,6 +57,7 @@
     --success-subtle-foreground: var(--success);
 
     --banner: 240 4% 16%;
+    --banner-dark: 240 2% 12%;
     --banner-foreground: 210 20% 98%;
     --banner-opacity: 1;
 

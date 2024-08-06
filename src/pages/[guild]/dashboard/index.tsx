@@ -1,10 +1,6 @@
 import { Header } from "@/components/Header"
 import { Layout, LayoutBanner, LayoutHero } from "@/components/Layout"
-import {
-  LayoutContainer,
-  LayoutHeadline,
-  LayoutMain,
-} from "@/components/Layout/Layout"
+import { LayoutContainer, LayoutHeadline, LayoutMain } from "@/components/Layout"
 import { Center, Heading, Spinner } from "@chakra-ui/react"
 import { EditGuildFormComponent } from "components/[guild]/EditGuild/EditGuildFormComponent"
 import DeleteGuildButton from "components/[guild]/EditGuild/components/DeleteGuildButton"

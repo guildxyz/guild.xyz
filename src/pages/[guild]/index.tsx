@@ -2,13 +2,13 @@ import { Header } from "@/components/Header"
 import {
   Layout,
   LayoutBanner,
+  LayoutContainer,
+  LayoutFooter,
   LayoutHeadline,
   LayoutHero,
   LayoutMain,
 } from "@/components/Layout"
-import { LayoutContainer, LayoutFooter } from "@/components/Layout/Layout"
 import { Anchor } from "@/components/ui/Anchor"
-import {} from "@/components/ui/Avatar"
 import { Center, Heading, Spinner } from "@chakra-ui/react"
 import AccessHub from "components/[guild]/AccessHub"
 import { GuildPageBanner } from "components/[guild]/GuildPageBanner"

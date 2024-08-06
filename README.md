@@ -21,6 +21,8 @@ Open source interface for Guild.xyz -- a tool for platformless membership manage
   - SWR for fetching and caching
   - React Hook Form for form state
   - jotai for custom, simple global state
+- Charts:
+  - visx
 - Web3 stuff:
   - viem
   - wagmi for connection management
