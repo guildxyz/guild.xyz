@@ -23,8 +23,11 @@ const config = {
         display: ["var(--font-dystopian,sans-serif)"],
       },
       colors: {
-        banner: "hsl(var(--banner))",
-        "banner-foreground": "hsl(var(--banner-foreground))",
+        banner: {
+          DEFAULT: "hsl(var(--banner))",
+          dark: "hsl(var(--banner-dark))",
+          foreground: "hsl(var(--banner-foreground))"
+        },
         border: "hsl(var(--border))",
         "border-muted": "hsl(var(--border-muted))",
         input: "hsl(var(--input))",

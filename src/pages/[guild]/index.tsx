@@ -122,7 +122,7 @@ const GuildPage = (): JSX.Element => {
 
       <Layout>
         <LayoutHero className="pb-16">
-          <LayoutBanner>
+          <LayoutBanner className="bg-banner-dark">
             {localBackgroundImage ? (
               <Image
                 src={localBackgroundImage}
