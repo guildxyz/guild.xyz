@@ -113,7 +113,7 @@ const GuildPage = (): JSX.Element => {
       {featureFlags?.includes("ONGOING_ISSUES") && <DynamicOngoingIssuesBanner />}
 
       <Layout>
-        <LayoutHero className="pb-28">
+        <LayoutHero className="pb-16">
           <LayoutBanner>
             {localBackgroundImage ? (
               <Image
@@ -205,25 +205,27 @@ const GuildPage = (): JSX.Element => {
               )}
             </LayoutContainer>
           )}
+
+          <LayoutContainer className="mt-8">
+            <GuildTabs
+              activeTab="HOME"
+              rightElement={
+                <HStack>
+                  {isMember && !isAdmin && <DynamicRecheckAccessesButton />}
+                  {!isMember ? (
+                    <JoinButton />
+                  ) : !isAdmin ? (
+                    <LeaveButton />
+                  ) : (
+                    <DynamicAddRewardAndCampaign />
+                  )}
+                </HStack>
+              }
+            />
+          </LayoutContainer>
         </LayoutHero>
 
         <LayoutMain className="-top-16">
-          <GuildTabs
-            activeTab="HOME"
-            rightElement={
-              <HStack>
-                {isMember && !isAdmin && <DynamicRecheckAccessesButton />}
-                {!isMember ? (
-                  <JoinButton />
-                ) : !isAdmin ? (
-                  <LeaveButton />
-                ) : (
-                  <DynamicAddRewardAndCampaign />
-                )}
-              </HStack>
-            }
-          />
-
           <AccessHub />
 
           <Section
