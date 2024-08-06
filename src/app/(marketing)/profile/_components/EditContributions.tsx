@@ -12,7 +12,7 @@ import {
 // import { profileSchema } from "@/lib/validations/profileSchema"
 import { Schemas } from "@guildxyz/types"
 // import { zodResolver } from "@hookform/resolvers/zod"
-import { Pencil } from "@phosphor-icons/react"
+import { PencilSimple } from "@phosphor-icons/react"
 import { FormProvider, useForm } from "react-hook-form"
 
 export const EditContributions = (
@@ -33,8 +33,8 @@ export const EditContributions = (
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="solid" size="icon" className="rounded-full">
-          <Pencil weight="bold" />
+        <Button variant="solid" size="icon-sm" className="rounded-full">
+          <PencilSimple weight="bold" />
         </Button>
       </DialogTrigger>
       <DialogContent size="lg" className="bg-background">
