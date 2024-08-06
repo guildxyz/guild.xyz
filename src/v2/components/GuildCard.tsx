@@ -45,7 +45,7 @@ export const GuildCard: React.FC<Props> = ({ guildData }) => (
       )}
     </div>
     <div className="flex gap-2">
-      <Badge className="space-x-2">
+      <Badge className="gap-2">
         <Users weight="bold" />
         <span>
           {new Intl.NumberFormat("en", { notation: "compact" }).format(

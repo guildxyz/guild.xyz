@@ -1,5 +1,4 @@
-import { Link } from "@chakra-ui/next-js"
-import { Stack, Text } from "@chakra-ui/react"
+import { Anchor } from "@/components/ui/Anchor"
 
 const LINK_REGEX =
   /https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,8}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g
@@ -19,16 +18,15 @@ const parseDescription = (description?: string) => {
       acc.push(curr)
       if (linkMatches[i]) {
         acc.push(
-          <Link
+          <Anchor
             key={linkMatches[i][0]}
             href={linkMatches[i][0]}
-            colorScheme={"primary"}
-            isExternal
-            display={"unset"}
+            // TODO: generate custom (non-Chakra) variables in the theme context
+            className="text-[var(--chakra-colors-primary-500)]"
             onClick={(e) => e.stopPropagation()}
           >
             {linkMatches[i][0]}
-          </Link>
+          </Anchor>
         )
       }
 
@@ -37,11 +35,11 @@ const parseDescription = (description?: string) => {
   })
 
   const paragraphComponents = (
-    <Stack spacing={4}>
+    <div className="flex w-full flex-col gap-4">
       {paragraphsWithLinks.map((p, index) => (
-        <Text key={index}>{p}</Text>
+        <p key={index}>{p}</p>
       ))}
-    </Stack>
+    </div>
   )
 
   return paragraphComponents
