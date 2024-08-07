@@ -12,9 +12,9 @@ import {
 import { Anchor } from "@/components/ui/Anchor"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
 import { AvatarGroup } from "@/components/ui/AvatarGroup"
-import { Button } from "@/components/ui/Button"
 import { Separator } from "@/components/ui/Separator"
 import { Skeleton } from "@/components/ui/Skeleton"
+import { useUserPublic } from "@/hooks/useUserPublic"
 import { Schemas } from "@guildxyz/types"
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr"
 import { useAtom } from "jotai"
@@ -27,6 +27,7 @@ import { EditProfile } from "../_components/EditProfile"
 import { OperatedGuildCard } from "../_components/OperatedGuildCard"
 import { ProfileSkeleton } from "../_components/ProfileSkeleton"
 import { RecentActivity } from "../_components/RecentActivity"
+import { useContribution } from "../_hooks/useContribution"
 import { profileAtom } from "./atoms"
 
 // async function getProfileData(username: string) {
@@ -66,7 +67,10 @@ const Page = ({
     fetcherForSWR
   )
   const [profile, setProfile] = useAtom(profileAtom)
+  const contributions = useContribution()
 
+  const { id: publicUserId } = useUserPublic()
+  const isProfileOwner = !!profile?.userId && publicUserId === profile.userId
   useEffect(() => {
     setProfile(fetchedProfile)
   }, [fetchedProfile, setProfile])
@@ -139,15 +143,12 @@ const Page = ({
           <OperatedGuildCard />
           <div className="mt-8 mb-3 flex items-center justify-between">
             <h2 className="font-bold text-lg">Top contributions</h2>
-            <EditContributions />
+            {isProfileOwner && <EditContributions />}
           </div>
           <div className="grid grid-cols-1 gap-3">
-            <ContributionCard />
-            <ContributionCard />
-            <ContributionCard />
-            <Button size="sm" variant="outline" className="place-self-center">
-              See more involvement
-            </Button>
+            {contributions.data?.map((contribution) => (
+              <ContributionCard contribution={contribution} key={contribution.id} />
+            ))}
           </div>
           <div className="mt-8">
             <h2 className="mb-3 font-bold text-lg">Recent activity</h2>
