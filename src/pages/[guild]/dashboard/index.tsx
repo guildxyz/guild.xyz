@@ -19,56 +19,67 @@ import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useUser from "components/[guild]/hooks/useUser"
 import Card from "components/common/Card"
 import Section from "components/common/Section"
+import Head from "next/head"
 
 const DashboardPage = () => {
-  const { isDetailed } = useGuild()
+  const { isDetailed, name } = useGuild()
   const { isOwner } = useGuildPermission()
   const { isSuperAdmin } = useUser()
 
   if (!isDetailed)
     return (
-      <Center h="100vh" w="screen">
-        <Spinner />
-        <Heading fontFamily="display" size="md" ml="4" mb="1">
-          Loading dashboard...
-        </Heading>
-      </Center>
+      <>
+        <Head>
+          <title>Loading dashboard...</title>
+        </Head>
+        <Center h="100vh" w="screen">
+          <Spinner />
+          <Heading fontFamily="display" size="md" ml="4" mb="1">
+            Loading dashboard...
+          </Heading>
+        </Center>
+      </>
     )
 
   return (
-    <Layout>
-      <LayoutHero>
-        <LayoutBanner>
-          <GuildPageBanner />
-        </LayoutBanner>
+    <>
+      <Head>
+        <title>{`Dashboard - ${name}`}</title>
+      </Head>
+      <Layout>
+        <LayoutHero>
+          <LayoutBanner>
+            <GuildPageBanner />
+          </LayoutBanner>
 
-        <Header />
+          <Header />
 
-        <LayoutContainer className="-mb-14 mt-6">
-          <BackToGuildButton />
-        </LayoutContainer>
+          <LayoutContainer className="-mb-14 mt-6">
+            <BackToGuildButton />
+          </LayoutContainer>
 
-        <LayoutHeadline className="pt-8">
-          <LayoutTitle>Dashboard</LayoutTitle>
-        </LayoutHeadline>
-      </LayoutHero>
+          <LayoutHeadline className="pt-8">
+            <LayoutTitle>Dashboard</LayoutTitle>
+          </LayoutHeadline>
+        </LayoutHero>
 
-      <LayoutMain>
-        <GuildTabs activeTab="SETTINGS" />
+        <LayoutMain>
+          <GuildTabs activeTab="SETTINGS" />
 
-        <Card px={{ base: 5, md: 6 }} py={{ base: 6, md: 7 }} mb={4}>
-          <EditGuildFormComponent />
-        </Card>
-
-        {(isOwner || isSuperAdmin) && (
-          <Card px={{ base: 5, md: 6 }} py={{ base: 6, md: 7 }}>
-            <Section title="Danger zone">
-              <DeleteGuildButton />
-            </Section>
+          <Card px={{ base: 5, md: 6 }} py={{ base: 6, md: 7 }} mb={4}>
+            <EditGuildFormComponent />
           </Card>
-        )}
-      </LayoutMain>
-    </Layout>
+
+          {(isOwner || isSuperAdmin) && (
+            <Card px={{ base: 5, md: 6 }} py={{ base: 6, md: 7 }}>
+              <Section title="Danger zone">
+                <DeleteGuildButton />
+              </Section>
+            </Card>
+          )}
+        </LayoutMain>
+      </Layout>
+    </>
   )
 }
 
