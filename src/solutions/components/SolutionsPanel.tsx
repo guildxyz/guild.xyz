@@ -26,10 +26,9 @@ import {
   engagement,
   memberships,
   nft,
-  sybil,
   tokens,
 } from "solutions"
-import { PlatformName, PlatformType } from "types"
+import { PlatformName } from "types"
 import Category from "./Category"
 
 const categoryOptions = [{ label: "All", value: "all" }, ...categories]
@@ -68,16 +67,9 @@ const SolutionsPanel = ({
     setStep("SOLUTION_SETUP")
   }
 
-  const showPolygonId = !guildPlatforms?.some(
-    (gp) => gp.platformId === PlatformType.POLYGON_ID
-  )
-
   const categoryItems: Record<CategoryValue, SolutionCardData[]> = {
     engagement,
     memberships,
-    sybil: sybil.filter(
-      (solution) => showPolygonId || solution.handlerParam !== "POLYGON_ID"
-    ),
     nft,
     tokens,
   }

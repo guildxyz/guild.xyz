@@ -23,10 +23,6 @@ export const RewardPreviews = {
     ssr: false,
     loading: LoadingRewardPreview,
   }),
-  POLYGON_ID: dynamic(() => import("rewards/components/PolygonIDPreview"), {
-    ssr: false,
-    loading: LoadingRewardPreview,
-  }),
   CONTRACT_CALL: dynamic(() => import("rewards/components/ContractCallPreview"), {
     ssr: false,
     loading: LoadingRewardPreview,

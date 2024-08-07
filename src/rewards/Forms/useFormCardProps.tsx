@@ -8,7 +8,7 @@ import {
 import { useGuildForm } from "components/[guild]/hooks/useGuildForms"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import { CardPropsHook } from "rewards/types"
-import { GuildPlatformWithOptionalId, PlatformName } from "types"
+import { GuildPlatformWithOptionalId } from "types"
 import pluralize from "utils/pluralize"
 import { formData } from "./data"
 import { useUserFormSubmission } from "./hooks/useFormSubmissions"
@@ -23,7 +23,7 @@ const useFormCardProps: CardPropsHook = (
   const { userSubmission } = useUserFormSubmission(form ?? null)
 
   return {
-    type: "FORM" as PlatformName,
+    type: "FORM",
     image: (
       <Circle size={10} bgColor={circleBgColor}>
         <Icon as={formData?.icon} color="white" />

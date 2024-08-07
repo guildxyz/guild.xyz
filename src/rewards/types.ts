@@ -57,10 +57,16 @@ export type RewardComponentsData = {
 
 export type CardSetting = () => JSX.Element
 export type RewardPreview = ComponentType<PropsWithChildren>
-export type RewardComponentMap<T> = Readonly<Partial<Record<PlatformName, T>>>
+export type RewardComponentMap<T> = Readonly<
+  Partial<Record<Exclude<PlatformName, "POLYGON_ID">, T>>
+>
 
-export type Rewards = Readonly<Record<PlatformName, RewardData>>
-export type RewardComponents = Readonly<Record<PlatformName, RewardComponentsData>>
+export type Rewards = Readonly<
+  Record<Exclude<PlatformName, "POLYGON_ID">, RewardData>
+>
+export type RewardComponents = Readonly<
+  Record<Exclude<PlatformName, "POLYGON_ID">, RewardComponentsData>
+>
 
 export type AddRewardPanelProps = {
   onAdd: (
@@ -74,7 +80,7 @@ export type AddRewardPanelProps = {
 }
 
 export type CardPropsHook = (guildPlatform: GuildPlatformWithOptionalId) => {
-  type: PlatformName
+  type: Exclude<PlatformName, "POLYGON_ID">
   name: string
   image?: string | JSX.Element
   info?: string | JSX.Element

@@ -28,7 +28,6 @@ import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
 import Head from "next/head"
 import { useState } from "react"
-import { MintPolygonIDProofProvider } from "rewards/PolygonID/components/MintPolygonIDProofProvider"
 import { SWRConfig } from "swr"
 import { Guild } from "types"
 import fetcher from "utils/fetcher"
@@ -162,11 +161,9 @@ const GroupPageWrapper = ({ fallback }: Props): JSX.Element => {
       </Head>
       <SWRConfig value={fallback && { fallback }}>
         <ThemeProvider>
-          <MintPolygonIDProofProvider>
-            <JoinModalProvider>
-              <GroupPage />
-            </JoinModalProvider>
-          </MintPolygonIDProofProvider>
+          <JoinModalProvider>
+            <GroupPage />
+          </JoinModalProvider>
         </ThemeProvider>
       </SWRConfig>
     </>

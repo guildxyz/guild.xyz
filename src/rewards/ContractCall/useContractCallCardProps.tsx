@@ -3,7 +3,7 @@ import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import { CardPropsHook } from "rewards/types"
-import { GuildPlatformWithOptionalId, PlatformName } from "types"
+import { GuildPlatformWithOptionalId } from "types"
 import { Chains } from "wagmiConfig/chains"
 import NftAvailabilityTags from "./components/NftAvailabilityTags"
 
@@ -26,7 +26,7 @@ const useContractCallCardProps: CardPropsHook = (
     .find((rp) => rp.guildPlatformId === guildPlatform.id)
 
   return {
-    type: "CONTRACT_CALL" as PlatformName,
+    type: "CONTRACT_CALL",
     name,
     image,
     info: rolePlatform && (
