@@ -57,6 +57,9 @@
     --success-subtle-foreground: var(--success);
 
     --banner: 240 4% 16%;
+    --banner-dark: 240 2% 12%;
+    --banner-foreground: 210 20% 98%;
+    --banner-opacity: 1;
 
     --muted: 0 0% 100%;
     --muted-foreground: 240 5% 46%;
@@ -256,6 +259,44 @@
   .invisible-menu-list > div::-webkit-scrollbar-thumb {
     width: 0;
     height: 0;
+  }
+
+  .prose-counters {
+    counter-reset: main-counter;
+  }
+
+  .prose-counters section:not(:first-child) {
+    counter-increment: main-counter;
+  }
+
+  .prose-counters ol li::marker {
+    content: counter(main-counter) ". ";
+  }
+
+  .prose-counters ol li ol {
+    counter-reset: sub-counter;
+  }
+
+  .prose-counters ol li ol li {
+    counter-increment: sub-counter;
+  }
+
+  .prose-counters ol li ol li::marker {
+    content: counter(main-counter) "." counter(sub-counter) " ";
+  }
+
+  .prose table {
+    @apply border
+  }
+
+  .prose table thead,
+  .prose table tr {
+    @apply border-border
+  }
+
+  .prose table th,
+  .prose table td {
+    @apply p-4
   }
 }
 

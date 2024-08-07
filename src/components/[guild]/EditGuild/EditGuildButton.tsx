@@ -17,6 +17,7 @@ const EditGuildButton = (): JSX.Element => {
       colorScheme={buttonColorScheme}
       color={textColor}
       onClick={onOpen}
+      ml="auto"
     />
   )
 }

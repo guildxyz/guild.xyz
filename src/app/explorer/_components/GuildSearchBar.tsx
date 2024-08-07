@@ -52,7 +52,7 @@ export const GuildSearchBar = () => {
         type="single"
         className="self-start sm:h-12 sm:rounded-r-xl sm:border sm:border-border-muted sm:border-l-0 sm:bg-card sm:px-4"
         size="sm"
-        variant="default"
+        variant="secondary"
         onValueChange={(value) => value && setOrder(value as Order)}
         value={order}
       >

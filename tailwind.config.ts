@@ -23,7 +23,11 @@ const config = {
         display: ["var(--font-dystopian,sans-serif)"],
       },
       colors: {
-        banner: "hsl(var(--banner))",
+        banner: {
+          DEFAULT: "hsl(var(--banner))",
+          dark: "hsl(var(--banner-dark))",
+          foreground: "hsl(var(--banner-foreground))"
+        },
         border: "hsl(var(--border))",
         "border-muted": "hsl(var(--border-muted))",
         input: "hsl(var(--input))",
@@ -154,6 +158,9 @@ const config = {
           active: "hsl(var(--farcaster-active))",
         },
       },
+      opacity: {
+        banner: "var(--banner-opacity)"
+      },
       keyframes: {
         "accordion-down": {
           from: { height: "0" },
@@ -190,10 +197,13 @@ const config = {
         popover: "1500",
         toast: "1700",
         tooltip: "1800", 
-      }
+      },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [
+    require("tailwindcss-animate"),
+    require('@tailwindcss/typography')
+  ],
 } satisfies Config
 
 export default config

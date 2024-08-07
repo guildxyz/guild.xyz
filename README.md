@@ -27,6 +27,9 @@ Open source interface for Guild.xyz -- a tool for platformless membership manage
 - Web3 related:
   - viem
   - wagmi for connection management
+- Data visualization, graphics:
+  - visx
+  - threejs
 - Deployment:
   - Vercel
 - Product analytics:
