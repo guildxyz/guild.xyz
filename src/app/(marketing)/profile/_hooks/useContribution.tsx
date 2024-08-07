@@ -1,6 +1,7 @@
 import { Guild, Role, Schemas } from "@guildxyz/types"
 import useSWR from "swr"
 import fetcher from "utils/fetcher"
+import { useProfile } from "./useProfile"
 
 export type ExtendedContribution = {
   guild: Guild
@@ -48,15 +49,14 @@ const contributionFetcher = async (url: string) => {
 //   ReturnType<typeof parsedContributionFetcher>
 // >[number]
 
-export const useContribution = ({
-  profileIdOrUsername,
-}: { profileIdOrUsername: number | string; fetchAll?: boolean }) => {
+export const useContribution = () => {
+  const { data: profileData } = useProfile()
   // const {id: userId} = useUserPublic()
   // const {data: memberships} = useSWR<Membership>(`/v2/users/${userId}/memberships`, fetcher)
   // console.log(memberships)
 
-  return useSWR(
-    `/v2/profiles/${profileIdOrUsername}/contributions`,
-    contributionFetcher
+  return useSWR<Schemas["ProfileContribution"][]>(
+    profileData ? `/v2/profiles/${profileData.username}/contributions` : null,
+    fetcher
   )
 }

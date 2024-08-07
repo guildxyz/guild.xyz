@@ -1,3 +1,4 @@
+import { useUserPublic } from "@/hooks/useUserPublic"
 import { MembershipResult, Role } from "@guildxyz/types"
 import useSWR from "swr"
 import fetcher from "utils/fetcher"
@@ -39,6 +40,7 @@ const roleFetcher = async (url: string) => {
   // return parsedContributionFetcher(linearMemberships)
 }
 
-export const useAllRoles = (userId: number) => {
+export const useAllUserRoles = () => {
+  const { id: userId } = useUserPublic()
   return useSWR(`/v2/users/${userId}/memberships`, roleFetcher)
 }

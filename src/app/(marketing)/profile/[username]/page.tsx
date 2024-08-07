@@ -35,7 +35,8 @@ import { OperatedGuildCard } from "../_components/OperatedGuildCard"
 import { ProfileSkeleton } from "../_components/ProfileSkeleton"
 import { RecentActivity } from "../_components/RecentActivity"
 import { useContribution } from "../_hooks/useContribution"
-import { contributionsAtom, profileAtom } from "./atoms"
+import { useProfile } from "../_hooks/useProfile"
+import { profileAtom } from "./atoms"
 
 // async function getProfileData(username: string) {
 //   const req = `https://api.guild.xyz/v2/profiles/${username}`
@@ -74,19 +75,20 @@ const Page = ({
     fetcherForSWR
   )
   const [profile, setProfile] = useAtom(profileAtom)
-  const [contributions, setContributions] = useAtom(contributionsAtom)
-  const fetchedContribution = useContribution({ profileIdOrUsername: username })
+  const p = useProfile()
+  console.log({ p })
+  // const [contributions, setContributions] = useAtom(contributionsAtom)
+  const contributions = useContribution()
+  // const fetchedContribution = useContribution({ profileIdOrUsername: username })
   const level = 0
 
   const { id: publicUserId } = useUserPublic()
-  const isProfileOwner = profile?.userId && publicUserId === profile.userId
-
-  useEffect(() => {
-    if (fetchedContribution.data) {
-      setContributions(fetchedContribution.data)
-    }
-  }, [fetchedContribution.data, setContributions])
-
+  const isProfileOwner = !!profile?.userId && publicUserId === profile.userId
+  // useEffect(() => {
+  //   if (fetchedContribution.data) {
+  //     setContributions(fetchedContribution.data)
+  //   }
+  // }, [fetchedContribution.data, setContributions])
   useEffect(() => {
     setProfile(fetchedProfile)
   }, [fetchedProfile, setProfile])
@@ -188,13 +190,11 @@ const Page = ({
           <OperatedGuildCard />
           <div className="mt-8 mb-3 flex items-center justify-between">
             <h2 className="font-bold text-lg">Top contributions</h2>
-            {isProfileOwner && profile && (
-              <EditContributions userId={profile.userId} profileId={profile.id} />
-            )}
+            {isProfileOwner && <EditContributions />}
           </div>
           <div className="grid grid-cols-1 gap-3">
-            {contributions?.map(({ role, guild, contribution }) => (
-              <ContributionCard role={role} guild={guild} key={contribution.id} />
+            {contributions.data?.map((contribution) => (
+              <ContributionCard contribution={contribution} key={contribution.id} />
             ))}
             <Button size="sm" variant="outline" className="place-self-center">
               See more involvement

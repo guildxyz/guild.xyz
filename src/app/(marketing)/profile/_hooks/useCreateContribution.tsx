@@ -3,6 +3,7 @@ import { Schemas } from "@guildxyz/types"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 // import { useSetAtom } from "jotai"
 import fetcher from "utils/fetcher"
+import { useProfile } from "./useProfile"
 // import { profileAtom } from "../[username]/atoms"
 
 // export type IdOrUsername = {
@@ -14,27 +15,23 @@ export interface ProfileId {
 }
 export type EditProfilePayload = Schemas["ProfileContributionUpdate"]
 
-export const useCreateContribution = ({
-  method = "POST",
-  profileId,
-}: { method?: "POST" | "DELETE" | "PUT" } & ProfileId) => {
+export const useCreateContribution = () => {
   const { toast } = useToast()
-  // const setProfile = useSetAtom(profileAtom)
+  const { data: profile } = useProfile()
 
-  const updateProfile = async (signedValidation: SignedValidation) => {
-    // const { profileId } = JSON.parse(
-    //   signedValidation.signedPayload
-    // ) as EditProfilePayload
-    return fetcher(`/v2/profiles/${profileId}/contributions`, {
-      method,
-      ...signedValidation,
-    })
+  const update = async (signedValidation: SignedValidation) => {
+    return fetcher(
+      `/v2/profiles/${(profile as Schemas["Profile"]).id}/contributions`,
+      {
+        method: "POST",
+        ...signedValidation,
+      }
+    )
   }
 
-  const submitWithSign = useSubmitWithSign<Schemas["Profile"]>(updateProfile, {
+  const submitWithSign = useSubmitWithSign<Schemas["Profile"]>(update, {
     onSuccess: (response) => {
       console.log("onSuccess", response)
-      // setProfile(response)
       toast({
         variant: "success",
         title: "Successfully updated contributions",
@@ -51,6 +48,7 @@ export const useCreateContribution = ({
   })
   return {
     ...submitWithSign,
-    onSubmit: (payload: EditProfilePayload) => submitWithSign.onSubmit(payload),
+    onSubmit: (payload: EditProfilePayload) =>
+      profile && submitWithSign.onSubmit(payload),
   }
 }

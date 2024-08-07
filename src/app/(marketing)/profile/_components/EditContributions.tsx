@@ -27,19 +27,17 @@ import { Guild, Schemas } from "@guildxyz/types"
 import { Pencil } from "@phosphor-icons/react"
 import { AvatarFallback } from "@radix-ui/react-avatar"
 import { DialogDescription } from "@radix-ui/react-dialog"
-import { useAtom } from "jotai"
 import { FormProvider, useForm } from "react-hook-form"
 import useSWR from "swr"
 import fetcher from "utils/fetcher"
-import { contributionsAtom } from "../[username]/atoms"
-import { useAllRoles } from "../_hooks/useAllRoles"
-import { ProfileId, useEditContribution } from "../_hooks/useEditContribution"
+import { useAllUserRoles } from "../_hooks/useAllUserRoles"
+import { useContribution } from "../_hooks/useContribution"
+import { useCreateContribution } from "../_hooks/useCreateContribution"
 import { CardWithGuildLabel } from "./CardWithGuildLabel"
 
 const guildFetcher = (urls: string[]) => {
   return Promise.all(urls.map((url) => fetcher(url) as Promise<Guild>))
 }
-
 const useYourVerifiedGuild = () => {
   const yourGuilds = useYourGuilds()
   const requests = yourGuilds.data
@@ -48,30 +46,55 @@ const useYourVerifiedGuild = () => {
   return { guilds: useSWR(requests, guildFetcher), baseGuilds: yourGuilds }
 }
 
-export const EditContributions = ({
-  userId,
-  profileId,
-}: ProfileId & Pick<Schemas["Profile"], "userId">) => {
-  const form = useForm<
-    Schemas["ProfileContributionUpdate"] & {
-      firstContribution: Schemas["ProfileContributionUpdate"]
-      secondContribution: Schemas["ProfileContributionUpdate"]
-      thirdContribution: Schemas["ProfileContributionUpdate"]
-    }
-  >({
-    // resolver: zodResolver(profileSchema),
-    // defaultValues: {
-    //   ...contribution,
-    // },
+const EditContributionCard = ({
+  contribution,
+}: { contribution: Schemas["ProfileContribution"] }) => {
+  const { data: guild } = useSWR(`/v2/guilds/${contribution.guildId}`, fetcher)
+  const { data: roles } = useAllUserRoles()
+  if (!guild) return
+
+  return (
+    <CardWithGuildLabel guild={guild}>
+      <div className="flex flex-col gap-4 p-6">
+        <FormLabel className="font-extrabold text-muted-foreground text-xs uppercase">
+          TOP ROLE
+        </FormLabel>
+        <Select
+          defaultValue={contribution.roleId.toString()}
+          onValueChange={(value) => {
+            console.log("edit to", value)
+            // editContribution.onSubmit()
+            // .mutate((data) => {
+            // data[i] =
+            // })
+          }}
+          // defaultValue={field.value?.role.id.toString()}
+        >
+          <FormControl>
+            <SelectTrigger>
+              <SelectValue placeholder="Select from your guilds" />
+            </SelectTrigger>
+          </FormControl>
+          <SelectContent>
+            {roles?.map((data) => (
+              <SelectItem key={data.id} value={data.id.toString()}>
+                {data.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+    </CardWithGuildLabel>
+  )
+}
+
+export const EditContributions = () => {
+  const contributions = useContribution()
+  console.log(contributions)
+  const form = useForm<Schemas["ProfileContributionUpdate"]>({
     mode: "onTouched",
   })
-
-  // const guilds = allRoles.data?.reduce<ExtendedContribution[]>(
-  //   (acc, cur) =>
-  //     acc.some(({ guild }) => guild.id === cur.guild.id) ? acc : [...acc, cur],
-  //   []
-  // )
-  const allRoles = useAllRoles(userId)
+  const allRoles = useAllUserRoles()
   const {
     guilds: { data: guildData },
     baseGuilds,
@@ -87,19 +110,7 @@ export const EditContributions = ({
   const roles = allRoles.data?.filter(
     (role) => role.guildId.toString() === selectedId
   )
-  // const guilds: Guild[] = []
-  // selectedId === undefined
-  //   ? undefined
-  //   : guilds?.filter((d) => d.guild.id === parseInt(selectedId))
-
-  // useEffect(() => {
-  //   if (roles === undefined) {
-  //     form.setValue("guildId", undefined)
-  //   }
-  // }, [roles, form])
-
-  const [contributions, setContributions] = useAtom(contributionsAtom)
-  const editContribution = useEditContribution({ profileId })
+  const editContribution = useCreateContribution()
   async function onSubmit(values: Schemas["ProfileContributionUpdate"]) {
     editContribution.onSubmit(values)
     console.log("edit contributions submit", values)
@@ -122,60 +133,12 @@ export const EditContributions = ({
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <DialogBody className="gap-7">
               <div className="flex flex-col gap-3">
-                {(
-                  [
-                    "firstContribution",
-                    "secondContribution",
-                    "thirdContribution",
-                  ] as const
-                ).map((fieldName) => (
-                  <FormField
-                    control={form.control}
-                    name={fieldName}
-                    key={fieldName}
-                    render={({ field }) => {
-                      const guild = guilds?.find(
-                        (guild) => field.value && guild.id === field.value.guildId
-                      )
-                      if (!guild) return <></>
-                      const roles = allRoles.data?.filter(
-                        (role) => role.guildId === guild.id
-                      )
-
-                      return (
-                        <FormItem>
-                          <CardWithGuildLabel guild={guild}>
-                            <div className="flex flex-col gap-4 p-6">
-                              <FormLabel className="font-extrabold text-muted-foreground text-xs uppercase">
-                                TOP ROLE
-                              </FormLabel>
-                              <Select
-                                onValueChange={field.onChange}
-                                defaultValue={field.value?.toString()}
-                              >
-                                <FormControl>
-                                  <SelectTrigger>
-                                    <SelectValue placeholder="Select from your guilds" />
-                                  </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                  {roles?.map((data) => (
-                                    <SelectItem
-                                      key={data.id}
-                                      value={data.id.toString()}
-                                    >
-                                      {data.name}
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                            </div>
-                          </CardWithGuildLabel>
-                        </FormItem>
-                      )
-                    }}
-                  />
-                ))}
+                {contributions.data?.slice(0, 3).map((contribution, i) => {
+                  // const roles = allRoles.data?.filter(
+                  //   (role) => role.guildId === guild.id
+                  // )
+                  return <EditContributionCard contribution={contribution} />
+                })}
               </div>
               <div className="">
                 <h3 className="mb-3 font-semibold text-muted-foreground">
@@ -224,10 +187,10 @@ export const EditContributions = ({
                     name="roleId"
                     render={({ field }) => (
                       <FormItem className="pb-2">
-                        <FormLabel aria-disabled={!roles}>Role</FormLabel>
+                        <FormLabel aria-disabled={!roles?.length}>Role</FormLabel>
                         <Select
                           onValueChange={field.onChange}
-                          disabled={!roles}
+                          disabled={!roles?.length}
                           defaultValue={field.value?.toString()}
                         >
                           <FormControl>
