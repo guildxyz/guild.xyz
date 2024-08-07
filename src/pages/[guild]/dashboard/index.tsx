@@ -56,7 +56,7 @@ const DashboardPage = () => {
       </LayoutHero>
 
       <LayoutMain>
-        <GuildTabs activeTab="DASHBOARD" />
+        <GuildTabs activeTab="SETTINGS" />
 
         <Card px={{ base: 5, md: 6 }} py={{ base: 6, md: 7 }} mb={4}>
           <EditGuildFormComponent />

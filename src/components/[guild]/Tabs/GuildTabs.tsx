@@ -8,7 +8,7 @@ import TabButton from "./components/TabButton"
 
 type Props = {
   activeTab:
-    | "DASHBOARD"
+    | "SETTINGS"
     | "EVENTS"
     | "LEADERBOARD"
     | "MEMBERS"
@@ -40,7 +40,7 @@ const GuildTabs = ({ activeTab, ...rest }: Props): JSX.Element => {
 
   return (
     <Tabs {...rest}>
-      <TabButton href={`/${urlName}/dashboard`} isActive={activeTab === "DASHBOARD"}>
+      <TabButton href={`/${urlName}/dashboard`} isActive={activeTab === "SETTINGS"}>
         Settings
       </TabButton>
 
