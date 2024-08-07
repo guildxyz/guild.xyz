@@ -2,6 +2,7 @@ import { useToast } from "@/components/ui/hooks/useToast"
 import { Schemas } from "@guildxyz/types"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import fetcher from "utils/fetcher"
+import { useContribution } from "./useContribution"
 import { useProfile } from "./useProfile"
 
 export type EditProfilePayload = Schemas["ProfileContributionUpdate"]
@@ -9,6 +10,7 @@ export type EditProfilePayload = Schemas["ProfileContributionUpdate"]
 export const useCreateContribution = () => {
   const { toast } = useToast()
   const { data: profile } = useProfile()
+  const contribution = useContribution()
 
   const update = async (signedValidation: SignedValidation) => {
     return fetcher(
@@ -20,13 +22,19 @@ export const useCreateContribution = () => {
     )
   }
 
-  const submitWithSign = useSubmitWithSign<Schemas["Profile"]>(update, {
+  const submitWithSign = useSubmitWithSign<Schemas["ProfileContribution"]>(update, {
     onSuccess: (response) => {
       console.log("onSuccess", response)
-      toast({
-        variant: "success",
-        title: "Successfully created contribution",
+      contribution.mutate((prev) => {
+        // WARNING: should we validate here?
+        if (!prev) return
+        prev.push(response)
+        return prev
       })
+      // toast({
+      //   variant: "success",
+      //   title: "Successfully created contribution",
+      // })
     },
     onError: (response) => {
       console.log("onError", response)

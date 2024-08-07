@@ -2,6 +2,7 @@ import { useToast } from "@/components/ui/hooks/useToast"
 import { Schemas } from "@guildxyz/types"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import fetcher from "utils/fetcher"
+import { useContribution } from "./useContribution"
 import { useProfile } from "./useProfile"
 
 export const useUpdateContribution = ({
@@ -9,6 +10,7 @@ export const useUpdateContribution = ({
 }: { contributionId: Schemas["ProfileContribution"]["id"] }) => {
   const { toast } = useToast()
   const { data: profile } = useProfile()
+  const contribution = useContribution()
 
   const update = async (signedValidation: SignedValidation) => {
     return fetcher(
@@ -20,13 +22,24 @@ export const useUpdateContribution = ({
     )
   }
 
-  const submitWithSign = useSubmitWithSign<Schemas["Profile"]>(update, {
+  const submitWithSign = useSubmitWithSign<Schemas["ProfileContribution"]>(update, {
     onSuccess: (response) => {
       console.log("onSuccess", response)
-      toast({
-        variant: "success",
-        title: "Successfully updated contribution",
+      contribution.mutate((prev) => {
+        if (!prev || !contribution.data) return
+        // WARNING: should we validate here?
+        const toBeMutatedIndex = prev?.findIndex(
+          ({ id }) =>
+            id ===
+            (contribution.data as unknown as Schemas["ProfileContribution"]).id
+        )!
+        prev[toBeMutatedIndex] = response
+        return prev
       })
+      // toast({
+      //   variant: "success",
+      //   title: "Successfully updated contribution",
+      // })
     },
     onError: (response) => {
       console.log("onError", response)

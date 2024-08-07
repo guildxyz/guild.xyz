@@ -76,7 +76,6 @@ const EditContributionCard = ({
         <Select
           defaultValue={contribution.roleId.toString()}
           onValueChange={(value) => {
-            console.log("edit to", value)
             editContribution.onSubmit({ roleId: parseInt(value), guildId: guild.id })
           }}
         >
@@ -136,7 +135,10 @@ export const EditContributions = () => {
         <DialogBody className="gap-7">
           <div className="flex flex-col gap-3">
             {contributions.data?.slice(0, 3).map((contribution) => (
-              <EditContributionCard contribution={contribution} />
+              <EditContributionCard
+                contribution={contribution}
+                key={contribution.id}
+              />
             ))}
           </div>
           <div className="">
@@ -208,7 +210,7 @@ export const EditContributions = () => {
                   if (contributions.data && contributions.data.length >= 3) {
                     toast({
                       title: "Cannot add more than 3 contributions",
-                      description: "Please remove one first before adding one",
+                      description: "Please remove one first before adding a new one",
                       variant: "error",
                     })
                     return
