@@ -12,13 +12,13 @@ const StickyAction = ({ children }: PropsWithChildren) => {
         className={cn(
           "fixed inset-x-0 top-0 z-10 h-0 bg-card shadow-md transition-all duration-200 dark:bg-background",
           {
-            "h-16": isStuck,
+            "sm:h-16": isStuck,
           }
         )}
       >
         <LayoutContainer
-          className={cn("my-3 hidden items-center justify-end", {
-            flex: isStuck,
+          className={cn("my-3 flex items-center justify-end sm:hidden", {
+            "sm:flex": isStuck,
           })}
         >
           {children}
