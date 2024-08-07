@@ -7,8 +7,9 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/ToggleGroup"
 import { Circle, Rocket } from "@phosphor-icons/react"
 import { useState } from "react"
 
+const ACTIVITY_FILTERS = ["All", "Editing", "Join", "NFTs"] as const
+
 export const RecentActivity = () => {
-  const ACTIVITY_FILTERS = ["All", "Editing", "Join", "NFTs"] as const
   const [activityFilter, setActivityFilter] =
     useState<(typeof ACTIVITY_FILTERS)[number]>("All")
 

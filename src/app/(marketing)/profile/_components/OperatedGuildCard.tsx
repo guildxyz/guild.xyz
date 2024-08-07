@@ -2,9 +2,19 @@ import { CheckMark } from "@/components/CheckMark"
 import { Avatar, AvatarFallback } from "@/components/ui/Avatar"
 import { Card } from "@/components/ui/Card"
 import { Skeleton } from "@/components/ui/Skeleton"
+import {
+  ArrowFatUp,
+  Calendar,
+  FolderSimpleUser,
+  Icon,
+  ShootingStar,
+  Star,
+} from "@phosphor-icons/react"
 import { User } from "@phosphor-icons/react/dist/ssr"
 import { AvatarImage } from "@radix-ui/react-avatar"
+import { Separator } from "@radix-ui/react-separator"
 import Image from "next/image"
+import { PropsWithChildren } from "react"
 
 export const OperatedGuildCard = () => {
   return (
@@ -36,18 +46,49 @@ export const OperatedGuildCard = () => {
           </h3>
         </div>
       </div>
-      <div className="grid grow justify-stretch gap-2 px-6 py-5 md:grid-cols-2">
-        {Array.from({ length: 6 }, (_, i) => (
-          <Card
-            className="flex items-center gap-2 bg-secondary p-5 font-extrabold text-lg"
-            key={i}
-          >
-            <User weight="bold" className="min-w-min" />
-            123k
-            <span className="text-muted-foreground">members</span>
-          </Card>
-        ))}
+      <Separator orientation="vertical" className="bg-border-muted" />
+      <div className="grid grow justify-stretch gap-2 p-5 md:grid-cols-2">
+        <OperatedGuildDetailCard Icon={User}>
+          <EmphasizedData>123k</EmphasizedData>
+          members
+        </OperatedGuildDetailCard>
+        <OperatedGuildDetailCard Icon={ArrowFatUp}>
+          Avg level of members:
+          <EmphasizedData>3.6</EmphasizedData>
+        </OperatedGuildDetailCard>
+        <OperatedGuildDetailCard Icon={FolderSimpleUser}>
+          <EmphasizedData>13</EmphasizedData>
+          roles
+        </OperatedGuildDetailCard>
+        <OperatedGuildDetailCard Icon={Star}>
+          <EmphasizedData>20</EmphasizedData>
+          rewards in total
+        </OperatedGuildDetailCard>
+        <OperatedGuildDetailCard Icon={ShootingStar}>
+          In the top
+          <EmphasizedData>5%</EmphasizedData>
+          of guilds
+        </OperatedGuildDetailCard>
+        <OperatedGuildDetailCard Icon={Calendar}>
+          Created
+          <EmphasizedData>a year</EmphasizedData>
+          ago
+        </OperatedGuildDetailCard>
       </div>
     </Card>
   )
 }
+
+const OperatedGuildDetailCard = ({
+  Icon,
+  children,
+}: PropsWithChildren<{ Icon: Icon }>) => (
+  <Card className="flex items-center gap-2 rounded-xl bg-secondary p-5 font-bold">
+    <Icon weight="bold" className="min-w-min" />
+    <span className="text-muted-foreground">{children}</span>
+  </Card>
+)
+
+const EmphasizedData = ({ children }: PropsWithChildren) => (
+  <span className="font-black text-foreground"> {children} </span>
+)

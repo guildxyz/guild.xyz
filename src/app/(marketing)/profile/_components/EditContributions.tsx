@@ -23,7 +23,8 @@ import {
 import { useToast } from "@/components/ui/hooks/useToast"
 import { useYourGuilds } from "@/hooks/useYourGuilds"
 import { Guild, Schemas } from "@guildxyz/types"
-import { Pencil, X } from "@phosphor-icons/react"
+import { X } from "@phosphor-icons/react"
+import { PencilSimple } from "@phosphor-icons/react"
 import { AvatarFallback } from "@radix-ui/react-avatar"
 import { DialogDescription } from "@radix-ui/react-dialog"
 import { useState } from "react"
@@ -126,8 +127,8 @@ export const EditContributions = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="solid" size="icon" className="rounded-full">
-          <Pencil weight="bold" />
+        <Button variant="solid" size="icon-sm" className="rounded-full">
+          <PencilSimple weight="bold" />
         </Button>
       </DialogTrigger>
       <DialogContent size="lg" className="bg-background">
