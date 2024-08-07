@@ -10,7 +10,7 @@ export const CardWithGuildLabel = ({
 }: PropsWithChildren<{ guild: Guild }>) => {
   return (
     <Card
-      className="relative flex"
+      className="relative flex border-2"
       style={{ borderColor: guild.theme.color, background: guild.theme.color }}
     >
       <div
@@ -33,7 +33,7 @@ export const CardWithGuildLabel = ({
           <CheckMark className="sm:hidden" />
         </div>
       </div>
-      <div className="m-0.5 mt-9 size-full rounded-2xl bg-card sm:m-0.5 sm:ml-8">
+      <div className="mt-9 size-full rounded-2xl bg-card sm:mt-0 sm:ml-8">
         {children}
       </div>
     </Card>

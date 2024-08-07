@@ -1,40 +1,18 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
 import { AvatarGroup } from "@/components/ui/AvatarGroup"
 import { Button } from "@/components/ui/Button"
-import { Card } from "@/components/ui/Card"
 import { Separator } from "@/components/ui/Separator"
 import { Guild, Role } from "@guildxyz/types"
 import { CaretDown, Users } from "@phosphor-icons/react/dist/ssr"
+import { CardWithGuildLabel } from "./CardWithGuildLabel"
 
 export const ContributionCardView = ({
   guild,
   role,
 }: { guild: Guild; role: Role }) => {
   return (
-    <Card
-      className="flex flex-col border-2 md:flex-row"
-      style={{ borderColor: guild.theme.color }}
-    >
-      <div
-        className="relative flex h-10 self-start rounded-br-2xl bg-border px-3 md:h-full md:w-10 md:rounded-br-none"
-        style={{ background: guild.theme.color }}
-      >
-        <div className="md:-translate-x-1/2 md:-rotate-90 flex items-center gap-1 md:absolute md:bottom-1/2 md:left-1/2 md:translate-y-1/2">
-          <Avatar size="sm">
-            <AvatarImage
-              src={guild.imageUrl}
-              alt="guild avatar"
-              width={32}
-              height={32}
-            />
-            <AvatarFallback />
-          </Avatar>
-          <div className="max-w-12 truncate font-bold font-display">
-            {guild.name}
-          </div>
-        </div>
-      </div>
-      <div className="grid w-full grid-cols-[auto_1fr] items-center gap-4 p-6 md:grid-cols-[auto_auto_1fr]">
+    <CardWithGuildLabel guild={guild}>
+      <div className="grid grid-cols-[auto_1fr] items-center gap-4 p-6 md:grid-cols-[auto_auto_1fr]">
         <Avatar className="size-16 sm:size-20">
           <AvatarImage src={role.imageUrl} alt={"role"} width={64} height={64} />
           <AvatarFallback />
@@ -65,6 +43,6 @@ export const ContributionCardView = ({
           </Button>
         </div>
       </div>
-    </Card>
+    </CardWithGuildLabel>
   )
 }
