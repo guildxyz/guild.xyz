@@ -113,21 +113,20 @@ export const EditProfile = (
           Edit profile
         </Button>
       </DialogTrigger>
-      <DialogContent size="lg" className="bg-background">
-        <DialogHeader>
-          <DialogTitle>Edit profile</DialogTitle>
-          <DialogDescription />
-          <DialogCloseButton />
-        </DialogHeader>
-        <FormProvider {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
-            <DialogBody>
+      <FormProvider {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <DialogContent size="lg" className="bg-background" scrollBody>
+            <DialogHeader>
+              <DialogTitle>Edit profile</DialogTitle>
+              <DialogCloseButton />
+            </DialogHeader>
+            <DialogBody scroll>
               <div className="relative mb-20">
                 <FormField
                   control={form.control}
                   name="backgroundImageUrl"
                   render={({ field }) => (
-                    <FormItem className="relative flex h-32 items-center justify-center overflow-hidden rounded-xl border">
+                    <FormItem className="relative flex h-32 items-center justify-center overflow-hidden rounded-xl">
                       <div className="absolute inset-0 size-full">
                         {field.value ? (
                           <Image
@@ -163,7 +162,7 @@ export const EditProfile = (
                       variant="unstyled"
                       type="button"
                       className={cn(
-                        "-bottom-2 absolute left-4 size-28 translate-y-1/2 rounded-full border-2 border-dotted",
+                        "-bottom-2 absolute left-4 size-28 translate-y-1/2 rounded-full border border-dotted",
                         { "border-solid": field.value }
                       )}
                       {...getRootProps()}
@@ -216,7 +215,7 @@ export const EditProfile = (
                 control={form.control}
                 name="bio"
                 render={({ field }) => (
-                  <FormItem className="">
+                  <FormItem>
                     <FormLabel>Bio</FormLabel>
                     <FormControl>
                       <Textarea
@@ -229,16 +228,20 @@ export const EditProfile = (
                   </FormItem>
                 )}
               />
+              <Separator className="mt-8 mb-4 bg-border-muted" />
+              <div>
+                <p className="mb-2 font-medium">Danger zone</p>
+                <Button
+                  variant="subtle"
+                  colorScheme="destructive"
+                  type="submit"
+                  size="sm"
+                >
+                  Delete profile
+                </Button>
+              </div>
             </DialogBody>
-            <DialogFooter>
-              <Button
-                colorScheme="destructive"
-                type="button"
-                isLoading={deleteProfile.isLoading}
-                onClick={deleteProfileHandler}
-              >
-                Delete profile
-              </Button>
+            <DialogFooter className="pt-5 pb-7">
               <Button
                 isLoading={editProfile.isLoading}
                 colorScheme="success"
@@ -248,9 +251,9 @@ export const EditProfile = (
                 Save
               </Button>
             </DialogFooter>
-          </form>
-        </FormProvider>
-      </DialogContent>
+          </DialogContent>
+        </form>
+      </FormProvider>
     </Dialog>
   )
 }
