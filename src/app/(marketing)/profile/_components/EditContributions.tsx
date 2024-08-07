@@ -50,7 +50,10 @@ const useYourVerifiedGuild = () => {
 const EditContributionCard = ({
   contribution,
 }: { contribution: Schemas["ProfileContribution"] }) => {
-  const { data: guild } = useSWR(`/v2/guilds/${contribution.guildId}`, fetcher)
+  const { data: guild } = useSWR<Guild>(
+    `/v2/guilds/${contribution.guildId}`,
+    fetcher
+  )
   const { data: allRoles } = useAllUserRoles()
   const editContribution = useUpdateContribution({ contributionId: contribution.id })
   const deleteContribution = useDeleteContribution({
@@ -119,7 +122,6 @@ export const EditContributions = () => {
     (role) => role.guildId.toString() === selectedId
   )
   const createContribution = useCreateContribution()
-  console.log(contributions.data)
 
   return (
     <Dialog>
@@ -150,7 +152,13 @@ export const EditContributions = () => {
             <Card className="flex flex-col gap-2 border border-dashed bg-card-secondary p-5">
               <div className="pb-2">
                 <Label>Guild</Label>
-                <Select onValueChange={setGuildId} value={guildId} key={guildId}>
+                <Select
+                  onValueChange={(value) => {
+                    setGuildId(value)
+                    setRoleId("")
+                  }}
+                  value={guildId}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Select from your guilds" />
                   </SelectTrigger>
@@ -177,7 +185,6 @@ export const EditContributions = () => {
               <div className="pb-2">
                 <Label aria-disabled={!roles?.length}>Role</Label>
                 <Select
-                  key={roleId}
                   onValueChange={setRoleId}
                   value={roleId}
                   disabled={!roles?.length || !guildId}

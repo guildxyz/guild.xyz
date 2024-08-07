@@ -24,7 +24,6 @@ export const useCreateContribution = () => {
 
   const submitWithSign = useSubmitWithSign<Schemas["ProfileContribution"]>(update, {
     onSuccess: (response) => {
-      console.log("onSuccess", response)
       contribution.mutate(
         (prev) => {
           // WARNING: should we validate here?
@@ -40,7 +39,6 @@ export const useCreateContribution = () => {
       })
     },
     onError: (response) => {
-      console.log("onError", response)
       toast({
         variant: "error",
         title: "Failed to create contribution",

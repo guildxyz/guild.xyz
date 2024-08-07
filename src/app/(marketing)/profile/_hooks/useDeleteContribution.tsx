@@ -24,7 +24,6 @@ export const useDeleteContribution = ({
 
   const submitWithSign = useSubmitWithSign<object>(update, {
     onSuccess: (response) => {
-      console.log("onSuccess", response)
       contribution.mutate(
         (prev) => {
           if (!prev || !contribution.data) return
@@ -39,7 +38,6 @@ export const useDeleteContribution = ({
       })
     },
     onError: (response) => {
-      console.log("onError", response)
       toast({
         variant: "error",
         title: "Failed to deleted contribution",

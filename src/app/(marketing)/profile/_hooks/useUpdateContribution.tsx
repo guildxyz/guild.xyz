@@ -24,7 +24,6 @@ export const useUpdateContribution = ({
 
   const submitWithSign = useSubmitWithSign<Schemas["ProfileContribution"]>(update, {
     onSuccess: (response) => {
-      console.log("onSuccess", response)
       contribution.mutate(
         (prev) => {
           if (!prev || !contribution.data) return
@@ -44,7 +43,6 @@ export const useUpdateContribution = ({
       })
     },
     onError: (response) => {
-      console.log("onError", response)
       toast({
         variant: "error",
         title: "Failed to update contribution",
