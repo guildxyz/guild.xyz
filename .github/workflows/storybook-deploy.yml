@@ -3,7 +3,6 @@ name: Build and Publish storybook to GitHub Pages
 on:
   push:
     branches:
-      - "add-storybook-gh-action"
       - "main"
 
 permissions:
