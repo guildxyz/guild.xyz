@@ -16,7 +16,7 @@ const AddSolutionsAndEditGuildButton = () => {
   const buttonProps = {
     ...(!isStickyActionStuck && !isMobile
       ? {
-          color: textColor,
+          color: `${textColor} !important`,
           colorScheme: buttonColorScheme,
         }
       : colorMode === "light"
