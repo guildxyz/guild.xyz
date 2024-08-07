@@ -1,16 +1,15 @@
 import { CheckMark } from "@/components/CheckMark"
 import { LayoutTitle } from "@/components/Layout"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
-import { Badge } from "@/components/ui/Badge"
 import { Skeleton } from "@/components/ui/Skeleton"
 import { cn } from "@/lib/utils"
-import { Users } from "@phosphor-icons/react/dist/ssr"
+import MemberCount from "./RoleCard/components/MemberCount"
 import { useThemeContext } from "./ThemeContext"
 import useGuild from "./hooks/useGuild"
 
 const GuildPageImageAndName = () => {
   const { imageUrl, name, tags, memberCount } = useGuild()
-  const { avatarBg } = useThemeContext()
+  const { avatarBg, textColor, buttonColorScheme } = useThemeContext()
 
   return (
     <>
@@ -32,12 +31,12 @@ const GuildPageImageAndName = () => {
           )}
         </div>
 
-        <Badge className="text-banner-foreground">
-          <Users weight="bold" />
-          {new Intl.NumberFormat("en", { notation: "compact" }).format(
-            memberCount ?? 0
-          )}
-        </Badge>
+        <MemberCount
+          memberCount={memberCount ?? 0}
+          bgColor={`${buttonColorScheme}.200`}
+          color={textColor}
+          maxW="max-content"
+        />
       </div>
     </>
   )
