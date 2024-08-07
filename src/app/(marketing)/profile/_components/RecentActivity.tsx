@@ -57,9 +57,6 @@ export const RecentActivity = () => {
                   className="hidden size-1.5 text-muted-foreground sm:block"
                   weight="fill"
                 />
-                <Badge colorScheme="blue" size="sm">
-                  +5 XP
-                </Badge>
               </div>
             </div>
           </Card>

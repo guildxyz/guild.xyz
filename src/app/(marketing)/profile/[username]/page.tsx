@@ -21,11 +21,9 @@ import { useAtom } from "jotai"
 import { useEffect } from "react"
 import useSWR from "swr"
 import { fetcherForSWR } from "utils/fetcher"
-import { CircularProgressBar } from "../_components/CircularProgressBar"
 import { ContributionCard } from "../_components/ContributionCard"
 import { EditContributions } from "../_components/EditContributions"
 import { EditProfile } from "../_components/EditProfile"
-import { LevelBadge } from "../_components/LevelBadge"
 import { OperatedGuildCard } from "../_components/OperatedGuildCard"
 import { ProfileSkeleton } from "../_components/ProfileSkeleton"
 import { RecentActivity } from "../_components/RecentActivity"
@@ -68,7 +66,6 @@ const Page = ({
     fetcherForSWR
   )
   const [profile, setProfile] = useAtom(profileAtom)
-  const level = 0
 
   useEffect(() => {
     setProfile(fetchedProfile)
@@ -109,8 +106,6 @@ const Page = ({
                   <Skeleton className="size-full" />
                 </AvatarFallback>
               </Avatar>
-              <CircularProgressBar progress={0.1} />
-              <LevelBadge level={level} className="absolute right-0 bottom-0" />
             </div>
             <h1 className="text-center font-bold text-4xl leading-normal tracking-tight">
               {profile.name}
@@ -140,33 +135,6 @@ const Page = ({
               </div>
             </div>
           </div>
-          {/* <h2 className="mb-3 font-bold text-lg">Experience</h2>
-          <div className="mb-16 grid grid-cols-1 gap-3 md:grid-cols-2">
-            <Card className="p-6">
-              <div className="grid grid-cols-[auto_1fr] grid-rows-[auto_auto_auto] items-center gap-x-3 gap-y-2">
-                <LevelBadge
-                  level={level}
-                  className="row-span-3 size-14 self-start justify-self-center"
-                />
-                <div className="flex flex-col justify-between gap-2 sm:flex-row">
-                  <h3 className="font-bold">Champion</h3>
-                  <p className="text-muted-foreground">1322 / 9999 XP</p>
-                </div>
-                <Progress value={77} />
-                <p className="text-muted-foreground">
-                  This is a description that perfectly matches the 80 character
-                  description limit.
-                </p>
-              </div>
-            </Card>
-            <Card className="space-y-4 p-6">
-              <div className="flex flex-col items-start justify-between gap-2 sm:flex-row">
-                <h3 className="font-bold">Engagement this month</h3>
-                <Badge colorScheme="blue">+72 XP</Badge>
-              </div>
-              <ActivityChart />
-            </Card>
-          </div> */}
           <h2 className="mb-3 font-bold text-lg">Operated guilds</h2>
           <OperatedGuildCard />
           <div className="mt-8 mb-3 flex items-center justify-between">
