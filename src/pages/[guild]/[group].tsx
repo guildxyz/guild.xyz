@@ -10,7 +10,6 @@ import {
 import { StickyAction } from "@/components/[guild]/StickyAction"
 import { Center, Heading, Spinner } from "@chakra-ui/react"
 import AccessHub from "components/[guild]/AccessHub"
-import { useAccessedGuildPlatforms } from "components/[guild]/AccessHub/AccessHub"
 import { GroupPageImageAndName } from "components/[guild]/GroupPageImageAndName"
 import { GuildPageBanner } from "components/[guild]/GuildPageBanner"
 import { JoinButton } from "components/[guild]/JoinButton"
@@ -27,19 +26,12 @@ import useMembership from "components/explorer/hooks/useMembership"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
 import Head from "next/head"
-import { useState } from "react"
 import { MintPolygonIDProofProvider } from "rewards/PolygonID/components/MintPolygonIDProofProvider"
 import { SWRConfig } from "swr"
 import { Guild } from "types"
 import fetcher from "utils/fetcher"
 import parseDescription from "utils/parseDescription"
 
-const DynamicEditCampaignButton = dynamic(
-  () => import("components/[guild]/[group]/EditCampaignButton"),
-  {
-    ssr: false,
-  }
-)
 const DynamicAddAndOrderRoles = dynamic(
   () => import("components/[guild]/AddAndOrderRoles"),
   {
@@ -66,17 +58,14 @@ const DynamicRecheckAccessesAndLeaveButton = dynamic(
 )
 
 const GroupPage = (): JSX.Element => {
-  const { imageUrl: guildImageUrl, isDetailed } = useGuild()
+  const { isDetailed } = useGuild()
 
   const group = useRoleGroup()
 
   const { isAdmin } = useGuildPermission()
   const { isMember } = useMembership()
 
-  const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
-  const [isAddRoleStuck, setIsAddRoleStuck] = useState(false)
-
-  const accessedGuildPlatforms = useAccessedGuildPlatforms(group.id)
+  const { localThemeColor } = useThemeContext()
 
   return (
     <>
