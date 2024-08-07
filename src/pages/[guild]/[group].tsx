@@ -1,17 +1,26 @@
-import { Box, Center, Flex, HStack, Heading, Spinner } from "@chakra-ui/react"
+import { Header } from "@/components/Header"
+import {
+  Layout,
+  LayoutBanner,
+  LayoutContainer,
+  LayoutHeadline,
+  LayoutHero,
+  LayoutMain,
+} from "@/components/Layout"
+import { StickyAction } from "@/components/[guild]/StickyAction"
+import { Center, Heading, Spinner } from "@chakra-ui/react"
 import AccessHub from "components/[guild]/AccessHub"
 import { useAccessedGuildPlatforms } from "components/[guild]/AccessHub/AccessHub"
-import JoinButton from "components/[guild]/JoinButton"
+import { GroupPageImageAndName } from "components/[guild]/GroupPageImageAndName"
+import { GuildPageBanner } from "components/[guild]/GuildPageBanner"
+import { JoinButton } from "components/[guild]/JoinButton"
 import JoinModalProvider from "components/[guild]/JoinModal/JoinModalProvider"
-import LeaveButton from "components/[guild]/LeaveButton"
 import Roles from "components/[guild]/Roles"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import GuildImageAndName from "components/[guild]/collect/components/GuildImageAndName"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useRoleGroup from "components/[guild]/hooks/useRoleGroup"
-import GuildLogo from "components/common/GuildLogo"
-import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
 import useMembership from "components/explorer/hooks/useMembership"
@@ -26,22 +35,38 @@ import fetcher from "utils/fetcher"
 import parseDescription from "utils/parseDescription"
 
 const DynamicEditCampaignButton = dynamic(
-  () => import("components/[guild]/[group]/EditCampaignButton")
+  () => import("components/[guild]/[group]/EditCampaignButton"),
+  {
+    ssr: false,
+  }
 )
 const DynamicAddAndOrderRoles = dynamic(
-  () => import("components/[guild]/AddAndOrderRoles")
+  () => import("components/[guild]/AddAndOrderRoles"),
+  {
+    ssr: false,
+  }
 )
-const DynamicAddSolutionsButton = dynamic(
-  () => import("solutions/components/AddSolutionsButton")
+const DynamicAddSolutionsAndEditGuildButton = dynamic(
+  () =>
+    import("components/[guild]/AddSolutionsAndEditGuildButton").then(
+      (module) => module.AddSolutionsAndEditGuildButton
+    ),
+  {
+    ssr: false,
+  }
 )
-const DynamicRecheckAccessesButton = dynamic(() =>
-  import("components/[guild]/RecheckAccessesButton").then(
-    (module) => module.TopRecheckAccessesButton
-  )
+const DynamicRecheckAccessesAndLeaveButton = dynamic(
+  () =>
+    import("components/[guild]/RecheckAccessesAndLeaveButton").then(
+      (module) => module.RecheckAccessesAndLeaveButton
+    ),
+  {
+    ssr: false,
+  }
 )
 
 const GroupPage = (): JSX.Element => {
-  const { imageUrl: guildImageUrl } = useGuild()
+  const { imageUrl: guildImageUrl, isDetailed } = useGuild()
 
   const group = useRoleGroup()
 
@@ -59,60 +84,48 @@ const GroupPage = (): JSX.Element => {
         <meta name="theme-color" content={localThemeColor} />
       </Head>
 
-      <Layout
-        backButton={<GuildImageAndName />}
-        action={isAdmin && <DynamicEditCampaignButton />}
-        title={group.name}
-        textColor={textColor}
-        ogDescription={group.description}
-        description={group.description && parseDescription(group.description)}
-        image={
-          group.imageUrl && (
-            <GuildLogo
-              imageUrl={group.imageUrl}
-              size={{ base: "56px", lg: "72px" }}
-              mt={{ base: 1, lg: 2 }}
-              bgColor={textColor === "primary.800" ? "primary.800" : "transparent"}
-            />
-          )
-        }
-        imageUrl={group.imageUrl ?? guildImageUrl}
-        background={localThemeColor}
-        backgroundImage={localBackgroundImage}
-        backgroundOffset={100}
-      >
-        <Flex justifyContent="end" mb={3}>
-          <HStack>
-            {isMember && !isAdmin && <DynamicRecheckAccessesButton />}
-            {!isMember ? (
-              <JoinButton />
-            ) : !isAdmin ? (
-              <LeaveButton />
-            ) : isAddRoleStuck ? (
-              <DynamicAddAndOrderRoles />
-            ) : (
-              <DynamicAddSolutionsButton />
-            )}
-          </HStack>
-        </Flex>
+      <Layout>
+        <LayoutHero className="pb-24">
+          <LayoutBanner>
+            <GuildPageBanner />
+          </LayoutBanner>
 
-        <AccessHub />
+          <Header className="mb-10" />
 
-        <Section
-          title={
-            (isAdmin || isMember || !!accessedGuildPlatforms?.length) && "Roles"
-          }
-          titleRightElement={
-            isAdmin && (
-              <Box my="-2 !important" ml="auto !important">
-                <DynamicAddAndOrderRoles setIsStuck={setIsAddRoleStuck} />
-              </Box>
-            )
-          }
-          mb="10"
-        >
-          <Roles />
-        </Section>
+          <LayoutContainer className="-mb-16 mt-6">
+            <GuildImageAndName />
+          </LayoutContainer>
+
+          <LayoutHeadline className="pt-12">
+            <GroupPageImageAndName />
+
+            <StickyAction>
+              {isAdmin && isDetailed ? (
+                <DynamicAddSolutionsAndEditGuildButton />
+              ) : !isMember ? (
+                <JoinButton />
+              ) : (
+                <DynamicRecheckAccessesAndLeaveButton />
+              )}
+            </StickyAction>
+          </LayoutHeadline>
+
+          {group?.description && (
+            <LayoutContainer className="mt-6 font-semibold">
+              {parseDescription(group.description)}
+            </LayoutContainer>
+          )}
+        </LayoutHero>
+
+        <LayoutMain className="-top-16 flex flex-col items-start gap-8">
+          <AccessHub />
+
+          <Section
+            titleRightElement={isAdmin ? <DynamicAddAndOrderRoles /> : undefined}
+          >
+            <Roles />
+          </Section>
+        </LayoutMain>
       </Layout>
     </>
   )
