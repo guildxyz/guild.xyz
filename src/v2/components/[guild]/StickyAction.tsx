@@ -17,7 +17,7 @@ const StickyAction = ({ children }: PropsWithChildren) => {
         )}
       >
         <LayoutContainer
-          className={cn("my-3 flex items-center justify-end sm:hidden", {
+          className={cn("flex h-full items-center justify-end sm:hidden", {
             "sm:flex": isStuck,
           })}
         >
