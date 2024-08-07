@@ -1,10 +1,10 @@
-import { IconButton } from "@chakra-ui/react"
+import { ButtonProps, IconButton } from "@chakra-ui/react"
 import { SlidersHorizontal } from "@phosphor-icons/react"
 import { useRouter } from "next/router"
 import { useThemeContext } from "../ThemeContext"
 import useGuild from "../hooks/useGuild"
 
-const EditGuildButton = (props): JSX.Element => {
+const EditGuildButton = (props: ButtonProps): JSX.Element => {
   const router = useRouter()
   const { urlName } = useGuild()
   const { textColor, buttonColorScheme } = useThemeContext()
