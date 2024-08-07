@@ -24,7 +24,7 @@ import { useYourGuilds } from "@/hooks/useYourGuilds"
 // import { profileSchema } from "@/lib/validations/profileSchema"
 import { Guild, Schemas } from "@guildxyz/types"
 // import { zodResolver } from "@hookform/resolvers/zod"
-import { Pencil } from "@phosphor-icons/react"
+import { Pencil, X } from "@phosphor-icons/react"
 import { AvatarFallback } from "@radix-ui/react-avatar"
 import { DialogDescription } from "@radix-ui/react-dialog"
 import { FormProvider, useForm } from "react-hook-form"
@@ -33,6 +33,8 @@ import fetcher from "utils/fetcher"
 import { useAllUserRoles } from "../_hooks/useAllUserRoles"
 import { useContribution } from "../_hooks/useContribution"
 import { useCreateContribution } from "../_hooks/useCreateContribution"
+import { useDeleteContribution } from "../_hooks/useDeleteContribution"
+import { useUpdateContribution } from "../_hooks/useUpdateContribution"
 import { CardWithGuildLabel } from "./CardWithGuildLabel"
 
 const guildFetcher = (urls: string[]) => {
@@ -50,12 +52,25 @@ const EditContributionCard = ({
   contribution,
 }: { contribution: Schemas["ProfileContribution"] }) => {
   const { data: guild } = useSWR(`/v2/guilds/${contribution.guildId}`, fetcher)
-  const { data: roles } = useAllUserRoles()
-  if (!guild) return
+  const { data: allRoles } = useAllUserRoles()
+  if (!guild || !allRoles) return
+  const roles = allRoles.filter((role) => role.guildId === guild.id)
+  const editContribution = useUpdateContribution({ contributionId: contribution.id })
+  const deleteContribution = useDeleteContribution({
+    contributionId: contribution.id,
+  })
 
   return (
     <CardWithGuildLabel guild={guild}>
-      <div className="flex flex-col gap-4 p-6">
+      <div className="relative flex flex-col gap-4 p-6">
+        <Button
+          size="icon"
+          variant="ghost"
+          onClick={deleteContribution.onSubmit}
+          className="absolute top-2 right-2 size-7"
+        >
+          <X />
+        </Button>
         <FormLabel className="font-extrabold text-muted-foreground text-xs uppercase">
           TOP ROLE
         </FormLabel>
@@ -63,12 +78,8 @@ const EditContributionCard = ({
           defaultValue={contribution.roleId.toString()}
           onValueChange={(value) => {
             console.log("edit to", value)
-            // editContribution.onSubmit()
-            // .mutate((data) => {
-            // data[i] =
-            // })
+            editContribution.onSubmit({ roleId: parseInt(value), guildId: guild.id })
           }}
-          // defaultValue={field.value?.role.id.toString()}
         >
           <FormControl>
             <SelectTrigger>
