@@ -12,7 +12,6 @@ const DIRTY_KEYS_TO_KEEP = [
   "data",
   "chain",
   "socialLinks",
-  "eventSources",
 ]
 // Keys to keep even if they aren't dirty
 const KEYS_TO_KEEP = [
