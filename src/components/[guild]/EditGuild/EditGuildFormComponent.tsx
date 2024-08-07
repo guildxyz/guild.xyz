@@ -292,8 +292,9 @@ const EditGuildFormComponent = () => {
                 justifyContent="space-between"
                 px={{ base: 5, md: 6 }}
                 py={{ base: 3, md: 4 }}
+                spacing={4}
               >
-                <Text>You have unsaved changes!</Text>
+                <Text fontSize="sm">You have unsaved changes!</Text>
                 <Button
                   // isDisabled={!isDirty}
                   isDisabled={Object.keys(formState?.errors ?? {}).length > 0}
@@ -303,6 +304,7 @@ const EditGuildFormComponent = () => {
                   loadingText={loadingText}
                   onClick={onSave}
                   maxW="max-content"
+                  flexShrink={0}
                 >
                   Save changes
                 </Button>
