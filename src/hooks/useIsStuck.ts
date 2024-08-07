@@ -26,7 +26,11 @@ const useIsStuck = (
 
     const observer = new IntersectionObserver(
       ([e]) => {
-        setIsStuckActive(e.intersectionRatio < 1)
+        setIsStuckActive(
+          !e.isIntersecting &&
+            (e.boundingClientRect.top < topOffsetPx ||
+              e.boundingClientRect.bottom > bottomOffsetPx)
+        )
       },
       {
         threshold: [1],
