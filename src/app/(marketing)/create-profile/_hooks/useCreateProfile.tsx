@@ -1,10 +1,8 @@
 import { useConfetti } from "@/components/Confetti"
 import { useToast } from "@/components/ui/hooks/useToast"
 import { profileSchema } from "@/lib/validations/profileSchema"
-import { profileAtom } from "@app/(marketing)/profile/[username]/atoms"
 import { Schemas } from "@guildxyz/types"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
-import { useSetAtom } from "jotai"
 import { useRouter } from "next/navigation"
 import fetcher from "utils/fetcher"
 import { z } from "zod"
@@ -13,7 +11,6 @@ export const useCreateProfile = () => {
   const router = useRouter()
   const { toast } = useToast()
   const { confettiPlayer } = useConfetti()
-  const setProfile = useSetAtom(profileAtom)
 
   const createProfile = async (signedValidation: SignedValidation) =>
     fetcher(`/v2/profiles`, {
@@ -28,7 +25,6 @@ export const useCreateProfile = () => {
         title: "Successfully created profile",
       })
       confettiPlayer.current("Confetti from left and right")
-      setProfile(response)
       router.replace(`/profile/${response.username}`)
     },
     onError: (response) => {

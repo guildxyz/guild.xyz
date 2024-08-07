@@ -1,21 +1,18 @@
 import { useToast } from "@/components/ui/hooks/useToast"
 import { Schemas } from "@guildxyz/types"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
-import { useSetAtom } from "jotai"
-import { useRouter } from "next/navigation"
+import { useParams, useRouter } from "next/navigation"
 import fetcher from "utils/fetcher"
-import { profileAtom } from "../[username]/atoms"
+import { useProfile } from "./useProfile"
 
-export type EditProfilePayload = Schemas["ProfileUpdate"] &
-  Pick<Schemas["Profile"], "id">
-export const useEditProfile = () => {
+export const useUpdateProfile = () => {
   const { toast } = useToast()
   const router = useRouter()
-  const setProfile = useSetAtom(profileAtom)
+  const params = useParams<{ username: string }>()
+  const { mutate } = useProfile()
 
   const updateProfile = async (signedValidation: SignedValidation) => {
-    const { id } = JSON.parse(signedValidation.signedPayload) as EditProfilePayload
-    return fetcher(`/v2/profiles/${id}`, {
+    return fetcher(`/v2/profiles/${params?.username}`, {
       method: "PUT",
       ...signedValidation,
     })
@@ -24,8 +21,8 @@ export const useEditProfile = () => {
   const submitWithSign = useSubmitWithSign<Schemas["Profile"]>(updateProfile, {
     onSuccess: (response) => {
       console.log("onSuccess", response)
-      setProfile(response)
       router.replace(`/profile/${response.username}`)
+      mutate(() => response, { revalidate: false })
       toast({
         variant: "success",
         title: "Successfully updated profile",
@@ -42,6 +39,7 @@ export const useEditProfile = () => {
   })
   return {
     ...submitWithSign,
-    onSubmit: (payload: EditProfilePayload) => submitWithSign.onSubmit(payload),
+    onSubmit: (payload: Schemas["ProfileUpdate"]) =>
+      params?.username && submitWithSign.onSubmit(payload),
   }
 }

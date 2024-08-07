@@ -15,12 +15,7 @@ import { AvatarGroup } from "@/components/ui/AvatarGroup"
 import { Separator } from "@/components/ui/Separator"
 import { Skeleton } from "@/components/ui/Skeleton"
 import { useUserPublic } from "@/hooks/useUserPublic"
-import { Schemas } from "@guildxyz/types"
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr"
-import { useAtom } from "jotai"
-import { useEffect } from "react"
-import useSWR from "swr"
-import { fetcherForSWR } from "utils/fetcher"
 import { ContributionCard } from "../_components/ContributionCard"
 import { EditContributions } from "../_components/EditContributions"
 import { EditProfile } from "../_components/EditProfile"
@@ -28,7 +23,7 @@ import { OperatedGuildCard } from "../_components/OperatedGuildCard"
 import { ProfileSkeleton } from "../_components/ProfileSkeleton"
 import { RecentActivity } from "../_components/RecentActivity"
 import { useContribution } from "../_hooks/useContribution"
-import { profileAtom } from "./atoms"
+import { useProfile } from "../_hooks/useProfile"
 
 // async function getProfileData(username: string) {
 //   const req = `https://api.guild.xyz/v2/profiles/${username}`
@@ -57,23 +52,11 @@ import { profileAtom } from "./atoms"
 //   }
 // }
 
-const Page = ({
-  params: { username },
-}: {
-  params: { username: string }
-}) => {
-  const { data: fetchedProfile, isLoading } = useSWR<Schemas["Profile"]>(
-    `/v2/profiles/${username}`,
-    fetcherForSWR
-  )
-  const [profile, setProfile] = useAtom(profileAtom)
+const Page = () => {
+  const { data: profile, isLoading } = useProfile()
   const contributions = useContribution()
-
   const { id: publicUserId } = useUserPublic()
   const isProfileOwner = !!profile?.userId && publicUserId === profile.userId
-  useEffect(() => {
-    setProfile(fetchedProfile)
-  }, [fetchedProfile, setProfile])
 
   if (!profile || isLoading) {
     return <ProfileSkeleton />
@@ -91,15 +74,7 @@ const Page = ({
       <LayoutMain>
         <div className="mt-24">
           <div className="relative mb-24 flex flex-col items-center">
-            <EditProfile
-              profileImageUrl={profile.profileImageUrl}
-              name={profile.name}
-              bio={profile.bio ?? undefined}
-              backgroundImageUrl={profile.backgroundImageUrl ?? undefined}
-              username={profile.username}
-              id={profile.id}
-              userId={profile.userId}
-            />
+            {isProfileOwner && <EditProfile />}
             <div className="relative mb-12 flex items-center justify-center">
               <Avatar className="size-48">
                 <AvatarImage
