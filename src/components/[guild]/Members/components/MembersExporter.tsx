@@ -67,7 +67,6 @@ const MembersExporter = (): JSX.Element => {
     <>
       <Button
         aria-label="Export members"
-        // variant="ghost"
         leftIcon={<Icon as={Export} />}
         size="sm"
         onClick={onOpen}
