@@ -22,18 +22,18 @@ import {
 } from "@/components/ui/Select"
 import { useToast } from "@/components/ui/hooks/useToast"
 import { useYourGuilds } from "@/hooks/useYourGuilds"
-import { Guild, Schemas } from "@guildxyz/types"
+import { Guild, MembershipResult, Role, Schemas } from "@guildxyz/types"
 import { X } from "@phosphor-icons/react"
 import { PencilSimple } from "@phosphor-icons/react"
 import { AvatarFallback } from "@radix-ui/react-avatar"
 import { DialogDescription } from "@radix-ui/react-dialog"
 import { useState } from "react"
-import useSWR from "swr"
+import useSWRImmutable from "swr/immutable"
 import fetcher from "utils/fetcher"
-import { useAllUserRoles } from "../_hooks/useAllUserRoles"
 import { useContribution } from "../_hooks/useContribution"
 import { useCreateContribution } from "../_hooks/useCreateContribution"
 import { useDeleteContribution } from "../_hooks/useDeleteContribution"
+import { useMemberships } from "../_hooks/useMemberships"
 import { useUpdateContribution } from "../_hooks/useUpdateContribution"
 import { CardWithGuildLabel } from "./CardWithGuildLabel"
 
@@ -45,27 +45,29 @@ const useYourVerifiedGuild = () => {
   const requests = yourGuilds.data
     ? yourGuilds.data.map((guild) => `/v2/guilds/${guild.id}`)
     : null
-  return { guilds: useSWR(requests, guildFetcher), baseGuilds: yourGuilds }
+  return { guilds: useSWRImmutable(requests, guildFetcher), baseGuilds: yourGuilds }
 }
 
 const EditContributionCard = ({
   contribution,
 }: { contribution: Schemas["ProfileContribution"] }) => {
-  const { data: guild } = useSWR<Guild>(
+  const { data: guild } = useSWRImmutable<Guild>(
     `/v2/guilds/${contribution.guildId}`,
     fetcher
   )
-  const { data: allRoles } = useAllUserRoles()
+  const memberships = useMemberships()
   const editContribution = useUpdateContribution({ contributionId: contribution.id })
   const deleteContribution = useDeleteContribution({
     contributionId: contribution.id,
   })
-  if (!guild || !allRoles) return
-  const roles = allRoles.filter((role) => role.guildId === guild.id)
+  if (!guild || !memberships.data) return
+  const roleIds = memberships.data.find(
+    (membership) => membership.guildId === guild.id
+  )?.roleIds
 
   return (
     <CardWithGuildLabel guild={guild}>
-      <div className="relative flex flex-col gap-4 p-6">
+      <div className="relative flex flex-col gap-2 p-6">
         <Button
           size="icon"
           variant="ghost"
@@ -88,10 +90,8 @@ const EditContributionCard = ({
             <SelectValue placeholder="Select from your guilds" />
           </SelectTrigger>
           <SelectContent>
-            {roles?.map((data) => (
-              <SelectItem key={data.id} value={data.id.toString()}>
-                {data.name}
-              </SelectItem>
+            {roleIds.map((roleId) => (
+              <RoleSelectItem roleId={roleId} guildId={guild.id} />
             ))}
           </SelectContent>
         </Select>
@@ -102,7 +102,7 @@ const EditContributionCard = ({
 
 export const EditContributions = () => {
   const contributions = useContribution()
-  const allRoles = useAllUserRoles()
+  const memberships = useMemberships()
   const [guildId, setGuildId] = useState("")
   const [roleId, setRoleId] = useState("")
   const { toast } = useToast()
@@ -118,10 +118,10 @@ export const EditContributions = () => {
         curr.tags.includes("VERIFIED") ? [...acc, guildData[i]] : acc,
       []
     )
-  const selectedId = guildId
-  const roles = allRoles.data?.filter(
-    (role) => role.guildId.toString() === selectedId
-  )
+
+  const roleIds = memberships.data?.find(
+    (membership) => membership.guildId.toString() === guildId
+  )?.roleIds
   const createContribution = useCreateContribution()
 
   return (
@@ -184,31 +184,18 @@ export const EditContributions = () => {
                 </Select>
               </div>
               <div className="pb-2">
-                <Label aria-disabled={!roles?.length}>Role</Label>
+                <Label aria-disabled={!roleIds?.length}>Role</Label>
                 <Select
                   onValueChange={setRoleId}
                   value={roleId}
-                  disabled={!roles?.length || !guildId}
+                  disabled={!roleIds?.length || !guildId}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select from your roles" />
                   </SelectTrigger>
                   <SelectContent>
-                    {roles?.map((data) => (
-                      <SelectItem key={data.id} value={data.id.toString()}>
-                        <div className="flex gap-2">
-                          <Avatar size="xs">
-                            <AvatarImage
-                              src={data.imageUrl}
-                              width={32}
-                              height={32}
-                              alt="guild avatar"
-                            />
-                            <AvatarFallback />
-                          </Avatar>
-                          {data.name}
-                        </div>
-                      </SelectItem>
+                    {roleIds?.map((roleId) => (
+                      <RoleSelectItem roleId={roleId} guildId={parseInt(guildId)} />
                     ))}
                   </SelectContent>
                 </Select>
@@ -240,5 +227,32 @@ export const EditContributions = () => {
         </DialogBody>
       </DialogContent>
     </Dialog>
+  )
+}
+const RoleSelectItem = ({
+  roleId,
+  guildId,
+}: Pick<MembershipResult, "guildId"> & {
+  roleId: MembershipResult["roleIds"][number]
+}) => {
+  const { data: data } = useSWRImmutable<Role>(
+    `/v2/guilds/${guildId}/roles/${roleId}`
+  )
+  if (!data) return
+  return (
+    <SelectItem key={data.id} value={data.id.toString()}>
+      <div className="flex gap-2">
+        <Avatar size="xs">
+          <AvatarImage
+            src={data.imageUrl}
+            width={32}
+            height={32}
+            alt="guild avatar"
+          />
+          <AvatarFallback />
+        </Avatar>
+        {data.name}
+      </div>
+    </SelectItem>
   )
 }
