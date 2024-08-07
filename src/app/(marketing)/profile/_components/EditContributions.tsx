@@ -1,5 +1,6 @@
 "use client"
 
+import { Avatar, AvatarImage } from "@/components/ui/Avatar"
 import { Button } from "@/components/ui/Button"
 import { Card } from "@/components/ui/Card"
 import {
@@ -24,6 +25,7 @@ import { useYourGuilds } from "@/hooks/useYourGuilds"
 import { Guild, Schemas } from "@guildxyz/types"
 // import { zodResolver } from "@hookform/resolvers/zod"
 import { Pencil } from "@phosphor-icons/react"
+import { AvatarFallback } from "@radix-ui/react-avatar"
 import { DialogDescription } from "@radix-ui/react-dialog"
 import { useAtom } from "jotai"
 import { FormProvider, useForm } from "react-hook-form"
@@ -198,7 +200,18 @@ export const EditContributions = ({
                           <SelectContent>
                             {guilds?.map((data) => (
                               <SelectItem key={data.id} value={data.id.toString()}>
-                                {data.name}
+                                <div className="flex gap-2">
+                                  <Avatar size="xs">
+                                    <AvatarImage
+                                      src={data.imageUrl}
+                                      width={32}
+                                      height={32}
+                                      alt="guild avatar"
+                                    />
+                                    <AvatarFallback />
+                                  </Avatar>
+                                  {data.name}
+                                </div>
                               </SelectItem>
                             ))}
                           </SelectContent>
@@ -223,9 +236,20 @@ export const EditContributions = ({
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            {roles?.map((role) => (
-                              <SelectItem key={role.id} value={role.id.toString()}>
-                                {role.name}
+                            {roles?.map((data) => (
+                              <SelectItem key={data.id} value={data.id.toString()}>
+                                <div className="flex gap-2">
+                                  <Avatar size="xs">
+                                    <AvatarImage
+                                      src={data.imageUrl}
+                                      width={32}
+                                      height={32}
+                                      alt="guild avatar"
+                                    />
+                                    <AvatarFallback />
+                                  </Avatar>
+                                  {data.name}
+                                </div>
                               </SelectItem>
                             ))}
                           </SelectContent>
