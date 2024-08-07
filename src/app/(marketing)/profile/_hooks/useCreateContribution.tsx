@@ -25,16 +25,19 @@ export const useCreateContribution = () => {
   const submitWithSign = useSubmitWithSign<Schemas["ProfileContribution"]>(update, {
     onSuccess: (response) => {
       console.log("onSuccess", response)
-      contribution.mutate((prev) => {
-        // WARNING: should we validate here?
-        if (!prev) return
-        prev.push(response)
-        return prev
+      contribution.mutate(
+        (prev) => {
+          // WARNING: should we validate here?
+          if (!prev) return
+          prev.push(response)
+          return prev
+        },
+        { revalidate: false }
+      )
+      toast({
+        variant: "success",
+        title: "Successfully created contribution",
       })
-      // toast({
-      //   variant: "success",
-      //   title: "Successfully created contribution",
-      // })
     },
     onError: (response) => {
       console.log("onError", response)

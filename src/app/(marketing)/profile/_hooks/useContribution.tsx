@@ -1,5 +1,5 @@
 import { Guild, Role, Schemas } from "@guildxyz/types"
-import useSWR from "swr"
+import useSWRImmutable from "swr/immutable"
 import fetcher from "utils/fetcher"
 import { useProfile } from "./useProfile"
 
@@ -55,7 +55,7 @@ export const useContribution = () => {
   // const {data: memberships} = useSWR<Membership>(`/v2/users/${userId}/memberships`, fetcher)
   // console.log(memberships)
 
-  return useSWR<Schemas["ProfileContribution"][]>(
+  return useSWRImmutable<Schemas["ProfileContribution"][]>(
     profileData ? `/v2/profiles/${profileData.username}/contributions` : null,
     fetcher
   )

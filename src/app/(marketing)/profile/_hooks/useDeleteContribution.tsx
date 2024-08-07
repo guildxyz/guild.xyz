@@ -25,20 +25,18 @@ export const useDeleteContribution = ({
   const submitWithSign = useSubmitWithSign<object>(update, {
     onSuccess: (response) => {
       console.log("onSuccess", response)
-      contribution.mutate((prev) => {
-        if (!prev || !contribution.data) return
-        // WARNING: should we validate here?
-        const toBeMutatedIndex = prev?.findIndex(
-          ({ id }) =>
-            id ===
-            (contribution.data as unknown as Schemas["ProfileContribution"]).id
-        )!
-        return prev.filter((_, i) => i === toBeMutatedIndex)
+      contribution.mutate(
+        (prev) => {
+          if (!prev || !contribution.data) return
+          // WARNING: should we validate here?
+          return prev.filter((p) => p.id !== contributionId)
+        },
+        { revalidate: false }
+      )
+      toast({
+        variant: "success",
+        title: "Successfully deleted contribution",
       })
-      // toast({
-      //   variant: "success",
-      //   title: "Successfully deleted contribution",
-      // })
     },
     onError: (response) => {
       console.log("onError", response)

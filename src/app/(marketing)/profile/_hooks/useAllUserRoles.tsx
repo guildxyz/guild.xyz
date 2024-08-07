@@ -1,6 +1,6 @@
 import { useUserPublic } from "@/hooks/useUserPublic"
 import { MembershipResult, Role } from "@guildxyz/types"
-import useSWR from "swr"
+import useSWRImmutable from "swr/immutable"
 import fetcher from "utils/fetcher"
 // import { parsedContributionFetcher } from "./useContribution"
 
@@ -42,5 +42,5 @@ const roleFetcher = async (url: string) => {
 
 export const useAllUserRoles = () => {
   const { id: userId } = useUserPublic()
-  return useSWR(`/v2/users/${userId}/memberships`, roleFetcher)
+  return useSWRImmutable(`/v2/users/${userId}/memberships`, roleFetcher)
 }

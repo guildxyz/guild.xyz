@@ -25,21 +25,23 @@ export const useUpdateContribution = ({
   const submitWithSign = useSubmitWithSign<Schemas["ProfileContribution"]>(update, {
     onSuccess: (response) => {
       console.log("onSuccess", response)
-      contribution.mutate((prev) => {
-        if (!prev || !contribution.data) return
-        // WARNING: should we validate here?
-        const toBeMutatedIndex = prev?.findIndex(
-          ({ id }) =>
-            id ===
+      contribution.mutate(
+        (prev) => {
+          if (!prev || !contribution.data) return
+          // WARNING: should we validate here?
+          return prev.map((p) =>
+            p.id ===
             (contribution.data as unknown as Schemas["ProfileContribution"]).id
-        )!
-        prev[toBeMutatedIndex] = response
-        return prev
+              ? response
+              : p
+          )
+        },
+        { revalidate: false }
+      )
+      toast({
+        variant: "success",
+        title: "Successfully updated contribution",
       })
-      // toast({
-      //   variant: "success",
-      //   title: "Successfully updated contribution",
-      // })
     },
     onError: (response) => {
       console.log("onError", response)

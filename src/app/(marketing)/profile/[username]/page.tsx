@@ -13,7 +13,6 @@ import { Anchor } from "@/components/ui/Anchor"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
 import { AvatarGroup } from "@/components/ui/AvatarGroup"
 import { Badge } from "@/components/ui/Badge"
-import { Button } from "@/components/ui/Button"
 import { Card } from "@/components/ui/Card"
 import { Progress } from "@/components/ui/Progress"
 import { Separator } from "@/components/ui/Separator"
@@ -35,7 +34,6 @@ import { OperatedGuildCard } from "../_components/OperatedGuildCard"
 import { ProfileSkeleton } from "../_components/ProfileSkeleton"
 import { RecentActivity } from "../_components/RecentActivity"
 import { useContribution } from "../_hooks/useContribution"
-import { useProfile } from "../_hooks/useProfile"
 import { profileAtom } from "./atoms"
 
 // async function getProfileData(username: string) {
@@ -75,20 +73,11 @@ const Page = ({
     fetcherForSWR
   )
   const [profile, setProfile] = useAtom(profileAtom)
-  const p = useProfile()
-  console.log({ p })
-  // const [contributions, setContributions] = useAtom(contributionsAtom)
   const contributions = useContribution()
-  // const fetchedContribution = useContribution({ profileIdOrUsername: username })
   const level = 0
 
   const { id: publicUserId } = useUserPublic()
   const isProfileOwner = !!profile?.userId && publicUserId === profile.userId
-  // useEffect(() => {
-  //   if (fetchedContribution.data) {
-  //     setContributions(fetchedContribution.data)
-  //   }
-  // }, [fetchedContribution.data, setContributions])
   useEffect(() => {
     setProfile(fetchedProfile)
   }, [fetchedProfile, setProfile])
@@ -196,9 +185,6 @@ const Page = ({
             {contributions.data?.map((contribution) => (
               <ContributionCard contribution={contribution} key={contribution.id} />
             ))}
-            <Button size="sm" variant="outline" className="place-self-center">
-              See more involvement
-            </Button>
           </div>
           <div className="mt-8">
             <h2 className="mb-3 font-bold text-lg">Recent activity</h2>

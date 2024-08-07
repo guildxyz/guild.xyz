@@ -52,12 +52,12 @@ const EditContributionCard = ({
 }: { contribution: Schemas["ProfileContribution"] }) => {
   const { data: guild } = useSWR(`/v2/guilds/${contribution.guildId}`, fetcher)
   const { data: allRoles } = useAllUserRoles()
-  if (!guild || !allRoles) return
-  const roles = allRoles.filter((role) => role.guildId === guild.id)
   const editContribution = useUpdateContribution({ contributionId: contribution.id })
   const deleteContribution = useDeleteContribution({
     contributionId: contribution.id,
   })
+  if (!guild || !allRoles) return
+  const roles = allRoles.filter((role) => role.guildId === guild.id)
 
   return (
     <CardWithGuildLabel guild={guild}>
@@ -118,6 +118,7 @@ export const EditContributions = () => {
     (role) => role.guildId.toString() === selectedId
   )
   const createContribution = useCreateContribution()
+  console.log(contributions.data)
 
   return (
     <Dialog>
@@ -206,6 +207,7 @@ export const EditContributions = () => {
                 colorScheme="success"
                 className="self-end"
                 disabled={!roleId || !guildId}
+                isLoading={createContribution.isLoading}
                 onClick={() => {
                   if (contributions.data && contributions.data.length >= 3) {
                     toast({
