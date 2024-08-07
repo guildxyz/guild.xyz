@@ -90,16 +90,21 @@ FormItem.displayName = "FormItem"
 const FormLabel = forwardRef<
   ElementRef<typeof LabelPrimitive.Root>,
   ComponentPropsWithoutRef<typeof LabelPrimitive.Root>
->(({ className, ...props }, ref) => {
+>(({ className, children, ...props }, ref) => {
   const { formItemId } = useFormField()
 
   return (
     <Label
       ref={ref}
-      className={cn("text-md", className)}
+      className={cn("group text-md aria-disabled:text-muted-foreground", className)}
       htmlFor={formItemId}
       {...props}
-    />
+    >
+      {children}
+      <span className="ml-1 hidden select-none font-bold text-destructive-subtle-foreground group-aria-required:inline-block">
+        *
+      </span>
+    </Label>
   )
 })
 FormLabel.displayName = "FormLabel"
@@ -150,7 +155,7 @@ const FormErrorMessage = forwardRef<
   const [debounceBody] = useDebounceValue(body, 200)
 
   return (
-    <Collapsible open={!!error}>
+    <Collapsible open={!!body}>
       <CollapsibleContent>
         <p
           ref={ref}
