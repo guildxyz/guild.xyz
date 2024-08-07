@@ -208,9 +208,8 @@ const TopRecheckAccessesButton = () => {
 
   return (
     <RecheckAccessesButton
-      minW="44px"
-      variant="ghost"
-      rounded="full"
+      w={10}
+      h={10}
       tooltipLabel="Re-check accesses & send rewards"
       {...(!isStuck && {
         color: textColor,

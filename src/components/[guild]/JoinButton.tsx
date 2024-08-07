@@ -1,27 +1,17 @@
-import { useBreakpointValue } from "@chakra-ui/react"
-import Button from "components/common/Button"
+import { MobileFooter } from "@/components/MobileFooter"
+import { Button } from "@/components/ui/Button"
 import { useOpenJoinModal } from "./JoinModal/JoinModalProvider"
 
 const JoinButton = (): JSX.Element => {
   const openJoinModal = useOpenJoinModal()
 
-  const buttonText = useBreakpointValue({
-    base: "Join Guild",
-    md: "Join Guild to get roles",
-  })
-
   return (
-    <Button
-      h="10"
-      w="max-content"
-      ml="auto"
-      flexShrink="0"
-      onClick={openJoinModal}
-      colorScheme="green"
-    >
-      {buttonText}
-    </Button>
+    <MobileFooter>
+      <Button colorScheme="success" className="h-10" onClick={openJoinModal}>
+        Join Guild to get roles
+      </Button>
+    </MobileFooter>
   )
 }
 
-export default JoinButton
+export { JoinButton }

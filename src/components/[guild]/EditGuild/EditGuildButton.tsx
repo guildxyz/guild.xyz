@@ -1,5 +1,5 @@
 import { IconButton } from "@chakra-ui/react"
-import { GearSix } from "@phosphor-icons/react"
+import { SlidersHorizontal } from "@phosphor-icons/react"
 import { useRouter } from "next/router"
 import { useThemeContext } from "../ThemeContext"
 import useGuild from "../hooks/useGuild"
@@ -11,14 +11,13 @@ const EditGuildButton = (): JSX.Element => {
 
   return (
     <IconButton
-      icon={<GearSix />}
+      icon={<SlidersHorizontal />}
       aria-label="Edit Guild"
-      minW={"44px"}
-      rounded="full"
+      w={10}
+      h={10}
       colorScheme={buttonColorScheme}
       color={textColor}
       onClick={() => router.push(`/${urlName}/dashboard`)}
-      ml="auto"
     />
   )
 }

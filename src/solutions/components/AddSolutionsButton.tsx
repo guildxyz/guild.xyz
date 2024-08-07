@@ -1,3 +1,4 @@
+import { ButtonProps } from "@chakra-ui/react"
 import { Plus } from "@phosphor-icons/react"
 import {
   AddRewardProvider,
@@ -8,7 +9,7 @@ import { useThemeContext } from "components/[guild]/ThemeContext"
 import Button from "components/common/Button"
 import AddSolutionsModal from "./AddSolutionsModal"
 
-const AddSolutionsButton = () => {
+const AddSolutionsButton = (buttonProps: ButtonProps) => {
   const { onOpen } = useAddRewardContext()
 
   const { isStuck } = useIsTabsStuck()
@@ -19,8 +20,7 @@ const AddSolutionsButton = () => {
       <Button
         leftIcon={<Plus />}
         onClick={onOpen}
-        variant="ghost"
-        size="sm"
+        {...buttonProps}
         {...(!isStuck && {
           color: textColor,
           colorScheme: buttonColorScheme,
@@ -33,9 +33,9 @@ const AddSolutionsButton = () => {
   )
 }
 
-const AddSolutionsButtonWrapper = (): JSX.Element => (
+const AddSolutionsButtonWrapper = (buttonProps: ButtonProps): JSX.Element => (
   <AddRewardProvider>
-    <AddSolutionsButton />
+    <AddSolutionsButton {...buttonProps} />
   </AddRewardProvider>
 )
 

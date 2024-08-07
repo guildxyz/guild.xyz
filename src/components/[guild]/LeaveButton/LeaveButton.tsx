@@ -5,7 +5,11 @@ import {
   AlertDialogHeader,
   AlertDialogOverlay,
   IconButton,
-  Tooltip,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverContent,
+  PopoverTrigger,
   useDisclosure,
 } from "@chakra-ui/react"
 import { SignOut } from "@phosphor-icons/react"
@@ -33,23 +37,35 @@ const LeaveButton = ({ disableColoring = false }) => {
 
   return (
     <>
-      <Tooltip label="Leave guild" hasArrow>
-        <IconButton
-          aria-label="Leave guild"
-          icon={<SignOut />}
-          onClick={onOpen}
-          minW="44px"
-          variant="ghost"
-          rounded="full"
-          ml="auto"
-          {...(!isStuck &&
-            !disableColoring && {
-              color: textColor,
-              colorScheme: buttonColorScheme,
-            })}
-        />
-      </Tooltip>
+      <Popover trigger="hover" placement="bottom">
+        <PopoverTrigger>
+          <IconButton
+            aria-label="Leave guild"
+            icon={<SignOut />}
+            onClick={onOpen}
+            w={10}
+            h={10}
+            {...(!isStuck &&
+              !disableColoring && {
+                color: textColor,
+                colorScheme: buttonColorScheme,
+              })}
+          />
+        </PopoverTrigger>
 
+        <PopoverContent w="max-content">
+          <PopoverArrow />
+          <PopoverBody
+            fontWeight="medium"
+            fontSize="sm"
+            py={1.5}
+            px={3}
+            w="max-content"
+          >
+            Leave guild
+          </PopoverBody>
+        </PopoverContent>
+      </Popover>
       <Alert leastDestructiveRef={cancelRef} onClose={onClose} isOpen={isOpen}>
         <AlertDialogOverlay />
 

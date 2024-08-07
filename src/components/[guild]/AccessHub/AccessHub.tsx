@@ -27,6 +27,10 @@ const DynamicGuildPinRewardCard = dynamic(
   () => import("./components/GuildPinRewardCard")
 )
 
+const DynamicCreatedPageCard = dynamic(() =>
+  import("./components/CreatePageCard").then((m) => m.CreatePageCard)
+)
+
 export const useAccessedGuildPlatforms = (groupId?: number) => {
   const { guildPlatforms, roles } = useGuild()
   const { isAdmin } = useGuildPermission()
@@ -101,7 +105,7 @@ const AccessHub = (): JSX.Element => {
 
   return (
     <ClientOnly>
-      <Collapse in={showAccessHub} unmountOnExit>
+      <Collapse in={showAccessHub} unmountOnExit style={{ width: "100%" }}>
         <SimpleGrid
           templateColumns={{
             base: "repeat(auto-fit, minmax(250px, 1fr))",
@@ -147,6 +151,8 @@ const AccessHub = (): JSX.Element => {
             )}
 
           {shouldShowGuildPin && <DynamicGuildPinRewardCard />}
+
+          {isAdmin && <DynamicCreatedPageCard />}
         </SimpleGrid>
       </Collapse>
     </ClientOnly>

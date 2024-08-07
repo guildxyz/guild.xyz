@@ -13,9 +13,8 @@ import { Center, Heading, Spinner } from "@chakra-ui/react"
 import AccessHub from "components/[guild]/AccessHub"
 import { GuildPageBanner } from "components/[guild]/GuildPageBanner"
 import { GuildPageImageAndName } from "components/[guild]/GuildPageImageAndName"
-import JoinButton from "components/[guild]/JoinButton"
+import { JoinButton } from "components/[guild]/JoinButton"
 import JoinModalProvider from "components/[guild]/JoinModal/JoinModalProvider"
-import LeaveButton from "components/[guild]/LeaveButton"
 import { MintGuildPinProvider } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import Roles from "components/[guild]/Roles"
 import SocialIcon from "components/[guild]/SocialIcon"
@@ -42,23 +41,41 @@ import parseDescription from "utils/parseDescription"
 const DynamicOngoingIssuesBanner = dynamic(
   () => import("components/[guild]/OngoingIssuesBanner")
 )
-const DynamicEditGuildButton = dynamic(() => import("components/[guild]/EditGuild"))
 const DynamicAddAndOrderRoles = dynamic(
-  () => import("components/[guild]/AddAndOrderRoles")
+  () => import("components/[guild]/AddAndOrderRoles"),
+  {
+    ssr: false,
+  }
 )
-const DynamicAddRewardAndCampaign = dynamic(
-  () => import("components/[guild]/AddRewardAndCampaign")
-)
-const DynamicMembersExporter = dynamic(
-  () => import("components/[guild]/Members/components/MembersExporter")
+const DynamicAddSolutionsAndEditGuildButton = dynamic(
+  () =>
+    import("components/[guild]/AddSolutionsAndEditGuildButton").then(
+      (module) => module.AddSolutionsAndEditGuildButton
+    ),
+  {
+    ssr: false,
+  }
 )
 const DynamicActiveStatusUpdates = dynamic(
-  () => import("components/[guild]/ActiveStatusUpdates")
+  () => import("components/[guild]/ActiveStatusUpdates"),
+  {
+    ssr: false,
+  }
 )
-const DynamicRecheckAccessesButton = dynamic(() =>
-  import("components/[guild]/RecheckAccessesButton").then(
-    (module) => module.TopRecheckAccessesButton
-  )
+const DynamicRecheckAccessesAndLeaveButton = dynamic(
+  () =>
+    import("components/[guild]/RecheckAccessesAndLeaveButton").then(
+      (module) => module.RecheckAccessesAndLeaveButton
+    ),
+  {
+    ssr: false,
+  }
+)
+const DynamicMembersExporter = dynamic(
+  () => import("components/[guild]/Members/components/MembersExporter"),
+  {
+    ssr: false,
+  }
 )
 const DynamicDiscordBotPermissionsChecker = dynamic(
   () => import("components/[guild]/DiscordBotPermissionsChecker"),
@@ -95,27 +112,29 @@ const GuildPage = (): JSX.Element => {
       {featureFlags?.includes("ONGOING_ISSUES") && <DynamicOngoingIssuesBanner />}
 
       <Layout>
-        <LayoutHero>
+        <LayoutHero className="pb-24">
           <LayoutBanner>
             <GuildPageBanner />
           </LayoutBanner>
 
-          <Header />
+          <Header className="mb-10" />
 
-          <LayoutContainer className="-mb-14 mt-6">
+          <LayoutContainer className="-mb-16 mt-6">
             <BackButton />
           </LayoutContainer>
 
-          <LayoutHeadline className="pt-8">
+          <LayoutHeadline className="pt-12">
             <GuildPageImageAndName />
 
-            {isAdmin && isDetailed ? (
-              <DynamicEditGuildButton />
-            ) : !isMember ? (
-              <JoinButton />
-            ) : (
-              <LeaveButton />
-            )}
+            <div className="-mt-4 ml-auto flex items-center gap-2">
+              {isAdmin && isDetailed ? (
+                <DynamicAddSolutionsAndEditGuildButton />
+              ) : !isMember ? (
+                <JoinButton />
+              ) : (
+                <DynamicRecheckAccessesAndLeaveButton />
+              )}
+            </div>
           </LayoutHeadline>
 
           {(description || Object.keys(socialLinks ?? {}).length > 0) && (
@@ -147,12 +166,8 @@ const GuildPage = (): JSX.Element => {
           )}
         </LayoutHero>
 
-        <LayoutMain className="flex flex-col items-start gap-8">
-          <Section
-            titleRightElement={isAdmin ? <DynamicAddRewardAndCampaign /> : undefined}
-          >
-            <AccessHub />
-          </Section>
+        <LayoutMain className="-top-16 flex flex-col items-start gap-8">
+          <AccessHub />
 
           <Section
             titleRightElement={isAdmin ? <DynamicAddAndOrderRoles /> : undefined}
