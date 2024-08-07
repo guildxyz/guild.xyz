@@ -12,7 +12,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/Dialog"
-import { FormControl, FormField, FormItem, FormLabel } from "@/components/ui/Form"
+import { Label } from "@/components/ui/Label"
 import {
   Select,
   SelectContent,
@@ -20,14 +20,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/Select"
+import { useToast } from "@/components/ui/hooks/useToast"
 import { useYourGuilds } from "@/hooks/useYourGuilds"
-// import { profileSchema } from "@/lib/validations/profileSchema"
 import { Guild, Schemas } from "@guildxyz/types"
-// import { zodResolver } from "@hookform/resolvers/zod"
 import { Pencil, X } from "@phosphor-icons/react"
 import { AvatarFallback } from "@radix-ui/react-avatar"
 import { DialogDescription } from "@radix-ui/react-dialog"
-import { FormProvider, useForm } from "react-hook-form"
+import { useState } from "react"
 import useSWR from "swr"
 import fetcher from "utils/fetcher"
 import { useAllUserRoles } from "../_hooks/useAllUserRoles"
@@ -71,9 +70,9 @@ const EditContributionCard = ({
         >
           <X />
         </Button>
-        <FormLabel className="font-extrabold text-muted-foreground text-xs uppercase">
+        <Label className="font-extrabold text-muted-foreground text-xs uppercase">
           TOP ROLE
-        </FormLabel>
+        </Label>
         <Select
           defaultValue={contribution.roleId.toString()}
           onValueChange={(value) => {
@@ -81,11 +80,9 @@ const EditContributionCard = ({
             editContribution.onSubmit({ roleId: parseInt(value), guildId: guild.id })
           }}
         >
-          <FormControl>
-            <SelectTrigger>
-              <SelectValue placeholder="Select from your guilds" />
-            </SelectTrigger>
-          </FormControl>
+          <SelectTrigger>
+            <SelectValue placeholder="Select from your guilds" />
+          </SelectTrigger>
           <SelectContent>
             {roles?.map((data) => (
               <SelectItem key={data.id} value={data.id.toString()}>
@@ -101,11 +98,11 @@ const EditContributionCard = ({
 
 export const EditContributions = () => {
   const contributions = useContribution()
-  console.log(contributions)
-  const form = useForm<Schemas["ProfileContributionUpdate"]>({
-    mode: "onTouched",
-  })
   const allRoles = useAllUserRoles()
+  const [guildId, setGuildId] = useState("")
+  const [roleId, setRoleId] = useState("")
+  const { toast } = useToast()
+
   const {
     guilds: { data: guildData },
     baseGuilds,
@@ -117,15 +114,11 @@ export const EditContributions = () => {
         curr.tags.includes("VERIFIED") ? [...acc, guildData[i]] : acc,
       []
     )
-  const selectedId = form.watch("guildId") as unknown as string
+  const selectedId = guildId
   const roles = allRoles.data?.filter(
     (role) => role.guildId.toString() === selectedId
   )
-  const editContribution = useCreateContribution()
-  async function onSubmit(values: Schemas["ProfileContributionUpdate"]) {
-    editContribution.onSubmit(values)
-    console.log("edit contributions submit", values)
-  }
+  const createContribution = useCreateContribution()
 
   return (
     <Dialog>
@@ -140,110 +133,97 @@ export const EditContributions = () => {
           <DialogDescription />
           <DialogCloseButton />
         </DialogHeader>
-        <FormProvider {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
-            <DialogBody className="gap-7">
-              <div className="flex flex-col gap-3">
-                {contributions.data?.slice(0, 3).map((contribution, i) => {
-                  // const roles = allRoles.data?.filter(
-                  //   (role) => role.guildId === guild.id
-                  // )
-                  return <EditContributionCard contribution={contribution} />
-                })}
+        <DialogBody className="gap-7">
+          <div className="flex flex-col gap-3">
+            {contributions.data?.slice(0, 3).map((contribution) => (
+              <EditContributionCard contribution={contribution} />
+            ))}
+          </div>
+          <div className="">
+            <h3 className="mb-3 font-semibold text-muted-foreground">
+              Add contribution
+            </h3>
+            <Card className="flex flex-col gap-2 border border-dashed bg-card-secondary p-5">
+              <div className="pb-2">
+                <Label>Guild</Label>
+                <Select onValueChange={setGuildId} value={guildId}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select from your guilds" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {guilds?.map((data) => (
+                      <SelectItem key={data.id} value={data.id.toString()}>
+                        <div className="flex gap-2">
+                          <Avatar size="xs">
+                            <AvatarImage
+                              src={data.imageUrl}
+                              width={32}
+                              height={32}
+                              alt="guild avatar"
+                            />
+                            <AvatarFallback />
+                          </Avatar>
+                          {data.name}
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
-              <div className="">
-                <h3 className="mb-3 font-semibold text-muted-foreground">
-                  Add contribution
-                </h3>
-                <Card className="flex flex-col gap-2 border border-dashed bg-card-secondary p-5">
-                  <FormField
-                    control={form.control}
-                    name="guildId"
-                    render={({ field }) => (
-                      <FormItem className="pb-2">
-                        <FormLabel>Guild</FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value?.toString()}
-                        >
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select from your guilds" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {guilds?.map((data) => (
-                              <SelectItem key={data.id} value={data.id.toString()}>
-                                <div className="flex gap-2">
-                                  <Avatar size="xs">
-                                    <AvatarImage
-                                      src={data.imageUrl}
-                                      width={32}
-                                      height={32}
-                                      alt="guild avatar"
-                                    />
-                                    <AvatarFallback />
-                                  </Avatar>
-                                  {data.name}
-                                </div>
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="roleId"
-                    render={({ field }) => (
-                      <FormItem className="pb-2">
-                        <FormLabel aria-disabled={!roles?.length}>Role</FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          disabled={!roles?.length}
-                          defaultValue={field.value?.toString()}
-                        >
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select from your roles" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {roles?.map((data) => (
-                              <SelectItem key={data.id} value={data.id.toString()}>
-                                <div className="flex gap-2">
-                                  <Avatar size="xs">
-                                    <AvatarImage
-                                      src={data.imageUrl}
-                                      width={32}
-                                      height={32}
-                                      alt="guild avatar"
-                                    />
-                                    <AvatarFallback />
-                                  </Avatar>
-                                  {data.name}
-                                </div>
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </FormItem>
-                    )}
-                  />
-                  <Button
-                    colorScheme="success"
-                    type="submit"
-                    className="self-end"
-                    disabled={!form.watch("roleId") || !form.watch("guildId")}
-                  >
-                    Add
-                  </Button>
-                </Card>
+              <div className="pb-2">
+                <Label aria-disabled={!roles?.length}>Role</Label>
+                <Select
+                  onValueChange={setRoleId}
+                  value={roleId}
+                  disabled={!roles?.length}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select from your roles" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {roles?.map((data) => (
+                      <SelectItem key={data.id} value={data.id.toString()}>
+                        <div className="flex gap-2">
+                          <Avatar size="xs">
+                            <AvatarImage
+                              src={data.imageUrl}
+                              width={32}
+                              height={32}
+                              alt="guild avatar"
+                            />
+                            <AvatarFallback />
+                          </Avatar>
+                          {data.name}
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
-            </DialogBody>
-          </form>
-        </FormProvider>
+              <Button
+                colorScheme="success"
+                className="self-end"
+                disabled={!roleId || !guildId}
+                onClick={() => {
+                  if (contributions.data && contributions.data.length >= 3) {
+                    toast({
+                      title: "Cannot add more than 3 contributions",
+                      description: "Please remove one first before adding one",
+                      variant: "error",
+                    })
+                    return
+                  }
+                  createContribution.onSubmit({
+                    guildId: parseInt(guildId),
+                    roleId: parseInt(roleId),
+                  })
+                }}
+              >
+                Add
+              </Button>
+            </Card>
+          </div>
+        </DialogBody>
       </DialogContent>
     </Dialog>
   )

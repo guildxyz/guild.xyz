@@ -25,14 +25,14 @@ export const useCreateContribution = () => {
       console.log("onSuccess", response)
       toast({
         variant: "success",
-        title: "Successfully updated contributions",
+        title: "Successfully created contribution",
       })
     },
     onError: (response) => {
       console.log("onError", response)
       toast({
         variant: "error",
-        title: "Failed to update contributions",
+        title: "Failed to create contribution",
         description: response.error,
       })
     },
