@@ -8,6 +8,7 @@ import {
   LayoutHero,
   LayoutMain,
 } from "@/components/Layout"
+import { StickyAction } from "@/components/[guild]/StickyAction"
 import { Anchor } from "@/components/ui/Anchor"
 import { Center, Heading, Spinner } from "@chakra-ui/react"
 import AccessHub from "components/[guild]/AccessHub"
@@ -85,16 +86,7 @@ const DynamicDiscordBotPermissionsChecker = dynamic(
 )
 
 const GuildPage = (): JSX.Element => {
-  const {
-    name,
-    description,
-    imageUrl,
-    memberCount,
-    socialLinks,
-    tags,
-    featureFlags,
-    isDetailed,
-  } = useGuild()
+  const { description, socialLinks, featureFlags, isDetailed } = useGuild()
 
   const { isAdmin } = useGuildPermission()
   const { isMember } = useMembership()
@@ -126,7 +118,7 @@ const GuildPage = (): JSX.Element => {
           <LayoutHeadline className="pt-12">
             <GuildPageImageAndName />
 
-            <div className="-mt-4 ml-auto flex items-center gap-2">
+            <StickyAction>
               {isAdmin && isDetailed ? (
                 <DynamicAddSolutionsAndEditGuildButton />
               ) : !isMember ? (
@@ -134,7 +126,7 @@ const GuildPage = (): JSX.Element => {
               ) : (
                 <DynamicRecheckAccessesAndLeaveButton />
               )}
-            </div>
+            </StickyAction>
           </LayoutHeadline>
 
           {(description || Object.keys(socialLinks ?? {}).length > 0) && (
