@@ -6,15 +6,18 @@ import {
   Text,
   VStack,
   useColorModeValue,
+  useDisclosure,
 } from "@chakra-ui/react"
 import { FolderSimplePlus } from "@phosphor-icons/react"
 import { Plus } from "@phosphor-icons/react/dist/ssr"
+import CreateCampaignModal from "components/[guild]/CreateCampaignModal"
 import Button from "components/common/Button"
 import ColorCard from "components/common/ColorCard"
 import ColorCardLabel from "components/common/ColorCard/ColorCardLabel"
 
 const CreatePageCard = () => {
   const imageBgColor = useColorModeValue("gray.700", "gray.600")
+  const { isOpen, onClose } = useDisclosure()
 
   return (
     <ColorCard
@@ -57,6 +60,8 @@ const CreatePageCard = () => {
         borderBottomRightRadius="xl"
         borderTopLeftRadius="2xl"
       />
+
+      <CreateCampaignModal isOpen={isOpen} onClose={onClose} />
     </ColorCard>
   )
 }
