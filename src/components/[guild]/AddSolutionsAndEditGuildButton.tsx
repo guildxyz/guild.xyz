@@ -1,4 +1,4 @@
-import { MobileFooter } from "@/components/MobileFooter"
+import { StickyAction } from "@/components/StickyAction"
 import { isStickyActionStuckAtom } from "@/components/[guild]/constants"
 import { ButtonGroup, ButtonProps, Divider, useColorMode } from "@chakra-ui/react"
 import { useAtomValue } from "jotai"
@@ -27,7 +27,7 @@ const AddSolutionsAndEditGuildButton = () => {
   } satisfies ButtonProps
 
   return (
-    <MobileFooter>
+    <StickyAction>
       <ButtonGroup
         isAttached
         w={{ base: "full", smd: "auto" }}
@@ -54,7 +54,7 @@ const AddSolutionsAndEditGuildButton = () => {
           {...buttonProps}
         />
       </ButtonGroup>
-    </MobileFooter>
+    </StickyAction>
   )
 }
 

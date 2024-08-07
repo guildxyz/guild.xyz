@@ -8,7 +8,6 @@ import {
   LayoutHero,
   LayoutMain,
 } from "@/components/Layout"
-import { StickyAction } from "@/components/[guild]/StickyAction"
 import { Anchor } from "@/components/ui/Anchor"
 import { Center, Heading, Spinner } from "@chakra-ui/react"
 import AccessHub from "components/[guild]/AccessHub"
@@ -118,7 +117,7 @@ const GuildPage = (): JSX.Element => {
           <LayoutHeadline className="pt-12">
             <GuildPageImageAndName />
 
-            <StickyAction>
+            <div className="ml-auto">
               {isAdmin && isDetailed ? (
                 <DynamicAddSolutionsAndEditGuildButton />
               ) : !isMember ? (
@@ -126,7 +125,7 @@ const GuildPage = (): JSX.Element => {
               ) : (
                 <DynamicRecheckAccessesAndLeaveButton />
               )}
-            </StickyAction>
+            </div>
           </LayoutHeadline>
 
           {(description || Object.keys(socialLinks ?? {}).length > 0) && (
