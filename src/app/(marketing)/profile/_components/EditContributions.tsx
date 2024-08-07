@@ -66,6 +66,7 @@ const EditContributionCard = ({
           size="icon"
           variant="ghost"
           onClick={deleteContribution.onSubmit}
+          isLoading={deleteContribution.isLoading}
           className="absolute top-2 right-2 size-7"
         >
           <X />
@@ -149,7 +150,7 @@ export const EditContributions = () => {
             <Card className="flex flex-col gap-2 border border-dashed bg-card-secondary p-5">
               <div className="pb-2">
                 <Label>Guild</Label>
-                <Select onValueChange={setGuildId} value={guildId}>
+                <Select onValueChange={setGuildId} value={guildId} key={guildId}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select from your guilds" />
                   </SelectTrigger>
@@ -176,9 +177,10 @@ export const EditContributions = () => {
               <div className="pb-2">
                 <Label aria-disabled={!roles?.length}>Role</Label>
                 <Select
+                  key={roleId}
                   onValueChange={setRoleId}
                   value={roleId}
-                  disabled={!roles?.length}
+                  disabled={!roles?.length || !guildId}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select from your roles" />
