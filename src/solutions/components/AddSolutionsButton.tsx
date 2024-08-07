@@ -4,28 +4,15 @@ import {
   AddRewardProvider,
   useAddRewardContext,
 } from "components/[guild]/AddRewardContext"
-import { useIsTabsStuck } from "components/[guild]/Tabs"
-import { useThemeContext } from "components/[guild]/ThemeContext"
 import Button from "components/common/Button"
 import AddSolutionsModal from "./AddSolutionsModal"
 
 const AddSolutionsButton = (buttonProps: ButtonProps) => {
   const { onOpen } = useAddRewardContext()
 
-  const { isStuck } = useIsTabsStuck()
-  const { textColor = null, buttonColorScheme = null } = useThemeContext() || {}
-
   return (
     <>
-      <Button
-        leftIcon={<Plus />}
-        onClick={onOpen}
-        {...buttonProps}
-        {...(!isStuck && {
-          color: textColor,
-          colorScheme: buttonColorScheme,
-        })}
-      >
+      <Button leftIcon={<Plus />} onClick={onOpen} {...buttonProps}>
         Add solution
       </Button>
       <AddSolutionsModal />

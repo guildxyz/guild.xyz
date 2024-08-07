@@ -4,6 +4,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogOverlay,
+  ButtonProps,
   IconButton,
   Popover,
   PopoverArrow,
@@ -18,20 +19,15 @@ import Button from "components/common/Button"
 import { Alert } from "components/common/Modal"
 import useMembership from "components/explorer/hooks/useMembership"
 import { useRef } from "react"
-import { useIsTabsStuck } from "../Tabs/Tabs"
-import { useThemeContext } from "../ThemeContext"
 import useLeaveGuild from "./hooks/useLeaveGuild"
 
-const LeaveButton = ({ disableColoring = false }) => {
+const LeaveButton = (props: ButtonProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const cancelRef = useRef()
 
   const { id: guildId } = useGuild()
   const { isMember } = useMembership()
   const { onSubmit, isLoading } = useLeaveGuild(onClose)
-
-  const { isStuck } = useIsTabsStuck() ?? {}
-  const { textColor, buttonColorScheme } = useThemeContext()
 
   if (!isMember) return null
 
@@ -43,13 +39,7 @@ const LeaveButton = ({ disableColoring = false }) => {
             aria-label="Leave guild"
             icon={<SignOut />}
             onClick={onOpen}
-            w={10}
-            h={10}
-            {...(!isStuck &&
-              !disableColoring && {
-                color: textColor,
-                colorScheme: buttonColorScheme,
-              })}
+            {...props}
           />
         </PopoverTrigger>
 

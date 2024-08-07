@@ -13,8 +13,6 @@ const EditGuildButton = (props: ButtonProps): JSX.Element => {
     <IconButton
       icon={<SlidersHorizontal />}
       aria-label="Edit Guild"
-      colorScheme={buttonColorScheme}
-      color={textColor}
       onClick={() => router.push(`/${urlName}/dashboard`)}
       {...props}
     />

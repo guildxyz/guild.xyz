@@ -6,7 +6,7 @@ const RecheckAccessesAndLeaveButton = () => {
   return (
     <ButtonGroup isAttached>
       <TopRecheckAccessesButton />
-      <Divider orientation="vertical" h={10} />
+      <Divider orientation="vertical" h="var(--chakra-sizes-11)" />
       <LeaveButton />
     </ButtonGroup>
   )
