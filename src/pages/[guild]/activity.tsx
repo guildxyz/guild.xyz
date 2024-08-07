@@ -1,4 +1,5 @@
 import { Box, Spinner, Stack, Text } from "@chakra-ui/react"
+import BackToGuildButton from "components/[guild]/BackToGuildButton"
 import NoPermissionToPageFallback from "components/[guild]/NoPermissionToPageFallback"
 import GuildTabs from "components/[guild]/Tabs/GuildTabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
@@ -38,6 +39,7 @@ const ActivityLog = (): JSX.Element => {
       textColor={textColor}
       background={localThemeColor}
       backgroundImage={localBackgroundImage}
+      backButton={<BackToGuildButton />}
     >
       <GuildTabs activeTab="ACTIVITY" isSticky={false} />
 

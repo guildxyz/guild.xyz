@@ -1,3 +1,4 @@
+import BackToGuildButton from "components/[guild]/BackToGuildButton"
 import NoPermissionToPageFallback from "components/[guild]/NoPermissionToPageFallback"
 import GuildTabs from "components/[guild]/Tabs/GuildTabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
@@ -40,6 +41,7 @@ const AnalyticsPage = (): JSX.Element => {
         imageUrl={imageUrl}
         background={localThemeColor}
         backgroundImage={localBackgroundImage}
+        backButton={<BackToGuildButton />}
       >
         {/* we can't use sticky tabs because of the hidden overflow on body */}
         <GuildTabs activeTab="ANALYTICS" isSticky={false} />

@@ -12,6 +12,7 @@ import {
   Wrap,
 } from "@chakra-ui/react"
 import { useTokenRewards } from "components/[guild]/AccessHub/hooks/useTokenRewards"
+import BackToGuildButton from "components/[guild]/BackToGuildButton"
 import GuildName from "components/[guild]/GuildName"
 import SocialIcon from "components/[guild]/SocialIcon"
 import GuildTabs from "components/[guild]/Tabs/GuildTabs"
@@ -28,7 +29,6 @@ import Card from "components/common/Card"
 import ErrorAlert from "components/common/ErrorAlert"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
-import BackButton from "components/common/Layout/components/BackButton"
 import Section from "components/common/Section"
 import { useScrollBatchedRendering } from "hooks/useScrollBatchedRendering"
 import { useRouter } from "next/router"
@@ -104,7 +104,7 @@ const Leaderboard = () => {
       imageUrl={imageUrl}
       background={localThemeColor}
       backgroundImage={localBackgroundImage}
-      backButton={<BackButton />}
+      backButton={<BackToGuildButton />}
     >
       <GuildTabs
         activeTab="LEADERBOARD"

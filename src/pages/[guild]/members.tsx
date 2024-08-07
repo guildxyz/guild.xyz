@@ -4,6 +4,7 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table"
+import BackToGuildButton from "components/[guild]/BackToGuildButton"
 import NoPermissionToPageFallback from "components/[guild]/NoPermissionToPageFallback"
 import GuildTabs from "components/[guild]/Tabs/GuildTabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
@@ -197,6 +198,7 @@ const MembersPage = (): JSX.Element => {
         backgroundImage={localBackgroundImage}
         backgroundOffset={112}
         showFooter={false}
+        backButton={<BackToGuildButton />}
       >
         <GuildTabs activeTab="MEMBERS" rightElement={<CrmMenu table={table} />} />
         {/* for debugging */}
