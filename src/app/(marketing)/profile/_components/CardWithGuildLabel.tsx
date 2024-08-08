@@ -27,7 +27,7 @@ export const CardWithGuildLabel = ({
             />
             <AvatarFallback />
           </Avatar>
-          <div className="truncate font-bold font-display sm:max-w-12">
+          <div className="truncate font-bold font-display text-white sm:max-w-12">
             {guild.name}
           </div>
           <CheckMark className="sm:hidden" />
