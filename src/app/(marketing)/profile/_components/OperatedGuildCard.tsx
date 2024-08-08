@@ -1,4 +1,5 @@
 import { CheckMark } from "@/components/CheckMark"
+import { FeaturedIcon } from "@/components/FeaturedIcon"
 import { Avatar, AvatarFallback } from "@/components/ui/Avatar"
 import { Card } from "@/components/ui/Card"
 import { Skeleton } from "@/components/ui/Skeleton"
@@ -43,6 +44,7 @@ export const OperatedGuildCard = () => {
           <h3 className="text-center font-bold font-display text-white text-xl">
             The Guilded Age Guild
             <CheckMark className="ml-2 inline-block size-6" />
+            <FeaturedIcon className="ml-1 " />
           </h3>
         </div>
       </div>
