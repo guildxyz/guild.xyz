@@ -7,7 +7,6 @@ import TabButton from "./components/TabButton"
 type Props = {
   activeTab:
     | "SETTINGS"
-    | "EVENTS"
     | "LEADERBOARD"
     | "MEMBERS"
     | "ACTIVITY"
@@ -37,7 +36,6 @@ const GuildTabs = ({ activeTab, ...rest }: Props): JSX.Element => {
           Leaderboard
         </TabButton>
       )}
-
       {isAdmin && featureFlags?.includes("CRM") && (
         <TabButton href={`/${urlName}/members`} isActive={activeTab === "MEMBERS"}>
           Members

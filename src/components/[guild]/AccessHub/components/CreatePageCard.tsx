@@ -1,4 +1,3 @@
-import {} from "@/components/ui/Alert"
 import {
   Circle,
   HStack,
@@ -17,7 +16,7 @@ import ColorCardLabel from "components/common/ColorCard/ColorCardLabel"
 
 const CreatePageCard = () => {
   const imageBgColor = useColorModeValue("gray.700", "gray.600")
-  const { isOpen, onClose } = useDisclosure()
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   return (
     <ColorCard
@@ -47,7 +46,7 @@ const CreatePageCard = () => {
         </VStack>
       </HStack>
 
-      <Button leftIcon={<Plus />} variant="outline">
+      <Button leftIcon={<Plus />} variant="outline" onClick={onOpen}>
         Create page
       </Button>
 

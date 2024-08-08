@@ -1,5 +1,4 @@
 import { Box, Spinner, Stack, Text } from "@chakra-ui/react"
-import BackToGuildButton from "components/[guild]/BackToGuildButton"
 import NoPermissionToPageFallback from "components/[guild]/NoPermissionToPageFallback"
 import GuildTabs from "components/[guild]/Tabs/GuildTabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
@@ -15,6 +14,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import ErrorAlert from "components/common/ErrorAlert"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
+import { BackButton } from "components/common/Layout/components/BackButton"
 import { SectionTitle } from "components/common/Section"
 
 const ActivityLog = (): JSX.Element => {
@@ -39,7 +39,7 @@ const ActivityLog = (): JSX.Element => {
       textColor={textColor}
       background={localThemeColor}
       backgroundImage={localBackgroundImage}
-      backButton={<BackToGuildButton />}
+      backButton={<BackButton />}
     >
       <GuildTabs activeTab="ACTIVITY" isSticky={false} />
 
