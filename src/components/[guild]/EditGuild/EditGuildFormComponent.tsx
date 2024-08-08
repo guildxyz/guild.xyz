@@ -240,7 +240,7 @@ const EditGuildFormComponent = () => {
                 px={{ base: 5, md: 6 }}
                 py={{ base: 3, md: 4 }}
               >
-                <Text>You have unsaved changes!</Text>
+                <Text fontSize="sm">You have unsaved changes!</Text>
                 <Button
                   // isDisabled={!isDirty}
                   isDisabled={Object.keys(formState?.errors ?? {}).length > 0}
