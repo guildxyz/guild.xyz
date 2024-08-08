@@ -8,42 +8,81 @@ import {
 } from "@/components/Layout"
 import { SWRProvider } from "@/components/SWRProvider"
 import { Anchor } from "@/components/ui/Anchor"
-import { Schemas } from "@guildxyz/types"
+import { Guild, Role, Schemas } from "@guildxyz/types"
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr"
-import { env } from "env"
-import { unstable_serialize } from "swr"
+// import { env } from "env"
 import { Profile } from "../_components/Profile"
 
-const Page = async ({ params: { username } }: { params: { username: string } }) => {
-  const api = env.NEXT_PUBLIC_API.replace("/v1", "")
-  const profileRequest = new URL(`v2/profiles/${username}`, api)
+const api = "https://api.guild.xyz"
+
+async function ssrFetcher<T>(...args: Parameters<typeof fetch>) {
+  return (await fetch(...args)).json() as T
+}
+
+const fetchPublicProfileData = async ({ username }: { username: string }) => {
   const contributionsRequest = new URL(`v2/profiles/${username}/contributions`, api)
-  console.log({ profileRequest, contributionsRequest, api })
-  const contributions = (await (
-    await fetch(contributionsRequest, {
+  const profileRequest = new URL(`v2/profiles/${username}`, api)
+  const contributions = await ssrFetcher<Schemas["Contribution"][]>(
+    contributionsRequest,
+    {
       next: {
         tags: ["contributions"],
         revalidate: 600,
       },
-    })
-  ).json()) as Schemas["Contribution"][]
+    }
+  )
+  const profile = await ssrFetcher<Schemas["Profile"]>(profileRequest, {
+    next: {
+      tags: ["profile"],
+      revalidate: 600,
+    },
+  })
+  const roleRequests = contributions.map(
+    ({ roleId, guildId }) => new URL(`v2/guilds/${guildId}/roles/${roleId}`, api)
+  )
+  const guildRequests = contributions.map(
+    ({ guildId }) => new URL(`v2/guilds/${guildId}`, api)
+  )
+  const guilds = await Promise.all(
+    guildRequests.map((req) =>
+      ssrFetcher<Guild>(req, {
+        next: {
+          revalidate: 3600,
+        },
+      })
+    )
+  )
+  const roles = await Promise.all(
+    roleRequests.map((req) =>
+      ssrFetcher<Role>(req, {
+        next: {
+          revalidate: 3600,
+        },
+      })
+    )
+  )
+  const guildsZipped = Object.fromEntries(
+    guildRequests.map(({ pathname }, i) => [pathname, guilds[i]])
+  )
+  const rolesZipped = Object.fromEntries(
+    roleRequests.map(({ pathname }, i) => [pathname, roles[i]])
+  )
+  return {
+    fallback: {
+      [profileRequest.pathname]: profile,
+      [contributionsRequest.pathname]: contributions,
+      ...guildsZipped,
+      ...rolesZipped,
+    },
+  }
+}
 
-  const profile = (await (
-    await fetch(profileRequest, {
-      next: {
-        tags: ["profile"],
-        revalidate: 600,
-      },
-    })
-  ).json()) as Schemas["Profile"]
-
+const Page = async ({ params: { username } }: { params: { username: string } }) => {
+  const { fallback } = await fetchPublicProfileData({ username })
   return (
     <SWRProvider
       value={{
-        fallback: {
-          [unstable_serialize(profileRequest.pathname)]: profile,
-          [unstable_serialize(contributionsRequest.pathname)]: contributions,
-        },
+        fallback,
       }}
     >
       <Layout>
