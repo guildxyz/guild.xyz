@@ -7,7 +7,6 @@ import { PropsWithChildren } from "react"
 
 type Props = {
   href?: string
-  forceRender?: boolean
 }
 
 const BackButton = ({ href, children }: PropsWithChildren<Props>) => {
