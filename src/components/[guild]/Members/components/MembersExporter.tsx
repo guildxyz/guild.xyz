@@ -15,7 +15,6 @@ import {
   Spinner,
   Stack,
   Text,
-  useBreakpointValue,
   useClipboard,
   useDisclosure,
 } from "@chakra-ui/react"
@@ -35,7 +34,6 @@ const MembersExporter = (): JSX.Element => {
   )
 
   const downloadAnchorRef = useRef(null)
-  const label = useBreakpointValue({ base: "Export", sm: "Export members" })
 
   const { hasCopied, value, setValue, onCopy } = useClipboard("")
   const csvContent = encodeURI("data:text/csv;charset=utf-8," + value)
@@ -69,12 +67,11 @@ const MembersExporter = (): JSX.Element => {
     <>
       <Button
         aria-label="Export members"
-        variant="ghost"
         leftIcon={<Icon as={Export} />}
         size="sm"
         onClick={onOpen}
       >
-        {label}
+        Export members
       </Button>
       <Modal
         isOpen={isOpen}

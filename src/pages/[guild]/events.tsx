@@ -1,6 +1,5 @@
 import { HStack, Link, VStack, Wrap } from "@chakra-ui/react"
 import { NoteBlank } from "@phosphor-icons/react"
-import { EditGuildDrawerProvider } from "components/[guild]/EditGuild/EditGuildDrawerProvider"
 import EventCard from "components/[guild]/Events/EventCard"
 import FallbackFrame from "components/[guild]/Events/FallbackFrame"
 import GuildName from "components/[guild]/GuildName"
@@ -12,7 +11,7 @@ import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import ErrorAlert from "components/common/ErrorAlert"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
-import BackButton from "components/common/Layout/components/BackButton"
+import { BackToExplorerButton } from "components/common/Layout/components/BackToExplorerButton"
 import useGuildEvents, { GuildEvent } from "hooks/useGuildEvents"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
@@ -88,7 +87,7 @@ const GuildEvents = (): JSX.Element => {
       background={localThemeColor}
       backgroundImage={localBackgroundImage}
       action={isAdmin && isDetailed && <DynamicEditGuildButton />}
-      backButton={<BackButton />}
+      backButton={<BackToExplorerButton />}
     >
       <GuildTabs activeTab="EVENTS" />
       {(isValidating || data === undefined) && (
@@ -131,9 +130,7 @@ const GuildEvents = (): JSX.Element => {
 const GuildEventsWrapper = ({ fallback }): JSX.Element => (
   <SWRConfig value={fallback && { fallback }}>
     <ThemeProvider>
-      <EditGuildDrawerProvider>
-        <GuildEvents />
-      </EditGuildDrawerProvider>
+      <GuildEvents />
     </ThemeProvider>
   </SWRConfig>
 )

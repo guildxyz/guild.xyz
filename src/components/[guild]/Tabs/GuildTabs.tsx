@@ -8,7 +8,7 @@ import TabButton from "./components/TabButton"
 
 type Props = {
   activeTab:
-    | "HOME"
+    | "SETTINGS"
     | "EVENTS"
     | "LEADERBOARD"
     | "MEMBERS"
@@ -40,39 +40,24 @@ const GuildTabs = ({ activeTab, ...rest }: Props): JSX.Element => {
 
   return (
     <Tabs {...rest}>
-      <TabButton href={`/${urlName}`} isActive={activeTab === "HOME"}>
-        Home
+      <TabButton href={`/${urlName}/dashboard`} isActive={activeTab === "SETTINGS"}>
+        Settings
       </TabButton>
 
       {firstExistingPointsReward && (
         <TabButton
           href={`/${urlName}/leaderboard/${firstExistingPointsReward.id}`}
           isActive={activeTab === "LEADERBOARD"}
-          onClick={() => {
-            captureEvent("Click on leaderboard tab", {
-              from: "home",
-              guild: urlName,
-            })
-          }}
         >
           Leaderboard
         </TabButton>
       )}
       {(activeTab === "EVENTS" || hasEvents) && (
-        <TabButton
-          href={`/${urlName}/events`}
-          isActive={activeTab === "EVENTS"}
-          onClick={() => {
-            captureEvent("Click on events tab", {
-              from: "home",
-              guild: urlName,
-            })
-          }}
-        >
+        <TabButton href={`/${urlName}/events`} isActive={activeTab === "EVENTS"}>
           Events
         </TabButton>
       )}
-      {isAdmin && featureFlags.includes("CRM") && (
+      {isAdmin && featureFlags?.includes("CRM") && (
         <TabButton href={`/${urlName}/members`} isActive={activeTab === "MEMBERS"}>
           Members
         </TabButton>

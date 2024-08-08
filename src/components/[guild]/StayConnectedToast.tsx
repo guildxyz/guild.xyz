@@ -9,7 +9,7 @@ import useGuildPermission from "./hooks/useGuildPermission"
 
 const CONTACT_TOAST_ID = "requireGuildContactToast"
 
-const useStayConnectedToast = (onClick: () => void) => {
+const useStayConnectedToast = () => {
   const toastWithButton = useToastWithButton()
   const toastIdRef = useRef<ToastId>()
   const router = useRouter()
@@ -33,13 +33,13 @@ const useStayConnectedToast = (onClick: () => void) => {
         "To keep our services smooth, we occasionally need to reach out. Please add your contact info for timely updates and support!",
       buttonProps: {
         children: "Open guild settings",
-        onClick: () => onClick(),
+        onClick: () => router.push(`/${urlName}/dashboard`),
         rightIcon: <ArrowRight />,
       },
       duration: null,
       isClosable: true,
     })
-  }, [setHasSeenAddContactInfoToast, toastWithButton, onClick])
+  }, [setHasSeenAddContactInfoToast, toastWithButton])
 
   useEffect(() => {
     if (isAdmin && !contacts?.length && !isLoading && !hasSeenAddContactInfoToast)

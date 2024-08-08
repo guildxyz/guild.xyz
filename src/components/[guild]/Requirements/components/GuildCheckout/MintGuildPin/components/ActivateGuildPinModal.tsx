@@ -10,15 +10,18 @@ import {
   Stack,
 } from "@chakra-ui/react"
 import { ArrowSquareOut } from "@phosphor-icons/react"
-import { useEditGuildDrawer } from "components/[guild]/EditGuild/EditGuildDrawerContext"
+import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
+import { useRouter } from "next/router"
 import { useMintGuildPinContext } from "../../MintGuildPinContext"
 import GuildPinImage from "../../components/GuildPinImage"
 import ActivateGuildPinForm from "./ActivateGuildPinForm"
 
 const ActivateGuildPinModal = (): JSX.Element => {
-  const { onOpen: onEditGuildDrawerOpen } = useEditGuildDrawer()
+  const router = useRouter()
+  const { urlName } = useGuild()
+
   const { isActivateModalOpen, onActivateModalClose, isTooSmallImage, error } =
     useMintGuildPinContext()
 
@@ -48,7 +51,7 @@ const ActivateGuildPinModal = (): JSX.Element => {
                   size="sm"
                   w="max-content"
                   rightIcon={<ArrowSquareOut />}
-                  onClick={onEditGuildDrawerOpen}
+                  onClick={() => router.push(`/${urlName}/dashboard`)}
                   colorScheme="blue"
                   variant="link"
                 >

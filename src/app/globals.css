@@ -314,3 +314,9 @@
 iframe[src*='/recaptcha'] {
   pointer-events: all;
 }
+
+div[class^="intercom-with-namespace-"],
+div[aria-label="Load Chat"],
+.intercom-launcher {
+  @apply !bottom-3
+}

@@ -4,8 +4,13 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogOverlay,
+  ButtonProps,
   IconButton,
-  Tooltip,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverContent,
+  PopoverTrigger,
   useDisclosure,
 } from "@chakra-ui/react"
 import { SignOut } from "@phosphor-icons/react"
@@ -14,11 +19,9 @@ import Button from "components/common/Button"
 import { Alert } from "components/common/Modal"
 import useMembership from "components/explorer/hooks/useMembership"
 import { useRef } from "react"
-import { useIsTabsStuck } from "../Tabs/Tabs"
-import { useThemeContext } from "../ThemeContext"
 import useLeaveGuild from "./hooks/useLeaveGuild"
 
-const LeaveButton = ({ disableColoring = false }) => {
+const LeaveButton = (props: ButtonProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const cancelRef = useRef()
 
@@ -26,29 +29,33 @@ const LeaveButton = ({ disableColoring = false }) => {
   const { isMember } = useMembership()
   const { onSubmit, isLoading } = useLeaveGuild(onClose)
 
-  const { isStuck } = useIsTabsStuck() ?? {}
-  const { textColor, buttonColorScheme } = useThemeContext()
-
   if (!isMember) return null
 
   return (
     <>
-      <Tooltip label="Leave guild" hasArrow>
-        <IconButton
-          aria-label="Leave guild"
-          icon={<SignOut />}
-          onClick={onOpen}
-          minW={"44px"}
-          variant="ghost"
-          rounded="full"
-          {...(!isStuck &&
-            !disableColoring && {
-              color: textColor,
-              colorScheme: buttonColorScheme,
-            })}
-        />
-      </Tooltip>
+      <Popover trigger="hover" placement="bottom">
+        <PopoverTrigger>
+          <IconButton
+            aria-label="Leave guild"
+            icon={<SignOut />}
+            onClick={onOpen}
+            {...props}
+          />
+        </PopoverTrigger>
 
+        <PopoverContent w="max-content">
+          <PopoverArrow />
+          <PopoverBody
+            fontWeight="medium"
+            fontSize="sm"
+            py={1.5}
+            px={3}
+            w="max-content"
+          >
+            Leave guild
+          </PopoverBody>
+        </PopoverContent>
+      </Popover>
       <Alert leastDestructiveRef={cancelRef} onClose={onClose} isOpen={isOpen}>
         <AlertDialogOverlay />
 

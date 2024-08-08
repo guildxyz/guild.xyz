@@ -1,20 +1,24 @@
-import { useBreakpointValue } from "@chakra-ui/react"
-import Button from "components/common/Button"
+import { StickyAction } from "@/components/StickyAction"
+import { Button } from "@/components/ui/Button"
+import { useMediaQuery } from "usehooks-ts"
 import { useOpenJoinModal } from "./JoinModal/JoinModalProvider"
 
 const JoinButton = (): JSX.Element => {
   const openJoinModal = useOpenJoinModal()
-
-  const buttonText = useBreakpointValue({
-    base: "Join Guild",
-    md: "Join Guild to get roles",
-  })
+  const isMobile = useMediaQuery("(max-width: 640px)")
 
   return (
-    <Button h="10" flexShrink="0" onClick={openJoinModal} colorScheme="green">
-      {buttonText}
-    </Button>
+    <StickyAction>
+      <Button
+        colorScheme="success"
+        {...(isMobile ? { size: "xl", variant: "subtle" } : {})}
+        className="w-full rounded-none sm:w-auto sm:rounded-2xl"
+        onClick={openJoinModal}
+      >
+        Join Guild
+      </Button>
+    </StickyAction>
   )
 }
 
-export default JoinButton
+export { JoinButton }
