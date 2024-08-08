@@ -18,7 +18,7 @@ import useUser from "components/[guild]/hooks/useUser"
 import ErrorAlert from "components/common/ErrorAlert"
 import Layout from "components/common/Layout"
 import StickyBar from "components/common/Layout/StickyBar"
-import BackButton from "components/common/Layout/components/BackButton"
+import { BackToExplorerButton } from "components/common/Layout/components/BackToExplorerButton"
 import { SectionTitle } from "components/common/Section"
 import ErrorPage from "pages/_error"
 
@@ -51,7 +51,7 @@ const ActivityLog = (): JSX.Element => {
       }}
       textColor="white"
       backgroundOffset={46}
-      backButton={<BackButton />}
+      backButton={<BackToExplorerButton />}
     >
       <ActivityLogFiltersProvider>
         <StickyBar>

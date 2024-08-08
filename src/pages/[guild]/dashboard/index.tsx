@@ -8,7 +8,6 @@ import {
 } from "@/components/Layout"
 import { LayoutHeadline, LayoutMain } from "@/components/Layout"
 import { Center, Heading, Spinner } from "@chakra-ui/react"
-import BackToGuildButton from "components/[guild]/BackToGuildButton"
 import { EditGuildFormComponent } from "components/[guild]/EditGuild/EditGuildFormComponent"
 import DeleteGuildButton from "components/[guild]/EditGuild/components/DeleteGuildButton"
 import { GuildPageBanner } from "components/[guild]/GuildPageBanner"
@@ -18,6 +17,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useUser from "components/[guild]/hooks/useUser"
 import Card from "components/common/Card"
+import { BackButton } from "components/common/Layout/components/BackButton"
 import Section from "components/common/Section"
 import Head from "next/head"
 
@@ -55,7 +55,7 @@ const DashboardPage = () => {
           <Header />
 
           <LayoutContainer className="-mb-14 mt-6">
-            <BackToGuildButton />
+            <BackButton />
           </LayoutContainer>
 
           <LayoutHeadline className="pt-8">

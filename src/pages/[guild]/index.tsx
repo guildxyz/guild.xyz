@@ -22,7 +22,7 @@ import useStayConnectedToast from "components/[guild]/StayConnectedToast"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
-import BackButton from "components/common/Layout/components/BackButton"
+import { BackToExplorerButton } from "components/common/Layout/components/BackToExplorerButton"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
 import useMembership from "components/explorer/hooks/useMembership"
@@ -111,7 +111,7 @@ const GuildPage = (): JSX.Element => {
           <Header className="mb-10" />
 
           <LayoutContainer className="-mb-16 mt-6">
-            <BackButton />
+            <BackToExplorerButton />
           </LayoutContainer>
 
           <LayoutHeadline className="pt-12">

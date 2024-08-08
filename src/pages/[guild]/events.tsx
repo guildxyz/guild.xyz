@@ -11,7 +11,7 @@ import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import ErrorAlert from "components/common/ErrorAlert"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
-import BackButton from "components/common/Layout/components/BackButton"
+import { BackToExplorerButton } from "components/common/Layout/components/BackToExplorerButton"
 import useGuildEvents, { GuildEvent } from "hooks/useGuildEvents"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
@@ -87,7 +87,7 @@ const GuildEvents = (): JSX.Element => {
       background={localThemeColor}
       backgroundImage={localBackgroundImage}
       action={isAdmin && isDetailed && <DynamicEditGuildButton />}
-      backButton={<BackButton />}
+      backButton={<BackToExplorerButton />}
     >
       <GuildTabs activeTab="EVENTS" />
       {(isValidating || data === undefined) && (
