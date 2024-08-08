@@ -10,6 +10,7 @@ import { SWRProvider } from "@/components/SWRProvider"
 import { Anchor } from "@/components/ui/Anchor"
 import { Guild, Role, Schemas } from "@guildxyz/types"
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr"
+import { notFound } from "next/navigation"
 import { Profile } from "../_components/Profile"
 
 // TODO: use env var for this url when it is changed to this value.
@@ -23,12 +24,16 @@ async function ssrFetcher<T>(...args: Parameters<typeof fetch>) {
 const fetchPublicProfileData = async ({ username }: { username: string }) => {
   const contributionsRequest = new URL(`v2/profiles/${username}/contributions`, api)
   const profileRequest = new URL(`v2/profiles/${username}`, api)
-  const profile = await ssrFetcher<Schemas["Profile"]>(profileRequest, {
+  const profileResponse = await fetch(profileRequest, {
     next: {
       tags: ["profile"],
       revalidate: 600,
     },
   })
+  if (profileResponse.status === 404) {
+    notFound()
+  }
+  const profile = (await profileResponse.json()) as Schemas["Profile"]
   const contributions = await ssrFetcher<Schemas["Contribution"][]>(
     contributionsRequest,
     {
