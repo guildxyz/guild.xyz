@@ -24,7 +24,7 @@ import useGuildPermission from "../hooks/useGuildPermission"
 import AccessIndicator from "./components/AccessIndicator"
 import HiddenRewards from "./components/HiddenRewards"
 import { RoleCardMemberCount } from "./components/MemberCount"
-import Reward, { RewardIcon } from "./components/Reward"
+import { RewardIcon } from "./components/Reward"
 import RoleDescription from "./components/RoleDescription"
 import RoleHeader from "./components/RoleHeader"
 import RoleRequirementsSection, {
@@ -188,12 +188,12 @@ const RoleCard = memo(({ role }: Props) => {
                        */
                       {...(!isOpen && ({ inert: "true" } as any))}
                     >
-                      <Reward
+                      {/* <Reward
                         platform={platform}
                         role={role}
                         withLink
                         withMotionImg
-                      />
+                      /> */}
                     </SlideFade>
                   )
                 })}

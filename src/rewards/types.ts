@@ -52,7 +52,7 @@ export type RewardComponentsData = {
   cardWarningComponent?: (props: any) => JSX.Element
   cardButton?: (props: any) => JSX.Element
   AddRewardPanel?: ComponentType<AddRewardPanelProps>
-  RoleCardComponent?: ComponentType<RewardProps>
+  SmallRewardPreview?: ComponentType<RewardProps>
 }
 
 export type CardSetting = () => JSX.Element
