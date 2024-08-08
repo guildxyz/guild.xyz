@@ -37,7 +37,6 @@ const GuildTabs = ({ activeTab, ...rest }: Props): JSX.Element => {
           Leaderboard
         </TabButton>
       )}
-
       {isAdmin && featureFlags?.includes("CRM") && (
         <TabButton href={`/${urlName}/members`} isActive={activeTab === "MEMBERS"}>
           Members

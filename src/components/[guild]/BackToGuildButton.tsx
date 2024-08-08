@@ -1,4 +1,4 @@
-import BackButton from "components/common/Layout/components/BackButton"
+import { BackButton } from "components/common/Layout/components/BackButton"
 import useGuild from "./hooks/useGuild"
 
 const BackToGuildButton = () => {
