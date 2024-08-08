@@ -15,7 +15,7 @@ import { PropsWithChildren } from "react"
 import { Rest } from "types"
 
 type Props = {
-  label: string | JSX.Element
+  label?: string | JSX.Element
   title: string
   titleRightElement?: JSX.Element
   description?: string | JSX.Element
@@ -94,16 +94,20 @@ const RewardCard = ({
       </HStack>
       {actionRow}
     </Flex>
+
     {children}
-    <ColorCardLabel
-      fallbackColor="white"
-      backgroundColor={`${colorScheme}.500`}
-      label={label}
-      top="-2px"
-      left="-2px"
-      borderBottomRightRadius="xl"
-      borderTopLeftRadius="2xl"
-    />
+
+    {label && (
+      <ColorCardLabel
+        fallbackColor="white"
+        backgroundColor={`${colorScheme}.500`}
+        label={label}
+        top="-2px"
+        left="-2px"
+        borderBottomRightRadius="xl"
+        borderTopLeftRadius="2xl"
+      />
+    )}
   </ColorCard>
 )
 

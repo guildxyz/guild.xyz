@@ -1,5 +1,4 @@
-import { Icon, Tooltip, useColorModeValue } from "@chakra-ui/react"
-import { CircleWavyCheck, Question } from "@phosphor-icons/react"
+import { useColorModeValue } from "@chakra-ui/react"
 import { useMintGuildPinContext } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
@@ -29,19 +28,10 @@ const GuildPinRewardCard = () => {
   return (
     <RewardCard
       data-test="guild-pin-reward-card"
-      label={
-        <>
-          <Icon as={CircleWavyCheck} mb="-2px" mr="1.5" />
-          Guild.xyz
-          <Tooltip label="This is a built in reward by Guild.xyz" hasArrow>
-            <Icon as={Question} mb="-2px" ml="1.5" />
-          </Tooltip>
-        </>
-      }
       title="Guild Pin"
       image="/img/guild-pin-key-3d.svg"
       colorScheme={!guildPin?.isActive ? "gray" : "GUILD"}
-      borderStyle={!guildPin?.isActive && "dashed"}
+      borderWidth={0}
       description={
         !guildPin?.isActive
           ? "Mintable badge of membership"
@@ -61,6 +51,7 @@ const GuildPinRewardCard = () => {
         bgPosition: "top 7px right 7px",
         opacity: "0.07",
       }}
+      pt={undefined}
     >
       {(!(isInvalidImage || isTooSmallImage) || isAdmin) &&
         (guildPin?.chain !== "FUEL" ? (
