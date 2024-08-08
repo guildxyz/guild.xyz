@@ -67,7 +67,7 @@ export const ChoosePass: OnboardingChain = ({ dispatchChainAction }) => {
           ))}
         </CarouselContent>
       </Carousel>
-      <div className="mb-4 space-x-3 self-center lg:hidden">
+      <div className="mb-4 flex justify-center space-x-3 lg:hidden">
         {scrollSnaps.map((_, i) => (
           <CarouselDotButton
             key={i}
@@ -110,7 +110,7 @@ export const ChoosePass: OnboardingChain = ({ dispatchChainAction }) => {
           </ToggleGroupItem>
         ))}
       </ToggleGroup>
-      <div className="space-y-4 border-border border-t bg-background p-8">
+      <div className="space-y-2 border-border border-t bg-background p-8">
         <Benefits />
       </div>
     </div>

@@ -6,10 +6,10 @@ import { BENEFITS } from "../constants"
 export const Benefits = () => {
   return (
     <>
-      <h2 className="text-center font-bold text-muted-foreground text-xl leading-none tracking-tighter">
+      <h2 className="text-center font-extrabold text-muted-foreground leading-none tracking-tighter">
         Benefits
       </h2>
-      <p className="pb-4 text-center text-muted-foreground">
+      <p className="pb-5 text-center text-muted-foreground text-sm">
         All passes provide the same benefits
       </p>
       <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
@@ -37,14 +37,14 @@ export const Benefits = () => {
             >
               <Image src={image} alt="" width={28} height={28} />
             </div>
-            <div className="space-y-1">
+            <div className="space-y-0.5">
               <h3 className="font-semibold">{title}</h3>
               <p className="text-muted-foreground">{description}</p>
             </div>
           </Card>
         ))}
       </div>
-      <p className="pt-10 text-center text-muted-foreground">
+      <p className="pt-10 text-center text-muted-foreground text-sm">
         Prices are subject to change in the future
       </p>
     </>
