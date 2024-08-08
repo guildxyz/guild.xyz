@@ -3,6 +3,7 @@ import { Schemas } from "@guildxyz/types"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import { useParams, useRouter } from "next/navigation"
 import fetcher from "utils/fetcher"
+import { revalidateProfile } from "../_server_actions/revalidateProfile"
 import { useProfile } from "./useProfile"
 
 export const useUpdateProfile = () => {
@@ -23,6 +24,7 @@ export const useUpdateProfile = () => {
       console.log("onSuccess", response)
       router.replace(`/profile/${response.username}`)
       mutate(() => response, { revalidate: false })
+      revalidateProfile()
       toast({
         variant: "success",
         title: "Successfully updated profile",

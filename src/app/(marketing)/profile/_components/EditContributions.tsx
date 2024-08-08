@@ -50,7 +50,7 @@ const useYourVerifiedGuild = () => {
 
 const EditContributionCard = ({
   contribution,
-}: { contribution: Schemas["ProfileContribution"] }) => {
+}: { contribution: Schemas["Contribution"] }) => {
   const { data: guild } = useSWRImmutable<Guild>(
     `/v2/guilds/${contribution.guildId}`,
     fetcher
@@ -90,8 +90,8 @@ const EditContributionCard = ({
             <SelectValue placeholder="Select from your guilds" />
           </SelectTrigger>
           <SelectContent>
-            {roleIds.map((roleId) => (
-              <RoleSelectItem roleId={roleId} guildId={guild.id} />
+            {roleIds?.map((roleId) => (
+              <RoleSelectItem roleId={roleId} guildId={guild.id} key={roleId} />
             ))}
           </SelectContent>
         </Select>
@@ -195,7 +195,11 @@ export const EditContributions = () => {
                   </SelectTrigger>
                   <SelectContent>
                     {roleIds?.map((roleId) => (
-                      <RoleSelectItem roleId={roleId} guildId={parseInt(guildId)} />
+                      <RoleSelectItem
+                        roleId={roleId}
+                        guildId={parseInt(guildId)}
+                        key={roleId}
+                      />
                     ))}
                   </SelectContent>
                 </Select>
