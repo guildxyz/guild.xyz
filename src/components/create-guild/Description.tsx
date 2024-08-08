@@ -12,6 +12,7 @@ const Description = ({ isDisabled = false, ...rest }): JSX.Element => {
         {...register("description")}
         size="lg"
         placeholder="Optional"
+        _placeholder={{ color: "chakra-placeholder-color" }}
         isDisabled={isDisabled}
       />
     </FormControl>
