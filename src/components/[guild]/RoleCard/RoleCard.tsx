@@ -1,5 +1,4 @@
 import {
-  Box,
   Collapse,
   Flex,
   HStack,
@@ -16,13 +15,11 @@ import useMembership, {
 } from "components/explorer/hooks/useMembership"
 import dynamic from "next/dynamic"
 import { memo, useEffect, useRef } from "react"
-import rewards from "rewards"
-import { PlatformType, Role } from "types"
+import { Role } from "types"
 import RoleRequirements from "../Requirements"
 import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
 import AccessIndicator from "./components/AccessIndicator"
-import HiddenRewards from "./components/HiddenRewards"
 import { RoleCardMemberCount } from "./components/MemberCount"
 import { RewardIcon } from "./components/Reward"
 import RoleDescription from "./components/RoleDescription"
@@ -30,6 +27,7 @@ import RoleHeader from "./components/RoleHeader"
 import RoleRequirementsSection, {
   RoleRequirementsSectionHeader,
 } from "./components/RoleRequirementsSection"
+import { RoleRewards } from "./components/RoleRewards"
 
 type Props = {
   role: Role
@@ -167,39 +165,8 @@ const RoleCard = memo(({ role }: Props) => {
                 />
               </SlideFade>
             )}
-            <ClientOnly>
-              <Box p={5} pt={2} mt="auto">
-                {role.rolePlatforms?.map((platform, i) => {
-                  const guildPlatformType = guildPlatforms.find(
-                    (gp) => gp.id === platform.guildPlatformId
-                  )?.platformId
 
-                  if (!rewards[PlatformType[guildPlatformType]]) return
-
-                  return (
-                    <SlideFade
-                      key={platform.guildPlatformId}
-                      offsetY={10}
-                      in={isOpen}
-                      transition={{ enter: { delay: i * 0.1 } }}
-                      /**
-                       * Spreading inert because it's not added to @types/react yet:
-                       * https://github.com/DefinitelyTyped/DefinitelyTyped/pull/60822
-                       */
-                      {...(!isOpen && ({ inert: "true" } as any))}
-                    >
-                      {/* <Reward
-                        platform={platform}
-                        role={role}
-                        withLink
-                        withMotionImg
-                      /> */}
-                    </SlideFade>
-                  )
-                })}
-                {role.hiddenRewards && <HiddenRewards />}
-              </Box>
-            </ClientOnly>
+            <RoleRewards role={role} isOpen={isOpen} />
           </Flex>
           <RoleRequirementsSection isOpen={isOpen}>
             <RoleRequirementsSectionHeader isOpen={isOpen}>

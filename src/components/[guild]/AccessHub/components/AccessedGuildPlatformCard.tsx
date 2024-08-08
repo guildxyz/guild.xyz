@@ -32,6 +32,8 @@ const AccessedGuildPlatformCard = ({ platform }: { platform: GuildPlatform }) =>
           <PlatformCardWarning guildPlatform={platform} />
         ) : null
       }
+      h="full"
+      p={4}
     >
       {PlatformCardButton ? (
         <PlatformCardButton platform={platform} />
