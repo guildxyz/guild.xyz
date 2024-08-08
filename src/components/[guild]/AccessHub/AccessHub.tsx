@@ -12,16 +12,11 @@ import Card from "components/common/Card"
 import ClientOnly from "components/common/ClientOnly"
 import useMembership from "components/explorer/hooks/useMembership"
 import dynamic from "next/dynamic"
-import PointsRewardCard from "rewards/Points/PointsRewardCard"
-import { TokenRewardCard } from "rewards/Token/TokenRewardCard"
 import { PlatformType } from "types"
 import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
 import useRoleGroup from "../hooks/useRoleGroup"
-import AccessedGuildPlatformCard from "./components/AccessedGuildPlatformCard"
 import CampaignCards from "./components/CampaignCards"
-import { useAccessedGuildPoints } from "./hooks/useAccessedGuildPoints"
-import { useTokenRewards } from "./hooks/useTokenRewards"
 
 const DynamicGuildPinRewardCard = dynamic(
   () => import("./components/GuildPinRewardCard")
@@ -31,6 +26,7 @@ const DynamicCreatedPageCard = dynamic(() =>
   import("./components/CreatePageCard").then((m) => m.CreatePageCard)
 )
 
+// TODO: I think we can remove this hook
 export const useAccessedGuildPlatforms = (groupId?: number) => {
   const { guildPlatforms, roles } = useGuild()
   const { isAdmin } = useGuildPermission()
@@ -86,22 +82,14 @@ const AccessHub = (): JSX.Element => {
   const { isAdmin } = useGuildPermission()
   const { isMember } = useMembership()
 
-  const accessedGuildPlatforms = useAccessedGuildPlatforms(group?.id)
-  const accessedGuildPoints = useAccessedGuildPoints("ACCESSED_ONLY")
-  const accessedGuildTokens = useTokenRewards(!isAdmin)
-
   const shouldShowGuildPin =
     !group &&
-    featureFlags.includes("GUILD_CREDENTIAL") &&
+    featureFlags?.includes("GUILD_CREDENTIAL") &&
     ((isMember && guildPin?.isActive) || isAdmin)
 
   const hasVisiblePages = !!groups?.length && roles?.some((role) => !!role.groupId)
 
-  const showAccessHub =
-    isAdmin ||
-    isMember ||
-    !!accessedGuildPlatforms?.length ||
-    (hasVisiblePages && !group)
+  const showAccessHub = isAdmin || isMember || (hasVisiblePages && !group)
 
   return (
     <ClientOnly>
@@ -114,25 +102,9 @@ const AccessHub = (): JSX.Element => {
           gap={4}
         >
           <CampaignCards />
-
-          {accessedGuildPlatforms?.map((platform) => (
-            <AccessedGuildPlatformCard key={platform.id} platform={platform} />
-          ))}
-
-          {accessedGuildPoints?.map((pointPlatform) => (
-            <PointsRewardCard key={pointPlatform.id} guildPlatform={pointPlatform} />
-          ))}
-
-          {accessedGuildTokens?.map((platform) => (
-            <TokenRewardCard platform={platform} key={platform.id} />
-          ))}
-
           {(isMember || isAdmin) &&
             (!group ? !groups?.length : true) &&
-            !shouldShowGuildPin &&
-            !accessedGuildPlatforms?.length &&
-            !accessedGuildPoints?.length &&
-            !accessedGuildTokens?.length && (
+            !shouldShowGuildPin && (
               <Card>
                 <Alert status="info" h="full">
                   <Icon as={StarHalf} boxSize="5" mr="2" mt="1px" weight="regular" />
