@@ -7,10 +7,11 @@ import {
   LayoutTitle,
 } from "@/components/Layout"
 import { LayoutHeadline, LayoutMain } from "@/components/Layout"
-import { Center, Heading, Spinner } from "@chakra-ui/react"
+import {} from "@chakra-ui/react"
 import { EditGuildFormComponent } from "components/[guild]/EditGuild/EditGuildFormComponent"
 import DeleteGuildButton from "components/[guild]/EditGuild/components/DeleteGuildButton"
 import { GuildPageBanner } from "components/[guild]/GuildPageBanner"
+import NoPermissionToPageFallback from "components/[guild]/NoPermissionToPageFallback"
 import GuildTabs from "components/[guild]/Tabs/GuildTabs"
 import { ThemeProvider } from "components/[guild]/ThemeContext"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -22,30 +23,16 @@ import Section from "components/common/Section"
 import Head from "next/head"
 
 const DashboardPage = () => {
-  const { isDetailed, name } = useGuild()
+  const { name } = useGuild()
   const { isOwner } = useGuildPermission()
   const { isSuperAdmin } = useUser()
-
-  if (!isDetailed)
-    return (
-      <>
-        <Head>
-          <title>Loading dashboard...</title>
-        </Head>
-        <Center h="100vh" w="screen">
-          <Spinner />
-          <Heading fontFamily="display" size="md" ml="4" mb="1">
-            Loading dashboard...
-          </Heading>
-        </Center>
-      </>
-    )
 
   return (
     <>
       <Head>
-        <title>{`Dashboard - ${name}`}</title>
+        <title>{`Dashboard ${name ? ` - ${name}` : ""}`}</title>
       </Head>
+
       <Layout>
         <LayoutHero>
           <LayoutBanner>
@@ -66,17 +53,19 @@ const DashboardPage = () => {
         <LayoutMain>
           <GuildTabs activeTab="SETTINGS" />
 
-          <Card px={{ base: 5, md: 6 }} py={{ base: 6, md: 7 }} mb={4}>
-            <EditGuildFormComponent />
-          </Card>
-
-          {(isOwner || isSuperAdmin) && (
-            <Card px={{ base: 5, md: 6 }} py={{ base: 6, md: 7 }}>
-              <Section title="Danger zone">
-                <DeleteGuildButton />
-              </Section>
+          <NoPermissionToPageFallback>
+            <Card px={{ base: 5, md: 6 }} py={{ base: 6, md: 7 }} mb={4}>
+              <EditGuildFormComponent />
             </Card>
-          )}
+
+            {(isOwner || isSuperAdmin) && (
+              <Card px={{ base: 5, md: 6 }} py={{ base: 6, md: 7 }}>
+                <Section title="Danger zone">
+                  <DeleteGuildButton />
+                </Section>
+              </Card>
+            )}
+          </NoPermissionToPageFallback>
         </LayoutMain>
       </Layout>
     </>
