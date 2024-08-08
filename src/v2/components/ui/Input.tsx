@@ -7,7 +7,7 @@ const inputVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-card-secondary",
+        default: "bg-white dark:bg-card-secondary",
         muted: "bg-muted",
       },
       size: {

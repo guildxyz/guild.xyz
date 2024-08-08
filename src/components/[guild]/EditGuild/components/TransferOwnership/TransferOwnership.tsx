@@ -17,7 +17,6 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import { Modal } from "components/common/Modal"
 import useToast from "hooks/useToast"
 import { useState } from "react"
-import { useEditGuildDrawer } from "../../EditGuildDrawerContext"
 import useTransferOwnership from "./hooks/useTransferOwnership"
 
 const TransferOwnership = () => {
@@ -40,11 +39,8 @@ const TransferOwnershipModal = ({ isOpen, onClose }) => {
   const { mutateGuild } = useGuild()
   const toast = useToast()
 
-  const { onClose: onEditGuildDrawerClose } = useEditGuildDrawer()
-
   const handleClose = () => {
     setNewOwner("")
-    onEditGuildDrawerClose()
     onClose()
   }
 

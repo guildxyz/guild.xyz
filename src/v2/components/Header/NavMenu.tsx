@@ -21,19 +21,20 @@ import dynamic from "next/dynamic"
 import Link, { LinkProps } from "next/link"
 import { usePathname } from "next/navigation"
 import { AnchorHTMLAttributes, ReactNode } from "react"
+import GuildLogo from "static/logo.svg"
 import { ThemeToggle } from "../ThemeToggle"
 import { Button } from "../ui/Button"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/Popover"
 
 const AnimatedLogo = dynamic(() => import("components/explorer/AnimatedLogo"), {
   ssr: false,
-  loading: () => <img src="/guildLogos/logo.svg" className="size-4" />,
+  loading: () => <GuildLogo className="size-4 text-banner-foreground" />,
 })
 
 export const NavMenu = () => (
   <Popover>
     <PopoverTrigger asChild>
-      <Button className="rounded-2xl text-white" variant="ghost">
+      <Button className="rounded-2xl text-banner-foreground" variant="ghost">
         <AnimatedLogo />
         <span className="font-bold font-display text-base">Guild</span>
         <List weight="bold" className="ml-1" />

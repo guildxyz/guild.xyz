@@ -46,6 +46,7 @@ import {
   kava,
   klaytn,
   linea,
+  lisk,
   liskSepolia,
   lukso,
   mainnet,
@@ -186,6 +187,7 @@ export const wagmiConfig = IS_TEST
         filecoin,
         rootstock,
         mode,
+        lisk as Chain,
       ],
       transports: {
         [mainnet.id]: http(),
@@ -249,6 +251,7 @@ export const wagmiConfig = IS_TEST
         [filecoin.id]: http(),
         [rootstock.id]: http(),
         [mode.id]: http(),
+        [lisk.id]: http(),
       },
       ssr: true,
       connectors: [

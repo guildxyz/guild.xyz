@@ -59,6 +59,8 @@ const SearchBar = ({
       <Input
         ref={inputRef}
         placeholder={placeholder}
+        _placeholder={{ color: "chakra-placeholder-color" }}
+        fontWeight="normal"
         overflow="hidden"
         whiteSpace="nowrap"
         textOverflow="ellipsis"

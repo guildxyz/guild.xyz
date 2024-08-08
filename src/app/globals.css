@@ -57,6 +57,9 @@
     --success-subtle-foreground: var(--success);
 
     --banner: 240 4% 16%;
+    --banner-dark: 240 2% 12%;
+    --banner-foreground: 210 20% 98%;
+    --banner-opacity: 1;
 
     --muted: 0 0% 100%;
     --muted-foreground: 240 5% 46%;
@@ -294,6 +297,20 @@
   .prose-counters ol li ol li::marker {
     content: counter(main-counter) "." counter(sub-counter) " ";
   }
+
+  .prose table {
+    @apply border
+  }
+
+  .prose table thead,
+  .prose table tr {
+    @apply border-border
+  }
+
+  .prose table th,
+  .prose table td {
+    @apply p-4
+  }
 }
 
 /*
@@ -309,4 +326,10 @@
 */
 iframe[src*='/recaptcha'] {
   pointer-events: all;
+}
+
+div[class^="intercom-with-namespace-"],
+div[aria-label="Load Chat"],
+.intercom-launcher {
+  @apply !bottom-3
 }

@@ -40,7 +40,7 @@ const LayoutHero = ({
   children,
   ...props
 }: HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn("relative pb-40", className)} {...props}>
+  <div className={cn("relative pb-40 text-banner-foreground", className)} {...props}>
     {children}
   </div>
 )
@@ -72,7 +72,7 @@ const LayoutTitle = ({
 }: HTMLAttributes<HTMLHeadingElement>) => (
   <h1
     className={cn(
-      "font-bold font-display text-4xl text-white tracking-tight sm:text-5xl",
+      "font-bold font-display text-4xl tracking-tight sm:text-5xl",
       className
     )}
     {...props}

@@ -21,7 +21,7 @@ import useUser from "components/[guild]/hooks/useUser"
 import Card from "components/common/Card"
 import ErrorAlert from "components/common/ErrorAlert"
 import Layout from "components/common/Layout"
-import BackButton from "components/common/Layout/components/BackButton"
+import { BackToExplorerButton } from "components/common/Layout/components/BackToExplorerButton"
 import { SectionTitle } from "components/common/Section"
 
 const ActivityLog = (): JSX.Element => {
@@ -54,7 +54,7 @@ const ActivityLog = (): JSX.Element => {
       }}
       textColor="white"
       backgroundOffset={46}
-      backButton={<BackButton />}
+      backButton={<BackToExplorerButton />}
     >
       {id ? (
         <ActivityLogFiltersProvider>

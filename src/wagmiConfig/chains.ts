@@ -41,6 +41,7 @@ import {
   kava,
   klaytn,
   linea,
+  lisk,
   liskSepolia,
   lukso,
   mainnet,
@@ -608,7 +609,7 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
     },
   },
   LISK_SEPOLIA: {
-    ...generateChainConfig(liskSepolia as ViemChain, "/networkLogos/lisk.svg"),
+    ...generateChainConfig(liskSepolia as ViemChain, ETH_ICON),
     iconUrl: "/networkLogos/lisk.svg",
     blockExplorerIconUrl: {
       light: "/networkLogos/lisk.svg",
@@ -698,6 +699,14 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/networkLogos/mode.svg",
     },
   },
+  LISK: {
+    ...generateChainConfig(lisk as ViemChain, ETH_ICON),
+    iconUrl: "/networkLogos/lisk.svg",
+    blockExplorerIconUrl: {
+      light: "/networkLogos/lisk.svg",
+      dark: "/networkLogos/lisk.svg",
+    },
+  },
 }
 
 enum Chains {
@@ -766,6 +775,7 @@ enum Chains {
   FILECOIN = filecoin.id,
   ROOTSTOCK = rootstock.id,
   MODE = mode.id,
+  LISK = lisk.id,
 }
 
 export type Chain = keyof typeof Chains

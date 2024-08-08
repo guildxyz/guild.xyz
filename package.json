@@ -70,7 +70,6 @@
     "@tanstack/react-virtual": "^3.5.0",
     "@types/three": "^0.166.0",
     "@vercel/kv": "^1.0.1",
-    "@vercel/postgres": "^0.7.2",
     "@visx/curve": "^3.3.0",
     "@visx/xychart": "^3.10.2",
     "@web3inbox/core": "^1.1.0",

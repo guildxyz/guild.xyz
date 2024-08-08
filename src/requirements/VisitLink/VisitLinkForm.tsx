@@ -8,9 +8,9 @@ import {
   Spinner,
   Text,
 } from "@chakra-ui/react"
+import { LinkMetadata } from "app/api/link-metadata/types"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import useDebouncedState from "hooks/useDebouncedState"
-import { LinkMetadata } from "pages/api/link-metadata"
 import { useController, useFormContext } from "react-hook-form"
 import { RequirementFormProps } from "requirements/types"
 import useSWRImmutable from "swr/immutable"

@@ -14,6 +14,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import ErrorAlert from "components/common/ErrorAlert"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
+import { BackButton } from "components/common/Layout/components/BackButton"
 import { SectionTitle } from "components/common/Section"
 
 const ActivityLog = (): JSX.Element => {
@@ -38,6 +39,7 @@ const ActivityLog = (): JSX.Element => {
       textColor={textColor}
       background={localThemeColor}
       backgroundImage={localBackgroundImage}
+      backButton={<BackButton />}
     >
       <GuildTabs activeTab="ACTIVITY" isSticky={false} />
 
