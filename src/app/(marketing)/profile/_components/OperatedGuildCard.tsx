@@ -18,7 +18,7 @@ import { PropsWithChildren } from "react"
 
 export const OperatedGuildCard = () => {
   return (
-    <Card className="flex flex-col md:flex-row">
+    <Card className="flex flex-col bg-gray-50 md:flex-row dark:bg-card">
       <div className="relative w-full px-4 py-8 md:w-1/3">
         <div className="absolute inset-0 bg-black" />
         <Image
@@ -40,7 +40,7 @@ export const OperatedGuildCard = () => {
               <Skeleton className="size-full" />
             </AvatarFallback>
           </Avatar>
-          <h3 className="text-center font-bold font-display text-xl">
+          <h3 className="text-center font-bold font-display text-white text-xl">
             The Guilded Age Guild
             <CheckMark className="ml-2 inline-block size-6" />
           </h3>
@@ -83,7 +83,7 @@ const OperatedGuildDetailCard = ({
   Icon,
   children,
 }: PropsWithChildren<{ Icon: Icon }>) => (
-  <Card className="flex items-center gap-2 rounded-xl bg-secondary p-5 font-bold">
+  <Card className="flex items-center gap-2 rounded-xl p-5 font-bold shadow dark:bg-secondary">
     <Icon weight="bold" className="min-w-min" />
     <span className="text-muted-foreground">{children}</span>
   </Card>
