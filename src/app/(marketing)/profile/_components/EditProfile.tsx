@@ -1,5 +1,5 @@
-// "use client"
-//
+"use client"
+
 // import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
 // import { Button } from "@/components/ui/Button"
 // import {
@@ -242,8 +242,6 @@
 //     </Dialog>
 //   )
 // }
-
-"use client"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
 import { Button } from "@/components/ui/Button"

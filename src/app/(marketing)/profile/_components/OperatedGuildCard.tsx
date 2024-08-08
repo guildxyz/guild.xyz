@@ -2,15 +2,15 @@ import { CheckMark } from "@/components/CheckMark"
 import { Avatar, AvatarFallback } from "@/components/ui/Avatar"
 import { Card } from "@/components/ui/Card"
 import { Skeleton } from "@/components/ui/Skeleton"
+import { Icon } from "@phosphor-icons/react"
 import {
   ArrowFatUp,
   Calendar,
   FolderSimpleUser,
-  Icon,
   ShootingStar,
   Star,
-} from "@phosphor-icons/react"
-import { User } from "@phosphor-icons/react/dist/ssr"
+  User,
+} from "@phosphor-icons/react/dist/ssr"
 import { AvatarImage } from "@radix-ui/react-avatar"
 import { Separator } from "@radix-ui/react-separator"
 import Image from "next/image"
