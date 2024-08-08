@@ -23,6 +23,12 @@ async function ssrFetcher<T>(...args: Parameters<typeof fetch>) {
 const fetchPublicProfileData = async ({ username }: { username: string }) => {
   const contributionsRequest = new URL(`v2/profiles/${username}/contributions`, api)
   const profileRequest = new URL(`v2/profiles/${username}`, api)
+  const profile = await ssrFetcher<Schemas["Profile"]>(profileRequest, {
+    next: {
+      tags: ["profile"],
+      revalidate: 600,
+    },
+  })
   const contributions = await ssrFetcher<Schemas["Contribution"][]>(
     contributionsRequest,
     {
@@ -32,12 +38,6 @@ const fetchPublicProfileData = async ({ username }: { username: string }) => {
       },
     }
   )
-  const profile = await ssrFetcher<Schemas["Profile"]>(profileRequest, {
-    next: {
-      tags: ["profile"],
-      revalidate: 600,
-    },
-  })
   const roleRequests = contributions.map(
     ({ roleId, guildId }) => new URL(`v2/guilds/${guildId}/roles/${roleId}`, api)
   )

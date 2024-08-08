@@ -2,6 +2,7 @@ import { useToast } from "@/components/ui/hooks/useToast"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import { useParams, useRouter } from "next/navigation"
 import fetcher from "utils/fetcher"
+import { revalidateProfile } from "../_server_actions/revalidateProfile"
 
 export const useDeleteProfile = () => {
   const { toast } = useToast()
@@ -17,6 +18,7 @@ export const useDeleteProfile = () => {
 
   const submitWithSign = useSubmitWithSign<object>(createProfile, {
     onSuccess: () => {
+      revalidateProfile()
       router.replace("/create-profile")
       toast({
         variant: "success",
