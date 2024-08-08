@@ -169,7 +169,10 @@ const RoleCard = memo(({ role }: Props) => {
             <RoleRewards role={role} isOpen={isOpen} />
           </Flex>
           <RoleRequirementsSection isOpen={isOpen}>
-            <RoleRequirementsSectionHeader isOpen={isOpen}>
+            <RoleRequirementsSectionHeader
+              isOpen={isOpen}
+              label={role.logic === "ANY_OF" ? `Any ${role.anyOfNum} of` : undefined}
+            >
               <Spacer />
               <ClientOnly>
                 {!isMobile && (

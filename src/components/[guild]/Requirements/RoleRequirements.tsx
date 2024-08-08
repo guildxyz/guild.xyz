@@ -20,7 +20,6 @@ import { Role } from "types"
 import LogicDivider from "../LogicDivider"
 import { RoleCardCollapseProps } from "../RoleCard"
 import useRequirements from "../hooks/useRequirements"
-import AnyOfHeader from "./components/AnyOfHeader"
 import ExpandRequirementsButton from "./components/ExpandRequirementsButton"
 import HiddenRequirementAccessIndicator from "./components/HiddenRequirementAccessIndicator"
 import RequirementComponent, { RequirementSkeleton } from "./components/Requirement"
@@ -66,7 +65,7 @@ const RoleRequirements = ({
       style={{ width: "100%" }}
     >
       <VStack spacing="0">
-        {role.logic === "ANY_OF" && <AnyOfHeader anyOfNum={role.anyOfNum} />}
+        {/* {role.logic === "ANY_OF" && <AnyOfHeader anyOfNum={role.anyOfNum} />} */}
         <VStack ref={initialRequirementsRef} spacing={0} w="full" p={5} pt={0}>
           {/* Checking !data here too, so we don't show a loading state when we have data from the public request, but the authenticated request is still loading */}
           {isLoading && !requirements ? (
