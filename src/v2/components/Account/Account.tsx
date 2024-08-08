@@ -35,6 +35,7 @@ export const Account = () => {
           variant="ghost"
           onClick={() => setIsWalletSelectorModalOpen(true)}
           data-testid="sign-in-button"
+          className="rounded-2xl"
         >
           <SignIn weight="bold" />
           Sign in
@@ -48,7 +49,7 @@ export const Account = () => {
         <PopoverTrigger asChild>
           <Button
             variant="ghost"
-            className="rounded-r-none border-border border-r"
+            className="rounded-r-none rounded-l-2xl border-border border-r"
             aria-label="Notifications"
             onClick={() => {
               if (isOpen) return
@@ -66,7 +67,7 @@ export const Account = () => {
       <Button
         variant="ghost"
         onClick={() => setIsAccountModalOpen(true)}
-        className="rounded-l-none"
+        className="rounded-r-2xl rounded-l-none"
       >
         <div className="flex items-center gap-3">
           <div className="flex flex-col items-end gap-0">
