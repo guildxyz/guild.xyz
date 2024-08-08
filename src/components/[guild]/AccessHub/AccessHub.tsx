@@ -93,7 +93,17 @@ const AccessHub = (): JSX.Element => {
 
   return (
     <ClientOnly>
-      <Collapse in={showAccessHub} unmountOnExit style={{ width: "100%" }}>
+      <Collapse
+        in={showAccessHub}
+        unmountOnExit
+        style={{
+          width: "calc(100% + 20px)",
+          paddingBottom: 10,
+          marginBottom: -10,
+          paddingInline: 10,
+          marginInline: -10,
+        }}
+      >
         <SimpleGrid
           templateColumns={{
             base: "repeat(auto-fit, minmax(250px, 1fr))",
@@ -122,9 +132,8 @@ const AccessHub = (): JSX.Element => {
               </Card>
             )}
 
-          {shouldShowGuildPin && <DynamicGuildPinRewardCard />}
-
           {isAdmin && <DynamicCreatedPageCard />}
+          {shouldShowGuildPin && <DynamicGuildPinRewardCard />}
         </SimpleGrid>
       </Collapse>
     </ClientOnly>
