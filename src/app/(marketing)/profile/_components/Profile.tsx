@@ -40,7 +40,7 @@ export const Profile = () => {
             </AvatarFallback>
           </Avatar>
         </div>
-        <h1 className="text-center font-bold text-4xl leading-normal tracking-tight">
+        <h1 className="break-all text-center font-bold text-4xl leading-tight tracking-tight">
           {profile.name}
           <CheckMark className="ml-2 inline size-6 fill-yellow-500" />
         </h1>

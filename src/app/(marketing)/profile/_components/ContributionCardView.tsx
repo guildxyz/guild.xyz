@@ -1,9 +1,8 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
 import { AvatarGroup } from "@/components/ui/AvatarGroup"
-import { Button } from "@/components/ui/Button"
 import { Separator } from "@/components/ui/Separator"
 import { Guild, Role } from "@guildxyz/types"
-import { CaretDown, Users } from "@phosphor-icons/react/dist/ssr"
+import { Users } from "@phosphor-icons/react/dist/ssr"
 import { CardWithGuildLabel } from "./CardWithGuildLabel"
 
 export const ContributionCardView = ({
@@ -38,9 +37,6 @@ export const ContributionCardView = ({
             COLLECTION:
           </div>
           <AvatarGroup imageUrls={["", "", ""]} count={87} size="lg" />
-          <Button size="icon" variant="ghost" className="ml-2 hidden md:flex">
-            <CaretDown weight="bold" className="size-5" />
-          </Button>
         </div>
       </div>
     </CardWithGuildLabel>
