@@ -30,7 +30,7 @@ import { cn } from "@/lib/utils"
 import { profileSchema } from "@/lib/validations/profileSchema"
 import { Schemas } from "@guildxyz/types"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Eyedropper, Image as ImageIcon, Pencil, User } from "@phosphor-icons/react"
+import { Image as ImageIcon, Pencil, User } from "@phosphor-icons/react"
 import useDropzone from "hooks/useDropzone"
 import usePinata from "hooks/usePinata"
 import Image from "next/image"
@@ -39,6 +39,7 @@ import { FormProvider, useForm } from "react-hook-form"
 import { useDeleteProfile } from "../_hooks/useDeleteProfile"
 import { useProfile } from "../_hooks/useProfile"
 import { useUpdateProfile } from "../_hooks/useUpdateProfile"
+import { ProfileColorPicker } from "./ProfileColorPicker"
 
 export const EditProfile = () => {
   const { data: profile } = useProfile()
@@ -49,7 +50,6 @@ export const EditProfile = () => {
     },
     mode: "onTouched",
   })
-
   const disclosure = useDisclosure()
   const editProfile = useUpdateProfile()
 
@@ -119,7 +119,8 @@ export const EditProfile = () => {
                   render={({ field }) => (
                     <FormItem className="relative flex h-32 items-center justify-center overflow-hidden rounded-xl border">
                       <div className="absolute inset-0 size-full">
-                        {field.value ? (
+                        {field.value?.startsWith("http") ||
+                        field.value?.startsWith("/") ? (
                           <Image
                             src={field.value}
                             width={144}
@@ -127,7 +128,13 @@ export const EditProfile = () => {
                             alt="profile background"
                           />
                         ) : (
-                          <div className="size-full bg-purple-800" />
+                          <div
+                            className={`size-full`}
+                            style={{
+                              background: field.value ?? "black",
+                              filter: "brightness(70%)",
+                            }}
+                          />
                         )}
                       </div>
                       <div className="relative flex items-center gap-3">
@@ -138,9 +145,7 @@ export const EditProfile = () => {
                           orientation="vertical"
                           className="h-6 w-0.5 bg-white/50"
                         />
-                        <Button size="icon" variant="ghost">
-                          <Eyedropper weight="bold" size={24} />
-                        </Button>
+                        <ProfileColorPicker />
                       </div>
                     </FormItem>
                   )}
