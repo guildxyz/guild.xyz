@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/Form"
 import { Input } from "@/components/ui/Input"
 import { useToast } from "@/components/ui/hooks/useToast"
+import { usePinata } from "@/hooks/usePinata"
 import { cn } from "@/lib/utils"
 import { profileSchema } from "@/lib/validations/profileSchema"
 import { Schemas } from "@guildxyz/types"
@@ -21,7 +22,6 @@ import { Spinner, UploadSimple, User } from "@phosphor-icons/react"
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr"
 import useUser from "components/[guild]/hooks/useUser"
 import useDropzone from "hooks/useDropzone"
-import usePinata from "hooks/usePinata"
 import { useEffect, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { useCreateProfile } from "../_hooks/useCreateProfile"
@@ -100,9 +100,11 @@ export const StartProfile: OnboardingChain = () => {
   })
 
   let avatarFallBackIcon = <User size={32} />
+  const isAvatarLoading =
+    isUploading || (uploadProgress !== 0 && uploadProgress !== 1)
   if (isDragActive) {
     avatarFallBackIcon = <UploadSimple size={32} className="animate-wiggle" />
-  } else if (isUploading || (uploadProgress !== 0 && uploadProgress !== 1)) {
+  } else if (isAvatarLoading) {
     avatarFallBackIcon = <Spinner size={32} className="animate-spin" />
   }
 
@@ -129,17 +131,17 @@ export const StartProfile: OnboardingChain = () => {
                 {...getRootProps()}
               >
                 <Avatar className="size-36 bg-card-secondary">
+                  <AvatarFallback className="bg-card-secondary">
+                    {avatarFallBackIcon}
+                  </AvatarFallback>
                   {field.value && (
                     <AvatarImage
-                      src={field.value}
+                      src={!isAvatarLoading ? field.value : "/"}
                       width={144}
                       height={144}
                       alt="profile avatar"
                     />
                   )}
-                  <AvatarFallback className="bg-card-secondary">
-                    {avatarFallBackIcon}
-                  </AvatarFallback>
                 </Avatar>
               </Button>
             )}
