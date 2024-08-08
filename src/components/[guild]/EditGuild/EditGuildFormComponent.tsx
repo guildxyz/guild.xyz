@@ -8,12 +8,10 @@ import {
   VStack,
   useDisclosure,
 } from "@chakra-ui/react"
-import { zodResolver } from "@hookform/resolvers/zod"
 import Admins from "components/[guild]/EditGuild/components/Admins/Admins"
 import BackgroundImageUploader from "components/[guild]/EditGuild/components/BackgroundImageUploader"
 import ChangingGuildPinDesignAlert from "components/[guild]/EditGuild/components/ChangingGuildPinDesignAlert"
 import ColorPicker from "components/[guild]/EditGuild/components/ColorPicker"
-import Events from "components/[guild]/EditGuild/components/Events/Events"
 import HideFromExplorerToggle from "components/[guild]/EditGuild/components/HideFromExplorerToggle"
 import SocialLinks from "components/[guild]/EditGuild/components/SocialLinks"
 import TagManager from "components/[guild]/EditGuild/components/TagManager"
@@ -32,7 +30,6 @@ import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
 import { AnimatePresence, motion } from "framer-motion"
-import useGuildEvents from "hooks/useGuildEvents"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useToast from "hooks/useToast"
@@ -41,35 +38,7 @@ import dynamic from "next/dynamic"
 import { useCallback } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import handleSubmitDirty from "utils/handleSubmitDirty"
-import { z } from "zod"
 import { EditGuildForm } from "./types"
-
-const eventSourcesSchema = z
-  .object({
-    EVENTBRITE: z
-      .string()
-      .url()
-      .regex(/(.)+eventbrite\.com\/e\/(.)+/)
-      .transform((url) => url.replace(/\/+$/, ""))
-      .optional()
-      .nullable(),
-    LUMA: z
-      .string()
-      .url()
-      .regex(/(.)+lu\.ma\/(u|user)\/(.)+/)
-      .transform((url) => url.replace(/\/+$/, ""))
-      .optional()
-      .nullable(),
-    LINK3: z
-      .string()
-      .url()
-      .regex(/(.)+link3\.to\/(.)+/)
-      .transform((url) => url.replace(/\/+$/, ""))
-      .optional()
-      .nullable(),
-    DISCORD: z.string().url().optional().nullable(),
-  })
-  .optional()
 
 const DynamicFeatureFlags = dynamic(
   () => import("components/[guild]/EditGuild/components/FeatureFlags")
@@ -90,12 +59,10 @@ const EditGuildFormComponent = () => {
     socialLinks,
     contacts,
     featureFlags,
-    eventSources,
     tags: savedTags,
     guildPin,
   } = useGuild()
   const { isSuperAdmin } = useUser()
-  const { mutate: mutateEvents } = useGuildEvents()
 
   const defaultValues = {
     name,
@@ -116,23 +83,11 @@ const EditGuildFormComponent = () => {
     socialLinks,
     featureFlags: isSuperAdmin ? featureFlags : undefined,
     tags: savedTags,
-    eventSources: {
-      EVENTBRITE: eventSources?.EVENTBRITE || null,
-      LUMA: eventSources?.LUMA || null,
-      LINK3: eventSources?.LINK3 || null,
-    },
   } satisfies EditGuildForm
 
   const methods = useForm<EditGuildForm>({
     mode: "all",
     defaultValues,
-    resolver: zodResolver(
-      z
-        .object({
-          eventSources: eventSourcesSchema,
-        })
-        .passthrough() // So we don't validate the other keys with Zod (yet)
-    ),
   })
   const { control, reset, formState } = methods
 
@@ -145,7 +100,6 @@ const EditGuildFormComponent = () => {
       title: `Guild successfully updated!`,
       status: "success",
     })
-    mutateEvents()
     reset(undefined, { keepValues: true })
   }
 
@@ -244,15 +198,8 @@ const EditGuildFormComponent = () => {
 
           <Divider />
 
-          <Section title="Events" spacing="2">
-            <Events />
-          </Section>
-
-          <Divider />
-
           <Section title="Security" spacing="4">
             {savedTags?.includes("VERIFIED") && <HideFromExplorerToggle />}
-
             <Admins />
           </Section>
 
@@ -292,7 +239,6 @@ const EditGuildFormComponent = () => {
                 justifyContent="space-between"
                 px={{ base: 5, md: 6 }}
                 py={{ base: 3, md: 4 }}
-                spacing={4}
               >
                 <Text fontSize="sm">You have unsaved changes!</Text>
                 <Button
@@ -304,7 +250,6 @@ const EditGuildFormComponent = () => {
                   loadingText={loadingText}
                   onClick={onSave}
                   maxW="max-content"
-                  flexShrink={0}
                 >
                   Save changes
                 </Button>
