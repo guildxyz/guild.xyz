@@ -27,7 +27,6 @@ const RoleRequirementsSection = ({
 
 const RoleRequirementsSectionHeader = ({
   isOpen = true,
-  label,
   children,
 }: PropsWithChildren<any>) => (
   <HStack
@@ -38,23 +37,21 @@ const RoleRequirementsSectionHeader = ({
     transform={!isOpen && "translateY(10px)"}
     transition="transform .2s"
   >
-    {label && (
-      <Text
-        as="span"
-        mt="1"
-        mr="2"
-        fontSize="xs"
-        fontWeight="bold"
-        color="gray"
-        textTransform="uppercase"
-        noOfLines={1}
-        opacity={isOpen ? 1 : 0}
-        pointerEvents={!isOpen ? "none" : "auto"}
-        transition="opacity .2s"
-      >
-        {label}
-      </Text>
-    )}
+    <Text
+      as="span"
+      mt="1"
+      mr="2"
+      fontSize="xs"
+      fontWeight="bold"
+      color="gray"
+      textTransform="uppercase"
+      noOfLines={1}
+      opacity={isOpen ? 1 : 0}
+      pointerEvents={!isOpen ? "none" : "auto"}
+      transition="opacity .2s"
+    >
+      Requirements to qualify
+    </Text>
     {children}
   </HStack>
 )
