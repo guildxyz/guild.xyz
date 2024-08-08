@@ -2,6 +2,7 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
 import { Button } from "@/components/ui/Button"
+import { Card } from "@/components/ui/Card"
 import {
   Dialog,
   DialogBody,
@@ -95,10 +96,12 @@ export const EditProfile = () => {
   return (
     <Dialog onOpenChange={disclosure.setValue} open={disclosure.isOpen}>
       <DialogTrigger asChild>
-        <Button className="-top-8 absolute right-0" variant="solid">
-          <Pencil weight="bold" />
-          Edit profile
-        </Button>
+        <Card className="-top-8 absolute right-0 rounded-xl">
+          <Button variant="solid">
+            <Pencil weight="bold" />
+            Edit profile
+          </Button>
+        </Card>
       </DialogTrigger>
       <DialogContent size="lg" className="bg-background">
         <DialogHeader>
