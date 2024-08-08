@@ -1,10 +1,12 @@
 import { z } from "zod"
 
+const nullToUndefined = <T extends z.ZodTypeAny>(schema: T) =>
+  z.preprocess((value) => (value === null ? undefined : value), schema)
+
 export const profileSchema = z.object({
-  name: z
-    .string()
-    .max(100, { message: "Name cannot exceed 100 characters" })
-    .optional(),
+  name: nullToUndefined(
+    z.string().max(100, { message: "Name cannot exceed 100 characters" }).optional()
+  ),
   username: z
     .string()
     .min(1, { message: "Username is required" })
@@ -20,18 +22,21 @@ export const profileSchema = z.object({
         })
       }
     }),
-  bio: z
-    .string()
-    .max(1000, { message: "Bio cannot exceed 1000 characters" })
-    .optional(),
-  profileImageUrl: z
-    .string()
-    .url({ message: "Profile image must be a valid URL" })
-    .max(500, { message: "Profile image URL cannot exceed 500 characters" })
-    .optional(),
-  backgroundImageUrl: z
-    .string()
-    .url({ message: "Background image must be a valid URL" })
-    .max(500, { message: "Profile image URL cannot exceed 500 characters" })
-    .optional(),
+  bio: nullToUndefined(
+    z.string().max(1000, { message: "Bio cannot exceed 1000 characters" }).optional()
+  ),
+  profileImageUrl: nullToUndefined(
+    z
+      .string()
+      .url({ message: "Profile image must be a valid URL" })
+      .max(500, { message: "Profile image URL cannot exceed 500 characters" })
+      .optional()
+  ),
+  backgroundImageUrl: nullToUndefined(
+    z
+      .string()
+      .url({ message: "Background image must be a valid URL" })
+      .max(500, { message: "Profile image URL cannot exceed 500 characters" })
+      .optional()
+  ),
 })

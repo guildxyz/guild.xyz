@@ -1,6 +1,7 @@
 import { useConfetti } from "@/components/Confetti"
 import { useToast } from "@/components/ui/hooks/useToast"
 import { profileSchema } from "@/lib/validations/profileSchema"
+import { Schemas } from "@guildxyz/types"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import { useRouter } from "next/navigation"
 import fetcher from "utils/fetcher"
@@ -17,14 +18,13 @@ export const useCreateProfile = () => {
       ...signedValidation,
     })
 
-  const submitWithSign = useSubmitWithSign<unknown>(createProfile, {
+  const submitWithSign = useSubmitWithSign<Schemas["Profile"]>(createProfile, {
     onSuccess: (response) => {
       toast({
         variant: "success",
         title: "Successfully created profile",
       })
       confettiPlayer.current("Confetti from left and right")
-      // @ts-ignore: TODO: either acquire types from backend, or type them here
       router.replace(`/profile/${response.username}`)
     },
     onError: (response) => {

@@ -148,13 +148,11 @@ export const StartProfile: OnboardingChain = () => {
           {method === undefined ? (
             <>
               <ConnectFarcasterButton
-                className="ml-0 w-full gap-2"
+                className="ml-0 flex w-full items-center gap-2"
                 size="md"
                 disabled={!!farcasterProfile}
               >
-                <div className="size-6">
-                  <FarcasterImage />
-                </div>
+                <FarcasterImage />
                 Connect farcaster
               </ConnectFarcasterButton>
               <Button

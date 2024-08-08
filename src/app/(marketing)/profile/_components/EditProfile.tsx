@@ -7,6 +7,7 @@ import {
   DialogBody,
   DialogCloseButton,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -23,6 +24,7 @@ import { Input } from "@/components/ui/Input"
 import { Separator } from "@/components/ui/Separator"
 import { Textarea } from "@/components/ui/Textarea"
 import { toast } from "@/components/ui/hooks/useToast"
+import { useDisclosure } from "@/hooks/useDisclosure"
 import { cn } from "@/lib/utils"
 import { profileSchema } from "@/lib/validations/profileSchema"
 import { Schemas } from "@guildxyz/types"
@@ -33,18 +35,27 @@ import usePinata from "hooks/usePinata"
 import Image from "next/image"
 import { useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
+import { useDeleteProfile } from "../_hooks/useDeleteProfile"
+import { useProfile } from "../_hooks/useProfile"
+import { useUpdateProfile } from "../_hooks/useUpdateProfile"
 
-export const EditProfile = (profile: Schemas["ProfileUpdate"]) => {
+export const EditProfile = () => {
+  const { data: profile } = useProfile()
   const form = useForm<Schemas["ProfileUpdate"]>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      ...profile,
+      ...profileSchema.parse(profile),
     },
     mode: "onTouched",
   })
 
+  const disclosure = useDisclosure()
+  const editProfile = useUpdateProfile()
+
   async function onSubmit(values: Schemas["ProfileUpdate"]) {
-    console.log("edit profile submit", values)
+    await editProfile.onSubmit(profileSchema.parse(values))
+    if (editProfile.error) return
+    disclosure.onClose()
   }
 
   const { isUploading, onUpload } = usePinata({
@@ -79,28 +90,31 @@ export const EditProfile = (profile: Schemas["ProfileUpdate"]) => {
     },
   })
 
+  const deleteProfile = useDeleteProfile()
+
   return (
-    <Dialog>
+    <Dialog onOpenChange={disclosure.setValue} open={disclosure.isOpen}>
       <DialogTrigger asChild>
         <Button className="-top-8 absolute right-0" variant="solid">
           <Pencil weight="bold" />
           Edit profile
         </Button>
       </DialogTrigger>
-      <FormProvider {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <DialogContent size="lg" className="bg-background" scrollBody>
-            <DialogHeader>
-              <DialogTitle>Edit profile</DialogTitle>
-              <DialogCloseButton />
-            </DialogHeader>
-            <DialogBody scroll>
+      <DialogContent size="lg" className="bg-background">
+        <DialogHeader>
+          <DialogTitle>Edit profile</DialogTitle>
+          <DialogDescription />
+          <DialogCloseButton />
+        </DialogHeader>
+        <FormProvider {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <DialogBody>
               <div className="relative mb-20">
                 <FormField
                   control={form.control}
                   name="backgroundImageUrl"
                   render={({ field }) => (
-                    <FormItem className="relative flex h-32 items-center justify-center overflow-hidden rounded-xl">
+                    <FormItem className="relative flex h-32 items-center justify-center overflow-hidden rounded-xl border">
                       <div className="absolute inset-0 size-full">
                         {field.value ? (
                           <Image
@@ -136,7 +150,7 @@ export const EditProfile = (profile: Schemas["ProfileUpdate"]) => {
                       variant="unstyled"
                       type="button"
                       className={cn(
-                        "-bottom-2 absolute left-4 size-28 translate-y-1/2 rounded-full border border-dotted",
+                        "-bottom-2 absolute left-4 size-28 translate-y-1/2 rounded-full border-2 border-dotted",
                         { "border-solid": field.value }
                       )}
                       {...getRootProps()}
@@ -166,7 +180,12 @@ export const EditProfile = (profile: Schemas["ProfileUpdate"]) => {
                   <FormItem className="pb-2">
                     <FormLabel>Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="" variant="muted" {...field} />
+                      <Input
+                        placeholder=""
+                        variant="muted"
+                        {...field}
+                        value={field.value ?? undefined}
+                      />
                     </FormControl>
                     <FormErrorMessage />
                   </FormItem>
@@ -189,34 +208,37 @@ export const EditProfile = (profile: Schemas["ProfileUpdate"]) => {
                 control={form.control}
                 name="bio"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="">
                     <FormLabel>Bio</FormLabel>
                     <FormControl>
                       <Textarea
                         placeholder=""
                         className="max-h-12 bg-muted"
                         {...field}
+                        value={field.value ?? undefined}
                       />
                     </FormControl>
                     <FormErrorMessage />
                   </FormItem>
                 )}
               />
-              <Separator className="mt-8 mb-4 bg-border-muted" />
+              <Separator className="my-4" />
               <div>
                 <p className="mb-2 font-medium">Danger zone</p>
                 <Button
+                  onClick={deleteProfile.onSubmit}
                   variant="subtle"
+                  type="button"
                   colorScheme="destructive"
-                  type="submit"
                   size="sm"
                 >
                   Delete profile
                 </Button>
               </div>
             </DialogBody>
-            <DialogFooter className="pt-5 pb-7">
+            <DialogFooter>
               <Button
+                isLoading={editProfile.isLoading}
                 colorScheme="success"
                 type="submit"
                 disabled={!form.formState.isValid}
@@ -224,9 +246,9 @@ export const EditProfile = (profile: Schemas["ProfileUpdate"]) => {
                 Save
               </Button>
             </DialogFooter>
-          </DialogContent>
-        </form>
-      </FormProvider>
+          </form>
+        </FormProvider>
+      </DialogContent>
     </Dialog>
   )
 }

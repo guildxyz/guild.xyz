@@ -2,19 +2,20 @@ import { useToast } from "@/components/ui/hooks/useToast"
 import { Schemas } from "@guildxyz/types"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import fetcher from "utils/fetcher"
+import { revalidateContribution } from "../_server_actions/revalidateContribution"
 import { useContribution } from "./useContribution"
 import { useProfile } from "./useProfile"
 
 export const useDeleteContribution = ({
   contributionId,
-}: { contributionId: Schemas["ProfileContribution"]["id"] }) => {
+}: { contributionId: Schemas["Contribution"]["id"] }) => {
   const { toast } = useToast()
   const { data: profile } = useProfile()
   const contribution = useContribution()
 
   const update = async (signedValidation: SignedValidation) => {
     return fetcher(
-      `/v2/profiles/${(profile as Schemas["Profile"]).id}/contributions/${contributionId}`,
+      `/v2/profiles/${(profile as Schemas["Profile"]).username}/contributions/${contributionId}`,
       {
         method: "DELETE",
         ...signedValidation,
@@ -23,7 +24,7 @@ export const useDeleteContribution = ({
   }
 
   const submitWithSign = useSubmitWithSign<object>(update, {
-    onSuccess: (response) => {
+    onSuccess: () => {
       contribution.mutate(
         (prev) => {
           if (!prev || !contribution.data) return
@@ -32,6 +33,7 @@ export const useDeleteContribution = ({
         },
         { revalidate: false }
       )
+      revalidateContribution()
       toast({
         variant: "success",
         title: "Successfully deleted contribution",
@@ -40,7 +42,7 @@ export const useDeleteContribution = ({
     onError: (response) => {
       toast({
         variant: "error",
-        title: "Failed to deleted contribution",
+        title: "Failed to delete contribution",
         description: response.error,
       })
     },
