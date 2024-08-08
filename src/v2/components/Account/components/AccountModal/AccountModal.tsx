@@ -100,16 +100,21 @@ const AccountModal = () => {
                       <Skeleton className="size-full" />
                     </AvatarFallback>
                   </Avatar>
-                  <div className="flex w-full flex-col gap-1">
-                    <h3 className="flex items-center font-bold">
+                  <div className="flex w-full flex-col">
+                    <h3 className=" flex items-center font-bold">
                       {guildProfile.name}
-                      <CheckMark className="ml-2 inline-block fill-yellow-500" />
+                      <CheckMark className="-mt-0.5 ml-1 inline-block fill-yellow-500" />
                     </h3>
-                    <div className="text-muted-foreground">1999 / 2000 XP</div>
-                    <div className="mt-1 flex gap-2">
+                    <div className="text-medium text-muted-foreground">
+                      1999 / 2000 XP
+                    </div>
+                    <div className="mt-2 flex gap-1.5">
                       <Anchor
                         href={`/profile/${guildProfile.username}`}
-                        className={buttonVariants({ className: "w-full gap-3" })}
+                        className={buttonVariants({
+                          className: "w-full gap-3",
+                          size: "sm",
+                        })}
                         variant="unstyled"
                       >
                         View profile
@@ -117,7 +122,11 @@ const AccountModal = () => {
                       </Anchor>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button className="aspect-square" variant="outline">
+                          <Button
+                            className="aspect-square"
+                            variant="outline"
+                            size="sm"
+                          >
                             <DotsThreeVertical weight="bold" className="min-w-4" />
                           </Button>
                         </DropdownMenuTrigger>
