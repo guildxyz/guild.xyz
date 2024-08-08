@@ -152,9 +152,7 @@ export const StartProfile: OnboardingChain = () => {
                 size="md"
                 disabled={!!farcasterProfile}
               >
-                <div className="size-6">
-                  <FarcasterImage />
-                </div>
+                <FarcasterImage />
                 Connect farcaster
               </ConnectFarcasterButton>
               <Button
