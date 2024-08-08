@@ -26,7 +26,6 @@ import {
 import { Separator } from "@/components/ui/Separator"
 import { Skeleton } from "@/components/ui/Skeleton"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip"
-import { useDisclosure } from "@/hooks/useDisclosure"
 import { useUserPublic } from "@/hooks/useUserPublic"
 import {
   ArrowRight,
@@ -34,15 +33,14 @@ import {
   DotsThreeVertical,
   File,
 } from "@phosphor-icons/react"
-import { LinkBreak, SignOut } from "@phosphor-icons/react/dist/ssr"
+import { SignOut } from "@phosphor-icons/react/dist/ssr"
 import useUser from "components/[guild]/hooks/useUser"
 import useResolveAddress from "hooks/useResolveAddress"
 import { useAtom } from "jotai"
 import { deleteKeyPairFromIdb } from "utils/keyPair"
 import { useAccount } from "wagmi"
-import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
-import NetworkModal from "../NetworkModal"
 import { AccountConnections } from "./components/AccountConnections"
+import { NetworkIndicator } from "./components/NetworkIndicator"
 import { UsersGuildPins } from "./components/UsersGuildPins"
 
 const AccountModal = () => {
@@ -56,12 +54,6 @@ const AccountModal = () => {
 
   const { address: evmAddress, chainId } = useAccount()
   const domain = useResolveAddress(evmAddress)
-
-  const {
-    isOpen: isNetworkModalOpen,
-    onOpen: openNetworkModal,
-    onClose: closeNetworkModal,
-  } = useDisclosure()
 
   const handleLogout = () => {
     const keysToRemove = Object.keys({ ...window.localStorage }).filter((key) =>
@@ -139,8 +131,9 @@ const AccountModal = () => {
                             Purchase history
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
-                          <DropdownMenuLabel className="mt-3 flex px-4 text-muted-foreground">
+                          <DropdownMenuLabel className="mt-3 flex gap-1 px-4 text-muted-foreground">
                             Connected with {connectorName}
+                            <NetworkIndicator />
                           </DropdownMenuLabel>
                           <DropdownMenuItem
                             className="flex items-center gap-2 px-4 font-semibold"
@@ -171,36 +164,8 @@ const AccountModal = () => {
                       <p className="line-clamp-1 font-medium text-muted-foreground text-sm">
                         {`Connected with ${connectorName}`}
                       </p>
-
-                      {type === "EVM" ? (
-                        <Button
-                          variant="ghost"
-                          onClick={() => openNetworkModal()}
-                          size="xs"
-                          className="w-6 px-0"
-                        >
-                          {CHAIN_CONFIG[Chains[chainId]] ? (
-                            <img
-                              src={CHAIN_CONFIG[Chains[chainId]].iconUrl}
-                              alt={CHAIN_CONFIG[Chains[chainId]].name}
-                              className="size-4"
-                            />
-                          ) : (
-                            <LinkBreak weight="bold" />
-                          )}
-                        </Button>
-                      ) : (
-                        <img
-                          src="/walletLogos/fuel.svg"
-                          alt="Fuel"
-                          className="size-4"
-                        />
-                      )}
+                      <NetworkIndicator />
                     </div>
-                    <NetworkModal
-                      isOpen={isNetworkModalOpen}
-                      onClose={closeNetworkModal}
-                    />
                   </div>
 
                   <Tooltip>
