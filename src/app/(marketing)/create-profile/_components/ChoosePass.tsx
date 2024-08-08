@@ -110,7 +110,7 @@ export const ChoosePass: OnboardingChain = ({ dispatchChainAction }) => {
           </ToggleGroupItem>
         ))}
       </ToggleGroup>
-      <div className="space-y-4 border-border border-t bg-background p-8">
+      <div className="space-y-2 border-border border-t bg-background p-8">
         <Benefits />
       </div>
     </div>
