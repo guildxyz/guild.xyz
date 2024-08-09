@@ -34,6 +34,7 @@ const AccessedGuildPlatformCard = ({ platform }: { platform: GuildPlatform }) =>
       }
       h="full"
       p={4}
+      boxShadow="none"
     >
       {PlatformCardButton ? (
         <PlatformCardButton platform={platform} />
