@@ -2,6 +2,6 @@
 
 import { revalidateTag } from "next/cache"
 
-export async function revalidateContribution() {
+export async function revalidateContributions() {
   revalidateTag("contributions")
 }

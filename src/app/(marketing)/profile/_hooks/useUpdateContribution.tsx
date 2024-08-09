@@ -2,7 +2,7 @@ import { useToast } from "@/components/ui/hooks/useToast"
 import { Schemas } from "@guildxyz/types"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import fetcher from "utils/fetcher"
-import { revalidateContribution } from "../_server_actions/revalidateContribution"
+import { revalidateContributions } from "../_server_actions/revalidateContributions"
 import { useContributions } from "./useContributions"
 import { useProfile } from "./useProfile"
 
@@ -49,7 +49,7 @@ export const useUpdateContribution = ({
       )
     },
     onSuccess: () => {
-      revalidateContribution()
+      revalidateContributions()
     },
     onError: (response) => {
       toast({

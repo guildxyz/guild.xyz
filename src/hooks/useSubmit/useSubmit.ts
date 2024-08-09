@@ -26,7 +26,7 @@ const useSubmit = <DataType, ResponseType>(
     onError,
     allowThrow,
     onOptimistic,
-  }: UseSubmitOptions<ResponseType, DataType> = {}
+  }: UseSubmitOptions<ResponseType> = {}
 ) => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [error, setError] = useState<any>(undefined)

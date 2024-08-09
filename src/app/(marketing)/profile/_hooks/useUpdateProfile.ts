@@ -3,9 +3,9 @@ import { Schemas } from "@guildxyz/types"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import { useParams, useRouter } from "next/navigation"
 import fetcher from "utils/fetcher"
+import { revalidateContributions } from "../_server_actions/revalidateContributions"
 import { revalidateProfile } from "../_server_actions/revalidateProfile"
 import { useProfile } from "./useProfile"
-import { revalidateContribution } from "../_server_actions/revalidateContribution"
 
 export const useUpdateProfile = () => {
   const { toast } = useToast()
@@ -31,7 +31,7 @@ export const useUpdateProfile = () => {
     onSuccess: async (response) => {
       await revalidateProfile()
       if (profile?.username !== response.username) {
-        await revalidateContribution()
+        await revalidateContributions()
         router.replace(`/profile/${response.username}`)
       }
     },
