@@ -5,12 +5,13 @@ import { useParams, useRouter } from "next/navigation"
 import fetcher from "utils/fetcher"
 import { revalidateProfile } from "../_server_actions/revalidateProfile"
 import { useProfile } from "./useProfile"
+import { revalidateContribution } from "../_server_actions/revalidateContribution"
 
 export const useUpdateProfile = () => {
   const { toast } = useToast()
   const router = useRouter()
   const params = useParams<{ username: string }>()
-  const { mutate } = useProfile()
+  const { mutate, data: profile } = useProfile()
 
   const updateProfile = async (signedValidation: SignedValidation) => {
     return fetcher(`/v2/profiles/${params?.username}`, {
@@ -20,18 +21,21 @@ export const useUpdateProfile = () => {
   }
 
   const submitWithSign = useSubmitWithSign<Schemas["Profile"]>(updateProfile, {
-    onSuccess: (response) => {
-      console.log("onSuccess", response)
-      router.replace(`/profile/${response.username}`)
-      mutate(() => response, { revalidate: false })
-      revalidateProfile()
-      toast({
-        variant: "success",
-        title: "Successfully updated profile",
+    onOptimistic: (response, payload) => {
+      mutate(() => response, {
+        revalidate: false,
+        rollbackOnError: true,
+        optimisticData: () => payload,
       })
     },
+    onSuccess: async (response) => {
+      await revalidateProfile()
+      if (profile?.username !== response.username) {
+        await revalidateContribution()
+        router.replace(`/profile/${response.username}`)
+      }
+    },
     onError: (response) => {
-      console.log("onError", response)
       toast({
         variant: "error",
         title: "Failed to update profile",
