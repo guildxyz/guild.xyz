@@ -29,7 +29,6 @@ import { AvatarFallback } from "@radix-ui/react-avatar"
 import { DialogDescription } from "@radix-ui/react-dialog"
 import { useState } from "react"
 import useSWRImmutable from "swr/immutable"
-import fetcher from "utils/fetcher"
 import { useContribution } from "../_hooks/useContribution"
 import { useCreateContribution } from "../_hooks/useCreateContribution"
 import { useDeleteContribution } from "../_hooks/useDeleteContribution"
@@ -37,23 +36,11 @@ import { useMemberships } from "../_hooks/useMemberships"
 import { useUpdateContribution } from "../_hooks/useUpdateContribution"
 import { CardWithGuildLabel } from "./CardWithGuildLabel"
 
-const guildFetcher = (urls: string[]) => {
-  return Promise.all(urls.map((url) => fetcher(url) as Promise<Guild>))
-}
-const useYourVerifiedGuild = () => {
-  const yourGuilds = useYourGuilds()
-  const requests = yourGuilds.data
-    ? yourGuilds.data.map((guild) => `/v2/guilds/${guild.id}`)
-    : null
-  return { guilds: useSWRImmutable(requests, guildFetcher), baseGuilds: yourGuilds }
-}
-
 const EditContributionCard = ({
   contribution,
 }: { contribution: Schemas["Contribution"] }) => {
   const { data: guild } = useSWRImmutable<Guild>(
-    `/v2/guilds/${contribution.guildId}`,
-    fetcher
+    `/v2/guilds/${contribution.guildId}`
   )
   const memberships = useMemberships()
   const editContribution = useUpdateContribution({ contributionId: contribution.id })
@@ -107,17 +94,8 @@ export const EditContributions = () => {
   const [roleId, setRoleId] = useState("")
   const { toast } = useToast()
 
-  const {
-    guilds: { data: guildData },
-    baseGuilds,
-  } = useYourVerifiedGuild()
-  const guilds =
-    guildData &&
-    baseGuilds.data?.reduce<Guild[]>(
-      (acc, curr, i) =>
-        curr.tags.includes("VERIFIED") ? [...acc, guildData[i]] : acc,
-      []
-    )
+  const { data: baseGuilds } = useYourGuilds()
+  const guilds = baseGuilds?.filter(({ tags }) => tags.includes("VERIFIED"))
 
   const roleIds = memberships.data?.find(
     (membership) => membership.guildId.toString() === guildId
@@ -165,20 +143,7 @@ export const EditContributions = () => {
                   </SelectTrigger>
                   <SelectContent>
                     {guilds?.map((data) => (
-                      <SelectItem key={data.id} value={data.id.toString()}>
-                        <div className="flex gap-2">
-                          <Avatar size="xs">
-                            <AvatarImage
-                              src={data.imageUrl}
-                              width={32}
-                              height={32}
-                              alt="guild avatar"
-                            />
-                            <AvatarFallback />
-                          </Avatar>
-                          {data.name}
-                        </div>
-                      </SelectItem>
+                      <GuildSelectItem key={data.id} guildId={data.id} />
                     ))}
                   </SelectContent>
                 </Select>
@@ -233,6 +198,28 @@ export const EditContributions = () => {
     </Dialog>
   )
 }
+
+const GuildSelectItem = ({ guildId }: Pick<MembershipResult, "guildId">) => {
+  const { data } = useSWRImmutable<Guild>(`/v2/guilds/${guildId}`)
+  if (!data) return
+  return (
+    <SelectItem value={data.id.toString()}>
+      <div className="flex gap-2">
+        <Avatar size="xs">
+          <AvatarImage
+            src={data.imageUrl}
+            width={32}
+            height={32}
+            alt="guild avatar"
+          />
+          <AvatarFallback />
+        </Avatar>
+        {data.name}
+      </div>
+    </SelectItem>
+  )
+}
+
 const RoleSelectItem = ({
   roleId,
   guildId,

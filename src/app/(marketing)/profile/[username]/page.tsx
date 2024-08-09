@@ -10,7 +10,7 @@ import { SWRProvider } from "@/components/SWRProvider"
 import { Anchor } from "@/components/ui/Anchor"
 import { Guild, Role, Schemas } from "@guildxyz/types"
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr"
-import { notFound } from "next/navigation"
+import { notFound, redirect } from "next/navigation"
 import { Profile } from "../_components/Profile"
 
 // TODO: use env var for this url when it is changed to this value.
@@ -30,9 +30,10 @@ const fetchPublicProfileData = async ({ username }: { username: string }) => {
       revalidate: 600,
     },
   })
-  if (profileResponse.status === 404) {
-    notFound()
-  }
+
+  if (profileResponse.status === 404) notFound()
+  if (!profileResponse.ok) redirect("/error")
+
   const profile = (await profileResponse.json()) as Schemas["Profile"]
   const contributions = await ssrFetcher<Schemas["Contribution"][]>(
     contributionsRequest,
