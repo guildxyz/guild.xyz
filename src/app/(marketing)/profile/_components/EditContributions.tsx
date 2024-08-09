@@ -29,7 +29,7 @@ import { AvatarFallback } from "@radix-ui/react-avatar"
 import { DialogDescription } from "@radix-ui/react-dialog"
 import { useState } from "react"
 import useSWRImmutable from "swr/immutable"
-import { useContribution } from "../_hooks/useContribution"
+import { useContributions } from "../_hooks/useContributions"
 import { useCreateContribution } from "../_hooks/useCreateContribution"
 import { useDeleteContribution } from "../_hooks/useDeleteContribution"
 import { useMemberships } from "../_hooks/useMemberships"
@@ -88,7 +88,7 @@ const EditContributionCard = ({
 }
 
 export const EditContributions = () => {
-  const contributions = useContribution()
+  const contributions = useContributions()
   const memberships = useMemberships()
   const [guildId, setGuildId] = useState("")
   const [roleId, setRoleId] = useState("")

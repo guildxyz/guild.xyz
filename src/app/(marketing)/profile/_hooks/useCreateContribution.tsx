@@ -3,15 +3,13 @@ import { Schemas } from "@guildxyz/types"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import fetcher from "utils/fetcher"
 import { revalidateContribution } from "../_server_actions/revalidateContribution"
-import { useContribution } from "./useContribution"
+import { useContributions } from "./useContributions"
 import { useProfile } from "./useProfile"
-
-export type EditProfilePayload = Schemas["ContributionUpdate"]
 
 export const useCreateContribution = () => {
   const { toast } = useToast()
   const { data: profile } = useProfile()
-  const contributions = useContribution()
+  const contributions = useContributions()
 
   const update = async (signedValidation: SignedValidation) => {
     return fetcher(
@@ -30,17 +28,18 @@ export const useCreateContribution = () => {
         async () => {
           if (!contributions.data) return
           const contribution = await response
-          contributions.data[contributions.data.findIndex(({ id }) => id === -1)] =
-            contribution
-          // contributions.data.push(await response)
-          return contributions.data
+          contributions.data[
+            contributions.data.findLastIndex(({ id }) => id === -1)
+          ] = contribution
+          return contributions.data.filter(({ id }) => id !== -1)
         },
         {
           revalidate: false,
           rollbackOnError: true,
           optimisticData: () => {
+            // @ts-expect-error: incorrect types coming from lib
             const fakeContribution: Schemas["Contribution"] = {
-              ...(payload as EditProfilePayload),
+              ...(payload as Schemas["ContributionUpdate"]),
               id: -1,
               profileId: profile.userId,
             }
@@ -51,12 +50,8 @@ export const useCreateContribution = () => {
         }
       )
     },
-    onSuccess: (response) => {
+    onSuccess: () => {
       revalidateContribution()
-      toast({
-        variant: "success",
-        title: "Successfully created contribution",
-      })
     },
     onError: (response) => {
       toast({
@@ -68,7 +63,7 @@ export const useCreateContribution = () => {
   })
   return {
     ...submitWithSign,
-    onSubmit: (payload: EditProfilePayload) =>
+    onSubmit: (payload: Schemas["ContributionUpdate"]) =>
       profile && submitWithSign.onSubmit(payload),
   }
 }

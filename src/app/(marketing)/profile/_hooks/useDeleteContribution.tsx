@@ -3,7 +3,7 @@ import { Schemas } from "@guildxyz/types"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import fetcher from "utils/fetcher"
 import { revalidateContribution } from "../_server_actions/revalidateContribution"
-import { useContribution } from "./useContribution"
+import { useContributions } from "./useContributions"
 import { useProfile } from "./useProfile"
 
 export const useDeleteContribution = ({
@@ -11,7 +11,7 @@ export const useDeleteContribution = ({
 }: { contributionId: Schemas["Contribution"]["id"] }) => {
   const { toast } = useToast()
   const { data: profile } = useProfile()
-  const contributions = useContribution()
+  const contributions = useContributions()
 
   const update = async (signedValidation: SignedValidation) => {
     return fetcher(
@@ -42,10 +42,6 @@ export const useDeleteContribution = ({
     },
     onSuccess: () => {
       revalidateContribution()
-      toast({
-        variant: "success",
-        title: "Successfully deleted contribution",
-      })
     },
     onError: (response) => {
       toast({
