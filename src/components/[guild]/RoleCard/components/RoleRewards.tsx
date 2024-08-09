@@ -2,6 +2,7 @@ import { SlideFade } from "@chakra-ui/react"
 import AccessedGuildPlatformCard from "components/[guild]/AccessHub/components/AccessedGuildPlatformCard"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { ComponentProps, PropsWithChildren } from "react"
+import PointsRewardCard from "rewards/Points/PointsRewardCard"
 import { TokenRewardProvider } from "rewards/Token/TokenRewardContext"
 import { PlatformType, Role } from "types"
 import HiddenRewards from "./HiddenRewards"
@@ -38,9 +39,13 @@ const RoleRewards = ({ role, isOpen }: Props) => {
              */
             {...(!isOpen && ({ inert: "true" } as any))}
           >
-            <RewardWrapper platform={guildPlatform}>
-              <AccessedGuildPlatformCard platform={guildPlatform} />
-            </RewardWrapper>
+            {guildPlatform.platformId === PlatformType.POINTS ? (
+              <PointsRewardCard guildPlatform={guildPlatform} />
+            ) : (
+              <RewardWrapper platform={guildPlatform}>
+                <AccessedGuildPlatformCard platform={guildPlatform} />
+              </RewardWrapper>
+            )}
           </SlideFade>
         )
       })}
