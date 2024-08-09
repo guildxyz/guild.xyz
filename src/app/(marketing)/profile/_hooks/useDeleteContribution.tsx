@@ -2,8 +2,8 @@ import { useToast } from "@/components/ui/hooks/useToast"
 import { Schemas } from "@guildxyz/types"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import fetcher from "utils/fetcher"
-import { revalidateContribution } from "../_server_actions/revalidateContribution"
-import { useContribution } from "./useContribution"
+import { revalidateContributions } from "../_server_actions/revalidateContributions"
+import { useContributions } from "./useContributions"
 import { useProfile } from "./useProfile"
 
 export const useDeleteContribution = ({
@@ -11,7 +11,7 @@ export const useDeleteContribution = ({
 }: { contributionId: Schemas["Contribution"]["id"] }) => {
   const { toast } = useToast()
   const { data: profile } = useProfile()
-  const contribution = useContribution()
+  const contributions = useContributions()
 
   const update = async (signedValidation: SignedValidation) => {
     return fetcher(
@@ -24,20 +24,24 @@ export const useDeleteContribution = ({
   }
 
   const submitWithSign = useSubmitWithSign<object>(update, {
-    onSuccess: () => {
-      contribution.mutate(
-        (prev) => {
-          if (!prev || !contribution.data) return
-          // WARNING: should we validate here?
-          return prev.filter((p) => p.id !== contributionId)
+    onOptimistic: (response) => {
+      contributions.mutate(
+        async () => {
+          await response
+          return contributions.data?.filter((p) => p.id !== contributionId)
         },
-        { revalidate: false }
+        {
+          revalidate: false,
+          rollbackOnError: true,
+          optimisticData: () => {
+            if (!contributions.data) return []
+            return contributions.data.filter((p) => p.id !== contributionId)
+          },
+        }
       )
-      revalidateContribution()
-      toast({
-        variant: "success",
-        title: "Successfully deleted contribution",
-      })
+    },
+    onSuccess: () => {
+      revalidateContributions()
     },
     onError: (response) => {
       toast({

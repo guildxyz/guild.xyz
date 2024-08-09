@@ -2,8 +2,8 @@ import { useToast } from "@/components/ui/hooks/useToast"
 import { Schemas } from "@guildxyz/types"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import fetcher from "utils/fetcher"
-import { revalidateContribution } from "../_server_actions/revalidateContribution"
-import { useContribution } from "./useContribution"
+import { revalidateContributions } from "../_server_actions/revalidateContributions"
+import { useContributions } from "./useContributions"
 import { useProfile } from "./useProfile"
 
 export const useUpdateContribution = ({
@@ -11,7 +11,7 @@ export const useUpdateContribution = ({
 }: { contributionId: Schemas["Contribution"]["id"] }) => {
   const { toast } = useToast()
   const { data: profile } = useProfile()
-  const contribution = useContribution()
+  const contributions = useContributions()
 
   const update = async (signedValidation: SignedValidation) => {
     return fetcher(
@@ -24,24 +24,32 @@ export const useUpdateContribution = ({
   }
 
   const submitWithSign = useSubmitWithSign<Schemas["Contribution"]>(update, {
-    onSuccess: (response) => {
-      contribution.mutate(
-        (prev) => {
-          if (!prev || !contribution.data) return
-          // WARNING: should we validate here?
-          return prev.map((p) =>
-            p.id === (contribution.data as unknown as Schemas["Contribution"]).id
-              ? response
-              : p
+    onOptimistic: (response, payload) => {
+      if (!profile?.userId) return
+      contributions.mutate(
+        async () => {
+          if (!contributions.data) return
+          const contribution = await response
+          return contributions.data.map((data) =>
+            data.id === contributionId ? contribution : data
           )
         },
-        { revalidate: false }
+        {
+          revalidate: false,
+          rollbackOnError: true,
+          optimisticData: () => {
+            if (!contributions.data) return []
+            return contributions.data.map((data) =>
+              data.id === contributionId
+                ? { ...data, ...(payload as Schemas["Contribution"]) }
+                : data
+            )
+          },
+        }
       )
-      revalidateContribution()
-      toast({
-        variant: "success",
-        title: "Successfully updated contribution",
-      })
+    },
+    onSuccess: () => {
+      revalidateContributions()
     },
     onError: (response) => {
       toast({

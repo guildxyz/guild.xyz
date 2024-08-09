@@ -11,13 +11,13 @@ import { EditProfile } from "../_components/EditProfile"
 import { OperatedGuildCard } from "../_components/OperatedGuildCard"
 import { ProfileOwnerGuard } from "../_components/ProfileOwnerGuard"
 import { RecentActivity } from "../_components/RecentActivity"
-import { useContribution } from "../_hooks/useContribution"
+import { useContributions } from "../_hooks/useContributions"
 import { useProfile } from "../_hooks/useProfile"
 import { ProfileSkeleton } from "./ProfileSkeleton"
 
 export const Profile = () => {
   const { data: profile } = useProfile()
-  const { data: contributions } = useContribution()
+  const { data: contributions } = useContributions()
 
   if (!profile || !contributions) return <ProfileSkeleton />
 
