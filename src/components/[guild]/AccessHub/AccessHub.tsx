@@ -105,11 +105,12 @@ const AccessHub = (): JSX.Element => {
         }}
       >
         <SimpleGrid
-          // templateColumns={{
-          //   base: "repeat(auto-fit, minmax(250px, 1fr))",
-          //   md: "repeat(auto-fit, minmax(250px, .5fr))",
-          // }}
-          templateColumns={"repeat(4,1fr)"}
+          columns={{
+            base: 1,
+            md: 2,
+            lg: 3,
+            xl: 4,
+          }}
           gap={4}
         >
           <CampaignCards />
