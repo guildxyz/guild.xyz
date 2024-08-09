@@ -11,7 +11,7 @@ export type EditProfilePayload = Schemas["ContributionUpdate"]
 export const useCreateContribution = () => {
   const { toast } = useToast()
   const { data: profile } = useProfile()
-  const contribution = useContribution()
+  const contributions = useContribution()
 
   const update = async (signedValidation: SignedValidation) => {
     return fetcher(
@@ -24,16 +24,34 @@ export const useCreateContribution = () => {
   }
 
   const submitWithSign = useSubmitWithSign<Schemas["Contribution"]>(update, {
-    onSuccess: (response) => {
-      contribution.mutate(
-        (prev) => {
-          // WARNING: should we validate here?
-          if (!prev) return
-          prev.push(response)
-          return prev
+    onOptimistic: (response, payload) => {
+      if (!profile?.userId) return
+      contributions.mutate(
+        async () => {
+          if (!contributions.data) return
+          const contribution = await response
+          contributions.data[contributions.data.findIndex(({ id }) => id === -1)] =
+            contribution
+          // contributions.data.push(await response)
+          return contributions.data
         },
-        { revalidate: false }
+        {
+          revalidate: false,
+          rollbackOnError: true,
+          optimisticData: () => {
+            const fakeContribution: Schemas["Contribution"] = {
+              ...(payload as EditProfilePayload),
+              id: -1,
+              profileId: profile.userId,
+            }
+            if (!contributions.data) return [fakeContribution]
+            contributions.data.push(fakeContribution)
+            return contributions.data
+          },
+        }
       )
+    },
+    onSuccess: (response) => {
       revalidateContribution()
       toast({
         variant: "success",

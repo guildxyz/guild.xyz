@@ -11,7 +11,7 @@ export const useDeleteContribution = ({
 }: { contributionId: Schemas["Contribution"]["id"] }) => {
   const { toast } = useToast()
   const { data: profile } = useProfile()
-  const contribution = useContribution()
+  const contributions = useContribution()
 
   const update = async (signedValidation: SignedValidation) => {
     return fetcher(
@@ -24,15 +24,23 @@ export const useDeleteContribution = ({
   }
 
   const submitWithSign = useSubmitWithSign<object>(update, {
-    onSuccess: () => {
-      contribution.mutate(
-        (prev) => {
-          if (!prev || !contribution.data) return
-          // WARNING: should we validate here?
-          return prev.filter((p) => p.id !== contributionId)
+    onOptimistic: (response) => {
+      contributions.mutate(
+        async () => {
+          await response
+          return contributions.data?.filter((p) => p.id !== contributionId)
         },
-        { revalidate: false }
+        {
+          revalidate: false,
+          rollbackOnError: true,
+          optimisticData: () => {
+            if (!contributions.data) return []
+            return contributions.data.filter((p) => p.id !== contributionId)
+          },
+        }
       )
+    },
+    onSuccess: () => {
       revalidateContribution()
       toast({
         variant: "success",
