@@ -23,7 +23,11 @@ const config = {
         display: ["var(--font-dystopian,sans-serif)"],
       },
       colors: {
-        banner: "hsl(var(--banner))",
+        banner: {
+          DEFAULT: "hsl(var(--banner))",
+          dark: "hsl(var(--banner-dark))",
+          foreground: "hsl(var(--banner-foreground))"
+        },
         border: "hsl(var(--border))",
         "border-muted": "hsl(var(--border-muted))",
         input: "hsl(var(--input))",
@@ -153,6 +157,9 @@ const config = {
           hover: "hsl(var(--farcaster-hover))",
           active: "hsl(var(--farcaster-active))",
         },
+      },
+      opacity: {
+        banner: "var(--banner-opacity)"
       },
       keyframes: {
         wiggle: {

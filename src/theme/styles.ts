@@ -9,6 +9,11 @@ const styles = {
       "--fg-color-5": "var(--chakra-colors-gray-600) !important",
     },
 
+    body: {
+      background: "hsl(var(--background))",
+      backgroundColor: "hsl(var(--background))",
+    },
+
     ul: {
       listStyle: "none",
     },

@@ -16,7 +16,7 @@ const checkUrlName = (urlName: string) =>
     .then(() => true)
     .catch(() => false)
 
-const UrlName = ({ maxWidth = "sm" }) => {
+const UrlName = () => {
   const { errors } = useFormState()
   const { register, setError, clearErrors, setValue } = useFormContext()
 
@@ -25,7 +25,7 @@ const UrlName = ({ maxWidth = "sm" }) => {
   return (
     <FormControl isInvalid={!!errors?.urlName} isRequired>
       <FormLabel>URL name</FormLabel>
-      <InputGroup size="lg" maxWidth={maxWidth}>
+      <InputGroup size="lg">
         <InputLeftAddon>guild.xyz/</InputLeftAddon>
         <Input
           {...register("urlName")}
