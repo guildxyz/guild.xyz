@@ -10,7 +10,7 @@ export const CardWithGuildLabel = ({
 }: PropsWithChildren<{ guild: Guild }>) => {
   return (
     <Card
-      className="relative flex border-2"
+      className="relative flex border-2 bg-accent"
       style={{ borderColor: guild.theme.color, background: guild.theme.color }}
     >
       <div
