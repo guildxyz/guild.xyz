@@ -44,7 +44,7 @@ export const ChoosePass: OnboardingChain = ({ dispatchChainAction }) => {
             <CarouselItem className="select-none" key={title}>
               <article className="flex h-full flex-col items-center pb-6 text-center">
                 <div className="mb-2 h-48 w-full">
-                  <GuildPassScene />{" "}
+                  <GuildPassScene sceneVariant={title} />
                 </div>
                 <div className="px-4">
                   <h2 className="font-extrabold text-lg">{title}</h2>
@@ -89,7 +89,7 @@ export const ChoosePass: OnboardingChain = ({ dispatchChainAction }) => {
           >
             <article className="flex flex-col items-center pb-6 text-center">
               <div className="mb-2 h-48">
-                <GuildPassScene />
+                <GuildPassScene sceneVariant={title} />
               </div>
               <div className="px-8">
                 <h2 className="font-extrabold text-lg">{title}</h2>
