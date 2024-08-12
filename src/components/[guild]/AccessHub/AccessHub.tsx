@@ -12,7 +12,6 @@ import Card from "components/common/Card"
 import ClientOnly from "components/common/ClientOnly"
 import useMembership from "components/explorer/hooks/useMembership"
 import dynamic from "next/dynamic"
-import { PlatformType } from "types"
 import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
 import useRoleGroup from "../hooks/useRoleGroup"
@@ -25,55 +24,6 @@ const DynamicGuildPinRewardCard = dynamic(
 const DynamicCreatedPageCard = dynamic(() =>
   import("./components/CreatePageCard").then((m) => m.CreatePageCard)
 )
-
-// TODO: I think we can remove this hook
-export const useAccessedGuildPlatforms = (groupId?: number) => {
-  const { guildPlatforms, roles } = useGuild()
-  const { isAdmin } = useGuildPermission()
-  const { roleIds } = useMembership()
-
-  const relevantRoles = groupId
-    ? roles.filter((role) => role.groupId === groupId)
-    : roles.filter((role) => !role.groupId)
-
-  const relevantGuildPlatformIds = relevantRoles.flatMap((role) =>
-    role.rolePlatforms.map((rp) => rp.guildPlatformId)
-  )
-  const relevantGuildPlatforms = guildPlatforms.filter(
-    (gp) =>
-      relevantGuildPlatformIds.includes(gp.id) &&
-      gp.platformId !== PlatformType.POINTS &&
-      gp.platformId !== PlatformType.ERC20
-  )
-
-  // Displaying CONTRACT_CALL rewards for everyone, even for users who aren't members
-  const contractCallGuildPlatforms =
-    relevantGuildPlatforms?.filter(
-      (guildPlatform) => guildPlatform.platformId === PlatformType.CONTRACT_CALL
-    ) ?? []
-
-  if (isAdmin) return relevantGuildPlatforms
-
-  if (!roleIds) return contractCallGuildPlatforms
-
-  const accessedRoles = roles.filter((role) => roleIds.includes(role.id))
-  const accessedRolePlatforms = accessedRoles
-    .map((role) => role.rolePlatforms)
-    .flat()
-    .filter((rolePlatform) => !!rolePlatform)
-  const accessedGuildPlatformIds = [
-    ...new Set(
-      accessedRolePlatforms.map((rolePlatform) => rolePlatform.guildPlatformId)
-    ),
-  ]
-  const accessedGuildPlatforms = relevantGuildPlatforms?.filter(
-    (guildPlatform) =>
-      accessedGuildPlatformIds.includes(guildPlatform.id) ||
-      guildPlatform.platformId === PlatformType.CONTRACT_CALL
-  )
-
-  return accessedGuildPlatforms
-}
 
 const AccessHub = (): JSX.Element => {
   const { featureFlags, guildPin, groups, roles } = useGuild()
