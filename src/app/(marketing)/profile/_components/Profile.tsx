@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/Card"
 import { Separator } from "@/components/ui/Separator"
 import { Skeleton } from "@/components/ui/Skeleton"
 import { cn } from "@/lib/utils"
+import { Info } from "@phosphor-icons/react"
 import { PropsWithChildren } from "react"
 import { ContributionCard } from "../_components/ContributionCard"
 import { EditContributions } from "../_components/EditContributions"
@@ -81,13 +82,16 @@ export const Profile = () => {
       </div>
       <div className="grid grid-cols-1 gap-3">
         {contributions.length === 0 && (
-          <Card className="p-4">
-            <h3 className="mb-2 font-bold text-md">
-              Contributions will appear here
-            </h3>
-            <p className="text-muted-foreground">
-              This profile doesn't have any contribution yet
-            </p>
+          <Card className="flex gap-2 border border-info p-4">
+            <Info weight="fill" size={32} className="text-info" />
+            <div>
+              <h3 className="mb-1 font-bold text-md">
+                Contributions will appear here
+              </h3>
+              <p className="text-muted-foreground">
+                This profile doesn't have any contribution yet
+              </p>
+            </div>
           </Card>
         )}
         {contributions.map((contribution) => (
