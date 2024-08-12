@@ -11,8 +11,8 @@ export const ContributionCardView = ({
 }: { guild: Guild; role: Role }) => {
   return (
     <CardWithGuildLabel guild={guild}>
-      <div className="grid grid-cols-[auto_1fr] items-center gap-4 p-6 md:grid-cols-[auto_auto_1fr]">
-        <Avatar className="size-16 sm:size-20">
+      <div className="grid grid-cols-[auto_1fr] items-center gap-4 p-5 md:grid-cols-[auto_auto_1fr] md:p-6">
+        <Avatar className="size-16 md:size-20">
           <AvatarImage src={role.imageUrl} alt={"role"} width={64} height={64} />
           <AvatarFallback />
         </Avatar>
@@ -20,7 +20,7 @@ export const ContributionCardView = ({
           <div className="font-extrabold text-muted-foreground text-xs uppercase">
             TOP ROLE
           </div>
-          <h3 className="mb-1 font-bold font-display text-xl tracking-tight">
+          <h3 className="mb-1 font-bold font-display text-lg tracking-tight md:text-xl">
             {role.name}
           </h3>
           <div className="flex items-center gap-2 text-muted-foreground">
