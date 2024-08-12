@@ -96,7 +96,20 @@ const Page = async ({ params: { username } }: { params: { username: string } }) 
         <LayoutHero>
           <Header />
           <LayoutBanner className="-bottom-[500px]">
-            <div className="absolute inset-0 bg-[url('/banner.svg')] opacity-10" />
+            <div
+              className="absolute inset-0 bg-[url('/banner.svg')] opacity-5"
+              style={{
+                backgroundSize: "auto 50%",
+                backgroundPosition: "top 5px right 0px",
+              }}
+            />
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  "radial-gradient(circle at center, transparent 5%, hsl(var(--banner)))",
+              }}
+            />
             <div className="absolute inset-0 bg-gradient-to-t from-background" />
           </LayoutBanner>
         </LayoutHero>
