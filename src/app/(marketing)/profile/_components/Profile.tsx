@@ -5,6 +5,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
 import { AvatarGroup } from "@/components/ui/AvatarGroup"
 import { Separator } from "@/components/ui/Separator"
 import { Skeleton } from "@/components/ui/Skeleton"
+import { cn } from "@/lib/utils"
+import { PropsWithChildren } from "react"
 import { ContributionCard } from "../_components/ContributionCard"
 import { EditContributions } from "../_components/EditContributions"
 import { EditProfile } from "../_components/EditProfile"
@@ -68,10 +70,10 @@ export const Profile = () => {
           </div>
         </div>
       </div>
-      <h2 className="mb-3 font-bold text-lg">Operated guilds</h2>
+      <SectionTitle className="mb-3">Operated guilds</SectionTitle>
       <OperatedGuildCard />
       <div className="mt-8 mb-3 flex items-center justify-between">
-        <h2 className="font-bold text-lg">Top contributions</h2>
+        <SectionTitle>Top contributions</SectionTitle>
         <ProfileOwnerGuard>
           <EditContributions />
         </ProfileOwnerGuard>
@@ -82,7 +84,7 @@ export const Profile = () => {
         ))}
       </div>
       <div className="mt-8">
-        <h2 className="mb-3 font-bold text-lg">Recent activity</h2>
+        <SectionTitle className="mb-3">Recent activity</SectionTitle>
         <RecentActivity />
         <p className="mt-2 font-semibold text-muted-foreground">
           &hellip; only last 20 actions are shown
@@ -91,3 +93,10 @@ export const Profile = () => {
     </>
   )
 }
+
+const SectionTitle = ({
+  className,
+  children,
+}: PropsWithChildren<{ className?: string }>) => (
+  <h2 className={cn("font-bold sm:text-lg", className)}>{children}</h2>
+)
