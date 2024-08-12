@@ -3,11 +3,9 @@
 import { CheckMark } from "@/components/CheckMark"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
 import { AvatarGroup } from "@/components/ui/AvatarGroup"
-import { Card } from "@/components/ui/Card"
 import { Separator } from "@/components/ui/Separator"
 import { Skeleton } from "@/components/ui/Skeleton"
 import { cn } from "@/lib/utils"
-import { Info } from "@phosphor-icons/react"
 import { PropsWithChildren } from "react"
 import { ContributionCard } from "../_components/ContributionCard"
 import { EditContributions } from "../_components/EditContributions"
@@ -82,17 +80,12 @@ export const Profile = () => {
       </div>
       <div className="grid grid-cols-1 gap-3">
         {contributions.length === 0 && (
-          <Card className="flex gap-2 border border-info p-4">
-            <Info weight="fill" size={32} className="text-info" />
-            <div>
-              <h3 className="mb-1 font-bold text-md">
-                Contributions will appear here
-              </h3>
-              <p className="text-muted-foreground">
-                This profile doesn't have any contribution yet
-              </p>
-            </div>
-          </Card>
+          <div className="space-y-0.5 rounded-2xl border border-dashed p-6">
+            <h3 className="font-bold">Contributions will appear here</h3>
+            <p className="text-muted-foreground">
+              This profile doesn't have any contribution yet
+            </p>
+          </div>
         )}
         {contributions.map((contribution) => (
           <ContributionCard contribution={contribution} key={contribution.id} />
