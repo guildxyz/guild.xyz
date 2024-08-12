@@ -1,4 +1,4 @@
-import { Tooltip, useDisclosure } from "@chakra-ui/react"
+import { ButtonProps, Tooltip, useDisclosure } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import Button from "components/common/Button"
@@ -35,6 +35,12 @@ const PoapCardButton = ({ platform }: Props) => {
   const { isAvailable } = getRolePlatformTimeframeInfo(rolePlatform)
   const { claimed } = useClaimedReward(rolePlatform.id)
 
+  const baseButtonProps = {
+    w: "full",
+    size: { base: "sm", xl: "md" },
+    colorScheme: rewards.POAP.colorScheme,
+  } satisfies ButtonProps
+
   return (
     <>
       <Tooltip
@@ -46,14 +52,13 @@ const PoapCardButton = ({ platform }: Props) => {
         {claimed ? (
           <DynamicShowMintLinkButton
             rolePlatformId={rolePlatform.id}
-            w="full"
-            colorScheme={rewards.POAP.colorScheme}
+            {...baseButtonProps}
           >
             Show mint link
           </DynamicShowMintLinkButton>
         ) : !rolePlatform?.capacity && isAdmin ? (
           <>
-            <Button w="full" colorScheme={rewards.POAP.colorScheme} onClick={onOpen}>
+            <Button {...baseButtonProps} onClick={onOpen}>
               Upload mint links
             </Button>
             <UploadMintLinksModal
@@ -67,8 +72,7 @@ const PoapCardButton = ({ platform }: Props) => {
             as={Link}
             href={`/${urlName}/claim-poap/${platform.platformGuildData.fancyId}`}
             isDisabled={!isAvailable}
-            w="full"
-            colorScheme={rewards.POAP.colorScheme}
+            {...baseButtonProps}
           >
             Claim POAP
           </Button>

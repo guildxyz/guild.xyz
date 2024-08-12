@@ -31,7 +31,7 @@ const ContractCallRewardCardButton = ({ platform }: Props) => {
   if (!role)
     return (
       <Tooltip label="You need to add this reward to a role first">
-        <Button isDisabled colorScheme="cyan">
+        <Button isDisabled colorScheme="cyan" size={{ base: "sm", xl: "md" }}>
           Collect NFT
         </Button>
       </Tooltip>
@@ -42,6 +42,7 @@ const ContractCallRewardCardButton = ({ platform }: Props) => {
       as={Link}
       colorScheme="cyan"
       href={`/${urlName}/collect/${chain.toLowerCase()}/${contractAddress.toLowerCase()}`}
+      size={{ base: "sm", xl: "md" }}
       onClick={() => {
         captureEvent(
           "Click on collect page link (ContractCallRewardCardButton)",

@@ -27,8 +27,8 @@ const FormCardLinkButton = ({ platform }: Props) => {
       <LinkButton
         href={`/${urlName}/forms/${form?.id}/responses`}
         prefetch={false}
-        w="full"
-        variant={"outline"}
+        size={{ base: "sm", xl: "md" }}
+        variant="outline"
       >
         View responses
       </LinkButton>
@@ -41,7 +41,7 @@ const FormCardLinkButton = ({ platform }: Props) => {
       isLoading={isFormsValidating || isValidating}
       prefetch={false}
       href={!!form && !userSubmission ? `/${urlName}/forms/${form?.id}` : "#"}
-      w="full"
+      size={{ base: "sm", xl: "md" }}
       colorScheme={rewards.FORM.colorScheme}
       leftIcon={userSubmission && <Check />}
     >

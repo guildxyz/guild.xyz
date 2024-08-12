@@ -41,7 +41,8 @@ const RewardCard = ({
     color={`${colorScheme}.500`}
     pt={{ base: 10, sm: 11 }}
     display="flex"
-    flexDir="column"
+    flexDir={{ base: "column", sm: "row", md: "column", lg: "row", xl: "column" }}
+    gap={5}
     justifyContent="space-between"
     {...rest}
   >
@@ -53,7 +54,6 @@ const RewardCard = ({
     <Flex
       justifyContent={"space-between"}
       flexDirection={{ base: "column", md: "row" }}
-      mb={children && 5}
     >
       <HStack spacing={3} minHeight={10}>
         {typeof image === "string" ? (

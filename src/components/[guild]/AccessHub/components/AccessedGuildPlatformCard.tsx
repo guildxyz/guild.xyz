@@ -35,7 +35,7 @@ const AccessedGuildPlatformCard = () => {
         ) : null
       }
       h="full"
-      p={4}
+      p={{ base: 3, sm: 4 }}
       boxShadow="none"
     >
       {PlatformCardButton ? (

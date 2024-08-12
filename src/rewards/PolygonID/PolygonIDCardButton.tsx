@@ -10,7 +10,7 @@ const PolygonIDCardButton = () => {
   return (
     <Button
       onClick={data ? onMintPolygonIDProofModalOpen : onConnectDIDModalOpen}
-      w="full"
+      size={{ base: "sm", xl: "md" }}
       colorScheme="purple"
       isLoading={isLoading}
       loadingText="Checking your DID"

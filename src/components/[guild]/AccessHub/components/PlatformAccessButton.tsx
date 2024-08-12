@@ -19,6 +19,7 @@ const PlatformAccessButton = ({ platform }: Props) => {
       leftIcon={!buttonProps.href && <Icon as={icon} />}
       rightIcon={buttonProps.href && <ArrowSquareOut />}
       colorScheme={colorScheme}
+      size={{ base: "sm", xl: "md" }}
     >
       {label}
     </Button>

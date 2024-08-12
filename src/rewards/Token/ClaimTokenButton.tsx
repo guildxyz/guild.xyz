@@ -41,7 +41,7 @@ const ClaimTokenButton = ({
         >
           <Button
             colorScheme="gold"
-            w="full"
+            size={{ base: "sm", xl: "md" }}
             isDisabled={isDisabled || isFromGeogatedCountry || !isAvailable}
             onClick={onOpen}
             {...rest}

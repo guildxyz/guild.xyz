@@ -1,4 +1,4 @@
-import { Tooltip } from "@chakra-ui/react"
+import { ButtonProps, Tooltip } from "@chakra-ui/react"
 import { ArrowSquareOut } from "@phosphor-icons/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
@@ -37,6 +37,11 @@ const GatherCardButton = ({ platform }: Props) => {
   const { isAvailable } = getRolePlatformTimeframeInfo(rolePlatform)
   const isButtonDisabled = !isAvailable && !claimed
 
+  const baseButtonProps = {
+    size: { base: "sm", xl: "md" },
+    colorScheme: "GATHER_TOWN",
+  } satisfies ButtonProps
+
   return (
     <>
       {claimed ? (
@@ -46,8 +51,7 @@ const GatherCardButton = ({ platform }: Props) => {
           href={spaceUrl}
           iconSpacing={1}
           rightIcon={<ArrowSquareOut />}
-          w="full"
-          colorScheme="GATHER_TOWN"
+          {...baseButtonProps}
         >
           Go to space
         </Button>
@@ -60,8 +64,7 @@ const GatherCardButton = ({ platform }: Props) => {
           w="full"
         >
           <Button
-            colorScheme="GATHER_TOWN"
-            w="full"
+            {...baseButtonProps}
             onClick={onOpen}
             isDisabled={isButtonDisabled}
           >

@@ -59,7 +59,7 @@ const TextCardButton = ({ platform }: Props) => {
           isLoading={!rolePlatform || isLoading}
           loadingText={!rolePlatform ? "Loading..." : "Claiming secret..."}
           isDisabled={isButtonDisabled}
-          w="full"
+          size={{ base: "sm", xl: "md" }}
         >
           {platform.platformId === PlatformType.UNIQUE_TEXT
             ? "Claim"
