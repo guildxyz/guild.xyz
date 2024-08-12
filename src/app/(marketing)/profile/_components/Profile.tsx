@@ -3,6 +3,7 @@
 import { CheckMark } from "@/components/CheckMark"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
 import { AvatarGroup } from "@/components/ui/AvatarGroup"
+import { Card } from "@/components/ui/Card"
 import { Separator } from "@/components/ui/Separator"
 import { Skeleton } from "@/components/ui/Skeleton"
 import { cn } from "@/lib/utils"
@@ -79,6 +80,16 @@ export const Profile = () => {
         </ProfileOwnerGuard>
       </div>
       <div className="grid grid-cols-1 gap-3">
+        {contributions.length === 0 && (
+          <Card className="p-4">
+            <h3 className="mb-2 font-bold text-md">
+              Contributions will appear here
+            </h3>
+            <p className="text-muted-foreground">
+              This profile doesn't have any contribution yet
+            </p>
+          </Card>
+        )}
         {contributions.map((contribution) => (
           <ContributionCard contribution={contribution} key={contribution.id} />
         ))}
