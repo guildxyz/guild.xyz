@@ -22,13 +22,13 @@ export const Profile = () => {
   if (!profile || !contributions) return <ProfileSkeleton />
 
   return (
-    <div className="mt-24">
-      <div className="relative mb-24 flex flex-col items-center">
+    <>
+      <div className="relative mb-12 flex flex-col items-center pt-12 md:mb-20 md:pt-14">
         <ProfileOwnerGuard>
           <EditProfile />
         </ProfileOwnerGuard>
-        <div className="relative mb-12 flex items-center justify-center">
-          <Avatar className="size-48">
+        <div className="relative mb-6 flex items-center justify-center">
+          <Avatar className="size-40 md:size-48">
             <AvatarImage
               src={profile.profileImageUrl ?? ""}
               alt="profile"
@@ -40,22 +40,22 @@ export const Profile = () => {
             </AvatarFallback>
           </Avatar>
         </div>
-        <h1 className="break-all text-center font-bold text-4xl leading-tight tracking-tight">
+        <h1 className="break-all text-center font-extrabold text-3xl leading-tight tracking-tight md:text-4xl">
           {profile.name}
-          <CheckMark className="ml-2 inline size-6 fill-yellow-500" />
+          <CheckMark className="ml-2 inline size-6 fill-yellow-500 align-baseline" />
         </h1>
-        <div className="text-lg text-muted-foreground">@{profile.username}</div>
-        <p className="mt-6 max-w-md text-pretty text-center text-lg text-muted-foreground">
+        <div className="font-medium text-muted-foreground">@{profile.username}</div>
+        <p className="mt-4 max-w-md text-pretty text-center text-lg text-muted-foreground md:mt-6">
           {profile.bio}
         </p>
-        <div className="mt-8 grid grid-cols-[repeat(3,auto)] gap-x-8 gap-y-6 sm:grid-cols-[repeat(5,auto)]">
+        <div className="mt-8 grid grid-cols-[repeat(3,auto)] gap-x-6 gap-y-4 sm:grid-cols-[repeat(5,auto)]">
           <div className="flex flex-col items-center leading-tight">
-            <div className="font-bold text-lg">3232</div>
+            <div className="font-bold md:text-lg">3232</div>
             <div className="text-muted-foreground">Guildmates</div>
           </div>
-          <Separator orientation="vertical" className="h-12" />
+          <Separator orientation="vertical" className="h-10 md:h-12" />
           <div className="flex flex-col items-center leading-tight">
-            <div className="font-bold text-lg">0</div>
+            <div className="font-bold md:text-lg">0</div>
             <div className="text-muted-foreground">Followers</div>
           </div>
           <Separator orientation="vertical" className="hidden h-12 sm:block" />
@@ -88,6 +88,6 @@ export const Profile = () => {
           &hellip; only last 20 actions are shown
         </p>
       </div>
-    </div>
+    </>
   )
 }

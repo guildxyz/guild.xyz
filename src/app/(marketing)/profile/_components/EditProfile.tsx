@@ -96,7 +96,7 @@ export const EditProfile = () => {
   return (
     <Dialog onOpenChange={disclosure.setValue} open={disclosure.isOpen}>
       <DialogTrigger asChild>
-        <Card className="-top-8 absolute right-0 rounded-xl">
+        <Card className="absolute top-0 right-0 rounded-xl">
           <Button variant="solid">
             <Pencil weight="bold" />
             Edit profile

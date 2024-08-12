@@ -93,7 +93,7 @@ const Page = async ({ params: { username } }: { params: { username: string } }) 
       }}
     >
       <Layout>
-        <LayoutHero>
+        <LayoutHero className="pb-4 md:pb-10">
           <Header />
           <LayoutBanner className="-bottom-[500px]">
             <div
@@ -113,11 +113,11 @@ const Page = async ({ params: { username } }: { params: { username: string } }) 
             <div className="absolute inset-0 bg-gradient-to-t from-background" />
           </LayoutBanner>
         </LayoutHero>
-        <LayoutMain>
+        <LayoutMain className="top-0">
           <Profile />
         </LayoutMain>
-        <LayoutFooter>
-          <p className="mb-12 text-center font-medium text-muted-foreground">
+        <LayoutFooter className="pt-28 pb-5">
+          <p className="text-center font-medium text-muted-foreground">
             Guild Profiles are currently in invite only early access, only available
             to{" "}
             <Anchor
