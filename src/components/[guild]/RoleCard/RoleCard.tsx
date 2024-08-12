@@ -107,15 +107,12 @@ const RoleCard = memo(({ role }: Props) => {
                     )
 
                     return (
-                      <RewardIcon
-                        rolePlatformId={platform.id}
-                        guildPlatform={guildPlatform}
-                        transition={{
-                          bounce: 0.2,
-                          delay: i * 0.05,
-                        }}
-                        key={i}
-                      />
+                      <SlideFade key={i} in={!isOpen} delay={i * 0.05}>
+                        <RewardIcon
+                          rolePlatformId={platform.id}
+                          guildPlatform={guildPlatform}
+                        />
+                      </SlideFade>
                     )
                   })}
                 </HStack>

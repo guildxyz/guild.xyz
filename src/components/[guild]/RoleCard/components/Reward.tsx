@@ -158,10 +158,6 @@ const RewardIcon = ({
     },
   }
 
-  const motionElementProps = {
-    layoutId: `${rolePlatformId}_reward_img`,
-    transition: { type: "spring", duration: 0.5, ...transition },
-  }
   const circleBgColor = useColorModeValue("gray.700", "gray.600")
   const circleProps = {
     bgColor: circleBgColor,
