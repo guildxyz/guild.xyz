@@ -1,8 +1,11 @@
 import { SlideFade } from "@chakra-ui/react"
 import AccessedGuildPlatformCard from "components/[guild]/AccessHub/components/AccessedGuildPlatformCard"
+import {
+  RolePlatformProvider,
+  useRolePlatform,
+} from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { ComponentProps, PropsWithChildren } from "react"
-import PointsRewardCard from "rewards/Points/PointsRewardCard"
 import { TokenRewardProvider } from "rewards/Token/TokenRewardContext"
 import { PlatformType, Role } from "types"
 import HiddenRewards from "./HiddenRewards"
@@ -17,9 +20,9 @@ const RoleRewards = ({ role, isOpen }: Props) => {
 
   return (
     <div className="mt-auto grid gap-3 p-5 xl:grid-cols-2">
-      {role.rolePlatforms?.map((platform, i) => {
+      {role.rolePlatforms?.map((rolePlatform, i) => {
         const guildPlatform = guildPlatforms?.find(
-          (gp) => gp.id === platform.guildPlatformId
+          (gp) => gp.id === rolePlatform.guildPlatformId
         )
 
         {
@@ -29,7 +32,7 @@ const RoleRewards = ({ role, isOpen }: Props) => {
 
         return (
           <SlideFade
-            key={platform.guildPlatformId}
+            key={rolePlatform.guildPlatformId}
             offsetY={10}
             in={isOpen}
             transition={{ enter: { delay: i * 0.1 } }}
@@ -39,13 +42,16 @@ const RoleRewards = ({ role, isOpen }: Props) => {
              */
             {...(!isOpen && ({ inert: "true" } as any))}
           >
-            {guildPlatform.platformId === PlatformType.POINTS ? (
-              <PointsRewardCard guildPlatform={guildPlatform} />
-            ) : (
-              <RewardWrapper platform={guildPlatform}>
-                <AccessedGuildPlatformCard platform={guildPlatform} />
+            <RolePlatformProvider
+              rolePlatform={{
+                ...rolePlatform,
+                guildPlatform,
+              }}
+            >
+              <RewardWrapper>
+                <AccessedGuildPlatformCard />
               </RewardWrapper>
-            )}
+            </RolePlatformProvider>
           </SlideFade>
         )
       })}
@@ -56,12 +62,14 @@ const RoleRewards = ({ role, isOpen }: Props) => {
 }
 
 const RewardWrapper = ({
-  platform,
   children,
 }: PropsWithChildren<ComponentProps<typeof AccessedGuildPlatformCard>>) => {
-  if (platform.platformId === PlatformType.ERC20)
+  const { guildPlatform } = useRolePlatform()
+  if (guildPlatform.platformId === PlatformType.ERC20)
     return (
-      <TokenRewardProvider guildPlatform={platform}>{children}</TokenRewardProvider>
+      <TokenRewardProvider guildPlatform={guildPlatform}>
+        {children}
+      </TokenRewardProvider>
     )
 
   return children

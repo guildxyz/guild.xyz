@@ -1,4 +1,3 @@
-import { Icon } from "@chakra-ui/react"
 import { ArrowRight } from "@phosphor-icons/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
@@ -20,8 +19,9 @@ const PointsCardButton = ({ platform }: Props) => {
         href={`/${urlName}/leaderboard/${id}`}
         w="full"
         prefetch={false}
+        rightIcon={<ArrowRight />}
       >
-        View leaderboard <Icon as={ArrowRight} mb="-0.5" />
+        View leaderboard
       </Button>
     </>
   )
