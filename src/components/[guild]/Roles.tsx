@@ -82,6 +82,7 @@ const Roles = () => {
           roleCount={hiddenRoles.length}
           label="hidden"
           defaultIsOpen
+          mt={2}
         >
           {hiddenRoles.map((role) => (
             <RoleCard key={role.id} role={role} />

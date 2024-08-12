@@ -1,42 +1,31 @@
+import { Header } from "@/components/Header"
 import {
-  Box,
-  Center,
-  Divider,
-  HStack,
-  Heading,
-  Icon,
-  Link,
-  Spinner,
-  Tag,
-  TagLeftIcon,
-  Text,
-  Wrap,
-} from "@chakra-ui/react"
-import { Info, Users } from "@phosphor-icons/react"
+  Layout,
+  LayoutBanner,
+  LayoutContainer,
+  LayoutFooter,
+  LayoutHeadline,
+  LayoutHero,
+  LayoutMain,
+} from "@/components/Layout"
+import { Anchor } from "@/components/ui/Anchor"
+import { Center, Heading, Spinner } from "@chakra-ui/react"
 import AccessHub from "components/[guild]/AccessHub"
-import { useAccessedGuildPlatforms } from "components/[guild]/AccessHub/AccessHub"
-import { useEditGuildDrawer } from "components/[guild]/EditGuild/EditGuildDrawerContext"
-import { EditGuildDrawerProvider } from "components/[guild]/EditGuild/EditGuildDrawerProvider"
-import GuildName from "components/[guild]/GuildName"
-import JoinButton from "components/[guild]/JoinButton"
+import { GuildPageBanner } from "components/[guild]/GuildPageBanner"
+import { GuildPageImageAndName } from "components/[guild]/GuildPageImageAndName"
+import { JoinButton } from "components/[guild]/JoinButton"
 import JoinModalProvider from "components/[guild]/JoinModal/JoinModalProvider"
-import LeaveButton from "components/[guild]/LeaveButton"
-import Members from "components/[guild]/Members"
 import { MintGuildPinProvider } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import Roles from "components/[guild]/Roles"
 import SocialIcon from "components/[guild]/SocialIcon"
 import useStayConnectedToast from "components/[guild]/StayConnectedToast"
-import GuildTabs from "components/[guild]/Tabs/GuildTabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
-import GuildLogo from "components/common/GuildLogo"
-import Layout from "components/common/Layout"
-import BackButton from "components/common/Layout/components/BackButton"
+import { BackToExplorerButton } from "components/common/Layout/components/BackToExplorerButton"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
 import useMembership from "components/explorer/hooks/useMembership"
-import useUniqueMembers from "hooks/useUniqueMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
 import Head from "next/head"
@@ -52,23 +41,41 @@ import parseDescription from "utils/parseDescription"
 const DynamicOngoingIssuesBanner = dynamic(
   () => import("components/[guild]/OngoingIssuesBanner")
 )
-const DynamicEditGuildButton = dynamic(() => import("components/[guild]/EditGuild"))
 const DynamicAddAndOrderRoles = dynamic(
-  () => import("components/[guild]/AddAndOrderRoles")
+  () => import("components/[guild]/AddAndOrderRoles"),
+  {
+    ssr: false,
+  }
 )
-const DynamicAddRewardAndCampaign = dynamic(
-  () => import("components/[guild]/AddRewardAndCampaign")
-)
-const DynamicMembersExporter = dynamic(
-  () => import("components/[guild]/Members/components/MembersExporter")
+const DynamicAddSolutionsAndEditGuildButton = dynamic(
+  () =>
+    import("components/[guild]/AddSolutionsAndEditGuildButton").then(
+      (module) => module.AddSolutionsAndEditGuildButton
+    ),
+  {
+    ssr: false,
+  }
 )
 const DynamicActiveStatusUpdates = dynamic(
-  () => import("components/[guild]/ActiveStatusUpdates")
+  () => import("components/[guild]/ActiveStatusUpdates"),
+  {
+    ssr: false,
+  }
 )
-const DynamicRecheckAccessesButton = dynamic(() =>
-  import("components/[guild]/RecheckAccessesButton").then(
-    (module) => module.TopRecheckAccessesButton
-  )
+const DynamicRecheckAccessesAndLeaveButton = dynamic(
+  () =>
+    import("components/[guild]/RecheckAccessesAndLeaveButton").then(
+      (module) => module.RecheckAccessesAndLeaveButton
+    ),
+  {
+    ssr: false,
+  }
+)
+const DynamicMembersExporter = dynamic(
+  () => import("components/[guild]/Members/components/MembersExporter"),
+  {
+    ssr: false,
+  }
 )
 const DynamicDiscordBotPermissionsChecker = dynamic(
   () => import("components/[guild]/DiscordBotPermissionsChecker"),
@@ -78,41 +85,14 @@ const DynamicDiscordBotPermissionsChecker = dynamic(
 )
 
 const GuildPage = (): JSX.Element => {
-  const {
-    name,
-    description,
-    imageUrl,
-    admins,
-    memberCount,
-    roles,
-    isLoading,
-    socialLinks,
-    tags,
-    featureFlags,
-    isDetailed,
-  } = useGuild()
+  const { description, socialLinks, featureFlags, isDetailed } = useGuild()
 
   const { isAdmin } = useGuildPermission()
   const { isMember } = useMembership()
-  const { onOpen } = useEditGuildDrawer()
 
-  // Passing the admin addresses here to make sure that we render all admin avatars in the members list
-  const members = useUniqueMembers(
-    roles,
-    admins?.map((admin) => admin.address)
-  )
+  const { localThemeColor } = useThemeContext()
 
-  const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
-
-  const accessedGuildPlatforms = useAccessedGuildPlatforms()
-
-  useStayConnectedToast(() => {
-    onOpen()
-    setTimeout(() => {
-      const addContactBtn = document.getElementById("add-contact-btn")
-      if (addContactBtn) addContactBtn.focus()
-    }, 200)
-  })
+  useStayConnectedToast()
 
   return (
     <>
@@ -122,126 +102,75 @@ const GuildPage = (): JSX.Element => {
 
       {featureFlags?.includes("ONGOING_ISSUES") && <DynamicOngoingIssuesBanner />}
 
-      <Layout
-        title={<GuildName {...{ name, tags }} />}
-        ogTitle={name}
-        textColor={textColor}
-        ogDescription={description}
-        description={
-          (description || Object.keys(socialLinks ?? {}).length > 0) && (
-            <>
+      <Layout>
+        <LayoutHero className="pb-24">
+          <LayoutBanner>
+            <GuildPageBanner />
+          </LayoutBanner>
+
+          <Header className="mb-10" />
+
+          <LayoutContainer className="-mb-16 mt-6">
+            <BackToExplorerButton />
+          </LayoutContainer>
+
+          <LayoutHeadline className="pt-12">
+            <GuildPageImageAndName />
+
+            <div className="ml-auto">
+              {isAdmin && isDetailed ? (
+                <DynamicAddSolutionsAndEditGuildButton />
+              ) : !isMember ? (
+                <JoinButton />
+              ) : (
+                <DynamicRecheckAccessesAndLeaveButton />
+              )}
+            </div>
+          </LayoutHeadline>
+
+          {(description || Object.keys(socialLinks ?? {}).length > 0) && (
+            <LayoutContainer className="mt-6 font-semibold">
               {description && parseDescription(description)}
               {Object.keys(socialLinks ?? {}).length > 0 && (
-                <Wrap w="full" spacing={3} mt="3">
-                  {Object.entries(socialLinks).map(([type, link]) => {
+                <div className="mt-3 flex flex-wrap items-center gap-3">
+                  {Object.entries(socialLinks ?? {}).map(([type, link]) => {
                     const prettyLink = link
                       .replace(/(http(s)?:\/\/)*(www\.)*/i, "")
                       .replace(/\?.*/, "") // trim query params
                       .replace(/\/+$/, "") // trim ending slash
 
                     return (
-                      <HStack key={type} spacing={1.5} maxW="full">
+                      <div key={type} className="flex items-center gap-1.5">
                         <SocialIcon type={type as SocialLinkKey} size="sm" />
-                        <Link
+                        <Anchor
                           href={link?.startsWith("http") ? link : `https://${link}`}
-                          isExternal
-                          fontSize="sm"
-                          fontWeight="semibold"
-                          color={textColor}
-                          noOfLines={1}
+                          className="font-semibold text-banner-foreground text-sm"
                         >
                           {prettyLink}
-                        </Link>
-                      </HStack>
+                        </Anchor>
+                      </div>
                     )
                   })}
-                </Wrap>
+                </div>
               )}
-            </>
-          )
-        }
-        image={
-          <GuildLogo
-            imageUrl={imageUrl}
-            size={{ base: "56px", lg: "72px" }}
-            mt={{ base: 1, lg: 2 }}
-            bgColor={textColor === "primary.800" ? "primary.800" : "transparent"}
-          />
-        }
-        imageUrl={imageUrl}
-        background={localThemeColor}
-        backgroundImage={localBackgroundImage}
-        action={isAdmin && isDetailed && <DynamicEditGuildButton />}
-        backButton={<BackButton />}
-      >
-        <GuildTabs
-          activeTab="HOME"
-          rightElement={
-            <HStack>
-              {isMember && !isAdmin && <DynamicRecheckAccessesButton />}
-              {!isMember ? (
-                <JoinButton />
-              ) : !isAdmin ? (
-                <LeaveButton />
-              ) : (
-                <DynamicAddRewardAndCampaign />
-              )}
-            </HStack>
-          }
-        />
+            </LayoutContainer>
+          )}
+        </LayoutHero>
 
-        <AccessHub />
+        <LayoutMain className="-top-16 flex flex-col items-start gap-8">
+          <AccessHub />
 
-        <Section
-          title={
-            (isAdmin || isMember || !!accessedGuildPlatforms?.length) && "Roles"
-          }
-          titleRightElement={
-            isAdmin && (
-              <Box my="-2 !important" ml="auto !important">
-                <DynamicAddAndOrderRoles />
-              </Box>
-            )
-          }
-          mb="10"
-        >
-          <Roles />
-        </Section>
-        {/* we'll remove Members section completely, just keeping it for admins for now because of the Members exporter */}
-        {isAdmin && (
-          <>
-            <Divider my={10} />
-            <Section
-              title="Members"
-              titleRightElement={
-                <HStack justifyContent="space-between" w="full" my="-2 !important">
-                  <Tag maxH={6} pt={0.5}>
-                    <TagLeftIcon as={Users} />
-                    {isLoading ? (
-                      <Spinner size="xs" />
-                    ) : (
-                      new Intl.NumberFormat("en", {
-                        notation: "compact",
-                      }).format(memberCount ?? 0) ?? 0
-                    )}
-                  </Tag>
-                  {isAdmin && <DynamicMembersExporter />}
-                </HStack>
-              }
-            >
-              <Box>
-                {isAdmin && <DynamicActiveStatusUpdates />}
+          <Section
+            titleRightElement={isAdmin ? <DynamicAddAndOrderRoles /> : undefined}
+          >
+            <Roles />
+          </Section>
 
-                <Members members={members} />
-                <Text mt="6" colorScheme={"gray"}>
-                  <Icon as={Info} mr="2" mb="-2px" />
-                  Members section is only visible to admins and is under rework,
-                  until then only admins are shown
-                </Text>
-              </Box>
-            </Section>
-          </>
-        )}
+          {isAdmin && <DynamicMembersExporter />}
+          {isAdmin && <DynamicActiveStatusUpdates />}
+        </LayoutMain>
+
+        <LayoutFooter />
       </Layout>
 
       {isAdmin && <DynamicDiscordBotPermissionsChecker />}
@@ -282,14 +211,18 @@ const GuildPageWrapper = ({ fallback }: Props): JSX.Element => {
 
   return (
     <>
-      <LinkPreviewHead
-        path={fallback ? Object.values(fallback)[0].urlName : guild.urlName}
-      />
+      <LinkPreviewHead path={Object.values(fallback)[0].urlName} />
       <Head>
-        <title>{fallback ? Object.values(fallback)[0].name : guild.name}</title>
+        <title>{Object.values(fallback)[0].name}</title>
+        <meta property="og:title" content={Object.values(fallback)[0].name} />
+        <link
+          rel="shortcut icon"
+          href={Object.values(fallback)[0].imageUrl ?? "/guild-icon.png"}
+        />
+        <meta name="description" content={Object.values(fallback)[0].description} />
         <meta
-          property="og:title"
-          content={fallback ? Object.values(fallback)[0].name : guild.name}
+          property="og:description"
+          content={Object.values(fallback)[0].description}
         />
       </Head>
       <SWRConfig value={fallback && { fallback }}>
@@ -297,9 +230,7 @@ const GuildPageWrapper = ({ fallback }: Props): JSX.Element => {
           <MintGuildPinProvider>
             <MintPolygonIDProofProvider>
               <JoinModalProvider>
-                <EditGuildDrawerProvider>
-                  <GuildPage />
-                </EditGuildDrawerProvider>
+                <GuildPage />
               </JoinModalProvider>
             </MintPolygonIDProofProvider>
           </MintGuildPinProvider>

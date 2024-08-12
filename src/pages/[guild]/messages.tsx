@@ -10,6 +10,7 @@ import Card from "components/common/Card"
 import ErrorAlert from "components/common/ErrorAlert"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
+import { BackButton } from "components/common/Layout/components/BackButton"
 import dynamic from "next/dynamic"
 
 const DynamicSendNewMessage = dynamic(
@@ -44,6 +45,7 @@ const Messages = () => {
       textColor={textColor}
       background={localThemeColor}
       backgroundImage={localBackgroundImage}
+      backButton={<BackButton />}
     >
       <GuildTabs
         activeTab="MESSAGES"

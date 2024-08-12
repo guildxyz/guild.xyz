@@ -37,7 +37,7 @@ const AddAndOrderRoles = ({ setIsStuck = null }): JSX.Element => {
 
   return (
     <>
-      <ButtonGroup isAttached size="sm" variant="ghost">
+      <ButtonGroup isAttached size="sm" variant="ghost" ml="auto">
         <Button
           ref={addRoleButtonRef}
           leftIcon={<Icon as={Plus} />}

@@ -1,5 +1,6 @@
 // biome-ignore lint/performance/noBarrelFile: <explanation>
 export {
+  LayoutContainer,
   LayoutBanner,
   LayoutFooter,
   LayoutHeadline,

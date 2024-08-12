@@ -24,8 +24,6 @@ import GetRewardsJoinStep from "./JoinModal/components/progress/GetRewardsJoinSt
 import GetRolesJoinStep from "./JoinModal/components/progress/GetRolesJoinStep"
 import SatisfyRequirementsJoinStep from "./JoinModal/components/progress/SatisfyRequirementsJoinStep"
 import useMembershipUpdate from "./JoinModal/hooks/useMembershipUpdate"
-import { useIsTabsStuck } from "./Tabs/Tabs"
-import { useThemeContext } from "./ThemeContext"
 
 const TIMEOUT = 60_000
 
@@ -202,23 +200,12 @@ const RecheckAccessesButton = ({
   )
 }
 
-const TopRecheckAccessesButton = () => {
-  const { isStuck } = useIsTabsStuck()
-  const { textColor, buttonColorScheme } = useThemeContext()
-
-  return (
-    <RecheckAccessesButton
-      minW="44px"
-      variant="ghost"
-      rounded="full"
-      tooltipLabel="Re-check accesses & send rewards"
-      {...(!isStuck && {
-        color: textColor,
-        colorScheme: buttonColorScheme,
-      })}
-    />
-  )
-}
+const TopRecheckAccessesButton = (props: ButtonProps) => (
+  <RecheckAccessesButton
+    tooltipLabel="Re-check accesses & send rewards"
+    {...props}
+  />
+)
 
 export default RecheckAccessesButton
 export { TopRecheckAccessesButton }

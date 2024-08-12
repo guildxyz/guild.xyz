@@ -47,6 +47,7 @@ export const COVALENT_CHAINS = new Set<Chain>([
   "SEI",
   "ROOTSTOCK",
   "MODE",
+  "LISK",
 ])
 
 const walletActivityRequirementTypes: SelectOption[] = [
@@ -132,6 +133,7 @@ const WalletActivityForm = ({
     "SEI",
     "ROOTSTOCK",
     "MODE",
+    "LISK",
   ]
 
   for (const covalentChain of COVALENT_CHAINS.values()) {
