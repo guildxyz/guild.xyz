@@ -30,7 +30,7 @@ import { cn } from "@/lib/utils"
 import { profileSchema } from "@/lib/validations/profileSchema"
 import { Schemas } from "@guildxyz/types"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Image as ImageIcon, Pencil, User } from "@phosphor-icons/react"
+import { Eyedropper, Image as ImageIcon, Pencil, User } from "@phosphor-icons/react"
 import useDropzone from "hooks/useDropzone"
 import usePinata from "hooks/usePinata"
 import Image from "next/image"
@@ -138,14 +138,23 @@ export const EditProfile = () => {
                         )}
                       </div>
                       <div className="relative flex items-center gap-3">
-                        <Button size="icon" variant="ghost">
+                        <Button size="icon" variant="ghost" className="text-white">
                           <ImageIcon weight="bold" size={24} />
                         </Button>
                         <Separator
                           orientation="vertical"
                           className="h-6 w-0.5 bg-white/50"
                         />
-                        <ProfileColorPicker />
+                        <ProfileColorPicker>
+                          <Button
+                            type="button"
+                            size="icon"
+                            variant="ghost"
+                            className="text-white"
+                          >
+                            <Eyedropper weight="bold" size={24} />
+                          </Button>
+                        </ProfileColorPicker>
                       </div>
                     </FormItem>
                   )}

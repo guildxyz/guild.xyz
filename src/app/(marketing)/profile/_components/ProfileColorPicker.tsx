@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/Button"
 import { ColorPicker } from "@/components/ui/ColorPicker"
 import {
   DropdownMenu,
@@ -9,10 +8,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/DropdownMenu"
 import { Eyedropper } from "@phosphor-icons/react"
+import { PropsWithChildren } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import getColorByImage from "utils/getColorByImage"
 
-export const ProfileColorPicker = () => {
+export const ProfileColorPicker = ({ children }: PropsWithChildren<any>) => {
   const { setValue } = useFormContext()
 
   const profileImageUrl = useWatch({ name: "profileImageUrl" })
@@ -24,11 +24,7 @@ export const ProfileColorPicker = () => {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button type="button" size="icon" variant="ghost">
-          <Eyedropper weight="bold" size={24} />
-        </Button>
-      </DropdownMenuTrigger>
+      <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuLabel className="font-normal">
           <ColorPicker fieldName="backgroundImageUrl" />

@@ -86,6 +86,10 @@
     --alert-error: 0 78% 98%;
     --alert-error-icon: 0 84% 60%;
 
+    /* we plan to add the whole alpha color palettes */
+    --whiteAlpha-800: rgba(255, 255, 255, 0.80);
+    --blackAlpha-800: rgba(0, 0, 0, 0.80);
+
     --discord: 233 78% 63%;
     --discord-hover: 243 75% 59%;
     --discord-active: 245 58% 51%;
