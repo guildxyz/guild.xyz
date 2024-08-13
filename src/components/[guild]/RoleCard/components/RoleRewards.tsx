@@ -2,7 +2,6 @@ import { SlideFade } from "@chakra-ui/react"
 import AccessedGuildPlatformCard from "components/[guild]/AccessHub/components/AccessedGuildPlatformCard"
 import { RolePlatformProvider } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
 import useGuild from "components/[guild]/hooks/useGuild"
-import {} from "react"
 import { Role } from "types"
 import HiddenRewards from "./HiddenRewards"
 
