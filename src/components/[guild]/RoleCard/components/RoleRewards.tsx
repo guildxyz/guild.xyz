@@ -14,7 +14,7 @@ const RoleRewards = ({ role, isOpen }: Props) => {
   const { guildPlatforms } = useGuild()
 
   return (
-    <div className="mt-auto grid gap-3 p-5 xl:grid-cols-2">
+    <div className="mt-auto grid grid-cols-1 gap-3 p-5 xl:grid-cols-2">
       {role.rolePlatforms?.map((rolePlatform, i) => {
         const guildPlatform = guildPlatforms?.find(
           (gp) => gp.id === rolePlatform.guildPlatformId
