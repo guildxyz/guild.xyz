@@ -11,12 +11,11 @@ import { Anchor } from "@/components/ui/Anchor"
 import { Guild, Role, Schemas } from "@guildxyz/types"
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr"
 import { ActivityLogAction } from "components/[guild]/activity/constants"
+import { env } from "env"
 import { notFound, redirect } from "next/navigation"
 import { Profile } from "../_components/Profile"
 
-// TODO: use env var for this url when it is changed to this value.
-// next-server throws fetch error if we modify the env var in memory
-const api = "https://api.guild.xyz"
+const api = env.NEXT_PUBLIC_API
 
 async function ssrFetcher<T>(...args: Parameters<typeof fetch>) {
   return (await fetch(...args)).json() as T
