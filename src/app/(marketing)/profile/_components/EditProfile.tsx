@@ -117,7 +117,7 @@ export const EditProfile = () => {
                   control={form.control}
                   name="backgroundImageUrl"
                   render={({ field }) => (
-                    <FormItem className="relative flex h-32 items-center justify-center overflow-hidden rounded-xl border">
+                    <FormItem className="relative flex h-32 items-center justify-center overflow-hidden rounded-xl border border-border-muted">
                       <div className="absolute inset-0 size-full">
                         {field.value?.startsWith("http") ||
                         field.value?.startsWith("/") ? (
@@ -158,7 +158,7 @@ export const EditProfile = () => {
                       variant="unstyled"
                       type="button"
                       className={cn(
-                        "-bottom-2 absolute left-4 size-28 translate-y-1/2 rounded-full border-2 border-dotted",
+                        "-bottom-2 absolute left-4 size-28 translate-y-1/2 rounded-full border border-dotted",
                         { "border-solid": field.value }
                       )}
                       {...getRootProps()}
