@@ -13,31 +13,36 @@ const RewardCardButton = ({
   const openJoinModal = useOpenJoinModal()
 
   const { roleId } = useRolePlatform()
-  const hasRole = !!membership?.roles.find(
-    (role) => role.roleId === roleId && role.access
-  )
 
   const buttonProps = {
     size: { base: "sm", xl: "md" },
     ...props,
   } satisfies ButtonProps
 
-  if (isMember && !hasRole)
+  if ("href" in props) return <Button {...buttonProps} />
+
+  if (!isMember)
+    return (
+      <Tooltip label="Join guild to check access" hasArrow>
+        <Button onClick={openJoinModal} variant="outline" {...buttonProps} />
+      </Tooltip>
+    )
+
+  const hasRole = membership?.roles?.find(
+    (role) => role.roleId === roleId && role.access
+  )
+
+  if (!hasRole)
     return (
       <Tooltip
-        label="You must satisfy the requirements first in order to claim this reward"
+        label="You must satisfy the requirements to claim this reward"
         hasArrow
       >
         <Button {...buttonProps} as={undefined} onClick={undefined} isDisabled />
       </Tooltip>
     )
 
-  return (
-    <Button
-      onClick={isMember ? onClick : "href" in props ? undefined : openJoinModal}
-      {...buttonProps}
-    />
-  )
+  return <Button onClick={onClick} {...buttonProps} />
 }
 
 export { RewardCardButton }
