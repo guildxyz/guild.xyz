@@ -1,14 +1,4 @@
-import {
-  Alert,
-  AlertDescription,
-  AlertTitle,
-  Collapse,
-  Icon,
-  SimpleGrid,
-  Stack,
-} from "@chakra-ui/react"
-import { StarHalf } from "@phosphor-icons/react"
-import Card from "components/common/Card"
+import { Collapse, SimpleGrid } from "@chakra-ui/react"
 import ClientOnly from "components/common/ClientOnly"
 import useMembership from "components/explorer/hooks/useMembership"
 import dynamic from "next/dynamic"
@@ -64,26 +54,6 @@ const AccessHub = (): JSX.Element => {
           gap={4}
         >
           <CampaignCards />
-          {(isMember || isAdmin) &&
-            (!group ? !groups?.length : true) &&
-            !shouldShowGuildPin && (
-              <Card>
-                <Alert status="info" h="full">
-                  <Icon as={StarHalf} boxSize="5" mr="2" mt="1px" weight="regular" />
-                  <Stack>
-                    <AlertTitle>
-                      {!group ? "No accessed reward" : "No rewards yet"}
-                    </AlertTitle>
-                    <AlertDescription>
-                      {!!group && isAdmin
-                        ? "This page doesn’t have any auto-managed rewards yet. Add some roles below so their rewards will appear here!"
-                        : "You're a member of the guild, but your roles don't give you any auto-managed rewards. The owner might add some in the future or reward you another way!"}
-                    </AlertDescription>
-                  </Stack>
-                </Alert>
-              </Card>
-            )}
-
           {isAdmin && <DynamicCreatedPageCard />}
           {shouldShowGuildPin && <DynamicGuildPinRewardCard />}
         </SimpleGrid>
