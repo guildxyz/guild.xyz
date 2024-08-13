@@ -29,7 +29,7 @@ const AccessHub = (): JSX.Element => {
 
   const hasVisiblePages = !!groups?.length && roles?.some((role) => !!role.groupId)
 
-  const showAccessHub = isAdmin || isMember || (hasVisiblePages && !group)
+  const showAccessHub = isAdmin || (hasVisiblePages && !group) || shouldShowGuildPin
 
   return (
     <ClientOnly>
