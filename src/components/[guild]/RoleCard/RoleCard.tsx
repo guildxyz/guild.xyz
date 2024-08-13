@@ -61,11 +61,6 @@ const RoleCard = memo(({ role }: Props) => {
     if (!isOpen) onCloseExpanded()
   }, [isOpen, onCloseExpanded])
 
-  useEffect(() => {
-    if (isMember && hasRoleAccess && !isAdmin) onClose()
-    else onOpen()
-  }, [isMember, hasRoleAccess, isAdmin, onClose, onOpen])
-
   const isMobile = useBreakpointValue({ base: true, md: false }, { fallback: "md" })
 
   const collapsedHeight = isMobile && role.visibility === "PUBLIC" ? "90px" : "94px"
