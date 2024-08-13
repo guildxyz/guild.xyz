@@ -1,13 +1,9 @@
 import { SlideFade } from "@chakra-ui/react"
 import AccessedGuildPlatformCard from "components/[guild]/AccessHub/components/AccessedGuildPlatformCard"
-import {
-  RolePlatformProvider,
-  useRolePlatform,
-} from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
+import { RolePlatformProvider } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { ComponentProps, PropsWithChildren } from "react"
-import { TokenRewardProvider } from "rewards/Token/TokenRewardContext"
-import { PlatformType, Role } from "types"
+import {} from "react"
+import { Role } from "types"
 import HiddenRewards from "./HiddenRewards"
 
 type Props = {
@@ -43,9 +39,7 @@ const RoleRewards = ({ role, isOpen }: Props) => {
                 guildPlatform,
               }}
             >
-              <RewardWrapper>
-                <AccessedGuildPlatformCard />
-              </RewardWrapper>
+              <AccessedGuildPlatformCard />
             </RolePlatformProvider>
           </SlideFade>
         )
@@ -54,20 +48,6 @@ const RoleRewards = ({ role, isOpen }: Props) => {
       {role.hiddenRewards && <HiddenRewards />}
     </div>
   )
-}
-
-const RewardWrapper = ({
-  children,
-}: PropsWithChildren<ComponentProps<typeof AccessedGuildPlatformCard>>) => {
-  const { guildPlatform } = useRolePlatform()
-  if (guildPlatform.platformId === PlatformType.ERC20)
-    return (
-      <TokenRewardProvider guildPlatform={guildPlatform}>
-        {children}
-      </TokenRewardProvider>
-    )
-
-  return children
 }
 
 export { RoleRewards }
