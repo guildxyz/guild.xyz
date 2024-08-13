@@ -11,7 +11,6 @@ import { CardPropsHook } from "rewards/types"
 import { GuildPlatformWithOptionalId, PlatformName } from "types"
 import pluralize from "utils/pluralize"
 import { formData } from "./data"
-import { useUserFormSubmission } from "./hooks/useFormSubmissions"
 
 const useFormCardProps: CardPropsHook = (
   guildPlatform: GuildPlatformWithOptionalId
@@ -20,7 +19,6 @@ const useFormCardProps: CardPropsHook = (
   const circleBgColor = useColorModeValue("gray.700", "blackAlpha.300")
 
   const { form, isSigned } = useGuildForm(guildPlatform?.platformGuildData?.formId)
-  const { userSubmission } = useUserFormSubmission(form ?? null)
 
   return {
     type: "FORM" as PlatformName,
@@ -34,7 +32,6 @@ const useFormCardProps: CardPropsHook = (
       isSigned && isAdmin ? (
         <SubmissionCount submissionCount={form?.submissionCount ?? 0} />
       ) : undefined,
-    shouldHide: !isAdmin && !!userSubmission,
   }
 }
 

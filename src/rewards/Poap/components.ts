@@ -15,7 +15,7 @@ export default {
       ssr: false,
     }
   ),
-  RoleCardComponent: dynamic(() => import("rewards/components/PoapReward"), {
+  SmallRewardPreview: dynamic(() => import("rewards/components/PoapReward"), {
     ssr: false,
   }),
 } satisfies RewardComponentsData
