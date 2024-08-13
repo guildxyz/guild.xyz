@@ -1,7 +1,7 @@
 import { ArrowRight } from "@phosphor-icons/react"
 import useGuild from "components/[guild]/hooks/useGuild"
-import Button from "components/common/Button"
 import Link from "next/link"
+import { RewardCardButton } from "rewards/components/RewardCardButton"
 import { GuildPlatform } from "types"
 
 type Props = {
@@ -13,17 +13,14 @@ const PointsCardButton = ({ platform }: Props) => {
   const id = platform.id
 
   return (
-    <>
-      <Button
-        as={Link}
-        href={`/${urlName}/leaderboard/${id}`}
-        size={{ base: "sm", xl: "md" }}
-        prefetch={false}
-        rightIcon={<ArrowRight />}
-      >
-        View leaderboard
-      </Button>
-    </>
+    <RewardCardButton
+      as={Link}
+      href={`/${urlName}/leaderboard/${id}`}
+      prefetch={false}
+      rightIcon={<ArrowRight />}
+    >
+      View leaderboard
+    </RewardCardButton>
   )
 }
 

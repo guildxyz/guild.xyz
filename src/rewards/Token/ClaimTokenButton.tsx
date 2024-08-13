@@ -1,7 +1,7 @@
 import { ButtonProps, Tooltip, useDisclosure } from "@chakra-ui/react"
-import Button from "components/common/Button"
 import dynamic from "next/dynamic"
 import { claimTextButtonTooltipLabel } from "rewards/SecretText/TextCardButton"
+import { RewardCardButton } from "rewards/components/RewardCardButton"
 import { RolePlatform } from "types"
 import {
   getRolePlatformStatus,
@@ -39,15 +39,14 @@ const ClaimTokenButton = ({
           hasArrow
           shouldWrapChildren
         >
-          <Button
+          <RewardCardButton
             colorScheme="gold"
-            size={{ base: "sm", xl: "md" }}
             isDisabled={isDisabled || isFromGeogatedCountry || !isAvailable}
             onClick={onOpen}
             {...rest}
           >
             {children ?? "Claim"}
-          </Button>
+          </RewardCardButton>
         </Tooltip>
       </GeogatedCountryPopover>
       {!isDisabled && <DynamicClaimTokenModal isOpen={isOpen} onClose={onClose} />}

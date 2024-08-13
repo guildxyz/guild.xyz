@@ -1,7 +1,7 @@
 import { ModalFooter, Text, Tooltip } from "@chakra-ui/react"
-import useGuild from "components/[guild]/hooks/useGuild"
+import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
-import Button from "components/common/Button"
+import { RewardCardButton } from "rewards/components/RewardCardButton"
 import { GuildPlatform, PlatformType, RolePlatformStatus } from "types"
 import {
   getRolePlatformStatus,
@@ -25,12 +25,9 @@ export const claimTextButtonTooltipLabel: Record<
 }
 
 const TextCardButton = ({ platform }: Props) => {
-  const { roles } = useGuild()
   const { isAdmin } = useGuildPermission()
+  const rolePlatform = useRolePlatform()
 
-  const rolePlatform = roles
-    ?.find((r) => r.rolePlatforms.some((rp) => rp.guildPlatformId === platform.id))
-    ?.rolePlatforms?.find((rp) => rp.guildPlatformId === platform?.id)
   const {
     onSubmit,
     isLoading,
@@ -51,7 +48,7 @@ const TextCardButton = ({ platform }: Props) => {
         hasArrow
         shouldWrapChildren
       >
-        <Button
+        <RewardCardButton
           onClick={() => {
             onOpen()
             if (!response) onSubmit()
@@ -59,12 +56,11 @@ const TextCardButton = ({ platform }: Props) => {
           isLoading={!rolePlatform || isLoading}
           loadingText={!rolePlatform ? "Loading..." : "Claiming secret..."}
           isDisabled={isButtonDisabled}
-          size={{ base: "sm", xl: "md" }}
         >
           {platform.platformId === PlatformType.UNIQUE_TEXT
             ? "Claim"
             : "Reveal secret"}
-        </Button>
+        </RewardCardButton>
       </Tooltip>
 
       <ClaimTextModal

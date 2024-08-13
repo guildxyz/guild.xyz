@@ -25,11 +25,6 @@ const RoleRewards = ({ role, isOpen }: Props) => {
           (gp) => gp.id === rolePlatform.guildPlatformId
         )
 
-        {
-          /* TODO: support all reward types (points, erc20) */
-        }
-        if (!guildPlatform) return
-
         return (
           <SlideFade
             key={rolePlatform.guildPlatformId}

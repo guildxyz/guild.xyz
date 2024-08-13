@@ -16,7 +16,6 @@ const AccessedGuildPlatformCard = () => {
   if (!rewards[PlatformType[guildPlatform.platformId]]) return null
 
   const {
-    // cardPropsHook: useCardProps,
     cardMenuComponent: PlatformCardMenu,
     cardWarningComponent: PlatformCardWarning,
     cardButton: PlatformCardButton,
