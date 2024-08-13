@@ -1,4 +1,4 @@
-import { ModalFooter, Text, Tooltip } from "@chakra-ui/react"
+import { Tooltip } from "@chakra-ui/react"
 import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import { RewardCardButton } from "rewards/components/RewardCardButton"
@@ -70,17 +70,7 @@ const TextCardButton = ({ platform }: Props) => {
         isLoading={isLoading}
         error={error}
         response={response}
-      >
-        {!isAdmin && response?.uniqueValue && !claimed && (
-          <ModalFooter pt="5" pb="6" px="7">
-            <Text colorScheme="gray" fontSize={"sm"}>
-              By refreshing, the reward will disappear from the highlighted cards at
-              the top of the guild, but you will still be able to access it from it's
-              role anytime
-            </Text>
-          </ModalFooter>
-        )}
-      </ClaimTextModal>
+      />
     </>
   )
 }
