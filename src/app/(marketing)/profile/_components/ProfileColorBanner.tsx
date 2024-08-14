@@ -10,7 +10,7 @@ import { useProfile } from "../_hooks/useProfile"
 export const ProfileColorBanner = () => {
   const { data: profile } = useProfile()
 
-  if (!profile?.backgroundImageUrl) return null
+  if (!profile?.backgroundImageUrl?.startsWith("#")) return null
 
   const color = Color(profile.backgroundImageUrl)
   const patternOpacity =

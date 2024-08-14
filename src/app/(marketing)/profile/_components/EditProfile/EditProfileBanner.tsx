@@ -1,23 +1,39 @@
 import { Button } from "@/components/ui/Button"
 import { FormField, FormItem } from "@/components/ui/Form"
 import { Separator } from "@/components/ui/Separator"
+import { useToast } from "@/components/ui/hooks/useToast"
 import { Eyedropper, Image as ImageIcon } from "@phosphor-icons/react"
-import Image from "next/image"
+import usePinata from "hooks/usePinata"
+import { ProfileBackgroundImageUploader } from "./ProfileBackgroundImageUploader"
 import { ProfileColorPicker } from "./ProfileColorPicker"
 
 export const EditProfileBanner = () => {
+  const { toast } = useToast()
+
+  // todo: move this up to the wrapper component & disable the save button while loading
+  const backgroundUploader = usePinata({
+    fieldToSetOnSuccess: "backgroundImageUrl",
+    onError: (err) =>
+      toast({
+        variant: "error",
+        title: "Error",
+        description: err,
+      }),
+  })
+
   return (
     <FormField
       name="backgroundImageUrl"
       render={({ field }) => (
         <FormItem className="relative flex h-32 items-center justify-center overflow-hidden rounded-xl border border-border-muted">
-          <div className="absolute inset-0 size-full">
+          <div className="absolute inset-0 flex size-full items-center">
             {field.value?.startsWith("http") || field.value?.startsWith("/") ? (
-              <Image
+              <img
                 src={field.value}
-                width={144}
-                height={144}
                 alt="profile background"
+                style={{
+                  filter: "brightness(50%)",
+                }}
               />
             ) : (
               <div
@@ -30,9 +46,14 @@ export const EditProfileBanner = () => {
             )}
           </div>
           <div className="relative flex items-center gap-3">
-            <Button size="icon" variant="ghost" className="text-white">
+            <ProfileBackgroundImageUploader
+              uploader={backgroundUploader}
+              size="icon"
+              variant="ghost"
+              className="text-white"
+            >
               <ImageIcon weight="bold" size={24} />
-            </Button>
+            </ProfileBackgroundImageUploader>
             <Separator orientation="vertical" className="h-6 w-0.5 bg-white/50" />
             <ProfileColorPicker>
               <Button

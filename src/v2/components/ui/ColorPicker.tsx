@@ -51,6 +51,7 @@ export const ColorPicker = ({ fieldName, onChange }: Props) => {
                 className="h-10 max-w-40"
                 placeholder="Pick a color"
                 {...field}
+                value={CSS.supports("color", field.value) ? field.value : undefined}
               />
             </div>
           </FormControl>
