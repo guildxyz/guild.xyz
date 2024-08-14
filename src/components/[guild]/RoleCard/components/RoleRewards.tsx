@@ -23,25 +23,25 @@ const RoleRewards = ({ role, isOpen }: Props) => {
   const { guildPlatforms } = useGuild()
 
   return (
-    <div className="mt-auto grid grid-cols-1 gap-3 p-5 xl:grid-cols-2">
-      {role.rolePlatforms?.map((rolePlatform, i) => {
-        const guildPlatform = guildPlatforms?.find(
-          (gp) => gp.id === rolePlatform.guildPlatformId
-        )
+    <DynamicRewardsWrapper roleId={role.id}>
+      <div className="mt-auto grid grid-cols-1 gap-3 p-5 xl:grid-cols-2">
+        {role.rolePlatforms?.map((rolePlatform, i) => {
+          const guildPlatform = guildPlatforms?.find(
+            (gp) => gp.id === rolePlatform.guildPlatformId
+          )
 
-        return (
-          <SlideFade
-            key={rolePlatform.guildPlatformId}
-            offsetY={10}
-            in={isOpen}
-            transition={{ enter: { delay: i * 0.1 } }}
-            /**
-             * Spreading inert because it's not added to @types/react yet:
-             * https://github.com/DefinitelyTyped/DefinitelyTyped/pull/60822
-             */
-            {...(!isOpen && ({ inert: "true" } as any))}
-          >
-            <DynamicRewardWrapper roleId={role.id}>
+          return (
+            <SlideFade
+              key={rolePlatform.guildPlatformId}
+              offsetY={10}
+              in={isOpen}
+              transition={{ enter: { delay: i * 0.1 } }}
+              /**
+               * Spreading inert because it's not added to @types/react yet:
+               * https://github.com/DefinitelyTyped/DefinitelyTyped/pull/60822
+               */
+              {...(!isOpen && ({ inert: "true" } as any))}
+            >
               <RolePlatformProvider
                 rolePlatform={{
                   ...rolePlatform,
@@ -50,17 +50,17 @@ const RoleRewards = ({ role, isOpen }: Props) => {
               >
                 <AccessedGuildPlatformCard />
               </RolePlatformProvider>
-            </DynamicRewardWrapper>
-          </SlideFade>
-        )
-      })}
+            </SlideFade>
+          )
+        })}
 
-      {role.hiddenRewards && <HiddenRewards />}
-    </div>
+        {role.hiddenRewards && <HiddenRewards />}
+      </div>
+    </DynamicRewardsWrapper>
   )
 }
 
-const DynamicRewardWrapper = ({
+const DynamicRewardsWrapper = ({
   roleId,
   children,
 }: PropsWithChildren<{ roleId: number }>) => {
