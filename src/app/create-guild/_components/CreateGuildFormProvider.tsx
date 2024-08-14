@@ -17,7 +17,7 @@ const defaultValues = {
     },
   ],
   /**
-   * We need to define these values so the Zod resolver won't throw errors, but we'll actually overwrite these with proper values in the `useCreateGuild` hook
+   * We need to define these values so the Zod resolver won't throw errors, but we'll actually overwrite the urlName with a proper value in the `useCreateGuild` hook
    *
    * Temporarily creating a default Member role, later the users will be able to pick from Guild Templates
    */
