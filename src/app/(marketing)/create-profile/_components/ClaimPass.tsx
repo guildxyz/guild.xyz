@@ -8,26 +8,69 @@ import {
   FormLabel,
 } from "@/components/ui/Form"
 import { Input } from "@/components/ui/Input"
+import { Schemas, schemas } from "@guildxyz/types"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr"
+import { usePathname, useRouter } from "next/navigation"
+import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
+import useSWR from "swr"
 import { z } from "zod"
+import { REFERRER_USER_SEARCH_PARAM_KEY } from "../constants"
 import { OnboardingChain } from "../types"
 import { GuildPassScene } from "./GuildPassScene"
 
-const formSchema = z.object({
-  inviteHandle: z.string(),
-})
+const formSchema = schemas.ProfileCreationSchema.pick({ username: true })
+
+// referrerUserId: z.preprocess((val) => Number(val), z.number().int().positive()),
+// const useReferrerUsername = (username?: string) => {
+//   const searchParams = useSearchParams()
+//   const searchParamUserId = searchParams?.get(REFERRER_USER_SEARCH_PARAM_KEY)
+//   const idOrUsername = username ?? searchParamUserId
+//   useSWRImmutable<Schemas["Profile"]>(
+//     idOrUsername ? `/v2/profiles/${idOrUsername}` : null
+//   )
+// }
 
 export const ClaimPass: OnboardingChain = ({ dispatchChainAction }) => {
+  const router = useRouter()
+  const pathname = usePathname()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      inviteHandle: "",
+      username: "",
     },
+    delayError: 80,
+    mode: "onTouched",
   })
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
+
+  const username = form.watch("username")
+  const referrer = useSWR<Schemas["Profile"]>(
+    username && form.formState.isValid ? `/v2/profiles/${username}` : null
+  )
+  useEffect(() => {
+    if (referrer.error) {
+      form.setError("username", { message: referrer.error.error })
+      return
+    }
+    if (!referrer.data) {
+      return
+    }
+    form.clearErrors()
+  }, [referrer, form.setError, form.clearErrors])
+
+  function onSubmit(_: z.infer<typeof formSchema>) {
+    if (!referrer.data) {
+      throw new Error("Failed to resolve referrer profile")
+    }
+    const newSearchParams = new URLSearchParams(
+      Object.entries({
+        [REFERRER_USER_SEARCH_PARAM_KEY]: referrer.data.userId.toString(),
+      }).filter(([_, value]) => value)
+    )
+    router.replace(`${pathname}?${newSearchParams.toString()}`, {
+      scroll: false,
+    })
     dispatchChainAction("next")
   }
 
@@ -44,19 +87,30 @@ export const ClaimPass: OnboardingChain = ({ dispatchChainAction }) => {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <FormField
             control={form.control}
-            name="inviteHandle"
+            name="username"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Invite handle</FormLabel>
+                <FormLabel aria-required>Referrer username</FormLabel>
                 <FormControl>
-                  <Input placeholder="" {...field} />
+                  <Input placeholder="" required {...field} />
                 </FormControl>
-                <FormDescription>Guild Pass is invite only</FormDescription>
                 <FormErrorMessage />
+                <FormDescription>
+                  To claim your Guild Pass you must provide an existing profile
+                  username
+                </FormDescription>
               </FormItem>
             )}
           />
-          <Button type="submit" colorScheme="success" className="w-full">
+          <Button
+            type="submit"
+            colorScheme="success"
+            className="w-full"
+            disabled={!form.formState.isValid}
+            isLoading={
+              (form.formState.isValid && !referrer.data) || referrer.isLoading
+            }
+          >
             Continue
             <ArrowRight weight="bold" />
           </Button>

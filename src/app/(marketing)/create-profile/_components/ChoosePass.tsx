@@ -25,7 +25,7 @@ export const ChoosePass: OnboardingChain = ({ dispatchChainAction }) => {
     dispatchChainAction("next", {
       chosenSubscription: SUBSCRIPTIONS[subscriptionIndex],
     })
-  }, [subscriptionIndex])
+  }, [subscriptionIndex, dispatchChainAction])
 
   return (
     <div className="max-w-screen-lg">

@@ -22,9 +22,12 @@ import { ArrowRight } from "@phosphor-icons/react/dist/ssr"
 import useUser from "components/[guild]/hooks/useUser"
 import useDropzone from "hooks/useDropzone"
 import usePinata from "hooks/usePinata"
+import { useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
+import { z } from "zod"
 import { useCreateProfile } from "../_hooks/useCreateProfile"
+import { REFERRER_USER_SEARCH_PARAM_KEY } from "../constants"
 import { OnboardingChain } from "../types"
 
 enum CreateMethod {
@@ -39,6 +42,7 @@ export const StartProfile: OnboardingChain = () => {
     farcasterProfile ? CreateMethod.FillByFarcaster : undefined
   )
   const { toast } = useToast()
+  const referrerUserId = useSearchParams()?.get(REFERRER_USER_SEARCH_PARAM_KEY)
 
   useEffect(() => {
     if (!farcasterProfile) return
@@ -53,7 +57,7 @@ export const StartProfile: OnboardingChain = () => {
     })
   }, [farcasterProfile])
 
-  const form = useForm<Schemas["ProfileCreation"]>({
+  const form = useForm<z.infer<typeof profileSchema>>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
       name: "",
@@ -64,7 +68,24 @@ export const StartProfile: OnboardingChain = () => {
 
   const createProfile = useCreateProfile()
   async function onSubmit(values: Schemas["ProfileCreation"]) {
-    createProfile.onSubmit(values)
+    if (!referrerUserId) {
+      toast({
+        variant: "error",
+        title: "Failed to create profile",
+        description: "Referred user not found",
+      })
+      return
+    }
+    const parsedReferrerUserId = parseInt(referrerUserId)
+    if (isNaN(parsedReferrerUserId)) {
+      toast({
+        variant: "error",
+        title: "Failed to create profile",
+        description: "Referred user id is invalid",
+      })
+      return
+    }
+    createProfile.onSubmit({ ...values, referrerUserId: parsedReferrerUserId })
   }
 
   const { isUploading, onUpload } = usePinata({
