@@ -9,12 +9,12 @@ import { cn } from "@/lib/utils"
 import { PropsWithChildren } from "react"
 import { ContributionCard } from "../_components/ContributionCard"
 import { EditContributions } from "../_components/EditContributions"
-import { EditProfile } from "../_components/EditProfile"
 import { OperatedGuildCard } from "../_components/OperatedGuildCard"
 import { ProfileOwnerGuard } from "../_components/ProfileOwnerGuard"
 import { RecentActivity } from "../_components/RecentActivity"
 import { useContributions } from "../_hooks/useContributions"
 import { useProfile } from "../_hooks/useProfile"
+import { EditProfile } from "./EditProfile/EditProfile"
 import { ProfileSkeleton } from "./ProfileSkeleton"
 
 export const Profile = () => {
