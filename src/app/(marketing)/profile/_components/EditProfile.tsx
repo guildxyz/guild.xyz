@@ -8,7 +8,6 @@ import {
   DialogBody,
   DialogCloseButton,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -103,169 +102,166 @@ export const EditProfile = () => {
           </Button>
         </Card>
       </DialogTrigger>
-      <DialogContent size="lg" className="bg-background">
-        <DialogHeader>
-          <DialogTitle>Edit profile</DialogTitle>
-          <DialogDescription />
-          <DialogCloseButton />
-        </DialogHeader>
-        <FormProvider {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
-            <DialogBody>
-              <div className="relative mb-20">
-                <FormField
-                  control={form.control}
-                  name="backgroundImageUrl"
-                  render={({ field }) => (
-                    <FormItem className="relative flex h-32 items-center justify-center overflow-hidden rounded-xl border border-border-muted">
-                      <div className="absolute inset-0 size-full">
-                        {field.value?.startsWith("http") ||
-                        field.value?.startsWith("/") ? (
-                          <Image
-                            src={field.value}
-                            width={144}
-                            height={144}
-                            alt="profile background"
-                          />
-                        ) : (
-                          <div
-                            className={`size-full`}
-                            style={{
-                              background: field.value ?? "black",
-                              filter: "brightness(70%)",
-                            }}
-                          />
-                        )}
-                      </div>
-                      <div className="relative flex items-center gap-3">
-                        <Button size="icon" variant="ghost" className="text-white">
-                          <ImageIcon weight="bold" size={24} />
-                        </Button>
-                        <Separator
-                          orientation="vertical"
-                          className="h-6 w-0.5 bg-white/50"
+      <FormProvider {...form}>
+        <DialogContent size="lg" className="bg-background" scrollBody>
+          <DialogHeader>
+            <DialogTitle>Edit profile</DialogTitle>
+            <DialogCloseButton />
+          </DialogHeader>
+          <DialogBody scroll className="!pb-8">
+            <div className="relative mb-20">
+              <FormField
+                control={form.control}
+                name="backgroundImageUrl"
+                render={({ field }) => (
+                  <FormItem className="relative flex h-32 items-center justify-center overflow-hidden rounded-xl border border-border-muted">
+                    <div className="absolute inset-0 size-full">
+                      {field.value?.startsWith("http") ||
+                      field.value?.startsWith("/") ? (
+                        <Image
+                          src={field.value}
+                          width={144}
+                          height={144}
+                          alt="profile background"
                         />
-                        <ProfileColorPicker>
-                          <Button
-                            type="button"
-                            size="icon"
-                            variant="ghost"
-                            className="text-white"
-                          >
-                            <Eyedropper weight="bold" size={24} />
-                          </Button>
-                        </ProfileColorPicker>
-                      </div>
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="profileImageUrl"
-                  render={({ field }) => (
-                    <Button
-                      variant="unstyled"
-                      type="button"
-                      className={cn(
-                        "-bottom-2 absolute left-4 size-28 translate-y-1/2 rounded-full border border-dotted",
-                        { "border-solid": field.value }
+                      ) : (
+                        <div
+                          className={`size-full`}
+                          style={{
+                            background: field.value ?? "black",
+                            filter: "brightness(70%)",
+                          }}
+                        />
                       )}
-                      {...getRootProps()}
-                    >
-                      <Avatar className="size-36 bg-muted">
-                        {field.value && (
-                          <AvatarImage
-                            src={field.value}
-                            width={144}
-                            height={144}
-                            alt="profile avatar"
-                          />
-                        )}
-                        <AvatarFallback className="bg-muted">
-                          <User size={38} />
-                        </AvatarFallback>
-                      </Avatar>
-                    </Button>
-                  )}
-                />
-              </div>
+                    </div>
+                    <div className="relative flex items-center gap-3">
+                      <Button size="icon" variant="ghost" className="text-white">
+                        <ImageIcon weight="bold" size={24} />
+                      </Button>
+                      <Separator
+                        orientation="vertical"
+                        className="h-6 w-0.5 bg-white/50"
+                      />
+                      <ProfileColorPicker>
+                        <Button
+                          type="button"
+                          size="icon"
+                          variant="ghost"
+                          className="text-white"
+                        >
+                          <Eyedropper weight="bold" size={24} />
+                        </Button>
+                      </ProfileColorPicker>
+                    </div>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="profileImageUrl"
+                render={({ field }) => (
+                  <Button
+                    variant="unstyled"
+                    type="button"
+                    className={cn(
+                      "-bottom-2 absolute left-4 size-28 translate-y-1/2 rounded-full border border-dotted",
+                      { "border-solid": field.value }
+                    )}
+                    {...getRootProps()}
+                  >
+                    <Avatar className="size-36 bg-muted">
+                      {field.value && (
+                        <AvatarImage
+                          src={field.value}
+                          width={144}
+                          height={144}
+                          alt="profile avatar"
+                        />
+                      )}
+                      <AvatarFallback className="bg-muted">
+                        <User size={38} />
+                      </AvatarFallback>
+                    </Avatar>
+                  </Button>
+                )}
+              />
+            </div>
 
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem className="pb-2">
-                    <FormLabel>Name</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder=""
-                        variant="muted"
-                        {...field}
-                        value={field.value ?? undefined}
-                      />
-                    </FormControl>
-                    <FormErrorMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="username"
-                render={({ field }) => (
-                  <FormItem className="pb-2">
-                    <FormLabel aria-required="true">Username</FormLabel>
-                    <FormControl>
-                      <Input placeholder="" variant="muted" required {...field} />
-                    </FormControl>
-                    <FormErrorMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="bio"
-                render={({ field }) => (
-                  <FormItem className="">
-                    <FormLabel>Bio</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder=""
-                        className="max-h-12 bg-muted"
-                        {...field}
-                        value={field.value ?? undefined}
-                      />
-                    </FormControl>
-                    <FormErrorMessage />
-                  </FormItem>
-                )}
-              />
-              <Separator className="my-4" />
-              <div>
-                <p className="mb-2 font-medium">Danger zone</p>
-                <Button
-                  onClick={deleteProfile.onSubmit}
-                  variant="subtle"
-                  type="button"
-                  colorScheme="destructive"
-                  size="sm"
-                >
-                  Delete profile
-                </Button>
-              </div>
-            </DialogBody>
-            <DialogFooter>
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem className="pb-2">
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder=""
+                      variant="muted"
+                      {...field}
+                      value={field.value ?? undefined}
+                    />
+                  </FormControl>
+                  <FormErrorMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="username"
+              render={({ field }) => (
+                <FormItem className="pb-2">
+                  <FormLabel aria-required="true">Username</FormLabel>
+                  <FormControl>
+                    <Input placeholder="" variant="muted" required {...field} />
+                  </FormControl>
+                  <FormErrorMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="bio"
+              render={({ field }) => (
+                <FormItem className="">
+                  <FormLabel>Bio</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder=""
+                      className="max-h-12 bg-muted"
+                      {...field}
+                      value={field.value ?? undefined}
+                    />
+                  </FormControl>
+                  <FormErrorMessage />
+                </FormItem>
+              )}
+            />
+            <Separator className="my-4" />
+            <div>
+              <p className="mb-2 font-medium">Danger zone</p>
               <Button
-                isLoading={editProfile.isLoading}
-                colorScheme="success"
-                type="submit"
-                disabled={!form.formState.isValid}
+                onClick={deleteProfile.onSubmit}
+                variant="subtle"
+                type="button"
+                colorScheme="destructive"
+                size="sm"
               >
-                Save
+                Delete profile
               </Button>
-            </DialogFooter>
-          </form>
-        </FormProvider>
-      </DialogContent>
+            </div>
+          </DialogBody>
+          <DialogFooter className="border-border-muted border-t py-4">
+            <Button
+              isLoading={editProfile.isLoading}
+              colorScheme="success"
+              onClick={form.handleSubmit(onSubmit)}
+              disabled={!form.formState.isValid}
+            >
+              Save
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </FormProvider>
     </Dialog>
   )
 }
