@@ -21,21 +21,15 @@ const Page = () => (
       />
 
       <LayoutHero className="pb-52">
-        <LayoutBanner className="border-b border-dashed bg-banner-dark">
+        <LayoutBanner className="border-b border-dashed dark:bg-banner-dark">
           <div className="absolute inset-0 bg-[auto_115%] bg-[top_5px_right_0] bg-[url('/banner.svg')] bg-repeat opacity-5" />
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                "radial-gradient(circle at bottom, transparent 5%, hsl(var(--banner-dark)))",
-            }}
-          />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom,transparent_5%,hsl(var(--banner)))] dark:bg-[radial-gradient(circle_at_bottom,transparent_5%,hsl(var(--banner-dark)))]" />
         </LayoutBanner>
 
         <Header />
       </LayoutHero>
 
-      <LayoutMain className="max-w-lg">
+      <LayoutMain className="-top-40 sm:-top-36 max-w-lg px-0">
         <CreateGuildCard />
       </LayoutMain>
     </Layout>

@@ -102,7 +102,7 @@ const CreateGuildImageUploader = () => {
               className="size-full object-cover"
             />
           ) : (
-            <Image className="h-auto w-1/3" />
+            <Image className="h-auto w-1/3" weight="bold" />
           )}
         </Button>
       </FormControl>
