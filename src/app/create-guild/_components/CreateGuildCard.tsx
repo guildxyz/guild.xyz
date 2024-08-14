@@ -12,13 +12,11 @@ import { Input } from "@/components/ui/Input"
 import { useFormContext } from "react-hook-form"
 import { CreateGuildFormType } from "../types"
 import { CreateGuildButton } from "./CreateGuildButton"
+import { CreateGuildImageUploader } from "./CreateGuildImageUploader"
 import { EmailFormField } from "./EmailFormField"
 
 const CreateGuildCard = () => {
-  const {
-    control,
-    formState: { errors },
-  } = useFormContext<CreateGuildFormType>()
+  const { control } = useFormContext<CreateGuildFormType>()
 
   return (
     <Card className="flex flex-col px-5 py-6 shadow-lg md:px-6">
@@ -26,18 +24,7 @@ const CreateGuildCard = () => {
         Begin your guild
       </h2>
 
-      {/* <Center mb="6">
-          <IconSelector
-            uploader={iconUploader}
-            minW={512}
-            minH={512}
-            onGeneratedBlobChange={async (objectURL) => {
-              const generatedThemeColor = await getColorByImage(objectURL)
-              setValue("theme.color", generatedThemeColor)
-            }}
-            boxSize={28}
-          />
-        </Center> */}
+      <CreateGuildImageUploader />
 
       <div className="mb-8 flex flex-col gap-4">
         <FormField

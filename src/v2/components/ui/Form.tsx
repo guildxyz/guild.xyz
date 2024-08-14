@@ -150,7 +150,7 @@ const FormErrorMessage = forwardRef<
   const [debounceBody] = useDebounceValue(body, 200)
 
   return (
-    <Collapsible open={!!error}>
+    <Collapsible open={!!body}>
       <CollapsibleContent>
         <p
           ref={ref}
