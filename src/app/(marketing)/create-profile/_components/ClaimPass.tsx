@@ -14,7 +14,7 @@ import { ArrowRight } from "@phosphor-icons/react/dist/ssr"
 import { usePathname, useRouter } from "next/navigation"
 import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import useSWR from "swr"
+import useSWRImmutable from "swr/immutable"
 import { z } from "zod"
 import { REFERRER_USER_SEARCH_PARAM_KEY } from "../constants"
 import { OnboardingChain } from "../types"
@@ -40,12 +40,12 @@ export const ClaimPass: OnboardingChain = ({ dispatchChainAction }) => {
     defaultValues: {
       username: "",
     },
-    delayError: 80,
+    delayError: 100,
     mode: "onTouched",
   })
 
   const username = form.watch("username")
-  const referrer = useSWR<Schemas["Profile"]>(
+  const referrer = useSWRImmutable<Schemas["Profile"]>(
     username && form.formState.isValid ? `/v2/profiles/${username}` : null
   )
   useEffect(() => {
@@ -56,8 +56,7 @@ export const ClaimPass: OnboardingChain = ({ dispatchChainAction }) => {
     if (!referrer.data) {
       return
     }
-    form.clearErrors()
-  }, [referrer, form.setError, form.clearErrors])
+  }, [referrer, form.setError])
 
   function onSubmit(_: z.infer<typeof formSchema>) {
     if (!referrer.data) {
