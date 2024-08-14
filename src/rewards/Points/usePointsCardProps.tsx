@@ -1,8 +1,9 @@
 import { Circle, useColorModeValue } from "@chakra-ui/react"
+import DynamicTag from "components/[guild]/RoleCard/components/DynamicReward/DynamicTag"
 import useDynamicRewardUserAmount from "rewards/Token/hooks/useDynamicRewardUserAmount"
 import { CardPropsHook } from "rewards/types"
 import Star from "static/icons/star.svg"
-import { GuildPlatformWithOptionalId } from "types"
+import { GuildPlatformWithOptionalId, RolePlatform } from "types"
 import { useRolePlatform } from "../../components/[guild]/RolePlatforms/components/RolePlatformProvider"
 
 const usePointsCardProps: CardPropsHook = (
@@ -26,6 +27,9 @@ const usePointsCardProps: CardPropsHook = (
     ),
     // if undefined at admin setup -> "some", if saved with no value (empty string) -> 0
     name: `Get ${score ?? 0} ${guildPlatform.platformGuildData?.name || "points"}`,
+    info: !!rolePlatform?.dynamicAmount && (
+      <DynamicTag rolePlatform={rolePlatform as RolePlatform} mt={1} />
+    ),
   }
 }
 

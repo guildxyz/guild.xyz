@@ -2,6 +2,9 @@ import { SlideFade } from "@chakra-ui/react"
 import AccessedGuildPlatformCard from "components/[guild]/AccessHub/components/AccessedGuildPlatformCard"
 import { RolePlatformProvider } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
 import useGuild from "components/[guild]/hooks/useGuild"
+import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
+import dynamic from "next/dynamic"
+import { PropsWithChildren } from "react"
 import { Role } from "types"
 import HiddenRewards from "./HiddenRewards"
 
@@ -9,6 +12,12 @@ type Props = {
   role: Role
   isOpen: boolean
 }
+
+const DynamicApiRequirementHandlerProvider = dynamic(() =>
+  import("components/[guild]/RequirementHandlerContext").then(
+    (module) => module.ApiRequirementHandlerProvider
+  )
+)
 
 const RoleRewards = ({ role, isOpen }: Props) => {
   const { guildPlatforms } = useGuild()
@@ -32,14 +41,16 @@ const RoleRewards = ({ role, isOpen }: Props) => {
              */
             {...(!isOpen && ({ inert: "true" } as any))}
           >
-            <RolePlatformProvider
-              rolePlatform={{
-                ...rolePlatform,
-                guildPlatform,
-              }}
-            >
-              <AccessedGuildPlatformCard />
-            </RolePlatformProvider>
+            <DynamicRewardWrapper roleId={role.id}>
+              <RolePlatformProvider
+                rolePlatform={{
+                  ...rolePlatform,
+                  guildPlatform,
+                }}
+              >
+                <AccessedGuildPlatformCard />
+              </RolePlatformProvider>
+            </DynamicRewardWrapper>
           </SlideFade>
         )
       })}
@@ -47,6 +58,22 @@ const RoleRewards = ({ role, isOpen }: Props) => {
       {role.hiddenRewards && <HiddenRewards />}
     </div>
   )
+}
+
+const DynamicRewardWrapper = ({
+  roleId,
+  children,
+}: PropsWithChildren<{ roleId: number }>) => {
+  const { isAdmin } = useGuildPermission()
+
+  if (isAdmin)
+    return (
+      <DynamicApiRequirementHandlerProvider roleId={roleId}>
+        {children}
+      </DynamicApiRequirementHandlerProvider>
+    )
+
+  return children
 }
 
 export { RoleRewards }
