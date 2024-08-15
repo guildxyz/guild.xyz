@@ -7,7 +7,7 @@ import FormCardMenu from "./FormCardMenu"
 export default {
   cardButton: FormCardLinkButton,
   cardMenuComponent: FormCardMenu,
-  RoleCardComponent: dynamic(() => import("rewards/components/FormReward"), {
+  SmallRewardPreview: dynamic(() => import("rewards/components/FormReward"), {
     ssr: false,
   }),
   AddRewardPanel: dynamic(

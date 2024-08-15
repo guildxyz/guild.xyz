@@ -15,7 +15,7 @@ import { useMintPolygonIDProofContext } from "rewards/PolygonID/components/MintP
 import useConnectedDID from "rewards/PolygonID/hooks/useConnectedDID"
 import { PlatformType } from "types"
 
-const PolygonIDReward = ({ platform, withMotionImg }: RewardProps) => {
+const PolygonIDReward = ({ platform }: RewardProps) => {
   const { platformId } = platform.guildPlatform
 
   const { roles } = useGuild()
@@ -80,7 +80,6 @@ const PolygonIDReward = ({ platform, withMotionImg }: RewardProps) => {
         <RewardIcon
           rolePlatformId={platform.id}
           guildPlatform={platform?.guildPlatform}
-          withMotionImg={withMotionImg}
         />
       }
       label={
