@@ -100,7 +100,9 @@ const Page = async ({ params: { username } }: { params: { username: string } }) 
       }}
     >
       <Layout
-        style={isBgColor ? ({ "--banner": profile.backgroundImageUrl } as any) : {}}
+        style={
+          isBgColor ? { ["--banner" as string]: profile.backgroundImageUrl } : {}
+        }
       >
         <LayoutHero className="pb-4 md:pb-10">
           <Header />
@@ -108,16 +110,18 @@ const Page = async ({ params: { username } }: { params: { username: string } }) 
             {isBgColor ? (
               <ProfileColorBanner />
             ) : (
-              <Image
-                src={profile.backgroundImageUrl as string}
-                fill
-                sizes="100vw"
-                alt="profile background image"
-                style={{
-                  filter: "brightness(50%)",
-                  objectFit: "cover",
-                }}
-              />
+              profile.backgroundImageUrl && (
+                <Image
+                  src={profile.backgroundImageUrl}
+                  fill
+                  sizes="100vw"
+                  alt="profile background image"
+                  style={{
+                    filter: "brightness(50%)",
+                    objectFit: "cover",
+                  }}
+                />
+              )
             )}
             <div className="absolute inset-0 bg-gradient-to-t from-background" />
           </LayoutBanner>
