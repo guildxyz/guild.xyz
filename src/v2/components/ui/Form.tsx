@@ -80,7 +80,7 @@ const FormItem = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
 
     return (
       <FormItemContext.Provider value={{ id }}>
-        <div ref={ref} className={cn("space-y-2", className)} {...props} />
+        <div ref={ref} className={cn("flex flex-col", className)} {...props} />
       </FormItemContext.Provider>
     )
   }
@@ -96,7 +96,7 @@ const FormLabel = forwardRef<
   return (
     <Label
       ref={ref}
-      className={cn("text-md", className)}
+      className={cn("mb-2 text-md", className)}
       htmlFor={formItemId}
       {...props}
     />
@@ -150,14 +150,14 @@ const FormErrorMessage = forwardRef<
   const [debounceBody] = useDebounceValue(body, 200)
 
   return (
-    <Collapsible open={!!error}>
+    <Collapsible open={!!body}>
       <CollapsibleContent>
         <p
           ref={ref}
           id={formMessageId}
           // TODO: not sure if it is a good idea to use "destructive-subtle-foreground" here? Should we add a completely new CSS variable instead?
           className={cn(
-            "font-medium text-[0.8rem] text-destructive-subtle-foreground",
+            "pt-2 font-medium text-[0.8rem] text-destructive-subtle-foreground",
             className
           )}
           {...props}
