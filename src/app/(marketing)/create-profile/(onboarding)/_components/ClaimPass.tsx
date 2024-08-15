@@ -21,16 +21,6 @@ import { GuildPassScene } from "./GuildPassScene"
 
 const formSchema = schemas.ProfileCreationSchema.pick({ username: true })
 
-// referrerUserId: z.preprocess((val) => Number(val), z.number().int().positive()),
-// const useReferrerUsername = (username?: string) => {
-//   const searchParams = useSearchParams()
-//   const searchParamUserId = searchParams?.get(REFERRER_USER_SEARCH_PARAM_KEY)
-//   const idOrUsername = username ?? searchParamUserId
-//   useSWRImmutable<Schemas["Profile"]>(
-//     idOrUsername ? `/v2/profiles/${idOrUsername}` : null
-//   )
-// }
-
 export const ClaimPass: OnboardingChain = ({ dispatchChainAction, chainData }) => {
   const router = useRouter()
   const pathname = usePathname()
@@ -64,15 +54,7 @@ export const ClaimPass: OnboardingChain = ({ dispatchChainAction, chainData }) =
     if (!referrer.data) {
       throw new Error("Failed to resolve referrer profile")
     }
-    // const newSearchParams = new URLSearchParams(
-    //   Object.entries({
-    //     [REFERRER_USER_SEARCH_PARAM_KEY]: referrer.data.username.toString(),
-    //   }).filter(([_, value]) => value)
-    // )
     dispatchChainAction({ action: "next", data: { referrerProfile: referrer.data } })
-    // router.replace(`${pathname}?${newSearchParams.toString()}`, {
-    //   scroll: false,
-    // })
   }
 
   return (
