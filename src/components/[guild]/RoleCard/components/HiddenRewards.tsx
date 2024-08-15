@@ -1,22 +1,21 @@
-import { Center, useColorModeValue } from "@chakra-ui/react"
+import { Circle, useColorModeValue } from "@chakra-ui/react"
 import { Question } from "@phosphor-icons/react"
-import { RewardDisplay } from "./RewardDisplay"
+import RewardCard from "components/common/RewardCard"
 
 const HiddenRewards = () => {
-  const rewardImageBgColor = useColorModeValue("blackAlpha.100", "blackAlpha.300")
+  const rewardImageBgColor = useColorModeValue("gray.700", "gray.600")
 
   return (
-    <RewardDisplay
-      label={"Some secret rewards"}
-      icon={
-        <Center
-          boxSize={25}
-          backgroundColor={rewardImageBgColor}
-          borderRadius={"full"}
-        >
-          <Question />
-        </Center>
+    <RewardCard
+      colorScheme="gray"
+      title="Some secret rewards"
+      image={
+        <Circle size={10} bgColor={rewardImageBgColor}>
+          <Question color="white" />
+        </Circle>
       }
+      p={4}
+      pt={4}
     />
   )
 }

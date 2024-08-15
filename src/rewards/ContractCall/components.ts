@@ -17,7 +17,7 @@ export default {
       loading: AddRewardPanelLoadingSpinner,
     }
   ),
-  RoleCardComponent: dynamic(
+  SmallRewardPreview: dynamic(
     () => import("rewards/ContractCall/ContractCallReward"),
     {
       ssr: false,

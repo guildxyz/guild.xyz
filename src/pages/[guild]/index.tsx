@@ -110,11 +110,11 @@ const GuildPage = (): JSX.Element => {
 
           <Header className="mb-10" />
 
-          <LayoutContainer className="-mb-16 mt-6">
+          <LayoutContainer className="-mb-16 mt-6 max-w-screen-xl">
             <BackToExplorerButton />
           </LayoutContainer>
 
-          <LayoutHeadline className="pt-12">
+          <LayoutHeadline className="max-w-screen-xl pt-12">
             <GuildPageImageAndName />
 
             <div className="ml-auto">
@@ -129,7 +129,7 @@ const GuildPage = (): JSX.Element => {
           </LayoutHeadline>
 
           {(description || Object.keys(socialLinks ?? {}).length > 0) && (
-            <LayoutContainer className="mt-6 font-semibold">
+            <LayoutContainer className="mt-6 max-w-screen-xl font-semibold">
               {description && parseDescription(description)}
               {Object.keys(socialLinks ?? {}).length > 0 && (
                 <div className="mt-3 flex flex-wrap items-center gap-3">
@@ -157,7 +157,7 @@ const GuildPage = (): JSX.Element => {
           )}
         </LayoutHero>
 
-        <LayoutMain className="-top-16 flex flex-col items-start gap-8">
+        <LayoutMain className="-top-16 flex max-w-screen-xl flex-col items-start gap-8">
           <AccessHub />
 
           <Section

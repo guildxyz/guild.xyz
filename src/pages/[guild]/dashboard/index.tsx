@@ -7,7 +7,6 @@ import {
   LayoutTitle,
 } from "@/components/Layout"
 import { LayoutHeadline, LayoutMain } from "@/components/Layout"
-import {} from "@chakra-ui/react"
 import { EditGuildFormComponent } from "components/[guild]/EditGuild/EditGuildFormComponent"
 import DeleteGuildButton from "components/[guild]/EditGuild/components/DeleteGuildButton"
 import { GuildPageBanner } from "components/[guild]/GuildPageBanner"

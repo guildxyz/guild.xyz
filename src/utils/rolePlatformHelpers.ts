@@ -1,8 +1,9 @@
 import { getTimeDiff } from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
+import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
 import { RolePlatform, RolePlatformStatus } from "types"
 
 export const getRolePlatformStatus = (
-  rolePlatform: RolePlatform
+  rolePlatform: RolePlatform | ReturnType<typeof useRolePlatform>
 ): RolePlatformStatus => {
   const startTimeDiff = getTimeDiff(rolePlatform?.startTime)
   const endTimeDiff = getTimeDiff(rolePlatform?.endTime)
@@ -21,7 +22,9 @@ export const getRolePlatformStatus = (
   }
 }
 
-export const getRolePlatformTimeframeInfo = (rolePlatform: RolePlatform) => {
+export const getRolePlatformTimeframeInfo = (
+  rolePlatform: RolePlatform | ReturnType<typeof useRolePlatform>
+) => {
   const startTimeDiff = getTimeDiff(rolePlatform?.startTime) ?? 0
   const endTimeDiff = getTimeDiff(rolePlatform?.endTime) ?? 0
 

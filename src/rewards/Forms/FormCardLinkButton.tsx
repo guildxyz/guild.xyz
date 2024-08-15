@@ -2,10 +2,9 @@ import { Check } from "@phosphor-icons/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useGuildForm } from "components/[guild]/hooks/useGuildForms"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
-import Button from "components/common/Button"
-import { LinkButton } from "components/common/LinkMenuItem"
 import Link from "next/link"
 import rewards from "rewards"
+import { RewardCardButton } from "rewards/components/RewardCardButton"
 import { GuildPlatform } from "types"
 import { useUserFormSubmission } from "./hooks/useFormSubmissions"
 
@@ -24,29 +23,28 @@ const FormCardLinkButton = ({ platform }: Props) => {
 
   if (isAdmin && !!userSubmission)
     return (
-      <LinkButton
+      <RewardCardButton
+        as={Link}
         href={`/${urlName}/forms/${form?.id}/responses`}
         prefetch={false}
-        w="full"
-        variant={"outline"}
+        variant="outline"
       >
         View responses
-      </LinkButton>
+      </RewardCardButton>
     )
 
   return (
-    <Button
+    <RewardCardButton
       as={Link}
       isDisabled={!form || !!userSubmission}
       isLoading={isFormsValidating || isValidating}
       prefetch={false}
       href={!!form && !userSubmission ? `/${urlName}/forms/${form?.id}` : "#"}
-      w="full"
       colorScheme={rewards.FORM.colorScheme}
       leftIcon={userSubmission && <Check />}
     >
       {userSubmission ? "Already submitted" : "Fill form"}
-    </Button>
+    </RewardCardButton>
   )
 }
 export default FormCardLinkButton
