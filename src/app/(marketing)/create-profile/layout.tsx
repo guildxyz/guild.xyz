@@ -5,7 +5,6 @@ import { Card } from "@/components/ui/Card"
 import svgToTinyDataUri from "mini-svg-data-uri"
 import type { Metadata } from "next"
 import { PropsWithChildren } from "react"
-import { OnboardingDriver } from "./_components/OnboardingDriver"
 
 export const metadata: Metadata = {
   title: "Create profile",
@@ -38,7 +37,7 @@ const CreateProfile = ({ children }: PropsWithChildren) => {
         </LayoutHero>
         <LayoutMain>
           <Card className="mx-auto my-8 max-w-max bg-gradient-to-b from-card to-card-secondary shadow-2xl">
-            <OnboardingDriver>{children}</OnboardingDriver>
+            {children}
           </Card>
         </LayoutMain>
       </Layout>

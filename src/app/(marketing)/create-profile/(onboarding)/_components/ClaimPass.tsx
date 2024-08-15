@@ -1,5 +1,3 @@
-"use client"
-
 import { Button } from "@/components/ui/Button"
 import {
   FormControl,
@@ -75,7 +73,7 @@ export const ClaimPass: OnboardingChain = ({ dispatchChainAction }) => {
     router.replace(`${pathname}?${newSearchParams.toString()}`, {
       scroll: false,
     })
-    dispatchChainAction({ action: "next" })
+    dispatchChainAction({ action: "next", data: { referrerProfile: referrer.data } })
   }
 
   return (

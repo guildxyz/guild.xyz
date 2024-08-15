@@ -1,18 +1,16 @@
 "use client"
-
-import { useAtom } from "jotai"
 import { useRouter } from "next/navigation"
 import { StartProfile } from "../_components/StartProfile"
-import { chainDataAtom } from "../atoms"
+// import { chainDataAtom } from "../atoms"
 
 const Page = () => {
-  const [chainData] = useAtom(chainDataAtom)
+  // const [chainData] = useAtom(chainDataAtom)
   const router = useRouter()
 
   return (
     <StartProfile
-      chainData={chainData}
-      dispatchChainAction={({ action }) => {
+      chainData={{}}
+      dispatchChainAction={({ action, data }) => {
         if (action === "next") {
           // router.push("")
         }

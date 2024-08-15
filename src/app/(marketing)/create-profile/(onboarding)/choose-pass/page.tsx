@@ -13,7 +13,9 @@ const Page = () => {
     <ChoosePass
       chainData={{}}
       dispatchChainAction={({ action, data }) => {
-        if (action === "next" && data) {
+        if (action === "next") {
+          if (!data?.chosenSubscription)
+            throw new Error("Tried to resolve choose pass without value")
           setChainData(data)
           router.push("purchase-pass")
         }
