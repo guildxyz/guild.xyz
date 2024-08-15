@@ -1,24 +1,13 @@
-import {
-  Circle,
-  HStack,
-  Img,
-  SkeletonCircle,
-  Tag,
-  TagLabel,
-  TagLeftIcon,
-  Text,
-  Tooltip,
-  VStack,
-  useColorModeValue,
-} from "@chakra-ui/react"
-import { ArrowRight, EyeSlash, Plus } from "@phosphor-icons/react"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
+import { Badge } from "@/components/ui/Badge"
+import { Card } from "@/components/ui/Card"
+import { Skeleton } from "@/components/ui/Skeleton"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip"
+import { ArrowRight, EyeSlash, Plus } from "@phosphor-icons/react/dist/ssr"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import Button from "components/common/Button"
-import ColorCard from "components/common/ColorCard"
-import ColorCardLabel from "components/common/ColorCard/ColorCardLabel"
 import dynamic from "next/dynamic"
-import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/router"
 
@@ -36,8 +25,6 @@ const CampaignCards = () => {
     urlName: guildUrlName,
   } = useGuild()
   const { query } = useRouter()
-
-  const imageBgColor = useColorModeValue("gray.700", "gray.600")
 
   if (!groups?.length || !!query.group) return null
 
@@ -58,60 +45,46 @@ const CampaignCards = () => {
           campaignImage = guildImageUrl
 
         return (
-          <ColorCard
+          <Card
             key={id}
-            color={groupHasRoles ? "primary.500" : "gray.500"}
-            borderStyle={groupHasRoles ? "solid" : "dashed"}
-            pt={{ base: 10, sm: 11 }}
-            display="flex"
-            flexDir="column"
-            justifyContent="space-between"
+            className="relative flex flex-col justify-between p-5 sm:p-6"
           >
             {isAdmin && <DynamicCampaignCardMenu groupId={id} />}
 
-            <HStack spacing={3} minHeight={10} mb={5}>
-              {campaignImage.length > 0 ? (
-                <Circle
-                  overflow={"hidden"}
-                  borderRadius="full"
-                  size={10}
-                  flexShrink={0}
-                  position="relative"
-                  bgColor={imageBgColor}
-                >
-                  {campaignImage.match("guildLogos") ? (
-                    <Img src={campaignImage} alt="Guild logo" boxSize="40%" />
-                  ) : (
-                    <Image src={campaignImage} alt={name} fill sizes="2.5rem" />
-                  )}
-                </Circle>
-              ) : (
-                <SkeletonCircle size="10" />
-              )}
+            <div className="mb-5 flex items-center gap-3">
+              <Avatar className="size-10">
+                <AvatarImage src={campaignImage} alt={name} width={40} height={40} />
+                <AvatarFallback>
+                  <Skeleton className="size-full" />
+                </AvatarFallback>
+              </Avatar>
 
-              <VStack alignItems="start">
-                <Text fontWeight="bold">{name}</Text>
+              <div className="flex flex-col">
+                <span className="font-bold">{name}</span>
                 {hideFromGuildPage && (
-                  <Tooltip
-                    label="Members don't see this, they can only access this page by visiting it's link directly"
-                    hasArrow
-                    placement="bottom"
-                  >
-                    <Tag>
-                      <TagLeftIcon as={EyeSlash} />
-                      <TagLabel>Hidden</TagLabel>
-                    </Tag>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Badge>
+                        <EyeSlash weight="bold" />
+                        <span>Hidden</span>
+                      </Badge>
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom">
+                      <p>
+                        Members don't see this, they can only access this page by
+                        visiting it's link directly
+                      </p>
+                    </TooltipContent>
                   </Tooltip>
                 )}
-              </VStack>
-            </HStack>
-
+              </div>
+            </div>
             {groupHasRoles ? (
               <Button
                 as={Link}
                 colorScheme="primary"
                 href={`/${guildUrlName}/${urlName}`}
-                rightIcon={<ArrowRight />}
+                rightIcon={<ArrowRight weight="bold" />}
                 prefetch={false}
               >
                 View page
@@ -121,23 +94,13 @@ const CampaignCards = () => {
                 as={Link}
                 variant="outline"
                 href={`/${guildUrlName}/${urlName}`}
-                leftIcon={<Plus />}
+                leftIcon={<Plus weight="bold" />}
                 prefetch={false}
               >
                 Add roles
               </Button>
             )}
-
-            <ColorCardLabel
-              fallbackColor="white"
-              backgroundColor={groupHasRoles ? "primary.500" : "gray.500"}
-              label="Page"
-              top="-2px"
-              left="-2px"
-              borderBottomRightRadius="xl"
-              borderTopLeftRadius="2xl"
-            />
-          </ColorCard>
+          </Card>
         )
       })}
     </>

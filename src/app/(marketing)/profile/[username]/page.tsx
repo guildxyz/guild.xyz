@@ -12,8 +12,10 @@ import { Guild, Role, Schemas } from "@guildxyz/types"
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr"
 import { ActivityLogAction } from "components/[guild]/activity/constants"
 import { env } from "env"
+import Image from "next/image"
 import { notFound, redirect } from "next/navigation"
 import { Profile } from "../_components/Profile"
+import { ProfileColorBanner } from "../_components/ProfileColorBanner"
 
 const api = env.NEXT_PUBLIC_API
 
@@ -82,6 +84,7 @@ const fetchPublicProfileData = async ({ username }: { username: string }) => {
     roleRequests.map(({ pathname }, i) => [pathname, roles[i]])
   )
   return {
+    profile,
     fallback: {
       [activitiesRequest.pathname]: activities,
       [profileRequest.pathname]: profile,
@@ -93,26 +96,48 @@ const fetchPublicProfileData = async ({ username }: { username: string }) => {
 }
 
 const Page = async ({ params: { username } }: { params: { username: string } }) => {
-  const { fallback } = await fetchPublicProfileData({ username })
+  const { fallback, profile } = await fetchPublicProfileData({ username })
+
+  const isBgColor = profile.backgroundImageUrl?.startsWith("#")
+
   return (
     <SWRProvider
       value={{
         fallback,
       }}
     >
-      <Layout>
-        <LayoutHero>
+      <Layout
+        style={
+          isBgColor ? { ["--banner" as string]: profile.backgroundImageUrl } : {}
+        }
+      >
+        <LayoutHero className="pb-4 md:pb-10">
           <Header />
-          <LayoutBanner className="-bottom-[500px]">
-            <div className="absolute inset-0 bg-[url('/banner.svg')] opacity-10" />
+          <LayoutBanner className="-bottom-[600px]">
+            {isBgColor ? (
+              <ProfileColorBanner />
+            ) : (
+              profile.backgroundImageUrl && (
+                <Image
+                  src={profile.backgroundImageUrl}
+                  fill
+                  sizes="100vw"
+                  alt="profile background image"
+                  style={{
+                    filter: "brightness(50%)",
+                    objectFit: "cover",
+                  }}
+                />
+              )
+            )}
             <div className="absolute inset-0 bg-gradient-to-t from-background" />
           </LayoutBanner>
         </LayoutHero>
-        <LayoutMain>
+        <LayoutMain className="top-0">
           <Profile />
         </LayoutMain>
-        <LayoutFooter>
-          <p className="mb-12 text-center font-medium text-muted-foreground">
+        <LayoutFooter className="pt-28 pb-5">
+          <p className="text-center font-medium text-muted-foreground">
             Guild Profiles are currently in invite only early access, only available
             to{" "}
             <Anchor

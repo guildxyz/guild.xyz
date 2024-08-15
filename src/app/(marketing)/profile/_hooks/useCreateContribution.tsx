@@ -41,7 +41,7 @@ export const useCreateContribution = () => {
             const fakeContribution: Schemas["Contribution"] = {
               ...(payload as Schemas["ContributionUpdate"]),
               id: -1,
-              profileId: profile.userId,
+              userId: profile.userId,
             }
             if (!contributions.data) return [fakeContribution]
             contributions.data.push(fakeContribution)

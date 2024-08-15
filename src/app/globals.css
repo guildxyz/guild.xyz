@@ -56,9 +56,10 @@
     --success-subtle: 141 79% 85%;
     --success-subtle-foreground: var(--success);
 
-    --banner: 240 4% 16%;
-    --banner-dark: 240 2% 12%;
-    --banner-foreground: 210 20% 98%;
+    /* these are stored as hex so it's consistent with custom values on profiles with backgroundImageUrl. We plan to migrate all colors to hex values */
+    --banner: #27272a;
+    --banner-dark: #1e1e1f;
+    --banner-foreground: #f9fafb;
     --banner-opacity: 1;
 
     --muted: 0 0% 100%;
@@ -84,6 +85,10 @@
     --alert-warning-icon: 27 96% 61%;
     --alert-error: 0 78% 98%;
     --alert-error-icon: 0 84% 60%;
+
+    /* we plan to add the whole alpha color palettes */
+    --whiteAlpha-800: rgba(255, 255, 255, 0.80);
+    --blackAlpha-800: rgba(0, 0, 0, 0.80);
 
     --discord: 233 78% 63%;
     --discord-hover: 243 75% 59%;

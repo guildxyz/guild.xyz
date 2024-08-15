@@ -91,6 +91,7 @@ const TokenRewardCard = () => {
         cornerButton={
           isAdmin && <DynamicTokenRewardCardEditMenu guildPlatform={guildPlatform} />
         }
+        p={{ base: 3, sm: 4 }}
       >
         <ClaimTokenButton
           isDisabled={claimableAmount <= 0}

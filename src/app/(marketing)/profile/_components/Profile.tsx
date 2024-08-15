@@ -5,15 +5,17 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
 import { AvatarGroup } from "@/components/ui/AvatarGroup"
 import { Separator } from "@/components/ui/Separator"
 import { Skeleton } from "@/components/ui/Skeleton"
+import { cn } from "@/lib/utils"
+import { PropsWithChildren } from "react"
 import { ContributionCard } from "../_components/ContributionCard"
 import { EditContributions } from "../_components/EditContributions"
-import { EditProfile } from "../_components/EditProfile"
 import { OperatedGuildCard } from "../_components/OperatedGuildCard"
 import { ProfileOwnerGuard } from "../_components/ProfileOwnerGuard"
 import { RecentActivity } from "../_components/RecentActivity"
 import { useContributions } from "../_hooks/useContributions"
 import { useProfile } from "../_hooks/useProfile"
 import { useReferredUsers } from "../_hooks/useReferredUsers"
+import { EditProfile } from "./EditProfile/EditProfile"
 import { ProfileSkeleton } from "./ProfileSkeleton"
 
 export const Profile = () => {
@@ -24,13 +26,13 @@ export const Profile = () => {
   if (!profile || !contributions || !referredUsers) return <ProfileSkeleton />
 
   return (
-    <div className="mt-24">
-      <div className="relative mb-24 flex flex-col items-center">
+    <>
+      <div className="relative mb-12 flex flex-col items-center pt-12 md:mb-20 md:pt-14">
         <ProfileOwnerGuard>
           <EditProfile />
         </ProfileOwnerGuard>
-        <div className="relative mb-12 flex items-center justify-center">
-          <Avatar className="size-48">
+        <div className="relative mb-6 flex items-center justify-center">
+          <Avatar className="size-40 md:size-48">
             <AvatarImage
               src={profile.profileImageUrl ?? ""}
               alt="profile"
@@ -42,22 +44,22 @@ export const Profile = () => {
             </AvatarFallback>
           </Avatar>
         </div>
-        <h1 className="break-all text-center font-bold text-4xl leading-tight tracking-tight">
+        <h1 className="break-all text-center font-extrabold text-3xl leading-tight tracking-tight md:text-4xl">
           {profile.name}
-          <CheckMark className="ml-2 inline size-6 fill-yellow-500" />
+          <CheckMark className="ml-2 inline size-6 fill-yellow-500 align-baseline" />
         </h1>
-        <div className="text-lg text-muted-foreground">@{profile.username}</div>
-        <p className="mt-6 max-w-md text-pretty text-center text-lg text-muted-foreground">
+        <div className="font-medium text-muted-foreground">@{profile.username}</div>
+        <p className="mt-4 max-w-md text-pretty text-center text-lg text-muted-foreground md:mt-6">
           {profile.bio}
         </p>
-        <div className="mt-8 grid grid-cols-[repeat(3,auto)] gap-x-8 gap-y-6 sm:grid-cols-[repeat(5,auto)]">
+        <div className="mt-8 grid grid-cols-[repeat(3,auto)] gap-x-6 gap-y-4 sm:grid-cols-[repeat(5,auto)]">
           <div className="flex flex-col items-center leading-tight">
             <div className="font-bold text-lg">{referredUsers.length}</div>
             <div className="text-muted-foreground">Guildmates</div>
           </div>
-          <Separator orientation="vertical" className="h-12" />
+          <Separator orientation="vertical" className="h-10 md:h-12" />
           <div className="flex flex-col items-center leading-tight">
-            <div className="font-bold text-lg">0</div>
+            <div className="font-bold md:text-lg">0</div>
             <div className="text-muted-foreground">Followers</div>
           </div>
           <Separator orientation="vertical" className="hidden h-12 sm:block" />
@@ -70,10 +72,10 @@ export const Profile = () => {
           </div>
         </div>
       </div>
-      <h2 className="mb-3 font-bold text-lg">Operated guilds</h2>
+      <SectionTitle className="mb-3">Operated guilds</SectionTitle>
       <OperatedGuildCard />
       <div className="mt-8 mb-3 flex items-center justify-between">
-        <h2 className="font-bold text-lg">Top contributions</h2>
+        <SectionTitle>Top contributions</SectionTitle>
         <ProfileOwnerGuard>
           <EditContributions />
         </ProfileOwnerGuard>
@@ -84,12 +86,19 @@ export const Profile = () => {
         ))}
       </div>
       <div className="mt-8">
-        <h2 className="mb-3 font-bold text-lg">Recent activity</h2>
+        <SectionTitle className="mb-3">Recent activity</SectionTitle>
         <RecentActivity />
         <p className="mt-2 font-semibold text-muted-foreground">
           &hellip; only last 20 actions are shown
         </p>
       </div>
-    </div>
+    </>
   )
 }
+
+const SectionTitle = ({
+  className,
+  children,
+}: PropsWithChildren<{ className?: string }>) => (
+  <h2 className={cn("font-bold sm:text-lg", className)}>{children}</h2>
+)

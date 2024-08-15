@@ -24,9 +24,9 @@ const config = {
       },
       colors: {
         banner: {
-          DEFAULT: "hsl(var(--banner))",
-          dark: "hsl(var(--banner-dark))",
-          foreground: "hsl(var(--banner-foreground))"
+          DEFAULT: "var(--banner)",
+          dark: "var(--banner-dark)",
+          foreground: "var(--banner-foreground)"
         },
         border: "hsl(var(--border))",
         "border-muted": "hsl(var(--border-muted))",

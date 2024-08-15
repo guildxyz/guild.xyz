@@ -1,4 +1,4 @@
-import Button from "components/common/Button"
+import { RewardCardButton } from "rewards/components/RewardCardButton"
 import { useMintPolygonIDProofContext } from "./components/MintPolygonIDProofProvider"
 import useConnectedDID from "./hooks/useConnectedDID"
 
@@ -8,15 +8,14 @@ const PolygonIDCardButton = () => {
   const { isLoading, data } = useConnectedDID()
 
   return (
-    <Button
+    <RewardCardButton
       onClick={data ? onMintPolygonIDProofModalOpen : onConnectDIDModalOpen}
-      w="full"
       colorScheme="purple"
       isLoading={isLoading}
       loadingText="Checking your DID"
     >
       {data ? "Mint PolygonID Proofs" : "Connect DID"}
-    </Button>
+    </RewardCardButton>
   )
 }
 
