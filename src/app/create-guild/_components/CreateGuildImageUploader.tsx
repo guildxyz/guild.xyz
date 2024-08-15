@@ -1,7 +1,9 @@
-import { Button } from "@/components/ui/Button"
+import { buttonVariants } from "@/components/ui/Button"
 import { FormControl, FormErrorMessage, FormItem } from "@/components/ui/Form"
-import { Image, Spinner } from "@phosphor-icons/react/dist/ssr"
+import { cn } from "@/lib/utils"
+import { Image, Spinner, UploadSimple } from "@phosphor-icons/react/dist/ssr"
 import {
+  convertFilesFromEvent,
   getWidthAndHeightFromFile,
   imageDimensionsValidator,
 } from "components/create-guild/IconSelector/utils"
@@ -22,14 +24,12 @@ const CreateGuildImageUploader = () => {
   const imageUrl = useWatch({ control, name: "imageUrl" })
 
   const [placeholder, setPlaceholder] = useState<string | null>(null)
-  const { fileRejections, getRootProps, getInputProps } = useDropzone({
+  const { fileRejections, getRootProps, getInputProps, isDragActive } = useDropzone({
     multiple: false,
     noClick: false,
     // We need to use any here unfortunately, but this is the correct usage according to the react-dropzone source code
     getFilesFromEvent: async (event: any) => {
-      const filesFromEvent = event.dataTransfer
-        ? event.dataTransfer.files
-        : event.target.files
+      const filesFromEvent = await convertFilesFromEvent(event)
 
       const filePromises = []
 
@@ -40,8 +40,8 @@ const CreateGuildImageUploader = () => {
               resolve(file)
             } else {
               const { width, height } = await getWidthAndHeightFromFile(file)
-              file.width = width
-              file.height = height
+              Object.defineProperty(file, "width", { value: width })
+              Object.defineProperty(file, "height", { value: height })
               resolve(file)
             }
           })
@@ -75,11 +75,13 @@ const CreateGuildImageUploader = () => {
   return (
     <FormItem className="mb-6 flex flex-col items-center justify-center">
       <FormControl className="size-28 rounded-full bg-input-background">
-        <Button
-          variant="ghost"
-          className="relative size-28 rounded-full border border-input-border p-0 disabled:opacity-100"
+        <label
+          className={cn(
+            buttonVariants({ variant: "ghost" }),
+            "relative size-28 rounded-full border border-input-border p-0 disabled:opacity-100",
+            isUploading && "pointer-events-none"
+          )}
           {...getRootProps()}
-          disabled={isUploading}
         >
           <input {...getInputProps()} hidden />
           {isUploading ? (
@@ -101,10 +103,12 @@ const CreateGuildImageUploader = () => {
               alt="Guild image"
               className="size-full object-cover"
             />
+          ) : isDragActive ? (
+            <UploadSimple className="h-auto w-1/3" weight="bold" />
           ) : (
             <Image className="h-auto w-1/3" weight="bold" />
           )}
-        </Button>
+        </label>
       </FormControl>
 
       <FormErrorMessage>

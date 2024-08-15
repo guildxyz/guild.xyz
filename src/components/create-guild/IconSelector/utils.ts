@@ -37,3 +37,16 @@ export const getDimensionErrorMessage = (minW?: number, minH?: number): string =
   if (minW && minH) return `Image should be at least ${minW}x${minH}px`
   return `Image ${minW ? "width" : "height"} should be at least ${minW || minH}px`
 }
+
+export const convertFilesFromEvent = async (event: any) => {
+  // This happens in Chromium after choosing image with click. Event is an array of FileSystemHandle objects
+  if (Array.isArray(event)) {
+    return await Promise.all(event.map(async (file) => await file.getFile()))
+  }
+
+  // This happens on choosing image with drag & drop
+  if (event.dataTransfer) return event.dataTransfer.files
+
+  // This happens in Firefox on choosing image with click
+  return event.target.files
+}
