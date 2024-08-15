@@ -14,14 +14,16 @@ import { ProfileOwnerGuard } from "../_components/ProfileOwnerGuard"
 import { RecentActivity } from "../_components/RecentActivity"
 import { useContributions } from "../_hooks/useContributions"
 import { useProfile } from "../_hooks/useProfile"
+import { useReferredUsers } from "../_hooks/useReferredUsers"
 import { EditProfile } from "./EditProfile/EditProfile"
 import { ProfileSkeleton } from "./ProfileSkeleton"
 
 export const Profile = () => {
   const { data: profile } = useProfile()
   const { data: contributions } = useContributions()
+  const { data: referredUsers } = useReferredUsers()
 
-  if (!profile || !contributions) return <ProfileSkeleton />
+  if (!profile || !contributions || !referredUsers) return <ProfileSkeleton />
 
   return (
     <>
@@ -52,7 +54,7 @@ export const Profile = () => {
         </p>
         <div className="mt-8 grid grid-cols-[repeat(3,auto)] gap-x-6 gap-y-4 sm:grid-cols-[repeat(5,auto)]">
           <div className="flex flex-col items-center leading-tight">
-            <div className="font-bold md:text-lg">3232</div>
+            <div className="font-bold text-lg">{referredUsers.length}</div>
             <div className="text-muted-foreground">Guildmates</div>
           </div>
           <Separator orientation="vertical" className="h-10 md:h-12" />
