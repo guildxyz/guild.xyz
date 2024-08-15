@@ -10,6 +10,7 @@ import { SWRProvider } from "@/components/SWRProvider"
 import { Anchor } from "@/components/ui/Anchor"
 import { Guild, Role, Schemas } from "@guildxyz/types"
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr"
+import Image from "next/image"
 import { redirect } from "next/navigation"
 import { notFound } from "next/navigation"
 import { Profile } from "../_components/Profile"
@@ -104,8 +105,20 @@ const Page = async ({ params: { username } }: { params: { username: string } }) 
         <LayoutHero className="pb-4 md:pb-10">
           <Header />
           <LayoutBanner className="-bottom-[600px]">
-            {/* todo: render image in the other case */}
-            {isBgColor ? <ProfileColorBanner /> : null}
+            {isBgColor ? (
+              <ProfileColorBanner />
+            ) : (
+              <Image
+                src={profile.backgroundImageUrl as string}
+                fill
+                sizes="100vw"
+                alt="profile background image"
+                style={{
+                  filter: "brightness(50%)",
+                  objectFit: "cover",
+                }}
+              />
+            )}
             <div className="absolute inset-0 bg-gradient-to-t from-background" />
           </LayoutBanner>
         </LayoutHero>
