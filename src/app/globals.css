@@ -152,7 +152,7 @@
     --secondary-subtle: 240 6% 90%;
     --secondary-subtle-foreground: var(--foreground);
 
-    --info: 217 91 60%;
+    --info: 217 91% 60%;
     --info-hover: 213 94% 68%;
     --info-active: 212 96% 78%;
     --info-foreground: 0 0% 100%;

@@ -1,6 +1,5 @@
-import { buttonVariants } from "@/components/ui/Button"
+import { Button } from "@/components/ui/Button"
 import { FormControl, FormErrorMessage, FormItem } from "@/components/ui/Form"
-import { cn } from "@/lib/utils"
 import { Image, Spinner, UploadSimple } from "@phosphor-icons/react/dist/ssr"
 import {
   convertFilesFromEvent,
@@ -75,12 +74,10 @@ const CreateGuildImageUploader = () => {
   return (
     <FormItem className="mb-6 flex flex-col items-center justify-center">
       <FormControl className="size-28 rounded-full bg-input-background">
-        <label
-          className={cn(
-            buttonVariants({ variant: "ghost" }),
-            "relative size-28 rounded-full border border-input-border p-0 disabled:opacity-100",
-            isUploading && "pointer-events-none"
-          )}
+        <Button
+          variant="ghost"
+          className="relative size-28 rounded-full border border-input-border p-0 disabled:opacity-100"
+          disabled={isUploading}
           {...getRootProps()}
         >
           <input {...getInputProps()} hidden />
@@ -108,7 +105,7 @@ const CreateGuildImageUploader = () => {
           ) : (
             <Image className="h-auto w-1/3" weight="bold" />
           )}
-        </label>
+        </Button>
       </FormControl>
 
       <FormErrorMessage>
