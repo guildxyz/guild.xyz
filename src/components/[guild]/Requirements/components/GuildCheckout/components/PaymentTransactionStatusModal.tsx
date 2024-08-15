@@ -46,7 +46,6 @@ export const UnlockingRewards = ({ roleId }: { roleId: number }) => {
         key={rp.guildPlatformId}
         platform={{ ...rp, guildPlatform }}
         role={role}
-        withMotionImg={false}
         withLink
         isLinkColorful
       />

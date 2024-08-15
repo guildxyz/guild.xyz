@@ -1,7 +1,8 @@
 import { ButtonProps, Tooltip, useDisclosure } from "@chakra-ui/react"
-import Button from "components/common/Button"
+import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
 import dynamic from "next/dynamic"
 import { claimTextButtonTooltipLabel } from "rewards/SecretText/TextCardButton"
+import { RewardCardButton } from "rewards/components/RewardCardButton"
 import { RolePlatform } from "types"
 import {
   getRolePlatformStatus,
@@ -11,6 +12,7 @@ import {
   GeogatedCountryPopover,
   useIsFromGeogatedCountry,
 } from "./GeogatedCountryAlert"
+import { TokenRewardProvider } from "./TokenRewardContext"
 
 type Props = {
   isDisabled?: boolean
@@ -19,19 +21,16 @@ type Props = {
 
 const DynamicClaimTokenModal = dynamic(() => import("./ClaimTokenModal"))
 
-const ClaimTokenButton = ({
-  rolePlatform,
-  isDisabled,
-  children,
-  ...rest
-}: Props) => {
+const ClaimTokenButton = ({ isDisabled, children, ...rest }: Props) => {
+  const rolePlatform = useRolePlatform()
+
   const { isOpen, onOpen, onClose } = useDisclosure()
   const isFromGeogatedCountry = useIsFromGeogatedCountry()
 
   const { isAvailable } = getRolePlatformTimeframeInfo(rolePlatform)
 
   return (
-    <>
+    <TokenRewardProvider guildPlatform={rolePlatform.guildPlatform}>
       <GeogatedCountryPopover isDisabled={!isFromGeogatedCountry}>
         <Tooltip
           isDisabled={!isAvailable}
@@ -39,19 +38,18 @@ const ClaimTokenButton = ({
           hasArrow
           shouldWrapChildren
         >
-          <Button
+          <RewardCardButton
             colorScheme="gold"
-            w="full"
             isDisabled={isDisabled || isFromGeogatedCountry || !isAvailable}
             onClick={onOpen}
             {...rest}
           >
             {children ?? "Claim"}
-          </Button>
+          </RewardCardButton>
         </Tooltip>
       </GeogatedCountryPopover>
       {!isDisabled && <DynamicClaimTokenModal isOpen={isOpen} onClose={onClose} />}
-    </>
+    </TokenRewardProvider>
   )
 }
 

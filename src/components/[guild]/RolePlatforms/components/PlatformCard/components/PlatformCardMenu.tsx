@@ -11,7 +11,7 @@ const PlatformCardMenu = ({ children }: PropsWithChildren<unknown>) => (
       boxSize={8}
       minW={8}
       rounded="full"
-      colorScheme="alpha"
+      variant="ghost"
     />
 
     <Portal>
