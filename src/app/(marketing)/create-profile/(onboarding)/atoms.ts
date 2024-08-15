@@ -4,4 +4,5 @@ import { ChainData } from "./types"
 
 export const chainDataAtom = atom<Partial<ChainData>>({
   chosenSubscription: SUBSCRIPTIONS[0],
+  subscription: true,
 })

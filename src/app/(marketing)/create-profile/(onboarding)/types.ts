@@ -8,7 +8,7 @@ export interface ChainData {
   chosenSubscription: (typeof SUBSCRIPTIONS)[number]
   referrerProfile: Schemas["Profile"]
   createdProfile: Schemas["Profile"]
-  subscription: unknown
+  subscription: boolean
 }
 export type DispatchChainAction = (args: {
   action: ChainAction

@@ -96,4 +96,4 @@ export const BENEFITS = [
   image: StaticImageData
 }[]
 
-export const REFERRER_USER_SEARCH_PARAM_KEY = "referrer-user-id"
+export const REFERRER_USER_SEARCH_PARAM_KEY = "referrer-username"

@@ -16,7 +16,6 @@ import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import useSWRImmutable from "swr/immutable"
 import { z } from "zod"
-import { REFERRER_USER_SEARCH_PARAM_KEY } from "../constants"
 import { OnboardingChain } from "../types"
 import { GuildPassScene } from "./GuildPassScene"
 
@@ -32,13 +31,13 @@ const formSchema = schemas.ProfileCreationSchema.pick({ username: true })
 //   )
 // }
 
-export const ClaimPass: OnboardingChain = ({ dispatchChainAction }) => {
+export const ClaimPass: OnboardingChain = ({ dispatchChainAction, chainData }) => {
   const router = useRouter()
   const pathname = usePathname()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "",
+      username: chainData.referrerProfile?.username ?? "",
     },
     delayError: 100,
     mode: "onTouched",
@@ -65,15 +64,15 @@ export const ClaimPass: OnboardingChain = ({ dispatchChainAction }) => {
     if (!referrer.data) {
       throw new Error("Failed to resolve referrer profile")
     }
-    const newSearchParams = new URLSearchParams(
-      Object.entries({
-        [REFERRER_USER_SEARCH_PARAM_KEY]: referrer.data.userId.toString(),
-      }).filter(([_, value]) => value)
-    )
-    router.replace(`${pathname}?${newSearchParams.toString()}`, {
-      scroll: false,
-    })
+    // const newSearchParams = new URLSearchParams(
+    //   Object.entries({
+    //     [REFERRER_USER_SEARCH_PARAM_KEY]: referrer.data.username.toString(),
+    //   }).filter(([_, value]) => value)
+    // )
     dispatchChainAction({ action: "next", data: { referrerProfile: referrer.data } })
+    // router.replace(`${pathname}?${newSearchParams.toString()}`, {
+    //   scroll: false,
+    // })
   }
 
   return (
