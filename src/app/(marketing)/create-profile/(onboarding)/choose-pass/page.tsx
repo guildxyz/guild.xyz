@@ -6,8 +6,8 @@ import { ChoosePass } from "../_components/ChoosePass"
 import { chainDataAtom } from "../atoms"
 
 const Page = () => {
-  const setChainData = useSetAtom(chainDataAtom)
   const router = useRouter()
+  const setChainData = useSetAtom(chainDataAtom)
 
   return (
     <ChoosePass
