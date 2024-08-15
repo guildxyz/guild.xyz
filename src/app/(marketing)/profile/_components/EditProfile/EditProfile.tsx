@@ -150,7 +150,6 @@ export const EditProfile = () => {
                   <FormControl>
                     <Input
                       placeholder=""
-                      variant="muted"
                       {...field}
                       value={field.value ?? undefined}
                     />
@@ -166,7 +165,7 @@ export const EditProfile = () => {
                 <FormItem className="pb-2">
                   <FormLabel aria-required="true">Username</FormLabel>
                   <FormControl>
-                    <Input placeholder="" variant="muted" required {...field} />
+                    <Input placeholder="" required {...field} />
                   </FormControl>
                   <FormErrorMessage />
                 </FormItem>
