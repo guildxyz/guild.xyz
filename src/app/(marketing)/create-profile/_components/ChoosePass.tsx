@@ -1,3 +1,5 @@
+"use client"
+
 import { Button } from "@/components/ui/Button"
 import {
   Carousel,
@@ -22,8 +24,11 @@ export const ChoosePass: OnboardingChain = ({ dispatchChainAction }) => {
     useCarouselDotButton(api)
   useEffect(() => {
     if (subscriptionIndex === undefined) return
-    dispatchChainAction("next", {
-      chosenSubscription: SUBSCRIPTIONS[subscriptionIndex],
+    dispatchChainAction({
+      action: "next",
+      data: {
+        chosenSubscription: SUBSCRIPTIONS[subscriptionIndex],
+      },
     })
   }, [subscriptionIndex, dispatchChainAction])
 

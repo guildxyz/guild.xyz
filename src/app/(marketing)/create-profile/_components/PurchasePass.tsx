@@ -1,9 +1,11 @@
+"use client"
+
 import { Button } from "@/components/ui/Button"
 import { Separator } from "@/components/ui/Separator"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip"
 import { DotLottiePlayer } from "@dotlottie/react-player"
 import { ArrowLeft, Info } from "@phosphor-icons/react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { OnboardingChain } from "../types"
 import { GuildPassScene } from "./GuildPassScene"
 
@@ -17,11 +19,15 @@ export const PurchasePass: OnboardingChain = ({
 
   const { title, pricingShort } = chainData.chosenSubscription
 
+  useEffect(() => {
+    if (didUserPurchase) dispatchChainAction({ action: "next" })
+  }, [didUserPurchase])
+
   return (
     <div className="w-[28rem]">
       <div className="mt-8 mb-4 px-8">
         <Button
-          onClick={() => dispatchChainAction("previous")}
+          onClick={() => dispatchChainAction({ action: "previous" })}
           className="h-auto p-0"
           size="lg"
           variant="unstyled"

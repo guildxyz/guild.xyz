@@ -1,3 +1,5 @@
+"use client"
+
 import { Button } from "@/components/ui/Button"
 import {
   FormControl,
@@ -10,7 +12,7 @@ import {
 import { Input } from "@/components/ui/Input"
 import { Schemas, schemas } from "@guildxyz/types"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { ArrowRight } from "@phosphor-icons/react/dist/ssr"
+import { ArrowRight } from "@phosphor-icons/react"
 import { usePathname, useRouter } from "next/navigation"
 import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
@@ -48,15 +50,18 @@ export const ClaimPass: OnboardingChain = ({ dispatchChainAction }) => {
   const referrer = useSWRImmutable<Schemas["Profile"]>(
     username && form.formState.isValid ? `/v2/profiles/${username}` : null
   )
+
   useEffect(() => {
     if (referrer.error) {
       form.setError("username", { message: referrer.error.error })
       return
     }
-    if (!referrer.data) {
-      return
-    }
-  }, [referrer, form.setError])
+  }, [referrer.error, form.setError])
+
+  useEffect(() => {
+    if (!referrer.data) return
+    form.clearErrors()
+  }, [referrer.data, form.clearErrors])
 
   function onSubmit(_: z.infer<typeof formSchema>) {
     if (!referrer.data) {
@@ -70,7 +75,7 @@ export const ClaimPass: OnboardingChain = ({ dispatchChainAction }) => {
     router.replace(`${pathname}?${newSearchParams.toString()}`, {
       scroll: false,
     })
-    dispatchChainAction("next")
+    dispatchChainAction({ action: "next" })
   }
 
   return (

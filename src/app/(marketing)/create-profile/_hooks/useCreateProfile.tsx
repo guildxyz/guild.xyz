@@ -16,15 +16,14 @@ export const useCreateProfile = () => {
       ...signedValidation,
     })
 
-  const submitWithSign = useSubmitWithSign<unknown>(createProfile, {
+  const submitWithSign = useSubmitWithSign<Schemas["Profile"]>(createProfile, {
     onSuccess: (response) => {
       toast({
         variant: "success",
         title: "Successfully created profile",
       })
       confettiPlayer.current("Confetti from left and right")
-      // @ts-ignore: TODO: either acquire types from backend, or type them here
-      router.replace(`/profile/${response.username}`)
+      router.push(`/profile/${response.username}`)
     },
     onError: (response) => {
       toast({
