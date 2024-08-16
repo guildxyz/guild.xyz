@@ -80,11 +80,11 @@ const GroupPage = (): JSX.Element => {
 
           <Header className="mb-10" />
 
-          <LayoutContainer className="-mb-16 mt-6">
+          <LayoutContainer className="-mb-16 mt-6 max-w-screen-xl">
             <GuildImageAndName />
           </LayoutContainer>
 
-          <LayoutHeadline className="pt-12">
+          <LayoutHeadline className="max-w-screen-xl pt-12">
             <GroupPageImageAndName />
 
             <div className="ml-auto">
@@ -99,13 +99,13 @@ const GroupPage = (): JSX.Element => {
           </LayoutHeadline>
 
           {group?.description && (
-            <LayoutContainer className="mt-6 font-semibold">
+            <LayoutContainer className="mt-6 max-w-screen-xl font-semibold">
               {parseDescription(group.description)}
             </LayoutContainer>
           )}
         </LayoutHero>
 
-        <LayoutMain className="-top-16 flex flex-col items-start gap-8">
+        <LayoutMain className="-top-16 flex max-w-screen-xl flex-col items-start gap-8">
           <AccessHub />
 
           <Section

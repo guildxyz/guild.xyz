@@ -1,3 +1,4 @@
+import { background } from "@chakra-ui/react"
 import type { Config } from "tailwindcss"
 
 const config = {
@@ -28,9 +29,18 @@ const config = {
           dark: "hsl(var(--banner-dark))",
           foreground: "hsl(var(--banner-foreground))"
         },
-        border: "hsl(var(--border))",
-        "border-muted": "hsl(var(--border-muted))",
-        input: "hsl(var(--input))",
+        border: {
+          DEFAULT: "hsl(var(--border))",
+          muted: "hsl(var(--border-muted))"
+        },
+        input: {
+          background: "hsla(var(--input-background))",
+          border: {
+            DEFAULT: "hsla(var(--input-border))",
+            accent: "hsla(var(--input-border-accent))",
+            invalid: "hsl(var(--input-border-invalid))"
+          },
+        },
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",

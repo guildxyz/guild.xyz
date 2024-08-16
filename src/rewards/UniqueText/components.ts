@@ -6,7 +6,7 @@ import UniqueTextCardMenu from "./UniqueTextCardMenu"
 export default {
   cardButton: TextCardButton,
   cardMenuComponent: UniqueTextCardMenu,
-  RoleCardComponent: dynamic(() => import("rewards/components/TextReward"), {
+  SmallRewardPreview: dynamic(() => import("rewards/components/TextReward"), {
     ssr: false,
   }),
 } satisfies RewardComponentsData

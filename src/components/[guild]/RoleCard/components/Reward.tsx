@@ -17,7 +17,6 @@ import Button from "components/common/Button"
 import useMembership, {
   useRoleMembership,
 } from "components/explorer/hooks/useMembership"
-import { motion } from "framer-motion"
 import { useMemo, useState } from "react"
 import rewards from "rewards"
 import GoogleCardWarning from "rewards/Google/GoogleCardWarning"
@@ -40,13 +39,7 @@ const getRewardLabel = (platform: RolePlatform) => {
   }
 }
 
-const Reward = ({
-  role,
-  platform,
-  withLink,
-  withMotionImg = false,
-  isLinkColorful,
-}: RewardProps) => {
+const Reward = ({ role, platform, withLink, isLinkColorful }: RewardProps) => {
   const { isMember } = useMembership()
   const openJoinModal = useOpenJoinModal()
 
@@ -100,7 +93,6 @@ const Reward = ({
           <RewardIcon
             rolePlatformId={platform.id}
             guildPlatform={platform.guildPlatform}
-            withMotionImg={withMotionImg}
           />
         )
       }
@@ -148,13 +140,9 @@ const Reward = ({
   )
 }
 
-const MotionImg = motion(Img)
-const MotionCircle = motion(Circle)
-
 const RewardIcon = ({
   rolePlatformId,
   guildPlatform,
-  withMotionImg = true,
   transition,
 }: RewardIconProps) => {
   const [doIconFallback, setDoIconFallback] = useState(false)
@@ -170,10 +158,6 @@ const RewardIcon = ({
     },
   }
 
-  const motionElementProps = {
-    layoutId: `${rolePlatformId}_reward_img`,
-    transition: { type: "spring", duration: 0.5, ...transition },
-  }
   const circleBgColor = useColorModeValue("gray.700", "gray.600")
   const circleProps = {
     bgColor: circleBgColor,
@@ -181,17 +165,6 @@ const RewardIcon = ({
   }
 
   if (doIconFallback || !props.src) {
-    if (withMotionImg) {
-      return (
-        <MotionCircle {...motionElementProps} {...circleProps}>
-          <Icon
-            as={rewards[PlatformType[guildPlatform.platformId]].icon}
-            color="white"
-            boxSize={3}
-          />
-        </MotionCircle>
-      )
-    }
     return (
       <Circle {...circleProps}>
         <Icon
@@ -206,11 +179,7 @@ const RewardIcon = ({
   return (
     <Circle as="picture">
       <source srcSet={rewards[PlatformType[guildPlatform.platformId]].imageUrl} />
-      {withMotionImg ? (
-        <MotionImg {...motionElementProps} {...props} />
-      ) : (
-        <Img {...props} />
-      )}
+      <Img {...props} />
     </Circle>
   )
 }
@@ -227,7 +196,7 @@ const RewardWrapper = ({ platform, ...props }: RewardProps) => {
   const platformWithGuildPlatform = { ...platform, guildPlatform }
 
   const Component =
-    rewardComponents[PlatformType[guildPlatform?.platformId]].RoleCardComponent ??
+    rewardComponents[PlatformType[guildPlatform?.platformId]].SmallRewardPreview ??
     Reward
 
   return (
