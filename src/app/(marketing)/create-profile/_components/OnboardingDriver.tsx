@@ -3,7 +3,7 @@ import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hoo
 import { Button } from "@/components/ui/Button"
 import { cardClassName } from "@/components/ui/Card"
 import { cn } from "@/lib/utils"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { SUBSCRIPTIONS } from "../constants"
 import { ChainData, DispatchChainAction, OnboardingChain } from "../types"
 import { ChoosePass } from "./ChoosePass"
@@ -19,14 +19,14 @@ const chains: OnboardingChain[] = [
 ] as const
 
 export const OnboardingDriver = () => {
-  const [chainIndex, setChainIndex] = useState(3)
+  const [chainIndex, setChainIndex] = useState(1)
   const { address } = useWeb3ConnectionManager()
 
-  useEffect(() => {
-    if (!address) {
-      setChainIndex(0)
-    }
-  }, [address])
+  // useEffect(() => {
+  //   if (!address) {
+  //     setChainIndex(0)
+  //   }
+  // }, [address])
 
   // TODO: remove default chosen subscription, as it is only there for debug
   // purposes
