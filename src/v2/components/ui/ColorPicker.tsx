@@ -42,13 +42,16 @@ export const ColorPicker = ({ fieldName, onChange }: Props) => {
                   as={Palette}
                   pos="absolute"
                   pointerEvents={"none"}
-                  color={isIconLight ? "whiteAlpha.800" : "blackAlpha.800"}
+                  color={
+                    isIconLight ? "var(--whiteAlpha-800)" : "var(--blackAlpha-800)"
+                  }
                 />
               </div>
               <Input
                 className="h-10 max-w-40"
                 placeholder="Pick a color"
                 {...field}
+                value={CSS.supports("color", field.value) ? field.value : undefined}
               />
             </div>
           </FormControl>

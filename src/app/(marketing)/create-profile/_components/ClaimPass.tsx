@@ -34,7 +34,7 @@ export const ClaimPass: OnboardingChain = ({ dispatchChainAction }) => {
   return (
     <div className="max-w-md p-8">
       <div className="mb-12 h-48 w-full">
-        <GuildPassScene />
+        <GuildPassScene sceneVariant="Single Pass" />
       </div>
       <h1 className="mb-14 text-pretty text-center font-extrabold text-2xl leading-none tracking-tighter">
         Claim your Guild Pass and begin an epic adventure!
