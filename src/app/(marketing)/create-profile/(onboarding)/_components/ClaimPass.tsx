@@ -11,7 +11,6 @@ import { Input } from "@/components/ui/Input"
 import { Schemas, schemas } from "@guildxyz/types"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { ArrowRight } from "@phosphor-icons/react"
-import { usePathname, useRouter } from "next/navigation"
 import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import useSWRImmutable from "swr/immutable"
@@ -22,8 +21,6 @@ import { GuildPassScene } from "./GuildPassScene"
 const formSchema = schemas.ProfileCreationSchema.pick({ username: true })
 
 export const ClaimPass: OnboardingChain = ({ dispatchChainAction, chainData }) => {
-  const router = useRouter()
-  const pathname = usePathname()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
