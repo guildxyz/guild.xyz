@@ -16,8 +16,10 @@ const Section = forwardRef(
     }: PropsWithChildren<Props & Omit<StackProps, "title">>,
     ref: any
   ): JSX.Element => (
-    <Stack ref={ref} w="full" spacing={5} {...rest}>
-      {title && <SectionTitle title={title} titleRightElement={titleRightElement} />}
+    <Stack ref={ref} w="full" spacing={4} {...rest}>
+      {(title || titleRightElement) && (
+        <SectionTitle title={title} titleRightElement={titleRightElement} />
+      )}
       {children}
     </Stack>
   )
@@ -25,17 +27,19 @@ const Section = forwardRef(
 
 const SectionTitle = ({ title, titleRightElement, ...rest }: Props) => (
   <HStack spacing={2} alignItems="center">
-    <Heading
-      fontSize={{
-        base: "md",
-        sm: "lg",
-      }}
-      as="h3"
-      flexShrink="0"
-      {...rest}
-    >
-      {title}
-    </Heading>
+    {title && (
+      <Heading
+        fontSize={{
+          base: "md",
+          sm: "lg",
+        }}
+        as="h3"
+        flexShrink="0"
+        {...rest}
+      >
+        {title}
+      </Heading>
+    )}
     {titleRightElement}
   </HStack>
 )

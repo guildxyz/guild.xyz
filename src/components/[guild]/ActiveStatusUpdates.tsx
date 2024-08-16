@@ -14,7 +14,7 @@ const ActiveStatusUpdates = () => {
   const { status } = useActiveStatusUpdates()
 
   return (
-    <Collapse in={status === "STARTED"}>
+    <Collapse in={status === "STARTED"} style={{ width: "100%" }}>
       <Card mb="5" shadow="sm" borderRadius="xl">
         <Alert status="info" pos="relative">
           <AlertIcon mt="2px" boxSize="5" as={Spinner} />

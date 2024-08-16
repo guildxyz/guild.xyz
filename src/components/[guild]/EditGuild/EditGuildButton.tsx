@@ -1,24 +1,21 @@
-import { IconButton } from "@chakra-ui/react"
-import { GearSix } from "@phosphor-icons/react"
-import { useThemeContext } from "../ThemeContext"
-import { useEditGuildDrawer } from "./EditGuildDrawerContext"
+import { ButtonProps, IconButton, Tooltip } from "@chakra-ui/react"
+import { SlidersHorizontal } from "@phosphor-icons/react"
+import { useRouter } from "next/router"
+import useGuild from "../hooks/useGuild"
 
-const EditGuildButton = (): JSX.Element => {
-  const { onOpen } = useEditGuildDrawer()
-
-  const { textColor, buttonColorScheme } = useThemeContext()
+const EditGuildButton = (props: ButtonProps): JSX.Element => {
+  const router = useRouter()
+  const { urlName } = useGuild()
 
   return (
-    <IconButton
-      icon={<GearSix />}
-      aria-label="Edit Guild"
-      minW={"44px"}
-      rounded="full"
-      colorScheme={buttonColorScheme}
-      color={textColor}
-      onClick={onOpen}
-      ml="auto"
-    />
+    <Tooltip label="Admin dashboard" hasArrow>
+      <IconButton
+        icon={<SlidersHorizontal />}
+        aria-label="Edit Guild"
+        onClick={() => router.push(`/${urlName}/dashboard`)}
+        {...props}
+      />
+    </Tooltip>
   )
 }
 

@@ -26,6 +26,7 @@ import useMembers, { Member } from "components/[guild]/crm/useMembers"
 import useGuild from "components/[guild]/hooks/useGuild"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
+import { BackButton } from "components/common/Layout/components/BackButton"
 import Head from "next/head"
 import { useRouter } from "next/router"
 import ErrorPage from "pages/_error"
@@ -197,6 +198,7 @@ const MembersPage = (): JSX.Element => {
         backgroundImage={localBackgroundImage}
         backgroundOffset={112}
         showFooter={false}
+        backButton={<BackButton />}
       >
         <GuildTabs activeTab="MEMBERS" rightElement={<CrmMenu table={table} />} />
         {/* for debugging */}

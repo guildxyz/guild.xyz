@@ -1,43 +1,34 @@
-import { CheckMark } from "@/components/CheckMark"
 import { Header } from "@/components/Header"
 import {
   Layout,
   LayoutBanner,
+  LayoutContainer,
+  LayoutFooter,
   LayoutHeadline,
   LayoutHero,
   LayoutMain,
-  LayoutTitle,
 } from "@/components/Layout"
-import { LayoutContainer, LayoutFooter } from "@/components/Layout/Layout"
 import { Anchor } from "@/components/ui/Anchor"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
-import { Skeleton } from "@/components/ui/Skeleton"
-import { cn } from "@/lib/utils"
-import { Box, Center, HStack, Heading, Spinner } from "@chakra-ui/react"
+import { Center, Heading, Spinner } from "@chakra-ui/react"
 import AccessHub from "components/[guild]/AccessHub"
-import { useAccessedGuildPlatforms } from "components/[guild]/AccessHub/AccessHub"
-import { useEditGuildDrawer } from "components/[guild]/EditGuild/EditGuildDrawerContext"
-import { EditGuildDrawerProvider } from "components/[guild]/EditGuild/EditGuildDrawerProvider"
-import JoinButton from "components/[guild]/JoinButton"
+import { GuildPageBanner } from "components/[guild]/GuildPageBanner"
+import { GuildPageImageAndName } from "components/[guild]/GuildPageImageAndName"
+import { JoinButton } from "components/[guild]/JoinButton"
 import JoinModalProvider from "components/[guild]/JoinModal/JoinModalProvider"
-import LeaveButton from "components/[guild]/LeaveButton"
 import { MintGuildPinProvider } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
-import MemberCount from "components/[guild]/RoleCard/components/MemberCount"
 import Roles from "components/[guild]/Roles"
 import SocialIcon from "components/[guild]/SocialIcon"
 import useStayConnectedToast from "components/[guild]/StayConnectedToast"
-import GuildTabs from "components/[guild]/Tabs/GuildTabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
-import BackButton from "components/common/Layout/components/BackButton"
+import { BackToExplorerButton } from "components/common/Layout/components/BackToExplorerButton"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
 import useMembership from "components/explorer/hooks/useMembership"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
 import Head from "next/head"
-import Image from "next/image"
 import ErrorPage from "pages/_error"
 import { useEffect } from "react"
 import { MintPolygonIDProofProvider } from "rewards/PolygonID/components/MintPolygonIDProofProvider"
@@ -50,23 +41,41 @@ import parseDescription from "utils/parseDescription"
 const DynamicOngoingIssuesBanner = dynamic(
   () => import("components/[guild]/OngoingIssuesBanner")
 )
-const DynamicEditGuildButton = dynamic(() => import("components/[guild]/EditGuild"))
 const DynamicAddAndOrderRoles = dynamic(
-  () => import("components/[guild]/AddAndOrderRoles")
+  () => import("components/[guild]/AddAndOrderRoles"),
+  {
+    ssr: false,
+  }
 )
-const DynamicAddRewardAndCampaign = dynamic(
-  () => import("components/[guild]/AddRewardAndCampaign")
-)
-const DynamicMembersExporter = dynamic(
-  () => import("components/[guild]/Members/components/MembersExporter")
+const DynamicAddSolutionsAndEditGuildButton = dynamic(
+  () =>
+    import("components/[guild]/AddSolutionsAndEditGuildButton").then(
+      (module) => module.AddSolutionsAndEditGuildButton
+    ),
+  {
+    ssr: false,
+  }
 )
 const DynamicActiveStatusUpdates = dynamic(
-  () => import("components/[guild]/ActiveStatusUpdates")
+  () => import("components/[guild]/ActiveStatusUpdates"),
+  {
+    ssr: false,
+  }
 )
-const DynamicRecheckAccessesButton = dynamic(() =>
-  import("components/[guild]/RecheckAccessesButton").then(
-    (module) => module.TopRecheckAccessesButton
-  )
+const DynamicRecheckAccessesAndLeaveButton = dynamic(
+  () =>
+    import("components/[guild]/RecheckAccessesAndLeaveButton").then(
+      (module) => module.RecheckAccessesAndLeaveButton
+    ),
+  {
+    ssr: false,
+  }
+)
+const DynamicMembersExporter = dynamic(
+  () => import("components/[guild]/Members/components/MembersExporter"),
+  {
+    ssr: false,
+  }
 )
 const DynamicDiscordBotPermissionsChecker = dynamic(
   () => import("components/[guild]/DiscordBotPermissionsChecker"),
@@ -76,38 +85,14 @@ const DynamicDiscordBotPermissionsChecker = dynamic(
 )
 
 const GuildPage = (): JSX.Element => {
-  const {
-    name,
-    description,
-    imageUrl,
-    memberCount,
-    socialLinks,
-    tags,
-    featureFlags,
-    isDetailed,
-  } = useGuild()
+  const { description, socialLinks, featureFlags, isDetailed } = useGuild()
 
   const { isAdmin } = useGuildPermission()
   const { isMember } = useMembership()
-  const { onOpen } = useEditGuildDrawer()
 
-  const {
-    avatarBg,
-    textColor,
-    localThemeColor,
-    localBackgroundImage,
-    buttonColorScheme,
-  } = useThemeContext()
+  const { localThemeColor } = useThemeContext()
 
-  const accessedGuildPlatforms = useAccessedGuildPlatforms()
-
-  useStayConnectedToast(() => {
-    onOpen()
-    setTimeout(() => {
-      const addContactBtn = document.getElementById("add-contact-btn")
-      if (addContactBtn) addContactBtn.focus()
-    }, 200)
-  })
+  useStayConnectedToast()
 
   return (
     <>
@@ -118,69 +103,29 @@ const GuildPage = (): JSX.Element => {
       {featureFlags?.includes("ONGOING_ISSUES") && <DynamicOngoingIssuesBanner />}
 
       <Layout>
-        <LayoutHero className="pb-16">
-          <LayoutBanner className="bg-banner-dark">
-            {localBackgroundImage ? (
-              <Image
-                src={localBackgroundImage}
-                alt="Guild background image"
-                priority
-                fill
-                sizes="100vw"
-                style={{
-                  filter: "brightness(30%)",
-                  objectFit: "cover",
-                }}
-              />
-            ) : (
-              <div
-                className="h-full w-full opacity-banner"
-                style={{
-                  backgroundColor: localThemeColor,
-                }}
-              />
-            )}
+        <LayoutHero className="pb-24">
+          <LayoutBanner>
+            <GuildPageBanner />
           </LayoutBanner>
 
           <Header className="mb-10" />
 
-          <LayoutContainer className="-mb-16 mt-8">
-            <BackButton />
+          <LayoutContainer className="-mb-16 mt-6">
+            <BackToExplorerButton />
           </LayoutContainer>
 
           <LayoutHeadline className="pt-12">
-            {imageUrl && (
-              <Avatar className={cn("row-span-2 size-20 md:size-24", avatarBg)}>
-                <AvatarImage
-                  src={imageUrl}
-                  alt={`${name} logo`}
-                  width={96}
-                  height={96}
-                />
-                <AvatarFallback>
-                  <Skeleton className="size-full" />
-                </AvatarFallback>
-              </Avatar>
-            )}
-            <div className="flex flex-col gap-1">
-              <div className="flex items-start gap-1 sm:gap-1.5">
-                <LayoutTitle className="line-clamp-1 break-all leading-tight sm:leading-tight">
-                  {name}
-                </LayoutTitle>
-                {tags?.includes("VERIFIED") && (
-                  <CheckMark className="mt-2.5 size-5 shrink-0 sm:mt-4 sm:size-6" />
-                )}
-              </div>
+            <GuildPageImageAndName />
 
-              <MemberCount
-                memberCount={memberCount ?? 0}
-                bgColor={`${buttonColorScheme}.200`}
-                color={textColor}
-                maxW="max-content"
-              />
+            <div className="ml-auto">
+              {isAdmin && isDetailed ? (
+                <DynamicAddSolutionsAndEditGuildButton />
+              ) : !isMember ? (
+                <JoinButton />
+              ) : (
+                <DynamicRecheckAccessesAndLeaveButton />
+              )}
             </div>
-
-            {isAdmin && isDetailed && <DynamicEditGuildButton />}
           </LayoutHeadline>
 
           {(description || Object.keys(socialLinks ?? {}).length > 0) && (
@@ -210,41 +155,13 @@ const GuildPage = (): JSX.Element => {
               )}
             </LayoutContainer>
           )}
-
-          <LayoutContainer className="mt-8">
-            <GuildTabs
-              activeTab="HOME"
-              rightElement={
-                <HStack>
-                  {isMember && !isAdmin && <DynamicRecheckAccessesButton />}
-                  {!isMember ? (
-                    <JoinButton />
-                  ) : !isAdmin ? (
-                    <LeaveButton />
-                  ) : (
-                    <DynamicAddRewardAndCampaign />
-                  )}
-                </HStack>
-              }
-            />
-          </LayoutContainer>
         </LayoutHero>
 
-        <LayoutMain className="-top-16">
+        <LayoutMain className="-top-16 flex flex-col items-start gap-8">
           <AccessHub />
 
           <Section
-            title={
-              (isAdmin || isMember || !!accessedGuildPlatforms?.length) && "Roles"
-            }
-            titleRightElement={
-              isAdmin && (
-                <Box my="-2 !important" ml="auto !important">
-                  <DynamicAddAndOrderRoles />
-                </Box>
-              )
-            }
-            mb="10"
+            titleRightElement={isAdmin ? <DynamicAddAndOrderRoles /> : undefined}
           >
             <Roles />
           </Section>
@@ -313,9 +230,7 @@ const GuildPageWrapper = ({ fallback }: Props): JSX.Element => {
           <MintGuildPinProvider>
             <MintPolygonIDProofProvider>
               <JoinModalProvider>
-                <EditGuildDrawerProvider>
-                  <GuildPage />
-                </EditGuildDrawerProvider>
+                <GuildPage />
               </JoinModalProvider>
             </MintPolygonIDProofProvider>
           </MintGuildPinProvider>
