@@ -94,6 +94,7 @@ const useSetKeyPair = (submitOptions?: UseSubmitOptions) => {
   const recaptcha = useAtomValue(recaptchaAtom)
 
   const setSubmitResponse = useSubmit(
+    // @ts-ignore
     async ({
       signProps,
     }: {
@@ -175,6 +176,7 @@ const useSetKeyPair = (submitOptions?: UseSubmitOptions) => {
       return { keyPair: generatedKeys, user: userProfile }
     },
 
+    // @ts-ignore
     {
       ...submitOptions,
       onError: (error) => {

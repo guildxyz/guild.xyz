@@ -128,7 +128,7 @@ DialogBody.displayName = "DialogBody"
 const DialogFooter = ({ className, ...props }: HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      "flex flex-col-reverse px-6 pt-8 pb-10 sm:flex-row sm:justify-end sm:space-x-2 sm:px-10",
+      "flex flex-row justify-end space-x-2 px-6 pt-8 pb-10 sm:px-10",
       className
     )}
     {...props}

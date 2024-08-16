@@ -23,7 +23,7 @@ const Page = () => (
       <LayoutHero className="pb-52">
         <LayoutBanner className="border-border-muted border-b border-dashed dark:bg-banner-dark">
           <div className="absolute inset-0 bg-[auto_115%] bg-[top_5px_right_0] bg-[url('/banner.svg')] bg-repeat opacity-5" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom,transparent_5%,hsl(var(--banner)))] dark:bg-[radial-gradient(circle_at_bottom,transparent_5%,hsl(var(--banner-dark)))]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom,transparent_5%,var(--banner))] dark:bg-[radial-gradient(circle_at_bottom,transparent_5%,var(--banner-dark))]" />
         </LayoutBanner>
 
         <Header />
