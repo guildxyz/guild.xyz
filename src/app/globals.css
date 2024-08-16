@@ -179,7 +179,7 @@
     --success-subtle: 141 79% 85%;
     --success-subtle-foreground: var(--success-subtle);
 
-    --banner: 240 2% 12%;
+    --banner: #36363a;
 
     --muted: 240 3% 13%;
     --muted-foreground: 240 5% 60%;

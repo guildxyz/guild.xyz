@@ -9,6 +9,7 @@ export const metadata: Metadata = {
 }
 
 const Page = () => {
+  // todo: get finetuned layout from new create-guild
   return (
     <Layout className="relative min-h-screen">
       <div
@@ -21,13 +22,13 @@ const Page = () => {
       />
       <LayoutHero>
         <Header />
-        <LayoutBanner className="-bottom-[206px] border-border border-b border-dashed">
+        <LayoutBanner className="-bottom-[206px] border-border border-b border-dashed dark:bg-banner-dark">
           <div className="absolute inset-0 bg-[auto_115%] bg-[top_5px_right_0] bg-[url('/banner.svg')] bg-repeat opacity-10" />
           <div
             className="absolute inset-0"
             style={{
               background:
-                "radial-gradient(circle at bottom, transparent 5%, hsl(var(--banner)))",
+                "radial-gradient(circle at bottom, transparent 5%, var(--banner-dark))",
             }}
           />
         </LayoutBanner>
