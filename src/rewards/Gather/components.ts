@@ -7,7 +7,7 @@ import GatherCardMenu from "./GatherCardMenu"
 export default {
   cardButton: GatherCardButton,
   cardMenuComponent: GatherCardMenu,
-  RoleCardComponent: dynamic(() => import("rewards/components/GatherReward"), {
+  SmallRewardPreview: dynamic(() => import("rewards/components/GatherReward"), {
     ssr: false,
   }),
   AddRewardPanel: dynamic(

@@ -11,7 +11,7 @@ import {
 import Admins from "components/[guild]/EditGuild/components/Admins/Admins"
 import BackgroundImageUploader from "components/[guild]/EditGuild/components/BackgroundImageUploader"
 import ChangingGuildPinDesignAlert from "components/[guild]/EditGuild/components/ChangingGuildPinDesignAlert"
-import ColorPicker from "components/[guild]/EditGuild/components/ColorPicker"
+import GuildColorPicker from "components/[guild]/EditGuild/components/GuildColorPicker"
 import HideFromExplorerToggle from "components/[guild]/EditGuild/components/HideFromExplorerToggle"
 import SocialLinks from "components/[guild]/EditGuild/components/SocialLinks"
 import TagManager from "components/[guild]/EditGuild/components/TagManager"
@@ -191,7 +191,7 @@ const EditGuildFormComponent = () => {
 
           <Section title="Appearance" spacing="4">
             <Stack direction={{ base: "column", md: "row" }} spacing="5">
-              <ColorPicker fieldName="theme.color" />
+              <GuildColorPicker fieldName="theme.color" />
               <BackgroundImageUploader uploader={backgroundUploader} />
             </Stack>
           </Section>

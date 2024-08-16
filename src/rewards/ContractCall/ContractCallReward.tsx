@@ -1,24 +1,18 @@
 import { usePostHogContext } from "@/components/Providers/PostHogProvider"
-import { Circle, Img, SkeletonCircle, SkeletonProps } from "@chakra-ui/react"
+import { Img } from "@chakra-ui/react"
 import { ArrowRight } from "@phosphor-icons/react"
 import { RewardDisplay } from "components/[guild]/RoleCard/components/RewardDisplay"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
-import { motion } from "framer-motion"
 import Link from "next/link"
-import { forwardRef } from "react"
 import {
   RewardIconProps,
   RewardProps,
 } from "../../components/[guild]/RoleCard/components/types"
 import NftAvailabilityTags from "./components/NftAvailabilityTags"
 
-const ContractCallReward = ({
-  platform,
-  withMotionImg,
-  isLinkColorful,
-}: RewardProps) => {
+const ContractCallReward = ({ platform, isLinkColorful }: RewardProps) => {
   const { urlName } = useGuild()
 
   const { captureEvent } = usePostHogContext()
@@ -33,7 +27,6 @@ const ContractCallReward = ({
         <ContractCallRewardIcon
           rolePlatformId={platform.id}
           guildPlatform={platform?.guildPlatform}
-          withMotionImg={withMotionImg}
           isLoading={isLoading}
         />
       }
@@ -69,22 +62,8 @@ const ContractCallReward = ({
   )
 }
 
-const MotionImg = motion(Img)
-
-const MotionSkeletonCircle = motion(
-  forwardRef((props: SkeletonProps, ref: any) => (
-    <Circle ref={ref} size={props.boxSize}>
-      <SkeletonCircle {...props} />
-    </Circle>
-  ))
-)
-
 const ContractCallRewardIcon = ({
-  rolePlatformId,
   guildPlatform,
-  isLoading,
-  withMotionImg = true,
-  transition,
 }: RewardIconProps & { isLoading?: boolean }) => {
   const { image } = useNftDetails(
     guildPlatform?.platformGuildData?.chain,
@@ -97,17 +76,6 @@ const ContractCallRewardIcon = ({
     boxSize: 6,
     borderRadius: "full",
   }
-
-  if (withMotionImg)
-    return isLoading || !props.src ? (
-      <MotionSkeletonCircle boxSize={6} />
-    ) : (
-      <MotionImg
-        layoutId={`${rolePlatformId}_reward_img`}
-        transition={{ type: "spring", duration: 0.5, ...transition }}
-        {...props}
-      />
-    )
 
   return <Img {...props} />
 }

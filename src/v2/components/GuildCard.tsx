@@ -44,7 +44,7 @@ export const GuildCard: React.FC<Props> = ({ guildData }) => (
         </Tooltip>
       )}
     </div>
-    <div className="flex gap-2">
+    <div className="flex gap-1.5">
       <Badge className="gap-2">
         <Users weight="bold" />
         <span>

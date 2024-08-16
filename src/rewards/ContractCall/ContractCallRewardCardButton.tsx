@@ -2,8 +2,8 @@ import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import { Tooltip } from "@chakra-ui/react"
 import useGuildRewardNftBalanceByUserId from "components/[guild]/collect/hooks/useGuildRewardNftBalanceByUserId"
 import useGuild from "components/[guild]/hooks/useGuild"
-import Button from "components/common/Button"
 import Link from "next/link"
+import { RewardCardButton } from "rewards/components/RewardCardButton"
 import { GuildPlatform } from "types"
 import { Chains } from "wagmiConfig/chains"
 
@@ -31,14 +31,14 @@ const ContractCallRewardCardButton = ({ platform }: Props) => {
   if (!role)
     return (
       <Tooltip label="You need to add this reward to a role first">
-        <Button isDisabled colorScheme="cyan">
+        <RewardCardButton isDisabled colorScheme="cyan">
           Collect NFT
-        </Button>
+        </RewardCardButton>
       </Tooltip>
     )
 
   return (
-    <Button
+    <RewardCardButton
       as={Link}
       colorScheme="cyan"
       href={`/${urlName}/collect/${chain.toLowerCase()}/${contractAddress.toLowerCase()}`}
@@ -51,7 +51,7 @@ const ContractCallRewardCardButton = ({ platform }: Props) => {
       prefetch={false}
     >
       {alreadyCollected ? "View NFT details" : "Collect NFT"}
-    </Button>
+    </RewardCardButton>
   )
 }
 

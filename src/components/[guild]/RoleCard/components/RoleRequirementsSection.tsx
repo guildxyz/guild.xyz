@@ -50,7 +50,7 @@ const RoleRequirementsSectionHeader = ({
       pointerEvents={!isOpen ? "none" : "auto"}
       transition="opacity .2s"
     >
-      Requirements to qualify
+      Unlock rewards
     </Text>
     {children}
   </HStack>

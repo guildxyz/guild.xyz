@@ -3,22 +3,17 @@ import { VariantProps, cva } from "class-variance-authority"
 import { InputHTMLAttributes, forwardRef } from "react"
 
 const inputVariants = cva(
-  "flex w-full border border-input px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
+  "flex w-full border border-input-border bg-input-background px-4 py-2 transition-[border-color,_box-shadow] file:border-0 file:bg-transparent file:font-medium file:text-sm placeholder:text-muted-foreground hover:border-input-border-accent focus:border-input-border-accent focus:ring-input-border-accent focus-visible:outline-none focus-visible:ring-1 disabled:cursor-not-allowed disabled:opacity-50 aria-[invalid=true]:border-input-border-invalid aria-[invalid=true]:ring-1 aria-[invalid=true]:ring-input-border-invalid aria-[invalid=true]:focus:border-input-border-accent aria-[invalid=true]:focus:ring-input-border-accent",
   {
     variants: {
-      variant: {
-        default: "bg-card-secondary",
-        muted: "bg-muted",
-      },
       size: {
         xs: "h-6 rounded-md",
         sm: "h-8 rounded-lg",
-        md: "h-11 rounded-lg",
+        md: "h-10 rounded-lg",
         lg: "h-12 rounded-xl",
       },
     },
     defaultVariants: {
-      variant: "default",
       size: "md",
     },
   }
@@ -29,10 +24,15 @@ export interface InputProps
     VariantProps<typeof inputVariants> {}
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, size, variant, ...props }, ref) => (
+  ({ className, type, size, ...props }, ref) => (
     <input
       type={type}
-      className={cn(inputVariants({ size, variant, className }))}
+      className={cn(
+        inputVariants({
+          size,
+          className,
+        })
+      )}
       ref={ref}
       {...props}
     />

@@ -1,6 +1,6 @@
+import { useToast } from "@/components/ui/hooks/useToast"
 import { env } from "env"
 import useSubmit from "hooks/useSubmit"
-import useToast from "hooks/useToast"
 import { useCallback } from "react"
 import { Control, Path, useController, useFormContext } from "react-hook-form"
 import getRandomInt from "utils/getRandomInt"
@@ -29,7 +29,7 @@ const usePinata = <TFieldValues, TContext>({
   fieldToSetOnError = "" as Path<TFieldValues>,
   control: controlFromProps,
 }: Props<TFieldValues, TContext> = {}): Uploader => {
-  const toast = useToast()
+  const { toast } = useToast()
   const { control: controlFromContext } = useFormContext<TFieldValues>() ?? {}
   const control = controlFromContext ?? controlFromProps
 
@@ -57,7 +57,7 @@ const usePinata = <TFieldValues, TContext>({
             : undefined
 
       toast({
-        status: "error",
+        variant: "error",
         title: "Failed to upload image",
         description,
       })
