@@ -90,16 +90,24 @@ FormItem.displayName = "FormItem"
 const FormLabel = forwardRef<
   ElementRef<typeof LabelPrimitive.Root>,
   ComponentPropsWithoutRef<typeof LabelPrimitive.Root>
->(({ className, ...props }, ref) => {
+>(({ className, children, ...props }, ref) => {
   const { formItemId } = useFormField()
 
   return (
     <Label
       ref={ref}
-      className={cn("mb-2 text-md", className)}
+      className={cn(
+        "group mb-2 text-md aria-disabled:text-muted-foreground ",
+        className
+      )}
       htmlFor={formItemId}
       {...props}
-    />
+    >
+      {children}
+      <span className="ml-1 hidden select-none font-bold text-destructive-subtle-foreground group-aria-required:inline-block">
+        *
+      </span>
+    </Label>
   )
 })
 FormLabel.displayName = "FormLabel"
@@ -134,7 +142,7 @@ const FormDescription = forwardRef<
     <p
       ref={ref}
       id={formDescriptionId}
-      className={cn("text-muted-foreground text-sm", className)}
+      className={cn("mt-2 text-muted-foreground text-sm", className)}
       {...props}
     />
   )
