@@ -53,7 +53,9 @@ export const StartProfile: OnboardingChain = ({ chainData }) => {
   }, [farcasterProfile])
 
   const form = useForm<Schemas["ProfileCreation"]>({
-    resolver: zodResolver(schemas.ProfileCreationSchema),
+    resolver: zodResolver(
+      schemas.ProfileCreationSchema.omit({ referrerUserId: true })
+    ),
     defaultValues: {
       name: "",
       username: "",
