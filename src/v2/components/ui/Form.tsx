@@ -139,7 +139,7 @@ const FormDescription = forwardRef<
     <p
       ref={ref}
       id={formDescriptionId}
-      className={cn("text-muted-foreground text-sm", className)}
+      className={cn("mt-2 text-muted-foreground text-sm", className)}
       {...props}
     />
   )
