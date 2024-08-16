@@ -12,7 +12,7 @@ import { useEffect, useState } from "react"
 import parseDescription from "utils/parseDescription"
 import { RoleCardCollapseProps } from ".."
 
-const MAX_INITIAL_REQS_HEIGHT = 250
+const MAX_INITIAL_DESCRIPTION_HEIGHT = 160
 
 type Props = {
   description: string
@@ -24,7 +24,7 @@ const RoleDescription = (props: Props) => {
   const descriptionHeight =
     descriptionRef.current?.getBoundingClientRect().height || 24
 
-  if (descriptionHeight <= MAX_INITIAL_REQS_HEIGHT)
+  if (descriptionHeight <= MAX_INITIAL_DESCRIPTION_HEIGHT)
     return (
       <Box ref={descriptionRef} px={5} pb={3} wordBreak="break-word">
         {parseDescription(description)}
@@ -42,7 +42,7 @@ const CollapsableRoleDescription = ({
   onToggleExpanded,
 }: Props) => {
   const [maxInitialReqsHeight, setMaxInitialReqsHeight] = useState(
-    MAX_INITIAL_REQS_HEIGHT
+    MAX_INITIAL_DESCRIPTION_HEIGHT
   )
 
   useEffect(() => {
@@ -50,8 +50,8 @@ const CollapsableRoleDescription = ({
 
     const observer = new ResizeObserver((entries) => {
       const reqsHeight = entries[0].contentRect.height
-      if (reqsHeight > MAX_INITIAL_REQS_HEIGHT)
-        setMaxInitialReqsHeight(reqsHeight - 25)
+      if (reqsHeight > MAX_INITIAL_DESCRIPTION_HEIGHT)
+        setMaxInitialReqsHeight(MAX_INITIAL_DESCRIPTION_HEIGHT)
     })
 
     observer.observe(initialRequirementsRef.current)

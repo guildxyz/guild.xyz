@@ -9,7 +9,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import useDynamicRewardUserAmount from "rewards/Token/hooks/useDynamicRewardUserAmount"
 
-const PointsReward = ({ platform, withMotionImg }: RewardProps) => {
+const PointsReward = ({ platform }: RewardProps) => {
   const { urlName } = useGuild()
   const { platformGuildData } = platform.guildPlatform
   const name = platformGuildData?.name || "points"
@@ -29,7 +29,6 @@ const PointsReward = ({ platform, withMotionImg }: RewardProps) => {
         <RewardIcon
           rolePlatformId={platform.id}
           guildPlatform={platform?.guildPlatform}
-          withMotionImg={withMotionImg}
         />
       }
       label={

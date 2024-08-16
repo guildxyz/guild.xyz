@@ -1,5 +1,5 @@
 import useTokenData from "hooks/useTokenData"
-import { ReactElement, createContext, useContext } from "react"
+import { PropsWithChildren, createContext, useContext } from "react"
 import { GuildPlatform } from "types"
 import useTokenClaimFee from "./hooks/useClaimToken"
 
@@ -13,10 +13,9 @@ export type TokenRewardContextType = {
 const TokenRewardProvider = ({
   children,
   guildPlatform,
-}: {
-  children: ReactElement
+}: PropsWithChildren<{
   guildPlatform: GuildPlatform
-}): JSX.Element => {
+}>): JSX.Element => {
   const {
     platformGuildData: { tokenAddress, chain, imageUrl },
   } = guildPlatform || { platformGuildData: {} }

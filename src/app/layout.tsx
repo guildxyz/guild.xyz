@@ -43,6 +43,19 @@ export default function RootLayout({ children }: RootLayoutProps) {
             <PostHogPageViews />
           </Suspense>
         </Providers>
+
+        <canvas
+          id="js-confetti-canvas"
+          style={{
+            position: "fixed",
+            width: "100%",
+            height: "100%",
+            top: 0,
+            left: 0,
+            zIndex: 10001,
+            pointerEvents: "none",
+          }}
+        />
       </body>
     </html>
   )

@@ -72,7 +72,10 @@
     --border: 240 5.9% 90%;
     --border-muted: 240 3% 93%;
 
-    --input: var(--border);
+    --input-border: 240, 6%, 90%, 100%;
+    --input-border-accent: 240, 5%, 84%, 100%;
+    --input-border-invalid: 0 84% 60%;
+    --input-background: 0, 0%, 100%, 100%;
 
     --ring: 240, 0%, 45%, 25%;
 
@@ -150,7 +153,7 @@
     --secondary-subtle: 240 6% 90%;
     --secondary-subtle-foreground: var(--foreground);
 
-    --info: 217 91 60%;
+    --info: 217 91% 60%;
     --info-hover: 213 94% 68%;
     --info-active: 212 96% 78%;
     --info-foreground: 0 0% 100%;
@@ -184,7 +187,10 @@
     --border: 240 3% 38%;
     --border-muted: 240 3% 28%;
 
-    --input: var(--border);
+    --input-border: 0, 0%, 100%, 16%;
+    --input-border-accent: 0, 0%, 100%, 24%;
+    --input-border-invalid: 0 94% 82%;
+    --input-background: 0, 0%, 0%, 16%;
 
     --ring: 240 0% 45%;
 

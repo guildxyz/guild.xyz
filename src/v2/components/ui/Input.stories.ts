@@ -23,3 +23,13 @@ export const Default: Story = {
     },
   },
 }
+
+export const Invalid: Story = {
+  args: {
+    ...Default.args,
+    "aria-invalid": true,
+  },
+  argTypes: {
+    ...Default.argTypes,
+  },
+}
