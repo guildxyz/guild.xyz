@@ -1,11 +1,9 @@
 import { useConfetti } from "@/components/Confetti"
 import { useToast } from "@/components/ui/hooks/useToast"
-import { profileSchema } from "@/lib/validations/profileSchema"
 import { Schemas } from "@guildxyz/types"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import { useRouter } from "next/navigation"
 import fetcher from "utils/fetcher"
-import { z } from "zod"
 
 export const useCreateProfile = () => {
   const router = useRouter()
@@ -37,7 +35,7 @@ export const useCreateProfile = () => {
   })
   return {
     ...submitWithSign,
-    onSubmit: (payload: z.infer<typeof profileSchema>) =>
+    onSubmit: (payload: Schemas["ProfileCreation"]) =>
       submitWithSign.onSubmit(payload),
   }
 }

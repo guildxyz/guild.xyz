@@ -152,7 +152,9 @@ export const StartProfile: OnboardingChain = () => {
                 size="md"
                 disabled={!!farcasterProfile}
               >
-                <FarcasterImage />
+                <div className="size-5">
+                  <FarcasterImage />
+                </div>
                 Connect farcaster
               </ConnectFarcasterButton>
               <Button
@@ -172,7 +174,11 @@ export const StartProfile: OnboardingChain = () => {
                   <FormItem>
                     <FormLabel>Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="" {...field} />
+                      <Input
+                        placeholder=""
+                        {...field}
+                        value={field.value ?? undefined}
+                      />
                     </FormControl>
                     <FormErrorMessage />
                   </FormItem>
@@ -185,7 +191,12 @@ export const StartProfile: OnboardingChain = () => {
                   <FormItem className="pb-2">
                     <FormLabel aria-required="true">Username</FormLabel>
                     <FormControl>
-                      <Input placeholder="" required {...field} />
+                      <Input
+                        placeholder=""
+                        required
+                        {...field}
+                        value={field.value ?? undefined}
+                      />
                     </FormControl>
                     <FormErrorMessage />
                   </FormItem>

@@ -24,7 +24,7 @@ const DynamicShowMintLinkButton = dynamic(
   }
 )
 
-const PoapReward = ({ platform: platform, withMotionImg }: RewardProps) => {
+const PoapReward = ({ platform: platform }: RewardProps) => {
   const { platformId, platformGuildData } = platform.guildPlatform
   const { urlName } = useGuild()
   const { claimed } = useClaimedReward(platform.id)
@@ -37,7 +37,6 @@ const PoapReward = ({ platform: platform, withMotionImg }: RewardProps) => {
         <RewardIcon
           rolePlatformId={platform.id}
           guildPlatform={platform?.guildPlatform}
-          withMotionImg={withMotionImg}
         />
       }
       label={

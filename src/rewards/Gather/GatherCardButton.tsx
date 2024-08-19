@@ -1,8 +1,8 @@
 import { Tooltip } from "@chakra-ui/react"
 import { ArrowSquareOut } from "@phosphor-icons/react"
 import useGuild from "components/[guild]/hooks/useGuild"
-import Button from "components/common/Button"
 import { claimTextButtonTooltipLabel } from "rewards/SecretText/TextCardButton"
+import { RewardCardButton } from "rewards/components/RewardCardButton"
 import { GuildPlatform } from "types"
 import {
   getRolePlatformStatus,
@@ -40,17 +40,16 @@ const GatherCardButton = ({ platform }: Props) => {
   return (
     <>
       {claimed ? (
-        <Button
+        <RewardCardButton
           as="a"
           target="_blank"
           href={spaceUrl}
           iconSpacing={1}
           rightIcon={<ArrowSquareOut />}
-          w="full"
           colorScheme="GATHER_TOWN"
         >
           Go to space
-        </Button>
+        </RewardCardButton>
       ) : (
         <Tooltip
           isDisabled={!isButtonDisabled}
@@ -59,14 +58,13 @@ const GatherCardButton = ({ platform }: Props) => {
           shouldWrapChildren
           w="full"
         >
-          <Button
-            colorScheme="GATHER_TOWN"
-            w="full"
+          <RewardCardButton
             onClick={onOpen}
             isDisabled={isButtonDisabled}
+            colorScheme="GATHER_TOWN"
           >
             Claim access
-          </Button>
+          </RewardCardButton>
         </Tooltip>
       )}
 

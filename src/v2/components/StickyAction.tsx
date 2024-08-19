@@ -40,9 +40,12 @@ const DesktopHeaderBar = ({
     )}
   >
     <LayoutContainer
-      className={cn("flex h-full items-center justify-end sm:hidden", {
-        "sm:flex": isOpen,
-      })}
+      className={cn(
+        "flex h-full max-w-screen-xl items-center justify-end sm:hidden",
+        {
+          "sm:flex": isOpen,
+        }
+      )}
     >
       {children}
     </LayoutContainer>

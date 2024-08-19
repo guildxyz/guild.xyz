@@ -25,9 +25,14 @@ const GuildTabs = ({ activeTab, ...rest }: Props): JSX.Element => {
 
   return (
     <Tabs {...rest}>
-      <TabButton href={`/${urlName}/dashboard`} isActive={activeTab === "SETTINGS"}>
-        Settings
-      </TabButton>
+      {isAdmin && (
+        <TabButton
+          href={`/${urlName}/dashboard`}
+          isActive={activeTab === "SETTINGS"}
+        >
+          Settings
+        </TabButton>
+      )}
 
       {firstExistingPointsReward && (
         <TabButton

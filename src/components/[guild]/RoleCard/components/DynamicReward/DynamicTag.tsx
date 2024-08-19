@@ -10,7 +10,10 @@ const DynamicTag = ({
   rolePlatform,
   editDisabled,
   ...rest
-}: { rolePlatform: RolePlatform; editDisabled?: boolean } & Rest) => {
+}: {
+  rolePlatform: RolePlatform
+  editDisabled?: boolean
+} & Rest) => {
   const { isAdmin } = useGuildPermission()
   const { requirements: contextRequirements } = useRequirementHandlerContext() || {}
   const { data } = useRequirements(rolePlatform.roleId)
@@ -64,7 +67,7 @@ const DynamicTag = ({
         rolePlatform={rolePlatform}
         linkedRequirement={linkedRequirement}
         editDisabled={editDisabled}
-      ></DynamicRewardModal>
+      />
     </>
   )
 }

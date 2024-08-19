@@ -21,7 +21,7 @@ import {
 } from "utils/rolePlatformHelpers"
 import { useClaimedReward } from "../../hooks/useClaimedReward"
 
-const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
+const SecretTextReward = ({ platform }: RewardProps) => {
   const { platformId, platformGuildData } = platform.guildPlatform
 
   const { claimed } = useClaimedReward(platform.id)
@@ -90,7 +90,6 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
             <RewardIcon
               rolePlatformId={platform.id}
               guildPlatform={platform?.guildPlatform}
-              withMotionImg={withMotionImg}
             />
           )
         }
