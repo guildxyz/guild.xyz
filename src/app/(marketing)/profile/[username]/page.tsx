@@ -17,10 +17,6 @@ import { notFound, redirect } from "next/navigation"
 import { Profile } from "../_components/Profile"
 import { ProfileColorBanner } from "../_components/ProfileColorBanner"
 
-// TODO: use env var for this url when it is changed to this value.
-// next-server throws fetch error if we modify the env var in memory
-// const api = "https://api.guild.xyz"
-
 const api = env.NEXT_PUBLIC_API
 
 async function ssrFetcher<T>(...args: Parameters<typeof fetch>) {
