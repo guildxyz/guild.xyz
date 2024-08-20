@@ -10,7 +10,7 @@ export const CardWithGuildLabel = ({
 }: PropsWithChildren<{ guild: Guild }>) => {
   return (
     <Card
-      className="relative flex border-2 bg-accent"
+      className="relative flex border-4 bg-accent sm:border-2"
       style={{ borderColor: guild.theme.color, background: guild.theme.color }}
     >
       <div
@@ -27,7 +27,7 @@ export const CardWithGuildLabel = ({
             />
             <AvatarFallback />
           </Avatar>
-          <div className="truncate font-bold font-display text-white sm:max-w-12">
+          <div className="-mt-0.5 truncate font-bold font-display text-white max-sm:text-sm sm:max-w-12">
             {guild.name}
           </div>
           <CheckMark className="sm:hidden" />

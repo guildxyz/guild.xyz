@@ -9,19 +9,21 @@ import { cn } from "@/lib/utils"
 import { PropsWithChildren } from "react"
 import { ContributionCard } from "../_components/ContributionCard"
 import { EditContributions } from "../_components/EditContributions"
-import { EditProfile } from "../_components/EditProfile"
 import { OperatedGuildCard } from "../_components/OperatedGuildCard"
 import { ProfileOwnerGuard } from "../_components/ProfileOwnerGuard"
 import { RecentActivity } from "../_components/RecentActivity"
 import { useContributions } from "../_hooks/useContributions"
 import { useProfile } from "../_hooks/useProfile"
+import { useReferredUsers } from "../_hooks/useReferredUsers"
+import { EditProfile } from "./EditProfile/EditProfile"
 import { ProfileSkeleton } from "./ProfileSkeleton"
 
 export const Profile = () => {
   const { data: profile } = useProfile()
   const { data: contributions } = useContributions()
+  const { data: referredUsers } = useReferredUsers()
 
-  if (!profile || !contributions) return <ProfileSkeleton />
+  if (!profile || !contributions || !referredUsers) return <ProfileSkeleton />
 
   return (
     <>
@@ -52,7 +54,7 @@ export const Profile = () => {
         </p>
         <div className="mt-8 grid grid-cols-[repeat(3,auto)] gap-x-6 gap-y-4 sm:grid-cols-[repeat(5,auto)]">
           <div className="flex flex-col items-center leading-tight">
-            <div className="font-bold md:text-lg">3232</div>
+            <div className="font-bold md:text-lg">{referredUsers.length}</div>
             <div className="text-muted-foreground">Guildmates</div>
           </div>
           <Separator orientation="vertical" className="h-10 md:h-12" />
@@ -79,17 +81,18 @@ export const Profile = () => {
         </ProfileOwnerGuard>
       </div>
       <div className="grid grid-cols-1 gap-3">
-        {contributions.length === 0 && (
+        {contributions.length === 0 ? (
           <div className="space-y-0.5 rounded-2xl border border-dashed p-6">
             <h3 className="font-bold">Contributions will appear here</h3>
             <p className="text-muted-foreground">
               This profile doesn't have any contribution yet
             </p>
           </div>
+        ) : (
+          contributions.map((contribution) => (
+            <ContributionCard contribution={contribution} key={contribution.id} />
+          ))
         )}
-        {contributions.map((contribution) => (
-          <ContributionCard contribution={contribution} key={contribution.id} />
-        ))}
       </div>
       <div className="mt-8">
         <SectionTitle className="mb-3">Recent activity</SectionTitle>

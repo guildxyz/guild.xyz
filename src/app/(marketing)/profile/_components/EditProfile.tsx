@@ -27,8 +27,7 @@ import { Textarea } from "@/components/ui/Textarea"
 import { toast } from "@/components/ui/hooks/useToast"
 import { useDisclosure } from "@/hooks/useDisclosure"
 import { cn } from "@/lib/utils"
-import { profileSchema } from "@/lib/validations/profileSchema"
-import { Schemas } from "@guildxyz/types"
+import { Schemas, schemas } from "@guildxyz/types"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Image as ImageIcon, Pencil, User } from "@phosphor-icons/react"
 import useDropzone from "hooks/useDropzone"
@@ -44,9 +43,9 @@ import { ProfileColorPicker } from "./ProfileColorPicker"
 export const EditProfile = () => {
   const { data: profile } = useProfile()
   const form = useForm<Schemas["ProfileUpdate"]>({
-    resolver: zodResolver(profileSchema),
+    resolver: zodResolver(schemas.ProfileSchema),
     defaultValues: {
-      ...profileSchema.parse(profile),
+      ...schemas.ProfileSchema.parse(profile),
     },
     mode: "onTouched",
   })
@@ -54,7 +53,7 @@ export const EditProfile = () => {
   const editProfile = useUpdateProfile()
 
   async function onSubmit(values: Schemas["ProfileUpdate"]) {
-    await editProfile.onSubmit(profileSchema.parse(values) as any)
+    await editProfile.onSubmit(schemas.ProfileSchema.parse(values))
     if (editProfile.error) return
     disclosure.onClose()
   }
