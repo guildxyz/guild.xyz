@@ -9,7 +9,6 @@ import { cn } from "@/lib/utils"
 import { PropsWithChildren } from "react"
 import { ContributionCard } from "../_components/ContributionCard"
 import { EditContributions } from "../_components/EditContributions"
-import { OperatedGuildCard } from "../_components/OperatedGuildCard"
 import { ProfileOwnerGuard } from "../_components/ProfileOwnerGuard"
 import { RecentActivity } from "../_components/RecentActivity"
 import { useContributions } from "../_hooks/useContributions"
@@ -72,9 +71,7 @@ export const Profile = () => {
           </div>
         </div>
       </div>
-      <SectionTitle className="mb-3">Operated guilds</SectionTitle>
-      <OperatedGuildCard />
-      <div className="mt-8 mb-3 flex items-center justify-between">
+      <div className="mb-3 flex items-center justify-between">
         <SectionTitle>Top contributions</SectionTitle>
         <ProfileOwnerGuard>
           <EditContributions />
