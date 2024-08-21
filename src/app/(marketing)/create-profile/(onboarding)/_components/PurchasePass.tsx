@@ -45,7 +45,7 @@ export const PurchasePass: OnboardingChain = ({
               className="size-full"
             />
           ) : (
-            <GuildPassScene />
+            <GuildPassScene sceneVariant={title} />
           )}
         </div>
         <div className="flex w-full justify-between px-8">

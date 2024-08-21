@@ -23,7 +23,7 @@ export const useCreateProfile = () => {
         title: "Successfully created profile",
       })
       confettiPlayer.current("Confetti from left and right")
-      router.push(`/profile/${response.username}`)
+      router.replace(`/profile/${response.username}`)
     },
     onError: (response) => {
       toast({
