@@ -1,19 +1,35 @@
 "use client"
 
-import { Float } from "@react-three/drei"
-import { Canvas, ThreeElements } from "@react-three/fiber"
+import { Environment, Float } from "@react-three/drei"
+import { Canvas } from "@react-three/fiber"
+import { FunctionComponent } from "react"
 import * as THREE from "three"
+import { SUBSCRIPTIONS } from "../constants"
+import { Model as BasicModel } from "./BasicGuildPass"
+import { Model as GoldModel } from "./GoldGuildPass"
 
-function GuildPass(props: ThreeElements["mesh"]) {
-  return (
-    <mesh {...props} scale={4} rotation={new THREE.Euler(0.0, 0.1, 0.0)}>
-      <boxGeometry args={[1.4, 0.6, 0.1]} />
-      <meshStandardMaterial color="orange" wireframe />
-    </mesh>
-  )
+type SceneVariant = (typeof SUBSCRIPTIONS)[number]["title"]
+
+function SinglePass() {
+  return <BasicModel rotation={new THREE.Euler(Math.PI / 2, 0.0, 0.0)} scale={2} />
 }
 
-export const GuildPassScene = () => {
+function BundlePass() {
+  return <BasicModel rotation={new THREE.Euler(Math.PI / 2, 0.0, 0.0)} scale={2} />
+}
+
+function LifetimePass() {
+  return <GoldModel rotation={new THREE.Euler(Math.PI / 2, 0.0, 0.0)} scale={2} />
+}
+
+const Variants: Record<SceneVariant, FunctionComponent> = {
+  "Single Pass": SinglePass,
+  "Bundle Pass": BundlePass,
+  "Lifetime Pass": LifetimePass,
+}
+
+export const GuildPassScene = ({ sceneVariant }: { sceneVariant: SceneVariant }) => {
+  const Variant = Variants[sceneVariant]
   return (
     <Canvas>
       <ambientLight intensity={Math.PI / 2} />
@@ -26,8 +42,9 @@ export const GuildPassScene = () => {
       />
       <pointLight position={[-10, -10, -10]} decay={0} intensity={Math.PI} />
       <Float floatIntensity={6} speed={2.4}>
-        <GuildPass position={[0, 0, 0]} />
+        <Variant />
       </Float>
+      <Environment preset="city" />
     </Canvas>
   )
 }

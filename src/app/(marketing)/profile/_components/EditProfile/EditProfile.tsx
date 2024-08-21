@@ -26,8 +26,7 @@ import { Textarea } from "@/components/ui/Textarea"
 import { toast } from "@/components/ui/hooks/useToast"
 import { useDisclosure } from "@/hooks/useDisclosure"
 import { cn } from "@/lib/utils"
-import { profileSchema } from "@/lib/validations/profileSchema"
-import { Schemas } from "@guildxyz/types"
+import { Schemas, schemas } from "@guildxyz/types"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Pencil, User } from "@phosphor-icons/react"
 import useDropzone from "hooks/useDropzone"
@@ -41,18 +40,18 @@ import { EditProfileBanner } from "./EditProfileBanner"
 
 export const EditProfile = () => {
   const { data: profile } = useProfile()
-  const form = useForm<Schemas["ProfileUpdate"]>({
-    resolver: zodResolver(profileSchema),
+  const form = useForm<Schemas["Profile"]>({
+    resolver: zodResolver(schemas.ProfileUpdateSchema),
     defaultValues: {
-      ...profileSchema.parse(profile),
+      ...schemas.ProfileUpdateSchema.parse(profile),
     },
     mode: "onTouched",
   })
   const disclosure = useDisclosure()
   const editProfile = useUpdateProfile()
 
-  async function onSubmit(values: Schemas["ProfileUpdate"]) {
-    await editProfile.onSubmit(profileSchema.parse(values))
+  async function onSubmit(values: Schemas["Profile"]) {
+    await editProfile.onSubmit(schemas.ProfileUpdateSchema.parse(values))
     if (editProfile.error) return
     disclosure.onClose()
   }
@@ -150,7 +149,6 @@ export const EditProfile = () => {
                   <FormControl>
                     <Input
                       placeholder=""
-                      variant="muted"
                       {...field}
                       value={field.value ?? undefined}
                     />
@@ -166,7 +164,7 @@ export const EditProfile = () => {
                 <FormItem className="pb-2">
                   <FormLabel aria-required="true">Username</FormLabel>
                   <FormControl>
-                    <Input placeholder="" variant="muted" required {...field} />
+                    <Input placeholder="" required {...field} />
                   </FormControl>
                   <FormErrorMessage />
                 </FormItem>

@@ -80,7 +80,7 @@ const FormItem = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
 
     return (
       <FormItemContext.Provider value={{ id }}>
-        <div ref={ref} className={cn("space-y-2", className)} {...props} />
+        <div ref={ref} className={cn("flex flex-col", className)} {...props} />
       </FormItemContext.Provider>
     )
   }
@@ -96,7 +96,10 @@ const FormLabel = forwardRef<
   return (
     <Label
       ref={ref}
-      className={cn("group text-md aria-disabled:text-muted-foreground", className)}
+      className={cn(
+        "group mb-2 text-md aria-disabled:text-muted-foreground",
+        className
+      )}
       htmlFor={formItemId}
       {...props}
     >
@@ -139,7 +142,7 @@ const FormDescription = forwardRef<
     <p
       ref={ref}
       id={formDescriptionId}
-      className={cn("text-muted-foreground text-sm", className)}
+      className={cn("mt-2 text-muted-foreground text-sm", className)}
       {...props}
     />
   )
@@ -162,7 +165,7 @@ const FormErrorMessage = forwardRef<
           id={formMessageId}
           // TODO: not sure if it is a good idea to use "destructive-subtle-foreground" here? Should we add a completely new CSS variable instead?
           className={cn(
-            "font-medium text-[0.8rem] text-destructive-subtle-foreground",
+            "pt-2 font-medium text-[0.8rem] text-destructive-subtle-foreground",
             className
           )}
           {...props}
