@@ -22,6 +22,10 @@ const Page = () => {
         <h1 className="text-pretty font-bold font-display text-2xl leading-none tracking-tight">
           Sign in to create your profile
         </h1>
+        <p className="text-pretty text-muted-foreground leading-normal">
+          Start your new profile adventure by signing in: earn experience, display
+          achievements and explore new rewards!
+        </p>
       </div>
       <div className="mt-6 flex w-full gap-4 bg-card-secondary px-8 py-4">
         <Anchor
