@@ -22,6 +22,7 @@ export const useCreateProfile = () => {
         variant: "success",
         title: "Successfully created profile",
       })
+      // TODO: maybe we should move this logic into page.tsx?
       confettiPlayer.current("Confetti from left and right")
       router.replace(`/profile/${response.username}`)
     },
