@@ -6,19 +6,25 @@ import { Anchor } from "@/components/ui/Anchor"
 import { Button, buttonVariants } from "@/components/ui/Button"
 import { SignIn } from "@phosphor-icons/react"
 import { useSetAtom } from "jotai"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { useEffect } from "react"
 
 const Page = () => {
   const { isWeb3Connected } = useWeb3ConnectionManager()
   const setIsWalletSelectorModalOpen = useSetAtom(walletSelectorModalAtom)
   const router = useRouter()
+  const searchParams = useSearchParams()
 
   useEffect(() => {
     if (isWeb3Connected) {
-      router.replace("/create-profile/claim-pass")
+      router.replace(
+        ["/create-profile/claim-pass", searchParams]
+          .filter(Boolean)
+          .map(String)
+          .join("?")
+      )
     }
-  }, [isWeb3Connected, router.replace])
+  }, [isWeb3Connected, router.replace, searchParams])
 
   return (
     <div className="flex max-w-sm flex-col gap-4">
