@@ -2,7 +2,7 @@
 
 import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { useRouter, useSearchParams } from "next/navigation"
-import { PropsWithChildren, useEffect } from "react"
+import { PropsWithChildren, Suspense, useEffect } from "react"
 import { CreateProfileSkeleton } from "./CreateProfileSkeleton"
 
 export const AuthWall = ({ children }: PropsWithChildren) => {
@@ -18,8 +18,12 @@ export const AuthWall = ({ children }: PropsWithChildren) => {
   }, [isWeb3Connected, router.replace, searchParams])
 
   if (!isWeb3Connected) {
-    return <CreateProfileSkeleton />
+    return (
+      <Suspense>
+        <CreateProfileSkeleton />
+      </Suspense>
+    )
   }
 
-  return children
+  return <Suspense>{children}</Suspense>
 }
