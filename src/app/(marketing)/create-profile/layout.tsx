@@ -2,7 +2,7 @@ import { Header } from "@/components/Header"
 import { Layout, LayoutBanner, LayoutHero, LayoutMain } from "@/components/Layout"
 import { Card } from "@/components/ui/Card"
 import svgToTinyDataUri from "mini-svg-data-uri"
-import { PropsWithChildren } from "react"
+import { PropsWithChildren, Suspense } from "react"
 
 const CreateProfile = ({ children }: PropsWithChildren) => {
   return (
@@ -30,7 +30,7 @@ const CreateProfile = ({ children }: PropsWithChildren) => {
       </LayoutHero>
       <LayoutMain>
         <Card className="mx-auto max-w-max bg-gradient-to-b from-card to-card-secondary shadow-2xl">
-          {children}
+          <Suspense>{children}</Suspense>
         </Card>
       </LayoutMain>
     </Layout>

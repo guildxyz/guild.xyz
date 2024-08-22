@@ -6,8 +6,8 @@ export const metadata: Metadata = {
   title: "Create profile",
 }
 
-const CreateProfile = ({ children }: PropsWithChildren) => {
+const Layout = ({ children }: PropsWithChildren) => {
   return <ConfettiProvider>{children}</ConfettiProvider>
 }
 
-export default CreateProfile
+export default Layout
