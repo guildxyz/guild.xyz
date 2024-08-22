@@ -40,12 +40,6 @@ export const ActivityCard = ({ activity }: { activity: ActivityLogAction }) => {
       <div className="px-5 py-6">
         <h3 className="space-x-1.5 font-bold">
           <ActionLabel activity={activity} />
-          {/*Acquire the{" "}
-          <Badge className="whitespace-nowrap">
-            <Rocket weight="fill" className="mr-1" />
-            Enter Farcaster
-          </Badge>{" "}
-          role*/}
         </h3>
         <div className="mt-1.5 flex flex-wrap items-center gap-2">
           <ClientOnly>
@@ -54,10 +48,6 @@ export const ActivityCard = ({ activity }: { activity: ActivityLogAction }) => {
               ago
             </p>
           </ClientOnly>
-          {/*<Circle
-            className="hidden size-1.5 text-muted-foreground sm:block"
-            weight="fill"
-          />*/}
         </div>
       </div>
     </Card>

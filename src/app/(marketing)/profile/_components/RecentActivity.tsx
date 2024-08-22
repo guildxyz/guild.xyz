@@ -9,6 +9,8 @@ import { useMemo, useState } from "react"
 import { useProfile } from "../_hooks/useProfile"
 import { ActivityCard } from "./ActivityCard"
 
+// TODO: these are duplicated types (and extended), we should move them to
+// backend types
 export enum ACTION {
   // Guild
   CreateGuild = "create guild",
@@ -67,29 +69,32 @@ export enum ACTION {
   ReferProfile = "refer profile",
 }
 
-const ACTIVITY_FILTERS = ["All", "Profile", "Guilds", "Rewards"] as const
+const ACTIVITY_FILTERS = ["All", "Editing", "Join", "Rewards"] as const
 const FILTER_ACTIONS: Record<
   Exclude<(typeof ACTIVITY_FILTERS)[number], "All">,
   ACTION[]
 > = {
-  Guilds: [
+  Join: [
     ACTION.JoinGuild,
-    ACTION.LeaveGuild,
-    ACTION.UpdateGuild,
-    ACTION.KickFromGuild,
     ACTION.CreateGuild,
-  ] as const,
-  Profile: [
-    ACTION.UpdateProfile,
     ACTION.CreateProfile,
+    ACTION.ReferProfile,
+  ] as const,
+  Editing: [
+    ACTION.LeaveGuild,
+    ACTION.KickFromGuild,
+    ACTION.UpdateGuild,
+    ACTION.UpdateProfile,
     ACTION.DeleteProfile,
-  ] as const,
-  Rewards: [
-    ACTION.RevokeReward,
-    ACTION.LoseReward,
-    ACTION.SendReward,
+    ACTION.CreateRole,
+    ACTION.DeleteRole,
+    ACTION.DeleteGuild,
+    ACTION.AddReward,
     ACTION.UpdateReward,
+    ACTION.RemoveReward,
+    ACTION.AddAdmin,
   ] as const,
+  Rewards: [ACTION.RevokeReward, ACTION.LoseReward, ACTION.SendReward] as const,
 }
 const THIRTY_DAYS_IN_MS = 30 * 86400 * 1000
 
@@ -107,12 +112,12 @@ export const RecentActivity = () => {
       ["offset", "0"],
       ["after", lastMonthApprox.toString()],
       ...(activityFilter === "All"
-        ? Object.values(FILTER_ACTIONS).flat()
+        ? Array.from(new Set(Object.values(FILTER_ACTIONS).flat()))
         : FILTER_ACTIONS[activityFilter]
       ).map((action) => ["action", action]),
     ])
   const auditLog = useSWRWithOptionalAuth<ActivityLogActionResponse>(
-    profile.data ? `/v2/audit-log?${searchParams}` : null
+    searchParams ? `/v2/audit-log?${searchParams}` : null
   )
 
   return (
