@@ -24,7 +24,7 @@ type GLTFResult = GLTF & {
 
 export function Model(props: JSX.IntrinsicElements["group"]) {
   const { nodes, materials } = useGLTF(
-    "models/gold_guild_pass-transformed.glb"
+    "/models/gold_guild_pass-transformed.glb"
   ) as GLTFResult
   return (
     <group {...props} dispose={null}>
@@ -49,4 +49,4 @@ export function Model(props: JSX.IntrinsicElements["group"]) {
   )
 }
 
-useGLTF.preload("models/gold_guild_pass-transformed.glb")
+useGLTF.preload("/models/gold_guild_pass-transformed.glb")

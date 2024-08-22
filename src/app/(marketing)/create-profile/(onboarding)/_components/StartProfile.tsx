@@ -24,14 +24,14 @@ import usePinata from "hooks/usePinata"
 import { useEffect, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { useCreateProfile } from "../_hooks/useCreateProfile"
-import { OnboardingChain } from "../types"
+import { CreateProfileStep } from "../types"
 
 enum CreateMethod {
   FillByFarcaster,
   FromBlank,
 }
 
-export const StartProfile: OnboardingChain = () => {
+export const StartProfile: CreateProfileStep = ({ data: chainData }) => {
   const { farcasterProfiles = [] } = useUser()
   const farcasterProfile = farcasterProfiles.at(0)
   const [method, setMethod] = useState<CreateMethod | undefined>(
@@ -53,7 +53,9 @@ export const StartProfile: OnboardingChain = () => {
   }, [farcasterProfile])
 
   const form = useForm<Schemas["ProfileCreation"]>({
-    resolver: zodResolver(schemas.ProfileCreationSchema),
+    resolver: zodResolver(
+      schemas.ProfileCreationSchema.omit({ referrerUserId: true })
+    ),
     defaultValues: {
       name: "",
       username: "",
@@ -63,7 +65,13 @@ export const StartProfile: OnboardingChain = () => {
 
   const createProfile = useCreateProfile()
   async function onSubmit(values: Schemas["ProfileCreation"]) {
-    createProfile.onSubmit(values)
+    if (!chainData.referrerProfile?.userId) {
+      throw new Error("Tried to create profile with empty referrer profile")
+    }
+    createProfile.onSubmit({
+      ...values,
+      referrerUserId: chainData.referrerProfile.userId,
+    })
   }
 
   const { isUploading, onUpload } = usePinata({

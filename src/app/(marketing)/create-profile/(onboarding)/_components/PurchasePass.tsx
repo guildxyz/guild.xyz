@@ -1,27 +1,29 @@
+"use client"
+
 import { Button } from "@/components/ui/Button"
 import { Separator } from "@/components/ui/Separator"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip"
 import { DotLottiePlayer } from "@dotlottie/react-player"
 import { ArrowLeft, Info } from "@phosphor-icons/react"
-import { useState } from "react"
-import { OnboardingChain } from "../types"
+import { useEffect, useState } from "react"
+import { CreateProfileStep } from "../types"
 import { GuildPassScene } from "./GuildPassScene"
 
-export const PurchasePass: OnboardingChain = ({
-  dispatchChainAction,
-  chainData,
-}) => {
+export const PurchasePass: CreateProfileStep = ({ dispatchAction, data }) => {
   const [didUserPurchase, setDidUserPurchase] = useState(false)
-  if (!chainData.chosenSubscription)
-    throw new Error("Subscription data was not provided")
+  if (!data.chosenSubscription) throw new Error("Subscription data was not provided")
 
-  const { title, pricingShort } = chainData.chosenSubscription
+  const { title, pricingShort } = data.chosenSubscription
+
+  useEffect(() => {
+    if (didUserPurchase) dispatchAction({ action: "next" })
+  }, [didUserPurchase])
 
   return (
     <div className="w-[28rem]">
       <div className="mt-8 mb-4 px-8">
         <Button
-          onClick={() => dispatchChainAction("previous")}
+          onClick={() => dispatchAction({ action: "previous" })}
           className="h-auto p-0"
           size="lg"
           variant="unstyled"
