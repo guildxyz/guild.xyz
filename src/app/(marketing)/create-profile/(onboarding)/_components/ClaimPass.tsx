@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/Input"
 import { Schemas, schemas } from "@guildxyz/types"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { ArrowRight } from "@phosphor-icons/react"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import useSWRImmutable from "swr/immutable"
 import { z } from "zod"
@@ -26,13 +26,14 @@ export const ClaimPass: OnboardingChain = ({ dispatchChainAction, chainData }) =
     defaultValues: {
       username: chainData.referrerProfile?.username ?? "",
     },
-    delayError: 100,
     mode: "onTouched",
   })
 
-  const username = form.watch("username")
+  const defaultReferrer =
+    !form.getFieldState("username").isDirty && chainData.referrerProfile?.username
+  const [username, setUsername] = useState<string>()
   const referrer = useSWRImmutable<Schemas["Profile"]>(
-    username && form.formState.isValid ? `/v2/profiles/${username}` : null
+    username ? `/v2/profiles/${username}` : null
   )
 
   useEffect(() => {
@@ -72,7 +73,15 @@ export const ClaimPass: OnboardingChain = ({ dispatchChainAction, chainData }) =
               <FormItem>
                 <FormLabel aria-required>Referrer username</FormLabel>
                 <FormControl>
-                  <Input placeholder="" required {...field} />
+                  <Input
+                    placeholder=""
+                    required
+                    {...field}
+                    onBlur={() => {
+                      setUsername(field.value)
+                      field.onBlur()
+                    }}
+                  />
                 </FormControl>
                 <FormErrorMessage />
                 <FormDescription>
@@ -86,10 +95,10 @@ export const ClaimPass: OnboardingChain = ({ dispatchChainAction, chainData }) =
             type="submit"
             colorScheme="success"
             className="w-full"
-            disabled={!form.formState.isValid}
-            isLoading={
-              (form.formState.isValid && !referrer.data) || referrer.isLoading
+            disabled={
+              defaultReferrer ? false : !form.formState.isValid || !referrer.data
             }
+            isLoading={referrer.isLoading}
           >
             Continue
             <ArrowRight weight="bold" />
