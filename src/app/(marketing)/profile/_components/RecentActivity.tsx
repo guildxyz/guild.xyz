@@ -1,17 +1,119 @@
 "use client"
 
-import { Avatar, AvatarFallback } from "@/components/ui/Avatar"
-import { Badge } from "@/components/ui/Badge"
 import { Card } from "@/components/ui/Card"
+import { Skeleton } from "@/components/ui/Skeleton"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/ToggleGroup"
-import { Circle, Rocket } from "@phosphor-icons/react"
-import { useState } from "react"
+import { ActivityLogActionResponse } from "components/[guild]/activity/ActivityLogContext"
+import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
+import { useMemo, useState } from "react"
+import { useProfile } from "../_hooks/useProfile"
+import { ActivityCard } from "./ActivityCard"
 
-const ACTIVITY_FILTERS = ["All", "Editing", "Join", "NFTs"] as const
+export enum ACTION {
+  // Guild
+  CreateGuild = "create guild",
+  UpdateGuild = "update guild",
+  DeleteGuild = "delete guild",
+  ExecutePendingActions = "execute pending actions",
+  TransferOwnership = "transfer ownership",
+  // Guild update
+  AddAdmin = "add admin",
+  RemoveAdmin = "remove admin",
+  ShowMembersOn = "show members on",
+  ShowMembersOff = "show members off",
+  HideFromExplorerOn = "hide from explorer on",
+  HideFromExplorerOff = "hide from explorer off",
+  // Role
+  CreateRole = "create role",
+  UpdateRole = "update role",
+  DeleteRole = "delete role",
+  // Form
+  CreateForm = "create form",
+  UpdateForm = "update form",
+  DeleteForm = "delete form",
+  SubmitForm = "submit form",
+  // Reward
+  AddReward = "add reward",
+  RemoveReward = "remove reward",
+  UpdateReward = "update reward",
+  // Requirement
+  AddRequirement = "add requirement",
+  UpdateRequirement = "update requirement",
+  RemoveRequirement = "remove requirement",
+  // Status update
+  StartStatusUpdate = "start status update",
+  RestartStatusUpdate = "restart status update",
+  StopStatusUpdate = "stop status update",
+  // User
+  ClickJoinOnPlatform = "click join on platform",
+  JoinGuild = "join guild",
+  LeaveGuild = "leave guild",
+  KickFromGuild = "kick from guild",
+  UserStatusUpdate = "user status update",
+  GetRole = "get role",
+  LoseRole = "lose role",
+  SendReward = "send reward",
+  GetReward = "get reward",
+  RevokeReward = "revoke reward",
+  LoseReward = "lose reward",
+  ConnectIdentity = "connect identity",
+  DisconnectIdentity = "disconnect identity",
+  OptIn = "user opt-in",
+  OptOut = "user opt-out",
+  // Profile
+  UpdateProfile = "update profile",
+  CreateProfile = "create profile",
+  DeleteProfile = "delete profile",
+  ReferProfile = "refer profile",
+}
+
+const ACTIVITY_FILTERS = ["All", "Profile", "Guilds", "Rewards"] as const
+const FILTER_ACTIONS: Record<
+  Exclude<(typeof ACTIVITY_FILTERS)[number], "All">,
+  ACTION[]
+> = {
+  Guilds: [
+    ACTION.JoinGuild,
+    ACTION.LeaveGuild,
+    ACTION.UpdateGuild,
+    ACTION.KickFromGuild,
+    ACTION.CreateGuild,
+  ] as const,
+  Profile: [
+    ACTION.UpdateProfile,
+    ACTION.CreateProfile,
+    ACTION.DeleteProfile,
+  ] as const,
+  Rewards: [
+    ACTION.RevokeReward,
+    ACTION.LoseReward,
+    ACTION.SendReward,
+    ACTION.UpdateReward,
+  ] as const,
+}
+const THIRTY_DAYS_IN_MS = 30 * 86400 * 1000
 
 export const RecentActivity = () => {
   const [activityFilter, setActivityFilter] =
     useState<(typeof ACTIVITY_FILTERS)[number]>("All")
+  const profile = useProfile()
+  const lastMonthApprox = useMemo(() => Date.now() - THIRTY_DAYS_IN_MS, [])
+  const searchParams =
+    profile.data &&
+    new URLSearchParams([
+      ["username", profile.data.username],
+      ["userId", profile.data.userId.toString()],
+      ["limit", "20"],
+      ["offset", "0"],
+      ["after", lastMonthApprox.toString()],
+      ...(activityFilter === "All"
+        ? Object.values(FILTER_ACTIONS).flat()
+        : FILTER_ACTIONS[activityFilter]
+      ).map((action) => ["action", action]),
+    ])
+  const auditLog = useSWRWithOptionalAuth<ActivityLogActionResponse>(
+    profile.data ? `/v2/audit-log?${searchParams}` : null
+  )
 
   return (
     <>
@@ -32,34 +134,14 @@ export const RecentActivity = () => {
         ))}
       </ToggleGroup>
       <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
-        {Array.from({ length: 8 }, (_, i) => (
-          <Card className="flex" key={i}>
-            <div className="flex h-full w-9 items-center justify-center border-border border-r-2 bg-accent">
-              <div className="-rotate-90 flex items-center gap-1">
-                <Avatar size="xs">
-                  <AvatarFallback>#</AvatarFallback>
-                </Avatar>
-                <span className="font-bold font-display text-sm">Guild</span>
-              </div>
-            </div>
-            <div className="px-5 py-6">
-              <h3 className="font-bold">
-                Acquire the{" "}
-                <Badge className="whitespace-nowrap">
-                  <Rocket weight="fill" className="mr-1" />
-                  Enter Farcaster
-                </Badge>{" "}
-                role
-              </h3>
-              <div className="mt-1.5 flex flex-wrap items-center gap-2">
-                <p className="text-muted-foreground">2 hours ago</p>
-                <Circle
-                  className="hidden size-1.5 text-muted-foreground sm:block"
-                  weight="fill"
-                />
-              </div>
-            </div>
-          </Card>
+        {auditLog.isLoading &&
+          Array.from({ length: 20 }, () => (
+            <Card>
+              <Skeleton className="h-[102px] w-full" />
+            </Card>
+          ))}
+        {auditLog.data?.entries.map((activity) => (
+          <ActivityCard activity={activity} key={activity.id} />
         ))}
       </div>
     </>

@@ -1,6 +1,7 @@
 "use client"
 
 import { CheckMark } from "@/components/CheckMark"
+import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
 import { AvatarGroup } from "@/components/ui/AvatarGroup"
 import { Card } from "@/components/ui/Card"
@@ -23,6 +24,7 @@ export const Profile = () => {
   const { data: profile } = useProfile()
   const { data: contributions } = useContributions()
   const { data: referredUsers } = useReferredUsers()
+  const { isWeb3Connected } = useWeb3ConnectionManager()
 
   if (!profile || !contributions || !referredUsers) return <ProfileSkeleton />
 
@@ -97,13 +99,15 @@ export const Profile = () => {
           <ContributionCard contribution={contribution} key={contribution.id} />
         ))}
       </div>
-      <div className="mt-8">
-        <SectionTitle className="mb-3">Recent activity</SectionTitle>
-        <RecentActivity />
-        <p className="mt-2 font-semibold text-muted-foreground">
-          &hellip; only last 20 actions are shown
-        </p>
-      </div>
+      {isWeb3Connected && (
+        <div className="mt-8">
+          <SectionTitle className="mb-3">Recent activity</SectionTitle>
+          <RecentActivity />
+          <p className="mt-2 font-semibold text-muted-foreground">
+            &hellip; only last 20 actions are shown
+          </p>
+        </div>
+      )}
     </>
   )
 }
