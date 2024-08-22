@@ -4,7 +4,7 @@ import { useToast } from "@/components/ui/hooks/useToast"
 import { Schemas } from "@guildxyz/types"
 import { useSetAtom } from "jotai"
 import { useRouter, useSearchParams } from "next/navigation"
-import { useEffect } from "react"
+import { useEffect, useRef } from "react"
 import useSWRImmutable from "swr/immutable"
 import { ChainSkeleton } from "../_components/ChainSkeleton"
 import { ClaimPass } from "../_components/ClaimPass"
@@ -15,14 +15,17 @@ const Page = () => {
   const router = useRouter()
   const { toast } = useToast()
   const referrerUsername = useSearchParams()?.get(REFERRER_USER_SEARCH_PARAM_KEY)
+  const didReferrerValidate = useRef(false)
   const referrer = useSWRImmutable<Schemas["Profile"]>(
-    referrerUsername ? `/v2/profiles/${referrerUsername}` : null
+    referrerUsername ? `/v2/profiles/${referrerUsername}` : null,
+    { shouldRetryOnError: false }
   )
   const setChainData = useSetAtom(chainDataAtom)
 
   useEffect(() => {
-    if (!referrerUsername) return
+    if (!referrerUsername || didReferrerValidate.current) return
     if (referrer.error) {
+      didReferrerValidate.current = true
       toast({
         variant: "error",
         title: "Failed to identify referrer profile",
