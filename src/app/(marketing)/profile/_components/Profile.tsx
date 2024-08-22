@@ -24,7 +24,7 @@ export const Profile = () => {
   return (
     <>
       <ProfileHero />
-      <div className="mb-3 flex items-center justify-between">
+      <div className="mb-3 flex items-center justify-between" data-theme="dark">
         <SectionTitle>Top contributions</SectionTitle>
         <ProfileOwnerGuard>
           <EditContributions />
@@ -63,5 +63,7 @@ const SectionTitle = ({
   className,
   children,
 }: PropsWithChildren<{ className?: string }>) => (
-  <h2 className={cn("font-bold sm:text-lg", className)}>{children}</h2>
+  <h2 className={cn("font-bold text-foreground sm:text-lg", className)}>
+    {children}
+  </h2>
 )

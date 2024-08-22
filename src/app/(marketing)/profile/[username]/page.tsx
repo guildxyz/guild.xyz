@@ -97,14 +97,16 @@ const Page = async ({ params: { username } }: { params: { username: string } }) 
         fallback,
       }}
     >
-      <Layout
-        style={
-          isBgColor ? { ["--banner" as string]: profile.backgroundImageUrl } : {}
-        }
-      >
+      <Layout>
         <LayoutHero className="pb-4 md:pb-10">
           <Header />
-          <LayoutBanner className="-bottom-[600px]">
+          <LayoutBanner
+            className={profile.bio ? "-bottom-[640px]" : "-bottom-[610px]"}
+            data-theme="dark"
+            style={
+              isBgColor ? { ["--banner" as string]: profile.backgroundImageUrl } : {}
+            }
+          >
             {isBgColor ? (
               <ProfileColorBanner />
             ) : (

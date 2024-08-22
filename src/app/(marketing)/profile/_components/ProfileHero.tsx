@@ -17,7 +17,10 @@ export const ProfileHero = () => {
   if (!profile) return null
 
   return (
-    <div className="relative mb-12 flex flex-col items-center pt-12 md:mb-20 md:pt-14">
+    <div
+      className="relative mb-12 flex flex-col items-center pt-12 text-foreground md:mb-20 md:pt-14"
+      data-theme="dark"
+    >
       <ProfileOwnerGuard>
         <EditProfile />
       </ProfileOwnerGuard>
