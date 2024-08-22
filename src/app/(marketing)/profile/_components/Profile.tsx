@@ -3,9 +3,11 @@
 import { CheckMark } from "@/components/CheckMark"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
 import { AvatarGroup } from "@/components/ui/AvatarGroup"
+import { Card } from "@/components/ui/Card"
 import { Separator } from "@/components/ui/Separator"
 import { Skeleton } from "@/components/ui/Skeleton"
 import { cn } from "@/lib/utils"
+import { Info } from "@phosphor-icons/react"
 import { PropsWithChildren } from "react"
 import { ContributionCard } from "../_components/ContributionCard"
 import { EditContributions } from "../_components/EditContributions"
@@ -53,7 +55,7 @@ export const Profile = () => {
         </p>
         <div className="mt-8 grid grid-cols-[repeat(3,auto)] gap-x-6 gap-y-4 sm:grid-cols-[repeat(5,auto)]">
           <div className="flex flex-col items-center leading-tight">
-            <div className="font-bold text-lg">{referredUsers.length}</div>
+            <div className="font-bold md:text-lg">{referredUsers.length}</div>
             <div className="text-muted-foreground">Guildmates</div>
           </div>
           <Separator orientation="vertical" className="h-10 md:h-12" />
@@ -78,6 +80,19 @@ export const Profile = () => {
         </ProfileOwnerGuard>
       </div>
       <div className="grid grid-cols-1 gap-3">
+        {contributions.length === 0 && (
+          <Card className="flex gap-2 border border-info p-4">
+            <Info weight="fill" size={32} className="text-info" />
+            <div>
+              <h3 className="mb-1 font-bold text-md">
+                Contributions will appear here
+              </h3>
+              <p className="text-muted-foreground">
+                This profile doesn't have any contribution yet
+              </p>
+            </div>
+          </Card>
+        )}
         {contributions.map((contribution) => (
           <ContributionCard contribution={contribution} key={contribution.id} />
         ))}
