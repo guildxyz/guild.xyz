@@ -29,12 +29,13 @@ export const ClaimPass: OnboardingChain = ({ dispatchChainAction, chainData }) =
     mode: "onTouched",
   })
 
-  const defaultReferrer =
-    !form.getFieldState("username").isDirty && chainData.referrerProfile?.username
   const [username, setUsername] = useState<string>()
   const referrer = useSWRImmutable<Schemas["Profile"]>(
     username ? `/v2/profiles/${username}` : null
   )
+  const finalReferrer =
+    (!form.getFieldState("username").isDirty && chainData.referrerProfile) ||
+    referrer.data
 
   useEffect(() => {
     if (referrer.error) {
@@ -49,10 +50,10 @@ export const ClaimPass: OnboardingChain = ({ dispatchChainAction, chainData }) =
   }, [referrer.data, form.clearErrors])
 
   function onSubmit(_: z.infer<typeof formSchema>) {
-    if (!referrer.data) {
+    if (!finalReferrer) {
       throw new Error("Failed to resolve referrer profile")
     }
-    dispatchChainAction({ action: "next", data: { referrerProfile: referrer.data } })
+    dispatchChainAction({ action: "next", data: { referrerProfile: finalReferrer } })
   }
 
   return (
@@ -95,9 +96,7 @@ export const ClaimPass: OnboardingChain = ({ dispatchChainAction, chainData }) =
             type="submit"
             colorScheme="success"
             className="w-full"
-            disabled={
-              defaultReferrer ? false : !form.formState.isValid || !referrer.data
-            }
+            disabled={!form.formState.isValid || !finalReferrer}
             isLoading={referrer.isLoading}
           >
             Continue
