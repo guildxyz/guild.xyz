@@ -9,6 +9,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import EditNFTDescriptionModal from "./components/EditNFTDescriptionModal"
 import EditNftModal from "./components/EditNftModal"
+import { useRef } from "react"
 
 type Props = {
   platformGuildId: string
@@ -26,6 +27,7 @@ const ContractCallCardMenu = ({ platformGuildId }: Props): JSX.Element => {
     onOpen: legacyOnOpen,
     onClose: legacyOnClose,
   } = useDisclosure()
+  const ref = useRef(null)
 
   const isLegacy =
     guildPlatform.platformGuildData.function ===
@@ -45,7 +47,11 @@ const ContractCallCardMenu = ({ platformGuildId }: Props): JSX.Element => {
   return (
     <>
       <PlatformCardMenu>
-        <MenuItem icon={<PencilSimple />} onClick={isLegacy ? legacyOnOpen : onOpen}>
+        <MenuItem
+          icon={<PencilSimple />}
+          onClick={isLegacy ? legacyOnOpen : onOpen}
+          ref={ref}
+        >
           {isLegacy ? "Edit NFT description" : "Edit NFT"}
         </MenuItem>
         <RemovePlatformMenuItem platformGuildId={platformGuildId} />
@@ -59,6 +65,7 @@ const ContractCallCardMenu = ({ platformGuildId }: Props): JSX.Element => {
         />
       ) : (
         <EditNftModal
+          finalFocusRef={ref}
           isOpen={isOpen}
           onClose={onClose}
           guildPlatform={guildPlatform}

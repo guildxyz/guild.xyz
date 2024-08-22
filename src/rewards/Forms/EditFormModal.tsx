@@ -21,14 +21,16 @@ import { FormProvider, useForm } from "react-hook-form"
 import { uuidv7 } from "uuidv7"
 import { z } from "zod"
 import useEditForm from "./hooks/useEditForm"
+import { MutableRefObject } from "react"
 
 type Props = {
   isOpen: boolean
   onClose: () => void
   form: Schemas["Form"]
+  finalFocusRef?: MutableRefObject<null>
 }
 
-const EditFormModal = ({ isOpen, onClose, form }: Props) => {
+const EditFormModal = ({ isOpen, onClose, form, finalFocusRef }: Props) => {
   const methods = useForm<z.input<typeof FormCreationSchema>>({
     mode: "all",
     resolver: zodResolver(FormCreationSchema),
@@ -93,6 +95,7 @@ const EditFormModal = ({ isOpen, onClose, form }: Props) => {
         size="4xl"
         colorScheme="dark"
         scrollBehavior="inside"
+        finalFocusRef={finalFocusRef}
       >
         <ModalOverlay />
         <ModalContent maxH="100vh !important">

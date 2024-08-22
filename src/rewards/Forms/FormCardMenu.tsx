@@ -6,6 +6,7 @@ import { useGuildForm } from "components/[guild]/hooks/useGuildForms"
 import LinkMenuItem from "components/common/LinkMenuItem"
 import PlatformCardMenu from "../../components/[guild]/RolePlatforms/components/PlatformCard/components/PlatformCardMenu"
 import EditFormModal from "./EditFormModal"
+import { ElementRef, useRef } from "react"
 
 type Props = {
   platformGuildId: string
@@ -17,6 +18,7 @@ const FormCardMenu = ({ platformGuildId }: Props): JSX.Element => {
     (gp) => gp.platformGuildId === platformGuildId
   )
   const formId = guildPlatform?.platformGuildData?.formId
+  const ref = useRef(null)
 
   const { form } = useGuildForm(formId)
 
@@ -25,7 +27,7 @@ const FormCardMenu = ({ platformGuildId }: Props): JSX.Element => {
   return (
     <>
       <PlatformCardMenu>
-        <MenuItem icon={<PencilSimple />} onClick={onOpen}>
+        <MenuItem icon={<PencilSimple />} onClick={onOpen} ref={ref}>
           Edit form
         </MenuItem>
 
@@ -39,7 +41,14 @@ const FormCardMenu = ({ platformGuildId }: Props): JSX.Element => {
         <RemovePlatformMenuItem platformGuildId={platformGuildId} />
       </PlatformCardMenu>
 
-      {!!form && <EditFormModal isOpen={isOpen} onClose={onClose} form={form} />}
+      {!!form && (
+        <EditFormModal
+          isOpen={isOpen}
+          onClose={onClose}
+          form={form}
+          finalFocusRef={ref}
+        />
+      )}
     </>
   )
 }
