@@ -1,8 +1,8 @@
 import { atom } from "jotai"
 import { SUBSCRIPTIONS } from "./constants"
-import { ChainData } from "./types"
+import { CreateProfileData } from "./types"
 
-export const chainDataAtom = atom<Partial<ChainData>>({
+export const createProfileDataAtom = atom<Partial<CreateProfileData>>({
   chosenSubscription: SUBSCRIPTIONS[0],
   subscription: true,
 })

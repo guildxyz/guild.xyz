@@ -2,31 +2,31 @@
 import { useAtom } from "jotai"
 import { useRouter } from "next/navigation"
 import { useEffect } from "react"
-import { ChainSkeleton } from "../_components/ChainSkeleton"
+import { CreateProfileSkeleton } from "../_components/CreateProfileSkeleton"
 import { StartProfile } from "../_components/StartProfile"
-import { chainDataAtom } from "../atoms"
+import { createProfileDataAtom } from "../atoms"
 
 const Page = () => {
-  const [chainData] = useAtom(chainDataAtom)
+  const [data] = useAtom(createProfileDataAtom)
   const router = useRouter()
 
   useEffect(() => {
-    if (!chainData.referrerProfile) {
+    if (!data.referrerProfile) {
       router.replace("claim-pass")
     }
-    if (!chainData.subscription) {
+    if (!data.subscription) {
       router.replace("choose-pass")
     }
-  }, [chainData, router.replace])
+  }, [data, router.replace])
 
-  if (!chainData.subscription || !chainData.referrerProfile) {
-    return <ChainSkeleton />
+  if (!data.subscription || !data.referrerProfile) {
+    return <CreateProfileSkeleton />
   }
 
   return (
     <StartProfile
-      chainData={chainData}
-      dispatchChainAction={({ action }) => {
+      data={data}
+      dispatchAction={({ action }) => {
         if (action === "next") {
           // router.push("")
         }

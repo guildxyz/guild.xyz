@@ -24,14 +24,14 @@ import usePinata from "hooks/usePinata"
 import { useEffect, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { useCreateProfile } from "../_hooks/useCreateProfile"
-import { OnboardingChain } from "../types"
+import { CreateProfileStep } from "../types"
 
 enum CreateMethod {
   FillByFarcaster,
   FromBlank,
 }
 
-export const StartProfile: OnboardingChain = ({ chainData }) => {
+export const StartProfile: CreateProfileStep = ({ data: chainData }) => {
   const { farcasterProfiles = [] } = useUser()
   const farcasterProfile = farcasterProfiles.at(0)
   const [method, setMethod] = useState<CreateMethod | undefined>(

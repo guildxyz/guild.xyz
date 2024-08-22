@@ -6,9 +6,9 @@ import { useSetAtom } from "jotai"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useRef } from "react"
 import useSWRImmutable from "swr/immutable"
-import { ChainSkeleton } from "../_components/ChainSkeleton"
 import { ClaimPass } from "../_components/ClaimPass"
-import { chainDataAtom } from "../atoms"
+import { CreateProfileSkeleton } from "../_components/CreateProfileSkeleton"
+import { createProfileDataAtom } from "../atoms"
 import { REFERRER_USER_SEARCH_PARAM_KEY } from "../constants"
 
 const Page = () => {
@@ -20,7 +20,7 @@ const Page = () => {
     referrerUsername ? `/v2/profiles/${referrerUsername}` : null,
     { shouldRetryOnError: false }
   )
-  const setChainData = useSetAtom(chainDataAtom)
+  const setData = useSetAtom(createProfileDataAtom)
 
   useEffect(() => {
     if (!referrerUsername || didReferrerValidate.current) return
@@ -35,18 +35,18 @@ const Page = () => {
   }, [referrer.error, referrerUsername, toast])
 
   if (referrer.isLoading) {
-    return <ChainSkeleton />
+    return <CreateProfileSkeleton />
   }
 
   return (
     <ClaimPass
-      chainData={{ referrerProfile: referrer.data }}
-      dispatchChainAction={({ action, data }) => {
+      data={{ referrerProfile: referrer.data }}
+      dispatchAction={({ action, data }) => {
         if (action === "next") {
           if (!data?.referrerProfile) {
             throw new Error("Tried to resolve referrer profile without value")
           }
-          setChainData((prev) => ({
+          setData((prev) => ({
             ...prev,
             referrerProfile: data.referrerProfile,
           }))

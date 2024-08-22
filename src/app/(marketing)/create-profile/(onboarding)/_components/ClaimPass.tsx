@@ -15,16 +15,16 @@ import { useEffect, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import useSWRImmutable from "swr/immutable"
 import { z } from "zod"
-import { OnboardingChain } from "../types"
+import { CreateProfileStep } from "../types"
 import { GuildPassScene } from "./GuildPassScene"
 
 const formSchema = schemas.ProfileCreationSchema.pick({ username: true })
 
-export const ClaimPass: OnboardingChain = ({ dispatchChainAction, chainData }) => {
+export const ClaimPass: CreateProfileStep = ({ dispatchAction, data }) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: chainData.referrerProfile?.username ?? "",
+      username: data.referrerProfile?.username ?? "",
     },
     mode: "onTouched",
   })
@@ -34,7 +34,7 @@ export const ClaimPass: OnboardingChain = ({ dispatchChainAction, chainData }) =
     username ? `/v2/profiles/${username}` : null
   )
   const finalReferrer =
-    (!form.getFieldState("username").isDirty && chainData.referrerProfile) ||
+    (!form.getFieldState("username").isDirty && data.referrerProfile) ||
     referrer.data
 
   useEffect(() => {
@@ -48,7 +48,7 @@ export const ClaimPass: OnboardingChain = ({ dispatchChainAction, chainData }) =
     if (!finalReferrer) {
       throw new Error("Failed to resolve referrer profile")
     }
-    dispatchChainAction({ action: "next", data: { referrerProfile: finalReferrer } })
+    dispatchAction({ action: "next", data: { referrerProfile: finalReferrer } })
   }
 
   return (

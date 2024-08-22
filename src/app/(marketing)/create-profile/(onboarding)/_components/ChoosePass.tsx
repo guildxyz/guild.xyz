@@ -13,24 +13,24 @@ import { Separator } from "@/components/ui/Separator"
 import { ToggleGroup, ToggleGroupItem } from "@radix-ui/react-toggle-group"
 import { useEffect, useState } from "react"
 import { SUBSCRIPTIONS } from "../constants"
-import { OnboardingChain } from "../types"
+import { CreateProfileStep } from "../types"
 import { Benefits } from "./Benefits"
 import { GuildPassScene } from "./GuildPassScene"
 
-export const ChoosePass: OnboardingChain = ({ dispatchChainAction }) => {
+export const ChoosePass: CreateProfileStep = ({ dispatchAction }) => {
   const [api, setApi] = useState<CarouselApi>()
   const [subscriptionIndex, setSubscriptionIndex] = useState<number>()
   const { selectedIndex, scrollSnaps, onCarouselDotButtonClick } =
     useCarouselDotButton(api)
   useEffect(() => {
     if (subscriptionIndex === undefined) return
-    dispatchChainAction({
+    dispatchAction({
       action: "next",
       data: {
         chosenSubscription: SUBSCRIPTIONS[subscriptionIndex],
       },
     })
-  }, [subscriptionIndex, dispatchChainAction])
+  }, [subscriptionIndex, dispatchAction])
 
   return (
     <div className="max-w-screen-lg">

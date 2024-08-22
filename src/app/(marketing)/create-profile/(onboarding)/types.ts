@@ -2,20 +2,20 @@ import { Schemas } from "@guildxyz/types"
 import { FunctionComponent } from "react"
 import { SUBSCRIPTIONS } from "./constants"
 
-export type ChainAction = "next" | "previous"
+export type CreateProfileAction = "next" | "previous"
 
-export interface ChainData {
+export interface CreateProfileData {
   chosenSubscription: (typeof SUBSCRIPTIONS)[number]
   referrerProfile: Schemas["Profile"]
   createdProfile: Schemas["Profile"]
   subscription: boolean
 }
-export type DispatchChainAction = (args: {
-  action: ChainAction
-  data?: Partial<ChainData>
+export type DispatchAction = (args: {
+  action: CreateProfileAction
+  data?: Partial<CreateProfileData>
 }) => void
 
-export type OnboardingChain = FunctionComponent<{
-  dispatchChainAction: DispatchChainAction
-  chainData: Partial<ChainData>
+export type CreateProfileStep = FunctionComponent<{
+  dispatchAction: DispatchAction
+  data: Partial<CreateProfileData>
 }>
