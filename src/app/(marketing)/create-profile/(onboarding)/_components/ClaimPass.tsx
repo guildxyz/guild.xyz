@@ -44,11 +44,6 @@ export const ClaimPass: OnboardingChain = ({ dispatchChainAction, chainData }) =
     }
   }, [referrer.error, form.setError])
 
-  useEffect(() => {
-    if (!referrer.data) return
-    form.clearErrors()
-  }, [referrer.data, form.clearErrors])
-
   function onSubmit(_: z.infer<typeof formSchema>) {
     if (!finalReferrer) {
       throw new Error("Failed to resolve referrer profile")
@@ -96,7 +91,10 @@ export const ClaimPass: OnboardingChain = ({ dispatchChainAction, chainData }) =
             type="submit"
             colorScheme="success"
             className="w-full"
-            disabled={!form.formState.isValid || !finalReferrer}
+            disabled={
+              !form.formState.isValid ||
+              finalReferrer?.username !== form.watch("username")
+            }
             isLoading={referrer.isLoading}
           >
             Continue
