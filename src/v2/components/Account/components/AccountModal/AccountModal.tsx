@@ -20,13 +20,19 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/DropdownMenu"
 import { Separator } from "@/components/ui/Separator"
 import { Skeleton } from "@/components/ui/Skeleton"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip"
 import { useUserPublic } from "@/hooks/useUserPublic"
-import { ArrowRight, DotsThreeVertical } from "@phosphor-icons/react"
+import {
+  ArrowRight,
+  CreditCard,
+  DotsThreeVertical,
+  File,
+} from "@phosphor-icons/react"
 import { SignOut } from "@phosphor-icons/react/dist/ssr"
 import useUser from "components/[guild]/hooks/useUser"
 import useResolveAddress from "hooks/useResolveAddress"
@@ -99,8 +105,8 @@ const AccountModal = () => {
                       {guildProfile.name}
                       <CheckMark className="-mt-0.5 ml-1 inline-block fill-yellow-500" />
                     </h3>
-                    <div className="text-muted-foreground text-sm">
-                      @{guildProfile.username}
+                    <div className="text-medium text-muted-foreground">
+                      1999 / 2000 XP
                     </div>
                     <div className="mt-2 flex gap-1.5">
                       <Anchor
@@ -125,6 +131,15 @@ const AccountModal = () => {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>
+                          <DropdownMenuItem className="flex items-center gap-2 px-4 font-semibold">
+                            <CreditCard weight="bold" className="size-4" />
+                            Manage subscription
+                          </DropdownMenuItem>
+                          <DropdownMenuItem className="flex items-center gap-2 px-4 font-semibold">
+                            <File weight="bold" className="size-4" />
+                            Purchase history
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
                           <DropdownMenuLabel className="mt-3 flex gap-1 px-4 text-muted-foreground">
                             Connected with {connectorName}
                             <NetworkIndicator />
