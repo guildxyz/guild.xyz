@@ -42,7 +42,7 @@ export const Profile = () => {
             </div>
           </Card>
         )}
-        {contributions.map((contribution) => (
+        {contributions.slice(0, 3).map((contribution) => (
           <ContributionCard contribution={contribution} key={contribution.id} />
         ))}
       </div>
