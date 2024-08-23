@@ -1,13 +1,17 @@
 import { CheckMark } from "@/components/CheckMark"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
 import { Card } from "@/components/ui/Card"
+import { cn } from "@/lib/utils"
 import { Guild } from "@guildxyz/types"
+import Color from "color"
 import { PropsWithChildren } from "react"
 
 export const CardWithGuildLabel = ({
   guild,
   children,
 }: PropsWithChildren<{ guild: Guild }>) => {
+  const color = guild.theme.color && Color(guild.theme.color)
+
   return (
     <Card
       className="relative flex border-4 bg-accent sm:border-2"
@@ -27,7 +31,16 @@ export const CardWithGuildLabel = ({
             />
             <AvatarFallback />
           </Avatar>
-          <div className="-mt-0.5 truncate font-bold font-display text-white max-sm:text-sm sm:max-w-12">
+          <div
+            className={cn(
+              "-mt-0.5 truncate font-bold font-display max-sm:text-sm sm:max-w-12",
+              color
+                ? color.isDark()
+                  ? "text-white"
+                  : "text-black"
+                : "text-foreground"
+            )}
+          >
             {guild.name}
           </div>
           <CheckMark className="sm:hidden" />

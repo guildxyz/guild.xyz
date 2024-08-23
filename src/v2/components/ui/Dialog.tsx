@@ -57,29 +57,43 @@ export interface DialogContentProps
   extends ComponentPropsWithoutRef<typeof DialogPrimitive.Content>,
     VariantProps<typeof dialogContentVariants> {
   scrollBody?: boolean
+  overlayClasses?: string
   trapFocus?: FocusScopeProps["trapped"]
 }
 
 const DialogContent = forwardRef<
   ElementRef<typeof DialogPrimitive.Content>,
   DialogContentProps
->(({ size, trapFocus = true, className, scrollBody, children, ...props }, ref) => (
-  <DialogPortal>
-    <DialogOverlay>
-      <FocusScope trapped={trapFocus} loop>
-        <DialogPrimitive.Content
-          ref={ref}
-          className={cn(dialogContentVariants({ size, className }), {
-            "max-h-[calc(100vh-2*theme(space.16))]": scrollBody,
-          })}
-          {...props}
-        >
-          {children}
-        </DialogPrimitive.Content>
-      </FocusScope>
-    </DialogOverlay>
-  </DialogPortal>
-))
+>(
+  (
+    {
+      size,
+      trapFocus = true,
+      className,
+      scrollBody,
+      children,
+      overlayClasses,
+      ...props
+    },
+    ref
+  ) => (
+    <DialogPortal>
+      <DialogOverlay className={overlayClasses}>
+        <FocusScope trapped={trapFocus} loop>
+          <DialogPrimitive.Content
+            ref={ref}
+            className={cn(dialogContentVariants({ size, className }), {
+              "max-h-[calc(100vh-2*theme(space.16))]": scrollBody,
+            })}
+            {...props}
+          >
+            {children}
+          </DialogPrimitive.Content>
+        </FocusScope>
+      </DialogOverlay>
+    </DialogPortal>
+  )
+)
 DialogContent.displayName = DialogPrimitive.Content.displayName
 
 const DialogCloseButton = forwardRef<

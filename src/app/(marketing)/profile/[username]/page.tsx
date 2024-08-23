@@ -15,6 +15,7 @@ import Image from "next/image"
 import { notFound, redirect } from "next/navigation"
 import { Profile } from "../_components/Profile"
 import { ProfileColorBanner } from "../_components/ProfileColorBanner"
+import { ProfileHero } from "../_components/ProfileHero"
 
 const api = env.NEXT_PUBLIC_API
 
@@ -97,14 +98,16 @@ const Page = async ({ params: { username } }: { params: { username: string } }) 
         fallback,
       }}
     >
-      <Layout
-        style={
-          isBgColor ? { ["--banner" as string]: profile.backgroundImageUrl } : {}
-        }
-      >
-        <LayoutHero className="pb-4 md:pb-10">
+      <Layout>
+        <LayoutHero className="pb-0">
           <Header />
-          <LayoutBanner className="-bottom-[600px]">
+          <LayoutBanner
+            className="-bottom-[100px]"
+            data-theme="dark"
+            style={
+              isBgColor ? { ["--banner" as string]: profile.backgroundImageUrl } : {}
+            }
+          >
             {isBgColor ? (
               <ProfileColorBanner />
             ) : (
@@ -123,6 +126,7 @@ const Page = async ({ params: { username } }: { params: { username: string } }) 
             )}
             <div className="absolute inset-0 bg-gradient-to-t from-background" />
           </LayoutBanner>
+          <ProfileHero />
         </LayoutHero>
         <LayoutMain className="top-0">
           <Profile />

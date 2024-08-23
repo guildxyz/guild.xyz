@@ -126,7 +126,7 @@
     --xl: 1280px;
   }
 
-  :root[data-theme="dark"] {
+  :root[data-theme="dark"], [data-theme="dark"] {
     --background: 240 3.7% 15.88%;
     --foreground: 210 20% 98%;
 
