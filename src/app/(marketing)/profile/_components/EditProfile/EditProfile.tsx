@@ -2,7 +2,6 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
 import { Button } from "@/components/ui/Button"
-import { Card } from "@/components/ui/Card"
 import {
   Dialog,
   DialogBody,
@@ -28,17 +27,17 @@ import { useDisclosure } from "@/hooks/useDisclosure"
 import { cn } from "@/lib/utils"
 import { Schemas, schemas } from "@guildxyz/types"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Pencil, User } from "@phosphor-icons/react"
+import { User } from "@phosphor-icons/react"
 import useDropzone from "hooks/useDropzone"
 import usePinata from "hooks/usePinata"
-import { useState } from "react"
+import { PropsWithChildren, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { useDeleteProfile } from "../../_hooks/useDeleteProfile"
 import { useProfile } from "../../_hooks/useProfile"
 import { useUpdateProfile } from "../../_hooks/useUpdateProfile"
 import { EditProfileBanner } from "./EditProfileBanner"
 
-export const EditProfile = () => {
+export const EditProfile = ({ children }: PropsWithChildren<any>) => {
   const { data: profile } = useProfile()
   const form = useForm<Schemas["Profile"]>({
     resolver: zodResolver(schemas.ProfileUpdateSchema),
@@ -92,14 +91,7 @@ export const EditProfile = () => {
 
   return (
     <Dialog onOpenChange={disclosure.setValue} open={disclosure.isOpen}>
-      <DialogTrigger asChild>
-        <Card className="absolute top-0 right-0 rounded-xl">
-          <Button variant="solid">
-            <Pencil weight="bold" />
-            Edit profile
-          </Button>
-        </Card>
-      </DialogTrigger>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <FormProvider {...form}>
         <DialogContent size="lg" className="bg-background" scrollBody>
           <DialogHeader>
