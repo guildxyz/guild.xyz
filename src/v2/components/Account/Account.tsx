@@ -87,10 +87,12 @@ export const Account = () => {
               </AvatarFallback>
             </Avatar>
             <div className="flex flex-col items-start">
-              <div className="max-w-24 truncate font-bold text-sm">
+              <div className="max-w-24 truncate font-bold text-sm leading-tight">
                 {guildProfile.name}
               </div>
-              <div className="text-muted-foreground text-xs">1922/2000 XP</div>
+              <div className="text-muted-foreground text-xs">
+                @{guildProfile.username}
+              </div>
             </div>
           </div>
         ) : (
