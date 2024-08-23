@@ -19,7 +19,7 @@ import {
   getRolePlatformTimeframeInfo,
 } from "utils/rolePlatformHelpers"
 
-const GatherReward = ({ platform, withMotionImg }: RewardProps) => {
+const GatherReward = ({ platform }: RewardProps) => {
   const { platformId, platformGuildData } = platform.guildPlatform
 
   const {
@@ -86,7 +86,6 @@ const GatherReward = ({ platform, withMotionImg }: RewardProps) => {
             <RewardIcon
               rolePlatformId={platform.id}
               guildPlatform={platform?.guildPlatform}
-              withMotionImg={withMotionImg}
             />
           )
         }

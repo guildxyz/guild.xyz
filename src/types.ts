@@ -178,7 +178,6 @@ type SimpleGuild = {
   showMembers: boolean
   hideFromExplorer: boolean
   socialLinks: SocialLinks
-  eventSources: EventSources
   onboardingComplete: boolean
   memberCount: number
   guildPin?: GuildPinConfig
@@ -583,10 +582,6 @@ type GuildContact = {
   id?: number
 }
 
-const supportedEventSources = ["LINK3", "EVENTBRITE", "LUMA", "DISCORD"] as const
-type EventSourcesKey = (typeof supportedEventSources)[number]
-type EventSources = Partial<Record<EventSourcesKey, string>>
-
 type Guild = {
   id: number
   name: string
@@ -610,7 +605,6 @@ type Guild = {
   hiddenRoles?: boolean
   requiredPlatforms?: PlatformName[]
   tags: GuildTags[]
-  eventSources: Record<EventSourcesKey, string>
   guildPin?: GuildPinConfig
   isFallback?: boolean
   isDetailed?: boolean
@@ -746,15 +740,13 @@ type DetailedPinLeaderboardUserData = {
 
 type SearchParams = { [key: string]: string | string[] | undefined }
 
-export { supportedEventSources, ValidationMethod }
+export { ValidationMethod }
 export type {
   BaseUser,
   ClientStateRequirementCreateResponse,
   CoingeckoToken,
   DetailedPinLeaderboardUserData as DetailedUserLeaderboardData,
   DiscordError,
-  EventSources,
-  EventSourcesKey,
   GitPoap,
   Group,
   Guild,

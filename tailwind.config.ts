@@ -1,3 +1,4 @@
+import { background } from "@chakra-ui/react"
 import type { Config } from "tailwindcss"
 
 const config = {
@@ -23,10 +24,23 @@ const config = {
         display: ["var(--font-dystopian,sans-serif)"],
       },
       colors: {
-        banner: "hsl(var(--banner))",
-        border: "hsl(var(--border))",
-        "border-muted": "hsl(var(--border-muted))",
-        input: "hsl(var(--input))",
+        banner: {
+          DEFAULT: "var(--banner)",
+          dark: "var(--banner-dark)",
+          foreground: "var(--banner-foreground)"
+        },
+        border: {
+          DEFAULT: "hsl(var(--border))",
+          muted: "hsl(var(--border-muted))"
+        },
+        input: {
+          background: "hsla(var(--input-background))",
+          border: {
+            DEFAULT: "hsla(var(--input-border))",
+            accent: "hsla(var(--input-border-accent))",
+            invalid: "hsl(var(--input-border-invalid))"
+          },
+        },
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
@@ -153,6 +167,9 @@ const config = {
           hover: "hsl(var(--farcaster-hover))",
           active: "hsl(var(--farcaster-active))",
         },
+      },
+      opacity: {
+        banner: "var(--banner-opacity)"
       },
       keyframes: {
         wiggle: {

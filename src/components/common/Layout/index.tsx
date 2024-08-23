@@ -1,6 +1,6 @@
 import { Header } from "@/components/Header"
 import LegacyLayout from "./Layout"
-import BackButton from "./components/BackButton"
+import { BackToExplorerButton } from "./components/BackToExplorerButton"
 import Background from "./components/Background"
 import Footer from "./components/Footer"
 import Head from "./components/Head"
@@ -60,7 +60,7 @@ export const Layout = {
    * `backgroundOffset`
    */
   Background,
-  BackButton,
+  BackToExplorerButton,
   /** Displays page title, description and other information */
   Headline,
   /** Wraps main page content */

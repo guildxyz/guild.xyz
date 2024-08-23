@@ -40,7 +40,7 @@ const LayoutHero = ({
   children,
   ...props
 }: HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn("relative pb-40", className)} {...props}>
+  <div className={cn("relative pb-40 text-banner-foreground", className)} {...props}>
     {children}
   </div>
 )
@@ -72,7 +72,7 @@ const LayoutTitle = ({
 }: HTMLAttributes<HTMLHeadingElement>) => (
   <h1
     className={cn(
-      "font-bold font-display text-4xl text-white tracking-tight sm:text-5xl",
+      "font-bold font-display text-4xl tracking-tight sm:text-5xl",
       className
     )}
     {...props}
@@ -87,27 +87,29 @@ const LayoutMain = ({ children, className, ...props }: LayoutContainerProps) => 
   </LayoutContainer>
 )
 
-const LayoutFooter = ({ className, ...props }: LayoutContainerProps) => (
+const LayoutFooter = ({ className, children, ...props }: LayoutContainerProps) => (
   <LayoutContainer className={cn("mt-auto", className)} {...props} asChild>
     <footer>
-      <p className="my-8 text-center text-muted-foreground text-sm">
-        {`This website is `}
-        <Anchor
-          href="https://github.com/guildxyz/guild.xyz"
-          target="_blank"
-          showExternal
-        >
-          open source
-        </Anchor>
-        {`, and built on the `}
-        <Anchor
-          target="_blank"
-          href="https://www.npmjs.com/package/@guildxyz/sdk"
-          showExternal
-        >
-          Guild SDK
-        </Anchor>
-      </p>
+      {children || (
+        <p className="my-8 text-center text-muted-foreground text-sm">
+          {`This website is `}
+          <Anchor
+            href="https://github.com/guildxyz/guild.xyz"
+            target="_blank"
+            showExternal
+          >
+            open source
+          </Anchor>
+          {`, and built on the `}
+          <Anchor
+            target="_blank"
+            href="https://www.npmjs.com/package/@guildxyz/sdk"
+            showExternal
+          >
+            Guild SDK
+          </Anchor>
+        </p>
+      )}
     </footer>
   </LayoutContainer>
 )

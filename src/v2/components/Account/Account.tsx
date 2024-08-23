@@ -32,11 +32,12 @@ export const Account = () => {
 
   if (!address)
     return (
-      <Card>
+      <Card className="overflow-visible">
         <Button
           variant="ghost"
           onClick={() => setIsWalletSelectorModalOpen(true)}
           data-testid="sign-in-button"
+          className="rounded-2xl"
         >
           <SignIn weight="bold" />
           Sign in
@@ -45,12 +46,12 @@ export const Account = () => {
     )
 
   return (
-    <Card className="flex items-center" data-testid="account-card">
+    <Card className="flex items-center overflow-visible" data-testid="account-card">
       <Popover open={isOpen} onOpenChange={setValue}>
         <PopoverTrigger asChild>
           <Button
             variant="ghost"
-            className="rounded-r-none border-border border-r"
+            className="rounded-r-none rounded-l-2xl border-border border-r"
             aria-label="Notifications"
             onClick={() => {
               if (isOpen) return
@@ -68,7 +69,7 @@ export const Account = () => {
       <Button
         variant="ghost"
         onClick={() => setIsAccountModalOpen(true)}
-        className="rounded-l-none"
+        className="rounded-r-2xl rounded-l-none"
       >
         {guildProfile ? (
           <div className="flex items-center gap-3 pr-1">

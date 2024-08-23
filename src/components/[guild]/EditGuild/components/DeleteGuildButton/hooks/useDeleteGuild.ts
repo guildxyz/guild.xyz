@@ -5,12 +5,10 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
-import { useFormContext } from "react-hook-form"
 import { GuildBase } from "types"
 import fetcher from "utils/fetcher"
 
 const useDeleteGuild = () => {
-  const { reset } = useFormContext()
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
   const router = useRouter()
@@ -42,8 +40,6 @@ const useDeleteGuild = () => {
         (prev) => mutateGuildsCache(prev, guild.id),
         { revalidate: false }
       )
-
-      reset()
 
       router.push("/explorer")
     },

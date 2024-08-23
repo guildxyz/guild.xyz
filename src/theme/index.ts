@@ -24,6 +24,10 @@ const theme = extendTheme({
   },
   components,
   styles,
+  breakpoints: {
+    // needed for the Tailwind migration, matches Tailwind's sm breakpoint (and is between Chakra's sm and md)
+    smd: "640px",
+  },
 })
 
 export default theme

@@ -5,6 +5,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import MembersCountChart from "components/analytics/MembersChart"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
+import { BackButton } from "components/common/Layout/components/BackButton"
 import Head from "next/head"
 import { useRouter } from "next/router"
 import ErrorPage from "pages/_error"
@@ -40,6 +41,7 @@ const AnalyticsPage = (): JSX.Element => {
         imageUrl={imageUrl}
         background={localThemeColor}
         backgroundImage={localBackgroundImage}
+        backButton={<BackButton />}
       >
         {/* we can't use sticky tabs because of the hidden overflow on body */}
         <GuildTabs activeTab="ANALYTICS" isSticky={false} />

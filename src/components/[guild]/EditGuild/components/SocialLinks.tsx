@@ -18,7 +18,7 @@ import { useFormContext, useWatch } from "react-hook-form"
 import { SelectOption, SocialLinkKey } from "types"
 import capitalize from "utils/capitalize"
 import { z } from "zod"
-import { EditGuildForm } from "../EditGuildDrawer"
+import { EditGuildForm } from "../types"
 
 const socialLinkUserPaths = {
   TWITTER: "https://x.com/",

@@ -21,9 +21,15 @@ Open source interface for Guild.xyz -- a tool for platformless membership manage
   - SWR for fetching and caching
   - React Hook Form for form state
   - jotai for custom, simple global state
-- Web3 stuff:
+- Testing:
+  - Storybook - [live deployment](https://guildxyz.github.io/guild.xyz)
+  - Playwright
+- Web3 related:
   - viem
   - wagmi for connection management
+- Data visualization, graphics:
+  - visx
+  - threejs
 - Deployment:
   - Vercel
 - Product analytics:

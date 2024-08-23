@@ -81,7 +81,7 @@ export const ConfettiProvider = ({ children }: PropsWithChildren) => {
     const confettiClosure: ConfettiPlayer = (type) => {
       if (type === "Confetti from left and right") {
         doubleConfetti(confetti)
-        audioRef.current?.play()
+        // audioRef.current?.play()
       }
     }
     confettiRef.current = confettiClosure
@@ -97,7 +97,7 @@ export const ConfettiProvider = ({ children }: PropsWithChildren) => {
           resize: true,
         }}
       />
-      <audio ref={audioRef} src="sfx/confetti-party-popper.mp3" />
+      <audio ref={audioRef} src="/sfx/confetti-party-popper.mp3" />
     </ConfettiContext.Provider>
   )
 }

@@ -1,43 +1,67 @@
-import { Header } from "@/components/Header"
-import { Layout, LayoutBanner, LayoutHero, LayoutMain } from "@/components/Layout"
-import svgToTinyDataUri from "mini-svg-data-uri"
-import type { Metadata } from "next"
-import { OnboardingDriver } from "./_components/OnboardingDriver"
+"use client"
 
-export const metadata: Metadata = {
-  title: "Create profile",
-}
+import { walletSelectorModalAtom } from "@/components/Providers/atoms"
+import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import { Anchor } from "@/components/ui/Anchor"
+import { Button, buttonVariants } from "@/components/ui/Button"
+import { SignIn } from "@phosphor-icons/react"
+import { useSetAtom } from "jotai"
+import { useRouter, useSearchParams } from "next/navigation"
+import { useEffect } from "react"
 
 const Page = () => {
+  const { isWeb3Connected } = useWeb3ConnectionManager()
+  const setIsWalletSelectorModalOpen = useSetAtom(walletSelectorModalAtom)
+  const router = useRouter()
+  const searchParams = useSearchParams()
+
+  useEffect(() => {
+    if (isWeb3Connected) {
+      router.replace(
+        ["/create-profile/claim-pass", searchParams]
+          .filter(Boolean)
+          .map(String)
+          .join("?")
+      )
+    }
+  }, [isWeb3Connected, router.replace, searchParams])
+
   return (
-    <Layout className="relative min-h-screen">
-      <div
-        className="-z-10 absolute inset-0"
-        style={{
-          background: `radial-gradient(ellipse at center, transparent -250%, hsl(var(--background)) 80%), url("${svgToTinyDataUri(
-            `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="30" height="30" fill="none" stroke="#666"><path d="M0 .5H31.5V32"/></svg>`
-          )}")`,
-        }}
-      />
-      <LayoutHero>
-        <Header />
-        <LayoutBanner className="-bottom-[206px] border-border border-b border-dashed">
-          <div className="absolute inset-0 bg-[auto_115%] bg-[top_5px_right_0] bg-[url('/banner.svg')] bg-repeat opacity-10" />
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                "radial-gradient(circle at bottom, transparent 5%, hsl(var(--banner)))",
-            }}
-          />
-        </LayoutBanner>
-      </LayoutHero>
-      <LayoutMain>
-        <div className="my-8">
-          <OnboardingDriver />
-        </div>
-      </LayoutMain>
-    </Layout>
+    <div className="flex max-w-sm flex-col gap-4">
+      <div className="space-y-6 px-8 pt-8">
+        <h1 className="text-pretty font-bold font-display text-2xl leading-none tracking-tight">
+          Sign in to create your profile
+        </h1>
+        <p className="text-pretty text-muted-foreground leading-normal">
+          Start your new profile adventure by signing in: earn experience, display
+          achievements and explore new rewards!
+        </p>
+      </div>
+      <div className="mt-2 flex w-full gap-4 bg-card-secondary px-8 py-4">
+        <Anchor
+          href="/"
+          variant="unstyled"
+          className={buttonVariants({
+            colorScheme: "secondary",
+            variant: "ghost",
+            size: "lg",
+            className: "w-full",
+          })}
+        >
+          <span>Back to home</span>
+        </Anchor>
+        <Button
+          onClick={() => setIsWalletSelectorModalOpen(true)}
+          colorScheme="primary"
+          size="lg"
+          className="w-full"
+          isLoading={isWeb3Connected === null}
+        >
+          <SignIn weight="bold" />
+          <span>Sign in</span>
+        </Button>
+      </div>
+    </div>
   )
 }
 
