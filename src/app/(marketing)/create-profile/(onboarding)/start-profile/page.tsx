@@ -14,12 +14,9 @@ const Page = () => {
     if (!data.referrerProfile) {
       router.replace("claim-pass")
     }
-    if (!data.subscription) {
-      router.replace("choose-pass")
-    }
   }, [data, router.replace])
 
-  if (!data.subscription || !data.referrerProfile) {
+  if (!data.referrerProfile) {
     return <CreateProfileSkeleton />
   }
 

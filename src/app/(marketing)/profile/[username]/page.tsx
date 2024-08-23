@@ -16,6 +16,7 @@ import { notFound, redirect } from "next/navigation"
 import { JoinProfileAction } from "../_components/JoinProfileAction"
 import { Profile } from "../_components/Profile"
 import { ProfileColorBanner } from "../_components/ProfileColorBanner"
+import { ProfileHero } from "../_components/ProfileHero"
 
 const api = env.NEXT_PUBLIC_API
 
@@ -99,10 +100,10 @@ const Page = async ({ params: { username } }: { params: { username: string } }) 
       }}
     >
       <Layout>
-        <LayoutHero className="pb-4 md:pb-10">
+        <LayoutHero className="pb-0">
           <Header />
           <LayoutBanner
-            className={profile.bio ? "-bottom-[640px]" : "-bottom-[610px]"}
+            className="-bottom-[100px]"
             data-theme="dark"
             style={
               isBgColor ? { ["--banner" as string]: profile.backgroundImageUrl } : {}
@@ -126,6 +127,7 @@ const Page = async ({ params: { username } }: { params: { username: string } }) 
             )}
             <div className="absolute inset-0 bg-gradient-to-t from-background" />
           </LayoutBanner>
+          <ProfileHero />
         </LayoutHero>
         <LayoutMain className="top-0">
           <Profile />

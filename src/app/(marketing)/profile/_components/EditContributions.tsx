@@ -117,7 +117,7 @@ export const EditContributions = () => {
         </DialogHeader>
         <DialogBody className="gap-7">
           <div className="flex flex-col gap-3">
-            {guilds?.length === 0 && (
+            {guilds && guilds.length === 0 && (
               <Card className="flex gap-2 border border-destructive-subtle p-4 text-destructive-subtle">
                 <WarningCircle size={32} weight="fill" />
                 <h3 className="font-medium">

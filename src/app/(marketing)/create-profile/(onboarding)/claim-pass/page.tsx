@@ -50,7 +50,7 @@ const Page = () => {
             ...prev,
             referrerProfile: data.referrerProfile,
           }))
-          router.push("choose-pass")
+          router.push("start-profile")
         }
       }}
     />
