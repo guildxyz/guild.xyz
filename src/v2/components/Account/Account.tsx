@@ -88,7 +88,7 @@ export const Account = () => {
             </Avatar>
             <div className="flex flex-col items-start">
               <div className="max-w-24 truncate font-bold text-sm leading-tight">
-                {guildProfile.name}
+                {guildProfile.name || guildProfile.username}
               </div>
               <div className="text-muted-foreground text-xs">
                 @{guildProfile.username}

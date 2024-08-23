@@ -60,6 +60,11 @@ const AccountModal = () => {
 
     deleteKeyPairFromIdb(id)
       ?.catch(() => {})
+      ?.catch(() => {})
+      ?.catch(() => {})
+      ?.catch(() => {})
+      ?.catch(() => {})
+      ?.catch(() => {})
       .finally(() => {
         setIsOpen(false)
         disconnect()
@@ -96,8 +101,10 @@ const AccountModal = () => {
                   </Avatar>
                   <div className="flex w-full flex-col">
                     <h3 className=" flex items-center font-bold">
-                      {guildProfile.name}
-                      <CheckMark className="-mt-0.5 ml-1 inline-block fill-yellow-500" />
+                      <span className="max-w-52 truncate">
+                        {guildProfile.name || guildProfile.username}
+                      </span>
+                      <CheckMark className="ml-0.5 inline-block fill-yellow-500" />
                     </h3>
                     <div className="text-muted-foreground text-sm">
                       @{guildProfile.username}
