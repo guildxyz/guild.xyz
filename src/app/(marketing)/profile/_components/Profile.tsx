@@ -11,19 +11,17 @@ import { RecentActivity } from "../_components/RecentActivity"
 import { useContributions } from "../_hooks/useContributions"
 import { useProfile } from "../_hooks/useProfile"
 import { useReferredUsers } from "../_hooks/useReferredUsers"
-import { ProfileHero } from "./ProfileHero"
-import { ProfileSkeleton } from "./ProfileSkeleton"
+import { ProfileMainSkeleton } from "./ProfileSkeleton"
 
 export const Profile = () => {
   const { data: profile } = useProfile()
   const { data: contributions } = useContributions()
   const { data: referredUsers } = useReferredUsers()
 
-  if (!profile || !contributions || !referredUsers) return <ProfileSkeleton />
+  if (!profile || !contributions || !referredUsers) return <ProfileMainSkeleton />
 
   return (
     <>
-      <ProfileHero />
       <div className="mb-3 flex items-center justify-between" data-theme="dark">
         <SectionTitle>Top contributions</SectionTitle>
         <ProfileOwnerGuard>
