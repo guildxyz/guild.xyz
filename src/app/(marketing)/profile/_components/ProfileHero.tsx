@@ -14,7 +14,7 @@ export const ProfileHero = () => {
   const { data: profile } = useProfile()
   const { data: referredUsers } = useReferredUsers()
 
-  if (!profile) return null
+  if (!profile || !referredUsers) return null
 
   return (
     <div
