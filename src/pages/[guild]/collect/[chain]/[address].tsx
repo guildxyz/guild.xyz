@@ -246,11 +246,18 @@ const getStaticProps = async ({ params }) => {
   const chain = validateNftChain(chainFromQuery)
   const address = validateNftAddress(addressFromQuery)
 
-  if (!chain || !address)
+  if (!chain || !address) {
+    console.log("404 #1", {
+      chain,
+      address,
+      chainFromQuery,
+      addressFromQuery,
+      urlName,
+    })
     return {
       notFound: true,
     }
-
+  }
   const guildPageEndpoint = `/v2/guilds/guild-page/${urlName}`
 
   let publicGuild: Guild, guild: Guild
@@ -264,7 +271,9 @@ const getStaticProps = async ({ params }) => {
         },
       }),
     ])
-  } catch {
+  } catch (error) {
+    console.log("404 #2")
+    console.error(error)
     return {
       notFound: true,
     }
@@ -283,10 +292,16 @@ const getStaticProps = async ({ params }) => {
 
   const nftRole = guild.roles.find((role) => role.id === nftRoleReward?.roleId)
 
-  if (!nftGuildReward || !nftRoleReward || !nftRole)
+  if (!nftGuildReward || !nftRoleReward || !nftRole) {
+    console.log("404 #3", {
+      nftGuildReward,
+      nftRoleReward,
+      nftRole,
+    })
     return {
       notFound: true,
     }
+  }
 
   // Calling the serverless endpoint, so if we fetch this data for the first time, it'll be added to the Vercel cache
 
