@@ -48,7 +48,7 @@ export const Profile = () => {
         ))}
       </div>
       {isWeb3Connected && (
-        <div className="mt-8">
+        <div className="mt-16">
           <SectionTitle className="mb-3">Recent activity</SectionTitle>
           <RecentActivity />
           <p className="mt-2 font-semibold text-muted-foreground">
