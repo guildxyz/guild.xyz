@@ -14,7 +14,7 @@ import WithdrawPoolModal from "./WithdrawPoolModal"
 import usePool from "./hooks/usePool"
 
 const RemoveTokenRewardConfirmation = ({ isOpen, onClose, guildPlatform }) => {
-  const { onSubmit, isLoading } = useRemoveGuildPlatform(guildPlatform.id)
+  const { onSubmit, isLoading, isSigning } = useRemoveGuildPlatform(guildPlatform.id)
 
   const { data: poolData, refetch } = usePool(
     guildPlatform.platformGuildData.chain,
@@ -32,6 +32,7 @@ const RemoveTokenRewardConfirmation = ({ isOpen, onClose, guildPlatform }) => {
     <>
       <ConfirmationAlert
         isLoading={isLoading}
+        loadingText={isSigning && "Check your wallet"}
         isOpen={isOpen}
         onClose={onClose}
         onConfirm={onSubmit}

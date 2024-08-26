@@ -28,7 +28,7 @@ const DeleteRoleButton = ({ roleId, onDrawerClose }: Props): JSX.Element => {
     onDrawerClose()
   }
 
-  const { onSubmit, isLoading } = useDeleteRole(roleId, onSuccess)
+  const { onSubmit, isLoading, isSigning } = useDeleteRole(roleId, onSuccess)
 
   const roleResponse = useRole(id, roleId)
   const role = roleResponse as unknown as Role
@@ -59,6 +59,7 @@ const DeleteRoleButton = ({ roleId, onDrawerClose }: Props): JSX.Element => {
       <DeleteButton label="Delete role" onClick={onOpen} />
       <ConfirmationAlert
         isLoading={isLoading || tokenRewardDeleteLoading}
+        loadingText={isSigning && "Check your wallet"}
         isOpen={isOpen}
         onClose={onClose}
         onConfirm={handleDelete}

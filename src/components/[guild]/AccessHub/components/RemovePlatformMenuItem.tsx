@@ -21,7 +21,9 @@ const RemovePlatformMenuItem = ({ platformGuildId }: Props): JSX.Element => {
 
   const { isPlatform } = rewards[PlatformType[guildPlatform?.platformId]] ?? {}
 
-  const { onSubmit, isLoading } = useRemoveGuildPlatform(guildPlatform?.id)
+  const { onSubmit, isLoading, isSigning } = useRemoveGuildPlatform(
+    guildPlatform?.id
+  )
 
   const color = useColorModeValue("red.600", "red.300")
 
@@ -33,6 +35,7 @@ const RemovePlatformMenuItem = ({ platformGuildId }: Props): JSX.Element => {
 
       <ConfirmationAlert
         isLoading={isLoading}
+        loadingText={isSigning && "Check your wallet"}
         isOpen={isOpen}
         onClose={onClose}
         onConfirm={onSubmit}

@@ -16,6 +16,7 @@ type Props = {
   description: string | JSX.Element
   confirmationText: string
   isLoading?: boolean
+  loadingText?: string | boolean
 } & Omit<AlertDialogProps, "leastDestructiveRef" | "children">
 
 const ConfirmationAlert = ({
@@ -25,6 +26,7 @@ const ConfirmationAlert = ({
   description,
   title,
   isLoading = false,
+  loadingText,
   ...rest
 }: Props): JSX.Element => {
   const cancelRef = useRef()
@@ -45,6 +47,7 @@ const ConfirmationAlert = ({
               ml={3}
               onClick={!!onConfirm ? () => onConfirm() : () => onClose()}
               isLoading={isLoading}
+              loadingText={loadingText}
             >
               {confirmationText}
             </Button>
