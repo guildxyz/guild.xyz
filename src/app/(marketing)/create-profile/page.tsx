@@ -37,7 +37,7 @@ const Page = () => {
           achievements and explore new rewards!
         </p>
       </div>
-      <div className="mt-2 flex w-full gap-4 bg-card-secondary px-8 py-4">
+      <div className="mt-4 flex w-full gap-4 bg-card-secondary px-8 py-4">
         <Anchor
           href="/"
           variant="unstyled"

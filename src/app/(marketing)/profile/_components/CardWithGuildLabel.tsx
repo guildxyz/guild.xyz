@@ -34,7 +34,7 @@ export const CardWithGuildLabel = ({
           <div
             className={cn(
               "-mt-0.5 truncate font-bold font-display text-foreground max-sm:text-sm sm:max-w-12",
-              color && color.isDark() ? "text-white" : "text-black"
+              color && (color.isDark() ? "text-white" : "text-black")
             )}
           >
             {guild.name}
