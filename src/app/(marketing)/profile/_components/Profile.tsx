@@ -51,9 +51,6 @@ export const Profile = () => {
         <div className="mt-16">
           <SectionTitle className="mb-3">Recent activity</SectionTitle>
           <RecentActivity />
-          <p className="mt-2 font-semibold text-muted-foreground">
-            &hellip; only last 20 actions are shown
-          </p>
         </div>
       )}
     </>

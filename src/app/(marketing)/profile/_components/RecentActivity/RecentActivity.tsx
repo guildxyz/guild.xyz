@@ -139,15 +139,28 @@ export const RecentActivity = () => {
         ))}
       </ToggleGroup>
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-        {auditLog.isLoading &&
+        {auditLog.isLoading ? (
           Array.from({ length: 20 }, (_, i) => (
             <Card key={i}>
               <Skeleton className="h-[102px] w-full" />
             </Card>
-          ))}
-        {auditLog.data?.entries.map((activity) => (
-          <ActivityCard activity={activity} key={activity.id} />
-        ))}
+          ))
+        ) : auditLog.data?.entries?.length ? (
+          <>
+            {auditLog.data.entries.map((activity) => (
+              <ActivityCard activity={activity} key={activity.id} />
+            ))}
+            {auditLog.data?.entries?.length > 20 && (
+              <p className="col-span-full mt-2 font-semibold text-muted-foreground">
+                &hellip; only last 20 actions are shown
+              </p>
+            )}
+          </>
+        ) : (
+          <p className="mt-2 font-semibold text-muted-foreground">
+            No recent actions
+          </p>
+        )}
       </div>
     </>
   )
