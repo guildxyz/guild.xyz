@@ -11,7 +11,7 @@ import ClientOnly from "components/common/ClientOnly"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import useSWRImmutable from "swr/immutable"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
-import { useProfile } from "../_hooks/useProfile"
+import { useProfile } from "../../_hooks/useProfile"
 import { ActionLabel } from "./ActionLabel"
 
 export const ActivityCard = ({ activity }: { activity: ActivityLogAction }) => {

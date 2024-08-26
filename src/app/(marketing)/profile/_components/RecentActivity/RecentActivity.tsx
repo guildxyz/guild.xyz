@@ -6,7 +6,7 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/ToggleGroup"
 import { ActivityLogActionResponse } from "components/[guild]/activity/ActivityLogContext"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import { useMemo, useState } from "react"
-import { useProfile } from "../_hooks/useProfile"
+import { useProfile } from "../../_hooks/useProfile"
 import { ActivityCard } from "./ActivityCard"
 
 // TODO: these are duplicated types (and extended), we should move them to

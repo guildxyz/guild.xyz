@@ -7,11 +7,11 @@ import { PropsWithChildren } from "react"
 import { ContributionCard } from "../_components/ContributionCard"
 import { EditContributions } from "../_components/EditContributions"
 import { ProfileOwnerGuard } from "../_components/ProfileOwnerGuard"
-import { RecentActivity } from "../_components/RecentActivity"
 import { useContributions } from "../_hooks/useContributions"
 import { useProfile } from "../_hooks/useProfile"
 import { useReferredUsers } from "../_hooks/useReferredUsers"
 import { ProfileMainSkeleton } from "./ProfileSkeleton"
+import { RecentActivity } from "./RecentActivity/RecentActivity"
 
 export const Profile = () => {
   const { data: profile } = useProfile()
