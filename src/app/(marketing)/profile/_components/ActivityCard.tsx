@@ -2,7 +2,9 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
 import { Card } from "@/components/ui/Card"
+import { cn } from "@/lib/utils"
 import { Guild } from "@guildxyz/types"
+import Color from "color"
 import { ActivityLogActionResponse } from "components/[guild]/activity/ActivityLogContext"
 import { ActivityLogAction } from "components/[guild]/activity/constants"
 import ClientOnly from "components/common/ClientOnly"
@@ -26,6 +28,7 @@ export const ActivityCard = ({ activity }: { activity: ActivityLogAction }) => {
   const guild = guildLatest
     ? { ...guildLatest, ...guildLatest?.theme }
     : guildFallback?.entries.at(0)?.data
+  const color = Color(guild?.color)
 
   return (
     <Card className="flex">
@@ -44,7 +47,12 @@ export const ActivityCard = ({ activity }: { activity: ActivityLogAction }) => {
               />
               <AvatarFallback />
             </Avatar>
-            <span className="max-w-14 truncate font-bold font-display text-sm">
+            <span
+              className={cn(
+                "max-w-14 truncate font-bold font-display text-sm",
+                color && color.isDark() ? "text-white" : "text-black"
+              )}
+            >
               {guild.name}
             </span>
           </div>
