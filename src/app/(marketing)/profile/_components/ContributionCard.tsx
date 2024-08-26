@@ -2,6 +2,7 @@
 
 import { Guild, Role, Schemas } from "@guildxyz/types"
 import useSWRImmutable from "swr/immutable"
+import { useProfile } from "../_hooks/useProfile"
 import { ContributionCardView } from "./ContributionCardView"
 
 export const ContributionCard = ({
@@ -11,6 +12,19 @@ export const ContributionCard = ({
   const role = useSWRImmutable<Role>(
     `/v2/guilds/${contribution.guildId}/roles/${contribution.roleId}`
   )
+  const profile = useProfile()
+  const collection = useSWRImmutable<Schemas["ContributionCollection"]>(
+    profile.data
+      ? `/v2/profiles/${profile.data.username}/contributions/${contribution.id}/collection`
+      : null
+  )
   if (!role.data || !guild.data) return
-  return <ContributionCardView guild={guild.data} role={role.data} />
+  return (
+    <ContributionCardView
+      guild={guild.data}
+      role={role.data}
+      contributionCount={3}
+      contributionImages={[]}
+    />
+  )
 }

@@ -39,7 +39,7 @@ export const CardWithGuildLabel = ({
           >
             {guild.name}
           </div>
-          <CheckMark className="sm:hidden" />
+          <CheckMark />
         </div>
       </div>
       <div className="mt-9 size-full rounded-2xl bg-card sm:mt-0 sm:ml-8">

@@ -8,7 +8,14 @@ import { CardWithGuildLabel } from "./CardWithGuildLabel"
 export const ContributionCardView = ({
   guild,
   role,
-}: { guild: Guild; role: Role }) => {
+  contributionCount,
+  contributionImages,
+}: {
+  guild: Guild
+  role: Role
+  contributionImages: string[]
+  contributionCount: number
+}) => {
   return (
     <CardWithGuildLabel guild={guild}>
       <div className="grid grid-cols-[auto_1fr] items-center gap-4 p-5 md:grid-cols-[auto_auto_1fr] md:p-6">
@@ -31,13 +38,19 @@ export const ContributionCardView = ({
             </p>
           </div>
         </div>
-        <div className="col-span-2 flex w-full flex-col gap-2 justify-self-end md:col-span-1 md:w-auto md:flex-row md:items-center">
-          <Separator className="mb-2 md:hidden" />
-          <div className="font-extrabold text-muted-foreground text-xs uppercase">
-            COLLECTION:
+        {contributionCount && (
+          <div className="col-span-2 flex w-full flex-col gap-2 justify-self-end md:col-span-1 md:w-auto md:flex-row md:items-center">
+            <Separator className="mb-2 md:hidden" />
+            <div className="font-extrabold text-muted-foreground text-xs uppercase">
+              COLLECTION:
+            </div>
+            <AvatarGroup
+              imageUrls={contributionImages}
+              count={contributionCount}
+              size="lg"
+            />
           </div>
-          <AvatarGroup imageUrls={["", "", ""]} count={87} size="lg" />
-        </div>
+        )}
       </div>
     </CardWithGuildLabel>
   )
