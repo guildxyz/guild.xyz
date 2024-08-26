@@ -7,9 +7,7 @@ import {
   LayoutMain,
 } from "@/components/Layout"
 import { SWRProvider } from "@/components/SWRProvider"
-import { Anchor } from "@/components/ui/Anchor"
 import { Guild, Role, Schemas } from "@guildxyz/types"
-import { ArrowRight } from "@phosphor-icons/react/dist/ssr"
 import { env } from "env"
 import Image from "next/image"
 import { notFound, redirect } from "next/navigation"
@@ -134,16 +132,7 @@ const Page = async ({ params: { username } }: { params: { username: string } }) 
         </LayoutMain>
         <LayoutFooter className="pt-28 pb-5">
           <p className="text-center font-medium text-muted-foreground">
-            Guild Profiles are currently in invite only early access, only available
-            to{" "}
-            <Anchor
-              href={"#"}
-              className="inline-flex items-center gap-1"
-              variant="muted"
-            >
-              Subscribers
-              <ArrowRight />
-            </Anchor>
+            Guild Profiles are currently in referral only early access.
           </p>
         </LayoutFooter>
       </Layout>
