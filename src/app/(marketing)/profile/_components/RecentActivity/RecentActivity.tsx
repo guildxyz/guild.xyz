@@ -138,7 +138,7 @@ export const RecentActivity = () => {
           </ToggleGroupItem>
         ))}
       </ToggleGroup>
-      <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
         {auditLog.isLoading &&
           Array.from({ length: 20 }, (_, i) => (
             <Card key={i}>
