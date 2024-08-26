@@ -50,7 +50,7 @@ export const ActivityCard = ({ activity }: { activity: ActivityLogAction }) => {
             <span
               className={cn(
                 "max-w-14 truncate font-bold font-display text-sm",
-                color && color.isDark() ? "text-white" : "text-black"
+                color && (color.isDark() ? "text-white" : "text-black")
               )}
             >
               {guild.name}
