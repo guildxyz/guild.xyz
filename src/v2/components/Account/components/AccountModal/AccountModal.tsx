@@ -60,11 +60,6 @@ const AccountModal = () => {
 
     deleteKeyPairFromIdb(id)
       ?.catch(() => {})
-      ?.catch(() => {})
-      ?.catch(() => {})
-      ?.catch(() => {})
-      ?.catch(() => {})
-      ?.catch(() => {})
       .finally(() => {
         setIsOpen(false)
         disconnect()
