@@ -4,9 +4,6 @@ import { cn } from "@/lib/utils"
 import Color from "color"
 import { useProfile } from "../_hooks/useProfile"
 
-// This works great with most colors in dark mode (yellow / green shades not so much).
-// In light mode we could introduce a layered design so the header section is always dark,
-// and further optimize for bright vivid colors, for it to be a complete robust solution
 export const ProfileColorBanner = () => {
   const { data: profile } = useProfile()
 

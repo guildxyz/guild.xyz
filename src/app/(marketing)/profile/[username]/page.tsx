@@ -13,6 +13,7 @@ import { ArrowRight } from "@phosphor-icons/react/dist/ssr"
 import { env } from "env"
 import Image from "next/image"
 import { notFound, redirect } from "next/navigation"
+import { JoinProfileAction } from "../_components/JoinProfileAction"
 import { Profile } from "../_components/Profile"
 import { ProfileColorBanner } from "../_components/ProfileColorBanner"
 import { ProfileHero } from "../_components/ProfileHero"
@@ -146,6 +147,7 @@ const Page = async ({ params: { username } }: { params: { username: string } }) 
           </p>
         </LayoutFooter>
       </Layout>
+      <JoinProfileAction />
     </SWRProvider>
   )
 }
