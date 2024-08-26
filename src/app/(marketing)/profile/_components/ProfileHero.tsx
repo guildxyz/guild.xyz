@@ -2,12 +2,12 @@
 
 import { CheckMark } from "@/components/CheckMark"
 import { LayoutContainer } from "@/components/Layout"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
+import { ProfileAvatar } from "@/components/ProfileAvatar"
+import { Avatar } from "@/components/ui/Avatar"
 import { AvatarGroup } from "@/components/ui/AvatarGroup"
 import { Button } from "@/components/ui/Button"
 import { Card } from "@/components/ui/Card"
 import { Separator } from "@/components/ui/Separator"
-import { Skeleton } from "@/components/ui/Skeleton"
 import { Pencil } from "@phosphor-icons/react"
 import { ProfileOwnerGuard } from "../_components/ProfileOwnerGuard"
 import { useProfile } from "../_hooks/useProfile"
@@ -40,21 +40,15 @@ export const ProfileHero = () => {
             </Card>
           </EditProfile>
         </ProfileOwnerGuard>
-        <div className="relative mb-6 flex items-center justify-center">
-          <Avatar className="size-40 md:size-48">
-            <AvatarImage
-              src={profile.profileImageUrl ?? ""}
-              alt="profile"
-              width={192}
-              height={192}
-            />
-            <AvatarFallback>
-              <Skeleton className="size-full" />
-            </AvatarFallback>
-          </Avatar>
-        </div>
+        <Avatar className="relative mb-6 flex size-40 items-center justify-center rounded-full border-2 md:size-48">
+          <ProfileAvatar
+            username={profile.username}
+            profileImageUrl={profile.profileImageUrl}
+            size={192}
+          />
+        </Avatar>
         <h1 className="break-all text-center font-extrabold text-3xl leading-tight tracking-tight md:text-4xl">
-          {profile.name}
+          {profile.name || profile.username}
           <CheckMark className="ml-2 inline size-6 fill-yellow-500 align-baseline" />
         </h1>
         <div className="font-medium text-muted-foreground">@{profile.username}</div>

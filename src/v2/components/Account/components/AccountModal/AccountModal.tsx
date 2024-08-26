@@ -1,11 +1,12 @@
 import { CheckMark } from "@/components/CheckMark"
 import { CopyableAddress } from "@/components/CopyableAddress"
 import { GuildAvatar } from "@/components/GuildAvatar"
+import { ProfileAvatar } from "@/components/ProfileAvatar"
 import { accountModalAtom } from "@/components/Providers/atoms"
 import useConnectorNameAndIcon from "@/components/Web3ConnectionManager/hooks/useConnectorNameAndIcon"
 import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { Anchor } from "@/components/ui/Anchor"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
+import { Avatar } from "@/components/ui/Avatar"
 import { Button, buttonVariants } from "@/components/ui/Button"
 import {
   Dialog,
@@ -23,7 +24,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/DropdownMenu"
 import { Separator } from "@/components/ui/Separator"
-import { Skeleton } from "@/components/ui/Skeleton"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip"
 import { useUserPublic } from "@/hooks/useUserPublic"
 import { ArrowRight, DotsThreeVertical } from "@phosphor-icons/react"
@@ -81,18 +81,12 @@ const AccountModal = () => {
             <>
               {guildProfile ? (
                 <div className="mb-8 flex gap-3">
-                  <Avatar size="2xl" className="mr-2 self-center">
-                    {guildProfile.profileImageUrl && (
-                      <AvatarImage
-                        src={guildProfile.profileImageUrl}
-                        alt="profile avatar"
-                        width={78}
-                        height={78}
-                      />
-                    )}
-                    <AvatarFallback>
-                      <Skeleton className="size-full" />
-                    </AvatarFallback>
+                  <Avatar size="2xl" className="mr-2 self-center border-2">
+                    <ProfileAvatar
+                      size={78}
+                      username={guildProfile.username}
+                      profileImageUrl={guildProfile.profileImageUrl}
+                    />
                   </Avatar>
                   <div className="flex w-full flex-col">
                     <h3 className=" flex items-center font-bold">

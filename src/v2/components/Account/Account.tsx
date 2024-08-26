@@ -9,14 +9,14 @@ import useResolveAddress from "hooks/useResolveAddress"
 import { useSetAtom } from "jotai"
 import shortenHex from "utils/shortenHex"
 import { GuildAvatar } from "../GuildAvatar"
+import { ProfileAvatar } from "../ProfileAvatar"
 import { usePostHogContext } from "../Providers/PostHogProvider"
 import { accountModalAtom, walletSelectorModalAtom } from "../Providers/atoms"
 import { useWeb3ConnectionManager } from "../Web3ConnectionManager/hooks/useWeb3ConnectionManager"
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/Avatar"
+import { Avatar } from "../ui/Avatar"
 import { Button } from "../ui/Button"
 import { Card } from "../ui/Card"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/Popover"
-import { Skeleton } from "../ui/Skeleton"
 import { NotificationContent } from "./components/Notification/NotificationContent"
 
 export const Account = () => {
@@ -74,17 +74,11 @@ export const Account = () => {
         {guildProfile ? (
           <div className="flex items-center gap-3 pr-1">
             <Avatar size="sm">
-              {guildProfile.profileImageUrl && (
-                <AvatarImage
-                  src={guildProfile.profileImageUrl}
-                  alt="profile avatar"
-                  width={32}
-                  height={32}
-                />
-              )}
-              <AvatarFallback>
-                <Skeleton className="size-full" />
-              </AvatarFallback>
+              <ProfileAvatar
+                username={guildProfile.username}
+                profileImageUrl={guildProfile.profileImageUrl}
+                size={32}
+              />
             </Avatar>
             <div className="flex flex-col items-start">
               <div className="max-w-24 truncate font-bold text-sm leading-tight">
