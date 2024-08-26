@@ -11,7 +11,7 @@ import { ActivityCard } from "./ActivityCard"
 
 // TODO: these are duplicated types (and extended), we should move them to
 // backend types
-export enum ACTION {
+enum ACTION {
   // Guild
   CreateGuild = "create guild",
   UpdateGuild = "update guild",

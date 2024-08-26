@@ -3,26 +3,34 @@
 import { Badge } from "@/components/ui/Badge"
 import { Skeleton } from "@/components/ui/Skeleton"
 import { Guild, Role } from "@guildxyz/types"
-import { Rocket } from "@phosphor-icons/react"
+import { Confetti, Rocket } from "@phosphor-icons/react"
+import { ActivityLogActionResponse } from "components/[guild]/activity/ActivityLogContext"
 import { ACTION, ActivityLogAction } from "components/[guild]/activity/constants"
+import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import { FunctionComponent } from "react"
 import rewards from "rewards"
 import useSWRImmutable from "swr/immutable"
 import capitalize from "utils/capitalize"
+import { useProfile } from "../_hooks/useProfile"
 
 const GuildBadge: FunctionComponent<{ guildId?: number }> = ({ guildId }) => {
-  const { data: guild } = useSWRImmutable<Guild>(
-    guildId === undefined ? null : `/v2/guilds/${guildId}`
+  const { data: guildLatest, error } = useSWRImmutable<Guild>(
+    guildId ? `/v2/guilds/${guildId}` : null,
+    { shouldRetryOnError: false }
   )
+  const profile = useProfile()
+  const { data: guildFallback } = useSWRWithOptionalAuth<ActivityLogActionResponse>(
+    guildId && error && profile.data
+      ? `/v2/audit-log?guildId=${guildId}&limit=1&userId=${profile.data.userId}`
+      : null
+  )
+  const guild = guildLatest
+    ? { ...guildLatest, ...guildLatest?.theme }
+    : guildFallback?.entries.at(0)?.data
   if (!guild) {
     return <Skeleton className="inline-block h-5 w-16 translate-y-1/4" />
   }
-  return (
-    <Badge className="whitespace-nowrap">
-      <Rocket weight="fill" />
-      {guild.name}
-    </Badge>
-  )
+  return <Badge className="whitespace-nowrap">{guild.name}</Badge>
 }
 
 const RewardBadge: FunctionComponent<{
@@ -173,6 +181,24 @@ export const ActionLabel: FunctionComponent<{ activity: ActivityLogAction }> = (
             <span>{capitalizedName}</span>
             {!parentId && <RoleBadge roleId={ids.role} guildId={ids.guild} />}
             <GuildBadge guildId={ids.guild} />
+          </>
+        )
+      // @ts-ignore TODO: add and move this to backend
+      case "create profile":
+        return (
+          <>
+            <span>{capitalizedName}</span>
+            <Badge>
+              <Confetti weight="fill" />@{data?.username}
+            </Badge>
+          </>
+        )
+      // @ts-ignore TODO: add and move this to backend
+      case "refer profile":
+        return (
+          <>
+            <span>{capitalizedName}</span>
+            <Badge>@{data?.username}</Badge>
           </>
         )
       default:

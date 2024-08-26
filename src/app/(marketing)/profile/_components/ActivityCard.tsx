@@ -3,23 +3,36 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
 import { Card } from "@/components/ui/Card"
 import { Guild } from "@guildxyz/types"
+import { ActivityLogActionResponse } from "components/[guild]/activity/ActivityLogContext"
 import { ActivityLogAction } from "components/[guild]/activity/constants"
 import ClientOnly from "components/common/ClientOnly"
+import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import useSWRImmutable from "swr/immutable"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
+import { useProfile } from "../_hooks/useProfile"
 import { ActionLabel } from "./ActionLabel"
 
 export const ActivityCard = ({ activity }: { activity: ActivityLogAction }) => {
-  const { data: guild } = useSWRImmutable<Guild>(
-    activity.ids.guild ? `/v2/guilds/${activity.ids.guild}` : null
+  const { data: guildLatest, error } = useSWRImmutable<Guild>(
+    activity.ids.guild ? `/v2/guilds/${activity.ids.guild}` : null,
+    { shouldRetryOnError: false }
   )
+  const profile = useProfile()
+  const { data: guildFallback } = useSWRWithOptionalAuth<ActivityLogActionResponse>(
+    activity.ids.guild && error && profile.data
+      ? `/v2/audit-log?guildId=${activity.ids.guild}&limit=1&userId=${profile.data.userId}`
+      : null
+  )
+  const guild = guildLatest
+    ? { ...guildLatest, ...guildLatest?.theme }
+    : guildFallback?.entries.at(0)?.data
 
   return (
     <Card className="flex">
       {guild && (
         <div
-          className="flex h-full w-9 items-center justify-center border-border border-r-2 bg-accent"
-          style={{ background: guild.theme.color }}
+          className="flex h-full w-9 items-center justify-center bg-accent"
+          style={{ background: guild.color }}
         >
           <div className="-rotate-90 flex items-center gap-1">
             <Avatar size="xs">
