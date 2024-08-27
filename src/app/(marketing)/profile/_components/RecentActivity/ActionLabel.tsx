@@ -6,6 +6,7 @@ import { Guild, Role } from "@guildxyz/types"
 import { Confetti, Rocket } from "@phosphor-icons/react"
 import { ActivityLogActionResponse } from "components/[guild]/activity/ActivityLogContext"
 import { ACTION, ActivityLogAction } from "components/[guild]/activity/constants"
+import { useRolePlatform } from "hooks/useRolePlatform"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import { FunctionComponent } from "react"
 import rewards from "rewards"
@@ -28,17 +29,28 @@ const GuildBadge: FunctionComponent<{ guildId?: number }> = ({ guildId }) => {
     ? { ...guildLatest, ...guildLatest?.theme }
     : guildFallback?.entries.at(0)?.data
   if (!guild) {
-    return <Skeleton className="inline-block h-5 w-16 translate-y-1/4" />
+    return <BadgeSkeleton />
   }
   return <Badge className="whitespace-nowrap">{guild.name}</Badge>
 }
 
 const RewardBadge: FunctionComponent<{
-  roleId: number
-  rolePlatformId: number
-}> = () => {
-  // TODO: fill these using activity log response `values` field
-  return null
+  guildId?: number
+  roleId?: number
+  rolePlatformId?: number
+}> = ({ guildId, roleId, rolePlatformId }) => {
+  const { rolePlatform, isLoading } = useRolePlatform({
+    guildId,
+    roleId,
+    rolePlatformId,
+  })
+
+  if (isLoading) return <BadgeSkeleton />
+
+  if (!rolePlatform) return <Badge variant="outline">Deleted reward</Badge>
+
+  // todo
+  return <Badge>{rolePlatform.guildPlatform?.platformGuildData?.name}</Badge>
 }
 
 const RoleBadge: FunctionComponent<{
@@ -51,7 +63,7 @@ const RoleBadge: FunctionComponent<{
       : `/v2/guilds/${guildId}/roles/${roleId}`
   )
   if (!role) {
-    return <Skeleton className="inline-block h-5 w-16 translate-y-1/4" />
+    return <BadgeSkeleton />
   }
   return (
     <Badge className="whitespace-nowrap">
@@ -115,7 +127,11 @@ export const ActionLabel: FunctionComponent<{ activity: ActivityLogAction }> = (
         return (
           <>
             <span>{capitalizedName}</span>
-            <RewardBadge roleId={ids.role} rolePlatformId={ids.rolePlatform} />
+            <RewardBadge
+              guildId={ids.guild}
+              roleId={ids.role}
+              rolePlatformId={ids.rolePlatform}
+            />
             <span>to role</span>
             <RoleBadge roleId={ids.role} guildId={ids.guild} />
           </>
@@ -125,21 +141,33 @@ export const ActionLabel: FunctionComponent<{ activity: ActivityLogAction }> = (
         return (
           <>
             <span>{capitalizedName}</span>
-            <RewardBadge roleId={ids.role} rolePlatformId={ids.rolePlatform} />
+            <RewardBadge
+              guildId={ids.guild}
+              roleId={ids.role}
+              rolePlatformId={ids.rolePlatform}
+            />
           </>
         )
       case ACTION.LoseReward:
         return (
           <>
             <span>{capitalizedName}</span>
-            <RewardBadge roleId={ids.role} rolePlatformId={ids.rolePlatform} />
+            <RewardBadge
+              guildId={ids.guild}
+              roleId={ids.role}
+              rolePlatformId={ids.rolePlatform}
+            />
           </>
         )
       case ACTION.GetReward:
         return (
           <>
             <span>{capitalizedName}</span>
-            <RewardBadge roleId={ids.role} rolePlatformId={ids.rolePlatform} />
+            <RewardBadge
+              guildId={ids.guild}
+              roleId={ids.role}
+              rolePlatformId={ids.rolePlatform}
+            />
           </>
         )
       case ACTION.JoinGuild:
@@ -211,3 +239,7 @@ export const ActionLabel: FunctionComponent<{ activity: ActivityLogAction }> = (
     }
   })()
 }
+
+const BadgeSkeleton = () => (
+  <Skeleton className="inline-block h-5 w-16 translate-y-1/4" />
+)
