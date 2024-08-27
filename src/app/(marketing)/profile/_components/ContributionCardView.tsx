@@ -4,18 +4,20 @@ import { Separator } from "@/components/ui/Separator"
 import { Guild, Role } from "@guildxyz/types"
 import { Users } from "@phosphor-icons/react/dist/ssr"
 import { CardWithGuildLabel } from "./CardWithGuildLabel"
+import { ExtendedCollection } from "./ContributionCard"
 
 export const ContributionCardView = ({
   guild,
   role,
-  contributionCount,
-  contributionImages,
+  collection,
 }: {
   guild: Guild
   role: Role
-  contributionImages: string[]
-  contributionCount: number
+  collection: ExtendedCollection
 }) => {
+  const { NFTs, pins, points } = collection
+  const contributionCount = [...NFTs, ...pins, ...points].length
+  const contributionImages: string[] = []
   return (
     <CardWithGuildLabel guild={guild}>
       <div className="grid grid-cols-[auto_1fr] items-center gap-4 p-5 md:grid-cols-[auto_auto_1fr] md:p-6">

@@ -2,8 +2,24 @@
 
 import { Guild, Role, Schemas } from "@guildxyz/types"
 import useSWRImmutable from "swr/immutable"
+import fetcher from "utils/fetcher"
 import { useProfile } from "../_hooks/useProfile"
 import { ContributionCardView } from "./ContributionCardView"
+
+type Collection = Schemas["ContributionCollection"]
+export type Point = {
+  id: number
+  platformId: number
+  platformGuildId: string
+  platformGuildData: {
+    name: string
+    imageUrl: string
+  }
+}
+export interface ExtendedCollection extends Collection {
+  // TODO: move this override type to backend
+  points: (Collection["points"][number] & Point[])[]
+}
 
 export const ContributionCard = ({
   contribution,
@@ -18,13 +34,27 @@ export const ContributionCard = ({
       ? `/v2/profiles/${profile.data.username}/contributions/${contribution.id}/collection`
       : null
   )
-  if (!role.data || !guild.data) return
+  const points = useSWRImmutable<Point[]>(
+    collection.data?.points
+      ? collection.data.points.map(
+          ({ guildId, guildPlatformId }) =>
+            `/v2/guilds/${guildId}/guild-platforms/${guildPlatformId}`
+        )
+      : null,
+    (args) => Promise.all(args.map((arg) => fetcher(arg)))
+  )
+  console.log(points.data)
+  if (!role.data || !guild.data || !collection.data || !points.data) return
+
+  collection.data.points = collection.data.points.map((rawPoints, i) => ({
+    ...rawPoints,
+    ...points.data[i]!,
+  }))
   return (
     <ContributionCardView
       guild={guild.data}
       role={role.data}
-      contributionCount={3}
-      contributionImages={[]}
+      collection={collection.data as ExtendedCollection}
     />
   )
 }
