@@ -104,7 +104,7 @@ export const RecentActivity = () => {
   const profile = useProfile()
   const lastMonthApprox = useMemo(() => Date.now() - THIRTY_DAYS_IN_MS, [])
   const searchParams =
-    profile.data &&
+    profile.data?.userId &&
     new URLSearchParams([
       ["username", profile.data.username],
       ["userId", profile.data.userId.toString()],
