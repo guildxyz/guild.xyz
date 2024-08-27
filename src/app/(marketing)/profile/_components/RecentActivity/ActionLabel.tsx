@@ -57,14 +57,18 @@ const RoleBadge: FunctionComponent<{
   roleId?: number
   guildId?: number
 }> = ({ roleId, guildId }) => {
-  const { data: role } = useSWRImmutable<Role>(
+  const { data: role, isLoading } = useSWRImmutable<Role>(
     roleId === undefined || guildId === undefined
       ? null
       : `/v2/guilds/${guildId}/roles/${roleId}`
   )
+
+  if (isLoading) return <BadgeSkeleton />
+
   if (!role) {
-    return <BadgeSkeleton />
+    return <Badge variant="outline">Deleted role</Badge>
   }
+
   return (
     <Badge className="whitespace-nowrap">
       <Rocket weight="fill" />
@@ -240,6 +244,4 @@ export const ActionLabel: FunctionComponent<{ activity: ActivityLogAction }> = (
   })()
 }
 
-const BadgeSkeleton = () => (
-  <Skeleton className="inline-block h-5 w-16 translate-y-1/4" />
-)
+const BadgeSkeleton = () => <Skeleton className="inline-block h-6 w-16" />
