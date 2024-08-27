@@ -6,7 +6,7 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/ToggleGroup"
 import { ActivityLogActionResponse } from "components/[guild]/activity/ActivityLogContext"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import { useMemo, useState } from "react"
-import { useProfile } from "../_hooks/useProfile"
+import { useProfile } from "../../_hooks/useProfile"
 import { ActivityCard } from "./ActivityCard"
 
 // TODO: these are duplicated types (and extended), we should move them to
@@ -104,7 +104,7 @@ export const RecentActivity = () => {
   const profile = useProfile()
   const lastMonthApprox = useMemo(() => Date.now() - THIRTY_DAYS_IN_MS, [])
   const searchParams =
-    profile.data &&
+    profile.data?.userId &&
     new URLSearchParams([
       ["username", profile.data.username],
       ["userId", profile.data.userId.toString()],
@@ -138,16 +138,29 @@ export const RecentActivity = () => {
           </ToggleGroupItem>
         ))}
       </ToggleGroup>
-      <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
-        {auditLog.isLoading &&
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+        {auditLog.isLoading ? (
           Array.from({ length: 20 }, (_, i) => (
             <Card key={i}>
               <Skeleton className="h-[102px] w-full" />
             </Card>
-          ))}
-        {auditLog.data?.entries.map((activity) => (
-          <ActivityCard activity={activity} key={activity.id} />
-        ))}
+          ))
+        ) : auditLog.data?.entries?.length ? (
+          <>
+            {auditLog.data.entries.map((activity) => (
+              <ActivityCard activity={activity} key={activity.id} />
+            ))}
+            {auditLog.data?.entries?.length > 20 && (
+              <p className="col-span-full mt-2 font-semibold text-muted-foreground">
+                &hellip; only last 20 actions are shown
+              </p>
+            )}
+          </>
+        ) : (
+          <p className="mt-2 font-semibold text-muted-foreground">
+            No recent actions
+          </p>
+        )}
       </div>
     </>
   )
