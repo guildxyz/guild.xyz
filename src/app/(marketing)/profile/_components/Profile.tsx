@@ -7,11 +7,12 @@ import { PropsWithChildren } from "react"
 import { ContributionCard } from "../_components/ContributionCard"
 import { EditContributions } from "../_components/EditContributions"
 import { ProfileOwnerGuard } from "../_components/ProfileOwnerGuard"
-import { RecentActivity } from "../_components/RecentActivity"
 import { useContributions } from "../_hooks/useContributions"
 import { useProfile } from "../_hooks/useProfile"
 import { useReferredUsers } from "../_hooks/useReferredUsers"
 import { ProfileMainSkeleton } from "./ProfileSkeleton"
+import { RecentActivity } from "./RecentActivity/RecentActivity"
+import RecentActivityFallback from "./RecentActivity/RecentActivityFallback"
 
 export const Profile = () => {
   const { data: profile } = useProfile()
@@ -47,15 +48,10 @@ export const Profile = () => {
           <ContributionCard contribution={contribution} key={contribution.id} />
         ))}
       </div>
-      {isWeb3Connected && (
-        <div className="mt-16">
-          <SectionTitle className="mb-3">Recent activity</SectionTitle>
-          <RecentActivity />
-          <p className="mt-2 font-semibold text-muted-foreground">
-            &hellip; only last 20 actions are shown
-          </p>
-        </div>
-      )}
+      <div className="mt-16">
+        <SectionTitle className="mb-3">Recent activity</SectionTitle>
+        {isWeb3Connected ? <RecentActivity /> : <RecentActivityFallback />}
+      </div>
     </>
   )
 }

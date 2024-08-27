@@ -11,7 +11,7 @@ import { FunctionComponent } from "react"
 import rewards from "rewards"
 import useSWRImmutable from "swr/immutable"
 import capitalize from "utils/capitalize"
-import { useProfile } from "../_hooks/useProfile"
+import { useProfile } from "../../_hooks/useProfile"
 
 const GuildBadge: FunctionComponent<{ guildId?: number }> = ({ guildId }) => {
   const { data: guildLatest, error } = useSWRImmutable<Guild>(

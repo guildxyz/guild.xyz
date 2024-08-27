@@ -11,7 +11,7 @@ import ClientOnly from "components/common/ClientOnly"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import useSWRImmutable from "swr/immutable"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
-import { useProfile } from "../_hooks/useProfile"
+import { useProfile } from "../../_hooks/useProfile"
 import { ActionLabel } from "./ActionLabel"
 
 export const ActivityCard = ({ activity }: { activity: ActivityLogAction }) => {
@@ -62,7 +62,7 @@ export const ActivityCard = ({ activity }: { activity: ActivityLogAction }) => {
         <h3 className="space-x-1.5 font-bold">
           <ActionLabel activity={activity} />
         </h3>
-        <div className="mt-1.5 flex flex-wrap items-center gap-2">
+        <div className="mt-1 flex flex-wrap items-center gap-2">
           <ClientOnly>
             <p className="text-muted-foreground">
               {formatRelativeTimeFromNow(Date.now() - parseInt(activity.timestamp))}{" "}
