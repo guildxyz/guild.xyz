@@ -150,7 +150,7 @@ export const RecentActivity = () => {
             {auditLog.data.entries.map((activity) => (
               <ActivityCard activity={activity} key={activity.id} />
             ))}
-            {auditLog.data?.entries?.length > 20 && (
+            {auditLog.data?.entries?.length >= 20 && (
               <p className="col-span-full mt-2 font-semibold text-muted-foreground">
                 &hellip; only last 20 actions are shown
               </p>
