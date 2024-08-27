@@ -5,7 +5,7 @@ import { Skeleton } from "@/components/ui/Skeleton"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/ToggleGroup"
 import { ActivityLogActionResponse } from "components/[guild]/activity/ActivityLogContext"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
-import { useMemo, useState } from "react"
+import { useState } from "react"
 import { useProfile } from "../../_hooks/useProfile"
 import { ActivityCard } from "./ActivityCard"
 
@@ -97,7 +97,6 @@ export const RecentActivity = () => {
   const [activityFilter, setActivityFilter] =
     useState<(typeof ACTIVITY_FILTERS)[number]>("All")
   const profile = useProfile()
-  const lastMonthApprox = useMemo(() => Date.now() - THIRTY_DAYS_IN_MS, [])
   const searchParams =
     profile.data?.userId &&
     new URLSearchParams([
@@ -105,7 +104,6 @@ export const RecentActivity = () => {
       ["userId", profile.data.userId.toString()],
       ["limit", "20"],
       ["offset", "0"],
-      ["after", lastMonthApprox.toString()],
       ...(activityFilter === "All"
         ? Array.from(new Set(Object.values(FILTER_ACTIONS).flat()))
         : FILTER_ACTIONS[activityFilter]
