@@ -90,21 +90,21 @@ export const ActionLabel: FunctionComponent<{ activity: ActivityLogAction }> = (
         return (
           <>
             <span>{capitalizedName}</span>
-            <GuildBadge guildId={ids.guild} />
+            {/* <GuildBadge guildId={ids.guild} /> */}
           </>
         )
       case ACTION.UpdateGuild:
         return (
           <>
             <span>{capitalizedName}</span>
-            <GuildBadge guildId={ids.guild} />
+            {/* <GuildBadge guildId={ids.guild} /> */}
           </>
         )
       case ACTION.DeleteGuild:
         return (
           <>
             <span>{capitalizedName}</span>
-            <GuildBadge guildId={ids.guild} />
+            {/* <GuildBadge guildId={ids.guild} /> */}
           </>
         )
       case ACTION.AddAdmin:
@@ -112,7 +112,7 @@ export const ActionLabel: FunctionComponent<{ activity: ActivityLogAction }> = (
         return (
           <>
             <span>{capitalizedName}:</span>
-            <GuildBadge guildId={ids.guild} />
+            {/* <GuildBadge guildId={ids.guild} /> */}
           </>
         )
       case ACTION.CreateRole:
@@ -122,7 +122,7 @@ export const ActionLabel: FunctionComponent<{ activity: ActivityLogAction }> = (
           <>
             <span>{capitalizedName}</span>
             <RoleBadge roleId={ids.role} guildId={ids.guild} />
-            <GuildBadge guildId={ids.guild} />
+            {/* <GuildBadge guildId={ids.guild} /> */}
           </>
         )
       case ACTION.AddReward:
@@ -178,14 +178,14 @@ export const ActionLabel: FunctionComponent<{ activity: ActivityLogAction }> = (
         return (
           <>
             <span>Join Guild</span>
-            <GuildBadge guildId={ids.guild} />
+            {/* <GuildBadge guildId={ids.guild} /> */}
           </>
         )
       case ACTION.ClickJoinOnPlatform:
         return (
           <>
             <span>{`Join Guild through ${rewards[data.platformName].name}`}</span>
-            <GuildBadge guildId={ids.guild} />
+            {/* <GuildBadge guildId={ids.guild} /> */}
           </>
         )
       case ACTION.UserStatusUpdate:
@@ -194,7 +194,7 @@ export const ActionLabel: FunctionComponent<{ activity: ActivityLogAction }> = (
         return (
           <>
             <span>{capitalizedName}</span>
-            <GuildBadge guildId={ids.guild} />
+            {/* <GuildBadge guildId={ids.guild} /> */}
           </>
         )
       case ACTION.GetRole:
@@ -212,7 +212,7 @@ export const ActionLabel: FunctionComponent<{ activity: ActivityLogAction }> = (
           <>
             <span>{capitalizedName}</span>
             {!parentId && <RoleBadge roleId={ids.role} guildId={ids.guild} />}
-            <GuildBadge guildId={ids.guild} />
+            {/* <GuildBadge guildId={ids.guild} /> */}
           </>
         )
       // @ts-ignore TODO: add and move this to backend
