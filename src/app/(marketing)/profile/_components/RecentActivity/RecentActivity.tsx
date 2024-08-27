@@ -76,27 +76,22 @@ const FILTER_ACTIONS: Record<
 > = {
   Join: [
     ACTION.JoinGuild,
-    ACTION.CreateGuild,
+    ACTION.LeaveGuild,
     ACTION.CreateProfile,
     ACTION.ReferProfile,
   ] as const,
   Editing: [
-    ACTION.LeaveGuild,
-    ACTION.KickFromGuild,
+    ACTION.CreateGuild,
     ACTION.UpdateGuild,
-    ACTION.UpdateProfile,
-    ACTION.DeleteProfile,
     ACTION.CreateRole,
     ACTION.DeleteRole,
     ACTION.DeleteGuild,
     ACTION.AddReward,
     ACTION.UpdateReward,
     ACTION.RemoveReward,
-    ACTION.AddAdmin,
   ] as const,
-  Rewards: [ACTION.RevokeReward, ACTION.LoseReward, ACTION.SendReward] as const,
+  Rewards: [ACTION.LoseReward, ACTION.SendReward] as const,
 }
-const THIRTY_DAYS_IN_MS = 30 * 86400 * 1000
 
 export const RecentActivity = () => {
   const [activityFilter, setActivityFilter] =
