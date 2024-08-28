@@ -25,7 +25,7 @@ export const generateMetadata = async ({ params: { username } }: PageProps) => {
     fetchFallback: false,
   })
   return {
-    title: `${profile.name || profile.username} on guild.xyz`,
+    title: `${profile.name || profile.username} (@${profile.username}) | Guild.xyz`,
     description: profile.bio,
     openGraph: {
       images: [profile.profileImageUrl, profile.backgroundImageUrl].filter(
