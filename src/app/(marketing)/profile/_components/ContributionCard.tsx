@@ -43,7 +43,7 @@ export const ContributionCard = ({
       : null,
     (args) => Promise.all(args.map((arg) => fetcher(arg)))
   )
-  if (!role.data || !guild.data || !collection.data || !points.data) return
+  if (!role.data || !guild.data || !collection.data || points.isLoading) return
 
   collection.data.points = collection.data.points.map((rawPoints, i) => ({
     ...rawPoints,
