@@ -4,10 +4,8 @@ import { CheckMark } from "@/components/CheckMark"
 import { LayoutContainer } from "@/components/Layout"
 import { ProfileAvatar } from "@/components/ProfileAvatar"
 import { Avatar } from "@/components/ui/Avatar"
-import { AvatarGroup } from "@/components/ui/AvatarGroup"
 import { Button } from "@/components/ui/Button"
 import { Card } from "@/components/ui/Card"
-import { Separator } from "@/components/ui/Separator"
 import { Pencil } from "@phosphor-icons/react"
 import { ProfileOwnerGuard } from "../_components/ProfileOwnerGuard"
 import { useProfile } from "../_hooks/useProfile"
@@ -55,23 +53,10 @@ export const ProfileHero = () => {
         <p className="mt-4 max-w-md text-pretty text-center text-lg text-muted-foreground md:mt-6">
           {profile.bio}
         </p>
-        <div className="mt-8 grid grid-cols-[repeat(3,auto)] gap-x-6 gap-y-4 sm:grid-cols-[repeat(5,auto)]">
+        <div className="mt-8 grid grid-cols-[repeat(3,auto)] gap-y-4 space-x-6 sm:grid-cols-[repeat(5,auto)]">
           <div className="flex flex-col items-center leading-tight">
             <div className="font-bold md:text-lg">{referredUsers.length}</div>
             <div className="text-muted-foreground">Guildmates</div>
-          </div>
-          <Separator orientation="vertical" className="h-10 md:h-12" />
-          <div className="flex flex-col items-center leading-tight">
-            <div className="font-bold md:text-lg">0</div>
-            <div className="text-muted-foreground">Followers</div>
-          </div>
-          <Separator orientation="vertical" className="hidden h-12 sm:block" />
-          <div className="col-span-3 flex items-center gap-2 place-self-center sm:col-span-1">
-            <AvatarGroup imageUrls={["", ""]} count={8} />
-            <div className="text-muted-foreground leading-tight">
-              Followed by <span className="font-bold">Hoho</span>,<br />
-              <span className="font-bold">Hihi</span> and 22 others
-            </div>
           </div>
         </div>
       </div>
