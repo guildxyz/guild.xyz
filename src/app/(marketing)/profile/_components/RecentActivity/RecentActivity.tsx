@@ -90,7 +90,7 @@ const FILTER_ACTIONS: Record<
     ACTION.UpdateReward,
     ACTION.RemoveReward,
   ] as const,
-  Rewards: [ACTION.LoseReward, ACTION.SendReward] as const,
+  Rewards: [ACTION.GetReward, ACTION.LoseReward] as const,
 }
 
 export const RecentActivity = () => {
