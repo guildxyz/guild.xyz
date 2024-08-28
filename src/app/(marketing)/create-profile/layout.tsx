@@ -2,7 +2,14 @@ import { Header } from "@/components/Header"
 import { Layout, LayoutBanner, LayoutHero, LayoutMain } from "@/components/Layout"
 import { Card } from "@/components/ui/Card"
 import svgToTinyDataUri from "mini-svg-data-uri"
+import type { Metadata } from "next"
 import { PropsWithChildren, Suspense } from "react"
+
+export const metadata: Metadata = {
+  title: "Create profile",
+  description:
+    "Start your new profile adventure by signing in: earn experience, display achievements and explore new rewards!",
+}
 
 const CreateProfile = ({ children }: PropsWithChildren) => {
   return (
