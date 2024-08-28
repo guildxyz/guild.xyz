@@ -18,7 +18,7 @@ export const AvatarGroup = ({
   return (
     <div className="ml-3 flex">
       {imageUrls.map((src, i) => (
-        <Avatar key={i} className={cn(avatarVariants(avatarProps), "-ml-3")}>
+        <Avatar key={i} className={cn(avatarVariants(avatarProps), "-ml-3 border")}>
           <AvatarImage src={src} alt="avatar" />
           <AvatarFallback>
             <Skeleton className="size-full" />
@@ -26,7 +26,7 @@ export const AvatarGroup = ({
         </Avatar>
       ))}
       {diffCount > 0 && (
-        <Avatar className={cn(avatarVariants(avatarProps), "-ml-3")}>
+        <Avatar className={cn(avatarVariants(avatarProps), "-ml-3 border")}>
           <AvatarFallback>+{diffCount}</AvatarFallback>
         </Avatar>
       )}

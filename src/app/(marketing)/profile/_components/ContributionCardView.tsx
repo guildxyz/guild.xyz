@@ -16,8 +16,10 @@ export const ContributionCardView = ({
   collection: ExtendedCollection
 }) => {
   const { NFTs, pins, points } = collection
-  const contributionCount = [...NFTs, ...pins, ...points].length
-  const contributionImages: string[] = []
+  const collections = [...NFTs, ...pins, ...points]
+  const contributionImages: string[] = [
+    ...points.map((point) => point.platformGuildData.imageUrl),
+  ]
   return (
     <CardWithGuildLabel guild={guild}>
       <div className="grid grid-cols-[auto_1fr] items-center gap-4 p-5 md:grid-cols-[auto_auto_1fr] md:p-6">
@@ -40,7 +42,7 @@ export const ContributionCardView = ({
             </p>
           </div>
         </div>
-        {contributionCount && (
+        {collections.length && (
           <div className="col-span-2 flex w-full flex-col gap-2 justify-self-end md:col-span-1 md:w-auto md:flex-row md:items-center">
             <Separator className="mb-2 md:hidden" />
             <div className="font-extrabold text-muted-foreground text-xs uppercase">
@@ -48,7 +50,7 @@ export const ContributionCardView = ({
             </div>
             <AvatarGroup
               imageUrls={contributionImages}
-              count={contributionCount}
+              count={collections.length}
               size="lg"
             />
           </div>

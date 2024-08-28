@@ -18,7 +18,7 @@ export type Point = {
 }
 export interface ExtendedCollection extends Collection {
   // TODO: move this override type to backend
-  points: (Collection["points"][number] & Point[])[]
+  points: (Collection["points"][number] & Point)[]
 }
 
 export const ContributionCard = ({
@@ -43,13 +43,13 @@ export const ContributionCard = ({
       : null,
     (args) => Promise.all(args.map((arg) => fetcher(arg)))
   )
-  console.log(points.data)
   if (!role.data || !guild.data || !collection.data || !points.data) return
 
   collection.data.points = collection.data.points.map((rawPoints, i) => ({
     ...rawPoints,
-    ...points.data[i]!,
+    ...points.data?.at(i),
   }))
+
   return (
     <ContributionCardView
       guild={guild.data}
