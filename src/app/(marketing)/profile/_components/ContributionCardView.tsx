@@ -37,8 +37,11 @@ export const ContributionCardView = ({
           <div className="flex items-center gap-2 text-muted-foreground">
             <Users weight="bold" className="min-w-min" />
             <p className="line-clamp-1 text-sm">
-              Only {((role.memberCount / guild.memberCount || 0) * 100).toFixed(1)}%
-              of members have this role
+              Only{" "}
+              {Number(
+                ((role.memberCount / guild.memberCount || 0) * 100).toFixed(1)
+              )}
+              % of members have this role
             </p>
           </div>
         </div>
