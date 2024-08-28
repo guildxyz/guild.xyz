@@ -244,4 +244,6 @@ export const ActionLabel: FunctionComponent<{ activity: ActivityLogAction }> = (
   })()
 }
 
-const BadgeSkeleton = () => <Skeleton className="inline-block h-6 w-16" />
+const BadgeSkeleton = () => (
+  <Skeleton className="inline-flex h-6 w-16 align-bottom" />
+)
