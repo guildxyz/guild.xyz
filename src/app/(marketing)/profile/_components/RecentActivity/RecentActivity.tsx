@@ -11,24 +11,31 @@ import { useProfile } from "../../_hooks/useProfile"
 import { ActivityCard } from "./ActivityCard"
 
 const ACTIVITY_FILTERS = ["All", "Editing", "Join", "Rewards"] as const
-const FILTER_ACTIONS: Record<
-  Exclude<(typeof ACTIVITY_FILTERS)[number], "All">,
-  ACTION[]
-> = {
-  Join: [
+const FILTER_ACTIONS: Record<(typeof ACTIVITY_FILTERS)[number], ACTION[]> = {
+  All: [
     ACTION.JoinGuild,
     ACTION.LeaveGuild,
-    ACTION.CreateProfile,
-    ACTION.ReferProfile,
-  ] as const,
-  Editing: [
     ACTION.CreateGuild,
-    ACTION.UpdateGuild,
     ACTION.CreateRole,
     ACTION.DeleteRole,
     ACTION.DeleteGuild,
     ACTION.AddReward,
-    ACTION.UpdateReward,
+    ACTION.RemoveReward,
+    ACTION.GetReward,
+    ACTION.LoseReward,
+  ],
+  Join: [
+    ACTION.JoinGuild,
+    ACTION.LeaveGuild,
+    // ACTION.CreateProfile,
+    // ACTION.ReferProfile,
+  ] as const,
+  Editing: [
+    ACTION.CreateGuild,
+    ACTION.CreateRole,
+    ACTION.DeleteRole,
+    ACTION.DeleteGuild,
+    ACTION.AddReward,
     ACTION.RemoveReward,
   ] as const,
   Rewards: [ACTION.GetReward, ACTION.LoseReward] as const,
@@ -45,10 +52,7 @@ export const RecentActivity = () => {
       ["userId", profile.data.userId.toString()],
       ["limit", "20"],
       ["offset", "0"],
-      ...(activityFilter === "All"
-        ? Array.from(new Set(Object.values(FILTER_ACTIONS).flat()))
-        : FILTER_ACTIONS[activityFilter]
-      ).map((action) => ["action", action]),
+      ...FILTER_ACTIONS[activityFilter].map((action) => ["action", action]),
     ])
   const auditLog = useSWRWithOptionalAuth<ActivityLogActionResponse>(
     searchParams ? `/v2/audit-log?${searchParams}` : null
