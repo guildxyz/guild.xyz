@@ -12,7 +12,7 @@ import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import useSWRImmutable from "swr/immutable"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 import { useProfile } from "../../_hooks/useProfile"
-import { ActionLabel } from "./ActionLabel"
+import { ProfileActionLabel } from "./ProfileActionLabel"
 
 export const ActivityCard = ({ activity }: { activity: ActivityLogAction }) => {
   const { data: guildLatest, error } = useSWRImmutable<Guild>(
@@ -60,7 +60,7 @@ export const ActivityCard = ({ activity }: { activity: ActivityLogAction }) => {
       )}
       <div className="px-5 py-6">
         <h3 className="space-x-1.5 font-bold">
-          <ActionLabel activity={activity} />
+          <ProfileActionLabel activity={activity} />
         </h3>
         <div className="mt-1 flex flex-wrap items-center gap-2">
           <ClientOnly>

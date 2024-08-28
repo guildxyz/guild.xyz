@@ -77,9 +77,11 @@ const RoleBadge: FunctionComponent<{
   )
 }
 
-export const ActionLabel: FunctionComponent<{ activity: ActivityLogAction }> = ({
-  activity,
-}) => {
+/** This component could just extend the original ActionLabel used in activity log, overriding actions
+ * that we want to display differently, but we've decided to just copy & simplify it for now  */
+export const ProfileActionLabel: FunctionComponent<{
+  activity: ActivityLogAction
+}> = ({ activity }) => {
   const { action, ids, data, parentId } = activity
   const capitalizedName = capitalize(action)
 
