@@ -42,7 +42,9 @@ const RemovePlatformMenuItem = ({ platformGuildId }: Props): JSX.Element => {
         title="Remove reward"
         description={
           <>
-            Are you sure you want to remove this reward?
+            This reward type will be removed completely from the guild, from all
+            roles and pages. If you only want to remove it from the current role,
+            please open <span className="font-semibold">"Edit role"</span>!
             {isPlatform && <AlreadyGrantedAccessesWillRemainInfo />}
           </>
         }
