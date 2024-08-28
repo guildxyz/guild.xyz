@@ -104,7 +104,7 @@
     "react-markdown": "^8.0.7",
     "react-papaparse": "^4.4.0",
     "react-window": "^1.8.8",
-    "remark-gfm": "^4.0.0",
+    "remark-gfm": "^3.0.1",
     "slugify": "^1.6.5",
     "swr": "^2.2.4",
     "tailwind-merge": "^2.3.0",
