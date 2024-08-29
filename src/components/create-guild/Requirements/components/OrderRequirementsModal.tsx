@@ -30,12 +30,7 @@ const OrderRequirementsModal = ({
   requirements: Requirement[]
   roleId: number
 }): JSX.Element => {
-  // const { requirements } = useGuild()
-  // const group = useRequirementGroup()
   const relevantRequirements = requirements
-  // group
-  // ? requirements.filter((requirement) => requirement.groupId === group.id)
-  // : requirements.filter((requirement) => !requirement.groupId)
 
   const {
     isOpen: isAlertOpen,
