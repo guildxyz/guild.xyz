@@ -157,7 +157,7 @@ const Page = async ({ params: { username } }: PageProps) => {
         </LayoutMain>
         <LayoutFooter className="pt-28 pb-5">
           <p className="text-center font-medium text-muted-foreground">
-            Guild Profiles are currently in referral only early access.
+            Guild Profiles are currently in early access.
           </p>
         </LayoutFooter>
       </Layout>
