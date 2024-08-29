@@ -141,6 +141,7 @@ const Page = async ({ params: { username } }: PageProps) => {
                   fill
                   sizes="100vw"
                   alt="profile background image"
+                  priority
                   style={{
                     filter: "brightness(50%)",
                     objectFit: "cover",
