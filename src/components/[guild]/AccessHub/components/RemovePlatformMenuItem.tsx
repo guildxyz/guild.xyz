@@ -21,7 +21,9 @@ const RemovePlatformMenuItem = ({ platformGuildId }: Props): JSX.Element => {
 
   const { isPlatform } = rewards[PlatformType[guildPlatform?.platformId]] ?? {}
 
-  const { onSubmit, isLoading } = useRemoveGuildPlatform(guildPlatform?.id)
+  const { onSubmit, isLoading, isSigning } = useRemoveGuildPlatform(
+    guildPlatform?.id
+  )
 
   const color = useColorModeValue("red.600", "red.300")
 
@@ -33,13 +35,16 @@ const RemovePlatformMenuItem = ({ platformGuildId }: Props): JSX.Element => {
 
       <ConfirmationAlert
         isLoading={isLoading}
+        loadingText={isSigning && "Check your wallet"}
         isOpen={isOpen}
         onClose={onClose}
         onConfirm={onSubmit}
         title="Remove reward"
         description={
           <>
-            Are you sure you want to remove this reward?
+            This reward type will be removed completely from the guild, from all
+            roles and pages. If you only want to remove it from the current role,
+            please open <span className="font-semibold">"Edit role"</span>!
             {isPlatform && <AlreadyGrantedAccessesWillRemainInfo />}
           </>
         }

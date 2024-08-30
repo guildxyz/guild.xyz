@@ -20,7 +20,7 @@ const RemovePlatformButton = ({
   isPlatform,
 }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { onSubmit, isLoading } = useRemovePlatform(onClose)
+  const { onSubmit, isLoading, isSigning } = useRemovePlatform(onClose)
 
   return (
     <>
@@ -37,6 +37,7 @@ const RemovePlatformButton = ({
 
       <ConfirmationAlert
         isLoading={isLoading}
+        loadingText={isSigning && "Check your wallet"}
         isOpen={isOpen}
         onClose={onClose}
         onConfirm={onSubmit}
