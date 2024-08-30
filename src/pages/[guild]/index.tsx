@@ -128,13 +128,12 @@ const GuildPage = (): JSX.Element => {
           <LayoutHeadline className="max-w-screen-xl pt-12">
             <GuildPageImageAndName />
 
-            <div className="ml-auto">
-              {!isMember ? (
-                <JoinButton />
-              ) : isAdmin && isDetailed ? (
+            <div className="ml-auto flex gap-2">
+              {!isMember && <JoinButton />}
+              {isAdmin && isDetailed ? (
                 <DynamicAddSolutionsAndEditGuildButton />
               ) : (
-                <DynamicRecheckAccessesAndLeaveButton />
+                isMember && <DynamicRecheckAccessesAndLeaveButton />
               )}
             </div>
           </LayoutHeadline>
