@@ -129,10 +129,10 @@ const GuildPage = (): JSX.Element => {
             <GuildPageImageAndName />
 
             <div className="ml-auto">
-              {isAdmin && isDetailed ? (
-                <DynamicAddSolutionsAndEditGuildButton />
-              ) : !isMember ? (
+              {!isMember ? (
                 <JoinButton />
+              ) : isAdmin && isDetailed ? (
+                <DynamicAddSolutionsAndEditGuildButton />
               ) : (
                 <DynamicRecheckAccessesAndLeaveButton />
               )}
