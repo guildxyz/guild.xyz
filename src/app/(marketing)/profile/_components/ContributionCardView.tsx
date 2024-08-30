@@ -1,8 +1,15 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
-import { AvatarGroup } from "@/components/ui/AvatarGroup"
+import {
+  Avatar,
+  AvatarFallback,
+  // AvatarImage,
+  avatarVariants,
+} from "@/components/ui/Avatar"
+// import { AvatarGroup } from "@/components/ui/AvatarGroup"
 import { Separator } from "@/components/ui/Separator"
+import { cn } from "@/lib/utils"
 import { Guild, Role } from "@guildxyz/types"
 import { Users } from "@phosphor-icons/react/dist/ssr"
+import { AvatarImage } from "@radix-ui/react-avatar"
 import { CardWithGuildLabel } from "./CardWithGuildLabel"
 import { ExtendedCollection } from "./ContributionCard"
 
@@ -15,14 +22,10 @@ export const ContributionCardView = ({
   role: Role
   collection: ExtendedCollection
 }) => {
-  const { NFTs, pins, points } = collection
-  const collections = [...NFTs, ...pins, ...points]
-  const contributionImages: string[] = [
-    ...points.map(
-      (point) => point.platformGuildData?.imageUrl || "/static/icons/star.svg"
-    ),
-  ]
-  console.log(collections)
+  const { NFTs, pins, points: collectionPoints } = collection
+  const collections = [...NFTs, ...pins, ...collectionPoints]
+  console.log({ NFTs, pins, collectionPoints })
+  const collectionPoint = collectionPoints.at(0)
   return (
     <CardWithGuildLabel guild={guild}>
       <div className="grid grid-cols-[auto_1fr] items-center gap-4 p-5 md:grid-cols-[auto_auto_1fr] md:p-6">
@@ -54,11 +57,39 @@ export const ContributionCardView = ({
             <div className="font-extrabold text-muted-foreground text-xs uppercase">
               COLLECTION:
             </div>
-            <AvatarGroup
-              imageUrls={contributionImages}
-              count={collections.length}
-              size="lg"
-            />
+
+            <div className="ml-3 flex">
+              {collectionPoint && (
+                <>
+                  <Avatar
+                    className={cn(avatarVariants({ size: "lg" }), "-ml-3 border")}
+                  >
+                    <AvatarImage
+                      src={collectionPoint.point.platformGuildData.imageUrl}
+                      alt="avatar"
+                    />
+                    <AvatarFallback />
+                  </Avatar>
+                  <div className="-ml-3 self-center rounded-r-lg border bg-card-secondary px-3 py-0.5">
+                    <div className="font-extrabold text-sm">
+                      {collectionPoint.totalPoints}&nbsp;
+                      <span className="font-normal">
+                        {collectionPoint.point.platformGuildData.name}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-1 text-muted-foreground text-xs">
+                      <Users weight="bold" />
+                      {Number(
+                        (collectionPoint.rank /
+                          collectionPoint.leaderboard.leaderboard.length) *
+                          100
+                      )}
+                      %
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
         )}
       </div>

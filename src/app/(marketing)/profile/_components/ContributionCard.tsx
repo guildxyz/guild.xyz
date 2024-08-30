@@ -1,6 +1,6 @@
 "use client"
 
-import { Guild, Role, Schemas } from "@guildxyz/types"
+import { GetLeaderboardResponse, Guild, Role, Schemas } from "@guildxyz/types"
 import useSWRImmutable from "swr/immutable"
 import fetcher from "utils/fetcher"
 import { useProfile } from "../_hooks/useProfile"
@@ -18,7 +18,10 @@ export type Point = {
 }
 export interface ExtendedCollection extends Collection {
   // TODO: move this override type to backend
-  points: (Collection["points"][number] & Point)[]
+  points: (Collection["points"][number] & {
+    point: Point
+    leaderboard: GetLeaderboardResponse
+  })[]
 }
 
 export const ContributionCard = ({
@@ -43,11 +46,30 @@ export const ContributionCard = ({
       : null,
     (args) => Promise.all(args.map((arg) => fetcher(arg)))
   )
-  if (!role.data || !guild.data || !collection.data || points.isLoading) return
+
+  const leaderboards = useSWRImmutable<GetLeaderboardResponse[]>(
+    collection.data?.points
+      ? collection.data.points.map(
+          ({ guildId, guildPlatformId }) =>
+            `/v2/guilds/${guildId}/points/${guildPlatformId}/leaderboard`
+        )
+      : null,
+    (args) => Promise.all(args.map((arg) => fetcher(arg)))
+  )
+
+  if (
+    !role.data ||
+    !guild.data ||
+    !collection.data ||
+    points.isLoading ||
+    leaderboards.isLoading
+  )
+    return
 
   collection.data.points = collection.data.points.map((rawPoints, i) => ({
     ...rawPoints,
-    ...points.data?.at(i),
+    point: points.data?.at(i),
+    leaderboard: leaderboards.data?.at(i),
   }))
 
   return (
