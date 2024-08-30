@@ -1,5 +1,6 @@
 "use client"
 
+import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { Anchor } from "@/components/ui/Anchor"
 import { Card } from "@/components/ui/Card"
 import { REFERRER_USER_SEARCH_PARAM_KEY } from "@app/(marketing)/create-profile/(onboarding)/constants"
@@ -10,7 +11,13 @@ import { useProfile } from "../_hooks/useProfile"
 export const JoinProfileAction = () => {
   const profile = useProfile()
   const user = useUser()
-  if (!profile.data || user.guildProfile) {
+  const { isWeb3Connected } = useWeb3ConnectionManager()
+  if (
+    !profile.data ||
+    isWeb3Connected === null ||
+    user.guildProfile ||
+    user.isLoading
+  ) {
     return
   }
   return (

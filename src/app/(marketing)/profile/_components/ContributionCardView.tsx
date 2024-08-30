@@ -18,7 +18,9 @@ export const ContributionCardView = ({
   const { NFTs, pins, points } = collection
   const collections = [...NFTs, ...pins, ...points]
   const contributionImages: string[] = [
-    ...points.map((point) => point.platformGuildData.imageUrl),
+    ...points.map(
+      (point) => point.platformGuildData?.imageUrl || "/static/icons/star.svg"
+    ),
   ]
   console.log(collections)
   return (

@@ -16,7 +16,6 @@ import { FormProvider, useForm } from "react-hook-form"
 import useSWRImmutable from "swr/immutable"
 import { z } from "zod"
 import { CreateProfileStep } from "../types"
-import { GuildPassScene } from "./GuildPassScene"
 
 const formSchema = schemas.ProfileCreationSchema.pick({ username: true })
 
@@ -53,12 +52,12 @@ export const ClaimPass: CreateProfileStep = ({ dispatchAction, data }) => {
 
   return (
     <div className="max-w-md p-8">
-      <div className="mb-12 h-48 w-full">
-        <GuildPassScene sceneVariant="Single Pass" />
-      </div>
-      <h1 className="mb-14 text-pretty text-center font-extrabold text-2xl leading-none tracking-tighter">
-        Claim your Guild Pass and begin an epic adventure!
+      <h1 className="mb-2 text-pretty text-center font-extrabold text-2xl leading-none tracking-tighter">
+        Start your profile
       </h1>
+      <p className="mb-8 text-center text-muted-foreground">
+        Begin an epic adventure now!
+      </p>
 
       <FormProvider {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">

@@ -17,20 +17,28 @@ import { Avatar } from "../ui/Avatar"
 import { Button } from "../ui/Button"
 import { Card } from "../ui/Card"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/Popover"
+import { Skeleton } from "../ui/Skeleton"
 import { NotificationContent } from "./components/Notification/NotificationContent"
 
 export const Account = () => {
-  const { address } = useWeb3ConnectionManager()
+  const { address, isWeb3Connected } = useWeb3ConnectionManager()
   const setIsAccountModalOpen = useSetAtom(accountModalAtom)
   const setIsWalletSelectorModalOpen = useSetAtom(walletSelectorModalAtom)
   const { isOpen, setValue } = useDisclosure()
 
   const domainName = useResolveAddress(address)
-  const { addresses, guildProfile } = useUser()
+  const { addresses, guildProfile, isLoading } = useUser()
   const linkedAddressesCount = (addresses?.length ?? 1) - 1
   const { captureEvent } = usePostHogContext()
 
-  if (!address)
+  if (isLoading || isWeb3Connected === null) {
+    return (
+      <Card className="overflow-visible">
+        <Skeleton className="h-11 w-36" />
+      </Card>
+    )
+  }
+  if (!address) {
     return (
       <Card className="overflow-visible">
         <Button
@@ -44,7 +52,7 @@ export const Account = () => {
         </Button>
       </Card>
     )
-
+  }
   return (
     <Card className="flex items-center overflow-visible" data-testid="account-card">
       <Popover open={isOpen} onOpenChange={setValue}>
