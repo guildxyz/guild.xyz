@@ -1,5 +1,6 @@
 import { useToast } from "@/components/ui/hooks/useToast"
 import { Schemas } from "@guildxyz/types"
+import useUser from "components/[guild]/hooks/useUser"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import { useParams, useRouter } from "next/navigation"
 import fetcher from "utils/fetcher"
@@ -12,6 +13,7 @@ export const useUpdateProfile = () => {
   const router = useRouter()
   const params = useParams<{ username: string }>()
   const { mutate, data: profile } = useProfile()
+  const user = useUser()
 
   const updateProfile = async (signedValidation: SignedValidation) => {
     return fetcher(`/v2/profiles/${params?.username}`, {
@@ -30,6 +32,7 @@ export const useUpdateProfile = () => {
     },
     onSuccess: async (response) => {
       await revalidateProfile()
+      await user.mutate()
       if (profile?.username !== response.username) {
         await revalidateContributions()
         router.replace(`/profile/${response.username}`)
