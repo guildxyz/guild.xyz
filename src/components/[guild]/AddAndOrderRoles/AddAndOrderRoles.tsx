@@ -36,6 +36,9 @@ const AddAndOrderRoles = ({ setIsStuck = null }): JSX.Element => {
     setIsStuck?.(isStuck)
   }, [isStuck, setIsStuck])
 
+  /**
+   * Passing role IDs as the OrderRolesModal key, so we re-populate the form's default values when the admin adds a new role to their guild
+   */
   const { roles } = useGuild()
   const orderRolesModalKey = roles?.map((r) => r.id).join("-")
 
@@ -82,9 +85,6 @@ const AddAndOrderRoles = ({ setIsStuck = null }): JSX.Element => {
         finalFocusRef={addRoleButtonRef}
       />
       <OrderRolesModal
-        /**
-         * Passing role IDs as the key, so we re-populate the form's default values when the admin adds a new role to their guild
-         */
         key={orderRolesModalKey}
         isOpen={isOrderModalOpen}
         onClose={onOrderModalClose}
