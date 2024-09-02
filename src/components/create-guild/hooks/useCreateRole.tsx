@@ -35,12 +35,10 @@ type CreateRoleResponse = Role & {
 const useCreateRole = ({
   onSuccess,
   onError,
-  skipMutate,
 }: {
   onSuccess?: (res?: CreateRoleResponse) => void
   onError?: (error: any) => void
-  skipMutate?: boolean
-}) => {
+} = {}) => {
   const { id, mutateGuild } = useGuild()
   const group = useRoleGroup()
 
@@ -76,21 +74,23 @@ const useCreateRole = ({
         })
       }
 
-      if (!skipMutate) {
-        mutateYourGuilds((prev) => mutateGuildsCache(prev, id), {
-          revalidate: false,
-        })
-        matchMutate<GuildBase[]>(
-          /\/guilds\?order/,
-          (prev) => mutateGuildsCache(prev, id),
-          { revalidate: false }
-        )
+      mutateYourGuilds((prev) => mutateGuildsCache(prev, id), {
+        revalidate: false,
+      })
+      matchMutate<GuildBase[]>(
+        /\/guilds\?order/,
+        (prev) => mutateGuildsCache(prev, id),
+        { revalidate: false }
+      )
 
-        mutateGuild((curr) => ({
+      mutateGuild(
+        (curr) => ({
           ...curr,
           roles: [...curr.roles, response_],
-        }))
-      }
+        }),
+        { revalidate: false }
+      )
+
       window.location.hash = `role-${response_.id}`
 
       onSuccess?.(response_)
