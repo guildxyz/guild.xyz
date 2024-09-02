@@ -14,9 +14,14 @@ import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
 import { Reorder } from "framer-motion"
-import { useMemo, useState } from "react"
+import { useMemo } from "react"
+import { useController, useForm } from "react-hook-form"
 import useReorderRoles from "../hooks/useReorderRoles"
 import DraggableRoleCard from "./DraggableRoleCard"
+
+type OrderRolesForm = {
+  roleIds: number[]
+}
 
 const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
   const { roles } = useGuild()
@@ -54,19 +59,27 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
   )
 
   const defaultRoleIdsOrder = publicAndSecretRoles?.map((role) => role.id)
-  const [roleIdsOrder, setRoleIdsOrder] = useState(defaultRoleIdsOrder)
 
-  /**
-   * Using JSON.stringify to compare the values, not the object identity (so it works
-   * as expected after a successful save too)
-   */
-  const isDirty =
-    JSON.stringify(defaultRoleIdsOrder) !== JSON.stringify(roleIdsOrder)
+  const {
+    control,
+    reset,
+    formState: { isDirty },
+    handleSubmit,
+  } = useForm<OrderRolesForm>({
+    mode: "all",
+    defaultValues: { roleIds: defaultRoleIdsOrder },
+  })
+  const {
+    field: { value: roleIdsOrder, onChange: onRoleIdsOrderChange },
+  } = useController({
+    control,
+    name: "roleIds",
+  })
 
   const { isLoading, onSubmit } = useReorderRoles(onClose)
 
-  const handleSubmit = () => {
-    const changedRoles = roleIdsOrder
+  const onChangeRoleOrders = (data: OrderRolesForm) => {
+    const changedRoles = data.roleIds
       .map((roleId, i) => ({
         id: roleId,
         position: i,
@@ -81,7 +94,7 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
   }
 
   const onCloseAndClear = () => {
-    setRoleIdsOrder(defaultRoleIdsOrder)
+    reset({ roleIds: defaultRoleIdsOrder })
     onClose()
     onAlertClose()
   }
@@ -103,7 +116,7 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
             <Reorder.Group
               axis="y"
               values={roleIdsOrder}
-              onReorder={setRoleIdsOrder}
+              onReorder={(newOrder: number[]) => onRoleIdsOrderChange(newOrder)}
             >
               {relevantRoles?.length ? (
                 roleIdsOrder?.map((roleId) => (
@@ -129,7 +142,7 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
             </Button>
             <Button
               isLoading={isLoading}
-              onClick={handleSubmit}
+              onClick={handleSubmit(onChangeRoleOrders)}
               colorScheme="green"
               isDisabled={!isDirty}
             >
