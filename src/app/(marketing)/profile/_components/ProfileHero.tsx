@@ -45,11 +45,9 @@ export const ProfileHero = () => {
   const profileFarcaster = useProfileFarcaster()
   const fc = profileFarcaster.followers.data?.users.at(0)
   const relevantFc =
-    profileFarcaster.relevantFollowers.data?.top_relevant_followers_hydrated
-  console.log(
-    relevantFc,
-    relevantFc?.map(({ user }) => user.pfp_url)
-  )
+    profileFarcaster.relevantFollowers.data?.top_relevant_followers_hydrated?.map(
+      ({ user }) => user
+    )
   if (!profile || !referredUsers) return <ProfileHeroSkeleton />
 
   return (
@@ -86,7 +84,6 @@ export const ProfileHero = () => {
         <p className="mt-4 max-w-md text-pretty text-center text-lg text-muted-foreground md:mt-6">
           {profile.bio}
         </p>
-        {/*<div className="mt-8 grid grid-cols-[repeat(3,auto)] space-x-6 gap-y-4 sm:grid-cols-[repeat(5,auto)]">*/}
         <div className="mt-8 flex flex-wrap items-center justify-center gap-6 gap-y-4 sm:flex-nowrap">
           <div className="flex flex-col items-center leading-tight">
             <div className="font-bold md:text-lg">{referredUsers.length}</div>
@@ -96,43 +93,53 @@ export const ProfileHero = () => {
             <>
               <Separator orientation="vertical" className="h-10 md:h-12" />
               <div className="flex flex-col items-center leading-tight">
-                <div className="font-bold md:text-lg">{fc.follower_count}</div>
-                <div className="flex items-center gap-1 text-muted-foreground">
-                  <FarcasterImage />
-                  Followers
-                </div>
-              </div>
-              <Separator orientation="vertical" className="h-10 md:h-12" />
-              <div className="flex flex-col items-center leading-tight">
                 <div className="font-bold md:text-lg">{fc.following_count}</div>
                 <div className="flex items-center gap-1 text-muted-foreground">
                   <FarcasterImage />
                   Following
                 </div>
               </div>
-              {relevantFc && fc && (
-                <>
-                  <Separator
-                    orientation="vertical"
-                    className="hidden h-12 sm:block"
-                  />
-                  <div className="col-span-3 flex max-w-sm items-center gap-2 place-self-center sm:col-span-1">
-                    <AvatarGroup
-                      imageUrls={relevantFc.map(({ user }) => user.pfp_url)}
-                      count={relevantFc.length}
-                    />
-                    <div className="text-balance text-muted-foreground leading-tight">
-                      Followed by <span className="font-bold">HOho</span>,{" "}
-                      <span className="font-bold">Hihi</span> and 22 others on
-                      Farcaster
-                    </div>
+
+              <Separator
+                orientation="horizontal"
+                className="h-px w-full sm:h-10 sm:w-px md:h-12"
+              />
+              {relevantFc ? (
+                <RelevantFollowers {...{ relevantFc, fc }} />
+              ) : (
+                <div className="flex flex-col items-center leading-tight">
+                  <div className="font-bold md:text-lg">{fc.follower_count}</div>
+                  <div className="flex items-center gap-1 text-muted-foreground">
+                    <FarcasterImage />
+                    Followers
                   </div>
-                </>
+                </div>
               )}
             </>
           )}
         </div>
       </div>
     </LayoutContainer>
+  )
+}
+const RelevantFollowers = ({ relevantFc, fc }: { relevantFc: any; fc: any }) => {
+  const [first, second] = relevantFc
+  return (
+    <div className="flex items-center gap-2">
+      <AvatarGroup
+        imageUrls={relevantFc.map(({ pfp_url }) => pfp_url)}
+        count={fc.follower_count}
+      />
+      <div className="max-w-64 text-muted-foreground leading-tight">
+        Followed by <span className="font-bold">{first.display_name}</span>
+        {second && (
+          <>
+            <span>", "</span>
+            <span className="font-bold">{second.display_name}</span>
+          </>
+        )}{" "}
+        and {fc.follower_count - Math.min(2, relevantFc.length)} others on Farcaster
+      </div>
+    </div>
   )
 }

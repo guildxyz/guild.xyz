@@ -77,7 +77,7 @@ const fetchPublicProfileData = async ({
     neynarRequest &&
     (await ssrFetcher(neynarRequest, {
       next: {
-        revalidate: 12 * 3600,
+        revalidate: 24 * 3600,
       },
     }))
 
