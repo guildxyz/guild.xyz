@@ -36,6 +36,10 @@ const rewards: Rewards = {
   FARCASTER: farcasterData,
 } as const
 
+export const JOINABLE_REQUIREMENT_PLATFORMS = Object.entries(rewards)
+  .filter(([, reward]) => reward.requiredForRequirements)
+  .map(([rewardName]) => rewardName)
+
 export default rewards
 
 export * from "./constants"
