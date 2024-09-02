@@ -10,4 +10,5 @@ export const polygonIdData = {
   autoRewardSetup: true,
   isPlatform: false,
   asRewardRestriction: PlatformAsRewardRestrictions.MULTIPLE_ROLES,
+  requiredForRequirements: true,
 } as const satisfies RewardData

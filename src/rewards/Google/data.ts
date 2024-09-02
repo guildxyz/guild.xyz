@@ -10,4 +10,5 @@ export const googleData = {
   autoRewardSetup: false,
   isPlatform: true,
   asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
+  requiredForRequirements: true,
 } satisfies RewardData

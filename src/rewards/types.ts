@@ -45,6 +45,10 @@ export type RewardData = {
   autoRewardSetup: boolean
   isPlatform: boolean
   asRewardRestriction: PlatformAsRewardRestrictions
+  /**
+   * True when the guildPlatform can be included in the `requiredPlatforms` array
+   */
+  requiredForRequirements?: boolean
 }
 
 export type RewardComponentsData = {

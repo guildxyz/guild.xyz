@@ -10,4 +10,5 @@ export const farcasterData = {
   autoRewardSetup: false,
   isPlatform: true,
   asRewardRestriction: PlatformAsRewardRestrictions.NOT_APPLICABLE,
+  requiredForRequirements: true,
 } satisfies RewardData

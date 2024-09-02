@@ -10,4 +10,5 @@ export const discordData = {
   autoRewardSetup: false,
   isPlatform: true,
   asRewardRestriction: PlatformAsRewardRestrictions.MULTIPLE_ROLES,
+  requiredForRequirements: true,
 } satisfies RewardData

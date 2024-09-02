@@ -9,6 +9,7 @@ export const twitterV1Data = {
   autoRewardSetup: false,
   isPlatform: true,
   asRewardRestriction: PlatformAsRewardRestrictions.NOT_APPLICABLE,
+  requiredForRequirements: true,
 } as const satisfies RewardData
 
 export const twitterData = {
@@ -20,4 +21,5 @@ export const twitterData = {
   autoRewardSetup: false,
   isPlatform: false,
   asRewardRestriction: PlatformAsRewardRestrictions.NOT_APPLICABLE,
+  requiredForRequirements: true,
 } as const satisfies RewardData

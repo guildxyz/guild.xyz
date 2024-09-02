@@ -9,4 +9,5 @@ export const emailData = {
   autoRewardSetup: false,
   isPlatform: true,
   asRewardRestriction: PlatformAsRewardRestrictions.NOT_APPLICABLE,
+  requiredForRequirements: true,
 } as const satisfies RewardData

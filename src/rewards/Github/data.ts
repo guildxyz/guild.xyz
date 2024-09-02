@@ -10,4 +10,5 @@ export const githubData = {
   autoRewardSetup: false,
   isPlatform: true,
   asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
+  requiredForRequirements: true,
 } as const satisfies RewardData
