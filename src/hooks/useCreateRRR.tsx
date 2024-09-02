@@ -80,13 +80,7 @@ const useCreateRRR = ({ onSuccess }: { onSuccess?: (res) => void }) => {
   const mutateCreatedRole = useMutateCreatedRole()
   const mutateAdditionsToRoles = useMutateAdditionsToRoles()
 
-  const {
-    onSubmit: createRole,
-    isSigning,
-    signLoadingText,
-  } = useCreateRole({
-    skipMutate: true,
-  })
+  const { onSubmit: createRole, isSigning, signLoadingText } = useCreateRole()
   const { createRequirements } = useCreateRequirements()
   const { createRolePlatforms } = useCreateRolePlatforms()
 
