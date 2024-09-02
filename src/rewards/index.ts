@@ -14,6 +14,7 @@ import { telegramData } from "rewards/Telegram/data"
 import { tokenData } from "rewards/Token/data"
 import { twitterData, twitterV1Data } from "rewards/Twitter/data"
 import { uniqueTextData } from "rewards/UniqueText/data"
+import { PlatformName } from "types"
 import { Rewards } from "./types"
 
 const rewards: Rewards = {
@@ -38,7 +39,7 @@ const rewards: Rewards = {
 
 export const JOINABLE_REQUIREMENT_PLATFORMS = Object.entries(rewards)
   .filter(([, reward]) => reward.requiredForRequirements)
-  .map(([rewardName]) => rewardName)
+  .map(([rewardName]) => rewardName) as PlatformName[]
 
 export default rewards
 

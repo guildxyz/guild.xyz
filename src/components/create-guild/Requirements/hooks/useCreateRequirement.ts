@@ -4,6 +4,7 @@ import useRequirements from "components/[guild]/hooks/useRequirements"
 import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
+import { JOINABLE_REQUIREMENT_PLATFORMS } from "rewards"
 import { RequirementCreateResponseOutput } from "types"
 import preprocessRequirement from "utils/preprocessRequirement"
 
@@ -11,7 +12,7 @@ const useCreateRequirement = (
   roleId: number,
   config?: { onSuccess?: () => void; onError?: (err: any) => void }
 ) => {
-  const { id: guildId } = useGuild()
+  const { id: guildId, mutateGuild } = useGuild()
   const { mutate: mutateRequirements } = useRequirements(roleId)
   const showErrorToast = useShowErrorToast()
 
@@ -53,6 +54,30 @@ const useCreateRequirement = (
         ],
         { revalidate: false }
       )
+
+      const requiredPlatformName = JOINABLE_REQUIREMENT_PLATFORMS.find(
+        (platformName) => response.type.includes(platformName)
+      )
+
+      if (requiredPlatformName) {
+        mutateGuild(
+          (prevGuild) =>
+            prevGuild
+              ? {
+                  ...prevGuild,
+                  requiredPlatforms: [
+                    ...new Set([
+                      ...(prevGuild.requiredPlatforms ?? []),
+                      requiredPlatformName,
+                    ]),
+                  ],
+                }
+              : undefined,
+          {
+            revalidate: false,
+          }
+        )
+      }
 
       config?.onSuccess?.()
     },

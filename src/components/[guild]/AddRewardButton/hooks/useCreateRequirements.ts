@@ -8,10 +8,11 @@ import {
 } from "types"
 
 import { useFetcherWithSign } from "hooks/useFetcherWithSign"
+import { JOINABLE_REQUIREMENT_PLATFORMS } from "rewards"
 import preprocessRequirement from "utils/preprocessRequirement"
 
 const useCreateRequirements = () => {
-  const { id: guildId } = useGuild()
+  const { id: guildId, mutateGuild } = useGuild()
   const showErrorToast = useShowErrorToast()
   const fetcherWithSign = useFetcherWithSign()
   const { captureEvent } = usePostHogContext()
@@ -59,6 +60,31 @@ const useCreateRequirements = () => {
     const createdRequirements = results
       .filter((res) => res.status === "fulfilled")
       .map((res) => res.result)
+
+    const requiredPlatformNames = JOINABLE_REQUIREMENT_PLATFORMS.filter(
+      (platformName) =>
+        createdRequirements.some((req) => req.type.includes(platformName))
+    )
+
+    if (requiredPlatformNames) {
+      mutateGuild(
+        (prevGuild) =>
+          prevGuild
+            ? {
+                ...prevGuild,
+                requiredPlatforms: [
+                  ...new Set([
+                    ...(prevGuild.requiredPlatforms ?? []),
+                    ...requiredPlatformNames,
+                  ]),
+                ],
+              }
+            : undefined,
+        {
+          revalidate: false,
+        }
+      )
+    }
 
     return { createdRequirements, requirementIdMap }
   }
