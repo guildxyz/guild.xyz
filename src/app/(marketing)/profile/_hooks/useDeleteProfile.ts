@@ -19,7 +19,7 @@ export const useDeleteProfile = () => {
   const submitWithSign = useSubmitWithSign<object>(submit, {
     onSuccess: () => {
       revalidateProfile()
-      router.replace("/create-profile/claim-pass")
+      router.replace("/create-profile/prompt-referrer")
       toast({
         variant: "success",
         title: "Successfully deleted profile",

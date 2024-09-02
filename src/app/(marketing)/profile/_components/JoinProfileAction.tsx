@@ -25,7 +25,7 @@ export const JoinProfileAction = () => {
       <Anchor
         variant="unstyled"
         className="slide-in-from-bottom fade-in pointer-events-auto animate-in rounded-2xl duration-700"
-        href={`/create-profile/claim-pass?${REFERRER_USER_SEARCH_PARAM_KEY}=${profile.data.username}`}
+        href={`/create-profile/prompt-referrer?${REFERRER_USER_SEARCH_PARAM_KEY}=${profile.data.username}`}
       >
         <Card
           className="flex max-w-md items-center gap-3 border border-transparent p-4 font-medium leading-tight"

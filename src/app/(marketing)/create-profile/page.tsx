@@ -20,7 +20,7 @@ const Page = () => {
   useEffect(() => {
     if (isWeb3Connected) {
       router.replace(
-        ["/create-profile/claim-pass", searchParams]
+        ["/create-profile/prompt-referrer", searchParams]
           .filter(Boolean)
           .map(String)
           .join("?")

@@ -19,7 +19,7 @@ import { CreateProfileStep } from "../types"
 
 const formSchema = schemas.ProfileCreationSchema.pick({ username: true })
 
-export const ClaimPass: CreateProfileStep = ({ dispatchAction, data }) => {
+export const PromptReferrer: CreateProfileStep = ({ dispatchAction, data }) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
