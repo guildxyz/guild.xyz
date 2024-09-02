@@ -251,7 +251,7 @@ const RoleSelectItem = ({
           />
           <AvatarFallback />
         </Avatar>
-        {data.name}
+        <span className="line-clamp-1">{data.name}</span>
       </div>
     </SelectItem>
   )

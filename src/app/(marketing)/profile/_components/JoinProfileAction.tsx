@@ -1,5 +1,6 @@
 "use client"
 
+import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { Anchor } from "@/components/ui/Anchor"
 import { Card } from "@/components/ui/Card"
 import { REFERRER_USER_SEARCH_PARAM_KEY } from "@app/(marketing)/create-profile/(onboarding)/constants"
@@ -10,7 +11,13 @@ import { useProfile } from "../_hooks/useProfile"
 export const JoinProfileAction = () => {
   const profile = useProfile()
   const user = useUser()
-  if (!profile.data || user.guildProfile) {
+  const { isWeb3Connected } = useWeb3ConnectionManager()
+  if (
+    !profile.data ||
+    isWeb3Connected === null ||
+    user.guildProfile ||
+    user.isLoading
+  ) {
     return
   }
   return (
@@ -18,7 +25,7 @@ export const JoinProfileAction = () => {
       <Anchor
         variant="unstyled"
         className="slide-in-from-bottom fade-in pointer-events-auto animate-in rounded-2xl duration-700"
-        href={`/create-profile/claim-pass?${REFERRER_USER_SEARCH_PARAM_KEY}=${profile.data.username}`}
+        href={`/create-profile/prompt-referrer?${REFERRER_USER_SEARCH_PARAM_KEY}=${profile.data.username}`}
       >
         <Card
           className="flex max-w-md items-center gap-3 border border-transparent p-4 font-medium leading-tight"

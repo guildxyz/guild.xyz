@@ -9,6 +9,7 @@ import { AvatarGroup } from "@/components/ui/AvatarGroup"
 import { Button } from "@/components/ui/Button"
 import { Card } from "@/components/ui/Card"
 import { Separator } from "@/components/ui/Separator"
+import { FarcasterProfile } from "@guildxyz/types"
 import { Pencil } from "@phosphor-icons/react"
 import useUser from "components/[guild]/hooks/useUser"
 import useSWRImmutable from "swr/immutable"
@@ -20,23 +21,35 @@ import { ProfileHeroSkeleton } from "./ProfileSkeleton"
 
 const useProfileFarcaster = () => {
   const { data: profile } = useProfile()
-  const { farcasterProfiles } = useUser(profile?.userId)
-  const fcProfile = farcasterProfiles?.at(0)
-  console.log(fcProfile)
-  return useSWRImmutable(
+  const user = useUser(profile?.userId)
+  const userFcProfile = user.farcasterProfiles?.at(0)
+  const fcProfile = useSWRImmutable<FarcasterProfile[]>(
+    profile?.userId ? `/v2/users/${profile.userId}/farcaster-profiles` : null
+  ).data?.at(0)
+  const followers = useSWRImmutable(
     fcProfile
       ? `https://api.neynar.com/v2/farcaster/user/bulk?api_key=NEYNAR_API_DOCS&fids=${fcProfile.fid}`
       : null
   )
+  const relevantFollowers = useSWRImmutable(
+    fcProfile && userFcProfile
+      ? `https://api.neynar.com/v2/farcaster/followers/relevant?api_key=NEYNAR_API_DOCS&target_fid=${fcProfile.fid}&viewer_fid=${userFcProfile.fid}`
+      : null
+  )
+  return { followers, relevantFollowers }
 }
 
 export const ProfileHero = () => {
   const { data: profile } = useProfile()
   const { data: referredUsers } = useReferredUsers()
   const profileFarcaster = useProfileFarcaster()
-  console.log(profileFarcaster.data)
-  const fc = profileFarcaster.data?.users.at(0)
-
+  const fc = profileFarcaster.followers.data?.users.at(0)
+  const relevantFc =
+    profileFarcaster.relevantFollowers.data?.top_relevant_followers_hydrated
+  console.log(
+    relevantFc,
+    relevantFc?.map(({ user }) => user.pfp_url)
+  )
   if (!profile || !referredUsers) return <ProfileHeroSkeleton />
 
   return (
@@ -97,14 +110,25 @@ export const ProfileHero = () => {
                   Following
                 </div>
               </div>
-              <Separator orientation="vertical" className="hidden h-12 sm:block" />
-              <div className="col-span-3 flex max-w-sm items-center gap-2 place-self-center sm:col-span-1">
-                <AvatarGroup imageUrls={["", ""]} count={8} />
-                <div className="text-balance text-muted-foreground leading-tight">
-                  Followed by <span className="font-bold">Hoho</span>,{" "}
-                  <span className="font-bold">Hihi</span> and 22 others on Farcaster
-                </div>
-              </div>
+              {relevantFc && fc && (
+                <>
+                  <Separator
+                    orientation="vertical"
+                    className="hidden h-12 sm:block"
+                  />
+                  <div className="col-span-3 flex max-w-sm items-center gap-2 place-self-center sm:col-span-1">
+                    <AvatarGroup
+                      imageUrls={relevantFc.map(({ user }) => user.pfp_url)}
+                      count={relevantFc.length}
+                    />
+                    <div className="text-balance text-muted-foreground leading-tight">
+                      Followed by <span className="font-bold">HOho</span>,{" "}
+                      <span className="font-bold">Hihi</span> and 22 others on
+                      Farcaster
+                    </div>
+                  </div>
+                </>
+              )}
             </>
           )}
         </div>

@@ -20,6 +20,7 @@ export const CardWithGuildLabel = ({
       <div
         className="absolute inset-x-0 h-9 w-full px-2 sm:top-0 sm:h-full sm:w-8 sm:p-0"
         style={{ background: guild.theme.color }}
+        title={guild.name}
       >
         <div className="sm:-translate-x-1/2 sm:-rotate-90 flex h-full items-center gap-1 sm:absolute sm:left-1/2 sm:justify-center">
           <Avatar size="xs">

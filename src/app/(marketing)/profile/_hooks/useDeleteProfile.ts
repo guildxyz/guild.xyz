@@ -9,17 +9,17 @@ export const useDeleteProfile = () => {
   const router = useRouter()
   const params = useParams<{ username: string }>()
 
-  const createProfile = async (signedValidation: SignedValidation) => {
+  const submit = async (signedValidation: SignedValidation) => {
     return fetcher(`/v2/profiles/${params?.username}`, {
       method: "DELETE",
       ...signedValidation,
     })
   }
 
-  const submitWithSign = useSubmitWithSign<object>(createProfile, {
+  const submitWithSign = useSubmitWithSign<object>(submit, {
     onSuccess: () => {
       revalidateProfile()
-      router.replace("/create-profile/claim-pass")
+      router.replace("/create-profile/prompt-referrer")
       toast({
         variant: "success",
         title: "Successfully deleted profile",

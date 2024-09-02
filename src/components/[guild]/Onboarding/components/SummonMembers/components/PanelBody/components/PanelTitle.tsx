@@ -23,6 +23,7 @@ const PanelTitle = () => {
       placeholder={"Title"}
       color={color}
       as={HStack}
+      wordBreak={"break-word"}
     >
       <EditablePreview />
       <EditableInput marginInlineStart="0 !important" width="min" />

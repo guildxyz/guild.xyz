@@ -4,6 +4,7 @@ import {
   FormErrorMessage,
   FormLabel,
   Tag,
+  useColorMode,
 } from "@chakra-ui/react"
 import { HStack, Icon, forwardRef } from "@chakra-ui/react"
 import { Warning } from "@phosphor-icons/react"
@@ -141,6 +142,20 @@ const Admins = () => {
   )
 }
 
+const CustomMultiValueContainer = (props) => {
+  const { colorMode } = useColorMode()
+
+  return (
+    <chakraComponents.MultiValueContainer
+      {...props}
+      sx={{
+        ...props.sx,
+        bgColor: colorMode === "dark" && props.data.isFixed ? "gray.500" : undefined,
+      }}
+    />
+  )
+}
+
 type PropsHelper = MultiValueGenericProps<unknown, boolean, GroupBase<unknown>>
 const CustomMultiValueLabel = (props: PropsWithChildren<PropsHelper>) => {
   const domain = isValidAddress(props.data.value) ? undefined : props.data.value
@@ -199,6 +214,7 @@ const AdminSelect = forwardRef((props: Props, ref) => (
     as={CreatableSelect}
     size="lg"
     components={{
+      MultiValueContainer: CustomMultiValueContainer,
       MultiValueLabel: CustomMultiValueLabel,
       Input: (inputProps) => (
         <chakraComponents.Input {...inputProps} placeholder="Paste address" />

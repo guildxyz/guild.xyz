@@ -23,6 +23,7 @@ import useDropzone from "hooks/useDropzone"
 import usePinata from "hooks/usePinata"
 import { useEffect, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
+import getColorByImage from "utils/getColorByImage"
 import { useCreateProfile } from "../_hooks/useCreateProfile"
 import { CreateProfileStep } from "../types"
 
@@ -90,12 +91,15 @@ export const StartProfile: CreateProfileStep = ({ data: chainData }) => {
   const { isDragActive, getRootProps } = useDropzone({
     multiple: false,
     noClick: false,
-    onDrop: (acceptedFiles) => {
-      if (!acceptedFiles[0]) return
+    onDrop: async (acceptedFiles) => {
+      const file = acceptedFiles[0]
+      if (!file) return
       onUpload({
-        data: [acceptedFiles[0]],
+        data: [file],
         onProgress: setUploadProgress,
       })
+      const dominantColor = await getColorByImage(URL.createObjectURL(file))
+      form.setValue("backgroundImageUrl", dominantColor)
     },
     onError: (error) => {
       toast({

@@ -1,6 +1,7 @@
 import { useConfetti } from "@/components/Confetti"
 import { useToast } from "@/components/ui/hooks/useToast"
 import { Schemas } from "@guildxyz/types"
+import useUser from "components/[guild]/hooks/useUser"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import { useRouter } from "next/navigation"
 import fetcher from "utils/fetcher"
@@ -9,6 +10,7 @@ export const useCreateProfile = () => {
   const router = useRouter()
   const { toast } = useToast()
   const { confettiPlayer } = useConfetti()
+  const user = useUser()
 
   const createProfile = async (signedValidation: SignedValidation) =>
     fetcher(`/v2/profiles`, {
@@ -17,13 +19,13 @@ export const useCreateProfile = () => {
     })
 
   const submitWithSign = useSubmitWithSign<Schemas["Profile"]>(createProfile, {
-    onSuccess: (response) => {
+    onSuccess: async (response) => {
       toast({
         variant: "success",
         title: "Successfully created profile",
       })
-      // TODO: maybe we should move this logic into page.tsx?
       confettiPlayer.current("Confetti from left and right")
+      await user.mutate()
       router.replace(`/profile/${response.username}`)
     },
     onError: (response) => {

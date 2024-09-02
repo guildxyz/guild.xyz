@@ -12,7 +12,7 @@ const Page = () => {
 
   useEffect(() => {
     if (!data.referrerProfile) {
-      router.replace("claim-pass")
+      router.replace("prompt-referrer")
     }
   }, [data, router.replace])
 

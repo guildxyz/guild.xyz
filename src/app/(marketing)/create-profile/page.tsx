@@ -8,17 +8,19 @@ import { SignIn } from "@phosphor-icons/react"
 import { useSetAtom } from "jotai"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useEffect } from "react"
+import { useIsClient } from "usehooks-ts"
 
 const Page = () => {
   const { isWeb3Connected } = useWeb3ConnectionManager()
   const setIsWalletSelectorModalOpen = useSetAtom(walletSelectorModalAtom)
   const router = useRouter()
   const searchParams = useSearchParams()
+  const isClient = useIsClient()
 
   useEffect(() => {
     if (isWeb3Connected) {
       router.replace(
-        ["/create-profile/claim-pass", searchParams]
+        ["/create-profile/prompt-referrer", searchParams]
           .filter(Boolean)
           .map(String)
           .join("?")
@@ -55,7 +57,7 @@ const Page = () => {
           colorScheme="primary"
           size="lg"
           className="w-full"
-          isLoading={isWeb3Connected === null}
+          isLoading={isClient && isWeb3Connected === null}
         >
           <SignIn weight="bold" />
           <span>Sign in</span>
