@@ -14,6 +14,7 @@ import Button from "components/common/Button"
 import useIsStuck from "hooks/useIsStuck"
 import { useEffect, useRef } from "react"
 import RecheckAccessesButton from "../RecheckAccessesButton"
+import useGuild from "../hooks/useGuild"
 import AddRoleDrawer from "./components/AddRoleDrawer"
 import OrderRolesModal from "./components/OrderRolesModal"
 
@@ -34,6 +35,9 @@ const AddAndOrderRoles = ({ setIsStuck = null }): JSX.Element => {
   useEffect(() => {
     setIsStuck?.(isStuck)
   }, [isStuck, setIsStuck])
+
+  const { roles } = useGuild()
+  const orderRolesModalKey = roles?.map((r) => r.id).join("-")
 
   return (
     <>
@@ -60,7 +64,7 @@ const AddAndOrderRoles = ({ setIsStuck = null }): JSX.Element => {
             icon={<CaretDown />}
             borderTopLeftRadius="0"
             borderBottomLeftRadius="0"
-          ></MenuButton>
+          />
           <MenuList>
             <MenuItem
               ref={orderButtonRef}
@@ -78,6 +82,10 @@ const AddAndOrderRoles = ({ setIsStuck = null }): JSX.Element => {
         finalFocusRef={addRoleButtonRef}
       />
       <OrderRolesModal
+        /**
+         * Passing role IDs as the key, so we re-populate the form's default values when the admin adds a new role to their guild
+         */
+        key={orderRolesModalKey}
         isOpen={isOrderModalOpen}
         onClose={onOrderModalClose}
         finalFocusRef={orderButtonRef}
