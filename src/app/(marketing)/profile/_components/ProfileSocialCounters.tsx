@@ -11,13 +11,14 @@ import { useReferredUsers } from "../_hooks/useReferredUsers"
 
 export const ProfileSocialCounters = ({ className }: any) => {
   const { data: referredUsers } = useReferredUsers()
-  const profileFarcaster = useProfileFarcaster()
+  const { targetProfileData, relevantFollowers } = useProfileFarcaster()
 
-  const fc = profileFarcaster.followers.data?.users.at(0)
-  const relevantFc =
-    profileFarcaster.relevantFollowers.data?.top_relevant_followers_hydrated?.map(
-      ({ user }) => user
-    )
+  if (!referredUsers) return
+
+  const targetFc = targetProfileData.data?.users.at(0)
+  const relevantFc = relevantFollowers.data?.top_relevant_followers_hydrated?.map(
+    ({ user }) => user
+  )
 
   return (
     <div
@@ -27,10 +28,10 @@ export const ProfileSocialCounters = ({ className }: any) => {
       )}
     >
       <SocialCountTile count={referredUsers.length}>Guildmates</SocialCountTile>
-      {fc && (
+      {targetFc && (
         <>
           <Separator orientation="vertical" className="h-10 md:h-12" />
-          <SocialCountTile count={fc.following_count}>
+          <SocialCountTile count={targetFc.following_count}>
             <FarcasterImage />
             Following
           </SocialCountTile>
@@ -40,9 +41,9 @@ export const ProfileSocialCounters = ({ className }: any) => {
             className="h-px w-full sm:h-10 sm:w-px md:h-12"
           />
           {relevantFc ? (
-            <RelevantFollowers {...{ relevantFc, fc }} />
+            <RelevantFollowers {...{ relevantFc, targetFc }} />
           ) : (
-            <SocialCountTile count={fc.follower_count}>
+            <SocialCountTile count={targetFc.follower_count}>
               <FarcasterImage />
               Followers
             </SocialCountTile>
@@ -53,24 +54,40 @@ export const ProfileSocialCounters = ({ className }: any) => {
   )
 }
 
+/**
+ * Uses [neynar API](https://docs.neynar.com) to retrieve farcaster data required by guild profile.
+ * In the context of this function `target` is the *guild profile* that is observed, and `viewer` is the *guild user*
+ * that is observing.
+ *
+ * @returns
+ *
+ * `targetProfileData`: `target` farcaster profile related data.
+ *
+ * `relevantFollowers`: farcaster followers that `target` and `viewer` share
+ * from the context of the `viewer`.
+ *
+ * Reference:
+ * - https://docs.neynar.com/reference/user-bulk
+ * - https://docs.neynar.com/reference/relevant-followers
+ * */
 const useProfileFarcaster = () => {
   const { data: profile } = useProfile()
-  const user = useUser(profile?.userId)
-  const userFcProfile = user.farcasterProfiles?.at(0)
-  const fcProfile = useSWRImmutable<FarcasterProfile[]>(
+  const user = useUser()
+  const viewerFcProfile = user.farcasterProfiles?.at(0)
+  const targetFcProfile = useSWRImmutable<FarcasterProfile[]>(
     profile?.userId ? `/v2/users/${profile.userId}/farcaster-profiles` : null
   ).data?.at(0)
-  const followers = useSWRImmutable(
-    fcProfile
-      ? `https://api.neynar.com/v2/farcaster/user/bulk?api_key=NEYNAR_API_DOCS&fids=${fcProfile.fid}`
+  const targetProfileData = useSWRImmutable(
+    targetFcProfile
+      ? `https://api.neynar.com/v2/farcaster/user/bulk?api_key=NEYNAR_API_DOCS&fids=${targetFcProfile.fid}`
       : null
   )
   const relevantFollowers = useSWRImmutable(
-    fcProfile && userFcProfile
-      ? `https://api.neynar.com/v2/farcaster/followers/relevant?api_key=NEYNAR_API_DOCS&target_fid=${fcProfile.fid}&viewer_fid=${userFcProfile.fid}`
+    targetFcProfile && viewerFcProfile
+      ? `https://api.neynar.com/v2/farcaster/followers/relevant?api_key=NEYNAR_API_DOCS&target_fid=${targetFcProfile.fid}&viewer_fid=${viewerFcProfile.fid}`
       : null
   )
-  return { followers, relevantFollowers }
+  return { targetProfileData, relevantFollowers }
 }
 
 const SocialCountTile = ({ count, children }: PropsWithChildren<{ count: any }>) => (
@@ -80,23 +97,27 @@ const SocialCountTile = ({ count, children }: PropsWithChildren<{ count: any }>)
   </div>
 )
 
-const RelevantFollowers = ({ relevantFc, fc }: { relevantFc: any; fc: any }) => {
-  const [first, second] = relevantFc
+const RelevantFollowers = ({
+  relevantFc,
+  targetFc,
+}: { relevantFc: any; targetFc: any }) => {
+  const [firstFc, secondFc] = relevantFc
   return (
     <div className="flex items-center gap-2">
       <AvatarGroup
         imageUrls={relevantFc.map(({ pfp_url }) => pfp_url)}
-        count={fc.follower_count}
+        count={targetFc.follower_count}
       />
       <div className="max-w-64 text-muted-foreground leading-tight">
-        Followed by <span className="font-bold">{first.display_name}</span>
-        {second && (
+        Followed by <span className="font-bold">{firstFc.display_name}</span>
+        {secondFc && (
           <>
             <span>", "</span>
-            <span className="font-bold">{second.display_name}</span>
+            <span className="font-bold">{secondFc.display_name}</span>
           </>
         )}{" "}
-        and {fc.follower_count - Math.min(2, relevantFc.length)} others on Farcaster
+        and {targetFc.follower_count - Math.min(2, relevantFc.length)} others on
+        Farcaster
       </div>
     </div>
   )
