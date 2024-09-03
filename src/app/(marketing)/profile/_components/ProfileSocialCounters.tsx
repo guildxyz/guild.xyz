@@ -4,6 +4,7 @@ import { Separator } from "@/components/ui/Separator"
 import { cn } from "@/lib/utils"
 import { FarcasterProfile } from "@guildxyz/types"
 import useUser from "components/[guild]/hooks/useUser"
+import { PropsWithChildren } from "react"
 import useSWRImmutable from "swr/immutable"
 import { useProfile } from "../_hooks/useProfile"
 import { useReferredUsers } from "../_hooks/useReferredUsers"
@@ -25,20 +26,14 @@ export const ProfileSocialCounters = ({ className }: any) => {
         className
       )}
     >
-      <div className="flex flex-col items-center leading-tight">
-        <div className="font-bold md:text-lg">{referredUsers.length}</div>
-        <div className="text-muted-foreground">Guildmates</div>
-      </div>
+      <SocialCountTile count={referredUsers.length}>Guildmates</SocialCountTile>
       {fc && (
         <>
           <Separator orientation="vertical" className="h-10 md:h-12" />
-          <div className="flex flex-col items-center leading-tight">
-            <div className="font-bold md:text-lg">{fc.following_count}</div>
-            <div className="flex items-center gap-1 text-muted-foreground">
-              <FarcasterImage />
-              Following
-            </div>
-          </div>
+          <SocialCountTile count={fc.following_count}>
+            <FarcasterImage />
+            Following
+          </SocialCountTile>
 
           <Separator
             orientation="horizontal"
@@ -47,13 +42,10 @@ export const ProfileSocialCounters = ({ className }: any) => {
           {relevantFc ? (
             <RelevantFollowers {...{ relevantFc, fc }} />
           ) : (
-            <div className="flex flex-col items-center leading-tight">
-              <div className="font-bold md:text-lg">{fc.follower_count}</div>
-              <div className="flex items-center gap-1 text-muted-foreground">
-                <FarcasterImage />
-                Followers
-              </div>
-            </div>
+            <SocialCountTile count={fc.follower_count}>
+              <FarcasterImage />
+              Followers
+            </SocialCountTile>
           )}
         </>
       )}
@@ -80,6 +72,13 @@ const useProfileFarcaster = () => {
   )
   return { followers, relevantFollowers }
 }
+
+const SocialCountTile = ({ count, children }: PropsWithChildren<{ count: any }>) => (
+  <div className="flex flex-col items-center leading-tight">
+    <div className="font-bold md:text-lg">{count}</div>
+    <div className="flex items-center gap-1 text-muted-foreground">{children}</div>
+  </div>
+)
 
 const RelevantFollowers = ({ relevantFc, fc }: { relevantFc: any; fc: any }) => {
   const [first, second] = relevantFc
