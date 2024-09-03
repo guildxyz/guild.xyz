@@ -8,7 +8,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import { env } from "env"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
-import { useToastWithTweetButton } from "hooks/useToast"
+import { useToastWithShareButtons } from "hooks/useToastWithShareButtons"
 import { useState } from "react"
 import guildPinAbi from "static/abis/guildPin"
 import { GuildPinMetadata } from "types"
@@ -48,7 +48,7 @@ const useMintGuildPin = () => {
 
   const { mutate } = useUsersGuildPins()
 
-  const toastWithTweetButton = useToastWithTweetButton()
+  const toastWithShareButtons = useToastWithShareButtons()
   const showErrorToast = useShowErrorToast()
 
   const { address, chainId, status } = useAccount()
@@ -191,9 +191,9 @@ const useMintGuildPin = () => {
     // TODO: trigger membership update only for a specific role (once Guild Pin will be a real reward)
     triggerMembershipUpdate()
 
-    toastWithTweetButton({
+    toastWithShareButtons({
       title: "Successfully minted Guild Pin!",
-      tweetText: `Just minted my Guild Pin for joining ${name}!\nguild.xyz/${urlName}`,
+      shareText: `Just minted my Guild Pin for joining ${name}!\nguild.xyz/${urlName}`,
     })
   }
 
