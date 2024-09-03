@@ -24,9 +24,6 @@ const Page = () => {
     <StartProfile
       data={data}
       dispatchAction={({ action }) => {
-        if (action === "next") {
-          // router.push("")
-        }
         if (action === "previous") {
           router.back()
         }
