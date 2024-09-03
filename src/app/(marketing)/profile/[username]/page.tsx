@@ -65,7 +65,13 @@ const fetchPublicProfileData = async ({
     api
   )
   const farcasterProfiles = await ssrFetcher<FarcasterProfile[]>(
-    farcasterProfilesRequest
+    farcasterProfilesRequest,
+    {
+      next: {
+        tags: ["profile"],
+        revalidate: 3600,
+      },
+    }
   )
   const fcProfile = farcasterProfiles.at(0)
   const neynarRequest =
