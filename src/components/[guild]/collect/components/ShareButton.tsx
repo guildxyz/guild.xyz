@@ -7,9 +7,10 @@ import {
   useClipboard,
 } from "@chakra-ui/react"
 import { CopySimple, ShareNetwork } from "@phosphor-icons/react"
+import { XLogo } from "@phosphor-icons/react/dist/ssr"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import Button from "components/common/Button"
-import XLogo from "static/icons/x.svg"
+import FarcasterLogo from "static/socialIcons/farcaster.svg"
 
 type Props = {
   onClick?: () => void
@@ -42,6 +43,21 @@ const ShareButton = ({ onClick, shareText }: Props): JSX.Element => {
         <MenuList>
           <MenuItem icon={<CopySimple size={12} />} fontSize="sm" onClick={onCopy}>
             {hasCopied ? "Copied!" : "Copy URL"}
+          </MenuItem>
+          <MenuItem
+            icon={<FarcasterLogo size={12} />}
+            fontSize="sm"
+            onClick={() => {
+              if (typeof window === "undefined") return
+              window.open(
+                `https://warpcast.com/~/compose?text=${encodeURIComponent(
+                  `${shareText}\n${pageLink}`
+                )}`,
+                "_blank"
+              )
+            }}
+          >
+            Cast
           </MenuItem>
           <MenuItem
             icon={<XLogo size={12} />}
