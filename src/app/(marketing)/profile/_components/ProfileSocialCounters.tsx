@@ -16,8 +16,6 @@ export const ProfileSocialCounters = ({ className }: any) => {
   const { farcasterProfile } = useFarcasterProfile(profile?.userId)
   const { relevantFollowers } = useRelevantFarcasterFollowers(farcasterProfile?.fid)
 
-  if (!referredUsers) return
-
   return (
     <div
       className={cn(
@@ -25,7 +23,9 @@ export const ProfileSocialCounters = ({ className }: any) => {
         className
       )}
     >
-      <SocialCountTile count={referredUsers.length}>Guildmates</SocialCountTile>
+      {referredUsers && (
+        <SocialCountTile count={referredUsers.length}>Guildmates</SocialCountTile>
+      )}
       {farcasterProfile && (
         <>
           <Separator orientation="vertical" className="h-10 md:h-12" />
