@@ -28,7 +28,7 @@ export const ActivityCard = ({ activity }: { activity: ActivityLogAction }) => {
   const guild = guildLatest
     ? { ...guildLatest, ...guildLatest?.theme }
     : guildFallback?.entries.at(0)?.data
-  const color = Color(guild?.color)
+  const color = guild?.color && Color(guild.color)
 
   return (
     <Card className="flex">
