@@ -1,5 +1,5 @@
 import useSWRWithOptionalAuth, {
-  mutateOptionalAuthSWRKey,
+  useMutateOptionalAuthSWRKey,
 } from "hooks/useSWRWithOptionalAuth"
 import { usePathname } from "next/navigation"
 import { mutate as swrMutate, unstable_serialize, useSWRConfig } from "swr"
@@ -17,6 +17,7 @@ const useGuild = (guildId?: string | number) => {
   const id = useGuildUrlNameFromPathname(guildId)
 
   const publicSWRKey = `/v2/guilds/guild-page/${id}`
+  const mutateOptionalAuthSWRKey = useMutateOptionalAuthSWRKey()
 
   const { data, mutate, isLoading, error, isSigned } = useSWRWithOptionalAuth<Guild>(
     id ? publicSWRKey : null,

@@ -60,16 +60,20 @@ const useSWRWithOptionalAuth = <Data = any, Error = any>(
  * We could do a mutate(url) here as well, but I removed it as it seemed unnecessary,
  * since the user is already authenticated, when we call this.
  */
-const mutateOptionalAuthSWRKey = <Data>(
-  url: string,
-  mutator?: (prevData: Data) => Data,
-  options?: MutatorOptions<Data>
-) =>
-  mutate<Data>(
-    unstable_serialize([url, { method: "GET", body: {} }]),
-    mutator,
-    options
-  )
+const useMutateOptionalAuthSWRKey = () => {
+  const { address } = useWeb3ConnectionManager()
 
-export { mutateOptionalAuthSWRKey }
+  return <Data>(
+    url: string,
+    mutator?: (prevData: Data) => Data,
+    options?: MutatorOptions<Data>
+  ) =>
+    mutate<Data>(
+      unstable_serialize(getKeyForSWRWithOptionalAuth(url, address)),
+      mutator,
+      options
+    )
+}
+
+export { getKeyForSWRWithOptionalAuth, useMutateOptionalAuthSWRKey }
 export default useSWRWithOptionalAuth
