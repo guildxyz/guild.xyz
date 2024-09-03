@@ -7,7 +7,7 @@ import {
   LayoutMain,
 } from "@/components/Layout"
 import { SWRProvider } from "@/components/SWRProvider"
-import { Guild, Role, Schemas } from "@guildxyz/types"
+import { FarcasterProfile, Guild, Role, Schemas } from "@guildxyz/types"
 import { env } from "env"
 import { Metadata } from "next"
 import Image from "next/image"
@@ -60,6 +60,33 @@ const fetchPublicProfileData = async ({
   if (!fetchFallback) {
     return { profile }
   }
+  const farcasterProfilesRequest = new URL(
+    `/v2/users/${profile.userId}/farcaster-profiles`,
+    api
+  )
+  const farcasterProfiles = await ssrFetcher<FarcasterProfile[]>(
+    farcasterProfilesRequest,
+    {
+      next: {
+        tags: ["profile"],
+        revalidate: 3600,
+      },
+    }
+  )
+  const fcProfile = farcasterProfiles.at(0)
+  const neynarRequest =
+    fcProfile &&
+    new URL(
+      `https://api.neynar.com/v2/farcaster/user/bulk?api_key=NEYNAR_API_DOCS&fids=${fcProfile.fid}`
+    )
+  const fcFollowers =
+    neynarRequest &&
+    (await ssrFetcher(neynarRequest, {
+      next: {
+        revalidate: 24 * 3600,
+      },
+    }))
+
   const referredUsersRequest = new URL(
     `/v2/profiles/${username}/referred-users`,
     api
@@ -107,26 +134,26 @@ const fetchPublicProfileData = async ({
       })
     )
   )
-  const guildsZipped = Object.fromEntries(
-    guildRequests.map(({ pathname }, i) => [pathname, guilds[i]])
-  )
-  const rolesZipped = Object.fromEntries(
-    roleRequests.map(({ pathname }, i) => [pathname, roles[i]])
-  )
+  const guildsZipped = guildRequests.map(({ pathname }, i) => [pathname, guilds[i]])
+  const rolesZipped = roleRequests.map(({ pathname }, i) => [pathname, roles[i]])
   return {
     profile,
-    fallback: {
-      [profileRequest.pathname]: profile,
-      [contributionsRequest.pathname]: contributions,
-      [referredUsersRequest.pathname]: referredUsers,
-      ...guildsZipped,
-      ...rolesZipped,
-    },
+    fallback: Object.fromEntries(
+      [
+        [profileRequest.pathname, profile],
+        [contributionsRequest.pathname, contributions],
+        [farcasterProfilesRequest.pathname, farcasterProfiles],
+        [neynarRequest?.href, fcFollowers],
+        [referredUsersRequest.pathname, referredUsers],
+        ...guildsZipped,
+        ...rolesZipped,
+      ].filter(([key, value]) => key && value)
+    ),
   }
 }
 
 const Page = async ({ params: { username } }: PageProps) => {
-  const { fallback, profile } = await fetchPublicProfileData({ username })
+  const { profile, fallback } = await fetchPublicProfileData({ username })
 
   const isBgColor = profile.backgroundImageUrl?.startsWith("#")
 
