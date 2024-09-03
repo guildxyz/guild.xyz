@@ -65,6 +65,14 @@ export const StartProfile: CreateProfileStep = ({ data: chainData }) => {
   })
 
   const createProfile = useCreateProfile()
+  const [isLoading, setIsLoading] = useState(false)
+  useEffect(() => {
+    if (createProfile.isLoading) {
+      setIsLoading(true)
+    } else if (createProfile.error) {
+      setIsLoading(false)
+    }
+  }, [createProfile.isLoading, createProfile.error])
   async function onSubmit(values: Schemas["ProfileCreation"]) {
     if (!chainData.referrerProfile?.userId) {
       throw new Error("Tried to create profile with empty referrer profile")
@@ -217,7 +225,7 @@ export const StartProfile: CreateProfileStep = ({ data: chainData }) => {
                 className="w-full"
                 type="submit"
                 colorScheme="success"
-                isLoading={createProfile.isLoading}
+                isLoading={isLoading}
                 disabled={!form.formState.isValid}
               >
                 Start my profile

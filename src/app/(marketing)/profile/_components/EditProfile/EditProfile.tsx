@@ -30,7 +30,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { User } from "@phosphor-icons/react"
 import useDropzone from "hooks/useDropzone"
 import usePinata from "hooks/usePinata"
-import { PropsWithChildren, useState } from "react"
+import { PropsWithChildren, useEffect, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { useDeleteProfile } from "../../_hooks/useDeleteProfile"
 import { useProfile } from "../../_hooks/useProfile"
@@ -88,6 +88,14 @@ export const EditProfile = ({ children }: PropsWithChildren<any>) => {
   })
 
   const deleteProfile = useDeleteProfile()
+  const [isDeleteLoading, setIsDeleteLoading] = useState(false)
+  useEffect(() => {
+    if (deleteProfile.isLoading) {
+      setIsDeleteLoading(true)
+    } else if (deleteProfile.error) {
+      setIsDeleteLoading(false)
+    }
+  }, [deleteProfile.isLoading, deleteProfile.error])
 
   return (
     <Dialog onOpenChange={disclosure.setValue} open={disclosure.isOpen}>
@@ -185,6 +193,7 @@ export const EditProfile = ({ children }: PropsWithChildren<any>) => {
               <p className="mb-2 font-medium">Danger zone</p>
               <Button
                 onClick={deleteProfile.onSubmit}
+                isLoading={isDeleteLoading}
                 variant="subtle"
                 type="button"
                 colorScheme="destructive"
