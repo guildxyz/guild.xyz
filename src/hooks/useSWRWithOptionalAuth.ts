@@ -6,6 +6,14 @@ import useSWRImmutable from "swr/immutable"
 
 type SWRSettings = Parameters<typeof useSWR>[2]
 
+const getKeyForSWRWithOptionalAuth = (
+  url: string,
+  address: `0x${string}` | undefined
+) => {
+  if (!address) return null
+  return [url, {}, `swr-with-optional-auth-${address.toLowerCase()}`]
+}
+
 const useSWRWithOptionalAuth = <Data = any, Error = any>(
   url: string | null,
   options: SWRSettings = {},
@@ -14,14 +22,14 @@ const useSWRWithOptionalAuth = <Data = any, Error = any>(
 ): SWRResponse<Data, Error> & { isSigned: boolean } => {
   const useSWRHook = isMutable ? useSWR : useSWRImmutable
 
-  const { isWeb3Connected } = useWeb3ConnectionManager()
+  const { isWeb3Connected, address } = useWeb3ConnectionManager()
   const { keyPair } = useUserPublic()
 
   const shouldSendAuth = !!keyPair && isWeb3Connected
 
   const fetcherWithSign = useFetcherWithSign()
   const authenticatedResponse = useSWRHook<Data, Error, any>(
-    url && shouldSendAuth ? [url, { method: "GET", body: {} }] : null,
+    url && shouldSendAuth ? getKeyForSWRWithOptionalAuth(url, address) : null,
     fetcherWithSign,
     options as any
   )
