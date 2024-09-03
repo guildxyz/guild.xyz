@@ -81,6 +81,11 @@ const fetchPublicProfileData = async ({
       },
     }))
 
+  const referredUsersRequest = new URL(
+    `/v2/profiles/${username}/referred-users`,
+    api
+  )
+  const referredUsers = await ssrFetcher(referredUsersRequest)
   const contributionsRequest = new URL(`v2/profiles/${username}/contributions`, api)
   const contributions = await ssrFetcher<Schemas["Contribution"][]>(
     contributionsRequest,
@@ -125,9 +130,10 @@ const fetchPublicProfileData = async ({
         [contributionsRequest.pathname, contributions],
         [farcasterProfilesRequest.pathname, farcasterProfiles],
         [neynarRequest?.href, fcFollowers],
+        [referredUsersRequest.pathname, referredUsers],
         ...guildsZipped,
         ...rolesZipped,
-      ].filter(Boolean)
+      ].filter(([key, value]) => key && value)
     ),
   }
 }

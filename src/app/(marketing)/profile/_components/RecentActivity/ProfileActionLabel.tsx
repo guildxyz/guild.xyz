@@ -1,18 +1,18 @@
 "use client"
 
 import { Badge } from "@/components/ui/Badge"
-import { Skeleton } from "@/components/ui/Skeleton"
 import { Guild, Role } from "@guildxyz/types"
 import { Confetti, Rocket } from "@phosphor-icons/react"
 import { ActivityLogActionResponse } from "components/[guild]/activity/ActivityLogContext"
 import { ACTION, ActivityLogAction } from "components/[guild]/activity/constants"
-import { useRolePlatform } from "hooks/useRolePlatform"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import { FunctionComponent } from "react"
 import rewards from "rewards"
 import useSWRImmutable from "swr/immutable"
 import capitalize from "utils/capitalize"
 import { useProfile } from "../../_hooks/useProfile"
+import { BadgeSkeleton } from "./BadgeSkeleton"
+import { RewardBadge } from "./RewardBadge"
 
 const GuildBadge: FunctionComponent<{ guildId?: number }> = ({ guildId }) => {
   const { data: guildLatest, error } = useSWRImmutable<Guild>(
@@ -32,25 +32,6 @@ const GuildBadge: FunctionComponent<{ guildId?: number }> = ({ guildId }) => {
     return <BadgeSkeleton />
   }
   return <Badge className="whitespace-nowrap">{guild.name}</Badge>
-}
-
-const RewardBadge: FunctionComponent<{
-  guildId?: number
-  roleId?: number
-  rolePlatformId?: number
-}> = ({ guildId, roleId, rolePlatformId }) => {
-  const { rolePlatform, isLoading } = useRolePlatform({
-    guildId,
-    roleId,
-    rolePlatformId,
-  })
-
-  if (isLoading) return <BadgeSkeleton />
-
-  if (!rolePlatform) return <Badge variant="outline">Deleted reward</Badge>
-
-  // todo
-  return <Badge>{rolePlatform.guildPlatform?.platformGuildData?.name}</Badge>
 }
 
 const RoleBadge: FunctionComponent<{
@@ -245,7 +226,3 @@ export const ProfileActionLabel: FunctionComponent<{
     }
   })()
 }
-
-const BadgeSkeleton = () => (
-  <Skeleton className="inline-flex h-6 w-16 align-bottom" />
-)
