@@ -64,12 +64,15 @@ const fetchPublicProfileData = async ({
     `/v2/profiles/${username}/referred-users`,
     api
   )
-  const referredUsers = await ssrFetcher(referredUsersRequest, {
-    next: {
-      tags: ["profile"],
-      revalidate: 3600,
-    },
-  })
+  const referredUsers = await ssrFetcher<Schemas["Profile"][]>(
+    referredUsersRequest,
+    {
+      next: {
+        tags: ["profile"],
+        revalidate: 3600,
+      },
+    }
+  )
   const contributionsRequest = new URL(`v2/profiles/${username}/contributions`, api)
   const contributions = await ssrFetcher<Schemas["Contribution"][]>(
     contributionsRequest,
