@@ -16,7 +16,6 @@ const RewardCardButton = ({
 
   const buttonProps = {
     size: { base: "sm", xl: "md" },
-    w: "full",
     ...props,
   } satisfies ButtonProps
 
