@@ -60,6 +60,11 @@ const fetchPublicProfileData = async ({
   if (!fetchFallback) {
     return { profile }
   }
+  const referredUsersRequest = new URL(
+    `/v2/profiles/${username}/referred-users`,
+    api
+  )
+  const referredUsers = await ssrFetcher(referredUsersRequest)
   const contributionsRequest = new URL(`v2/profiles/${username}/contributions`, api)
   const contributions = await ssrFetcher<Schemas["Contribution"][]>(
     contributionsRequest,
@@ -105,6 +110,7 @@ const fetchPublicProfileData = async ({
     fallback: {
       [profileRequest.pathname]: profile,
       [contributionsRequest.pathname]: contributions,
+      [referredUsersRequest.pathname]: referredUsers,
       ...guildsZipped,
       ...rolesZipped,
     },
