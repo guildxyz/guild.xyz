@@ -33,7 +33,7 @@ export const Account = () => {
 
   if (isLoading || isWeb3Connected === null) {
     return (
-      <Card className="overflow-visible">
+      <Card className="overflow-hidden">
         <Skeleton className="h-11 w-36" />
       </Card>
     )
