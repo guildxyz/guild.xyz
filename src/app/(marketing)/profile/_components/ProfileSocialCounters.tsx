@@ -34,10 +34,7 @@ export const ProfileSocialCounters = ({ className }: any) => {
             Following
           </SocialCountTile>
 
-          <Separator
-            orientation="horizontal"
-            className="h-px w-full sm:h-10 sm:w-px md:h-12"
-          />
+          <Separator orientation="vertical" className="h-10 max-sm:hidden md:h-12" />
           {relevantFollowers?.length ? (
             <RelevantFollowers
               relevantFollowers={relevantFollowers}
