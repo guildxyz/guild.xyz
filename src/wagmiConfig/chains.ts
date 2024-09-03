@@ -14,7 +14,6 @@ import {
   taikoKatlaTestnet,
   x1,
 } from "static/customChains"
-// import type { Chain as ViemChain } from "viem"
 import {
   type Chain as ViemChain,
   arbitrum,
@@ -31,6 +30,7 @@ import {
   celo,
   coreDao,
   cronos,
+  cronoszkEVM,
   cyber,
   evmos,
   fantom,
@@ -300,7 +300,7 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
     iconUrl: "/networkLogos/cronos.svg",
     blockExplorerIconUrl: {
       light: "/networkLogos/cronos.svg",
-      dark: "/explorerLogos/cronos-dark.svg",
+      dark: "/explorerLogos/cronos.svg",
     },
     etherscanApiUrl: "https://cronos.org/explorer",
   },
@@ -707,6 +707,14 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/networkLogos/lisk.svg",
     },
   },
+  CRONOS_ZKEVM: {
+    ...generateChainConfig(cronoszkEVM, "/networkLogos/cronos.svg"),
+    iconUrl: "/networkLogos/cronos.svg",
+    blockExplorerIconUrl: {
+      light: "/networkLogos/cronos.svg",
+      dark: "/explorerLogos/cronos.svg",
+    },
+  },
 }
 
 enum Chains {
@@ -776,6 +784,7 @@ enum Chains {
   ROOTSTOCK = rootstock.id,
   MODE = mode.id,
   LISK = lisk.id,
+  CRONOS_ZKEVM = cronoszkEVM.id,
 }
 
 export type Chain = keyof typeof Chains
