@@ -24,7 +24,7 @@ const useToastWithShareButtons = () => {
               <span>Cast</span>
             </a>
           </ToastAction>
-          <ToastAction altText="Cast" asChild>
+          <ToastAction altText="Share" asChild>
             <a
               href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
                 shareText
