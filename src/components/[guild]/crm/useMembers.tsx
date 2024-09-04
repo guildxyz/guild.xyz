@@ -1,6 +1,7 @@
 import { useUserPublic } from "@/hooks/useUserPublic"
 import useActiveStatusUpdates from "hooks/useActiveStatusUpdates"
 import { useFetcherWithSign } from "hooks/useFetcherWithSign"
+import { useGetKeyForSWRWithOptionalAuth } from "hooks/useGetKeyForSWRWithOptionalAuth"
 import { useCallback, useMemo } from "react"
 import useSWRInfinite from "swr/infinite"
 import { PlatformAccountDetails } from "types"
@@ -32,6 +33,8 @@ const useMembers = (queryString: string) => {
   const { id } = useGuild()
   const { keyPair } = useUserPublic()
 
+  const getKeyForSWRWithOptionalAuth = useGetKeyForSWRWithOptionalAuth()
+
   const getKey = useCallback(
     (pageIndex, previousPageData) => {
       if (!id || !keyPair) return null
@@ -40,21 +43,17 @@ const useMembers = (queryString: string) => {
 
       const pagination = `offset=${pageIndex * LIMIT}&limit=${LIMIT}`
 
-      return `/v2/crm/guilds/${id}/members?${[queryString, pagination].join("&")}`
+      return getKeyForSWRWithOptionalAuth(
+        `/v2/crm/guilds/${id}/members?${[queryString, pagination].join("&")}`
+      )
     },
     [queryString, id, keyPair]
   )
 
   const fetcherWithSign = useFetcherWithSign()
   const fetchMembers = useCallback(
-    (url: string) =>
-      fetcherWithSign([
-        url,
-        {
-          method: "GET",
-          body: {},
-        },
-      ]).then((res) =>
+    (props) =>
+      fetcherWithSign(props).then((res) =>
         res.map((user) => ({
           ...user,
           platformUsers: user.platformUsers.sort(sortAccounts),

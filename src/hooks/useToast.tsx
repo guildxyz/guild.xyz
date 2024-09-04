@@ -10,7 +10,6 @@ import {
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import { useRef } from "react"
-import XLogo from "static/icons/x.svg"
 
 const useToast = (toastOptions?: UseToastOptions) =>
   chakraUseToast({
@@ -77,30 +76,5 @@ const useToastWithButton = () => {
   }
 }
 
-type TweetToastOptions = {
-  title: string
-  tweetText: string
-}
-
-const useToastWithTweetButton = () => {
-  const toastWithButton = useToastWithButton()
-
-  return ({ title, tweetText }: TweetToastOptions) =>
-    toastWithButton({
-      status: "success",
-      title,
-      description: "Let others know as well by sharing it on X",
-      buttonProps: {
-        leftIcon: <XLogo weight="fill" />,
-        children: "Share",
-        as: "a",
-        href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-          tweetText
-        )}`,
-        target: "_blank",
-      },
-    })
-}
-
 export default useToast
-export { useToastWithButton, useToastWithTweetButton }
+export { useToastWithButton }

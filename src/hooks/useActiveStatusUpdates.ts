@@ -3,6 +3,7 @@ import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import { useState } from "react"
 import useSWR from "swr"
+import { useGetKeyForSWRWithOptionalAuth } from "./useGetKeyForSWRWithOptionalAuth"
 
 type Status = {
   id: string
@@ -21,17 +22,13 @@ const useActiveStatusUpdates = (roleId?: number, onSuccess?: () => void) => {
   const { isAdmin } = useGuildPermission()
 
   const fetcherWithSign = useFetcherWithSign()
+  const getKeyForSWRWithOptionalAuth = useGetKeyForSWRWithOptionalAuth()
 
   const { data, isValidating, mutate } = useSWR<Response>(
-    isAdmin ? `/v2/actions/status-update?guildId=${id}` : null,
-    (url) =>
-      fetcherWithSign([
-        url,
-        {
-          method: "GET",
-          body: {},
-        },
-      ]),
+    isAdmin
+      ? getKeyForSWRWithOptionalAuth(`/v2/actions/status-update?guildId=${id}`)
+      : null,
+    fetcherWithSign,
     {
       refreshInterval: isActive && 5000,
       revalidateOnFocus: false,
