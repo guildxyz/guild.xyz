@@ -6,9 +6,24 @@ import { mutate as swrMutate, unstable_serialize, useSWRConfig } from "swr"
 import useSWRImmutable from "swr/immutable"
 import { Guild, SimpleGuild } from "types"
 
+// TODO: once we migrate every page to the app router, we should remove this array & use the `useParams` hook instead of `usePathname`
+const EXCLUDED_ROUTES = [
+  "explorer",
+  "create-guild",
+  "privacy-policy",
+  "terms-of-use",
+  "leaderboard",
+  "profile",
+  "superadmin",
+]
+
 const useGuildUrlNameFromPathname = (guildId?: string | number) => {
   const pathname = usePathname()
   const guildFromPathname = pathname?.split("/").at(1)
+
+  const idToReturn = guildId ?? guildFromPathname
+
+  if (EXCLUDED_ROUTES.includes(idToReturn?.toString() ?? "")) return undefined
 
   return guildId ?? guildFromPathname
 }
