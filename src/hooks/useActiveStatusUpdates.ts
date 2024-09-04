@@ -25,8 +25,10 @@ const useActiveStatusUpdates = (roleId?: number, onSuccess?: () => void) => {
   const getKeyForSWRWithOptionalAuth = useGetKeyForSWRWithOptionalAuth()
 
   const { data, isValidating, mutate } = useSWR<Response>(
-    isAdmin ? `/v2/actions/status-update?guildId=${id}` : null,
-    (url) => fetcherWithSign(getKeyForSWRWithOptionalAuth(url)),
+    isAdmin
+      ? getKeyForSWRWithOptionalAuth(`/v2/actions/status-update?guildId=${id}`)
+      : null,
+    fetcherWithSign,
     {
       refreshInterval: isActive && 5000,
       revalidateOnFocus: false,

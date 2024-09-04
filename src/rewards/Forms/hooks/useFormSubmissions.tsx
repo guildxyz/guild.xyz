@@ -39,18 +39,20 @@ const useFormSubmissions = (formId, queryString) => {
 
       const pagination = `offset=${pageIndex * LIMIT}&limit=${LIMIT}`
 
-      return `/v2/guilds/${id}/forms/${formId}/user-submissions?${[
-        queryString,
-        pagination,
-      ].join("&")}`
+      return getKeyForSWRWithOptionalAuth(
+        `/v2/guilds/${id}/forms/${formId}/user-submissions?${[
+          queryString,
+          pagination,
+        ].join("&")}`
+      )
     },
     [queryString, id, formId]
   )
 
   const { data, ...rest } = useSWRInfinite<FormSubmission[]>(
     getKey,
-    (url: string) =>
-      fetcherWithSign(getKeyForSWRWithOptionalAuth(url)).then((res) =>
+    (props) =>
+      fetcherWithSign(props).then((res) =>
         res.map((user) => ({
           ...user,
           platformUsers: user.platformUsers.sort(sortAccounts),
