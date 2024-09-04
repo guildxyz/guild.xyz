@@ -28,6 +28,7 @@ import {
 } from "@phosphor-icons/react/dist/ssr"
 import useUser from "components/[guild]/hooks/useUser"
 import { useFetcherWithSign } from "hooks/useFetcherWithSign"
+import { useGetKeyForSWRWithOptionalAuth } from "hooks/useGetKeyForSWRWithOptionalAuth"
 import useSubmit, { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import { QRCodeSVG } from "qrcode.react"
 import { useCallback, useEffect, useState } from "react"
@@ -69,9 +70,11 @@ const ConnectFarcasterButton = ({
   const { captureEvent } = usePostHogContext()
   const { farcasterProfiles, id: userId, mutate } = useUser()
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const fetcherWithSign = useFetcherWithSign()
   const { toast } = useToast()
   const [pollInterval, setPollInterval] = useState<NodeJS.Timeout>()
+
+  const fetcherWithSign = useFetcherWithSign()
+  const getKeyForSWRWithOptionalAuth = useGetKeyForSWRWithOptionalAuth()
 
   const onApprove = () => {
     captureEvent("[farcaster] request approved")
@@ -124,10 +127,9 @@ const ConnectFarcasterButton = ({
             clearInterval(interval)
           }
 
-          fetcherWithSign([
-            `/v2/users/${userId}/farcaster-profiles`,
-            { method: "GET" },
-          ])
+          fetcherWithSign(
+            getKeyForSWRWithOptionalAuth(`/v2/users/${userId}/farcaster-profiles`)
+          )
             .then((profiles) => {
               if (profiles?.length > 0) {
                 mutate(

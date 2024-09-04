@@ -5,6 +5,7 @@ import { useToast } from "@/components/ui/hooks/useToast"
 import useUser from "components/[guild]/hooks/useUser"
 import { env } from "env"
 import { useFetcherWithSign } from "hooks/useFetcherWithSign"
+import { useGetKeyForSWRWithOptionalAuth } from "hooks/useGetKeyForSWRWithOptionalAuth"
 import usePopupWindow from "hooks/usePopupWindow"
 import useSubmit, { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import { UseSubmitOptions } from "hooks/useSubmit/types"
@@ -75,18 +76,20 @@ const useConnectPlatform = (
   disconnectFromExistingUser?: boolean
 ) => {
   const { id, mutate: mutateUser } = useUser()
-  const fetcherWithSign = useFetcherWithSign()
   const fetchUserEmail = useFetchUserEmail()
   const { toast } = useToast()
   const showPlatformMergeAlert = useSetAtom(platformMergeAlertAtom)
   const { onOpen } = usePopupWindow()
 
+  const fetcherWithSign = useFetcherWithSign()
+  const getKeyForSWRWithOptionalAuth = useGetKeyForSWRWithOptionalAuth()
+
   const { data: authToken } = useSWR(
     id ? `guild-oauth-token-${id}` : null,
     () =>
-      fetcherWithSign([`/v2/oauth/${platformName}/token`, { method: "GET" }]).then(
-        ({ token }) => token
-      ),
+      fetcherWithSign(
+        getKeyForSWRWithOptionalAuth(`/v2/oauth/${platformName}/token`)
+      ).then(({ token }) => token),
     { dedupingInterval: 1000 * 60 * 4, refreshInterval: 1000 * 30 }
   )
 
@@ -116,10 +119,11 @@ const useConnectPlatform = (
             const result: OAuthResultParams = event.data
 
             if (result.status === "success") {
-              fetcherWithSign([
-                `/v2/users/${id}/platform-users/${PlatformType[platformName]}`,
-                { method: "GET" },
-              ])
+              fetcherWithSign(
+                getKeyForSWRWithOptionalAuth(
+                  `/v2/users/${id}/platform-users/${PlatformType[platformName]}`
+                )
+              )
                 .then((newPlatformUser) => {
                   mutateUser(
                     async (prev) => {

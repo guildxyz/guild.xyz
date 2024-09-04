@@ -1,5 +1,6 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useFetcherWithSign } from "hooks/useFetcherWithSign"
+import { useGetKeyForSWRWithOptionalAuth } from "hooks/useGetKeyForSWRWithOptionalAuth"
 import { useState } from "react"
 import useSWRImmutable from "swr/immutable"
 
@@ -34,8 +35,9 @@ const useExports = () => {
   const [shouldPoll, setShouldPoll] = useState(false)
   const fetcherWithSign = useFetcherWithSign()
 
-  const fetchExports = (endpoint) =>
-    fetcherWithSign([endpoint, { method: "GET" }]).then((res: ExportsEndpoint) => {
+  const getKeyForSWRWithOptionalAuth = useGetKeyForSWRWithOptionalAuth()
+  const fetchExports = (props) =>
+    fetcherWithSign(props).then((res: ExportsEndpoint) => {
       if (res.exports.some((exp) => exp.status === "STARTED")) setShouldPoll(true)
       else setShouldPoll(false)
 
@@ -43,7 +45,7 @@ const useExports = () => {
     })
 
   return useSWRImmutable<ExportData[]>(
-    `/v2/crm/guilds/${id}/exports`,
+    getKeyForSWRWithOptionalAuth(`/v2/crm/guilds/${id}/exports`),
     fetchExports,
     {
       keepPreviousData: true,

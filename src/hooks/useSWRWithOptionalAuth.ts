@@ -1,16 +1,11 @@
 import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { useUserPublic } from "@/hooks/useUserPublic"
-import useUser from "components/[guild]/hooks/useUser"
 import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import useSWR, { mutate, MutatorOptions, SWRResponse, unstable_serialize } from "swr"
 import useSWRImmutable from "swr/immutable"
+import { useGetKeyForSWRWithOptionalAuth } from "./useGetKeyForSWRWithOptionalAuth"
 
 type SWRSettings = Parameters<typeof useSWR>[2]
-
-const getKeyForSWRWithOptionalAuth = (url: string, userId: number) => {
-  if (!userId) return null
-  return [url, {}, `swr-with-optional-auth-${userId}`]
-}
 
 const useSWRWithOptionalAuth = <Data = any, Error = any>(
   url: string | null,
@@ -21,13 +16,14 @@ const useSWRWithOptionalAuth = <Data = any, Error = any>(
   const useSWRHook = isMutable ? useSWR : useSWRImmutable
 
   const { isWeb3Connected } = useWeb3ConnectionManager()
-  const { id, keyPair } = useUserPublic()
+  const { keyPair } = useUserPublic()
+  const getKeyForSWRWithOptionalAuth = useGetKeyForSWRWithOptionalAuth()
 
   const shouldSendAuth = !!keyPair && isWeb3Connected
 
   const fetcherWithSign = useFetcherWithSign()
   const authenticatedResponse = useSWRHook<Data, Error, any>(
-    url && shouldSendAuth ? getKeyForSWRWithOptionalAuth(url, id) : null,
+    url && shouldSendAuth ? getKeyForSWRWithOptionalAuth(url) : null,
     fetcherWithSign,
     options as any
   )
@@ -59,7 +55,7 @@ const useSWRWithOptionalAuth = <Data = any, Error = any>(
  * since the user is already authenticated, when we call this.
  */
 const useMutateOptionalAuthSWRKey = () => {
-  const { id } = useUser()
+  const getKeyForSWRWithOptionalAuth = useGetKeyForSWRWithOptionalAuth()
 
   return <Data>(
     url: string,
@@ -67,11 +63,11 @@ const useMutateOptionalAuthSWRKey = () => {
     options?: MutatorOptions<Data>
   ) =>
     mutate<Data>(
-      unstable_serialize(getKeyForSWRWithOptionalAuth(url, id)),
+      unstable_serialize(getKeyForSWRWithOptionalAuth(url)),
       mutator,
       options
     )
 }
 
-export { getKeyForSWRWithOptionalAuth, useMutateOptionalAuthSWRKey }
+export { useMutateOptionalAuthSWRKey }
 export default useSWRWithOptionalAuth

@@ -17,6 +17,7 @@ import {
 } from "./ActivityLogFiltersBar/components/ActivityLogFiltersContext"
 
 import { useUserPublic } from "@/hooks/useUserPublic"
+import { useGetKeyForSWRWithOptionalAuth } from "hooks/useGetKeyForSWRWithOptionalAuth"
 import {
   ADMIN_ACTIONS,
   ActivityLogAction,
@@ -115,6 +116,8 @@ const ActivityLogProvider = ({
 
   const [actionGroup, setActionGroup] = useState(null)
 
+  const getKeyForSWRWithOptionalAuth = useGetKeyForSWRWithOptionalAuth()
+
   const getKey = (
     pageIndex: number,
     previousPageData: ActivityLogActionResponse
@@ -153,7 +156,7 @@ const ActivityLogProvider = ({
 
     if (!query.action) addActionGroupFilterParams(searchParams)
 
-    return `/auditLog?${searchParams.toString()}`
+    return getKeyForSWRWithOptionalAuth(`/auditLog?${searchParams.toString()}`)
   }
 
   const addActionGroupFilterParams = (searchParams: URLSearchParams) => {
@@ -172,18 +175,12 @@ const ActivityLogProvider = ({
       searchParams.append("action", action.toString())
     })
   }
+
   const fetcherWithSign = useFetcherWithSign()
-  const fetchActivityLogPage = (url: string) =>
-    fetcherWithSign([
-      url,
-      {
-        method: "GET",
-        body: {},
-      },
-    ])
+
   const ogSWRInfiniteResponse = useSWRInfinite<ActivityLogActionResponse>(
     getKey,
-    fetchActivityLogPage,
+    fetcherWithSign,
     {
       revalidateIfStale: false,
       revalidateOnFocus: false,

@@ -8,6 +8,7 @@ import { mutate } from "swr"
 import { StoredKeyPair, setKeyPairToIdb } from "utils/keyPair"
 import { recaptchaAtom, shouldUseReCAPTCHAAtom } from "utils/recaptcha"
 import { checksumAddress } from "viem"
+import { useMutateOptionalAuthSWRKey } from "./useSWRWithOptionalAuth"
 import useSubmit from "./useSubmit"
 import { MessageParams, SignProps, UseSubmitOptions } from "./useSubmit/types"
 
@@ -93,6 +94,8 @@ const useSetKeyPair = (submitOptions?: UseSubmitOptions) => {
 
   const recaptcha = useAtomValue(recaptchaAtom)
 
+  const mutateOptionalAuthSWRKey = useMutateOptionalAuthSWRKey()
+
   const setSubmitResponse = useSubmit(
     async ({
       signProps,
@@ -149,8 +152,8 @@ const useSetKeyPair = (submitOptions?: UseSubmitOptions) => {
        */
       await setKeyPairToIdb(userProfile.id, generatedKeys).catch(() => {})
 
-      await mutate(
-        [`/v2/users/${userProfile.id}/profile`, { method: "GET", body: {} }],
+      await mutateOptionalAuthSWRKey(
+        `/v2/users/${userProfile.id}/profile`,
         userProfile,
         {
           revalidate: false,

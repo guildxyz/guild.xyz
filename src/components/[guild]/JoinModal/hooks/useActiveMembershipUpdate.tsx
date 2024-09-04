@@ -2,6 +2,7 @@ import type { AccessCheckJob, JoinJob } from "@guildxyz/types"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useMembership from "components/explorer/hooks/useMembership"
 import { useFetcherWithSign } from "hooks/useFetcherWithSign"
+import { useGetKeyForSWRWithOptionalAuth } from "hooks/useGetKeyForSWRWithOptionalAuth"
 import { UseSubmitOptions } from "hooks/useSubmit/types"
 import { atom, useAtom } from "jotai"
 import useSWRImmutable from "swr/immutable"
@@ -24,10 +25,12 @@ const useActiveMembershipUpdate = ({
   const { mutate: mutateMembership } = useMembership()
   const [shouldPoll, setShouldPoll] = useAtom(isPollingAtom)
 
+  const getKeyForSWRWithOptionalAuth = useGetKeyForSWRWithOptionalAuth()
+
   const progress = useSWRImmutable<JoinJob>(
     shouldPoll ? `/v2/actions/join?guildId=${guild?.id}` : null,
     (key) =>
-      fetcherWithSign([key, { method: "GET" }]).then(
+      fetcherWithSign(getKeyForSWRWithOptionalAuth(key)).then(
         (result: JoinJob[]) =>
           // casting to any until @guildxyz/types contains createdAtTimestamp
           result?.sort((jobA: any, jobB: any) =>
