@@ -1,6 +1,6 @@
 "use client"
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
+import { Avatar, AvatarFallback } from "@/components/ui/Avatar"
 import { Button } from "@/components/ui/Button"
 import {
   Dialog,
@@ -28,6 +28,7 @@ import { cn } from "@/lib/utils"
 import { Schemas, schemas } from "@guildxyz/types"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { User } from "@phosphor-icons/react"
+import { AvatarImage } from "@radix-ui/react-avatar"
 import useDropzone from "hooks/useDropzone"
 import usePinata from "hooks/usePinata"
 import { PropsWithChildren, useEffect, useState } from "react"
@@ -129,6 +130,7 @@ export const EditProfile = ({ children }: PropsWithChildren<any>) => {
                           width={144}
                           height={144}
                           alt="profile avatar"
+                          className="size-full object-cover"
                         />
                       )}
                       <AvatarFallback className="bg-muted">
