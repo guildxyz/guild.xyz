@@ -17,24 +17,26 @@ export const ProfileBackgroundImageUploader = ({
 }: PropsWithChildren<Props>): JSX.Element => {
   const [progress, setProgress] = useState<number>(0)
   const { toast } = useToast()
+  const showErrorToast = (description: string) =>
+    toast({
+      variant: "error",
+      title: "Couldn't upload image",
+      description,
+    })
 
-  // todo: error handling doesn't work for some reason yet
   const { isDragActive, getRootProps, getInputProps } = useDropzone({
     multiple: false,
     noClick: false,
     onDrop: (accepted, fileRejections) => {
-      console.log(accepted, fileRejections)
       if (accepted.length > 0) {
         onUpload({ data: [accepted[0]], onProgress: setProgress })
       }
+      if (fileRejections.length > 0)
+        showErrorToast(fileRejections[0].errors[0].message)
     },
     onError: (err) => {
       console.log(err)
-      toast({
-        variant: "error",
-        title: "Couldn't upload image",
-        description: err.message,
-      })
+      showErrorToast(err.message)
     },
   })
 
