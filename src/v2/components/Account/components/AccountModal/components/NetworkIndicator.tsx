@@ -1,7 +1,7 @@
 import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import { Button } from "@/components/ui/Button"
 import { useDisclosure } from "@/hooks/useDisclosure"
 import { LinkBreak } from "@phosphor-icons/react/dist/ssr"
-import Button from "components/common/Button"
 import { useAccount } from "wagmi"
 import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
 import NetworkModal from "../../NetworkModal"
@@ -23,7 +23,7 @@ export const NetworkIndicator = () => {
           variant="ghost"
           onClick={() => openNetworkModal()}
           size="xs"
-          className="w-6 px-0"
+          className="-my-0.5 w-6 px-0"
         >
           {CHAIN_CONFIG[Chains[chainId]] ? (
             <img
