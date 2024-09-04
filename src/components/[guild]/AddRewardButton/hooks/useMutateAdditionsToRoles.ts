@@ -1,5 +1,6 @@
+import { Requirement } from "@guildxyz/types"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { unstable_serialize, useSWRConfig } from "swr"
+import { useMutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import {
   Guild,
   GuildPlatform,
@@ -28,9 +29,12 @@ const groupRolePlatformsByRoleId = (
 
 const useMutateAdditionsToRoles = () => {
   const { mutateGuild, id: guildId } = useGuild()
-  const { mutate } = useSWRConfig()
+  const mutateOptionalAuthSWRKey = useMutateOptionalAuthSWRKey()
 
-  const mutateRequirements = (roleIds: number[], createdRequirements) => {
+  const mutateRequirements = (
+    roleIds: number[],
+    createdRequirements: RequirementCreateResponseOutput[]
+  ) => {
     const createdRequirementsByRoleId = groupRequirementsByRoleId(
       roleIds,
       createdRequirements
@@ -42,11 +46,8 @@ const useMutateAdditionsToRoles = () => {
         .filter((req) => !!req.deletedRequirements)
         .flatMap((req) => req.deletedRequirements)
 
-      mutate(
-        unstable_serialize([
-          `/v2/guilds/${guildId}/roles/${roleId}/requirements`,
-          { method: "GET", body: {} },
-        ]),
+      mutateOptionalAuthSWRKey<Requirement[]>(
+        `/v2/guilds/${guildId}/roles/${roleId}/requirements`,
         (prevRequirements) => [
           ...prevRequirements?.filter((req) => !reqIdsToDelete.includes(req.id)),
           ...createdRequirementsOnRole,

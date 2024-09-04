@@ -1,5 +1,6 @@
+import { useGetKeyForSWRWithOptionalAuth } from "hooks/useGetKeyForSWRWithOptionalAuth"
 import useSWRWithOptionalAuth, {
-  mutateOptionalAuthSWRKey,
+  useMutateOptionalAuthSWRKey,
 } from "hooks/useSWRWithOptionalAuth"
 import { usePathname } from "next/navigation"
 import { mutate as swrMutate, unstable_serialize, useSWRConfig } from "swr"
@@ -32,6 +33,7 @@ const useGuild = (guildId?: string | number) => {
   const id = useGuildUrlNameFromPathname(guildId)
 
   const publicSWRKey = `/v2/guilds/guild-page/${id}`
+  const mutateOptionalAuthSWRKey = useMutateOptionalAuthSWRKey()
 
   const { data, mutate, isLoading, error, isSigned } = useSWRWithOptionalAuth<Guild>(
     id ? publicSWRKey : null,
@@ -81,10 +83,11 @@ const useGuild = (guildId?: string | number) => {
 
 const useSimpleGuild = (guildId?: string | number) => {
   const id = useGuildUrlNameFromPathname(guildId)
+  const getKeyForSWRWithOptionalAuth = useGetKeyForSWRWithOptionalAuth()
 
   const { cache } = useSWRConfig()
   const guildPageFromCache = cache.get(
-    unstable_serialize([`/v2/guilds/guild-page/${id}`, { method: "GET", body: {} }])
+    unstable_serialize(getKeyForSWRWithOptionalAuth(`/v2/guilds/guild-page/${id}`))
   )?.data as SimpleGuild
 
   const { data, ...swrProps } = useSWRImmutable<SimpleGuild>(

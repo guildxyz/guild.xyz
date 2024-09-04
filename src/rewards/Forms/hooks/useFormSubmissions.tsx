@@ -3,6 +3,7 @@ import { sortAccounts } from "components/[guild]/crm/Identities"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
 import { useFetcherWithSign } from "hooks/useFetcherWithSign"
+import { useGetKeyForSWRWithOptionalAuth } from "hooks/useGetKeyForSWRWithOptionalAuth"
 import { useCallback, useMemo } from "react"
 import useSWRImmutable from "swr/immutable"
 import useSWRInfinite from "swr/infinite"
@@ -28,6 +29,7 @@ const LIMIT = 50
 const useFormSubmissions = (formId, queryString) => {
   const { id } = useGuild()
   const fetcherWithSign = useFetcherWithSign()
+  const getKeyForSWRWithOptionalAuth = useGetKeyForSWRWithOptionalAuth()
 
   const getKey = useCallback(
     (pageIndex, previousPageData) => {
@@ -37,24 +39,20 @@ const useFormSubmissions = (formId, queryString) => {
 
       const pagination = `offset=${pageIndex * LIMIT}&limit=${LIMIT}`
 
-      return `/v2/guilds/${id}/forms/${formId}/user-submissions?${[
-        queryString,
-        pagination,
-      ].join("&")}`
+      return getKeyForSWRWithOptionalAuth(
+        `/v2/guilds/${id}/forms/${formId}/user-submissions?${[
+          queryString,
+          pagination,
+        ].join("&")}`
+      )
     },
     [queryString, id, formId]
   )
 
   const { data, ...rest } = useSWRInfinite<FormSubmission[]>(
     getKey,
-    (url: string) =>
-      fetcherWithSign([
-        url,
-        {
-          method: "GET",
-          body: {},
-        },
-      ]).then((res) =>
+    (props) =>
+      fetcherWithSign(props).then((res) =>
         res.map((user) => ({
           ...user,
           platformUsers: user.platformUsers.sort(sortAccounts),
@@ -94,13 +92,13 @@ const useFormSubmissions = (formId, queryString) => {
 const useUserFormSubmission = (form: Schemas["Form"]) => {
   const { id } = useUser()
   const fetcherWithSign = useFetcherWithSign()
+  const getKeyForSWRWithOptionalAuth = useGetKeyForSWRWithOptionalAuth()
 
   const { data, ...rest } = useSWRImmutable<FormSubmission>(
     !!form && !!id
-      ? [
-          `/v2/guilds/${form.guildId}/forms/${form.id}/user-submissions/${id}`,
-          { method: "GET", body: {} },
-        ]
+      ? getKeyForSWRWithOptionalAuth(
+          `/v2/guilds/${form.guildId}/forms/${form.id}/user-submissions/${id}`
+        )
       : null,
     fetcherWithSign,
     {
