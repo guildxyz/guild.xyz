@@ -1,4 +1,4 @@
-import { Tooltip } from "@chakra-ui/react"
+import { Flex, Tooltip } from "@chakra-ui/react"
 import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import { RewardCardButton } from "rewards/components/RewardCardButton"
@@ -46,21 +46,23 @@ const TextCardButton = ({ platform }: Props) => {
         isDisabled={!isButtonDisabled || !hasRole}
         label={claimTextButtonTooltipLabel[getRolePlatformStatus(rolePlatform)]}
         hasArrow
-        shouldWrapChildren
       >
-        <RewardCardButton
-          onClick={() => {
-            onOpen()
-            if (!response) onSubmit()
-          }}
-          isLoading={!rolePlatform || isLoading}
-          loadingText={!rolePlatform ? "Loading..." : "Claiming secret..."}
-          isDisabled={isButtonDisabled}
-        >
-          {platform.platformId === PlatformType.UNIQUE_TEXT
-            ? "Claim"
-            : "Reveal secret"}
-        </RewardCardButton>
+        {/* instead of shouldWrapChildren, but with flex so the button always has the right width */}
+        <Flex flexDir="column">
+          <RewardCardButton
+            onClick={() => {
+              onOpen()
+              if (!response) onSubmit()
+            }}
+            isLoading={!rolePlatform || isLoading}
+            loadingText={!rolePlatform ? "Loading..." : "Claiming secret..."}
+            isDisabled={isButtonDisabled}
+          >
+            {platform.platformId === PlatformType.UNIQUE_TEXT
+              ? "Claim"
+              : "Reveal secret"}
+          </RewardCardButton>
+        </Flex>
       </Tooltip>
 
       <ClaimTextModal
