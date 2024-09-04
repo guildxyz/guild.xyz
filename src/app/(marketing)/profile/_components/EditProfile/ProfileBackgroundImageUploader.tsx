@@ -1,4 +1,5 @@
 import { ButtonProps, buttonVariants } from "@/components/ui/Button"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip"
 import { useToast } from "@/components/ui/hooks/useToast"
 import { UploadSimple } from "@phosphor-icons/react"
 import Button from "components/common/Button"
@@ -8,11 +9,13 @@ import { PropsWithChildren, useState } from "react"
 
 type Props = {
   uploader: Uploader
+  tooltipLabel: string
 } & ButtonProps
 
 export const ProfileBackgroundImageUploader = ({
   uploader: { isUploading, onUpload },
   children,
+  tooltipLabel,
   ...buttonProps
 }: PropsWithChildren<Props>): JSX.Element => {
   const [progress, setProgress] = useState<number>(0)
@@ -48,9 +51,14 @@ export const ProfileBackgroundImageUploader = ({
     )
 
   return (
-    <label {...getRootProps()} className={buttonVariants(buttonProps as any)}>
-      <input {...getInputProps()} hidden />
-      {isDragActive ? <UploadSimple weight="bold" size={24} /> : children}
-    </label>
+    <Tooltip>
+      <TooltipTrigger>
+        <label {...getRootProps()} className={buttonVariants(buttonProps as any)}>
+          <input {...getInputProps()} hidden />
+          {isDragActive ? <UploadSimple weight="bold" size={24} /> : children}
+        </label>
+      </TooltipTrigger>
+      <TooltipContent side="bottom">{tooltipLabel}</TooltipContent>
+    </Tooltip>
   )
 }
