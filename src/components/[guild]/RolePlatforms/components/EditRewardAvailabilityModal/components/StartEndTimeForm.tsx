@@ -42,10 +42,7 @@ const StartEndTimeForm = <TFieldValues, TContext>({
   platformType,
   ...stackProps
 }: Props<TFieldValues, TContext>) => {
-  const {
-    register,
-    formState: { errors },
-  } = useFormContext<TFieldValues>()
+  const { register } = useFormContext<TFieldValues>()
 
   const startTimeValue = useWatch({ control, name: startTimeField })
   const endTimeValue = useWatch({ control, name: endTimeField })
