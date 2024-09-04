@@ -36,7 +36,7 @@ const EditRolePlatformModal = ({
   onSubmit,
 }: Props) => {
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(false)
-  const methods = useForm()
+  const methods = useForm({ defaultValues: rolePlatform })
   const modalContentRef = useRef()
 
   const rewardName =
