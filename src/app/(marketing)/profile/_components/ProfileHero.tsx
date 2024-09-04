@@ -40,7 +40,6 @@ export const ProfileHero = () => {
           <ProfileAvatar
             username={profile.username}
             profileImageUrl={profile.profileImageUrl}
-            size={192}
           />
         </Avatar>
         <h1 className="break-all text-center font-extrabold text-3xl leading-tight tracking-tight md:text-4xl">
