@@ -83,7 +83,6 @@ const AccountModal = () => {
                 <div className="mb-8 flex gap-3">
                   <Avatar size="2xl" className="mr-2 self-center border-2">
                     <ProfileAvatar
-                      size={78}
                       username={guildProfile.username}
                       profileImageUrl={guildProfile.profileImageUrl}
                     />

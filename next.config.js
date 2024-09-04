@@ -88,9 +88,6 @@ const nextConfig = {
       {
         hostname: "og.link3.to",
       },
-      {
-        hostname: "imagedelivery.net"
-      }
     ],
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },

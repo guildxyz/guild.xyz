@@ -85,7 +85,6 @@ export const Account = () => {
               <ProfileAvatar
                 username={guildProfile.username}
                 profileImageUrl={guildProfile.profileImageUrl}
-                size={32}
               />
             </Avatar>
             <div className="flex flex-col items-start">
