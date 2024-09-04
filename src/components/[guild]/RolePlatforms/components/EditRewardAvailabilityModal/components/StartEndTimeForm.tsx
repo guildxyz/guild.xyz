@@ -22,7 +22,7 @@ export const AUTO_TIMEFRAME_PLATFORMS: PlatformName[] = ["POAP"]
 
 export const getShortDate = (isoDate: string): string | undefined => {
   if (!isoDate) return undefined
-  return isoDate.split(/:\d{2}\.\d{3}Z/)[0]
+  return isoDate.split("T")[0]
 }
 
 export const datetimeLocalToIsoString = (datetimeLocal: string): string | null => {
@@ -42,7 +42,10 @@ const StartEndTimeForm = <TFieldValues, TContext>({
   platformType,
   ...stackProps
 }: Props<TFieldValues, TContext>) => {
-  const { register } = useFormContext<TFieldValues>()
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<TFieldValues>()
 
   const startTimeValue = useWatch({ control, name: startTimeField })
   const endTimeValue = useWatch({ control, name: endTimeField })
@@ -64,7 +67,7 @@ const StartEndTimeForm = <TFieldValues, TContext>({
           </Text>
         </FormLabel>
         <Input
-          type="datetime-local"
+          type="date"
           {...register(startTimeField)}
           max={
             endTimeValue
@@ -87,7 +90,7 @@ const StartEndTimeForm = <TFieldValues, TContext>({
           </Text>
         </FormLabel>
         <Input
-          type="datetime-local"
+          type="date"
           {...register(endTimeField)}
           min={
             startTimeValue &&
