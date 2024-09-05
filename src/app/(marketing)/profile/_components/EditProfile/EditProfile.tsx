@@ -21,7 +21,6 @@ import {
 } from "@/components/ui/Form"
 import { Input } from "@/components/ui/Input"
 import { Textarea } from "@/components/ui/Textarea"
-import { toast } from "@/components/ui/hooks/useToast"
 import { useDisclosure } from "@/hooks/useDisclosure"
 import { Schemas, schemas } from "@guildxyz/types"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -50,24 +49,11 @@ export const EditProfile = ({ children }: PropsWithChildren<any>) => {
   const profilePicUploader = usePinata({
     control: form.control,
     fieldToSetOnSuccess: "profileImageUrl",
-    onError: (error) => {
-      toast({
-        variant: "error",
-        title: "Failed to upload file",
-        description: error,
-      })
-    },
   })
 
   const backgroundUploader = usePinata({
     control: form.control,
     fieldToSetOnSuccess: "backgroundImageUrl",
-    onError: (error) =>
-      toast({
-        variant: "error",
-        title: "Failed to upload file",
-        description: error,
-      }),
   })
 
   const { handleSubmit, isUploadingShown, uploadLoadingText } = useSubmitWithUpload(

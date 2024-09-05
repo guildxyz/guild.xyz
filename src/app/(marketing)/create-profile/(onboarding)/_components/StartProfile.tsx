@@ -12,7 +12,6 @@ import {
   FormLabel,
 } from "@/components/ui/Form"
 import { Input } from "@/components/ui/Input"
-import { useToast } from "@/components/ui/hooks/useToast"
 import { EditProfilePicture } from "@app/(marketing)/profile/_components/EditProfile/EditProfilePicture"
 import { Schemas, schemas } from "@guildxyz/types"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -36,7 +35,6 @@ export const StartProfile: CreateProfileStep = ({ data: chainData }) => {
   const [method, setMethod] = useState<CreateMethod | undefined>(
     farcasterProfile ? CreateMethod.FillByFarcaster : undefined
   )
-  const { toast } = useToast()
 
   useEffect(() => {
     if (!farcasterProfile) return
@@ -84,13 +82,6 @@ export const StartProfile: CreateProfileStep = ({ data: chainData }) => {
   const profilePicUploader = usePinata({
     control: form.control,
     fieldToSetOnSuccess: "profileImageUrl",
-    onError: (error) => {
-      toast({
-        variant: "error",
-        title: "Failed to upload file",
-        description: error,
-      })
-    },
   })
 
   return (
