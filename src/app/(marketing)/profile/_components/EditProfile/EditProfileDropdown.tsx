@@ -1,14 +1,16 @@
-import FarcasterImage from "@/../static/socialIcons/farcaster.svg"
 import { Button } from "@/components/ui/Button"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/DropdownMenu"
-import { DotsThreeVertical } from "@phosphor-icons/react"
+import {
+  ArrowsClockwise,
+  DotsThreeVertical,
+  TrashSimple,
+} from "@phosphor-icons/react"
 import useUser from "components/[guild]/hooks/useUser"
 import { useFormContext } from "react-hook-form"
 import { useDeleteProfile } from "../../_hooks/useDeleteProfile"
@@ -22,17 +24,17 @@ export const EditProfileDropdown = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        className="-bottom-3 absolute right-0 translate-y-full"
+        className="-bottom-2 absolute right-0 translate-y-full"
         asChild
       >
-        <Button variant="ghost" size="icon">
+        <Button variant="ghost" size="icon-sm">
           <DotsThreeVertical weight="bold" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent>
+      <DropdownMenuContent className="p-0">
         {farcasterProfile && (
           <DropdownMenuItem
-            className="flex gap-2"
+            className="flex gap-2 px-4 py-6 font-semibold"
             onClick={() => {
               if (farcasterProfile.avatar) {
                 setValue("profileImageUrl", farcasterProfile.avatar, {
@@ -46,14 +48,15 @@ export const EditProfileDropdown = () => {
               }
             }}
           >
-            <FarcasterImage /> Fill data by Farcaster
+            <ArrowsClockwise weight="bold" /> Fill data by Farcaster
           </DropdownMenuItem>
         )}
         <DropdownMenuSeparator />
-        <DropdownMenuLabel className="mt-2 text-destructive-subtle-foreground">
-          Danger zone
-        </DropdownMenuLabel>
-        <DropdownMenuItem onClick={deleteProfile.onSubmit}>
+        <DropdownMenuItem
+          onClick={deleteProfile.onSubmit}
+          className="gap-2 px-4 py-6 font-semibold text-destructive-subtle-foreground"
+        >
+          <TrashSimple weight="bold" />
           Delete profile
         </DropdownMenuItem>
       </DropdownMenuContent>
