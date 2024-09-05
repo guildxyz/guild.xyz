@@ -154,6 +154,7 @@ export const StartProfile: CreateProfileStep = ({ data: chainData }) => {
                       src={field.value}
                       width={144}
                       height={144}
+                      className="size-full object-cover"
                       alt="profile avatar"
                     />
                   )}
