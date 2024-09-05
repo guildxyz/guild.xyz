@@ -13,7 +13,8 @@ import { useState } from "react"
 
 export const EditProfilePicture = ({
   uploader: { onUpload, isUploading },
-}: { uploader: Uploader }) => {
+  className,
+}: { uploader: Uploader; className?: string }) => {
   const [uploadProgress, setUploadProgress] = useState(0)
 
   const showErrorToast = (description: string) =>
@@ -47,13 +48,14 @@ export const EditProfilePicture = ({
           variant="unstyled"
           type="button"
           className={cn(
-            "-bottom-2 absolute left-4 size-28 translate-y-1/2 overflow-hidden rounded-full border border-dotted",
-            { "border-solid": field.value }
+            "relative size-28 overflow-hidden rounded-full border border-dotted p-0",
+            { "border-solid": field.value },
+            className
           )}
           {...getRootProps()}
         >
           <input {...getInputProps()} hidden />
-          <Avatar className="size-28 bg-muted">
+          <Avatar className="size-full bg-transparent">
             {field.value && (
               <AvatarImage
                 src={field.value}
@@ -61,7 +63,7 @@ export const EditProfilePicture = ({
                 className="size-full object-cover"
               />
             )}
-            <AvatarFallback className="bg-muted">
+            <AvatarFallback className="bg-transparent">
               <User size={38} />
             </AvatarFallback>
           </Avatar>
@@ -74,7 +76,7 @@ export const EditProfilePicture = ({
             {isUploading ? (
               <p>{(uploadProgress * 100).toFixed(0)}%</p>
             ) : isDragActive ? (
-              <UploadSimple weight="bold" size={24} />
+              <UploadSimple weight="bold" size={24} className="animate-wiggle" />
             ) : (
               <Image weight="bold" size={24} />
             )}

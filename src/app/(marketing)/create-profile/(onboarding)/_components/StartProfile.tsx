@@ -2,7 +2,7 @@
 
 import FarcasterImage from "@/../static/socialIcons/farcaster.svg"
 import { ConnectFarcasterButton } from "@/components/Account/components/AccountModal/components/FarcasterProfile"
-import { Avatar, AvatarFallback } from "@/components/ui/Avatar"
+import {} from "@/components/ui/Avatar"
 import { Button } from "@/components/ui/Button"
 import {
   FormControl,
@@ -13,14 +13,12 @@ import {
 } from "@/components/ui/Form"
 import { Input } from "@/components/ui/Input"
 import { useToast } from "@/components/ui/hooks/useToast"
-import { cn } from "@/lib/utils"
+import { EditProfilePicture } from "@app/(marketing)/profile/_components/EditProfile/EditProfilePicture"
 import { Schemas, schemas } from "@guildxyz/types"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Spinner, UploadSimple, User } from "@phosphor-icons/react"
+import {} from "@phosphor-icons/react"
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr"
-import { AvatarImage } from "@radix-ui/react-avatar"
 import useUser from "components/[guild]/hooks/useUser"
-import useDropzone from "hooks/useDropzone"
 import usePinata from "hooks/usePinata"
 import { useEffect, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
@@ -83,7 +81,7 @@ export const StartProfile: CreateProfileStep = ({ data: chainData }) => {
     })
   }
 
-  const { isUploading, onUpload } = usePinata({
+  const profilePicUploader = usePinata({
     control: form.control,
     fieldToSetOnSuccess: "profileImageUrl",
     onError: (error) => {
@@ -95,34 +93,6 @@ export const StartProfile: CreateProfileStep = ({ data: chainData }) => {
     },
   })
 
-  const [uploadProgress, setUploadProgress] = useState(0)
-  const { isDragActive, getRootProps } = useDropzone({
-    multiple: false,
-    noClick: false,
-    onDrop: async (acceptedFiles) => {
-      const file = acceptedFiles[0]
-      if (!file) return
-      onUpload({
-        data: [file],
-        onProgress: setUploadProgress,
-      })
-    },
-    onError: (error) => {
-      toast({
-        variant: "error",
-        title: `Failed to upload file`,
-        description: error.message,
-      })
-    },
-  })
-
-  let avatarFallBackIcon = <User size={32} />
-  if (isDragActive) {
-    avatarFallBackIcon = <UploadSimple size={32} className="animate-wiggle" />
-  } else if (isUploading || (uploadProgress !== 0 && uploadProgress !== 1)) {
-    avatarFallBackIcon = <Spinner size={32} className="animate-spin" />
-  }
-
   return (
     <div className="w-[28rem] space-y-3 p-8">
       <h1 className="mb-10 text-pretty text-center font-bold font-display text-2xl leading-none tracking-tight">
@@ -131,36 +101,9 @@ export const StartProfile: CreateProfileStep = ({ data: chainData }) => {
 
       <FormProvider {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-3">
-          <FormField
-            control={form.control}
-            name="profileImageUrl"
-            render={({ field }) => (
-              <Button
-                variant="unstyled"
-                type="button"
-                disabled={method === undefined}
-                className={cn(
-                  "mb-8 size-36 self-center rounded-full border-2 border-dotted",
-                  { "border-solid": field.value }
-                )}
-                {...getRootProps()}
-              >
-                <Avatar className="size-36 bg-card-secondary">
-                  {field.value && (
-                    <AvatarImage
-                      src={field.value}
-                      width={144}
-                      height={144}
-                      className="size-full object-cover"
-                      alt="profile avatar"
-                    />
-                  )}
-                  <AvatarFallback className="bg-card-secondary">
-                    {avatarFallBackIcon}
-                  </AvatarFallback>
-                </Avatar>
-              </Button>
-            )}
+          <EditProfilePicture
+            uploader={profilePicUploader}
+            className="mb-8 size-36 self-center border-2 bg-card-secondary"
           />
 
           {method === undefined ? (

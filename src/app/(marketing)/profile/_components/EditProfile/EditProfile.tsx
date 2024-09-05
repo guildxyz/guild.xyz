@@ -87,7 +87,10 @@ export const EditProfile = ({ children }: PropsWithChildren<any>) => {
           <DialogBody>
             <div className="relative mb-20">
               <EditProfileBanner backgroundUploader={backgroundUploader} />
-              <EditProfilePicture uploader={profilePicUploader} />
+              <EditProfilePicture
+                uploader={profilePicUploader}
+                className="-bottom-2 absolute left-4 translate-y-1/2 bg-muted"
+              />
               <EditProfileDropdown />
             </div>
 
