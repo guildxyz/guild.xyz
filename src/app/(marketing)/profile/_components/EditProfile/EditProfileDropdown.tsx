@@ -9,6 +9,7 @@ import {
 import {
   ArrowsClockwise,
   DotsThreeVertical,
+  Spinner,
   TrashSimple,
 } from "@phosphor-icons/react"
 import useUser from "components/[guild]/hooks/useUser"
@@ -18,8 +19,9 @@ import { useDeleteProfile } from "../../_hooks/useDeleteProfile"
 export const EditProfileDropdown = () => {
   const { farcasterProfiles } = useUser()
   const farcasterProfile = farcasterProfiles?.at(0)
-  const deleteProfile = useDeleteProfile()
   const { setValue } = useFormContext()
+
+  const deleteProfile = useDeleteProfile()
 
   return (
     <DropdownMenu>
@@ -53,10 +55,19 @@ export const EditProfileDropdown = () => {
         )}
         <DropdownMenuSeparator />
         <DropdownMenuItem
-          onClick={deleteProfile.onSubmit}
+          onClick={(e) => {
+            // keep dropdown open to show loading state
+            e.preventDefault()
+            deleteProfile.onSubmit()
+          }}
+          disabled={deleteProfile.isLoading}
           className="gap-2 px-4 py-6 font-semibold text-destructive-subtle-foreground"
         >
-          <TrashSimple weight="bold" />
+          {deleteProfile.isLoading ? (
+            <Spinner weight="bold" className="animate-spin" />
+          ) : (
+            <TrashSimple weight="bold" />
+          )}
           Delete profile
         </DropdownMenuItem>
       </DropdownMenuContent>
