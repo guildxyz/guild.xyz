@@ -30,9 +30,14 @@ const UrlName = () => {
         <Input
           {...register("urlName")}
           onChange={(event) => {
-            setValue("urlName", slugify(event.target.value), {
-              shouldDirty: true,
-            })
+            setValue(
+              "urlName",
+              slugify(event.target.value) +
+                (event.target.value.match(/-$/)?.at(0) ?? ""),
+              {
+                shouldDirty: true,
+              }
+            )
           }}
           onBlur={(event) => {
             if (!event.target.value.length) {
