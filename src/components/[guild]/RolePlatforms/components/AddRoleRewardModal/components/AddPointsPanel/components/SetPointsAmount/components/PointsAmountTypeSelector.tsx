@@ -54,7 +54,7 @@ const PointsAmountTypeSelector = ({
     <Menu placement="bottom-end">
       <Tooltip
         isDisabled={!isEditing}
-        label="You can't change point type for existing rewards. Please add another point reward instead."
+        label="You can't change the point type for existing rewards. Please add another point reward instead!"
         placement="top"
         hasArrow
       >
