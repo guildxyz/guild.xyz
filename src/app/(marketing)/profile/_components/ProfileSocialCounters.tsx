@@ -42,7 +42,7 @@ export const ProfileSocialCounters = ({ className }: any) => {
           </SocialCountTile>
 
           <Separator orientation="vertical" className="h-10 max-sm:hidden md:h-12" />
-          {relevantFollowersFiltered?.length ? (
+          {relevantFollowersFiltered && relevantFollowersFiltered.length >= 1 ? (
             <RelevantFollowers
               relevantFollowers={relevantFollowersFiltered}
               followerCount={farcasterProfile.follower_count}
@@ -72,13 +72,21 @@ const SocialCountTile = ({
 const RelevantFollowers = ({
   relevantFollowers,
   followerCount,
-}: { relevantFollowers: DisplayableUser[]; followerCount: number }) => {
+}: {
+  relevantFollowers: DisplayableUser[]
+  followerCount: number
+}) => {
+  if (!relevantFollowers.length) {
+    throw new Error(
+      "Relevant followers must have at least one farcaster profile to display"
+    )
+  }
   const [firstFc, secondFc] = relevantFollowers
 
   return (
     <div className="flex items-center gap-2">
       <AvatarGroup
-        imageUrls={relevantFollowers.map(({ pfp_url }) => pfp_url)}
+        imageUrls={relevantFollowers.slice(0, 3).map(({ pfp_url }) => pfp_url)}
         count={followerCount}
       />
       <div className="max-w-64 text-muted-foreground leading-tight">
