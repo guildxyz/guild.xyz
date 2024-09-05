@@ -1,6 +1,6 @@
 "use client"
 
-import { Avatar, AvatarFallback } from "@/components/ui/Avatar"
+import {} from "@/components/ui/Avatar"
 import { Button } from "@/components/ui/Button"
 import {
   Dialog,
@@ -24,12 +24,8 @@ import { Separator } from "@/components/ui/Separator"
 import { Textarea } from "@/components/ui/Textarea"
 import { toast } from "@/components/ui/hooks/useToast"
 import { useDisclosure } from "@/hooks/useDisclosure"
-import { cn } from "@/lib/utils"
 import { Schemas, schemas } from "@guildxyz/types"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { User } from "@phosphor-icons/react"
-import { AvatarImage } from "@radix-ui/react-avatar"
-import useDropzone from "hooks/useDropzone"
 import usePinata from "hooks/usePinata"
 import { PropsWithChildren, useEffect, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
@@ -37,6 +33,7 @@ import { useDeleteProfile } from "../../_hooks/useDeleteProfile"
 import { useProfile } from "../../_hooks/useProfile"
 import { useUpdateProfile } from "../../_hooks/useUpdateProfile"
 import { EditProfileBanner } from "./EditProfileBanner"
+import { EditProfilePicture } from "./EditProfilePicture"
 
 export const EditProfile = ({ children }: PropsWithChildren<any>) => {
   const { data: profile } = useProfile()
@@ -56,7 +53,7 @@ export const EditProfile = ({ children }: PropsWithChildren<any>) => {
     disclosure.onClose()
   }
 
-  const { isUploading, onUpload } = usePinata({
+  const profilePicUploader = usePinata({
     control: form.control,
     fieldToSetOnSuccess: "profileImageUrl",
     onError: (error) => {
@@ -64,26 +61,6 @@ export const EditProfile = ({ children }: PropsWithChildren<any>) => {
         variant: "error",
         title: "Failed to upload file",
         description: error,
-      })
-    },
-  })
-
-  const [uploadProgress, setUploadProgress] = useState(0)
-  const { isDragActive, getRootProps } = useDropzone({
-    multiple: false,
-    noClick: false,
-    onDrop: (acceptedFiles) => {
-      if (!acceptedFiles[0]) return
-      onUpload({
-        data: [acceptedFiles[0]],
-        onProgress: setUploadProgress,
-      })
-    },
-    onError: (error) => {
-      toast({
-        variant: "error",
-        title: `Failed to upload file`,
-        description: error.message,
       })
     },
   })
@@ -110,36 +87,7 @@ export const EditProfile = ({ children }: PropsWithChildren<any>) => {
           <DialogBody scroll className="!pb-8">
             <div className="relative mb-20">
               <EditProfileBanner />
-              <FormField
-                control={form.control}
-                name="profileImageUrl"
-                render={({ field }) => (
-                  <Button
-                    variant="unstyled"
-                    type="button"
-                    className={cn(
-                      "-bottom-2 absolute left-4 size-28 translate-y-1/2 rounded-full border border-dotted",
-                      { "border-solid": field.value }
-                    )}
-                    {...getRootProps()}
-                  >
-                    <Avatar className="size-36 bg-muted">
-                      {field.value && (
-                        <AvatarImage
-                          src={field.value}
-                          width={144}
-                          height={144}
-                          alt="profile avatar"
-                          className="size-full object-cover"
-                        />
-                      )}
-                      <AvatarFallback className="bg-muted">
-                        <User size={38} />
-                      </AvatarFallback>
-                    </Avatar>
-                  </Button>
-                )}
-              />
+              <EditProfilePicture onUpload={profilePicUploader.onUpload} />
             </div>
 
             <FormField
