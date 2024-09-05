@@ -8,15 +8,20 @@ import {
   MenuOptionGroup,
   Portal,
   Text,
+  Tooltip,
 } from "@chakra-ui/react"
 import { CaretDown, Lightning } from "@phosphor-icons/react"
 import Button from "components/common/Button"
+import { useWatch } from "react-hook-form"
 import { PointsType } from "../types"
 
 const PointsAmountTypeSelector = ({
   type,
   setType,
 }: { type: PointsType; setType: (newType: PointsType) => void }) => {
+  const rolePlatformId = useWatch({ name: "id" })
+  const isEditing = typeof rolePlatformId === "number"
+
   const options = [
     {
       label: "Static",
@@ -47,15 +52,23 @@ const PointsAmountTypeSelector = ({
 
   return (
     <Menu placement="bottom-end">
-      <MenuButton
-        as={Button}
-        size="sm"
-        variant="ghost"
-        rightIcon={<CaretDown />}
-        color="GrayText"
+      <Tooltip
+        isDisabled={!isEditing}
+        label="You can't change point type for existing rewards. Please add another point reward instead."
+        placement="top"
+        hasArrow
       >
-        {selected?.label}
-      </MenuButton>
+        <MenuButton
+          as={Button}
+          size="sm"
+          variant="ghost"
+          rightIcon={<CaretDown />}
+          color="GrayText"
+          isDisabled={isEditing}
+        >
+          {selected?.label}
+        </MenuButton>
+      </Tooltip>
       <Portal>
         <MenuList
           zIndex={"popover"}
