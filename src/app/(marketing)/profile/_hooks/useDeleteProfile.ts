@@ -26,6 +26,7 @@ export const useDeleteProfile = () => {
       toast({
         variant: "success",
         title: "Successfully deleted profile",
+        description: "Redirecting you to the Create profile page",
       })
     },
     onError: (response) => {
