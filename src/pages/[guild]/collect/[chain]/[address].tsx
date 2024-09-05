@@ -249,6 +249,7 @@ const getStaticProps = async ({ params }) => {
   if (!chain || !address)
     return {
       notFound: true,
+      revalidate: 300,
     }
 
   const guildPageEndpoint = `/v2/guilds/guild-page/${urlName}`
@@ -267,6 +268,7 @@ const getStaticProps = async ({ params }) => {
   } catch {
     return {
       notFound: true,
+      revalidate: 300,
     }
   }
 
@@ -286,6 +288,7 @@ const getStaticProps = async ({ params }) => {
   if (!nftGuildReward || !nftRoleReward || !nftRole)
     return {
       notFound: true,
+      revalidate: 300,
     }
 
   // Calling the serverless endpoint, so if we fetch this data for the first time, it'll be added to the Vercel cache
