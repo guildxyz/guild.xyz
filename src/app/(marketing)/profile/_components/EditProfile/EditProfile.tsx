@@ -27,6 +27,7 @@ import { useDisclosure } from "@/hooks/useDisclosure"
 import { Schemas, schemas } from "@guildxyz/types"
 import { zodResolver } from "@hookform/resolvers/zod"
 import usePinata from "hooks/usePinata"
+import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import { PropsWithChildren, useEffect, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { useDeleteProfile } from "../../_hooks/useDeleteProfile"
@@ -45,13 +46,7 @@ export const EditProfile = ({ children }: PropsWithChildren<any>) => {
     mode: "onTouched",
   })
   const disclosure = useDisclosure()
-  const editProfile = useUpdateProfile()
-
-  async function onSubmit(values: Schemas["Profile"]) {
-    await editProfile.onSubmit(schemas.ProfileUpdateSchema.parse(values))
-    if (editProfile.error) return
-    disclosure.onClose()
-  }
+  const { onSubmit, isLoading } = useUpdateProfile({ onSuccess: disclosure.onClose })
 
   const profilePicUploader = usePinata({
     control: form.control,
@@ -64,6 +59,22 @@ export const EditProfile = ({ children }: PropsWithChildren<any>) => {
       })
     },
   })
+
+  const backgroundUploader = usePinata({
+    control: form.control,
+    fieldToSetOnSuccess: "backgroundImageUrl",
+    onError: (error) =>
+      toast({
+        variant: "error",
+        title: "Failed to upload file",
+        description: error,
+      }),
+  })
+
+  const { handleSubmit, isUploadingShown, uploadLoadingText } = useSubmitWithUpload(
+    form.handleSubmit(onSubmit),
+    profilePicUploader.isUploading || backgroundUploader.isUploading
+  )
 
   const deleteProfile = useDeleteProfile()
   const [isDeleteLoading, setIsDeleteLoading] = useState(false)
@@ -86,7 +97,7 @@ export const EditProfile = ({ children }: PropsWithChildren<any>) => {
           </DialogHeader>
           <DialogBody scroll className="!pb-8">
             <div className="relative mb-20">
-              <EditProfileBanner />
+              <EditProfileBanner backgroundUploader={backgroundUploader} />
               <EditProfilePicture uploader={profilePicUploader} />
             </div>
 
@@ -155,9 +166,10 @@ export const EditProfile = ({ children }: PropsWithChildren<any>) => {
           </DialogBody>
           <DialogFooter className="border-border-muted border-t py-4">
             <Button
-              isLoading={editProfile.isLoading}
+              isLoading={isLoading || isUploadingShown}
+              loadingText={uploadLoadingText ?? "Saving"}
               colorScheme="success"
-              onClick={form.handleSubmit(onSubmit)}
+              onClick={handleSubmit}
               disabled={!form.formState.isValid}
             >
               Save
