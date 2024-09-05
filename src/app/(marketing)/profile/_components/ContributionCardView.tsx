@@ -9,6 +9,9 @@ export const ContributionCardView = ({
   guild,
   role,
 }: { guild: Guild; role: Role }) => {
+  const roleAcquirementPercentage = Number(
+    ((role.memberCount / guild.memberCount || 0) * 100).toFixed(1)
+  )
   return (
     <CardWithGuildLabel guild={guild}>
       <div className="grid grid-cols-[auto_1fr] items-center gap-4 p-5 md:grid-cols-[auto_auto_1fr] md:p-6">
@@ -26,11 +29,8 @@ export const ContributionCardView = ({
           <div className="flex items-center gap-2 text-muted-foreground">
             <Users weight="bold" className="min-w-min" />
             <p className="line-clamp-1 text-sm">
-              Only{" "}
-              {Number(
-                ((role.memberCount / guild.memberCount || 0) * 100).toFixed(1)
-              )}
-              % of members have this role
+              {roleAcquirementPercentage < 18 && "Only "}
+              {roleAcquirementPercentage}% of members have this role
             </p>
           </div>
         </div>
