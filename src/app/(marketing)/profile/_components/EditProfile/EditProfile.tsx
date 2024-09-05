@@ -1,6 +1,6 @@
 "use client"
 
-import {} from "@/components/ui/Avatar"
+import FarcasterImage from "@/../static/socialIcons/farcaster.svg"
 import { Button } from "@/components/ui/Button"
 import {
   Dialog,
@@ -13,6 +13,14 @@ import {
   DialogTrigger,
 } from "@/components/ui/Dialog"
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/DropdownMenu"
+import {
   FormControl,
   FormErrorMessage,
   FormField,
@@ -20,12 +28,13 @@ import {
   FormLabel,
 } from "@/components/ui/Form"
 import { Input } from "@/components/ui/Input"
-import { Separator } from "@/components/ui/Separator"
 import { Textarea } from "@/components/ui/Textarea"
 import { toast } from "@/components/ui/hooks/useToast"
 import { useDisclosure } from "@/hooks/useDisclosure"
 import { Schemas, schemas } from "@guildxyz/types"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { DotsThreeVertical } from "@phosphor-icons/react"
+import useUser from "components/[guild]/hooks/useUser"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import { PropsWithChildren } from "react"
@@ -38,6 +47,8 @@ import { EditProfilePicture } from "./EditProfilePicture"
 
 export const EditProfile = ({ children }: PropsWithChildren<any>) => {
   const { data: profile } = useProfile()
+  const { farcasterProfiles } = useUser()
+  const farcasterProfile = farcasterProfiles?.at(0)
   const form = useForm<Schemas["Profile"]>({
     resolver: zodResolver(schemas.ProfileUpdateSchema),
     defaultValues: {
@@ -82,7 +93,11 @@ export const EditProfile = ({ children }: PropsWithChildren<any>) => {
     <Dialog onOpenChange={disclosure.setValue} open={disclosure.isOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <FormProvider {...form}>
-        <DialogContent size="lg" className="bg-background" scrollBody>
+        <DialogContent
+          size="lg"
+          className="overflow-hidden bg-background"
+          scrollBody
+        >
           <DialogHeader>
             <DialogTitle>Edit profile</DialogTitle>
             <DialogCloseButton />
@@ -91,6 +106,44 @@ export const EditProfile = ({ children }: PropsWithChildren<any>) => {
             <div className="relative mb-20">
               <EditProfileBanner backgroundUploader={backgroundUploader} />
               <EditProfilePicture uploader={profilePicUploader} />
+              <DropdownMenu>
+                <DropdownMenuTrigger
+                  className="-bottom-3 absolute right-0 translate-y-full"
+                  asChild
+                >
+                  <Button variant="ghost" size="icon">
+                    <DotsThreeVertical weight="bold" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  {farcasterProfile && (
+                    <DropdownMenuItem
+                      className="flex gap-2"
+                      onClick={() => {
+                        if (farcasterProfile.avatar) {
+                          form.setValue("profileImageUrl", farcasterProfile.avatar, {
+                            shouldValidate: true,
+                          })
+                        }
+                        if (farcasterProfile.username) {
+                          form.setValue("name", farcasterProfile.username, {
+                            shouldValidate: true,
+                          })
+                        }
+                      }}
+                    >
+                      <FarcasterImage /> Fill data by Farcaster
+                    </DropdownMenuItem>
+                  )}
+                  <DropdownMenuSeparator />
+                  <DropdownMenuLabel className="mt-2 text-destructive-subtle-foreground">
+                    Danger zone
+                  </DropdownMenuLabel>
+                  <DropdownMenuItem onClick={deleteProfile.onSubmit}>
+                    Delete profile
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
 
             <FormField
@@ -141,22 +194,8 @@ export const EditProfile = ({ children }: PropsWithChildren<any>) => {
                 </FormItem>
               )}
             />
-            <Separator className="my-4" />
-            <div>
-              <p className="mb-2 font-medium">Danger zone</p>
-              <Button
-                onClick={deleteProfile.onSubmit}
-                isLoading={deleteProfile.isLoading}
-                variant="subtle"
-                type="button"
-                colorScheme="destructive"
-                size="sm"
-              >
-                Delete profile
-              </Button>
-            </div>
           </DialogBody>
-          <DialogFooter className="border-border-muted border-t py-4">
+          <DialogFooter className="border-border-muted border-t bg-card-secondary py-4">
             <Button
               isLoading={isLoading || isUploadingShown}
               loadingText={uploadLoadingText ?? "Saving"}
