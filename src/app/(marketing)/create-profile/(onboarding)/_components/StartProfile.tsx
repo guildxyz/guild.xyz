@@ -19,6 +19,7 @@ import {} from "@phosphor-icons/react"
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr"
 import useUser from "components/[guild]/hooks/useUser"
 import usePinata from "hooks/usePinata"
+import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import { useEffect, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { useCreateProfile } from "../_hooks/useCreateProfile"
@@ -84,6 +85,11 @@ export const StartProfile: CreateProfileStep = ({ data: chainData }) => {
     fieldToSetOnSuccess: "profileImageUrl",
   })
 
+  const { handleSubmit, isUploadingShown, uploadLoadingText } = useSubmitWithUpload(
+    form.handleSubmit(onSubmit),
+    profilePicUploader.isUploading
+  )
+
   return (
     <div className="w-[28rem] space-y-3 p-8">
       <h1 className="mb-10 text-pretty text-center font-bold font-display text-2xl leading-none tracking-tight">
@@ -91,7 +97,7 @@ export const StartProfile: CreateProfileStep = ({ data: chainData }) => {
       </h1>
 
       <FormProvider {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3">
           <EditProfilePicture
             uploader={profilePicUploader}
             className="mb-8 size-36 self-center border-2 bg-card-secondary"
@@ -156,16 +162,17 @@ export const StartProfile: CreateProfileStep = ({ data: chainData }) => {
               />
               <Button
                 className="w-full"
-                type="submit"
                 colorScheme="success"
-                isLoading={isLoading}
+                onClick={handleSubmit}
+                isLoading={isLoading || isUploadingShown}
+                loadingText={uploadLoadingText}
                 disabled={!form.formState.isValid}
               >
                 Start my profile
               </Button>
             </>
           )}
-        </form>
+        </div>
       </FormProvider>
     </div>
   )
