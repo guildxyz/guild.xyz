@@ -11,8 +11,12 @@ import {
 } from "@chakra-ui/react"
 import { CaretDown, Lightning } from "@phosphor-icons/react"
 import Button from "components/common/Button"
+import { PointsType } from "../types"
 
-const PointsAmountTypeSelector = ({ type, setType }) => {
+const PointsAmountTypeSelector = ({
+  type,
+  setType,
+}: { type: PointsType; setType: (newType: PointsType) => void }) => {
   const options = [
     {
       label: "Static",
@@ -60,13 +64,16 @@ const PointsAmountTypeSelector = ({ type, setType }) => {
           overflow={"hidden"}
           borderRadius={"lg"}
         >
-          <MenuOptionGroup value={type} onChange={setType}>
+          <MenuOptionGroup
+            value={type}
+            onChange={(newValue) => setType(newValue as PointsType)}
+          >
             {options.map((option, i) => (
               <MenuItemOption
                 key={option.value}
                 value={option.value}
                 py="2.5"
-                borderBottomWidth={i !== options.length - 1 && 1}
+                borderBottomWidth={i !== options.length - 1 ? 1 : undefined}
               >
                 <Box w="full">
                   <Text fontWeight={"semibold"}>{option.label}</Text>
