@@ -3,18 +3,25 @@ import { AvatarGroup } from "@/components/ui/AvatarGroup"
 import { Separator } from "@/components/ui/Separator"
 import { cn } from "@/lib/utils"
 import { PropsWithChildren } from "react"
+import { RequiredFields } from "types"
 import {
+  User,
   useFarcasterProfile,
   useRelevantFarcasterFollowers,
 } from "../_hooks/useFarcasterProfile"
 import { useProfile } from "../_hooks/useProfile"
 import { useReferredUsers } from "../_hooks/useReferredUsers"
 
+type DisplayableUser = RequiredFields<User, "pfp_url" | "display_name">
+
 export const ProfileSocialCounters = ({ className }: any) => {
   const { data: referredUsers } = useReferredUsers()
   const { data: profile } = useProfile()
   const { farcasterProfile } = useFarcasterProfile(profile?.userId)
   const { relevantFollowers } = useRelevantFarcasterFollowers(farcasterProfile?.fid)
+  const relevantFollowersFiltered = relevantFollowers?.filter(
+    (user) => user && user.pfp_url && user.display_name
+  ) as undefined | DisplayableUser[]
 
   return (
     <div
@@ -35,9 +42,9 @@ export const ProfileSocialCounters = ({ className }: any) => {
           </SocialCountTile>
 
           <Separator orientation="vertical" className="h-10 max-sm:hidden md:h-12" />
-          {relevantFollowers?.length ? (
+          {relevantFollowersFiltered?.length ? (
             <RelevantFollowers
-              relevantFollowers={relevantFollowers}
+              relevantFollowers={relevantFollowersFiltered}
               followerCount={farcasterProfile.follower_count}
             />
           ) : (
@@ -52,7 +59,10 @@ export const ProfileSocialCounters = ({ className }: any) => {
   )
 }
 
-const SocialCountTile = ({ count, children }: PropsWithChildren<{ count: any }>) => (
+const SocialCountTile = ({
+  count,
+  children,
+}: PropsWithChildren<{ count: number }>) => (
   <div className="flex flex-col items-center leading-tight">
     <div className="font-bold md:text-lg">{count}</div>
     <div className="flex items-center gap-1 text-muted-foreground">{children}</div>
@@ -62,7 +72,7 @@ const SocialCountTile = ({ count, children }: PropsWithChildren<{ count: any }>)
 const RelevantFollowers = ({
   relevantFollowers,
   followerCount,
-}: { relevantFollowers: any; followerCount: number }) => {
+}: { relevantFollowers: DisplayableUser[]; followerCount: number }) => {
   const [firstFc, secondFc] = relevantFollowers
 
   return (

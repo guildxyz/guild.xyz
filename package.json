@@ -42,6 +42,7 @@
     "@lexical/rich-text": "^0.12.0",
     "@lexical/selection": "^0.12.0",
     "@lexical/utils": "^0.12.0",
+    "@neynar/nodejs-sdk": "^1.51.0",
     "@nouns/assets": "^0.4.2",
     "@phosphor-icons/react": "^2.1.7",
     "@radix-ui/react-accordion": "^1.2.0",
