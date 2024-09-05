@@ -28,9 +28,6 @@ type Props = {
   rolePlatform: RolePlatform
 }
 
-// TODO: needs backend support
-const EDIT_SUPPORTED = false
-
 const ExistingRolePlatformCard = ({ rolePlatform }: Props) => {
   const { guildPlatforms } = useGuild()
   const setVisibilityModalProps = useVisibilityModalProps()
@@ -108,31 +105,28 @@ const ExistingRolePlatformCard = ({ rolePlatform }: Props) => {
           <RemovePlatformButton {...{ removeButtonColor, isPlatform }} />
         }
         actionRow={
-          EDIT_SUPPORTED ? (
-            cardSettingsComponent && (
-              <>
-                <Button
-                  size="sm"
-                  onClick={onEditOpen}
-                  ml={{ base: 0, md: 3 }}
-                  mt={{ base: 5, md: 0 }}
-                >
-                  Edit
-                </Button>
-                <EditRolePlatformModal
-                  rolePlatform={{ ...rolePlatform, guildPlatform }}
-                  isOpen={isEditOpen}
-                  onClose={onEditClose}
-                  onSubmit={(updateData) => {
-                    onEdit({ ...rolePlatform, ...updateData })
-                    onEditClose()
-                  }}
-                />
-              </>
-            )
-          ) : (
-            <></>
-          )
+          // TODO: we could add a prop for this in the rewards config if we'll need to support editing rolePlatforms for multiple reward types
+          type === "POINTS" ? (
+            <>
+              <Button
+                size="sm"
+                onClick={onEditOpen}
+                ml={{ base: 0, md: 3 }}
+                mt={{ base: 5, md: 0 }}
+              >
+                Edit
+              </Button>
+              <EditRolePlatformModal
+                rolePlatform={{ ...rolePlatform, guildPlatform }}
+                isOpen={isEditOpen}
+                onClose={onEditClose}
+                onSubmit={(updateData) => {
+                  onEdit({ ...rolePlatform, ...updateData })
+                  onEditClose()
+                }}
+              />
+            </>
+          ) : undefined
         }
         contentRow={
           <>
