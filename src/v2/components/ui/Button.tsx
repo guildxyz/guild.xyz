@@ -88,9 +88,8 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {...props}
         disabled={isLoading || disabled}
       >
-        {isLoading ? <CircleNotch weight="bold" className="animate-spin" /> : null}
-
-        {isLoading ? (
+        {isLoading && <CircleNotch weight="bold" className="animate-spin" />}
+        {isLoading && loadingText ? (
           <span>{loadingText}</span>
         ) : typeof children === "string" ? (
           <span>{children}</span>

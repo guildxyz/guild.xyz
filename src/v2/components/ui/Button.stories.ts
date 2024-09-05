@@ -17,6 +17,7 @@ export const Solid: Story = {
     size: "md",
     variant: "solid",
     colorScheme: "primary",
+    loadingText: undefined,
     isLoading: false,
     disabled: false,
   },
@@ -25,6 +26,10 @@ export const Solid: Story = {
       type: "string",
       control: "select",
       options: ["xs", "sm", "md", "lg", "xl"] satisfies ButtonProps["size"][],
+    },
+    loadingText: {
+      type: "string",
+      control: "text",
     },
     colorScheme: {
       type: "string",
