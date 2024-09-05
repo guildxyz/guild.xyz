@@ -1,6 +1,5 @@
 "use client"
 
-import FarcasterImage from "@/../static/socialIcons/farcaster.svg"
 import { Button } from "@/components/ui/Button"
 import {
   Dialog,
@@ -12,14 +11,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/Dialog"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/DropdownMenu"
+import {} from "@/components/ui/DropdownMenu"
 import {
   FormControl,
   FormErrorMessage,
@@ -33,22 +25,18 @@ import { toast } from "@/components/ui/hooks/useToast"
 import { useDisclosure } from "@/hooks/useDisclosure"
 import { Schemas, schemas } from "@guildxyz/types"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { DotsThreeVertical } from "@phosphor-icons/react"
-import useUser from "components/[guild]/hooks/useUser"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import { PropsWithChildren } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import { useDeleteProfile } from "../../_hooks/useDeleteProfile"
 import { useProfile } from "../../_hooks/useProfile"
 import { useUpdateProfile } from "../../_hooks/useUpdateProfile"
 import { EditProfileBanner } from "./EditProfileBanner"
+import { EditProfileDropdown } from "./EditProfileDropdown"
 import { EditProfilePicture } from "./EditProfilePicture"
 
 export const EditProfile = ({ children }: PropsWithChildren<any>) => {
   const { data: profile } = useProfile()
-  const { farcasterProfiles } = useUser()
-  const farcasterProfile = farcasterProfiles?.at(0)
   const form = useForm<Schemas["Profile"]>({
     resolver: zodResolver(schemas.ProfileUpdateSchema),
     defaultValues: {
@@ -87,8 +75,6 @@ export const EditProfile = ({ children }: PropsWithChildren<any>) => {
     profilePicUploader.isUploading || backgroundUploader.isUploading
   )
 
-  const deleteProfile = useDeleteProfile()
-
   return (
     <Dialog onOpenChange={disclosure.setValue} open={disclosure.isOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
@@ -106,44 +92,7 @@ export const EditProfile = ({ children }: PropsWithChildren<any>) => {
             <div className="relative mb-20">
               <EditProfileBanner backgroundUploader={backgroundUploader} />
               <EditProfilePicture uploader={profilePicUploader} />
-              <DropdownMenu>
-                <DropdownMenuTrigger
-                  className="-bottom-3 absolute right-0 translate-y-full"
-                  asChild
-                >
-                  <Button variant="ghost" size="icon">
-                    <DotsThreeVertical weight="bold" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  {farcasterProfile && (
-                    <DropdownMenuItem
-                      className="flex gap-2"
-                      onClick={() => {
-                        if (farcasterProfile.avatar) {
-                          form.setValue("profileImageUrl", farcasterProfile.avatar, {
-                            shouldValidate: true,
-                          })
-                        }
-                        if (farcasterProfile.username) {
-                          form.setValue("name", farcasterProfile.username, {
-                            shouldValidate: true,
-                          })
-                        }
-                      }}
-                    >
-                      <FarcasterImage /> Fill data by Farcaster
-                    </DropdownMenuItem>
-                  )}
-                  <DropdownMenuSeparator />
-                  <DropdownMenuLabel className="mt-2 text-destructive-subtle-foreground">
-                    Danger zone
-                  </DropdownMenuLabel>
-                  <DropdownMenuItem onClick={deleteProfile.onSubmit}>
-                    Delete profile
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <EditProfileDropdown />
             </div>
 
             <FormField
