@@ -79,16 +79,12 @@ export const EditProfile = ({ children }: PropsWithChildren<any>) => {
     <Dialog onOpenChange={disclosure.setValue} open={disclosure.isOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <FormProvider {...form}>
-        <DialogContent
-          size="lg"
-          className="overflow-hidden bg-background"
-          scrollBody
-        >
+        <DialogContent size="lg" className="bg-background">
           <DialogHeader>
             <DialogTitle>Edit profile</DialogTitle>
             <DialogCloseButton />
           </DialogHeader>
-          <DialogBody scroll className="!pb-8">
+          <DialogBody>
             <div className="relative mb-20">
               <EditProfileBanner backgroundUploader={backgroundUploader} />
               <EditProfilePicture uploader={profilePicUploader} />
@@ -99,7 +95,7 @@ export const EditProfile = ({ children }: PropsWithChildren<any>) => {
               control={form.control}
               name="name"
               render={({ field }) => (
-                <FormItem className="pb-2">
+                <FormItem className="pb-3">
                   <FormLabel>Name</FormLabel>
                   <FormControl>
                     <Input
@@ -116,7 +112,7 @@ export const EditProfile = ({ children }: PropsWithChildren<any>) => {
               control={form.control}
               name="username"
               render={({ field }) => (
-                <FormItem className="pb-2">
+                <FormItem className="pb-3">
                   <FormLabel aria-required="true">Username</FormLabel>
                   <FormControl>
                     <Input placeholder="" required {...field} />
@@ -144,7 +140,7 @@ export const EditProfile = ({ children }: PropsWithChildren<any>) => {
               )}
             />
           </DialogBody>
-          <DialogFooter className="border-border-muted border-t bg-card-secondary py-4">
+          <DialogFooter className="py-8">
             <Button
               isLoading={isLoading || isUploadingShown}
               loadingText={uploadLoadingText ?? "Saving"}
