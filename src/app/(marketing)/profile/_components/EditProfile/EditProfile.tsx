@@ -87,7 +87,7 @@ export const EditProfile = ({ children }: PropsWithChildren<any>) => {
           <DialogBody scroll className="!pb-8">
             <div className="relative mb-20">
               <EditProfileBanner />
-              <EditProfilePicture onUpload={profilePicUploader.onUpload} />
+              <EditProfilePicture uploader={profilePicUploader} />
             </div>
 
             <FormField

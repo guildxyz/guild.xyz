@@ -31,6 +31,7 @@ export const ProfileBackgroundImageUploader = ({
     multiple: false,
     noClick: false,
     onDrop: (accepted, fileRejections) => {
+      setProgress(0)
       if (accepted.length > 0) {
         onUpload({ data: [accepted[0]], onProgress: setProgress })
       }

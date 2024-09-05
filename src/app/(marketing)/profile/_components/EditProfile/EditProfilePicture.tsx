@@ -5,33 +5,37 @@ import { Button } from "@/components/ui/Button"
 import { FormField } from "@/components/ui/Form"
 import { toast } from "@/components/ui/hooks/useToast"
 import { cn } from "@/lib/utils"
-import { User } from "@phosphor-icons/react"
+import { Image, UploadSimple, User } from "@phosphor-icons/react"
 import { AvatarImage } from "@radix-ui/react-avatar"
 import useDropzone from "hooks/useDropzone"
 import { Uploader } from "hooks/usePinata/usePinata"
 import { useState } from "react"
 
 export const EditProfilePicture = ({
-  onUpload,
-}: { onUpload: Uploader["onUpload"] }) => {
+  uploader: { onUpload, isUploading },
+}: { uploader: Uploader }) => {
   const [uploadProgress, setUploadProgress] = useState(0)
 
-  const { isDragActive, getRootProps } = useDropzone({
+  const showErrorToast = (description: string) =>
+    toast({
+      variant: "error",
+      title: "Couldn't upload image",
+      description,
+    })
+
+  const { isDragActive, getRootProps, getInputProps } = useDropzone({
     multiple: false,
     noClick: false,
-    onDrop: (acceptedFiles) => {
-      if (!acceptedFiles[0]) return
-      onUpload({
-        data: [acceptedFiles[0]],
-        onProgress: setUploadProgress,
-      })
+    onDrop: (acceptedFiles, rejectedFiles) => {
+      setUploadProgress(0)
+      if (acceptedFiles.length > 0) {
+        onUpload({ data: [acceptedFiles[0]], onProgress: setUploadProgress })
+      }
+      if (rejectedFiles.length > 0)
+        showErrorToast(rejectedFiles[0].errors[0].message)
     },
-    onError: (error) => {
-      toast({
-        variant: "error",
-        title: `Failed to upload file`,
-        description: error.message,
-      })
+    onError: (err) => {
+      showErrorToast(err.message)
     },
   })
 
@@ -43,17 +47,16 @@ export const EditProfilePicture = ({
           variant="unstyled"
           type="button"
           className={cn(
-            "-bottom-2 absolute left-4 size-28 translate-y-1/2 rounded-full border border-dotted",
+            "-bottom-2 absolute left-4 size-28 translate-y-1/2 overflow-hidden rounded-full border border-dotted",
             { "border-solid": field.value }
           )}
           {...getRootProps()}
         >
-          <Avatar className="size-36 bg-muted">
+          <input {...getInputProps()} hidden />
+          <Avatar className="size-28 bg-muted">
             {field.value && (
               <AvatarImage
                 src={field.value}
-                width={144}
-                height={144}
                 alt="profile avatar"
                 className="size-full object-cover"
               />
@@ -62,6 +65,20 @@ export const EditProfilePicture = ({
               <User size={38} />
             </AvatarFallback>
           </Avatar>
+          <div
+            className={cn(
+              "absolute inset-0 flex items-center justify-center bg-[rgba(0,0,0,0.50)] text-white opacity-0 transition-opacity hover:opacity-100",
+              (isDragActive || isUploading) && "opacity-100"
+            )}
+          >
+            {isUploading ? (
+              <p>{(uploadProgress * 100).toFixed(0)}%</p>
+            ) : isDragActive ? (
+              <UploadSimple weight="bold" size={24} />
+            ) : (
+              <Image weight="bold" size={24} />
+            )}
+          </div>
         </Button>
       )}
     />
