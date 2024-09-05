@@ -11,6 +11,7 @@ import {
   ReactElement,
   forwardRef,
 } from "react"
+import { buttonVariants } from "./Button"
 
 const ToastProvider = ToastPrimitives.Provider
 
@@ -76,8 +77,10 @@ const ToastAction = forwardRef<
   <ToastPrimitives.Action
     ref={ref}
     className={cn(
-      "inline-flex h-8 w-max shrink-0 items-center justify-center rounded-md bg-secondary px-3 font-medium text-sm transition-colors hover:bg-secondary-hover focus:outline-none focus:ring-ring focus-visible:ring-4 active:bg-secondary-active disabled:pointer-events-none disabled:opacity-50",
-      className
+      buttonVariants({
+        size: "sm",
+        className: ["gap-1 rounded-md", className],
+      })
     )}
     {...props}
   />

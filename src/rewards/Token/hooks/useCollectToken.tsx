@@ -4,7 +4,7 @@ import useCustomPosthogEvents from "hooks/useCustomPosthogEvents"
 import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
-import { useToastWithTweetButton } from "hooks/useToast"
+import { useToastWithShareButtons } from "hooks/useToastWithShareButtons"
 import { useState } from "react"
 import tokenRewardPoolAbi from "static/abis/tokenRewardPool"
 import { PlatformType } from "types"
@@ -119,16 +119,16 @@ const useCollectToken = (
     return receipt
   }
 
-  const tweetToast = useToastWithTweetButton()
+  const toastWithShareButtons = useToastWithShareButtons()
   const showErrorToast = useShowErrorToast()
 
   return {
     ...useSubmit<undefined, TransactionReceipt>(collect, {
       onSuccess: () => {
         setLoadingText("")
-        tweetToast({
+        toastWithShareButtons({
           title: "Successfully claimed your tokens!",
-          tweetText: `Just collected my tokens in the ${name} guild!\nguild.xyz/${urlName}`,
+          shareText: `Just collected my tokens in the ${name} guild!\nguild.xyz/${urlName}`,
         })
 
         captureEvent("Successful token claiming", {

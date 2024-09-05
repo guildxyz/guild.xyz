@@ -83,7 +83,6 @@ const AccountModal = () => {
                 <div className="mb-8 flex gap-3">
                   <Avatar size="2xl" className="mr-2 self-center border-2">
                     <ProfileAvatar
-                      size={78}
                       username={guildProfile.username}
                       profileImageUrl={guildProfile.profileImageUrl}
                     />
@@ -121,7 +120,7 @@ const AccountModal = () => {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>
-                          <DropdownMenuLabel className="mt-3 flex gap-1 px-4 text-muted-foreground">
+                          <DropdownMenuLabel className="mt-2 flex gap-1 px-4 text-muted-foreground">
                             Connected with {connectorName}
                             <NetworkIndicator />
                           </DropdownMenuLabel>

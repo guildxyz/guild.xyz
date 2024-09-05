@@ -33,7 +33,7 @@ export const Account = () => {
 
   if (isLoading || isWeb3Connected === null) {
     return (
-      <Card className="overflow-visible">
+      <Card className="overflow-hidden">
         <Skeleton className="h-11 w-36" />
       </Card>
     )
@@ -85,7 +85,6 @@ export const Account = () => {
               <ProfileAvatar
                 username={guildProfile.username}
                 profileImageUrl={guildProfile.profileImageUrl}
-                size={32}
               />
             </Avatar>
             <div className="flex flex-col items-start">

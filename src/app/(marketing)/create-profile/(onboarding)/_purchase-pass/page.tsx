@@ -16,7 +16,7 @@ const Page = () => {
       router.replace("choose-pass")
     }
     if (!data.referrerProfile) {
-      router.replace("claim-pass")
+      router.replace("prompt-referrer")
     }
   }, [data, router.replace])
 

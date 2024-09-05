@@ -1,14 +1,30 @@
+import { useGetKeyForSWRWithOptionalAuth } from "hooks/useGetKeyForSWRWithOptionalAuth"
 import useSWRWithOptionalAuth, {
-  mutateOptionalAuthSWRKey,
+  useMutateOptionalAuthSWRKey,
 } from "hooks/useSWRWithOptionalAuth"
 import { usePathname } from "next/navigation"
 import { mutate as swrMutate, unstable_serialize, useSWRConfig } from "swr"
 import useSWRImmutable from "swr/immutable"
 import { Guild, SimpleGuild } from "types"
 
+// TODO: once we migrate every page to the app router, we should remove this array & use the `useParams` hook instead of `usePathname`
+const EXCLUDED_ROUTES = [
+  "explorer",
+  "create-guild",
+  "privacy-policy",
+  "terms-of-use",
+  "leaderboard",
+  "profile",
+  "superadmin",
+]
+
 const useGuildUrlNameFromPathname = (guildId?: string | number) => {
   const pathname = usePathname()
   const guildFromPathname = pathname?.split("/").at(1)
+
+  const idToReturn = guildId ?? guildFromPathname
+
+  if (EXCLUDED_ROUTES.includes(idToReturn?.toString() ?? "")) return undefined
 
   return guildId ?? guildFromPathname
 }
@@ -17,6 +33,7 @@ const useGuild = (guildId?: string | number) => {
   const id = useGuildUrlNameFromPathname(guildId)
 
   const publicSWRKey = `/v2/guilds/guild-page/${id}`
+  const mutateOptionalAuthSWRKey = useMutateOptionalAuthSWRKey()
 
   const { data, mutate, isLoading, error, isSigned } = useSWRWithOptionalAuth<Guild>(
     id ? publicSWRKey : null,
@@ -66,10 +83,11 @@ const useGuild = (guildId?: string | number) => {
 
 const useSimpleGuild = (guildId?: string | number) => {
   const id = useGuildUrlNameFromPathname(guildId)
+  const getKeyForSWRWithOptionalAuth = useGetKeyForSWRWithOptionalAuth()
 
   const { cache } = useSWRConfig()
   const guildPageFromCache = cache.get(
-    unstable_serialize([`/v2/guilds/guild-page/${id}`, { method: "GET", body: {} }])
+    unstable_serialize(getKeyForSWRWithOptionalAuth(`/v2/guilds/guild-page/${id}`))
   )?.data as SimpleGuild
 
   const { data, ...swrProps } = useSWRImmutable<SimpleGuild>(

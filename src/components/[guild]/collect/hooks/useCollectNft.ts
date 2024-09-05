@@ -10,7 +10,7 @@ import useCustomPosthogEvents from "hooks/useCustomPosthogEvents"
 import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
-import { useToastWithTweetButton } from "hooks/useToast"
+import { useToastWithShareButtons } from "hooks/useToastWithShareButtons"
 import { useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import guildRewardNftAbi from "static/abis/guildRewardNft"
@@ -71,7 +71,7 @@ const useCollectNft = () => {
   const { id: guildId, urlName } = useGuild()
   const postHogOptions = { guild: urlName }
 
-  const tweetToast = useToastWithTweetButton()
+  const toastWithShareButtons = useToastWithShareButtons()
   const showErrorToast = useShowErrorToast()
 
   const { address: userAddress, chainId, status } = useAccount()
@@ -230,11 +230,11 @@ const useCollectNft = () => {
 
         captureEvent("Minted NFT (GuildCheckout)", postHogOptions)
 
-        tweetToast({
+        toastWithShareButtons({
           title: `Successfully collected ${amount > 1 ? `${amount} ` : ""}NFT${
             amount > 1 ? "s" : ""
           }!`,
-          tweetText: `Just collected my ${name} NFT${
+          shareText: `Just collected my ${name} NFT${
             amount > 1 ? "s" : ""
           }!\nguild.xyz/${urlName}/collect/${chain.toLowerCase()}/${nftAddress.toLowerCase()}`,
         })

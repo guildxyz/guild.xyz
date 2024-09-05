@@ -4,6 +4,7 @@ import useUser from "components/[guild]/hooks/useUser"
 import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import useSWR, { SWRConfiguration } from "swr"
 import { PlatformType } from "types"
+import { useGetKeyForSWRWithOptionalAuth } from "./useGetKeyForSWRWithOptionalAuth"
 
 export type Gateables = {
   [PlatformType.DISCORD]: Array<DiscordGateable>
@@ -25,6 +26,7 @@ const useGateables = <K extends keyof Gateables>(
   )
 
   const fetcherWithSign = useFetcherWithSign()
+  const getKeyForSWRWithOptionalAuth = useGetKeyForSWRWithOptionalAuth()
 
   const shouldFetch =
     isConnected &&
@@ -34,10 +36,9 @@ const useGateables = <K extends keyof Gateables>(
 
   const { data, isLoading, mutate, error, isValidating } = useSWR<Gateables[K]>(
     shouldFetch
-      ? [
-          `/v2/users/${userId}/platforms/${PlatformType[platformId]}/gateables`,
-          { method: "GET" },
-        ]
+      ? getKeyForSWRWithOptionalAuth(
+          `/v2/users/${userId}/platforms/${PlatformType[platformId]}/gateables`
+        )
       : null,
     (props) =>
       fetcherWithSign(props).then((body) => {

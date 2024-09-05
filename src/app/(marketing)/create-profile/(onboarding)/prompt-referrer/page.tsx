@@ -6,8 +6,8 @@ import { useSetAtom } from "jotai"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useRef } from "react"
 import useSWRImmutable from "swr/immutable"
-import { ClaimPass } from "../_components/ClaimPass"
 import { CreateProfileSkeleton } from "../_components/CreateProfileSkeleton"
+import { PromptReferrer } from "../_components/PromptReferrer"
 import { createProfileDataAtom } from "../atoms"
 import { REFERRER_USER_SEARCH_PARAM_KEY } from "../constants"
 
@@ -39,7 +39,7 @@ const Page = () => {
   }
 
   return (
-    <ClaimPass
+    <PromptReferrer
       data={{ referrerProfile: referrer.data }}
       dispatchAction={({ action, data }) => {
         if (action === "next") {

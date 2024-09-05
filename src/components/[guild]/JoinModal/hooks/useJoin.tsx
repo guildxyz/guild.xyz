@@ -5,7 +5,8 @@ import { useMintGuildPinContext } from "components/[guild]/Requirements/componen
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
 import { UseSubmitOptions } from "hooks/useSubmit/types"
-import { useToastWithButton, useToastWithTweetButton } from "hooks/useToast"
+import { useToastWithButton } from "hooks/useToast"
+import { useToastWithShareButtons } from "hooks/useToastWithShareButtons"
 import { useRouter } from "next/router"
 import { useState } from "react"
 import useMembershipUpdate from "./useMembershipUpdate"
@@ -13,7 +14,7 @@ import useMembershipUpdate from "./useMembershipUpdate"
 const useJoin = ({ onSuccess, onError }: UseSubmitOptions<JoinJob>) => {
   const guild = useGuild()
   const user = useUser()
-  const toastWithTweetButton = useToastWithTweetButton()
+  const toastWithShareButtons = useToastWithShareButtons()
   const toastWithButton = useToastWithButton()
   const [isNoAccess, setIsNoAccess] = useState(false)
 
@@ -50,9 +51,9 @@ const useJoin = ({ onSuccess, onError }: UseSubmitOptions<JoinJob>) => {
             },
           })
         } else {
-          toastWithTweetButton({
+          toastWithShareButtons({
             title: "Successfully joined guild",
-            tweetText: `Just joined the ${guild.name} guild. Continuing my brave quest to explore all corners of web3!
+            shareText: `Just joined the ${guild.name} guild. Continuing my brave quest to explore all corners of web3!
       guild.xyz/${guild.urlName}`,
           })
         }

@@ -192,6 +192,8 @@ export const EditContributions = () => {
                     })
                     return
                   }
+                  setGuildId("")
+                  setRoleId("")
                   createContribution.onSubmit({
                     guildId: parseInt(guildId),
                     roleId: parseInt(roleId),

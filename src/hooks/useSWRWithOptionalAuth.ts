@@ -3,6 +3,7 @@ import { useUserPublic } from "@/hooks/useUserPublic"
 import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import useSWR, { mutate, MutatorOptions, SWRResponse, unstable_serialize } from "swr"
 import useSWRImmutable from "swr/immutable"
+import { useGetKeyForSWRWithOptionalAuth } from "./useGetKeyForSWRWithOptionalAuth"
 
 type SWRSettings = Parameters<typeof useSWR>[2]
 
@@ -16,12 +17,13 @@ const useSWRWithOptionalAuth = <Data = any, Error = any>(
 
   const { isWeb3Connected } = useWeb3ConnectionManager()
   const { keyPair } = useUserPublic()
+  const getKeyForSWRWithOptionalAuth = useGetKeyForSWRWithOptionalAuth()
 
   const shouldSendAuth = !!keyPair && isWeb3Connected
 
   const fetcherWithSign = useFetcherWithSign()
   const authenticatedResponse = useSWRHook<Data, Error, any>(
-    url && shouldSendAuth ? [url, { method: "GET", body: {} }] : null,
+    url && shouldSendAuth ? getKeyForSWRWithOptionalAuth(url) : null,
     fetcherWithSign,
     options as any
   )
@@ -52,16 +54,20 @@ const useSWRWithOptionalAuth = <Data = any, Error = any>(
  * We could do a mutate(url) here as well, but I removed it as it seemed unnecessary,
  * since the user is already authenticated, when we call this.
  */
-const mutateOptionalAuthSWRKey = <Data>(
-  url: string,
-  mutator?: (prevData: Data) => Data,
-  options?: MutatorOptions<Data>
-) =>
-  mutate<Data>(
-    unstable_serialize([url, { method: "GET", body: {} }]),
-    mutator,
-    options
-  )
+const useMutateOptionalAuthSWRKey = () => {
+  const getKeyForSWRWithOptionalAuth = useGetKeyForSWRWithOptionalAuth()
 
-export { mutateOptionalAuthSWRKey }
+  return <Data>(
+    url: string,
+    mutator?: (prevData: Data) => Data,
+    options?: MutatorOptions<Data>
+  ) =>
+    mutate<Data>(
+      unstable_serialize(getKeyForSWRWithOptionalAuth(url)),
+      mutator,
+      options
+    )
+}
+
+export { useMutateOptionalAuthSWRKey }
 export default useSWRWithOptionalAuth

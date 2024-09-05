@@ -1,17 +1,9 @@
-import {
-  Avatar,
-  AvatarFallback,
-  // AvatarImage,
-  avatarVariants,
-} from "@/components/ui/Avatar"
-// import { AvatarGroup } from "@/components/ui/AvatarGroup"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
 import { Separator } from "@/components/ui/Separator"
-import { cn } from "@/lib/utils"
-import { Guild, Role } from "@guildxyz/types"
+import { Guild, Role, Schemas } from "@guildxyz/types"
 import { Users } from "@phosphor-icons/react/dist/ssr"
-import { AvatarImage } from "@radix-ui/react-avatar"
 import { CardWithGuildLabel } from "./CardWithGuildLabel"
-import { ExtendedCollection } from "./ContributionCard"
+import { ContributionCollection } from "./ContributionCollection"
 
 export const ContributionCardView = ({
   guild,
@@ -20,12 +12,14 @@ export const ContributionCardView = ({
 }: {
   guild: Guild
   role: Role
-  collection: ExtendedCollection
+  collection?: Schemas["ContributionCollection"]
 }) => {
-  const { NFTs, pins, points: collectionPoints } = collection
-  const collections = [...NFTs, ...pins, ...collectionPoints]
-  console.log({ NFTs, pins, collectionPoints })
-  const collectionPoint = collectionPoints.at(0)
+  const roleAcquirementPercentage = Number(
+    ((role.memberCount / guild.memberCount || 0) * 100).toFixed(1)
+  )
+  const collections = [collection?.NFTs, collection?.pins, collection?.points]
+    .filter(Boolean)
+    .flat()
   return (
     <CardWithGuildLabel guild={guild}>
       <div className="grid grid-cols-[auto_1fr] items-center gap-4 p-5 md:grid-cols-[auto_auto_1fr] md:p-6">
@@ -43,15 +37,12 @@ export const ContributionCardView = ({
           <div className="flex items-center gap-2 text-muted-foreground">
             <Users weight="bold" className="min-w-min" />
             <p className="line-clamp-1 text-sm">
-              Only{" "}
-              {Number(
-                ((role.memberCount / guild.memberCount || 0) * 100).toFixed(1)
-              )}
-              % of members have this role
+              {roleAcquirementPercentage < 18 && "Only "}
+              {roleAcquirementPercentage}% of members have this role
             </p>
           </div>
         </div>
-        {!!collections.length && (
+        {collection && collections.length && (
           <div className="col-span-2 flex w-full flex-col gap-2 justify-self-end md:col-span-1 md:w-auto md:flex-row md:items-center">
             <Separator className="mb-2 md:hidden" />
             <div className="font-extrabold text-muted-foreground text-xs uppercase">
@@ -59,36 +50,7 @@ export const ContributionCardView = ({
             </div>
 
             <div className="ml-3 flex">
-              {collectionPoint && (
-                <>
-                  <Avatar
-                    className={cn(avatarVariants({ size: "lg" }), "-ml-3 border")}
-                  >
-                    <AvatarImage
-                      src={collectionPoint.point.platformGuildData.imageUrl}
-                      alt="avatar"
-                    />
-                    <AvatarFallback />
-                  </Avatar>
-                  <div className="-ml-3 self-center rounded-r-lg border bg-card-secondary px-3 py-0.5">
-                    <div className="font-extrabold text-sm">
-                      {collectionPoint.totalPoints}&nbsp;
-                      <span className="font-normal">
-                        {collectionPoint.point.platformGuildData.name}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-1 text-muted-foreground text-xs">
-                      <Users weight="bold" />
-                      {Number(
-                        (collectionPoint.rank /
-                          collectionPoint.leaderboard.leaderboard.length) *
-                          100
-                      )}
-                      %
-                    </div>
-                  </div>
-                </>
-              )}
+              <ContributionCollection collection={collection} />
             </div>
           </div>
         )}

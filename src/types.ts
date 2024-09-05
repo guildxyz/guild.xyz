@@ -740,6 +740,8 @@ type DetailedPinLeaderboardUserData = {
 
 type SearchParams = { [key: string]: string | string[] | undefined }
 
+export type RequiredFields<T, K extends keyof T> = T & Required<Pick<T, K>>
+
 export { ValidationMethod }
 export type {
   BaseUser,

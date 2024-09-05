@@ -1,28 +1,8 @@
-"use client"
-
-import { GetLeaderboardResponse, Guild, Role, Schemas } from "@guildxyz/types"
+import { Skeleton } from "@/components/ui/Skeleton"
+import { Guild, Role, Schemas } from "@guildxyz/types"
 import useSWRImmutable from "swr/immutable"
-import fetcher from "utils/fetcher"
 import { useProfile } from "../_hooks/useProfile"
 import { ContributionCardView } from "./ContributionCardView"
-
-type Collection = Schemas["ContributionCollection"]
-export type Point = {
-  id: number
-  platformId: number
-  platformGuildId: string
-  platformGuildData: {
-    name: string
-    imageUrl: string
-  }
-}
-export interface ExtendedCollection extends Collection {
-  // TODO: move this override type to backend
-  points: (Collection["points"][number] & {
-    point: Point
-    leaderboard: GetLeaderboardResponse
-  })[]
-}
 
 export const ContributionCard = ({
   contribution,
@@ -37,46 +17,16 @@ export const ContributionCard = ({
       ? `/v2/profiles/${profile.data.username}/contributions/${contribution.id}/collection`
       : null
   )
-  const points = useSWRImmutable<Point[]>(
-    collection.data?.points
-      ? collection.data.points.map(
-          ({ guildId, guildPlatformId }) =>
-            `/v2/guilds/${guildId}/guild-platforms/${guildPlatformId}`
-        )
-      : null,
-    (args) => Promise.all(args.map((arg) => fetcher(arg)))
-  )
 
-  const leaderboards = useSWRImmutable<GetLeaderboardResponse[]>(
-    collection.data?.points
-      ? collection.data.points.map(
-          ({ guildId, guildPlatformId }) =>
-            `/v2/guilds/${guildId}/points/${guildPlatformId}/leaderboard`
-        )
-      : null,
-    (args) => Promise.all(args.map((arg) => fetcher(arg)))
-  )
-
-  if (
-    !role.data ||
-    !guild.data ||
-    !collection.data ||
-    points.isLoading ||
-    leaderboards.isLoading
-  )
-    return
-
-  collection.data.points = collection.data.points.map((rawPoints, i) => ({
-    ...rawPoints,
-    point: points.data?.at(i),
-    leaderboard: leaderboards.data?.at(i),
-  }))
+  if (!role.data || !guild.data || !collection.data) {
+    return <Skeleton className="h-32 w-full rounded-2xl" />
+  }
 
   return (
     <ContributionCardView
       guild={guild.data}
       role={role.data}
-      collection={collection.data as ExtendedCollection}
+      collection={collection.data}
     />
   )
 }

@@ -6,6 +6,7 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/ToggleGroup"
 import { ActivityLogActionResponse } from "components/[guild]/activity/ActivityLogContext"
 import { ACTION } from "components/[guild]/activity/constants"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
+import { atom, useAtom } from "jotai"
 import { useState } from "react"
 import { useProfile } from "../../_hooks/useProfile"
 import { ActivityCard } from "./ActivityCard"
@@ -41,9 +42,14 @@ const FILTER_ACTIONS: Record<(typeof ACTIVITY_FILTERS)[number], ACTION[]> = {
   Rewards: [ACTION.GetReward, ACTION.LoseReward] as const,
 }
 
+export const activityValuesAtom = atom<ActivityLogActionResponse["values"] | null>(
+  null
+)
+
 export const RecentActivity = () => {
   const [activityFilter, setActivityFilter] =
     useState<(typeof ACTIVITY_FILTERS)[number]>("All")
+  const [_, setActivityValues] = useAtom(activityValuesAtom)
   const profile = useProfile()
   const searchParams =
     profile.data?.userId &&
@@ -55,7 +61,12 @@ export const RecentActivity = () => {
       ...FILTER_ACTIONS[activityFilter].map((action) => ["action", action]),
     ])
   const auditLog = useSWRWithOptionalAuth<ActivityLogActionResponse>(
-    searchParams ? `/v2/audit-log?${searchParams}` : null
+    searchParams ? `/v2/audit-log?${searchParams}` : null,
+    {
+      // for some reason, ts errors on the setActivityValues part
+      // @ts-ignore
+      onSuccess: (data) => setActivityValues(data.values),
+    }
   )
 
   return (

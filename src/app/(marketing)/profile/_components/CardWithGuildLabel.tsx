@@ -34,7 +34,7 @@ export const CardWithGuildLabel = ({
           </Avatar>
           <div
             className={cn(
-              "-mt-0.5 truncate font-bold font-display text-foreground max-sm:text-sm sm:max-w-12",
+              "-mt-0.5 truncate font-bold font-display text-foreground text-sm sm:max-w-14",
               color && (color.isDark() ? "text-white" : "text-black")
             )}
           >

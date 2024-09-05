@@ -19,7 +19,7 @@ import { CreateProfileStep } from "../types"
 
 const formSchema = schemas.ProfileCreationSchema.pick({ username: true })
 
-export const ClaimPass: CreateProfileStep = ({ dispatchAction, data }) => {
+export const PromptReferrer: CreateProfileStep = ({ dispatchAction, data }) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -52,12 +52,9 @@ export const ClaimPass: CreateProfileStep = ({ dispatchAction, data }) => {
 
   return (
     <div className="max-w-md p-8">
-      <h1 className="mb-2 text-pretty text-center font-extrabold text-2xl leading-none tracking-tighter">
+      <h1 className="mb-8 text-pretty text-center font-extrabold text-2xl leading-none tracking-tighter">
         Start your profile
       </h1>
-      <p className="mb-8 text-center text-muted-foreground">
-        Begin an epic adventure now!
-      </p>
 
       <FormProvider {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -80,8 +77,8 @@ export const ClaimPass: CreateProfileStep = ({ dispatchAction, data }) => {
                 </FormControl>
                 <FormErrorMessage />
                 <FormDescription>
-                  To claim your Guild Pass you must provide an existing profile
-                  username
+                  Guild profiles are invite only, you must provide an existing
+                  profile username
                 </FormDescription>
               </FormItem>
             )}

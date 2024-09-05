@@ -24,6 +24,8 @@ test("can mint guild pin", async ({ pageWithKeyPair: { page } }) => {
 
   await page.waitForResponse("**/v2/guilds/*/pin")
 
-  const successToast = await page.getByText("Successfully minted Guild Pin!")
+  const successToast = await page.getByText("Successfully minted Guild Pin!", {
+    exact: true,
+  })
   await expect(successToast).toBeVisible({ timeout: 30_000 })
 })

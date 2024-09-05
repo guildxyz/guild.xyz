@@ -1,5 +1,4 @@
 "use client"
-
 import { CheckMark } from "@/components/CheckMark"
 import { LayoutContainer } from "@/components/Layout"
 import { ProfileAvatar } from "@/components/ProfileAvatar"
@@ -9,15 +8,14 @@ import { Card } from "@/components/ui/Card"
 import { Pencil } from "@phosphor-icons/react"
 import { ProfileOwnerGuard } from "../_components/ProfileOwnerGuard"
 import { useProfile } from "../_hooks/useProfile"
-import { useReferredUsers } from "../_hooks/useReferredUsers"
 import { EditProfile } from "./EditProfile/EditProfile"
 import { ProfileHeroSkeleton } from "./ProfileSkeleton"
+import { ProfileSocialCounters } from "./ProfileSocialCounters"
 
 export const ProfileHero = () => {
   const { data: profile } = useProfile()
-  const { data: referredUsers } = useReferredUsers()
 
-  if (!profile || !referredUsers) return <ProfileHeroSkeleton />
+  if (!profile) return <ProfileHeroSkeleton />
 
   return (
     <LayoutContainer>
@@ -42,7 +40,6 @@ export const ProfileHero = () => {
           <ProfileAvatar
             username={profile.username}
             profileImageUrl={profile.profileImageUrl}
-            size={192}
           />
         </Avatar>
         <h1 className="break-all text-center font-extrabold text-3xl leading-tight tracking-tight md:text-4xl">
@@ -53,12 +50,7 @@ export const ProfileHero = () => {
         <p className="mt-4 max-w-md text-pretty text-center text-lg text-muted-foreground md:mt-6">
           {profile.bio}
         </p>
-        <div className="mt-8 grid grid-cols-[repeat(3,auto)] gap-y-4 space-x-6 sm:grid-cols-[repeat(5,auto)]">
-          <div className="flex flex-col items-center leading-tight">
-            <div className="font-bold md:text-lg">{referredUsers.length}</div>
-            <div className="text-muted-foreground">Guildmates</div>
-          </div>
-        </div>
+        <ProfileSocialCounters className="mt-8" />
       </div>
     </LayoutContainer>
   )

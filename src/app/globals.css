@@ -120,6 +120,18 @@
     --farcaster-hover: 261 55% 55%;
     --farcaster-active: 239 75% 50%;
 
+    /** 
+     * Missing reward colors to work with the current Chakra driven solution. 
+     * Should find a better solution when we ditch Chakra and won't need to be backward compatible
+     *
+     * Examples of usage -> new: RewardBadge, old: RewardTag
+     */
+    --gather_town: 232, 66%, 55%;
+    --cyan: 190, 100%, 42%;
+    --blue: 217, 91%, 60%;
+    --gold: 35, 39%, 60%;
+    --gray: 240, 4%, 46%;
+    
     --sm: 640px;
     --md: 768px;
     --lg: 1024px;

@@ -12,7 +12,7 @@ const Page = () => {
 
   useEffect(() => {
     if (!data.referrerProfile) {
-      router.replace("claim-pass")
+      router.replace("prompt-referrer")
     }
   }, [data, router.replace])
 
@@ -24,9 +24,6 @@ const Page = () => {
     <StartProfile
       data={data}
       dispatchAction={({ action }) => {
-        if (action === "next") {
-          // router.push("")
-        }
         if (action === "previous") {
           router.back()
         }

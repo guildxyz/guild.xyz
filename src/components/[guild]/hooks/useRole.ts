@@ -1,10 +1,12 @@
 import { useFetcherWithSign } from "hooks/useFetcherWithSign"
+import { useGetKeyForSWRWithOptionalAuth } from "hooks/useGetKeyForSWRWithOptionalAuth"
 import useSWRImmutable from "swr/immutable"
 import { Role } from "types"
 import useGuild from "./useGuild"
 
 const useRole = (guildId: number | string, roleId: number) => {
   const url = `/v2/guilds/${guildId}/roles/${roleId}`
+  const getKeyForSWRWithOptionalAuth = useGetKeyForSWRWithOptionalAuth()
 
   /**
    * If the role is from the current guild, we don't need to fetch it separately,
@@ -23,7 +25,7 @@ const useRole = (guildId: number | string, roleId: number) => {
   const { data: authenticatedData, isLoading: isAuthenticatedRequestLoading } =
     useSWRImmutable<Role>(
       shouldFetch && !isUnauthenticatedRequestLoading && !unauthenticatedData
-        ? [url, { method: "GET", body: {} }]
+        ? getKeyForSWRWithOptionalAuth(url)
         : null,
       fetcherWithSign,
       {

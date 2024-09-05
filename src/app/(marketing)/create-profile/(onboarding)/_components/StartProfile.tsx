@@ -2,7 +2,7 @@
 
 import FarcasterImage from "@/../static/socialIcons/farcaster.svg"
 import { ConnectFarcasterButton } from "@/components/Account/components/AccountModal/components/FarcasterProfile"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
+import { Avatar, AvatarFallback } from "@/components/ui/Avatar"
 import { Button } from "@/components/ui/Button"
 import {
   FormControl,
@@ -18,6 +18,7 @@ import { Schemas, schemas } from "@guildxyz/types"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Spinner, UploadSimple, User } from "@phosphor-icons/react"
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr"
+import { AvatarImage } from "@radix-ui/react-avatar"
 import useUser from "components/[guild]/hooks/useUser"
 import useDropzone from "hooks/useDropzone"
 import usePinata from "hooks/usePinata"
@@ -65,6 +66,14 @@ export const StartProfile: CreateProfileStep = ({ data: chainData }) => {
   })
 
   const createProfile = useCreateProfile()
+  const [isLoading, setIsLoading] = useState(false)
+  useEffect(() => {
+    if (createProfile.isLoading) {
+      setIsLoading(true)
+    } else if (createProfile.error) {
+      setIsLoading(false)
+    }
+  }, [createProfile.isLoading, createProfile.error])
   async function onSubmit(values: Schemas["ProfileCreation"]) {
     if (!chainData.referrerProfile?.userId) {
       throw new Error("Tried to create profile with empty referrer profile")
@@ -145,6 +154,7 @@ export const StartProfile: CreateProfileStep = ({ data: chainData }) => {
                       src={field.value}
                       width={144}
                       height={144}
+                      className="size-full object-cover"
                       alt="profile avatar"
                     />
                   )}
@@ -217,7 +227,7 @@ export const StartProfile: CreateProfileStep = ({ data: chainData }) => {
                 className="w-full"
                 type="submit"
                 colorScheme="success"
-                isLoading={createProfile.isLoading}
+                isLoading={isLoading}
                 disabled={!form.formState.isValid}
               >
                 Start my profile

@@ -36,6 +36,7 @@ import {
   celo,
   coreDao,
   cronos,
+  cronoszkEVM,
   cyber,
   evmos,
   fantom,
@@ -188,6 +189,7 @@ export const wagmiConfig = IS_TEST
         rootstock,
         mode,
         lisk as Chain,
+        cronoszkEVM,
       ],
       transports: {
         [mainnet.id]: http(),
@@ -252,6 +254,7 @@ export const wagmiConfig = IS_TEST
         [rootstock.id]: http(),
         [mode.id]: http(),
         [lisk.id]: http(),
+        [cronoszkEVM.id]: http(),
       },
       ssr: true,
       connectors: [
