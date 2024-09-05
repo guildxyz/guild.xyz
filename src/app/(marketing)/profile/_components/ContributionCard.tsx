@@ -18,7 +18,7 @@ export const ContributionCard = ({
       : null
   )
 
-  if (!role.data || !guild.data || !collection.data) {
+  if (!role.data || !guild.data) {
     return <Skeleton className="h-32 w-full rounded-2xl" />
   }
 
