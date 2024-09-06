@@ -107,7 +107,7 @@ export const StartProfile: CreateProfileStep = ({ data: chainData }) => {
             <>
               <ConnectFarcasterButton
                 className="ml-0 flex w-full items-center gap-2"
-                size="md"
+                size="lg"
                 disabled={!!farcasterProfile}
               >
                 <div className="size-5">
@@ -117,6 +117,7 @@ export const StartProfile: CreateProfileStep = ({ data: chainData }) => {
               </ConnectFarcasterButton>
               <Button
                 variant="ghost"
+                size="lg"
                 onClick={() => setMethod(CreateMethod.FromBlank)}
               >
                 I don't have a Farcaster profile
@@ -132,11 +133,7 @@ export const StartProfile: CreateProfileStep = ({ data: chainData }) => {
                   <FormItem>
                     <FormLabel>Name</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder=""
-                        {...field}
-                        value={field.value ?? undefined}
-                      />
+                      <Input size="lg" {...field} value={field.value ?? undefined} />
                     </FormControl>
                     <FormErrorMessage />
                   </FormItem>
@@ -150,7 +147,7 @@ export const StartProfile: CreateProfileStep = ({ data: chainData }) => {
                     <FormLabel aria-required="true">Username</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder=""
+                        size="lg"
                         required
                         {...field}
                         value={field.value ?? undefined}
@@ -161,6 +158,7 @@ export const StartProfile: CreateProfileStep = ({ data: chainData }) => {
                 )}
               />
               <Button
+                size="lg"
                 className="w-full"
                 colorScheme="success"
                 onClick={handleSubmit}
