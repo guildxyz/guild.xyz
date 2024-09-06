@@ -1,6 +1,5 @@
 "use client"
 
-import {} from "@/components/ui/Avatar"
 import { Button } from "@/components/ui/Button"
 import {
   Dialog,
@@ -20,9 +19,7 @@ import {
   FormLabel,
 } from "@/components/ui/Form"
 import { Input } from "@/components/ui/Input"
-import { Separator } from "@/components/ui/Separator"
 import { Textarea } from "@/components/ui/Textarea"
-import { toast } from "@/components/ui/hooks/useToast"
 import { useDisclosure } from "@/hooks/useDisclosure"
 import { Schemas, schemas } from "@guildxyz/types"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -30,10 +27,10 @@ import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import { PropsWithChildren } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import { useDeleteProfile } from "../../_hooks/useDeleteProfile"
 import { useProfile } from "../../_hooks/useProfile"
 import { useUpdateProfile } from "../../_hooks/useUpdateProfile"
 import { EditProfileBanner } from "./EditProfileBanner"
+import { EditProfileDropdown } from "./EditProfileDropdown"
 import { EditProfilePicture } from "./EditProfilePicture"
 
 export const EditProfile = ({ children }: PropsWithChildren<any>) => {
@@ -51,24 +48,11 @@ export const EditProfile = ({ children }: PropsWithChildren<any>) => {
   const profilePicUploader = usePinata({
     control: form.control,
     fieldToSetOnSuccess: "profileImageUrl",
-    onError: (error) => {
-      toast({
-        variant: "error",
-        title: "Failed to upload file",
-        description: error,
-      })
-    },
   })
 
   const backgroundUploader = usePinata({
     control: form.control,
     fieldToSetOnSuccess: "backgroundImageUrl",
-    onError: (error) =>
-      toast({
-        variant: "error",
-        title: "Failed to upload file",
-        description: error,
-      }),
   })
 
   const { handleSubmit, isUploadingShown, uploadLoadingText } = useSubmitWithUpload(
@@ -76,28 +60,30 @@ export const EditProfile = ({ children }: PropsWithChildren<any>) => {
     profilePicUploader.isUploading || backgroundUploader.isUploading
   )
 
-  const deleteProfile = useDeleteProfile()
-
   return (
     <Dialog onOpenChange={disclosure.setValue} open={disclosure.isOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <FormProvider {...form}>
-        <DialogContent size="lg" className="bg-background" scrollBody>
+        <DialogContent size="lg" className="bg-background">
           <DialogHeader>
             <DialogTitle>Edit profile</DialogTitle>
             <DialogCloseButton />
           </DialogHeader>
-          <DialogBody scroll className="!pb-8">
+          <DialogBody>
             <div className="relative mb-20">
               <EditProfileBanner backgroundUploader={backgroundUploader} />
-              <EditProfilePicture uploader={profilePicUploader} />
+              <EditProfilePicture
+                uploader={profilePicUploader}
+                className="-bottom-2 absolute left-4 translate-y-1/2 bg-muted"
+              />
+              <EditProfileDropdown uploader={profilePicUploader} />
             </div>
 
             <FormField
               control={form.control}
               name="name"
               render={({ field }) => (
-                <FormItem className="pb-2">
+                <FormItem className="pb-3">
                   <FormLabel>Name</FormLabel>
                   <FormControl>
                     <Input
@@ -114,7 +100,7 @@ export const EditProfile = ({ children }: PropsWithChildren<any>) => {
               control={form.control}
               name="username"
               render={({ field }) => (
-                <FormItem className="pb-2">
+                <FormItem className="pb-3">
                   <FormLabel aria-required="true">Username</FormLabel>
                   <FormControl>
                     <Input placeholder="" required {...field} />
@@ -141,22 +127,8 @@ export const EditProfile = ({ children }: PropsWithChildren<any>) => {
                 </FormItem>
               )}
             />
-            <Separator className="my-4" />
-            <div>
-              <p className="mb-2 font-medium">Danger zone</p>
-              <Button
-                onClick={deleteProfile.onSubmit}
-                isLoading={deleteProfile.isLoading}
-                variant="subtle"
-                type="button"
-                colorScheme="destructive"
-                size="sm"
-              >
-                Delete profile
-              </Button>
-            </div>
           </DialogBody>
-          <DialogFooter className="border-border-muted border-t py-4">
+          <DialogFooter className="py-8">
             <Button
               isLoading={isLoading || isUploadingShown}
               loadingText={uploadLoadingText ?? "Saving"}

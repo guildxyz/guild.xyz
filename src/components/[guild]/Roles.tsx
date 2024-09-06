@@ -49,8 +49,16 @@ const Roles = () => {
   const [renderedRolesCount, setRenderedRolesCount] = useState(BATCH_SIZE)
   const rolesEl = useScrollBatchedRendering({
     batchSize: BATCH_SIZE,
-    disableRendering: roles?.length <= renderedRolesCount,
+    disableRendering: publicRoles?.length <= renderedRolesCount,
     setElementCount: setRenderedRolesCount,
+  })
+
+  const [renderedHiddenRolesCount, setRenderedHiddenRolesCount] =
+    useState(BATCH_SIZE)
+  const hiddenRolesEl = useScrollBatchedRendering({
+    batchSize: BATCH_SIZE,
+    disableRendering: hiddenRoles?.length <= renderedHiddenRolesCount,
+    setElementCount: setRenderedHiddenRolesCount,
   })
 
   return (
@@ -70,7 +78,7 @@ const Roles = () => {
         <DynamicNoRolesAlert />
       )}
 
-      {!!publicRoles?.length && roles?.length > renderedRolesCount && (
+      {!!publicRoles?.length && publicRoles?.length > renderedRolesCount && (
         <Center pt={6}>
           <Spinner />
         </Center>
@@ -78,16 +86,24 @@ const Roles = () => {
 
       {!!hiddenRoles?.length && (
         <CollapsibleRoleSection
+          ref={hiddenRolesEl}
           id="hiddenRoles"
           roleCount={hiddenRoles.length}
           label="hidden"
           defaultIsOpen
           mt={2}
         >
-          {hiddenRoles.map((role) => (
-            <RoleCard key={role.id} role={role} />
-          ))}
+          {hiddenRoles.map((role, i) => {
+            if (i > renderedHiddenRolesCount - 1) return null
+            return <RoleCard key={role.id} role={role} />
+          })}
         </CollapsibleRoleSection>
+      )}
+
+      {!!hiddenRoles?.length && hiddenRoles.length > renderedHiddenRolesCount && (
+        <Center pt={6}>
+          <Spinner />
+        </Center>
       )}
     </>
   )

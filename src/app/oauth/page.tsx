@@ -1,28 +1,15 @@
-/* eslint-disable @typescript-eslint/naming-convention */
+"use client"
+
 import { usePostHogContext } from "@/components/Providers/PostHogProvider"
+import { useErrorToast } from "@/components/ui/hooks/useErrorToast"
 import type { Message } from "@/hooks/useOauthPopupWindow"
-import AuthRedirect from "components/AuthRedirect"
-import useShowErrorToast from "hooks/useShowErrorToast"
-import { useRouter } from "next/dist/client/router"
+import { PlatformName } from "@guildxyz/types"
+import { useRouter } from "next/navigation"
 import { useCallback, useEffect } from "react"
-import { PlatformName } from "types"
 import timeoutPromise from "utils/timeoutPromise"
+import { OAuthLocalStorageInfo, OAuthResponse } from "./types"
 
 const OAUTH_CONFIRMATION_TIMEOUT_MS = 500
-
-export type OAuthResponse = {
-  error_description?: string
-  error?: string
-  csrfToken: string
-  platformName: PlatformName
-} & Record<string, any>
-
-export type OAuthLocalStorageInfo = {
-  csrfToken: string
-  from: string
-  redirect_url: string
-  scope: string
-}
 
 const getDataFromState = (
   state: string
@@ -34,25 +21,25 @@ const getDataFromState = (
   return { csrfToken, platformName: platformName as PlatformName }
 }
 
-const OAuth = () => {
-  const { push, query, isReady } = useRouter()
+const OAuthPage = ({ searchParams }: { searchParams: Record<string, string> }) => {
+  const { push } = useRouter()
   const { captureEvent } = usePostHogContext()
-  const errorToast = useShowErrorToast()
+  const errorToast = useErrorToast()
 
   const handleOauthResponse = useCallback(async () => {
-    if (!isReady || typeof window === "undefined") return null
+    if (typeof window === "undefined") return null
 
     let params: OAuthResponse
     if (
-      typeof query?.state !== "string" &&
-      typeof query?.oauth_token !== "string" &&
-      typeof query?.denied !== "string"
+      typeof searchParams?.state !== "string" &&
+      typeof searchParams?.oauth_token !== "string" &&
+      typeof searchParams?.denied !== "string"
     ) {
       const fragment = new URLSearchParams(window.location.hash.slice(1))
       const { state, ...rest } = Object.fromEntries(fragment.entries())
       params = { ...getDataFromState(state), ...rest }
     } else {
-      const { state, ...rest } = query
+      const { state, ...rest } = searchParams
       params = { ...getDataFromState(state?.toString()), ...rest }
     }
 
@@ -142,7 +129,7 @@ const OAuth = () => {
       )
       push(localStorageInfo.from)
     }
-  }, [captureEvent, errorToast, push, isReady, query])
+  }, [captureEvent, errorToast, push, searchParams])
 
   useEffect(() => {
     handleOauthResponse().catch((error) => {
@@ -157,7 +144,12 @@ const OAuth = () => {
     })
   }, [captureEvent, errorToast, handleOauthResponse, push])
 
-  return <AuthRedirect />
+  return (
+    <div className="flex h-[90vh] flex-col justify-center p-10 text-center">
+      <h1 className="mb-3 font-bold text-2xl">You're being redirected</h1>
+      <p>Closing the authentication window and taking you back to the site...</p>
+    </div>
+  )
 }
 
-export default OAuth
+export default OAuthPage

@@ -41,7 +41,7 @@ export default defineConfig({
 
   webServer: [
     {
-      command: `anvil --fork-url=${process.env.ANVIL_FORK_URL} --fork-block-number=6373425 -m='${process.env.NEXT_PUBLIC_E2E_WALLET_MNEMONIC}'`,
+      command: `anvil --fork-url=${process.env.ANVIL_FORK_URL} --fork-block-number=6373425 -m='${process.env.NEXT_PUBLIC_E2E_WALLET_MNEMONIC}' --fork-header='Authorization: ${process.env.ANVIL_FORK_KEY}'`,
       port: 8545,
     },
     {

@@ -72,12 +72,6 @@ const DynamicRecheckAccessesAndLeaveButton = dynamic(
     ssr: false,
   }
 )
-const DynamicMembersExporter = dynamic(
-  () => import("components/[guild]/Members/components/MembersExporter"),
-  {
-    ssr: false,
-  }
-)
 const DynamicDiscordBotPermissionsChecker = dynamic(
   () => import("components/[guild]/DiscordBotPermissionsChecker"),
   {
@@ -176,7 +170,6 @@ const GuildPage = (): JSX.Element => {
             <Roles />
           </Section>
 
-          {isAdmin && <DynamicMembersExporter />}
           {isAdmin && <DynamicActiveStatusUpdates />}
         </LayoutMain>
 

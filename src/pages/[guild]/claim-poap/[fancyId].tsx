@@ -178,6 +178,7 @@ const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
   if (!fancyId)
     return {
       notFound: true,
+      revalidate: 300,
     }
 
   const endpoint = `/v2/guilds/guild-page/${urlName}`
@@ -186,6 +187,7 @@ const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
   if (!guild?.id)
     return {
       notFound: true,
+      revalidate: 300,
     }
 
   guild.isFallback = true

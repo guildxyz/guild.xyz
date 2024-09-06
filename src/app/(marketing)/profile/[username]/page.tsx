@@ -48,7 +48,7 @@ const fetchPublicProfileData = async ({
   const profileRequest = new URL(`v2/profiles/${username}`, api)
   const profileResponse = await fetch(profileRequest, {
     next: {
-      tags: ["profile"],
+      tags: ["profile", profileRequest.pathname],
       revalidate: 3600,
     },
   })
@@ -68,7 +68,7 @@ const fetchPublicProfileData = async ({
     farcasterProfilesRequest,
     {
       next: {
-        tags: ["profile"],
+        tags: ["profile", farcasterProfilesRequest.pathname],
         revalidate: 3600,
       },
     }
@@ -95,7 +95,7 @@ const fetchPublicProfileData = async ({
     referredUsersRequest,
     {
       next: {
-        tags: ["profile"],
+        tags: ["profile", referredUsersRequest.pathname],
         revalidate: 3600,
       },
     }
@@ -105,7 +105,7 @@ const fetchPublicProfileData = async ({
     contributionsRequest,
     {
       next: {
-        tags: ["contributions"],
+        tags: ["contributions", contributionsRequest.pathname],
         revalidate: 3600,
       },
     }

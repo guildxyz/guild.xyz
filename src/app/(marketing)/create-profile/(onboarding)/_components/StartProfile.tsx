@@ -2,7 +2,6 @@
 
 import FarcasterImage from "@/../static/socialIcons/farcaster.svg"
 import { ConnectFarcasterButton } from "@/components/Account/components/AccountModal/components/FarcasterProfile"
-import { Avatar, AvatarFallback } from "@/components/ui/Avatar"
 import { Button } from "@/components/ui/Button"
 import {
   FormControl,
@@ -12,19 +11,16 @@ import {
   FormLabel,
 } from "@/components/ui/Form"
 import { Input } from "@/components/ui/Input"
-import { useToast } from "@/components/ui/hooks/useToast"
-import { cn } from "@/lib/utils"
+import { uploadImageUrlToPinata } from "@/lib/uploadImageUrlToPinata"
+import { EditProfilePicture } from "@app/(marketing)/profile/_components/EditProfile/EditProfilePicture"
 import { Schemas, schemas } from "@guildxyz/types"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Spinner, UploadSimple, User } from "@phosphor-icons/react"
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr"
-import { AvatarImage } from "@radix-ui/react-avatar"
 import useUser from "components/[guild]/hooks/useUser"
-import useDropzone from "hooks/useDropzone"
 import usePinata from "hooks/usePinata"
-import { useEffect, useState } from "react"
+import useSubmitWithUpload from "hooks/useSubmitWithUpload"
+import { useEffect, useRef, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import getColorByImage from "utils/getColorByImage"
 import { useCreateProfile } from "../_hooks/useCreateProfile"
 import { CreateProfileStep } from "../types"
 
@@ -39,20 +35,6 @@ export const StartProfile: CreateProfileStep = ({ data: chainData }) => {
   const [method, setMethod] = useState<CreateMethod | undefined>(
     farcasterProfile ? CreateMethod.FillByFarcaster : undefined
   )
-  const { toast } = useToast()
-
-  useEffect(() => {
-    if (!farcasterProfile) return
-    setMethod(CreateMethod.FillByFarcaster)
-    form.setValue(
-      "name",
-      farcasterProfile.username ?? form.getValues()?.name ?? "",
-      { shouldValidate: true }
-    )
-    form.setValue("profileImageUrl", farcasterProfile.avatar, {
-      shouldValidate: true,
-    })
-  }, [farcasterProfile])
 
   const form = useForm<Schemas["ProfileCreation"]>({
     resolver: zodResolver(
@@ -84,93 +66,51 @@ export const StartProfile: CreateProfileStep = ({ data: chainData }) => {
     })
   }
 
-  const { isUploading, onUpload } = usePinata({
+  const profilePicUploader = usePinata({
     control: form.control,
     fieldToSetOnSuccess: "profileImageUrl",
-    onError: (error) => {
-      toast({
-        variant: "error",
-        title: "Failed to upload file",
-        description: error,
-      })
-    },
   })
+  const isFarcasterAvatarUploaded = useRef(false)
 
-  const [uploadProgress, setUploadProgress] = useState(0)
-  const { isDragActive, getRootProps } = useDropzone({
-    multiple: false,
-    noClick: false,
-    onDrop: async (acceptedFiles) => {
-      const file = acceptedFiles[0]
-      if (!file) return
-      onUpload({
-        data: [file],
-        onProgress: setUploadProgress,
-      })
-      const dominantColor = await getColorByImage(URL.createObjectURL(file))
-      form.setValue("backgroundImageUrl", dominantColor)
-    },
-    onError: (error) => {
-      toast({
-        variant: "error",
-        title: `Failed to upload file`,
-        description: error.message,
-      })
-    },
-  })
+  useEffect(() => {
+    if (!farcasterProfile) return
+    setMethod(CreateMethod.FillByFarcaster)
+    form.setValue(
+      "name",
+      farcasterProfile.username ?? form.getValues()?.name ?? "",
+      { shouldValidate: true }
+    )
+    if (!farcasterProfile.avatar || isFarcasterAvatarUploaded.current) return
+    uploadImageUrlToPinata({
+      onUpload: profilePicUploader.onUpload,
+      image: new URL(farcasterProfile.avatar),
+    })
+    isFarcasterAvatarUploaded.current = true
+  }, [farcasterProfile, profilePicUploader.onUpload, form.setValue, form.getValues])
 
-  let avatarFallBackIcon = <User size={32} />
-  if (isDragActive) {
-    avatarFallBackIcon = <UploadSimple size={32} className="animate-wiggle" />
-  } else if (isUploading || (uploadProgress !== 0 && uploadProgress !== 1)) {
-    avatarFallBackIcon = <Spinner size={32} className="animate-spin" />
-  }
+  const { handleSubmit, isUploadingShown, uploadLoadingText } = useSubmitWithUpload(
+    form.handleSubmit(onSubmit),
+    profilePicUploader.isUploading
+  )
 
   return (
-    <div className="w-[28rem] space-y-3 p-8">
+    <div className="w-screen max-w-md space-y-3 p-8">
       <h1 className="mb-10 text-pretty text-center font-bold font-display text-2xl leading-none tracking-tight">
         Start your Guild Profile!
       </h1>
 
       <FormProvider {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-3">
-          <FormField
-            control={form.control}
-            name="profileImageUrl"
-            render={({ field }) => (
-              <Button
-                variant="unstyled"
-                type="button"
-                disabled={method === undefined}
-                className={cn(
-                  "mb-8 size-36 self-center rounded-full border-2 border-dotted",
-                  { "border-solid": field.value }
-                )}
-                {...getRootProps()}
-              >
-                <Avatar className="size-36 bg-card-secondary">
-                  {field.value && (
-                    <AvatarImage
-                      src={field.value}
-                      width={144}
-                      height={144}
-                      className="size-full object-cover"
-                      alt="profile avatar"
-                    />
-                  )}
-                  <AvatarFallback className="bg-card-secondary">
-                    {avatarFallBackIcon}
-                  </AvatarFallback>
-                </Avatar>
-              </Button>
-            )}
+        <div className="flex flex-col gap-3">
+          <EditProfilePicture
+            uploader={profilePicUploader}
+            className="mb-8 size-36 self-center border-2 bg-card-secondary"
           />
 
           {method === undefined ? (
             <>
               <ConnectFarcasterButton
                 className="ml-0 flex w-full items-center gap-2"
-                size="md"
+                size="lg"
                 disabled={!!farcasterProfile}
               >
                 <div className="size-5">
@@ -180,6 +120,7 @@ export const StartProfile: CreateProfileStep = ({ data: chainData }) => {
               </ConnectFarcasterButton>
               <Button
                 variant="ghost"
+                size="lg"
                 onClick={() => setMethod(CreateMethod.FromBlank)}
               >
                 I don't have a Farcaster profile
@@ -195,11 +136,7 @@ export const StartProfile: CreateProfileStep = ({ data: chainData }) => {
                   <FormItem>
                     <FormLabel>Name</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder=""
-                        {...field}
-                        value={field.value ?? undefined}
-                      />
+                      <Input size="lg" {...field} value={field.value ?? undefined} />
                     </FormControl>
                     <FormErrorMessage />
                   </FormItem>
@@ -213,7 +150,7 @@ export const StartProfile: CreateProfileStep = ({ data: chainData }) => {
                     <FormLabel aria-required="true">Username</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder=""
+                        size="lg"
                         required
                         {...field}
                         value={field.value ?? undefined}
@@ -224,17 +161,19 @@ export const StartProfile: CreateProfileStep = ({ data: chainData }) => {
                 )}
               />
               <Button
+                size="lg"
                 className="w-full"
-                type="submit"
                 colorScheme="success"
-                isLoading={isLoading}
+                onClick={handleSubmit}
+                isLoading={isLoading || isUploadingShown}
+                loadingText={uploadLoadingText}
                 disabled={!form.formState.isValid}
               >
                 Start my profile
               </Button>
             </>
           )}
-        </form>
+        </div>
       </FormProvider>
     </div>
   )

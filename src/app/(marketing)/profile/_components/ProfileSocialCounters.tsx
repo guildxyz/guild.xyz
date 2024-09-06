@@ -93,7 +93,7 @@ const RelevantFollowers = ({
         Followed by <span className="font-bold">{firstFc.display_name}</span>
         {secondFc && (
           <>
-            <span>", "</span>
+            <span>, </span>
             <span className="font-bold">{secondFc.display_name}</span>
           </>
         )}{" "}

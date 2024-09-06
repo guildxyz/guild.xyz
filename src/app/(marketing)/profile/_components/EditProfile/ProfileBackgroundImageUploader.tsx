@@ -39,7 +39,6 @@ export const ProfileBackgroundImageUploader = ({
         showErrorToast(fileRejections[0].errors[0].message)
     },
     onError: (err) => {
-      console.log(err)
       showErrorToast(err.message)
     },
   })
