@@ -15,9 +15,7 @@ export const ContributionCollection = ({
   collection,
   guildId,
 }: { collection: Schemas["ContributionCollection"]; guildId: number }) => {
-  const { NFTs, pins, points } = collection
-  console.log({ NFTs, pins, points })
-  const collectionPoint = points.at(0)
+  const collectionPoint = collection.points.at(0)
   const collectionNft = collection.NFTs.at(0)
   const collectionPin = collection.pins.at(0)
   const { data: pinHash } = useSWRImmutable<string>(
