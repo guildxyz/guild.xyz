@@ -16,7 +16,7 @@ import { PlatformType, RoleFormType, RolePlatform } from "types"
 import { RolePlatformProvider } from "./RolePlatformProvider"
 
 type Props = {
-  rolePlatform: RoleFormType["rolePlatforms"][number]
+  rolePlatform: NonNullable<RoleFormType["rolePlatforms"]>[number]
   onSubmit: (data: Partial<RolePlatform>) => void
   onClose: () => void
   isOpen: boolean
@@ -29,6 +29,36 @@ const EditRolePlatformContext = createContext<{
 
 export const useEditRolePlatformContext = () => useContext(EditRolePlatformContext)
 
+/**
+ * Role platforms with dynamic amount will return input as an array of objects, but we handle it as a single object on the frontend, so we map it to the correct format with this function.
+ *
+ * Context: LINEAR operation will always have only 1 input, so we decided we could handle it as an object insted of an array with 1 object in it.
+ *
+ * IMPORTANT: Once we start using other operation types for dynamic amount, we should only support arrays to avoid unnecessary complexity.
+ */
+const convertRolePlatformToEditForm = (
+  rolePlatform: Props["rolePlatform"]
+): Props["rolePlatform"] => {
+  if (
+    !rolePlatform.dynamicAmount?.operation.input ||
+    !Array.isArray(rolePlatform.dynamicAmount?.operation.input)
+  )
+    return rolePlatform
+
+  const mappedRolePlatform = {
+    ...rolePlatform,
+    dynamicAmount: {
+      ...rolePlatform.dynamicAmount,
+      operation: {
+        ...rolePlatform.dynamicAmount.operation,
+        input: rolePlatform.dynamicAmount.operation.input[0] as any,
+      },
+    },
+  }
+
+  return mappedRolePlatform
+}
+
 const EditRolePlatformModal = ({
   rolePlatform,
   onClose,
@@ -36,7 +66,9 @@ const EditRolePlatformModal = ({
   onSubmit,
 }: Props) => {
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(false)
-  const methods = useForm()
+  const methods = useForm({
+    defaultValues: convertRolePlatformToEditForm(rolePlatform),
+  })
   const modalContentRef = useRef()
 
   const rewardName =

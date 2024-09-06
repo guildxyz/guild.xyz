@@ -15,7 +15,10 @@ import { useFormContext, useWatch } from "react-hook-form"
 import Star from "static/icons/star.svg"
 import parseFromObject from "utils/parseFromObject"
 
-const StaticPointsAmountForm = ({ imageUrl, baseFieldPath }) => {
+const StaticPointsAmountForm = ({
+  imageUrl,
+  baseFieldPath,
+}: { imageUrl?: string; baseFieldPath: string }) => {
   const fieldName = `${baseFieldPath}.platformRoleData.score`
   const {
     register,
@@ -61,7 +64,11 @@ const StaticPointsAmountForm = ({ imageUrl, baseFieldPath }) => {
   )
 }
 
-const ShortcutButton = ({ amount, imageUrl, fieldName }) => {
+const ShortcutButton = ({
+  amount,
+  imageUrl,
+  fieldName,
+}: { amount: number; imageUrl?: string; fieldName: string }) => {
   const { setValue } = useFormContext()
 
   return (
@@ -76,7 +83,11 @@ const ShortcutButton = ({ amount, imageUrl, fieldName }) => {
       }
       h={{ md: "10" }}
       onClick={() => {
-        setValue(fieldName, amount, { shouldValidate: true, shouldDirty: true })
+        // Our backend accepts string, so converting the score here
+        setValue(fieldName, amount.toString(), {
+          shouldValidate: true,
+          shouldDirty: true,
+        })
       }}
     >
       {amount}

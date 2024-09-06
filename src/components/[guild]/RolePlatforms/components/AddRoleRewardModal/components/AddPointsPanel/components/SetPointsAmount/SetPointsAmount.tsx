@@ -5,19 +5,27 @@ import { useFormContext } from "react-hook-form"
 import DynamicPointsAmountForm from "./components/DynamicPointsAmountForm"
 import PointsAmountTypeSelector from "./components/PointsAmountTypeSelector"
 import StaticPointsAmountForm from "./components/StaticPointsAmountForm"
+import { PointsType } from "./types"
 
 const SetPointsAmount = ({
   imageUrl,
   name,
   baseFieldPath = "",
   defaultDynamicAmount = false,
+}: {
+  imageUrl: string
+  name: string
+  baseFieldPath?: string
+  defaultDynamicAmount?: boolean
 }) => {
-  const [type, setType] = useState(defaultDynamicAmount ? "dynamic" : "static")
+  const [type, setType] = useState<PointsType>(
+    defaultDynamicAmount ? "dynamic" : "static"
+  )
 
   const { setValue } = useFormContext()
   const { targetRoleId } = useAddRewardContext()
 
-  const handleTypeChange = (newType: "dynamic" | "static") => {
+  const handleTypeChange = (newType: PointsType) => {
     const dynamicAmountFieldPath = `${
       baseFieldPath ? baseFieldPath + "." : ""
     }dynamicAmount`
