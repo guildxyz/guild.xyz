@@ -7,42 +7,39 @@ import {
 import { cn } from "@/lib/utils"
 import { GuildReward, Schemas } from "@guildxyz/types"
 import { Users } from "@phosphor-icons/react"
+import { GuildAction } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
+import { env } from "env"
 import useSWRImmutable from "swr/immutable"
-
-// export type Point = {
-//   id: number
-//   platformId: number
-//   platformGuildId: string
-//   platformGuildData: {
-//     name: string
-//     imageUrl: string
-//   }
-// }
-
-type ExtendedCollection = Schemas["ContributionCollection"] & {
-  // TODO: move this override type to backend
-  points: (Schemas["ContributionCollection"]["points"][number] & {
-    point: GuildReward
-  })[]
-}
 
 export const ContributionCollection = ({
   collection,
-}: { collection: Schemas["ContributionCollection"] }) => {
+  guildId,
+}: { collection: Schemas["ContributionCollection"]; guildId: number }) => {
   const { NFTs, pins, points } = collection
   console.log({ NFTs, pins, points })
   const collectionPoint = points.at(0)
   const collectionNft = collection.NFTs.at(0)
   const collectionPin = collection.pins.at(0)
-
+  const { data: pinHash } = useSWRImmutable<string>(
+    collectionPin
+      ? `/v2/guilds/${guildId}/pin?guildAction=${GuildAction[collectionPin.action]}`
+      : null
+  )
+  const pin = pinHash ? new URL(pinHash, env.NEXT_PUBLIC_IPFS_GATEWAY) : undefined
   const { data: point } = useSWRImmutable<GuildReward>(
-    collectionPoint?.guildId
+    collectionPoint
       ? `/v2/guilds/${collectionPoint.guildId}/guild-platforms/${collectionPoint.guildPlatformId}`
       : null
   )
 
   return (
     <>
+      {pin && (
+        <Avatar className={cn(avatarVariants({ size: "lg" }), "-ml-3 border")}>
+          <AvatarImage src={pin.href} alt="avatar" width={32} height={32} />
+          <AvatarFallback />
+        </Avatar>
+      )}
       {collectionNft?.data.imageUrl && (
         <Avatar className={cn(avatarVariants({ size: "lg" }), "-ml-3 border")}>
           <AvatarImage

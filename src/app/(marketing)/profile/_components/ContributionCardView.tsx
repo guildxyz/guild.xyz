@@ -50,7 +50,7 @@ export const ContributionCardView = ({
             </div>
 
             <div className="ml-3 flex">
-              <ContributionCollection collection={collection} />
+              <ContributionCollection collection={collection} guildId={guild.id} />
             </div>
           </div>
         )}
