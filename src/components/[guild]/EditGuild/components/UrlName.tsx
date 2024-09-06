@@ -18,8 +18,7 @@ const checkUrlName = (urlName: string) =>
 
 const UrlName = () => {
   const { errors } = useFormState()
-  const { register, setError, clearErrors, setValue } = useFormContext()
-
+  const { register, setError, clearErrors, getFieldState } = useFormContext()
   const { urlName: currentUrlName } = useGuild()
 
   return (
@@ -28,30 +27,25 @@ const UrlName = () => {
       <InputGroup size="lg">
         <InputLeftAddon>guild.xyz/</InputLeftAddon>
         <Input
-          {...register("urlName")}
-          onChange={(event) => {
-            setValue("urlName", slugify(event.target.value), {
-              shouldDirty: true,
-            })
-          }}
+          {...register("urlName", {
+            required: "This field is required",
+            validate: (value: string) => {
+              const slugified = slugify(value)
+              if (value !== slugified)
+                return `Invalid URL name, try using "${slugified}" instead`
+            },
+          })}
           onBlur={(event) => {
-            if (!event.target.value.length) {
-              setError("urlName", { message: "This field is required" })
-              return
-            }
-
-            const newUrlName = slugify(event.target.value)
-            setValue("urlName", newUrlName, { shouldDirty: true })
-
-            checkUrlName(newUrlName).then((alreadyExists) => {
-              if (alreadyExists && currentUrlName !== newUrlName)
+            if (getFieldState("urlName").error) return
+            checkUrlName(event.target.value).then((alreadyExists) => {
+              if (alreadyExists && currentUrlName !== event.target.value) {
                 setError("urlName", {
                   message: "Sorry, this guild name is already taken",
                 })
-              return
+              } else {
+                clearErrors("urlName")
+              }
             })
-
-            clearErrors("urlName")
           }}
         />
       </InputGroup>
