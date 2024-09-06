@@ -19,7 +19,7 @@ export const AvatarGroup = ({
     <div className="ml-3 flex">
       {imageUrls.map((src, i) => (
         <Avatar key={i} className={cn(avatarVariants(avatarProps), "-ml-3")}>
-          <AvatarImage src={src} alt="avatar" />
+          <AvatarImage src={src} alt="avatar" className="size-full object-cover" />
           <AvatarFallback>
             <Skeleton className="size-full" />
           </AvatarFallback>
