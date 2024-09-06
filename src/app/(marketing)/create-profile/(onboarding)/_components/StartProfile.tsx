@@ -11,6 +11,7 @@ import {
   FormLabel,
 } from "@/components/ui/Form"
 import { Input } from "@/components/ui/Input"
+import { uploadImageUrlAvatarToPinata } from "@/lib/uploadImageUrlToPinata"
 import { EditProfilePicture } from "@app/(marketing)/profile/_components/EditProfile/EditProfilePicture"
 import { Schemas, schemas } from "@guildxyz/types"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -79,18 +80,13 @@ export const StartProfile: CreateProfileStep = ({ data: chainData }) => {
       farcasterProfile.username ?? form.getValues()?.name ?? "",
       { shouldValidate: true }
     )
-    void (async function () {
-      if (!farcasterProfile.avatar || isFarcasterAvatarUploaded.current) return
-      const data = await (await fetch(farcasterProfile.avatar)).blob()
-      const fileName = new URL(farcasterProfile.avatar).pathname.split("/").at(-1)
-      if (!fileName) return
-      isFarcasterAvatarUploaded.current = true
-      profilePicUploader.onUpload({
-        data: [new File([data], fileName)],
-        fileNames: [fileName],
-      })
-    })()
-  }, [farcasterProfile, profilePicUploader.onUpload, form.setValue, form.getValues])
+    if (!farcasterProfile.avatar || isFarcasterAvatarUploaded.current) return
+    uploadImageUrlAvatarToPinata({
+      uploader: profilePicUploader,
+      image: new URL(farcasterProfile.avatar),
+    })
+    isFarcasterAvatarUploaded.current = true
+  }, [farcasterProfile, profilePicUploader, form.setValue, form.getValues])
 
   const { handleSubmit, isUploadingShown, uploadLoadingText } = useSubmitWithUpload(
     form.handleSubmit(onSubmit),

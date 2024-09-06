@@ -6,6 +6,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/DropdownMenu"
+import { uploadImageUrlAvatarToPinata } from "@/lib/uploadImageUrlToPinata"
 import {
   ArrowsClockwise,
   DotsThreeVertical,
@@ -46,18 +47,11 @@ export const EditProfileDropdown: FunctionComponent<{ uploader: Uploader }> = ({
                   shouldValidate: true,
                 })
               }
-              void (async function () {
-                if (!farcasterProfile.avatar) return
-                const data = await (await fetch(farcasterProfile.avatar)).blob()
-                const fileName = new URL(farcasterProfile.avatar).pathname
-                  .split("/")
-                  .at(-1)
-                if (!fileName) return
-                uploader.onUpload({
-                  data: [new File([data], fileName)],
-                  fileNames: [fileName],
-                })
-              })()
+              if (!farcasterProfile.avatar) return
+              uploadImageUrlAvatarToPinata({
+                uploader,
+                image: new URL(farcasterProfile.avatar),
+              })
             }}
           >
             <ArrowsClockwise weight="bold" /> Fill data by Farcaster
