@@ -20,7 +20,7 @@ import { ArrowRight } from "@phosphor-icons/react/dist/ssr"
 import useUser from "components/[guild]/hooks/useUser"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { useCreateProfile } from "../_hooks/useCreateProfile"
 import { CreateProfileStep } from "../types"
@@ -36,19 +36,6 @@ export const StartProfile: CreateProfileStep = ({ data: chainData }) => {
   const [method, setMethod] = useState<CreateMethod | undefined>(
     farcasterProfile ? CreateMethod.FillByFarcaster : undefined
   )
-
-  useEffect(() => {
-    if (!farcasterProfile) return
-    setMethod(CreateMethod.FillByFarcaster)
-    form.setValue(
-      "name",
-      farcasterProfile.username ?? form.getValues()?.name ?? "",
-      { shouldValidate: true }
-    )
-    form.setValue("profileImageUrl", farcasterProfile.avatar, {
-      shouldValidate: true,
-    })
-  }, [farcasterProfile])
 
   const form = useForm<Schemas["ProfileCreation"]>({
     resolver: zodResolver(
@@ -84,6 +71,32 @@ export const StartProfile: CreateProfileStep = ({ data: chainData }) => {
     control: form.control,
     fieldToSetOnSuccess: "profileImageUrl",
   })
+  const isFarcasterAvatarUploaded = useRef(false)
+
+  useEffect(() => {
+    if (!farcasterProfile) return
+    setMethod(CreateMethod.FillByFarcaster)
+    form.setValue(
+      "name",
+      farcasterProfile.username ?? form.getValues()?.name ?? "",
+      { shouldValidate: true }
+    )
+    form.setValue("profileImageUrl", farcasterProfile.avatar, {
+      shouldValidate: true,
+    })
+
+    void (async function () {
+      if (!farcasterProfile.avatar || isFarcasterAvatarUploaded.current) return
+      const data = await (await fetch(farcasterProfile.avatar)).blob()
+      const fileName = new URL(farcasterProfile.avatar).pathname.split("/").at(-1)
+      if (!fileName) return
+      isFarcasterAvatarUploaded.current = true
+      profilePicUploader.onUpload({
+        data: [new File([data], fileName)],
+        fileNames: [fileName],
+      })
+    })()
+  }, [farcasterProfile, profilePicUploader.onUpload])
 
   const { handleSubmit, isUploadingShown, uploadLoadingText } = useSubmitWithUpload(
     form.handleSubmit(onSubmit),
