@@ -13,14 +13,17 @@ import {
   TrashSimple,
 } from "@phosphor-icons/react"
 import useUser from "components/[guild]/hooks/useUser"
+import { Uploader } from "hooks/usePinata/usePinata"
+import { FunctionComponent } from "react"
 import { useFormContext } from "react-hook-form"
 import { useDeleteProfile } from "../../_hooks/useDeleteProfile"
 
-export const EditProfileDropdown = () => {
+export const EditProfileDropdown: FunctionComponent<{ uploader: Uploader }> = ({
+  uploader,
+}) => {
   const { farcasterProfiles } = useUser()
   const farcasterProfile = farcasterProfiles?.at(0)
   const { setValue } = useFormContext()
-
   const deleteProfile = useDeleteProfile()
 
   return (
@@ -38,16 +41,23 @@ export const EditProfileDropdown = () => {
           <DropdownMenuItem
             className="flex gap-2 px-4 py-6 font-semibold"
             onClick={() => {
-              if (farcasterProfile.avatar) {
-                setValue("profileImageUrl", farcasterProfile.avatar, {
-                  shouldValidate: true,
-                })
-              }
               if (farcasterProfile.username) {
                 setValue("name", farcasterProfile.username, {
                   shouldValidate: true,
                 })
               }
+              void (async function () {
+                if (!farcasterProfile.avatar) return
+                const data = await (await fetch(farcasterProfile.avatar)).blob()
+                const fileName = new URL(farcasterProfile.avatar).pathname
+                  .split("/")
+                  .at(-1)
+                if (!fileName) return
+                uploader.onUpload({
+                  data: [new File([data], fileName)],
+                  fileNames: [fileName],
+                })
+              })()
             }}
           >
             <ArrowsClockwise weight="bold" /> Fill data by Farcaster

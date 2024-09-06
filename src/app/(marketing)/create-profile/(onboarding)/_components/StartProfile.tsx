@@ -79,7 +79,6 @@ export const StartProfile: CreateProfileStep = ({ data: chainData }) => {
       farcasterProfile.username ?? form.getValues()?.name ?? "",
       { shouldValidate: true }
     )
-
     void (async function () {
       if (!farcasterProfile.avatar || isFarcasterAvatarUploaded.current) return
       const data = await (await fetch(farcasterProfile.avatar)).blob()
