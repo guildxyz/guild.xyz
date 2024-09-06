@@ -169,9 +169,7 @@ export const StartProfile: CreateProfileStep = ({ data: chainData }) => {
                 className="w-full"
                 colorScheme="success"
                 onClick={handleSubmit}
-                isLoading={
-                  isLoading || isUploadingShown || profilePicUploader.isUploading
-                }
+                isLoading={isLoading || isUploadingShown}
                 loadingText={uploadLoadingText}
                 disabled={!form.formState.isValid}
               >
