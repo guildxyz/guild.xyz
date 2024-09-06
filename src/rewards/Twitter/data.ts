@@ -4,7 +4,7 @@ import XLogo from "static/icons/x.svg"
 export const twitterV1Data = {
   icon: XLogo,
   name: "X",
-  colorScheme: "TWITTER",
+  colorScheme: "black",
   gatedEntity: "account",
   autoRewardSetup: false,
   isPlatform: true,
@@ -15,7 +15,7 @@ export const twitterData = {
   icon: XLogo,
   imageUrl: "/platforms/x.svg",
   name: "X",
-  colorScheme: "TWITTER",
+  colorScheme: "black",
   gatedEntity: "account",
   autoRewardSetup: false,
   isPlatform: false,

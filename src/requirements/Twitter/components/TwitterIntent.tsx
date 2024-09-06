@@ -134,7 +134,7 @@ const TwitterIntent = ({
 
   return (
     <Button
-      colorScheme="TWITTER"
+      colorScheme="black"
       leftIcon={<Icon as={buttonIcon[action]} />}
       iconSpacing={1}
       size="xs"
