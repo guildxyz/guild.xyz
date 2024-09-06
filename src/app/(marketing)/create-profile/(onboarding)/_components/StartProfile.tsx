@@ -2,7 +2,6 @@
 
 import FarcasterImage from "@/../static/socialIcons/farcaster.svg"
 import { ConnectFarcasterButton } from "@/components/Account/components/AccountModal/components/FarcasterProfile"
-import {} from "@/components/ui/Avatar"
 import { Button } from "@/components/ui/Button"
 import {
   FormControl,
@@ -15,7 +14,6 @@ import { Input } from "@/components/ui/Input"
 import { EditProfilePicture } from "@app/(marketing)/profile/_components/EditProfile/EditProfilePicture"
 import { Schemas, schemas } from "@guildxyz/types"
 import { zodResolver } from "@hookform/resolvers/zod"
-import {} from "@phosphor-icons/react"
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr"
 import useUser from "components/[guild]/hooks/useUser"
 import usePinata from "hooks/usePinata"
@@ -81,9 +79,6 @@ export const StartProfile: CreateProfileStep = ({ data: chainData }) => {
       farcasterProfile.username ?? form.getValues()?.name ?? "",
       { shouldValidate: true }
     )
-    form.setValue("profileImageUrl", farcasterProfile.avatar, {
-      shouldValidate: true,
-    })
 
     void (async function () {
       if (!farcasterProfile.avatar || isFarcasterAvatarUploaded.current) return
@@ -96,7 +91,7 @@ export const StartProfile: CreateProfileStep = ({ data: chainData }) => {
         fileNames: [fileName],
       })
     })()
-  }, [farcasterProfile, profilePicUploader.onUpload])
+  }, [farcasterProfile, profilePicUploader.onUpload, form.setValue, form.getValues])
 
   const { handleSubmit, isUploadingShown, uploadLoadingText } = useSubmitWithUpload(
     form.handleSubmit(onSubmit),
@@ -177,7 +172,9 @@ export const StartProfile: CreateProfileStep = ({ data: chainData }) => {
                 className="w-full"
                 colorScheme="success"
                 onClick={handleSubmit}
-                isLoading={isLoading || isUploadingShown}
+                isLoading={
+                  isLoading || isUploadingShown || profilePicUploader.isUploading
+                }
                 loadingText={uploadLoadingText}
                 disabled={!form.formState.isValid}
               >
