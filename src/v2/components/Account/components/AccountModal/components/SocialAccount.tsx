@@ -116,6 +116,7 @@ const PLATFORM_COLORS = {
   GITHUB: "bg-github hover:bg-github-hover active:bg-github-active",
   POLYGON_ID: "bg-polygonid hover:bg-polygonid-hover active:bg-polygonid-active",
   FARCASTER: "bg-farcaster hover:bg-farcaster-hover active:bg-farcaster-active",
+  WORLD_ID: "bg-worldid hover:bg-worldid-hover active:bg-worldid-active",
 } satisfies Partial<Record<PlatformName, string>>
 
 const ConnectPlatformButton = ({

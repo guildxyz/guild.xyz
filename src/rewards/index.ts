@@ -14,6 +14,7 @@ import { telegramData } from "rewards/Telegram/data"
 import { tokenData } from "rewards/Token/data"
 import { twitterData, twitterV1Data } from "rewards/Twitter/data"
 import { uniqueTextData } from "rewards/UniqueText/data"
+import { worldIDData } from "rewards/WorldID/data"
 import { Rewards } from "./types"
 
 const rewards: Rewards = {
@@ -34,6 +35,7 @@ const rewards: Rewards = {
   GITHUB: githubData,
   POAP: poapData,
   FARCASTER: farcasterData,
+  WORLD_ID: worldIDData,
 } as const
 
 export default rewards

@@ -101,6 +101,7 @@ type PlatformName =
   | "GATHER_TOWN"
   | "ERC20"
   | "FARCASTER"
+  | "WORLD_ID"
 
 type PlatformUserData = {
   acessToken?: string
@@ -668,6 +669,7 @@ export enum PlatformType {
   FORM = 15,
   GATHER_TOWN = 16,
   ERC20 = 17,
+  WORLD_ID = 18,
 }
 
 enum ValidationMethod {
