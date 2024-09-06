@@ -1,6 +1,6 @@
 "use client"
 
-import { Avatar, AvatarImage } from "@/components/ui/Avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
 import { Button } from "@/components/ui/Button"
 import { Card } from "@/components/ui/Card"
 import {
@@ -25,7 +25,6 @@ import { useYourGuilds } from "@/hooks/useYourGuilds"
 import { Guild, MembershipResult, Role, Schemas } from "@guildxyz/types"
 import { WarningCircle, X } from "@phosphor-icons/react"
 import { PencilSimple } from "@phosphor-icons/react"
-import { AvatarFallback } from "@radix-ui/react-avatar"
 import { DialogDescription } from "@radix-ui/react-dialog"
 import { useState } from "react"
 import useSWRImmutable from "swr/immutable"
