@@ -1,4 +1,13 @@
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+  avatarVariants,
+} from "@/components/ui/Avatar"
+import { cn } from "@/lib/utils"
 import { GuildReward, Schemas } from "@guildxyz/types"
+import { Users } from "@phosphor-icons/react"
+import useSWRImmutable from "swr/immutable"
 
 // export type Point = {
 //   id: number
@@ -20,64 +29,58 @@ type ExtendedCollection = Schemas["ContributionCollection"] & {
 export const ContributionCollection = ({
   collection,
 }: { collection: Schemas["ContributionCollection"] }) => {
-  const { NFTs, pins, points: collectionPoints } = collection
-  console.log({ NFTs, pins, collectionPoints })
-  // const collections = [...NFTs, ...pins, ...collectionPoints]
-  // const collectionPoint = collectionPoints.at(0)
-  // const collectionNft = collection.NFTs.at(0)
-  // const collectionPin = collection.pins.at(0)
+  const { NFTs, pins, points } = collection
+  console.log({ NFTs, pins, points })
+  const collectionPoint = points.at(0)
+  const collectionNft = collection.NFTs.at(0)
+  const collectionPin = collection.pins.at(0)
 
-  // const points = useSWRImmutable<Schemas["ContributionCollection"]["points"]>(
-  //   collection.data?.points
-  //     ? collection.data.points.map(
-  //       ({ guildId, guildPlatformId }) =>
-  //         `/v2/guilds/${guildId}/guild-platforms/${guildPlatformId}`
-  //     )
-  //     : null,
-  //   (args) => Promise.all(args.map((arg) => fetcher(arg)))
-  // )
-
-  // collection.data.points = collection.data.points.map((rawPoints, i) => ({
-  //   ...rawPoints,
-  //   point: points.data?.at(i),
-  // }))
+  const { data: point } = useSWRImmutable<GuildReward>(
+    collectionPoint?.guildId
+      ? `/v2/guilds/${collectionPoint.guildId}/guild-platforms/${collectionPoint.guildPlatformId}`
+      : null
+  )
 
   return (
     <>
-      {/*collectionNft && (
-                <Avatar
-                  className={cn(avatarVariants({ size: "lg" }), "-ml-3 border")}
-                >
-                  <AvatarImage
-                    src={collectionNft.}
-                    alt="avatar"
-                  />
-                  <AvatarFallback />
-                </Avatar>)
-              */}
-      {/*collectionPoint?.point && (
+      {collectionNft?.data.imageUrl && (
+        <Avatar className={cn(avatarVariants({ size: "lg" }), "-ml-3 border")}>
+          <AvatarImage
+            src={collectionNft.data.imageUrl}
+            alt="avatar"
+            width={32}
+            height={32}
+          />
+          <AvatarFallback />
+        </Avatar>
+      )}
+      {point && collectionPoint && point.platformGuildData.imageUrl && (
         <>
           <Avatar className={cn(avatarVariants({ size: "lg" }), "-ml-3 border")}>
             <AvatarImage
-              src={collectionPoint.point.platformGuildData.imageUrl}
+              src={point.platformGuildData.imageUrl}
               alt="avatar"
+              width={32}
+              height={32}
             />
             <AvatarFallback />
           </Avatar>
-          <div className="-ml-3 self-center rounded-r-lg border bg-card-secondary pl-5 pr-2 py-0.5">
+          <div className="-ml-3 self-center rounded-r-lg border bg-card-secondary py-0.5 pr-2 pl-5">
             <div className="text-sm">
               {collectionPoint.totalPoints}&nbsp;
-              <span className="font-extrabold">
-                {collectionPoint.point.platformGuildData.name}
-              </span>
+              <span className="font-extrabold">{point.platformGuildData.name}</span>
             </div>
             <div className="flex items-center gap-1 text-muted-foreground text-xs">
               <Users weight="bold" />
-              {Number((collectionPoint.rank / 500000) * 100)}%
+              {
+                // TODO: use leaderboard rank size
+                Number(((collectionPoint.rank / 500000) * 100).toFixed(2))
+              }
+              %
             </div>
           </div>
         </>
-      )*/}
+      )}
     </>
   )
 }

@@ -42,7 +42,7 @@ export const ContributionCardView = ({
             </p>
           </div>
         </div>
-        {collection && collections.length && (
+        {collection && !!collections.length && (
           <div className="col-span-2 flex w-full flex-col gap-2 justify-self-end md:col-span-1 md:w-auto md:flex-row md:items-center">
             <Separator className="mb-2 md:hidden" />
             <div className="font-extrabold text-muted-foreground text-xs uppercase">
