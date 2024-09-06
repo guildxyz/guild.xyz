@@ -98,7 +98,7 @@ export const StartProfile: CreateProfileStep = ({ data: chainData }) => {
   )
 
   return (
-    <div className="w-[28rem] space-y-3 p-8">
+    <div className="w-screen max-w-md space-y-3 p-8">
       <h1 className="mb-10 text-pretty text-center font-bold font-display text-2xl leading-none tracking-tight">
         Start your Guild Profile!
       </h1>
@@ -114,7 +114,7 @@ export const StartProfile: CreateProfileStep = ({ data: chainData }) => {
             <>
               <ConnectFarcasterButton
                 className="ml-0 flex w-full items-center gap-2"
-                size="md"
+                size="lg"
                 disabled={!!farcasterProfile}
               >
                 <div className="size-5">
@@ -124,6 +124,7 @@ export const StartProfile: CreateProfileStep = ({ data: chainData }) => {
               </ConnectFarcasterButton>
               <Button
                 variant="ghost"
+                size="lg"
                 onClick={() => setMethod(CreateMethod.FromBlank)}
               >
                 I don't have a Farcaster profile
@@ -139,11 +140,7 @@ export const StartProfile: CreateProfileStep = ({ data: chainData }) => {
                   <FormItem>
                     <FormLabel>Name</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder=""
-                        {...field}
-                        value={field.value ?? undefined}
-                      />
+                      <Input size="lg" {...field} value={field.value ?? undefined} />
                     </FormControl>
                     <FormErrorMessage />
                   </FormItem>
@@ -157,7 +154,7 @@ export const StartProfile: CreateProfileStep = ({ data: chainData }) => {
                     <FormLabel aria-required="true">Username</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder=""
+                        size="lg"
                         required
                         {...field}
                         value={field.value ?? undefined}
@@ -168,6 +165,7 @@ export const StartProfile: CreateProfileStep = ({ data: chainData }) => {
                 )}
               />
               <Button
+                size="lg"
                 className="w-full"
                 colorScheme="success"
                 onClick={handleSubmit}

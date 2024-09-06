@@ -67,6 +67,7 @@ export const PromptReferrer: CreateProfileStep = ({ dispatchAction, data }) => {
                 <FormControl>
                   <Input
                     placeholder=""
+                    size="lg"
                     required
                     {...field}
                     onBlur={() => {
@@ -85,6 +86,7 @@ export const PromptReferrer: CreateProfileStep = ({ dispatchAction, data }) => {
           />
           <Button
             type="submit"
+            size="lg"
             colorScheme="success"
             className="w-full"
             disabled={
