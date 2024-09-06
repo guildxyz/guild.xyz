@@ -91,7 +91,7 @@ export const StartProfile: CreateProfileStep = ({ data: chainData }) => {
   )
 
   return (
-    <div className="w-[28rem] space-y-3 p-8">
+    <div className="space-y-3 p-8">
       <h1 className="mb-10 text-pretty text-center font-bold font-display text-2xl leading-none tracking-tight">
         Start your Guild Profile!
       </h1>

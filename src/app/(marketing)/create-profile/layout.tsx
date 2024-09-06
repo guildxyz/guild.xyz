@@ -31,7 +31,7 @@ const CreateProfile = ({ children }: PropsWithChildren) => {
         <Header />
       </LayoutHero>
       <LayoutMain className="-top-40 sm:-top-36 px-0">
-        <Card className="mx-auto max-w-max bg-gradient-to-b from-card to-card-secondary shadow-2xl">
+        <Card className="mx-auto w-full max-w-md bg-gradient-to-b from-card to-card-secondary shadow-2xl">
           <Suspense>{children}</Suspense>
         </Card>
       </LayoutMain>

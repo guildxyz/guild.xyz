@@ -51,7 +51,7 @@ export const PromptReferrer: CreateProfileStep = ({ dispatchAction, data }) => {
   }
 
   return (
-    <div className="max-w-md p-8">
+    <div className="p-8">
       <h1 className="mb-8 text-pretty text-center font-extrabold text-2xl leading-none tracking-tighter">
         Start your profile
       </h1>
