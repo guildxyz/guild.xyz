@@ -11,7 +11,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/Dialog"
-import {} from "@/components/ui/DropdownMenu"
 import {
   FormControl,
   FormErrorMessage,
@@ -77,7 +76,7 @@ export const EditProfile = ({ children }: PropsWithChildren<any>) => {
                 uploader={profilePicUploader}
                 className="-bottom-2 absolute left-4 translate-y-1/2 bg-muted"
               />
-              <EditProfileDropdown />
+              <EditProfileDropdown uploader={profilePicUploader} />
             </div>
 
             <FormField

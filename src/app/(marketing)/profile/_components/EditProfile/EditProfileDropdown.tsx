@@ -6,6 +6,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/DropdownMenu"
+import { uploadImageUrlToPinata } from "@/lib/uploadImageUrlToPinata"
 import {
   ArrowsClockwise,
   DotsThreeVertical,
@@ -13,14 +14,17 @@ import {
   TrashSimple,
 } from "@phosphor-icons/react"
 import useUser from "components/[guild]/hooks/useUser"
+import { Uploader } from "hooks/usePinata/usePinata"
+import { FunctionComponent } from "react"
 import { useFormContext } from "react-hook-form"
 import { useDeleteProfile } from "../../_hooks/useDeleteProfile"
 
-export const EditProfileDropdown = () => {
+export const EditProfileDropdown: FunctionComponent<{ uploader: Uploader }> = ({
+  uploader,
+}) => {
   const { farcasterProfiles } = useUser()
   const farcasterProfile = farcasterProfiles?.at(0)
   const { setValue } = useFormContext()
-
   const deleteProfile = useDeleteProfile()
 
   return (
@@ -38,16 +42,16 @@ export const EditProfileDropdown = () => {
           <DropdownMenuItem
             className="flex gap-2 px-4 py-6 font-semibold"
             onClick={() => {
-              if (farcasterProfile.avatar) {
-                setValue("profileImageUrl", farcasterProfile.avatar, {
-                  shouldValidate: true,
-                })
-              }
               if (farcasterProfile.username) {
                 setValue("name", farcasterProfile.username, {
                   shouldValidate: true,
                 })
               }
+              if (!farcasterProfile.avatar) return
+              uploadImageUrlToPinata({
+                onUpload: uploader.onUpload,
+                image: new URL(farcasterProfile.avatar),
+              })
             }}
           >
             <ArrowsClockwise weight="bold" /> Fill data by Farcaster

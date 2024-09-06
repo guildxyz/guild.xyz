@@ -2,7 +2,6 @@
 
 import FarcasterImage from "@/../static/socialIcons/farcaster.svg"
 import { ConnectFarcasterButton } from "@/components/Account/components/AccountModal/components/FarcasterProfile"
-import {} from "@/components/ui/Avatar"
 import { Button } from "@/components/ui/Button"
 import {
   FormControl,
@@ -12,15 +11,15 @@ import {
   FormLabel,
 } from "@/components/ui/Form"
 import { Input } from "@/components/ui/Input"
+import { uploadImageUrlToPinata } from "@/lib/uploadImageUrlToPinata"
 import { EditProfilePicture } from "@app/(marketing)/profile/_components/EditProfile/EditProfilePicture"
 import { Schemas, schemas } from "@guildxyz/types"
 import { zodResolver } from "@hookform/resolvers/zod"
-import {} from "@phosphor-icons/react"
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr"
 import useUser from "components/[guild]/hooks/useUser"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { useCreateProfile } from "../_hooks/useCreateProfile"
 import { CreateProfileStep } from "../types"
@@ -36,19 +35,6 @@ export const StartProfile: CreateProfileStep = ({ data: chainData }) => {
   const [method, setMethod] = useState<CreateMethod | undefined>(
     farcasterProfile ? CreateMethod.FillByFarcaster : undefined
   )
-
-  useEffect(() => {
-    if (!farcasterProfile) return
-    setMethod(CreateMethod.FillByFarcaster)
-    form.setValue(
-      "name",
-      farcasterProfile.username ?? form.getValues()?.name ?? "",
-      { shouldValidate: true }
-    )
-    form.setValue("profileImageUrl", farcasterProfile.avatar, {
-      shouldValidate: true,
-    })
-  }, [farcasterProfile])
 
   const form = useForm<Schemas["ProfileCreation"]>({
     resolver: zodResolver(
@@ -84,6 +70,23 @@ export const StartProfile: CreateProfileStep = ({ data: chainData }) => {
     control: form.control,
     fieldToSetOnSuccess: "profileImageUrl",
   })
+  const isFarcasterAvatarUploaded = useRef(false)
+
+  useEffect(() => {
+    if (!farcasterProfile) return
+    setMethod(CreateMethod.FillByFarcaster)
+    form.setValue(
+      "name",
+      farcasterProfile.username ?? form.getValues()?.name ?? "",
+      { shouldValidate: true }
+    )
+    if (!farcasterProfile.avatar || isFarcasterAvatarUploaded.current) return
+    uploadImageUrlToPinata({
+      onUpload: profilePicUploader.onUpload,
+      image: new URL(farcasterProfile.avatar),
+    })
+    isFarcasterAvatarUploaded.current = true
+  }, [farcasterProfile, profilePicUploader.onUpload, form.setValue, form.getValues])
 
   const { handleSubmit, isUploadingShown, uploadLoadingText } = useSubmitWithUpload(
     form.handleSubmit(onSubmit),

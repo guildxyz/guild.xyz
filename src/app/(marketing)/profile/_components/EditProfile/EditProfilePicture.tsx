@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/Button"
 import { FormField } from "@/components/ui/Form"
 import { toast } from "@/components/ui/hooks/useToast"
 import { cn } from "@/lib/utils"
-import { Image, UploadSimple, User } from "@phosphor-icons/react"
+import { Image, Spinner, UploadSimple, User } from "@phosphor-icons/react"
 import { AvatarImage } from "@radix-ui/react-avatar"
 import useDropzone from "hooks/useDropzone"
 import { Uploader } from "hooks/usePinata/usePinata"
@@ -74,7 +74,11 @@ export const EditProfilePicture = ({
             )}
           >
             {isUploading ? (
-              <p>{(uploadProgress * 100).toFixed(0)}%</p>
+              uploadProgress ? (
+                <p>{(uploadProgress * 100).toFixed(0)}%</p>
+              ) : (
+                <Spinner weight="bold" size={24} className="animate-spin" />
+              )
             ) : isDragActive ? (
               <UploadSimple weight="bold" size={24} className="animate-wiggle" />
             ) : (
