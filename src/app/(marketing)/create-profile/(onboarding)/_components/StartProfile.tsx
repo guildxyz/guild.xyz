@@ -82,11 +82,11 @@ export const StartProfile: CreateProfileStep = ({ data: chainData }) => {
     )
     if (!farcasterProfile.avatar || isFarcasterAvatarUploaded.current) return
     uploadImageUrlAvatarToPinata({
-      uploader: profilePicUploader,
+      onUpload: profilePicUploader.onUpload,
       image: new URL(farcasterProfile.avatar),
     })
     isFarcasterAvatarUploaded.current = true
-  }, [farcasterProfile, profilePicUploader, form.setValue, form.getValues])
+  }, [farcasterProfile, profilePicUploader.onUpload, form.setValue, form.getValues])
 
   const { handleSubmit, isUploadingShown, uploadLoadingText } = useSubmitWithUpload(
     form.handleSubmit(onSubmit),

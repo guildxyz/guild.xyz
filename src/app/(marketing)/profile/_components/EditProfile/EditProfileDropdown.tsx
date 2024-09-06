@@ -49,7 +49,7 @@ export const EditProfileDropdown: FunctionComponent<{ uploader: Uploader }> = ({
               }
               if (!farcasterProfile.avatar) return
               uploadImageUrlAvatarToPinata({
-                uploader,
+                onUpload: uploader.onUpload,
                 image: new URL(farcasterProfile.avatar),
               })
             }}
