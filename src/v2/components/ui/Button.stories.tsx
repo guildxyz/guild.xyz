@@ -1,5 +1,5 @@
+import { Book } from "@phosphor-icons/react"
 import type { Meta, StoryObj } from "@storybook/react"
-
 import { Button, ButtonProps } from "./Button"
 
 const meta: Meta<typeof Button> = {
@@ -89,5 +89,58 @@ export const Subtle: Story = {
   },
   argTypes: {
     ...Solid.argTypes,
+  },
+}
+
+export const WithIcon: Story = {
+  args: {
+    children: (
+      <>
+        <Book />
+        hello
+      </>
+    ),
+    size: "md",
+    variant: "solid",
+    colorScheme: "primary",
+    loadingText: undefined,
+    isLoading: false,
+    disabled: false,
+  },
+  argTypes: {
+    size: {
+      type: "string",
+      control: "select",
+      options: ["xs", "sm", "md", "lg", "xl"] satisfies ButtonProps["size"][],
+    },
+    loadingText: {
+      type: "string",
+      control: "text",
+    },
+    colorScheme: {
+      type: "string",
+      control: "select",
+      options: [
+        "primary",
+        "secondary",
+        "info",
+        "destructive",
+        "success",
+      ] satisfies ButtonProps["colorScheme"][],
+    },
+    variant: {
+      control: {
+        disable: true,
+      },
+    },
+    disabled: {
+      type: "boolean",
+      control: "boolean",
+    },
+    asChild: {
+      control: {
+        disable: true,
+      },
+    },
   },
 }
