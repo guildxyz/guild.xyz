@@ -11,7 +11,7 @@ import {
   FormLabel,
 } from "@/components/ui/Form"
 import { Input } from "@/components/ui/Input"
-import { uploadImageUrlAvatarToPinata } from "@/lib/uploadImageUrlToPinata"
+import { uploadImageUrlToPinata } from "@/lib/uploadImageUrlToPinata"
 import { EditProfilePicture } from "@app/(marketing)/profile/_components/EditProfile/EditProfilePicture"
 import { Schemas, schemas } from "@guildxyz/types"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -81,7 +81,7 @@ export const StartProfile: CreateProfileStep = ({ data: chainData }) => {
       { shouldValidate: true }
     )
     if (!farcasterProfile.avatar || isFarcasterAvatarUploaded.current) return
-    uploadImageUrlAvatarToPinata({
+    uploadImageUrlToPinata({
       onUpload: profilePicUploader.onUpload,
       image: new URL(farcasterProfile.avatar),
     })

@@ -1,6 +1,6 @@
 import { Uploader } from "hooks/usePinata/usePinata"
 
-export const uploadImageUrlAvatarToPinata = async ({
+export const uploadImageUrlToPinata = async ({
   image,
   onUpload,
 }: { image: URL; onUpload: Uploader["onUpload"] }) => {

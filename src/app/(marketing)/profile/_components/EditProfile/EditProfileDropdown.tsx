@@ -6,7 +6,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/DropdownMenu"
-import { uploadImageUrlAvatarToPinata } from "@/lib/uploadImageUrlToPinata"
+import { uploadImageUrlToPinata } from "@/lib/uploadImageUrlToPinata"
 import {
   ArrowsClockwise,
   DotsThreeVertical,
@@ -48,7 +48,7 @@ export const EditProfileDropdown: FunctionComponent<{ uploader: Uploader }> = ({
                 })
               }
               if (!farcasterProfile.avatar) return
-              uploadImageUrlAvatarToPinata({
+              uploadImageUrlToPinata({
                 onUpload: uploader.onUpload,
                 image: new URL(farcasterProfile.avatar),
               })
