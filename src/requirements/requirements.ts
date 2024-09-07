@@ -121,6 +121,12 @@ export const REQUIREMENTS_DATA = [
     isNegatable: true,
   },
   {
+    icon: "/requirementLogos/worldid.svg",
+    name: "World ID",
+    types: ["WORLD_ID_VERIFICATION"],
+    isNegatable: true,
+  },
+  {
     icon: "/requirementLogos/x.svg",
     name: "X",
     types: [

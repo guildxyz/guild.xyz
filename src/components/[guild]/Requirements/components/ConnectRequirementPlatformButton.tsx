@@ -18,6 +18,7 @@ import { useRequirementContext } from "./RequirementContext"
 function requirementTypeToPlatformName(type: RequirementType): PlatformName {
   if (type === "ALLOWLIST_EMAIL") return "EMAIL"
   if (REQUIREMENTS[type].types[0].startsWith("TWITTER")) return "TWITTER_V1"
+  if (REQUIREMENTS[type].types[0].startsWith("WORLD_ID")) return "WORLD_ID"
   return REQUIREMENTS[type].types[0].split("_")[0] as PlatformName
 }
 

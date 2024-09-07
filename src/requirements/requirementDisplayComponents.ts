@@ -126,6 +126,9 @@ export const REQUIREMENT_DISPLAY_COMPONENTS = {
   FORM_APPROVAL: dynamic<RequirementProps>(
     () => import("requirements/Form/FormRequirement")
   ),
+  WORLD_ID_VERIFICATION: dynamic<RequirementProps>(
+    () => import("requirements/WorldID/WorldIDRequirement")
+  ),
   TWITTER_ACCOUNT_AGE: dynamic<RequirementProps>(
     () => import("requirements/Twitter/TwitterRequirement")
   ),
