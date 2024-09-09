@@ -105,6 +105,7 @@ const AccountModal = () => {
                           size: "sm",
                         })}
                         variant="unstyled"
+                        onClick={() => setIsOpen(false)}
                       >
                         View profile
                         <ArrowRight weight="bold" />
