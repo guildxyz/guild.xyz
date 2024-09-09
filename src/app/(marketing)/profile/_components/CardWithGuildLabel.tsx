@@ -1,4 +1,3 @@
-import { CheckMark } from "@/components/CheckMark"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
 import { Card } from "@/components/ui/Card"
 import { cn } from "@/lib/utils"
@@ -22,7 +21,7 @@ export const CardWithGuildLabel = ({
         style={{ background: guild.theme.color }}
         title={guild.name}
       >
-        <div className="sm:-translate-x-1/2 sm:-rotate-90 flex h-full items-center gap-1 sm:absolute sm:left-1/2 sm:justify-center">
+        <div className="sm:-translate-x-1/2 sm:-rotate-90 flex h-full items-center gap-1 sm:absolute sm:left-1/2 sm:max-w-28 sm:justify-center">
           <Avatar size="xs">
             <AvatarImage
               src={guild.imageUrl}
@@ -34,13 +33,12 @@ export const CardWithGuildLabel = ({
           </Avatar>
           <div
             className={cn(
-              "-mt-0.5 truncate font-bold font-display text-foreground text-sm sm:max-w-14",
+              "-mt-0.5 truncate font-bold font-display text-foreground text-sm",
               color && (color.isDark() ? "text-white" : "text-black")
             )}
           >
             {guild.name}
           </div>
-          <CheckMark />
         </div>
       </div>
       <div className="mt-9 size-full rounded-2xl bg-card sm:mt-0 sm:ml-8">
