@@ -12,7 +12,7 @@ import { useProfile } from "./useProfile"
 export const useUpdateProfile = ({ onSuccess }: UseSubmitOptions) => {
   const { toast } = useToast()
   const router = useRouter()
-  const { mutate, data: profile } = useProfile()
+  const { mutate: mutateProfile, data: profile } = useProfile()
   const user = useUser()
 
   if (!profile) throw new Error("Tried to update profile outside profile context")
@@ -25,16 +25,17 @@ export const useUpdateProfile = ({ onSuccess }: UseSubmitOptions) => {
 
   const submitWithSign = useSubmitWithSign<Schemas["Profile"]>(updateProfile, {
     onOptimistic: (response, payload) => {
-      mutate(() => response, {
+      mutateProfile(() => response, {
         revalidate: false,
         rollbackOnError: true,
         optimisticData: () => payload,
       })
     },
     onSuccess: async (response) => {
-      revalidateProfile({ username: profile.username })
       await user.mutate()
+      revalidateProfile({ username: profile.username })
       if (profile.username !== response.username) {
+        mutateProfile()
         revalidateContributions({ username: profile.username })
         router.replace(`/profile/${response.username}`)
       }

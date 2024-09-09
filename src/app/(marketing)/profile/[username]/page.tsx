@@ -95,7 +95,7 @@ const fetchPublicProfileData = async ({
     referredUsersRequest,
     {
       next: {
-        tags: ["profile", referredUsersRequest.pathname],
+        tags: [profileRequest.pathname],
         revalidate: 3600,
       },
     }
