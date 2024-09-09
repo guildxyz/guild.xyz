@@ -6,6 +6,7 @@ import {
   DialogBody,
   DialogCloseButton,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -21,6 +22,7 @@ import {
 import { Input } from "@/components/ui/Input"
 import { Textarea } from "@/components/ui/Textarea"
 import { useDisclosure } from "@/hooks/useDisclosure"
+import { filterOnDirtyFormFields } from "@/lib/filterOnDirtyFormFields"
 import { Schemas, schemas } from "@guildxyz/types"
 import { zodResolver } from "@hookform/resolvers/zod"
 import usePinata from "hooks/usePinata"
@@ -56,7 +58,9 @@ export const EditProfile = ({ children }: PropsWithChildren<any>) => {
   })
 
   const { handleSubmit, isUploadingShown, uploadLoadingText } = useSubmitWithUpload(
-    form.handleSubmit(onSubmit),
+    form.handleSubmit((params) => {
+      onSubmit(filterOnDirtyFormFields(params, form.formState.dirtyFields))
+    }),
     profilePicUploader.isUploading || backgroundUploader.isUploading
   )
 
@@ -67,6 +71,7 @@ export const EditProfile = ({ children }: PropsWithChildren<any>) => {
         <DialogContent size="lg" className="bg-background">
           <DialogHeader>
             <DialogTitle>Edit profile</DialogTitle>
+            <DialogDescription className="sr-only" />
             <DialogCloseButton />
           </DialogHeader>
           <DialogBody>

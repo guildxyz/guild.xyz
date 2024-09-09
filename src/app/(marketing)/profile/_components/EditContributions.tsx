@@ -111,7 +111,7 @@ export const EditContributions = () => {
       <DialogContent size="lg" className="bg-background">
         <DialogHeader>
           <DialogTitle>Edit top contributions</DialogTitle>
-          <DialogDescription />
+          <DialogDescription className="sr-only" />
           <DialogCloseButton />
         </DialogHeader>
         <DialogBody className="gap-7">

@@ -28,11 +28,11 @@ export const useUpdateProfile = ({ onSuccess }: UseSubmitOptions) => {
       mutateProfile(() => response, {
         revalidate: false,
         rollbackOnError: true,
-        optimisticData: () => payload,
+        optimisticData: () => ({ ...profile, ...payload }),
       })
     },
     onSuccess: async (response) => {
-      await user.mutate()
+      user.mutate()
       revalidateProfile({ username: profile.username })
       if (profile.username !== response.username) {
         mutateProfile()
