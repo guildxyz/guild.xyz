@@ -62,6 +62,12 @@ const NewRolePlatformCard = ({ rolePlatform, remove }: Props) => {
   const cardSettingsComponent = cardSettings[type]
   const useCardProps = cardPropsHooks[type]
 
+  const shouldRenderCustomContentRow =
+    CAPACITY_TIME_PLATFORMS.includes(type) ||
+    type === "CONTRACT_CALL" ||
+    isLegacyContractCallReward ||
+    !!rolePlatform.dynamicAmount
+
   return (
     <RolePlatformProvider
       key={rolePlatform.id}
@@ -137,45 +143,52 @@ const NewRolePlatformCard = ({ rolePlatform, remove }: Props) => {
           )
         }
         contentRow={
-          <>
-            {CAPACITY_TIME_PLATFORMS.includes(type) || isLegacyContractCallReward ? (
-              <AvailabilitySetup
-                platformType={type}
-                rolePlatform={rolePlatform}
-                defaultValues={{
-                  capacity: rolePlatform.capacity,
-                  startTime: rolePlatform.startTime,
-                  endTime: rolePlatform.endTime,
-                }}
-                onDone={({ capacity, startTime, endTime }) => {
-                  setValue(`rolePlatforms.${rolePlatform.id}.capacity`, capacity, {
-                    shouldDirty: true,
-                  })
-                  setValue(`rolePlatforms.${rolePlatform.id}.startTime`, startTime, {
-                    shouldDirty: true,
-                  })
-                  setValue(`rolePlatforms.${rolePlatform.id}.endTime`, endTime, {
-                    shouldDirty: true,
-                  })
-                }}
-              />
-            ) : type === "CONTRACT_CALL" ? (
-              <NftAvailabilityTags
-                guildPlatform={guildPlatform}
-                rolePlatform={rolePlatform}
-                mt={1}
-              />
-            ) : null}
-            {!!rolePlatform.dynamicAmount && (
-              <DynamicTag
-                rolePlatform={
-                  { ...rolePlatform, guildPlatform: guildPlatform } as RolePlatform
-                }
-                editDisabled
-                mt={1}
-              />
-            )}
-          </>
+          shouldRenderCustomContentRow ? (
+            <>
+              {CAPACITY_TIME_PLATFORMS.includes(type) ||
+              isLegacyContractCallReward ? (
+                <AvailabilitySetup
+                  platformType={type}
+                  rolePlatform={rolePlatform}
+                  defaultValues={{
+                    capacity: rolePlatform.capacity,
+                    startTime: rolePlatform.startTime,
+                    endTime: rolePlatform.endTime,
+                  }}
+                  onDone={({ capacity, startTime, endTime }) => {
+                    setValue(`rolePlatforms.${rolePlatform.id}.capacity`, capacity, {
+                      shouldDirty: true,
+                    })
+                    setValue(
+                      `rolePlatforms.${rolePlatform.id}.startTime`,
+                      startTime,
+                      {
+                        shouldDirty: true,
+                      }
+                    )
+                    setValue(`rolePlatforms.${rolePlatform.id}.endTime`, endTime, {
+                      shouldDirty: true,
+                    })
+                  }}
+                />
+              ) : type === "CONTRACT_CALL" ? (
+                <NftAvailabilityTags
+                  guildPlatform={guildPlatform}
+                  rolePlatform={rolePlatform}
+                  mt={1}
+                />
+              ) : null}
+              {!!rolePlatform.dynamicAmount && (
+                <DynamicTag
+                  rolePlatform={
+                    { ...rolePlatform, guildPlatform: guildPlatform } as RolePlatform
+                  }
+                  editDisabled
+                  mt={1}
+                />
+              )}
+            </>
+          ) : undefined
         }
       />
     </RolePlatformProvider>
