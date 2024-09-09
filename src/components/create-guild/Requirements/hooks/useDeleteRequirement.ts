@@ -76,7 +76,7 @@ const useDeleteRequirement = (
         )
       }, 200)
 
-      triggerMembershipUpdate()
+      triggerMembershipUpdate({ roleIds: [roleId] })
     },
     onError: (error) => showErrorToast(error),
   })

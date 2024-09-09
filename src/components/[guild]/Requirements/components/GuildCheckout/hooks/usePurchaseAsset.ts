@@ -110,7 +110,7 @@ const usePurchaseAsset = () => {
     onSuccess: () => {
       captureEvent("Purchased requirement (GuildCheckout)", postHogOptions)
 
-      triggerMembershipUpdate()
+      triggerMembershipUpdate({ roleIds: [requirement.roleId] })
 
       toast({
         status: "success",
