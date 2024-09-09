@@ -89,7 +89,7 @@ const RelevantFollowers = ({
         imageUrls={relevantFollowers.slice(0, 3).map(({ pfp_url }) => pfp_url)}
         count={relevantFollowers.length}
       />
-      <div className="max-w-64 text-balance text-muted-foreground leading-tight">
+      <div className="max-w-52 text-balance text-muted-foreground leading-tight">
         Followed by{" "}
         <span className="inline-block max-w-24 truncate align-bottom font-bold">
           {firstFc.display_name}
