@@ -38,11 +38,9 @@ export const ProfileHero = () => {
     (typeof RANKS)[number],
     (typeof RANKS)[number] | undefined,
   ]
-  console.log({ rankIndex })
   const levelInRank = Math.floor(MAX_LEVEL / RANKS.length)
   const levels =
     nextRank && generateExponentialArray(levelInRank, nextRank.requiredXp)
-  console.log(levels, generateExponentialArray(5, 100))
   const levelIndex =
     levels && Math.max(0, levels.findIndex((level) => experienceCount <= level) - 1)
   const level = rankIndex * levelInRank + (levelIndex || 0)
