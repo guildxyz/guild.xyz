@@ -1,3 +1,4 @@
+import { consts } from "@guildxyz/types"
 import { RequirementType } from "requirements/types"
 import oldTokenBuyerAbi from "static/abis/oldTokenBuyer"
 import tokenBuyerAbi from "static/abis/tokenBuyer"
@@ -213,24 +214,7 @@ export const paymentSupportedChains = Object.keys(
   FEE_COLLECTOR_CONTRACT
 ) as (keyof typeof FEE_COLLECTOR_CONTRACT)[]
 
-export const GUILD_PIN_CONTRACTS = {
-  POLYGON: "0xff04820c36759c9f5203021fe051239ad2dcca8a",
-  BASE_MAINNET: "0x326f14942f8899406e3224bd63e9f250d275a52e",
-  ZKSYNC_ERA: "0xd1e4254fe7e56f58777ba624e7eeb3644f872b0d",
-  BSC: "0x807f16eba4a2c51b86cb8ec8be8eab34305c2bfd",
-  ARBITRUM: "0x0e6a14106497a7de36fba446628860c062e9e302",
-  CRONOS: "0x4205e56a69a0130a9e0828d45d0c84e45340a196",
-  OPTIMISM: "0x6c2c223b84724c4b8fd41ae0142c2369dfa7e319",
-  MANTLE: "0x4205e56a69a0130a9e0828d45d0c84e45340a196",
-  ONTOLOGY: "0x4205e56a69a0130a9e0828d45d0c84e45340a196",
-  LINEA: "0x4205e56a69a0130a9e0828d45d0c84e45340a196",
-  CYBER: "0x13ec6b98362e43add08f7cc4f6befd02fa52ee01",
-  MINT: "0x13ec6b98362e43add08f7cc4f6befd02fa52ee01",
-  MODE: "0x13ec6b98362e43add08f7cc4f6befd02fa52ee01",
-  SEPOLIA: "0xac49ee0c3bda5f851eac9a3184a21041e9afe379",
-} as const satisfies Partial<Record<Chain, `0x${string}`>>
-
-export type GuildPinsSupportedChain = keyof typeof GUILD_PIN_CONTRACTS
+export type GuildPinsSupportedChain = keyof typeof consts.PinContractAddresses
 
 export const openseaBaseUrl: Partial<Record<Chain, string>> = {
   ETHEREUM: "https://opensea.io/assets/ethereum",

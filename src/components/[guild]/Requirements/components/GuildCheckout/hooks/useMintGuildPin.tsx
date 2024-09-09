@@ -3,6 +3,7 @@ import {
   usePostHogContext,
 } from "@/components/Providers/PostHogProvider"
 import useUsersGuildPins from "@/hooks/useUsersGuildPins"
+import { consts } from "@guildxyz/types"
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { env } from "env"
@@ -15,7 +16,7 @@ import { GuildPinMetadata } from "types"
 import base64ToObject from "utils/base64ToObject"
 import fetcher from "utils/fetcher"
 import getEventsFromViemTxReceipt from "utils/getEventsFromViemTxReceipt"
-import { GUILD_PIN_CONTRACTS } from "utils/guildCheckout/constants"
+import { isGuildPinSupportedChain } from "utils/guildCheckout/utils"
 import processViemContractError from "utils/processViemContractError"
 import { TransactionReceipt } from "viem"
 import { useAccount, usePublicClient, useWalletClient } from "wagmi"
@@ -60,7 +61,10 @@ const useMintGuildPin = () => {
 
   const [loadingText, setLoadingText] = useState<string>("")
 
-  const contractAddress = GUILD_PIN_CONTRACTS[Chains[chainId]]
+  const chain = chainId ? Chains[chainId] : undefined
+  const contractAddress = isGuildPinSupportedChain(chain)
+    ? consts.PinContractAddresses[chain]
+    : "0x"
 
   const { guildPinFee } = useGuildPinFee()
 

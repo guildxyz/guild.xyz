@@ -1,4 +1,5 @@
 import { Checkbox, Stack, useColorModeValue } from "@chakra-ui/react"
+import { consts } from "@guildxyz/types"
 import useEditGuild from "components/[guild]/EditGuild/hooks/useEditGuild"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
@@ -8,7 +9,6 @@ import useToast from "hooks/useToast"
 import { FormProvider, useController, useForm, useWatch } from "react-hook-form"
 import { traitsSupportedChains } from "requirements/Nft/NftForm"
 import ChainPicker from "requirements/common/ChainPicker"
-import { GUILD_PIN_CONTRACTS } from "utils/guildCheckout/constants"
 import { Chain } from "wagmiConfig/chains"
 import { useMintGuildPinContext } from "../../MintGuildPinContext"
 
@@ -62,7 +62,7 @@ const ActivateGuildPinForm = (): JSX.Element => {
                   {
                     type: "ERC721",
                     chain,
-                    address: GUILD_PIN_CONTRACTS[chain],
+                    address: consts.PinContractAddresses[chain],
                     data: {
                       attributes: [
                         {
@@ -101,7 +101,7 @@ const ActivateGuildPinForm = (): JSX.Element => {
         <ChainPicker
           controlName="chain"
           supportedChains={[
-            ...(Object.keys(GUILD_PIN_CONTRACTS) as Chain[]),
+            ...(Object.keys(consts.PinContractAddresses) as Chain[]),
             "FUEL",
           ]}
           showDivider={false}
