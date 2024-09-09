@@ -1,11 +1,5 @@
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-  avatarVariants,
-} from "@/components/ui/Avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip"
-import { cn } from "@/lib/utils"
 import { GuildReward, Schemas } from "@guildxyz/types"
 import { Ranking } from "@phosphor-icons/react"
 import { GuildAction } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
@@ -37,7 +31,7 @@ export const ContributionCollection = ({
       {pin && (
         <Tooltip>
           <TooltipTrigger>
-            <Avatar className={cn(avatarVariants({ size: "lg" }), "-ml-3 border")}>
+            <Avatar size="lg" className="-ml-3 border-2 border-card">
               <AvatarImage src={pin.href} alt="avatar" width={32} height={32} />
               <AvatarFallback />
             </Avatar>
@@ -48,7 +42,7 @@ export const ContributionCollection = ({
       {collectionNft?.data.imageUrl && (
         <Tooltip>
           <TooltipTrigger>
-            <Avatar className={cn(avatarVariants({ size: "lg" }), "-ml-3 border")}>
+            <Avatar size="lg" className="-ml-3 border-2 border-card">
               <AvatarImage
                 src={collectionNft.data.imageUrl}
                 alt="avatar"
@@ -65,7 +59,7 @@ export const ContributionCollection = ({
       )}
       {point && collectionPoint && (
         <>
-          <Avatar size="lg" className="-ml-3 border">
+          <Avatar size="lg" className="-ml-3 border-2 border-card">
             {point.platformGuildData.imageUrl ? (
               <>
                 <AvatarImage
