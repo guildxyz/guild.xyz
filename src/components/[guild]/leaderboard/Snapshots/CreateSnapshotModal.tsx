@@ -19,7 +19,7 @@ import useCreateSnapshot from "hooks/useCreateSnapshot"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useRouter } from "next/router"
-import { useMemo } from "react"
+import { useEffect, useMemo } from "react"
 import { FormProvider, useController, useForm } from "react-hook-form"
 import { PlatformType } from "types"
 import SnapshotTable from "./SnapshotTable"
@@ -28,6 +28,16 @@ type Props = {
   onClose: () => void
   isOpen: boolean
   onSuccess: (snapshotId: number) => void
+}
+
+const generateSnapshotName = (pointsName?: string) => {
+  const dateString = new Date().toLocaleDateString("en-US", {
+    month: "2-digit",
+    day: "2-digit",
+    year: "numeric",
+  })
+
+  return `${!!pointsName ? pointsName + " snapshot " : "Points snapshot"} ${dateString}`
 }
 
 const CreateSnapshotModal = ({ onClose, isOpen, onSuccess }: Props) => {
@@ -42,7 +52,7 @@ const CreateSnapshotModal = ({ onClose, isOpen, onSuccess }: Props) => {
 
   const methods = useForm()
 
-  const { control } = methods
+  const { control, setValue } = methods
 
   const { field: selectedExistingId } = useController({
     control,
@@ -55,20 +65,14 @@ const CreateSnapshotModal = ({ onClose, isOpen, onSuccess }: Props) => {
   const selectedPointName =
     existingPointsRewards?.find((gp) => gp.id === selectedExistingId.value)
       ?.platformGuildData?.name || ""
-  const dateString = new Date().toLocaleDateString("en-US", {
-    month: "2-digit",
-    day: "2-digit",
-    year: "numeric",
-  })
 
   const {
     field: { value: name, onChange: onNameChange },
+    fieldState: { isDirty: isNameDirty },
   } = useController({
     control,
     name: "name",
-    defaultValue: `${
-      !!selectedPointName ? selectedPointName + " snapshot " : "Points snapshot"
-    } ${dateString}`,
+    defaultValue: generateSnapshotName(selectedPointName),
   })
 
   const { onSubmit: onCreateSnasphotSubmit, isLoading: isSubmitLoading } =
@@ -108,6 +112,11 @@ const CreateSnapshotModal = ({ onClose, isOpen, onSuccess }: Props) => {
       points: val.totalPoints,
     }))
   }, [data?.leaderboard])
+
+  useEffect(() => {
+    if (isNameDirty) return
+    setValue("name", generateSnapshotName(selectedPointName))
+  }, [setValue, selectedPointName, isNameDirty])
 
   return (
     <FormProvider {...methods}>
