@@ -73,7 +73,7 @@ export const ContributionCollection = ({
             />
             <AvatarFallback />
           </Avatar>
-          <div className="-ml-3 self-center rounded-r-lg border bg-card-secondary py-0.5 pr-2 pl-5">
+          <div className="-ml-3 self-center whitespace-nowrap rounded-r-lg border bg-card-secondary py-0.5 pr-2 pl-5">
             <div className="text-sm">
               {collectionPoint.totalPoints}&nbsp;
               <span className="font-extrabold">{point.platformGuildData.name}</span>
