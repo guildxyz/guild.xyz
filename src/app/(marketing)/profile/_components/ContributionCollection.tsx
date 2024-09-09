@@ -10,6 +10,7 @@ import { GuildReward, Schemas } from "@guildxyz/types"
 import { Ranking } from "@phosphor-icons/react"
 import { GuildAction } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import { env } from "env"
+import Star from "static/icons/star.svg"
 import useSWRImmutable from "swr/immutable"
 
 export const ContributionCollection = ({
@@ -62,16 +63,22 @@ export const ContributionCollection = ({
           </TooltipContent>
         </Tooltip>
       )}
-      {point && collectionPoint && point.platformGuildData.imageUrl && (
+      {point && collectionPoint && (
         <>
-          <Avatar className={cn(avatarVariants({ size: "lg" }), "-ml-3 border")}>
-            <AvatarImage
-              src={point.platformGuildData.imageUrl}
-              alt="avatar"
-              width={32}
-              height={32}
-            />
-            <AvatarFallback />
+          <Avatar size="lg" className="-ml-3 border">
+            {point.platformGuildData.imageUrl ? (
+              <>
+                <AvatarImage
+                  src={point.platformGuildData.imageUrl}
+                  alt="avatar"
+                  width={32}
+                  height={32}
+                />
+                <AvatarFallback />
+              </>
+            ) : (
+              <Star className="size-6" />
+            )}
           </Avatar>
           <div className="-ml-3 self-center whitespace-nowrap rounded-r-lg border bg-card-secondary py-0.5 pr-2 pl-5">
             <div className="text-sm">
