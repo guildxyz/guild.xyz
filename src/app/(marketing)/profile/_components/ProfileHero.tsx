@@ -1,4 +1,5 @@
 "use client"
+
 import { CheckMark } from "@/components/CheckMark"
 import { LayoutContainer } from "@/components/Layout"
 import { ProfileAvatar } from "@/components/ProfileAvatar"
@@ -6,7 +7,7 @@ import { Avatar } from "@/components/ui/Avatar"
 import { Button } from "@/components/ui/Button"
 import { Card } from "@/components/ui/Card"
 import { Pencil } from "@phosphor-icons/react"
-import { RANKS } from "../[username]/constants"
+import { MAX_LEVEL, RANKS } from "../[username]/constants"
 import { ProfileOwnerGuard } from "../_components/ProfileOwnerGuard"
 import { useExperiences } from "../_hooks/useExperiences"
 import { useProfile } from "../_hooks/useProfile"
@@ -16,16 +17,35 @@ import { Polygon } from "./Polygon"
 import { ProfileHeroSkeleton } from "./ProfileSkeleton"
 import { ProfileSocialCounters } from "./ProfileSocialCounters"
 
+const generateExponentialArray = (
+  steps: number,
+  sum: number,
+  exponent = 2
+): number[] => {
+  const baseSum = (Math.pow(exponent, steps) - 1) / (exponent - 1)
+  const scaleFactor = sum / baseSum
+  return Array.from({ length: steps }, (_, i) => Math.pow(exponent, i) * scaleFactor)
+}
+
 export const ProfileHero = () => {
   const { data: profile } = useProfile()
   const { data: experienceCount } = useExperiences({ count: true })
-  const rankIndex = RANKS.findIndex(
-    ({ requiredXp }) => experienceCount >= requiredXp
+  const rankIndex = Math.max(
+    0,
+    RANKS.findIndex(({ requiredXp }) => experienceCount < requiredXp) - 1
   )
-  const [rank, nextRank] = RANKS.slice(rankIndex, rankIndex + 1) as [
+  const [rank, nextRank] = RANKS.slice(rankIndex, rankIndex + 2) as [
     (typeof RANKS)[number],
     (typeof RANKS)[number] | undefined,
   ]
+  console.log({ rankIndex })
+  const levelInRank = Math.floor(MAX_LEVEL / RANKS.length)
+  const levels =
+    nextRank && generateExponentialArray(levelInRank, nextRank.requiredXp)
+  console.log(levels, generateExponentialArray(5, 100))
+  const levelIndex =
+    levels && Math.max(0, levels.findIndex((level) => experienceCount <= level) - 1)
+  const level = rankIndex * levelInRank + (levelIndex || 0)
 
   if (!profile || !rank) return <ProfileHeroSkeleton />
 
@@ -50,7 +70,7 @@ export const ProfileHero = () => {
         </ProfileOwnerGuard>
         <div className="relative mb-6 flex size-48 items-center justify-center md:size-56">
           <CircularProgressBar
-            progress={nextRank ? experienceCount / nextRank.requiredXp : 1}
+            progress={nextRank ? experienceCount / levels.at(levelIndex + 1) : 1}
             color={rank.color}
             className="absolute inset-0 size-full"
           />
@@ -66,7 +86,7 @@ export const ProfileHero = () => {
               color={rank.color}
               className="brightness-75"
             />
-            <span className="absolute font-bold font-display text-xl">23</span>
+            <span className="absolute font-bold font-display text-xl">{level}</span>
           </div>
         </div>
         <h1 className="break-all text-center font-extrabold text-3xl leading-tight tracking-tight md:text-4xl">
