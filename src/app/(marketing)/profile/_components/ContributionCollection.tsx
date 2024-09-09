@@ -58,7 +58,7 @@ export const ContributionCollection = ({
             </Avatar>
           </TooltipTrigger>
           <TooltipContent>
-            Minted NFT <strong>{collectionNft.data.name}</strong>
+            Minted <strong>{collectionNft.data.name}</strong>
           </TooltipContent>
         </Tooltip>
       )}
