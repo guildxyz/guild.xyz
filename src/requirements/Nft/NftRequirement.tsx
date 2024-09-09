@@ -1,4 +1,5 @@
 import { HStack, Text, useDisclosure } from "@chakra-ui/react"
+import { consts } from "@guildxyz/types"
 import { ImageData } from "@nouns/assets"
 import { ArrowSquareOut } from "@phosphor-icons/react"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
@@ -17,7 +18,7 @@ import { Fragment } from "react"
 import SearchableVirtualListModal from "requirements/common/SearchableVirtualListModal"
 import useSWRImmutable from "swr/immutable"
 import { Trait } from "types"
-import { GUILD_PIN_CONTRACTS } from "utils/guildCheckout/constants"
+import { isGuildPinSupportedChain } from "utils/guildCheckout/utils"
 import shortenHex from "utils/shortenHex"
 import { Chain } from "wagmiConfig/chains"
 import useNftMetadata, {
@@ -49,7 +50,9 @@ const NftRequirement = (props: RequirementProps) => {
 
   // This is a really basic solution, and it'll only handle the "Joined Guild" NFTs. We should probably think about a better solution in the future.
   const isGuildPin =
-    GUILD_PIN_CONTRACTS[requirementChain] === requirementAddress.toLowerCase()
+    isGuildPinSupportedChain(requirementChain) &&
+    consts.PinContractAddresses[requirementChain] ===
+      requirementAddress.toLowerCase()
 
   const guildIdAttribute =
     isGuildPin &&
