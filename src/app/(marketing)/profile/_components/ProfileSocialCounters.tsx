@@ -1,6 +1,7 @@
 import FarcasterImage from "@/../static/socialIcons/farcaster.svg"
 import { AvatarGroup } from "@/components/ui/AvatarGroup"
 import { Separator } from "@/components/ui/Separator"
+import { Skeleton } from "@/components/ui/Skeleton"
 import { cn } from "@/lib/utils"
 import { PropsWithChildren } from "react"
 import { RequiredFields } from "types"
@@ -30,8 +31,10 @@ export const ProfileSocialCounters = ({ className }: any) => {
         className
       )}
     >
-      {referredUsers && (
+      {referredUsers ? (
         <SocialCountTile count={referredUsers.length}>Guildmates</SocialCountTile>
+      ) : (
+        <Skeleton className="h-12 w-20" />
       )}
       {farcasterProfile && (
         <>
