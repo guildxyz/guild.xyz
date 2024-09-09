@@ -208,7 +208,7 @@ const useConnectPlatform = (
      * popup. We can only guarantee a redirect to happen, if we refresh the current
      * window
      */
-    if (platformName === "TELEGRAM") {
+    if (platformName === "TELEGRAM" || platformName === "WORLD_ID") {
       window.location.href = url
     } else {
       onOpen(url)
