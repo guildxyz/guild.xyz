@@ -66,6 +66,7 @@
     "@tanstack/react-table": "^8.13.2",
     "@tanstack/react-virtual": "^3.5.0",
     "@vercel/kv": "^1.0.1",
+    "@vercel/speed-insights": "^1.0.12",
     "@visx/curve": "^3.3.0",
     "@visx/xychart": "^3.10.2",
     "@web3inbox/core": "^1.1.0",
