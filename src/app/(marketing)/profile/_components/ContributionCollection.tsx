@@ -4,9 +4,10 @@ import {
   AvatarImage,
   avatarVariants,
 } from "@/components/ui/Avatar"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip"
 import { cn } from "@/lib/utils"
 import { GuildReward, Schemas } from "@guildxyz/types"
-import { Users } from "@phosphor-icons/react"
+import { Ranking } from "@phosphor-icons/react"
 import { GuildAction } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import { env } from "env"
 import useSWRImmutable from "swr/immutable"
@@ -33,21 +34,33 @@ export const ContributionCollection = ({
   return (
     <>
       {pin && (
-        <Avatar className={cn(avatarVariants({ size: "lg" }), "-ml-3 border")}>
-          <AvatarImage src={pin.href} alt="avatar" width={32} height={32} />
-          <AvatarFallback />
-        </Avatar>
+        <Tooltip>
+          <TooltipTrigger>
+            <Avatar className={cn(avatarVariants({ size: "lg" }), "-ml-3 border")}>
+              <AvatarImage src={pin.href} alt="avatar" width={32} height={32} />
+              <AvatarFallback />
+            </Avatar>
+          </TooltipTrigger>
+          <TooltipContent>Minted Guild Pin</TooltipContent>
+        </Tooltip>
       )}
       {collectionNft?.data.imageUrl && (
-        <Avatar className={cn(avatarVariants({ size: "lg" }), "-ml-3 border")}>
-          <AvatarImage
-            src={collectionNft.data.imageUrl}
-            alt="avatar"
-            width={32}
-            height={32}
-          />
-          <AvatarFallback />
-        </Avatar>
+        <Tooltip>
+          <TooltipTrigger>
+            <Avatar className={cn(avatarVariants({ size: "lg" }), "-ml-3 border")}>
+              <AvatarImage
+                src={collectionNft.data.imageUrl}
+                alt="avatar"
+                width={32}
+                height={32}
+              />
+              <AvatarFallback />
+            </Avatar>
+          </TooltipTrigger>
+          <TooltipContent>
+            Minted NFT <strong>{collectionNft.data.name}</strong>
+          </TooltipContent>
+        </Tooltip>
       )}
       {point && collectionPoint && point.platformGuildData.imageUrl && (
         <>
@@ -66,12 +79,7 @@ export const ContributionCollection = ({
               <span className="font-extrabold">{point.platformGuildData.name}</span>
             </div>
             <div className="flex items-center gap-1 text-muted-foreground text-xs">
-              <Users weight="bold" />
-              {
-                // TODO: use leaderboard rank size
-                Number(((collectionPoint.rank / 500000) * 100).toFixed(2))
-              }
-              %
+              <Ranking weight="bold" />#{collectionPoint.rank}
             </div>
           </div>
         </>
