@@ -1,17 +1,25 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
-import { AvatarGroup } from "@/components/ui/AvatarGroup"
 import { Separator } from "@/components/ui/Separator"
-import { Guild, Role } from "@guildxyz/types"
+import { Guild, Role, Schemas } from "@guildxyz/types"
 import { Users } from "@phosphor-icons/react/dist/ssr"
 import { CardWithGuildLabel } from "./CardWithGuildLabel"
+import { ContributionCollection } from "./ContributionCollection"
 
 export const ContributionCardView = ({
   guild,
   role,
-}: { guild: Guild; role: Role }) => {
+  collection,
+}: {
+  guild: Guild
+  role: Role
+  collection?: Schemas["ContributionCollection"]
+}) => {
   const roleAcquirementPercentage = Number(
     ((role.memberCount / guild.memberCount || 0) * 100).toFixed(1)
   )
+  const collections = [collection?.NFTs, collection?.pins, collection?.points]
+    .filter(Boolean)
+    .flat()
   return (
     <CardWithGuildLabel guild={guild}>
       <div className="grid grid-cols-[auto_1fr] items-center gap-4 p-5 md:grid-cols-[auto_auto_1fr] md:p-6">
@@ -34,13 +42,18 @@ export const ContributionCardView = ({
             </p>
           </div>
         </div>
-        <div className="col-span-2 flex w-full flex-col gap-2 justify-self-end md:col-span-1 md:w-auto md:flex-row md:items-center">
-          <Separator className="mb-2 md:hidden" />
-          <div className="font-extrabold text-muted-foreground text-xs uppercase">
-            COLLECTION:
+        {collection && !!collections.length && (
+          <div className="col-span-2 flex w-full flex-col gap-2 justify-self-end md:col-span-1 md:w-auto md:flex-row md:items-center">
+            <Separator className="mb-2 md:hidden" />
+            <div className="font-extrabold text-muted-foreground text-xs uppercase">
+              COLLECTION:
+            </div>
+
+            <div className="ml-3 flex">
+              <ContributionCollection collection={collection} guildId={guild.id} />
+            </div>
           </div>
-          <AvatarGroup imageUrls={["", "", ""]} count={87} size="lg" />
-        </div>
+        )}
       </div>
     </CardWithGuildLabel>
   )

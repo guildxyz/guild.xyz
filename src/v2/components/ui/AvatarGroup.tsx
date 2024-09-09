@@ -26,7 +26,7 @@ export const AvatarGroup = ({
         </Avatar>
       ))}
       {diffCount > 0 && (
-        <Avatar className={cn(avatarVariants(avatarProps), "-ml-3")}>
+        <Avatar className={cn(avatarVariants(avatarProps), "-ml-3 border")}>
           <AvatarFallback>+{diffCount}</AvatarFallback>
         </Avatar>
       )}

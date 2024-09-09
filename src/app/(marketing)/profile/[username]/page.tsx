@@ -110,6 +110,25 @@ const fetchPublicProfileData = async ({
       },
     }
   )
+  const collectionRequests = contributions.map(
+    ({ id }) =>
+      new URL(`v2/profiles/${username}/contributions/${id}/collection`, api)
+  )
+  let collections: Schemas["ContributionCollection"][] | undefined
+  try {
+    collections = await Promise.all(
+      collectionRequests.map((req) =>
+        ssrFetcher<Schemas["ContributionCollection"]>(req, {
+          next: {
+            tags: ["collections"],
+            revalidate: 3600,
+          },
+        })
+      )
+    )
+  } catch (e) {
+    console.error(e)
+  }
   const roleRequests = contributions.map(
     ({ roleId, guildId }) => new URL(`v2/guilds/${guildId}/roles/${roleId}`, api)
   )
@@ -134,6 +153,9 @@ const fetchPublicProfileData = async ({
       })
     )
   )
+  const collectionsZipped = collections
+    ? collectionRequests.map(({ pathname }, i) => [pathname, collections[i]])
+    : []
   const guildsZipped = guildRequests.map(({ pathname }, i) => [pathname, guilds[i]])
   const rolesZipped = roleRequests.map(({ pathname }, i) => [pathname, roles[i]])
   return {
@@ -145,6 +167,7 @@ const fetchPublicProfileData = async ({
         [farcasterProfilesRequest.pathname, farcasterProfiles],
         [neynarRequest?.href, fcFollowers],
         [referredUsersRequest.pathname, referredUsers],
+        ...collectionsZipped,
         ...guildsZipped,
         ...rolesZipped,
       ].filter(([key, value]) => key && value)
