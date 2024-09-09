@@ -36,22 +36,19 @@ export const ProfileSocialCounters = ({ className }: any) => {
       {farcasterProfile && (
         <>
           <Separator orientation="vertical" className="h-10 md:h-12" />
-          <SocialCountTile count={farcasterProfile.following_count}>
+          <SocialCountTile count={farcasterProfile.follower_count}>
             <FarcasterImage />
-            Following
+            Followers
           </SocialCountTile>
 
-          <Separator orientation="vertical" className="h-10 max-sm:hidden md:h-12" />
-          {relevantFollowersFiltered && relevantFollowersFiltered.length >= 1 ? (
-            <RelevantFollowers
-              relevantFollowers={relevantFollowersFiltered}
-              followerCount={farcasterProfile.follower_count}
-            />
-          ) : (
-            <SocialCountTile count={farcasterProfile.follower_count}>
-              <FarcasterImage />
-              Followers
-            </SocialCountTile>
+          {relevantFollowersFiltered && relevantFollowersFiltered.length >= 1 && (
+            <>
+              <Separator
+                orientation="vertical"
+                className="h-10 max-sm:hidden md:h-12"
+              />
+              <RelevantFollowers relevantFollowers={relevantFollowersFiltered} />
+            </>
           )}
         </>
       )}
@@ -71,10 +68,8 @@ const SocialCountTile = ({
 
 const RelevantFollowers = ({
   relevantFollowers,
-  followerCount,
 }: {
   relevantFollowers: DisplayableUser[]
-  followerCount: number
 }) => {
   if (!relevantFollowers.length) {
     throw new Error(
@@ -82,23 +77,27 @@ const RelevantFollowers = ({
     )
   }
   const [firstFc, secondFc] = relevantFollowers
+  const remainingFollowers =
+    relevantFollowers.length - Math.min(2, relevantFollowers.length)
 
   return (
     <div className="flex items-center gap-2">
       <AvatarGroup
         imageUrls={relevantFollowers.slice(0, 3).map(({ pfp_url }) => pfp_url)}
-        count={followerCount}
+        count={relevantFollowers.length}
       />
-      <div className="max-w-64 text-muted-foreground leading-tight">
-        Followed by <span className="font-bold">{firstFc.display_name}</span>
+      <div className="max-w-64 text-balance text-muted-foreground leading-tight">
+        Followed by{" "}
+        <span className="inline-block max-w-24 truncate align-bottom font-bold">
+          {firstFc.display_name}
+          {secondFc && <span className="font-normal">,&nbsp;</span>}
+        </span>
         {secondFc && (
-          <>
-            <span>, </span>
-            <span className="font-bold">{secondFc.display_name}</span>
-          </>
-        )}{" "}
-        and {followerCount - Math.min(2, relevantFollowers.length)} others on
-        Farcaster
+          <span className="inline-block max-w-24 truncate align-bottom font-bold">
+            {secondFc.display_name}
+          </span>
+        )}
+        {!!remainingFollowers && ` and ${remainingFollowers} others`} on Farcaster
       </div>
     </div>
   )
