@@ -158,6 +158,14 @@ const fetchPublicProfileData = async ({
     : []
   const guildsZipped = guildRequests.map(({ pathname }, i) => [pathname, guilds[i]])
   const rolesZipped = roleRequests.map(({ pathname }, i) => [pathname, roles[i]])
+  const experiencesRequest = new URL(`/v2/profiles/${username}/experiences`, api)
+  const experiences = await ssrFetcher<any>(experiencesRequest)
+  const experienceCountRequest = new URL(
+    `/v2/profiles/${username}/experiences?count=true`,
+    api
+  )
+  const experienceCount = await ssrFetcher<any>(experiencesRequest)
+
   return {
     profile,
     fallback: Object.fromEntries(
@@ -167,6 +175,8 @@ const fetchPublicProfileData = async ({
         [farcasterProfilesRequest.pathname, farcasterProfiles],
         [neynarRequest?.href, fcFollowers],
         [referredUsersRequest.pathname, referredUsers],
+        [experiencesRequest.pathname, experiences],
+        [experienceCountRequest.pathname, experienceCount],
         ...collectionsZipped,
         ...guildsZipped,
         ...rolesZipped,
