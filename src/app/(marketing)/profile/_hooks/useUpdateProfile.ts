@@ -3,7 +3,7 @@ import { Schemas, schemas } from "@guildxyz/types"
 import useUser from "components/[guild]/hooks/useUser"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import { UseSubmitOptions } from "hooks/useSubmit/types"
-import { useParams, useRouter } from "next/navigation"
+import { useRouter } from "next/navigation"
 import fetcher from "utils/fetcher"
 import { revalidateContributions } from "../_server_actions/revalidateContributions"
 import { revalidateProfile } from "../_server_actions/revalidateProfile"
@@ -12,12 +12,12 @@ import { useProfile } from "./useProfile"
 export const useUpdateProfile = ({ onSuccess }: UseSubmitOptions) => {
   const { toast } = useToast()
   const router = useRouter()
-  const params = useParams<{ username: string }>()
   const { mutate, data: profile } = useProfile()
   const user = useUser()
 
+  if (!profile) throw new Error("Tried to update profile outside profile context")
   const updateProfile = async (signedValidation: SignedValidation) => {
-    return fetcher(`/v2/profiles/${params?.username}`, {
+    return fetcher(`/v2/profiles/${profile.username}`, {
       method: "PUT",
       ...signedValidation,
     })
@@ -32,10 +32,10 @@ export const useUpdateProfile = ({ onSuccess }: UseSubmitOptions) => {
       })
     },
     onSuccess: async (response) => {
-      await revalidateProfile()
+      revalidateProfile({ username: profile.username })
       await user.mutate()
-      if (profile?.username !== response.username) {
-        await revalidateContributions()
+      if (profile.username !== response.username) {
+        revalidateContributions({ username: profile.username })
         router.replace(`/profile/${response.username}`)
       }
       onSuccess?.()
@@ -51,7 +51,6 @@ export const useUpdateProfile = ({ onSuccess }: UseSubmitOptions) => {
   return {
     ...submitWithSign,
     onSubmit: (payload: Schemas["ProfileUpdate"]) =>
-      params?.username &&
       submitWithSign.onSubmit(schemas.ProfileUpdateSchema.parse(payload)),
   }
 }

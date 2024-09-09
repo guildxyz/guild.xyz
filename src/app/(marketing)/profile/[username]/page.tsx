@@ -48,13 +48,13 @@ const fetchPublicProfileData = async ({
   const profileRequest = new URL(`v2/profiles/${username}`, api)
   const profileResponse = await fetch(profileRequest, {
     next: {
-      tags: ["profile", profileRequest.pathname],
+      tags: [profileRequest.pathname],
       revalidate: 3600,
     },
   })
 
   if (profileResponse.status === 404) notFound()
-  if (!profileResponse.ok) throw new Error("couldn't fetch profile")
+  if (!profileResponse.ok) throw new Error("couldn't to fetch /profile")
 
   const profile = (await profileResponse.json()) as Schemas["Profile"]
   if (!fetchFallback) {
@@ -68,7 +68,7 @@ const fetchPublicProfileData = async ({
     farcasterProfilesRequest,
     {
       next: {
-        tags: ["profile", farcasterProfilesRequest.pathname],
+        tags: [farcasterProfilesRequest.pathname],
         revalidate: 3600,
       },
     }
@@ -83,7 +83,7 @@ const fetchPublicProfileData = async ({
     neynarRequest &&
     (await ssrFetcher(neynarRequest, {
       next: {
-        revalidate: 24 * 3600,
+        revalidate: 12 * 3600,
       },
     }))
 
@@ -105,7 +105,7 @@ const fetchPublicProfileData = async ({
     contributionsRequest,
     {
       next: {
-        tags: ["contributions", contributionsRequest.pathname],
+        tags: [contributionsRequest.pathname],
         revalidate: 3600,
       },
     }
@@ -176,7 +176,16 @@ const fetchPublicProfileData = async ({
 }
 
 const Page = async ({ params: { username } }: PageProps) => {
-  const { profile, fallback } = await fetchPublicProfileData({ username })
+  let profileData: Awaited<ReturnType<typeof fetchPublicProfileData>>
+  try {
+    profileData = await fetchPublicProfileData({ username })
+  } catch (error) {
+    const e = error instanceof Error ? error : undefined
+    throw new Error(
+      ["Failed to retrieve profile data", e?.message].filter(Boolean).join(": ")
+    )
+  }
+  const { profile, fallback } = profileData
 
   const isBgColor = profile.backgroundImageUrl?.startsWith("#")
 

@@ -1,6 +1,5 @@
 import { useConfetti } from "@/components/Confetti"
 import { useToast } from "@/components/ui/hooks/useToast"
-import { revalidateContributions } from "@app/(marketing)/profile/_server_actions/revalidateContributions"
 import { Schemas } from "@guildxyz/types"
 import useUser from "components/[guild]/hooks/useUser"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
@@ -27,7 +26,6 @@ export const useCreateProfile = () => {
         title: "Successfully created profile",
       })
       confettiPlayer.current("Confetti from left and right")
-      revalidateContributions()
       await user.mutate()
       router.replace(`/profile/${response.username}`)
     },
