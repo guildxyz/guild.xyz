@@ -1,7 +1,6 @@
 "use client"
 import { Polygon } from "@/components/Polygon"
 import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
-import { Badge } from "@/components/ui/Badge"
 import { Card } from "@/components/ui/Card"
 import { cn } from "@/lib/utils"
 import { Info } from "@phosphor-icons/react"
@@ -75,10 +74,9 @@ export const Profile = () => {
           <Card className="space-y-4 p-6">
             <div className="flex flex-col items-start justify-between gap-2 sm:flex-row">
               <h3 className="font-bold">Engagement this month</h3>
-              <Badge colorScheme="blue">+72 XP</Badge>
             </div>
             <ParentSize>
-              {({ width }) => <ActivityChart width={width} height={40} />}
+              {({ width }) => <ActivityChart width={width} height={32} />}
             </ParentSize>
           </Card>
         </div>
