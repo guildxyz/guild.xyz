@@ -1,11 +1,10 @@
+import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { ReactNode } from "react"
 import { CardWarningComponentBase } from "rewards/components/CardWarningComponentBase"
-import { CardWarningComponentProps } from "rewards/types"
 
-const GoogleCardWarning = ({
-  rolePlatform,
-}: CardWarningComponentProps): ReactNode => {
+const GoogleCardWarning = (): ReactNode => {
+  const rolePlatform = useRolePlatform()
   const { roles } = useGuild()
   const roleMemberCount =
     roles?.find((role) => role.rolePlatforms.some((rp) => rp.id === rolePlatform.id))

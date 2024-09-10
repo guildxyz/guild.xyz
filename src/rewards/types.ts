@@ -49,7 +49,7 @@ export type RewardData = {
 
 export type RewardComponentsData = {
   cardMenuComponent?: (props: any) => JSX.Element
-  cardWarningComponent?: ComponentType<CardWarningComponentProps>
+  cardWarningComponent?: ComponentType<unknown>
   cardButton?: (props: any) => JSX.Element
   AddRewardPanel?: ComponentType<AddRewardPanelProps>
   SmallRewardPreview?: ComponentType<RewardProps>

@@ -33,9 +33,7 @@ const AccessedGuildPlatformCard = () => {
       guildPlatform={rolePlatform.guildPlatform}
       cornerButton={
         <>
-          {PlatformCardWarning && (
-            <PlatformCardWarning rolePlatform={rolePlatform} />
-          )}
+          {PlatformCardWarning && <PlatformCardWarning />}
           {isAdmin && isDetailed && PlatformCardMenu && (
             <PlatformCardMenu
               platformGuildId={rolePlatform.guildPlatform.platformGuildId}
