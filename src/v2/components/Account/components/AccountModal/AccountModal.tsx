@@ -15,6 +15,7 @@ import {
   DialogBody,
   DialogCloseButton,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/Dialog"
@@ -63,7 +64,7 @@ const AccountModal = () => {
     })
 
     deleteKeyPairFromIdb(id)
-      ?.catch(() => {})
+      ?.catch(() => { })
       .finally(() => {
         setIsOpen(false)
         disconnect()
@@ -78,6 +79,7 @@ const AccountModal = () => {
 
         <DialogHeader>
           <DialogTitle>Account</DialogTitle>
+          <DialogDescription className="sr-only" />
         </DialogHeader>
 
         <DialogBody scroll>
