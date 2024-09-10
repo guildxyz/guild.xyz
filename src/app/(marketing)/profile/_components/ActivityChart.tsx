@@ -4,22 +4,15 @@ import { localPoint } from "@visx/event"
 import { Group } from "@visx/group"
 import { scaleBand, scaleLinear } from "@visx/scale"
 import { Bar } from "@visx/shape"
-import { defaultStyles, useTooltip, useTooltipInPortal } from "@visx/tooltip"
+import { useTooltip, useTooltipInPortal } from "@visx/tooltip"
 import { useMemo } from "react"
 import { useExperiences } from "../_hooks/useExperiences"
 
 type TooltipData = Schemas["Experience"]
-const tooltipStyles = {
-  ...defaultStyles,
-  minWidth: 60,
-  backgroundColor: "rgba(0,0,0,0.9)",
-  color: "white",
-}
-
 const verticalMargin = 0
 
 const getX = (xp: Schemas["Experience"]) => xp.id.toString()
-const getY = (xp: Schemas["Experience"]) => xp.amount
+const getY = (xp: Schemas["Experience"]) => xp.amount + 4
 
 export type BarsProps = {
   width: number
@@ -28,8 +21,32 @@ export type BarsProps = {
 
 let tooltipTimeout: number
 export const ActivityChart = ({ width, height }: BarsProps) => {
-  const { data } = useExperiences({ count: false })
-  if (!data) return <Skeleton style={{ width, height }} />
+  const { data: rawData } = useExperiences({ count: false })
+  if (!rawData) return <Skeleton style={{ width, height }} />
+  const groupedData = new Map<number, Schemas["Experience"][]>()
+  for (const xp of rawData) {
+    const createdAt = new Date(xp.createdAt)
+    const commonDay = new Date(
+      createdAt.getFullYear(),
+      createdAt.getMonth(),
+      createdAt.getDate()
+    ).valueOf()
+    groupedData.set(commonDay, [...(groupedData.get(commonDay) ?? []), xp])
+  }
+  const data = [...groupedData.entries()]
+    .reduce<Schemas["Experience"][]>((acc, [_, xpGroup]) => {
+      return [
+        ...acc,
+        {
+          ...xpGroup[0],
+          amount: xpGroup.reduce((sumAcc, xp) => sumAcc + xp.amount, 0),
+        },
+      ]
+    }, [])
+    .sort(
+      (a, b) => new Date(a.createdAt).valueOf() - new Date(b.createdAt).valueOf()
+    )
+
   const xMax = width
   const yMax = height - verticalMargin
   const xScale = useMemo(
@@ -62,9 +79,6 @@ export const ActivityChart = ({ width, height }: BarsProps) => {
   } = useTooltip<TooltipData>()
 
   const { containerRef, TooltipInPortal } = useTooltipInPortal({
-    // TooltipInPortal is rendered in a separate child of <body /> and positioned
-    // with page coordinates which should be updated on scroll. consider using
-    // Tooltip or TooltipWithBounds if you don't need to render inside a Portal
     scroll: true,
   })
 
@@ -94,9 +108,6 @@ export const ActivityChart = ({ width, height }: BarsProps) => {
                 }}
                 onMouseMove={(event) => {
                   if (tooltipTimeout) clearTimeout(tooltipTimeout)
-                  // TooltipInPortal expects coordinates to be relative to containerRef
-                  // localPoint returns coordinates relative to the nearest SVG, which
-                  // is what containerRef is set to in this example.
                   const eventSvgCoords = localPoint(event)
                   const left = (barX || 0) + barWidth / 2
                   showTooltip({
@@ -111,12 +122,16 @@ export const ActivityChart = ({ width, height }: BarsProps) => {
         </Group>
       </svg>
       {tooltipOpen && tooltipData && (
-        <TooltipInPortal top={tooltipTop} left={tooltipLeft} style={tooltipStyles}>
-          <div>
-            <strong>+{tooltipData.amount} XP</strong>
-          </div>
-          <div>
-            <small>{new Date(tooltipData.createdAt).toLocaleDateString()}</small>
+        <TooltipInPortal
+          top={tooltipTop}
+          left={tooltipLeft}
+          unstyled
+          applyPositionStyle
+          className="rounded border bg-card px-2 py-1"
+        >
+          <strong>+{tooltipData.amount} XP</strong>
+          <div className="text-muted-foreground text-sm">
+            {new Date(tooltipData.createdAt).toLocaleDateString()}
           </div>
         </TooltipInPortal>
       )}
