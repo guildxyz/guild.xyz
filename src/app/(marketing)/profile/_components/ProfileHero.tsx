@@ -42,25 +42,26 @@ export const ProfileHero = () => {
             </Card>
           </EditProfile>
         </ProfileOwnerGuard>
-        <div className="relative mb-6 flex size-48 items-center justify-center md:size-56">
+        <div className="relative mb-6 flex size-44 items-center justify-center md:size-56">
           <CircularProgressBar
             progress={progress}
             color={rank.color}
+            strokeWidth={5}
             className="absolute inset-0 size-full"
           />
-          <Avatar className="flex size-40 items-center justify-center rounded-full border-2 md:size-48">
+          <Avatar className="flex size-40 items-center justify-center rounded-full border md:size-48">
             <ProfileAvatar
               username={profile.username}
               profileImageUrl={profile.profileImageUrl}
             />
           </Avatar>
-          <div className="-translate-x-1/4 -translate-y-1/4 absolute right-0 bottom-0 flex size-12 items-center justify-center">
+          <div className="absolute right-2 bottom-2 flex size-10 items-center justify-center md:right-3 md:bottom-3 md:size-12">
             <Polygon
               sides={rank.polygonCount}
               color={rank.color}
               className="brightness-75"
             />
-            <span className="absolute font-bold font-display text-xl tracking-tight">
+            <span className="-mt-0.5 absolute font-bold font-display text-lg tracking-tight md:text-xl">
               {levelIndex}
             </span>
           </div>
