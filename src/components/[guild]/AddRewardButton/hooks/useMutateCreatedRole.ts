@@ -19,8 +19,14 @@ const useMutateCreatedRole = () => {
   ) => {
     const completeRole = {
       ...createdRole,
-      requirements: createdRequirements,
-      rolePlatforms: createdRolePlatforms,
+      requirements:
+        createdRequirements.length > 0
+          ? createdRequirements
+          : createdRole.requirements,
+      rolePlatforms:
+        createdRolePlatforms.length > 0
+          ? createdRolePlatforms
+          : createdRole.rolePlatforms,
     }
 
     mutateYourGuilds((prev) => mutateGuildsCache(prev, guildId), {
@@ -58,7 +64,7 @@ const useMutateCreatedRole = () => {
 
     mutateOptionalAuthSWRKey(
       `/v2/guilds/${guildId}/roles/${createdRole.id}/requirements`,
-      () => createdRequirements,
+      () => completeRole.requirements,
       { revalidate: false }
     )
   }
