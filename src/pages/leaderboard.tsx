@@ -140,4 +140,3 @@ const getStaticProps: GetStaticProps = async () => {
 }
 
 export default Page
-export { getStaticProps }

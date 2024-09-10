@@ -11,10 +11,9 @@ import {
 import { env } from "env"
 import { unstable_serialize as infinite_unstable_serialize } from "swr/infinite"
 import { SearchParams } from "types"
-import { Explorer } from "./_components/Explorer"
-import { ExplorerSWRProvider } from "./_components/ExplorerSWRProvider"
-import { HeaderBackground } from "./_components/HeaderBackground"
 import { ActiveSection } from "./types"
+// Added imports from client.tsx
+import { Explorer, ExplorerSWRProvider, HeaderBackground } from "./components"
 
 export const metadata = {
   icons: {
