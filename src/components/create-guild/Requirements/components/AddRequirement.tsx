@@ -319,6 +319,7 @@ const AddRequirementForm = forwardRef(
   }
 )
 
+const DISABLED_REQUIREMENTS: RequirementType[] = ["GUILD_SNAPSHOT", "PAYMENT"]
 const AddRequirementHome = forwardRef(
   ({ setSelectedType, providerTypesOnly }: any, ref: any) => {
     const { featureFlags } = useGuild()
@@ -341,9 +342,7 @@ const AddRequirementHome = forwardRef(
           {general
             .filter(
               (req) =>
-                req.types[0] !== "GUILD_SNAPSHOT" &&
-                (!!featureFlags.includes("PAYMENT_REQUIREMENT") ||
-                  req.types[0] !== "PAYMENT") &&
+                !DISABLED_REQUIREMENTS.includes(req.types[0]) &&
                 (providerTypesOnly
                   ? req.types.some((el) => PROVIDER_TYPES.includes(el))
                   : true)
