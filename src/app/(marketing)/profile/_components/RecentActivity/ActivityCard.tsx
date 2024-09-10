@@ -1,6 +1,7 @@
 "use client"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
+import { Badge } from "@/components/ui/Badge"
 import { Card } from "@/components/ui/Card"
 import { cn } from "@/lib/utils"
 import { Guild } from "@guildxyz/types"
@@ -61,6 +62,11 @@ export const ActivityCard = ({ activity }: { activity: ActivityLogAction }) => {
       <div className="px-5 py-6">
         <h3 className="space-x-1.5 font-bold">
           <ProfileActionLabel activity={activity} />
+          {activity.xpAmount && (
+            <Badge colorScheme="blue" size="sm" className="align-text-top">
+              +{activity.xpAmount} XP
+            </Badge>
+          )}
         </h3>
         <div className="mt-1 flex flex-wrap items-center gap-2">
           <ClientOnly>

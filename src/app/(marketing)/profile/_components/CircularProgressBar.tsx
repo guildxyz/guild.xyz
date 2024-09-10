@@ -38,7 +38,10 @@ export const CircularProgressBar: React.FC<CircularProgressBarProps> = ({
         strokeWidth={strokeWidth}
       />
       <circle
-        className={cn("transition-all", { "stroke-primary": !color })}
+        className={cn("transition-all ease-out", {
+          "stroke-primary": !color,
+        })}
+        style={{ transitionDuration: "3.33s" }}
         cx={size / 2}
         cy={size / 2}
         r={radius}

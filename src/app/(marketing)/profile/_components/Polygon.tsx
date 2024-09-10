@@ -13,17 +13,19 @@ export const Polygon = ({ sides, color, className }: PolygonProps) => {
   const points = Array.from({ length: sides }, (_, i) => {
     const x = 50 + radius * Math.cos(i * angleStep)
     const y = 50 + radius * Math.sin(i * angleStep)
-    return `${x},${y}`
+    return [x, y].map((coord) => coord.toFixed(7)).join(",")
   }).join(" ")
 
   return (
     <svg viewBox={"0 0 100 100"} className={className}>
       <polygon
-        className={cn({ "fill-primary stroke-primary": !color })}
+        className={cn("-rotate-90 origin-center", {
+          "fill-primary stroke-primary": !color,
+        })}
         points={points}
         stroke={color}
         fill={color}
-        strokeWidth="22"
+        strokeWidth="24"
         strokeLinejoin="round"
       />
     </svg>
