@@ -1,4 +1,3 @@
-import {} from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { ReactNode } from "react"
 import { CardWarningComponentBase } from "rewards/components/CardWarningComponentBase"
