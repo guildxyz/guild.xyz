@@ -313,7 +313,11 @@ const useConnect = (useSubmitOptions?: UseSubmitOptions, isAutoConnect = false) 
         const [, addressOrDomain] = toastError.match(
           /^Before connecting your (?:.*?) account, please disconnect it from this address: (.*?)$/
         )
-        showPlatformMergeAlert({ addressOrDomain, platformName })
+        showPlatformMergeAlert({
+          addressOrDomain,
+          platformName,
+          onConnect: useSubmitOptions?.onSuccess,
+        })
       } else {
         showErrorToast(
           toastError

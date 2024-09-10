@@ -37,6 +37,11 @@ const PlatformMergeErrorAlert = () => {
           socialAccountName
         )} account successfully disconnected from old address, and connected to this one`,
       })
+
+      if (typeof state !== "boolean") {
+        state?.onConnect?.()
+      }
+
       setState(false)
     },
     undefined,
