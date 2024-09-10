@@ -19,7 +19,6 @@ import useMembership, {
 } from "components/explorer/hooks/useMembership"
 import { useMemo, useState } from "react"
 import rewards from "rewards"
-import GoogleCardWarning from "rewards/Google/GoogleCardWarning"
 import rewardComponents from "rewards/components"
 import { PlatformType, RolePlatform } from "types"
 import capitalize from "utils/capitalize"
@@ -121,20 +120,10 @@ const Reward = ({ role, platform, withLink, isLinkColorful }: RewardProps) => {
         </>
       }
       rightElement={
-        <>
-          <Visibility
-            visibilityRoleId={platform.visibilityRoleId}
-            entityVisibility={platform.visibility}
-          />
-
-          {platform.guildPlatform?.platformId === PlatformType.GOOGLE && (
-            <GoogleCardWarning
-              guildPlatform={platform.guildPlatform}
-              roleMemberCount={role.memberCount}
-              size="sm"
-            />
-          )}
-        </>
+        <Visibility
+          visibilityRoleId={platform.visibilityRoleId}
+          entityVisibility={platform.visibility}
+        />
       }
     />
   )
