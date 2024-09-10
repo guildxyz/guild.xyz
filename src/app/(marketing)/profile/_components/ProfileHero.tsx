@@ -7,9 +7,8 @@ import { Avatar } from "@/components/ui/Avatar"
 import { Button } from "@/components/ui/Button"
 import { Card } from "@/components/ui/Card"
 import { Pencil } from "@phosphor-icons/react"
-import { MAX_LEVEL, MAX_XP, RANKS } from "../[username]/constants"
 import { ProfileOwnerGuard } from "../_components/ProfileOwnerGuard"
-import { useExperiences } from "../_hooks/useExperiences"
+import { useExperienceProgression } from "../_hooks/useExperienceProgression"
 import { useProfile } from "../_hooks/useProfile"
 import { CircularProgressBar } from "./CircularProgressBar"
 import { EditProfile } from "./EditProfile/EditProfile"
@@ -17,40 +16,12 @@ import { Polygon } from "./Polygon"
 import { ProfileHeroSkeleton } from "./ProfileSkeleton"
 import { ProfileSocialCounters } from "./ProfileSocialCounters"
 
-const generateExponentialArray = (
-  steps: number,
-  sum: number,
-  exponent: number
-): number[] => {
-  const baseSum = (Math.pow(exponent, steps) - 1) / (exponent - 1)
-  const scaleFactor = sum / baseSum
-  return Array.from({ length: steps }, (_, i) => Math.pow(exponent, i) * scaleFactor)
-}
-
-export const calculateXpProgression = ({
-  experienceCount,
-}: { experienceCount: number }) => {
-  const levels = [...generateExponentialArray(MAX_LEVEL, MAX_XP, 1.03)]
-  const levelIndex = levels.findIndex((level) => experienceCount < level)
-  const levelInRank = Math.floor(MAX_LEVEL / RANKS.length)
-  const level = levels[levelIndex]
-  const rankIndex = Math.max(0, (levelIndex - 1) % levelInRank)
-  const rank = RANKS.at(rankIndex)
-  if (!rank) throw new Error("failed to calculate rank")
-  const nextLevel = levels.at(levelIndex + 1)
-  const progress = nextLevel ? experienceCount / nextLevel || 0 : 0
-  console.log({ progress, rank, levelIndex, level, experienceCount, levels })
-  return { progress, rank, levelIndex }
-}
-
 export const ProfileHero = () => {
   const { data: profile } = useProfile()
-  const { data: experienceCount } = useExperiences({ count: true })
-  const { rank, progress, levelIndex } = calculateXpProgression({
-    experienceCount,
-  })
+  const progression = useExperienceProgression()
 
-  if (!profile || !rank) return <ProfileHeroSkeleton />
+  if (!profile || !progression) return <ProfileHeroSkeleton />
+  const { rank, levelIndex, progress } = progression
 
   return (
     <LayoutContainer>

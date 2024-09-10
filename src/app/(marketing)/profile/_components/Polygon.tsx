@@ -13,7 +13,7 @@ export const Polygon = ({ sides, color, className }: PolygonProps) => {
   const points = Array.from({ length: sides }, (_, i) => {
     const x = 50 + radius * Math.cos(i * angleStep)
     const y = 50 + radius * Math.sin(i * angleStep)
-    return [x, y].map((coord) => coord.toFixed(7)).join(",")
+    return [x, y].map((coord) => coord.toFixed(5)).join(",")
   }).join(" ")
 
   return (
