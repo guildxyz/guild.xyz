@@ -14,21 +14,25 @@ const generateExponentialArray = (
 export const calculateXpProgression = ({
   experienceCount,
 }: { experienceCount: number }) => {
+  experienceCount = Math.min(experienceCount, MAX_XP)
   const levels = [...generateExponentialArray(MAX_LEVEL, MAX_XP, 1.03)]
   const levelIndex = Math.max(
     0,
     levels.findIndex((level) => experienceCount < level)
   )
+  const level = levels.at(levelIndex)
   const levelInRank = Math.floor(MAX_LEVEL / RANKS.length)
   const rankIndex = Math.max(0, (levelIndex - 1) % levelInRank)
   const rank = RANKS.at(rankIndex)
-  if (!rank) throw new Error("failed to calculate rank")
+  if (!rank || !level) throw new Error("failed to calculate rank")
   const nextLevel = levels.at(levelIndex + 1)
   const progress = nextLevel ? experienceCount / nextLevel || 0 : 0
-  return { progress, rank, levelIndex }
+  return { progress, rank, levelIndex, experienceCount, level }
 }
 
-export const useExperienceProgression = () => {
-  const { data: experienceCount } = useExperiences(true)
-  return experienceCount && calculateXpProgression({ experienceCount })
+export const useExperienceProgression = (showOwnProfile?: boolean) => {
+  const { data: experienceCount } = useExperiences({ showOwnProfile, count: true })
+  return typeof experienceCount === "number"
+    ? calculateXpProgression({ experienceCount })
+    : undefined
 }

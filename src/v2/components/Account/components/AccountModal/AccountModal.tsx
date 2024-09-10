@@ -1,6 +1,8 @@
 import { CheckMark } from "@/components/CheckMark"
+import { CircularProgressBar } from "@/components/CircularProgressBar"
 import { CopyableAddress } from "@/components/CopyableAddress"
 import { GuildAvatar } from "@/components/GuildAvatar"
+import { Polygon } from "@/components/Polygon"
 import { ProfileAvatar } from "@/components/ProfileAvatar"
 import { accountModalAtom } from "@/components/Providers/atoms"
 import useConnectorNameAndIcon from "@/components/Web3ConnectionManager/hooks/useConnectorNameAndIcon"
@@ -26,6 +28,7 @@ import {
 import { Separator } from "@/components/ui/Separator"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip"
 import { useUserPublic } from "@/hooks/useUserPublic"
+import { useExperienceProgression } from "@app/(marketing)/profile/_hooks/useExperienceProgression"
 import { ArrowRight, DotsThreeVertical } from "@phosphor-icons/react"
 import { SignOut } from "@phosphor-icons/react/dist/ssr"
 import useUser from "components/[guild]/hooks/useUser"
@@ -48,6 +51,7 @@ const AccountModal = () => {
 
   const { address: evmAddress, chainId } = useAccount()
   const domain = useResolveAddress(evmAddress)
+  const progression = useExperienceProgression(true)
 
   const handleLogout = () => {
     const keysToRemove = Object.keys({ ...window.localStorage }).filter((key) =>
@@ -81,12 +85,34 @@ const AccountModal = () => {
             <>
               {guildProfile ? (
                 <div className="mb-8 flex gap-3">
-                  <Avatar size="2xl" className="mr-2 self-center border-2">
-                    <ProfileAvatar
-                      username={guildProfile.username}
-                      profileImageUrl={guildProfile.profileImageUrl}
-                    />
-                  </Avatar>
+                  {progression && (
+                    <div className="relative mr-2 flex aspect-square items-center justify-center">
+                      <CircularProgressBar
+                        progress={progression.progress}
+                        color={progression.rank.color}
+                        className="absolute inset-0 size-full"
+                      />
+                      <Avatar
+                        size="2xl"
+                        className="m-2 flex items-center justify-center rounded-full border-2"
+                      >
+                        <ProfileAvatar
+                          username={guildProfile.username}
+                          profileImageUrl={guildProfile.profileImageUrl}
+                        />
+                      </Avatar>
+                      <div className="absolute right-0 bottom-0 flex size-8 items-center justify-center">
+                        <Polygon
+                          sides={progression.rank.polygonCount}
+                          color={progression.rank.color}
+                          className="brightness-75"
+                        />
+                        <span className="absolute font-bold font-display text-sm">
+                          {progression.levelIndex}
+                        </span>
+                      </div>
+                    </div>
+                  )}
                   <div className="flex w-full flex-col">
                     <h3 className=" flex items-center font-bold">
                       <span className="max-w-52 truncate">
@@ -95,7 +121,9 @@ const AccountModal = () => {
                       <CheckMark className="ml-0.5 inline-block fill-yellow-500" />
                     </h3>
                     <div className="text-muted-foreground text-sm">
-                      @{guildProfile.username}
+                      {progression
+                        ? `${progression.experienceCount} / ${Math.ceil(progression.level)} XP`
+                        : `@${guildProfile.username}`}
                     </div>
                     <div className="mt-2 flex gap-1.5">
                       <Anchor
