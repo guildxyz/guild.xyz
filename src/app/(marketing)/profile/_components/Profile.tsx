@@ -51,7 +51,6 @@ export const Profile = () => {
               <ProgressRoot>
                 <ProgressIndicator
                   value={xp.progress}
-                  // className="h-full w-full flex-1 rounded-r-full transition-all"
                   style={{ background: xp.rank.color }}
                 />
               </ProgressRoot>
