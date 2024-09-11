@@ -12,7 +12,7 @@ type TooltipData = Schemas["Experience"]
 const verticalMargin = 0
 
 const getX = (xp: Schemas["Experience"]) => xp.id.toString()
-const getY = (xp: Schemas["Experience"]) => xp.amount + 4
+const getY = (xp: Schemas["Experience"]) => xp.amount
 
 export type BarsProps = {
   width: number
@@ -52,7 +52,7 @@ export const ActivityChart = ({ width, height }: BarsProps) => {
   const xScale = useMemo(
     () =>
       scaleBand<string>({
-        range: [0, xMax],
+        range: [0, Math.min(data.length * 18, xMax)],
         round: true,
         domain: data.map(getX),
         padding: 0.4,
@@ -94,7 +94,7 @@ export const ActivityChart = ({ width, height }: BarsProps) => {
             const barY = yMax - barHeight
             return (
               <Bar
-                ry={3}
+                ry={4}
                 key={xp.id}
                 x={barX}
                 y={barY}

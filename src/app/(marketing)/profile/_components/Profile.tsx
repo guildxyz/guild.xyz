@@ -76,7 +76,7 @@ export const Profile = () => {
               <h3 className="font-bold">Engagement this month</h3>
             </div>
             <ParentSize>
-              {({ width }) => <ActivityChart width={width} height={32} />}
+              {({ width }) => <ActivityChart width={width} height={42} />}
             </ParentSize>
           </Card>
         </div>
