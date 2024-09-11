@@ -55,7 +55,6 @@ export const RecentActivity = () => {
     profile.data?.userId &&
     new URLSearchParams([
       ["username", profile.data.username],
-      ["userId", profile.data.userId.toString()],
       ["limit", "20"],
       ["offset", "0"],
       ...FILTER_ACTIONS[activityFilter].map((action) => ["action", action]),
