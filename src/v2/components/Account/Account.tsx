@@ -1,9 +1,9 @@
 "use client"
 
 import { CircularProgressBar } from "@/components/CircularProgressBar"
-import { Polygon } from "@/components/Polygon"
 import { useDisclosure } from "@/hooks/useDisclosure"
 import { cn } from "@/lib/utils"
+import { LevelBadge } from "@app/(marketing)/profile/_components/LevelBadge"
 import { useExperienceProgression } from "@app/(marketing)/profile/_hooks/useExperienceProgression"
 import { Bell } from "@phosphor-icons/react"
 import { SignIn } from "@phosphor-icons/react/dist/ssr"
@@ -33,7 +33,7 @@ export const Account = () => {
   const { addresses, guildProfile, isLoading } = useUser()
   const linkedAddressesCount = (addresses?.length ?? 1) - 1
   const { captureEvent } = usePostHogContext()
-  const progression = useExperienceProgression(true)
+  const xp = useExperienceProgression(true)
 
   if (isLoading || isWeb3Connected === null) {
     return (
@@ -86,11 +86,11 @@ export const Account = () => {
         {guildProfile ? (
           <div className="flex items-center gap-2">
             <div className="relative p-1">
-              {progression && (
+              {xp && (
                 <CircularProgressBar
                   className="absolute inset-0 size-full"
-                  progress={progression.progress}
-                  color={progression.rank.color}
+                  progress={xp.progress}
+                  color={xp.rank.color}
                 />
               )}
               <Avatar size="sm">
@@ -105,23 +105,12 @@ export const Account = () => {
                 {guildProfile.name || guildProfile.username}
               </div>
               <div className="text-muted-foreground text-xs">
-                {progression
-                  ? `${progression.experienceCount} / ${Math.ceil(progression.level)} XP`
+                {xp
+                  ? `${xp.experienceCount} / ${Math.ceil(xp.level)} XP`
                   : `@${guildProfile.username}`}
               </div>
             </div>
-            {progression && (
-              <div className="flex size-7 items-center justify-center">
-                <Polygon
-                  sides={progression.rank.polygonCount}
-                  color={progression.rank.color}
-                  className="brightness-75"
-                />
-                <span className="absolute font-display font-extrabold text-xs">
-                  {progression.levelIndex}
-                </span>
-              </div>
-            )}
+            {xp && <LevelBadge levelIndex={xp.levelIndex} rank={xp.rank} />}
           </div>
         ) : (
           <div className="flex items-center gap-3">

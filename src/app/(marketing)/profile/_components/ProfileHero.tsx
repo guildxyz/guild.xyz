@@ -3,7 +3,6 @@
 import { CheckMark } from "@/components/CheckMark"
 import { CircularProgressBar } from "@/components/CircularProgressBar"
 import { LayoutContainer } from "@/components/Layout"
-import { Polygon } from "@/components/Polygon"
 import { ProfileAvatar } from "@/components/ProfileAvatar"
 import { Avatar } from "@/components/ui/Avatar"
 import { Button } from "@/components/ui/Button"
@@ -13,15 +12,16 @@ import { ProfileOwnerGuard } from "../_components/ProfileOwnerGuard"
 import { useExperienceProgression } from "../_hooks/useExperienceProgression"
 import { useProfile } from "../_hooks/useProfile"
 import { EditProfile } from "./EditProfile/EditProfile"
+import { LevelBadge } from "./LevelBadge"
 import { ProfileHeroSkeleton } from "./ProfileSkeleton"
 import { ProfileSocialCounters } from "./ProfileSocialCounters"
 
 export const ProfileHero = () => {
   const { data: profile } = useProfile()
-  const progression = useExperienceProgression()
+  const xp = useExperienceProgression()
 
-  if (!profile || !progression) return <ProfileHeroSkeleton />
-  const { rank, levelIndex, progress } = progression
+  if (!profile || !xp) return <ProfileHeroSkeleton />
+  const { rank, levelIndex, progress } = xp
 
   return (
     <LayoutContainer>
@@ -55,16 +55,12 @@ export const ProfileHero = () => {
               profileImageUrl={profile.profileImageUrl}
             />
           </Avatar>
-          <div className="absolute right-2 bottom-2 flex size-10 items-center justify-center md:right-3 md:bottom-3 md:size-12">
-            <Polygon
-              sides={rank.polygonCount}
-              color={rank.color}
-              className="brightness-75"
-            />
-            <span className="-mt-0.5 absolute font-bold font-display text-lg tracking-tight md:text-xl">
-              {levelIndex}
-            </span>
-          </div>
+          <LevelBadge
+            size="lg"
+            levelIndex={levelIndex}
+            rank={rank}
+            className="absolute right-2 bottom-2 md:right-3 md:bottom-3"
+          />
         </div>
         <h1 className="break-all text-center font-extrabold text-3xl leading-tight tracking-tight md:text-4xl">
           {profile.name || profile.username}

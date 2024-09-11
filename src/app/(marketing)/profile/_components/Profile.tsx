@@ -1,5 +1,4 @@
 "use client"
-import { Polygon } from "@/components/Polygon"
 import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { Card } from "@/components/ui/Card"
 import { cn } from "@/lib/utils"
@@ -15,6 +14,7 @@ import { useExperienceProgression } from "../_hooks/useExperienceProgression"
 import { useProfile } from "../_hooks/useProfile"
 import { useReferredUsers } from "../_hooks/useReferredUsers"
 import { ActivityChart } from "./ActivityChart"
+import { LevelBadge } from "./LevelBadge"
 import { ProfileMainSkeleton } from "./ProfileSkeleton"
 import { RecentActivity } from "./RecentActivity/RecentActivity"
 import RecentActivityFallback from "./RecentActivity/RecentActivityFallback"
@@ -35,15 +35,7 @@ export const Profile = () => {
         <SectionTitle>Experience</SectionTitle>
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
           <Card className="flex gap-4 p-6">
-            <Polygon
-              color={xp.rank.color}
-              sides={xp.rank.polygonCount}
-              className="size-12"
-            />
-            {/*<LevelBadge
-                level={level}
-                className="row-span-3 size-14 self-start justify-self-center"
-              />*/}
+            <LevelBadge levelIndex={xp.levelIndex} rank={xp.rank} size="lg" />
             <div className="flex w-full flex-col gap-2">
               <div className="flex flex-col justify-between gap-2 sm:flex-row">
                 <h3 className="font-bold capitalize">{xp.rank.title}</h3>
@@ -64,11 +56,7 @@ export const Profile = () => {
                   }}
                 />
               </Progress>
-              <Progress value={xp.progress * 100} color={xp.rank.color} />
-              {/*<p className="text-muted-foreground">
-                This is a description that perfectly matches the 80 character
-                description limit.
-              </p>*/}
+              {/*<Progress value={xp.progress * 100} color={xp.rank.color} />*/}
             </div>
           </Card>
           <Card className="space-y-4 p-6">
