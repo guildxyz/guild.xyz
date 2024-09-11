@@ -6,6 +6,7 @@ import { scaleBand, scaleLinear } from "@visx/scale"
 import { Bar } from "@visx/shape"
 import { useTooltip, useTooltipInPortal } from "@visx/tooltip"
 import { useMemo } from "react"
+import { useExperienceProgression } from "../_hooks/useExperienceProgression"
 import { useExperiences } from "../_hooks/useExperiences"
 
 type TooltipData = Schemas["Experience"]
@@ -22,6 +23,7 @@ export type BarsProps = {
 let tooltipTimeout: number
 export const ActivityChart = ({ width, height }: BarsProps) => {
   const { data: rawData } = useExperiences({ count: false })
+  const xp = useExperienceProgression()
   if (!rawData) return <Skeleton style={{ width, height }} />
   if (rawData.length === 0)
     return <p className="text-muted-foreground">There are no activity this month</p>
@@ -88,21 +90,21 @@ export const ActivityChart = ({ width, height }: BarsProps) => {
     <div className="relative">
       <svg width={width} height={height} ref={containerRef}>
         <Group top={verticalMargin / 2}>
-          {data.map((xp) => {
-            const x = getX(xp)
+          {data.map((currentXp) => {
+            const x = getX(currentXp)
             const barWidth = xScale.bandwidth()
-            const barHeight = yMax - (yScale(getY(xp)) ?? 0)
+            const barHeight = yMax - (yScale(getY(currentXp)) ?? 0)
             const barX = xScale(x)
             const barY = yMax - barHeight
             return (
               <Bar
                 ry={4}
-                key={xp.id}
+                key={currentXp.id}
                 x={barX}
                 y={barY}
                 width={barWidth}
                 height={barHeight}
-                fill="hsl(var(--primary))"
+                fill={xp?.rank.color}
                 onMouseLeave={() => {
                   tooltipTimeout = window.setTimeout(() => {
                     hideTooltip()
@@ -113,7 +115,7 @@ export const ActivityChart = ({ width, height }: BarsProps) => {
                   const eventSvgCoords = localPoint(event)
                   const left = (barX || 0) + barWidth / 2
                   showTooltip({
-                    tooltipData: xp,
+                    tooltipData: currentXp,
                     tooltipTop: eventSvgCoords?.y,
                     tooltipLeft: left,
                   })
@@ -129,10 +131,10 @@ export const ActivityChart = ({ width, height }: BarsProps) => {
           left={tooltipLeft}
           unstyled
           applyPositionStyle
-          className="rounded border bg-card px-2 py-1"
+          className="rounded border bg-card px-2 py-1 text-sm"
         >
           <strong>+{tooltipData.amount} XP</strong>
-          <div className="text-muted-foreground text-sm">
+          <div className="text-muted-foreground">
             {new Date(tooltipData.createdAt).toLocaleDateString()}
           </div>
         </TooltipInPortal>

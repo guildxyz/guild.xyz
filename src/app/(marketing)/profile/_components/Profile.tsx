@@ -31,18 +31,20 @@ export const Profile = () => {
 
   return (
     <>
-      <div className="mb-16 flex flex-col gap-4">
-        <SectionTitle>Experience</SectionTitle>
+      <div className="mb-12">
+        <div data-theme="dark" className="mb-3">
+          <SectionTitle>Experience</SectionTitle>
+        </div>
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-          <Card className="flex gap-4 p-6">
+          <Card className="flex items-center gap-4 p-6">
             <LevelBadge
               levelIndex={xp.levelIndex}
               rank={xp.rank}
               size="lg"
               className=""
             />
-            <div className="flex grow flex-col gap-2">
-              <div className="flex flex-col justify-between gap-2 sm:flex-row">
+            <div className="-mt-1 flex grow flex-col gap-2">
+              <div className="flex flex-col justify-between sm:flex-row">
                 <h3 className="font-bold capitalize">{xp.rank.title}</h3>
                 <p className="text-muted-foreground">
                   {`${xp.experienceCount} / ${xp.level} XP`}
@@ -56,17 +58,21 @@ export const Profile = () => {
               </ProgressRoot>
             </div>
           </Card>
-          <Card className="space-y-4 p-6">
+          <Card className="space-y-3 p-6 pt-5">
             <div className="flex flex-col items-start justify-between gap-2 sm:flex-row">
               <h3 className="font-bold">Engagement this month</h3>
             </div>
-            <ParentSize>
-              {({ width }) => <ActivityChart width={width} height={42} />}
-            </ParentSize>
+            <div className="h-7">
+              <ParentSize>
+                {({ width, height }) => (
+                  <ActivityChart width={width} height={height} />
+                )}
+              </ParentSize>
+            </div>
           </Card>
         </div>
       </div>
-      <div className="mb-3 flex items-center justify-between" data-theme="dark">
+      <div className="mb-3 flex items-center justify-between">
         <SectionTitle>Top contributions</SectionTitle>
         <ProfileOwnerGuard>
           <EditContributions />
@@ -90,7 +96,7 @@ export const Profile = () => {
           <ContributionCard contribution={contribution} key={contribution.id} />
         ))}
       </div>
-      <div className="mt-16">
+      <div className="mt-14">
         <SectionTitle className="mb-3">Recent activity</SectionTitle>
         {isWeb3Connected ? <RecentActivity /> : <RecentActivityFallback />}
       </div>
