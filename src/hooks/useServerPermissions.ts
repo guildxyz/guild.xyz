@@ -1,4 +1,5 @@
 import { REQUIRED_PERMISSIONS } from "components/[guild]/DiscordBotPermissionsChecker"
+import { SWRConfiguration } from "swr"
 import useSWRImmutable from "swr/immutable"
 import fetcher from "utils/fetcher"
 
@@ -47,19 +48,24 @@ function mapPermissions(permissions: PermissionsResponse) {
   }
 }
 
-export default function useServerPermissions(serverId: string, shouldFetch = true) {
-  const shouldFetchFinal = shouldFetch && serverId?.length > 0
+export default function useServerPermissions(
+  serverId: string,
+  config: SWRConfiguration & { shouldFetch?: boolean } = { shouldFetch: undefined }
+) {
+  const { shouldFetch, ...swrConfig } = config
+  const shouldFetchFinal =
+    (typeof shouldFetch === "undefined" || shouldFetch) && serverId?.length > 0
   const { data, error, isLoading, isValidating, mutate } = useSWRImmutable<
     ReturnType<typeof mapPermissions>
   >(
     shouldFetchFinal ? `/v2/discord/servers/${serverId}/permissions` : null,
     (url) => fetcher(url).then(mapPermissions),
-    { shouldRetryOnError: false, revalidateOnMount: false }
+    { shouldRetryOnError: false, revalidateOnMount: false, ...swrConfig }
   )
 
   return {
     permissions: data,
-    rolePrders: data?.roleOrders,
+    roleOrders: data?.roleOrders,
     error,
     isLoading,
     isValidating,

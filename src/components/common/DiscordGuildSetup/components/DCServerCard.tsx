@@ -33,7 +33,7 @@ const DCServerCard = ({
     isValidating,
     permissions: existingPermissions,
     error,
-  } = useServerPermissions(serverData?.id, !isUsedInCurrentGuild)
+  } = useServerPermissions(serverData?.id, { shouldFetch: !isUsedInCurrentGuild })
 
   const onSelect = async () => {
     try {
