@@ -31,8 +31,10 @@ export const Profile = () => {
 
   return (
     <>
-      <div className="mb-16 flex flex-col gap-4">
-        <SectionTitle>Experience</SectionTitle>
+      <div className="mb-16">
+        <div data-theme="dark" className="mb-3">
+          <SectionTitle>Experience</SectionTitle>
+        </div>
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
           <Card className="flex gap-4 p-6">
             <LevelBadge
@@ -66,7 +68,7 @@ export const Profile = () => {
           </Card>
         </div>
       </div>
-      <div className="mb-3 flex items-center justify-between" data-theme="dark">
+      <div className="mb-3 flex items-center justify-between">
         <SectionTitle>Top contributions</SectionTitle>
         <ProfileOwnerGuard>
           <EditContributions />
