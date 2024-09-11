@@ -8,16 +8,13 @@ import { PlatformName, PlatformType } from "types"
 import PlatformAccessButton from "./PlatformAccessButton"
 
 const AccessedGuildPlatformCard = () => {
-  const rolePlatform = useRolePlatform()
+  const { guildPlatform } = useRolePlatform()
   const { isDetailed } = useGuild()
   const { isAdmin } = useGuildPermission()
 
   const rewardComponents =
-    rewardComponentsConfig[
-      PlatformType[rolePlatform.guildPlatform.platformId] as PlatformName
-    ]
-  const useCardProps =
-    cardPropsHooks[PlatformType[rolePlatform.guildPlatform.platformId]]
+    rewardComponentsConfig[PlatformType[guildPlatform.platformId] as PlatformName]
+  const useCardProps = cardPropsHooks[PlatformType[guildPlatform.platformId]]
 
   if (!rewardComponents || !useCardProps) return null
 
@@ -30,14 +27,12 @@ const AccessedGuildPlatformCard = () => {
   return (
     <PlatformCard
       usePlatformCardProps={useCardProps}
-      guildPlatform={rolePlatform.guildPlatform}
+      guildPlatform={guildPlatform}
       cornerButton={
         <>
           {PlatformCardWarning && <PlatformCardWarning />}
           {isAdmin && isDetailed && PlatformCardMenu && (
-            <PlatformCardMenu
-              platformGuildId={rolePlatform.guildPlatform.platformGuildId}
-            />
+            <PlatformCardMenu platformGuildId={guildPlatform.platformGuildId} />
           )}
         </>
       }
@@ -46,9 +41,9 @@ const AccessedGuildPlatformCard = () => {
       boxShadow="none"
     >
       {PlatformCardButton ? (
-        <PlatformCardButton platform={rolePlatform.guildPlatform} />
+        <PlatformCardButton platform={guildPlatform} />
       ) : (
-        <PlatformAccessButton platform={rolePlatform.guildPlatform} />
+        <PlatformAccessButton platform={guildPlatform} />
       )}
     </PlatformCard>
   )
