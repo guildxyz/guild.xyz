@@ -2,10 +2,11 @@
 
 import { schemas } from "@guildxyz/types"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { PropsWithChildren } from "react"
+import { PropsWithChildren, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import getRandomInt from "utils/getRandomInt"
 import { CreateGuildFormType } from "../types"
+import { CreateGuildStep, CreateGuildStepProvider } from "./CreateGuildStepContext"
 
 const defaultValues = {
   name: "",
@@ -35,14 +36,19 @@ const defaultValues = {
   ],
 } satisfies CreateGuildFormType
 
-const CreateGuildFormProvider = ({ children }: PropsWithChildren) => {
+const CreateGuildProvider = ({ children }: PropsWithChildren) => {
   const methods = useForm<CreateGuildFormType>({
     mode: "all",
     resolver: zodResolver(schemas.GuildCreationPayloadSchema),
     defaultValues,
   })
+  const [step, setStep] = useState<CreateGuildStep>("GENERAL_DETAILS")
 
-  return <FormProvider {...methods}>{children}</FormProvider>
+  return (
+    <CreateGuildStepProvider value={{ step, setStep }}>
+      <FormProvider {...methods}>{children}</FormProvider>
+    </CreateGuildStepProvider>
+  )
 }
 
-export { CreateGuildFormProvider }
+export { CreateGuildProvider }

@@ -1,15 +1,15 @@
 import { Header } from "@/components/Header"
 import { Layout, LayoutBanner, LayoutHero, LayoutMain } from "@/components/Layout"
 import svgToTinyDataUri from "mini-svg-data-uri"
-import { CreateGuildCard } from "./_components/CreateGuildCard"
-import { CreateGuildFormProvider } from "./_components/CreateGuildFormProvider"
+import CreateGuildContent from "./_components/CreateGuildContent"
+import { CreateGuildProvider } from "./_components/CreateGuildProvider"
 
 export const metadata = {
   title: "Begin your guild",
 }
 
 const Page = () => (
-  <CreateGuildFormProvider>
+  <CreateGuildProvider>
     <Layout>
       <div
         className="-z-10 absolute inset-0 opacity-40 dark:opacity-60"
@@ -29,11 +29,11 @@ const Page = () => (
         <Header />
       </LayoutHero>
 
-      <LayoutMain className="-top-40 sm:-top-36 max-w-lg px-0">
-        <CreateGuildCard />
+      <LayoutMain className="-top-40 sm:-top-36 px-0">
+        <CreateGuildContent />
       </LayoutMain>
     </Layout>
-  </CreateGuildFormProvider>
+  </CreateGuildProvider>
 )
 
 export default Page
