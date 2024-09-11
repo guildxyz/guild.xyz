@@ -119,7 +119,7 @@ const AccountModal = () => {
                     </h3>
                     <div className="text-muted-foreground text-sm">
                       {xp
-                        ? `${xp.experienceCount} / ${Math.ceil(xp.level)} XP`
+                        ? `${xp.experienceCount} / ${xp.level} XP`
                         : `@${guildProfile.username}`}
                     </div>
                     <div className="mt-2 flex gap-1.5">

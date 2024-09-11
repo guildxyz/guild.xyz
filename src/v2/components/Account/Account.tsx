@@ -106,7 +106,7 @@ export const Account = () => {
               </div>
               <div className="text-muted-foreground text-xs">
                 {xp
-                  ? `${xp.experienceCount} / ${Math.ceil(xp.level)} XP`
+                  ? `${xp.experienceCount} / ${xp.level} XP`
                   : `@${guildProfile.username}`}
               </div>
             </div>

@@ -45,7 +45,7 @@ export const Profile = () => {
               <div className="flex flex-col justify-between gap-2 sm:flex-row">
                 <h3 className="font-bold capitalize">{xp.rank.title}</h3>
                 <p className="text-muted-foreground">
-                  {`${xp.experienceCount} / ${Math.ceil(xp.level)} XP`}
+                  {`${xp.experienceCount} / ${xp.level} XP`}
                 </p>
               </div>
               <ProgressRoot>

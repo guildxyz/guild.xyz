@@ -14,7 +14,9 @@ const generateExponentialArray = (
 export const calculateXpProgression = ({
   experienceCount,
 }: { experienceCount: number }) => {
-  const levels = generateExponentialArray(MAX_LEVEL, MAX_XP, 1.03)
+  const levels = generateExponentialArray(MAX_LEVEL, MAX_XP, 1.03).map((num) =>
+    Math.floor(num)
+  )
   let levelIndex = levels.findIndex((level) => experienceCount < level)
   levelIndex = levelIndex === -1 ? levels.length - 1 : levelIndex
   const level = levels.at(levelIndex)
