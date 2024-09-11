@@ -10,7 +10,9 @@ import { ActivityLogAction } from "components/[guild]/activity/constants"
 import ClientOnly from "components/common/ClientOnly"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import useSWRImmutable from "swr/immutable"
-import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
+import formatRelativeTimeFromNow, {
+  MINUTE_IN_MS,
+} from "utils/formatRelativeTimeFromNow"
 import { useProfile } from "../../_hooks/useProfile"
 import { ProfileActionLabel } from "./ProfileActionLabel"
 
@@ -65,8 +67,13 @@ export const ActivityCard = ({ activity }: { activity: ActivityLogAction }) => {
         <div className="mt-1 flex flex-wrap items-center gap-2">
           <ClientOnly>
             <p className="text-muted-foreground">
-              {formatRelativeTimeFromNow(Date.now() - parseInt(activity.timestamp))}{" "}
-              ago
+              {(() => {
+                const since = Date.now() - parseInt(activity.timestamp)
+                const sinceMinutes = since / MINUTE_IN_MS
+                return sinceMinutes === 0
+                  ? "Just now"
+                  : `${formatRelativeTimeFromNow(since)} ago`
+              })()}
             </p>
           </ClientOnly>
         </div>
