@@ -8,11 +8,10 @@ export const useExperiences = <T extends boolean>({
   startTime,
 }: { count: T; showOwnProfile?: boolean; startTime?: number }) => {
   const { data: profile } = useProfile(showOwnProfile)
-  const oneMonthBeforeApprox = startTime && startTime - 86400 * 30
   const params = new URLSearchParams(
     [
       ["count", count && count.toString()],
-      ["startTime", oneMonthBeforeApprox && oneMonthBeforeApprox.toString()],
+      ["startTime", startTime && startTime.toString()],
     ].filter(([_, value]) => value) as string[][]
   )
   return useSWRImmutable<T extends true ? number : Schemas["Experience"][]>(

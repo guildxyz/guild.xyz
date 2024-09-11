@@ -21,21 +21,35 @@ export type BarsProps = {
 }
 
 let tooltipTimeout: number
-export const ActivityChart = ({ width, height }: BarsProps) => {
-  const { data: rawData } = useExperiences({ count: false })
+export const ActivityChartChildren = ({
+  width,
+  height,
+  rawData,
+}: BarsProps & {
+  rawData: Schemas["Experience"][]
+}) => {
+  const {
+    tooltipOpen,
+    tooltipLeft,
+    tooltipTop,
+    tooltipData,
+    hideTooltip,
+    showTooltip,
+  } = useTooltip<TooltipData>()
+
+  const { containerRef, TooltipInPortal } = useTooltipInPortal({
+    scroll: true,
+  })
   const xp = useExperienceProgression()
-  if (!rawData) return <Skeleton style={{ width, height }} />
-  if (rawData.length === 0)
-    return <p className="text-muted-foreground">There are no activity this month</p>
   const groupedData = new Map<number, Schemas["Experience"][]>()
-  for (const xp of rawData) {
-    const createdAt = new Date(xp.createdAt)
+  for (const rawXp of rawData) {
+    const createdAt = new Date(rawXp.createdAt)
     const commonDay = new Date(
       createdAt.getFullYear(),
       createdAt.getMonth(),
       createdAt.getDate()
     ).valueOf()
-    groupedData.set(commonDay, [...(groupedData.get(commonDay) ?? []), xp])
+    groupedData.set(commonDay, [...(groupedData.get(commonDay) ?? []), rawXp])
   }
   const data = [...groupedData.entries()]
     .reduce<Schemas["Experience"][]>((acc, [_, xpGroup]) => {
@@ -72,19 +86,6 @@ export const ActivityChart = ({ width, height }: BarsProps) => {
       }),
     [yMax]
   )
-
-  const {
-    tooltipOpen,
-    tooltipLeft,
-    tooltipTop,
-    tooltipData,
-    hideTooltip,
-    showTooltip,
-  } = useTooltip<TooltipData>()
-
-  const { containerRef, TooltipInPortal } = useTooltipInPortal({
-    scroll: true,
-  })
 
   return width < 10 ? null : (
     <div className="relative">
@@ -141,4 +142,12 @@ export const ActivityChart = ({ width, height }: BarsProps) => {
       )}
     </div>
   )
+}
+
+export const ActivityChart = ({ width, height }: BarsProps) => {
+  const { data: rawData } = useExperiences({ count: false })
+  if (!rawData) return <Skeleton style={{ width, height }} />
+  if (rawData.length === 0)
+    return <p className="text-muted-foreground">There are no activity this month</p>
+  return <ActivityChartChildren height={height} width={width} rawData={rawData} />
 }
