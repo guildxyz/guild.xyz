@@ -23,6 +23,8 @@ let tooltipTimeout: number
 export const ActivityChart = ({ width, height }: BarsProps) => {
   const { data: rawData } = useExperiences({ count: false })
   if (!rawData) return <Skeleton style={{ width, height }} />
+  if (rawData.length === 0)
+    return <p className="text-muted-foreground">There are no activity this month</p>
   const groupedData = new Map<number, Schemas["Experience"][]>()
   for (const xp of rawData) {
     const createdAt = new Date(xp.createdAt)
