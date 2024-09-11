@@ -159,12 +159,20 @@ const fetchPublicProfileData = async ({
   const guildsZipped = guildRequests.map(({ pathname }, i) => [pathname, guilds[i]])
   const rolesZipped = roleRequests.map(({ pathname }, i) => [pathname, roles[i]])
   const experiencesRequest = new URL(`/v2/profiles/${username}/experiences`, api)
-  const experiences = await ssrFetcher<Schemas["Experience"][]>(experiencesRequest)
+  const experiences = await ssrFetcher<Schemas["Experience"][]>(experiencesRequest, {
+    next: {
+      revalidate: 1200,
+    },
+  })
   const experienceCountRequest = new URL(
     `/v2/profiles/${username}/experiences?count=true`,
     api
   )
-  const experienceCount = await ssrFetcher<number>(experienceCountRequest)
+  const experienceCount = await ssrFetcher<number>(experienceCountRequest, {
+    next: {
+      revalidate: 1200,
+    },
+  })
 
   return {
     profile,
