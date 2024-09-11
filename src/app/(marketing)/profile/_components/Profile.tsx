@@ -35,8 +35,13 @@ export const Profile = () => {
         <SectionTitle>Experience</SectionTitle>
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
           <Card className="flex gap-4 p-6">
-            <LevelBadge levelIndex={xp.levelIndex} rank={xp.rank} size="lg" />
-            <div className="flex w-full flex-col gap-2">
+            <LevelBadge
+              levelIndex={xp.levelIndex}
+              rank={xp.rank}
+              size="lg"
+              className=""
+            />
+            <div className="flex grow flex-col gap-2">
               <div className="flex flex-col justify-between gap-2 sm:flex-row">
                 <h3 className="font-bold capitalize">{xp.rank.title}</h3>
                 <p className="text-muted-foreground">
