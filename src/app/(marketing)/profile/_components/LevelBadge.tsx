@@ -33,7 +33,9 @@ export const LevelBadge = ({
         color={rank.color}
         className="brightness-75"
       />
-      <span className="-mt-0.5 absolute font-bold font-display">{levelIndex}</span>
+      <span className="-mt-0.5 absolute font-bold font-display text-white">
+        {levelIndex}
+      </span>
     </div>
   )
 }
