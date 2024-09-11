@@ -1,45 +1,58 @@
 "use client"
 
-// React and related
-import { Suspense, PropsWithChildren, useEffect, useState, useRef, memo } from "react"
 import { useAtom, useAtomValue, useSetAtom } from "jotai"
+// React and related
+import {
+  PropsWithChildren,
+  Suspense,
+  memo,
+  useEffect,
+  useRef,
+  useState,
+} from "react"
 
+import Image from "next/image"
+import Link from "next/link"
 // Next.js
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import Link from "next/link"
-import Image from "next/image"
 
 // SWR
 import { SWRConfig, type SWRConfiguration } from "swr"
 import useSWRInfinite from "swr/infinite"
 
-// Custom hooks
-import useIsStuck from "hooks/useIsStuck"
-import useScrollspy from "hooks/useScrollSpy"
 import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { useYourGuilds } from "@/hooks/useYourGuilds"
 import useUser from "components/[guild]/hooks/useUser"
+import useDebouncedState from "hooks/useDebouncedState"
 import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import { useGetKeyForSWRWithOptionalAuth } from "hooks/useGetKeyForSWRWithOptionalAuth"
+// Custom hooks
+import useIsStuck from "hooks/useIsStuck"
 import { useScrollBatchedRendering } from "hooks/useScrollBatchedRendering"
-import useDebouncedState from "hooks/useDebouncedState"
+import useScrollspy from "hooks/useScrollSpy"
 
-// UI components
-import { Button, buttonVariants } from "@/components/ui/Button"
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/ToggleGroup"
 import { GuildCardSkeleton, GuildCardWithLink } from "@/components/GuildCard"
 import { Anchor } from "@/components/ui/Anchor"
+// UI components
+import { Button, buttonVariants } from "@/components/ui/Button"
 import { Card } from "@/components/ui/Card"
 import { Input } from "@/components/ui/Input"
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/ToggleGroup"
 
 // Icons
-import { Plus, MagnifyingGlass, PushPin, Sparkle, Spinner } from "@phosphor-icons/react"
+import {
+  MagnifyingGlass,
+  Plus,
+  PushPin,
+  Sparkle,
+  Spinner,
+} from "@phosphor-icons/react"
 
 // Utilities and types
 import { cn } from "@/lib/utils"
-import { SearchParams, GuildBase } from "types"
-import { ActiveSection } from "./types"
 import { env } from "env"
+import { GuildBase, SearchParams } from "types"
+import { ActiveSection } from "./types"
 
 // Atoms
 import { walletSelectorModalAtom } from "@/components/Providers/atoms"
@@ -126,48 +139,7 @@ const BATCH_SIZE = 24
 
 const GuildCardMemo = memo(GuildCardWithLink)
 
-const GuildCards = ({ guildData }: { guildData?: GuildBase[] }) => 
-  guildData?.length
-    ? guildData.map((data) => <GuildCardWithLink key={data.id} guildData={data} />)
-    : Array.from({ length: BATCH_SIZE }, (_, i) => <GuildCardSkeleton key={i} />)
-
-const useExploreGuilds = (searchParams?: SearchParams) => {
-  const { isSuperAdmin } = useUser()
-  const getKeyForSWRWithOptionalAuth = useGetKeyForSWRWithOptionalAuth()
-  const fetcherWithSign = useFetcherWithSign()
-  const options: SWRConfiguration = {
-    dedupingInterval: 60_000,
-  }
-
-  // sending authed request for superAdmins, so they can see unverified & hideFromExplorer guilds too
-  // @ts-expect-error TODO: resolve this type error
-  return useSWRInfinite<GuildBase[]>(
-    (pageIndex, previousPageData) => {
-      if (Array.isArray(previousPageData) && previousPageData.length !== BATCH_SIZE)
-        return null
-      const url = new URL("/v2/guilds", env.NEXT_PUBLIC_API)
-      const params: Record<string, string> = {
-        order: "FEATURED",
-        ...searchParams,
-        offset: (BATCH_SIZE * pageIndex).toString(),
-        limit: BATCH_SIZE.toString(),
-      }
-      for (const entry of Object.entries(params)) {
-        url.searchParams.set(...entry)
-      }
-
-      const urlString = url.pathname + url.search
-      if (isSuperAdmin) return getKeyForSWRWithOptionalAuth(urlString)
-      return urlString
-    },
-    isSuperAdmin ? fetcherWithSign : options,
-    isSuperAdmin ? options : null
-  )
-}
-
-const GuildInfiniteScroll = ({
-  searchParams,
-}: { searchParams: SearchParams }) => {
+const GuildInfiniteScroll = ({ searchParams }: { searchParams: SearchParams }) => {
   const search = searchParams.search
   const ref = useRef<HTMLElement>(null)
   const {
@@ -202,13 +174,53 @@ const GuildInfiniteScroll = ({
         className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
         ref={ref}
       >
-        <GuildCards guildData={renderedGuilds} />
+        {renderedGuilds?.length
+          ? renderedGuilds.map((data) => (
+              <GuildCardMemo key={data.id} guildData={data} />
+            ))
+          : Array.from({ length: BATCH_SIZE }, (_, i) => (
+              <GuildCardSkeleton key={i} />
+            ))}
       </section>
       <Spinner
         className="invisible mx-auto size-8 animate-spin data-[active=true]:visible"
         data-active={isValidating || isLoading}
       />
     </>
+  )
+}
+
+const useExploreGuilds = (searchParams?: SearchParams) => {
+  const { isSuperAdmin } = useUser()
+  const getKeyForSWRWithOptionalAuth = useGetKeyForSWRWithOptionalAuth()
+  const fetcherWithSign = useFetcherWithSign()
+  const options: SWRConfiguration = {
+    dedupingInterval: 60_000,
+  }
+
+  // sending authed request for superAdmins, so they can see unverified & hideFromExplorer guilds too
+  // @ts-expect-error TODO: resolve this type error
+  return useSWRInfinite<GuildBase[]>(
+    (pageIndex, previousPageData) => {
+      if (Array.isArray(previousPageData) && previousPageData.length !== BATCH_SIZE)
+        return null
+      const url = new URL("/v2/guilds", env.NEXT_PUBLIC_API)
+      const params: Record<string, string> = {
+        order: "FEATURED",
+        ...searchParams,
+        offset: (BATCH_SIZE * pageIndex).toString(),
+        limit: BATCH_SIZE.toString(),
+      }
+      for (const entry of Object.entries(params)) {
+        url.searchParams.set(...entry)
+      }
+
+      const urlString = url.pathname + url.search
+      if (isSuperAdmin) return getKeyForSWRWithOptionalAuth(urlString)
+      return urlString
+    },
+    isSuperAdmin ? fetcherWithSign : options,
+    isSuperAdmin ? options : null
   )
 }
 
@@ -385,8 +397,12 @@ const Explorer = ({ searchParams }: { searchParams: SearchParams }) => {
   )
 }
 
-const ExplorerSWRProvider = ({ children, value }: PropsWithChildren<{ value: SWRConfiguration }>) => 
+const ExplorerSWRProvider = ({
+  children,
+  value,
+}: PropsWithChildren<{ value: SWRConfiguration }>) => (
   <SWRConfig value={value}>{children}</SWRConfig>
+)
 
 const HeaderBackground = () => {
   const isNavStuck = useAtomValue(isNavStuckAtom)
@@ -406,15 +422,4 @@ const HeaderBackground = () => {
   )
 }
 
-export {
-  isNavStuckAtom,
-  isSearchStuckAtom,
-  activeSectionAtom,
-  GuildSearchBar,
-  GuildInfiniteScroll,
-  YourGuilds,
-  useYourGuilds,
-  Explorer,
-  ExplorerSWRProvider,
-  HeaderBackground
-}
+export { Explorer, ExplorerSWRProvider, HeaderBackground }
