@@ -5,6 +5,7 @@ import { Skeleton } from "@/components/ui/Skeleton"
 import { cn } from "@/lib/utils"
 import { PropsWithChildren } from "react"
 import { RequiredFields } from "types"
+import pluralize from "utils/pluralize"
 import {
   User,
   useFarcasterProfile,
@@ -89,7 +90,7 @@ const RelevantFollowers = ({
         imageUrls={relevantFollowers.slice(0, 3).map(({ pfp_url }) => pfp_url)}
         count={relevantFollowers.length}
       />
-      <div className="max-w-52 text-balance text-muted-foreground leading-tight">
+      <div className="max-w-60 text-balance text-muted-foreground leading-tight">
         Followed by{" "}
         <span className="inline-block max-w-24 truncate align-bottom font-bold">
           {firstFc.display_name}
@@ -100,7 +101,8 @@ const RelevantFollowers = ({
             {secondFc.display_name}
           </span>
         )}
-        {!!remainingFollowers && ` and ${remainingFollowers} others`} on Farcaster
+        {!!remainingFollowers && ` and ${pluralize(remainingFollowers, "other")}`} on
+        Farcaster
       </div>
     </div>
   )
