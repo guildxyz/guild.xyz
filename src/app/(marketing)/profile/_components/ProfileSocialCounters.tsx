@@ -5,7 +5,6 @@ import { Skeleton } from "@/components/ui/Skeleton"
 import { cn } from "@/lib/utils"
 import { PropsWithChildren } from "react"
 import { RequiredFields } from "types"
-import pluralize from "utils/pluralize"
 import {
   User,
   useFarcasterProfile,
@@ -13,6 +12,7 @@ import {
 } from "../_hooks/useFarcasterProfile"
 import { useProfile } from "../_hooks/useProfile"
 import { useReferredUsers } from "../_hooks/useReferredUsers"
+import pluralize from "utils/pluralize"
 
 type DisplayableUser = RequiredFields<User, "pfp_url" | "display_name">
 
@@ -90,7 +90,7 @@ const RelevantFollowers = ({
         imageUrls={relevantFollowers.slice(0, 3).map(({ pfp_url }) => pfp_url)}
         count={relevantFollowers.length}
       />
-      <div className="max-w-60 text-balance text-muted-foreground leading-tight">
+      <div className="max-w-64 text-balance text-muted-foreground leading-tight">
         Followed by{" "}
         <span className="inline-block max-w-24 truncate align-bottom font-bold">
           {firstFc.display_name}
