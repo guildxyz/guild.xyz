@@ -33,7 +33,7 @@ const DiscordCardWarningWithLogic = (): ReactNode => {
   return (
     <CardWarningComponentBase>
       This reward won't be assigned to users, because the connected Discord role
-      doesn't exist.
+      doesn't exist anymore
     </CardWarningComponentBase>
   )
 }
