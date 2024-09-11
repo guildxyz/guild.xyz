@@ -1,9 +1,9 @@
 "use client"
 import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { Card } from "@/components/ui/Card"
+import { ProgressIndicator, ProgressRoot } from "@/components/ui/Progress"
 import { cn } from "@/lib/utils"
 import { Info } from "@phosphor-icons/react"
-import { Progress, ProgressIndicator } from "@radix-ui/react-progress"
 import ParentSize from "@visx/responsive/lib/components/ParentSize"
 import { PropsWithChildren } from "react"
 import { ContributionCard } from "../_components/ContributionCard"
@@ -48,20 +48,13 @@ export const Profile = () => {
                   {`${xp.experienceCount} / ${Math.ceil(xp.level)} XP`}
                 </p>
               </div>
-              <Progress
-                className={cn(
-                  "relative h-3 w-full overflow-hidden rounded-full bg-secondary"
-                )}
-              >
+              <ProgressRoot>
                 <ProgressIndicator
-                  className="h-full w-full flex-1 rounded-r-full transition-all"
-                  style={{
-                    background: xp.rank.color,
-                    transform: `translateX(-${(1 - (xp.progress || 0)) * 100}%)`,
-                  }}
+                  value={xp.progress}
+                  // className="h-full w-full flex-1 rounded-r-full transition-all"
+                  style={{ background: xp.rank.color }}
                 />
-              </Progress>
-              {/*<Progress value={xp.progress * 100} color={xp.rank.color} />*/}
+              </ProgressRoot>
             </div>
           </Card>
           <Card className="space-y-4 p-6">
