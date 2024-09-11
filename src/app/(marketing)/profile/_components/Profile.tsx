@@ -31,7 +31,7 @@ export const Profile = () => {
 
   return (
     <>
-      <div className="mb-16">
+      <div className="mb-12">
         <div data-theme="dark" className="mb-3">
           <SectionTitle>Experience</SectionTitle>
         </div>
@@ -92,7 +92,7 @@ export const Profile = () => {
           <ContributionCard contribution={contribution} key={contribution.id} />
         ))}
       </div>
-      <div className="mt-16">
+      <div className="mt-14">
         <SectionTitle className="mb-3">Recent activity</SectionTitle>
         {isWeb3Connected ? <RecentActivity /> : <RecentActivityFallback />}
       </div>
