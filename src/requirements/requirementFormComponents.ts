@@ -363,6 +363,6 @@ export const REQUIREMENT_FORM_COMPONENTS = {
     () => import("requirements/Parallel/ParallelForm")
   ),
 } as const satisfies Record<
-  RequirementType,
+  Exclude<RequirementType, "WORLD_ID_VERIFICATION">,
   ReturnType<typeof dynamic<RequirementFormProps>> | null
 >
