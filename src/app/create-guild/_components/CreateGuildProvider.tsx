@@ -2,11 +2,17 @@
 
 import { schemas } from "@guildxyz/types"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { PropsWithChildren, useState } from "react"
+import {
+  Dispatch,
+  PropsWithChildren,
+  SetStateAction,
+  createContext,
+  useContext,
+  useState,
+} from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import getRandomInt from "utils/getRandomInt"
-import { CreateGuildFormType } from "../types"
-import { CreateGuildStep, CreateGuildStepProvider } from "./CreateGuildStepContext"
+import { CreateGuildFormType, CreateGuildStep, GuildTemplate } from "../types"
 
 const defaultValues = {
   name: "",
@@ -36,7 +42,20 @@ const defaultValues = {
   ],
 } satisfies CreateGuildFormType
 
-const CreateGuildProvider = ({ children }: PropsWithChildren) => {
+const CreateGuildContext = createContext<{
+  templates: GuildTemplate[]
+  step: CreateGuildStep
+  setStep: Dispatch<SetStateAction<CreateGuildStep>>
+}>({
+  templates: [],
+  step: "GENERAL_DETAILS",
+  setStep: () => {},
+})
+
+const CreateGuildProvider = ({
+  templates,
+  children,
+}: PropsWithChildren<{ templates: GuildTemplate[] }>) => {
   const methods = useForm<CreateGuildFormType>({
     mode: "all",
     resolver: zodResolver(schemas.GuildCreationPayloadSchema),
@@ -45,10 +64,12 @@ const CreateGuildProvider = ({ children }: PropsWithChildren) => {
   const [step, setStep] = useState<CreateGuildStep>("GENERAL_DETAILS")
 
   return (
-    <CreateGuildStepProvider value={{ step, setStep }}>
+    <CreateGuildContext.Provider value={{ step, setStep, templates }}>
       <FormProvider {...methods}>{children}</FormProvider>
-    </CreateGuildStepProvider>
+    </CreateGuildContext.Provider>
   )
 }
 
-export { CreateGuildProvider }
+const useCreateGuildContext = () => useContext(CreateGuildContext)
+
+export { CreateGuildProvider, useCreateGuildContext }
