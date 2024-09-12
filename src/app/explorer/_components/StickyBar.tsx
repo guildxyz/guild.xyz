@@ -10,19 +10,9 @@ import useScrollspy from "hooks/useScrollSpy"
 import { useAtom, useAtomValue, useSetAtom } from "jotai"
 import Link from "next/link"
 import { useEffect } from "react"
+import { smoothScrollTo } from "utils/smoothScrollTo"
 import { activeSectionAtom, isNavStuckAtom, isSearchStuckAtom } from "../atoms"
 import { ActiveSection } from "../types"
-
-export const smoothScrollTo = (id: string) => {
-  const target = document.getElementById(id)
-
-  if (!target) return
-
-  window.scrollTo({
-    behavior: "smooth",
-    top: target.offsetTop,
-  })
-}
 
 const Nav = () => {
   const isNavStuck = useAtomValue(isNavStuckAtom)
