@@ -61,7 +61,7 @@ const VisitLinkRequirement = ({ ...props }: RequirementProps) => {
 
   const showErrorToast = useShowErrorToast()
   const { onSubmit } = useSubmitWithSign(visitLink, {
-    onSuccess: () => triggerMembershipUpdate(),
+    onSuccess: () => triggerMembershipUpdate({ roleIds: [roleId] }),
     onError: () => showErrorToast("Something went wrong"),
   })
 

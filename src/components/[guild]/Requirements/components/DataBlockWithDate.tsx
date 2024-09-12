@@ -16,4 +16,37 @@ const DataBlockWithDate = ({ timestamp }: Props): JSX.Element => {
   return <DataBlock>{formattedDate ?? "Invalid date"}</DataBlock>
 }
 
+export const BeforeAfterDates = ({
+  minTs,
+  maxTs,
+}: { minTs?: number; maxTs?: number }) => {
+  if (maxTs && minTs === undefined)
+    return (
+      <>
+        {` before `}
+        <DataBlockWithDate timestamp={maxTs} />
+      </>
+    )
+
+  if (maxTs === undefined && minTs)
+    return (
+      <>
+        {` after `}
+        <DataBlockWithDate timestamp={minTs} />
+      </>
+    )
+
+  if (maxTs && minTs)
+    return (
+      <>
+        {` between `}
+        <DataBlockWithDate timestamp={minTs} />
+        {` and `}
+        <DataBlockWithDate timestamp={maxTs} />
+      </>
+    )
+
+  return null
+}
+
 export default DataBlockWithDate

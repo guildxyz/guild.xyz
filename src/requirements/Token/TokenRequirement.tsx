@@ -1,8 +1,5 @@
-import { HStack, Text } from "@chakra-ui/react"
+import { Text } from "@chakra-ui/react"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
-import DynamicPurchaseRequirement from "components/[guild]/Requirements/components/GuildCheckout/DynamicPurchaseRequirement"
-import { GuildCheckoutProvider } from "components/[guild]/Requirements/components/GuildCheckout/components/GuildCheckoutContext"
-import PurchaseTransactionStatusModal from "components/[guild]/Requirements/components/GuildCheckout/components/PurchaseTransactionStatusModal"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
@@ -36,13 +33,15 @@ const TokenRequirement = ({ ...rest }: Props) => {
       isImageLoading={isValidating}
       footer={
         requirement?.type === "ERC20" ? (
-          <HStack spacing="4">
-            <GuildCheckoutProvider>
-              <DynamicPurchaseRequirement />
-              <PurchaseTransactionStatusModal />
-            </GuildCheckoutProvider>
-            <BlockExplorerUrl />
-          </HStack>
+          // This feature is temporarily disabled
+          // <HStack spacing="4">
+          //   <GuildCheckoutProvider>
+          //     <DynamicPurchaseRequirement />
+          //     <PurchaseTransactionStatusModal />
+          //   </GuildCheckoutProvider>
+          //   <BlockExplorerUrl />
+          // </HStack>
+          <BlockExplorerUrl />
         ) : requirement?.type === "COIN" ? (
           <RequirementChainIndicator />
         ) : null

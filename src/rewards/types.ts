@@ -49,7 +49,7 @@ export type RewardData = {
 
 export type RewardComponentsData = {
   cardMenuComponent?: (props: any) => JSX.Element
-  cardWarningComponent?: (props: any) => JSX.Element
+  cardWarningComponent?: ComponentType<unknown>
   cardButton?: (props: any) => JSX.Element
   AddRewardPanel?: ComponentType<AddRewardPanelProps>
   SmallRewardPreview?: ComponentType<RewardProps>
@@ -79,4 +79,8 @@ export type CardPropsHook = (guildPlatform: GuildPlatformWithOptionalId) => {
   image?: string | JSX.Element
   info?: string | JSX.Element
   link?: string
+}
+
+export type CardWarningComponentProps = {
+  rolePlatform: NonNullable<RoleFormType["rolePlatforms"]>[number]
 }

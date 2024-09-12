@@ -86,7 +86,7 @@ const TwitterIntent = ({
 
   const { onSubmit } = useSubmitWithSign(completeAction, {
     onSuccess: () => {
-      triggerMembershipUpdate()
+      triggerMembershipUpdate({ roleIds: [roleId] })
       setHasClicked(false)
     },
   })

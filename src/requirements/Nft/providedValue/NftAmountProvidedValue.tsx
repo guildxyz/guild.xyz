@@ -1,8 +1,9 @@
 import { HStack, Text } from "@chakra-ui/react"
+import { consts } from "@guildxyz/types"
 import useGuild from "components/[guild]/hooks/useGuild"
 import DataBlock from "components/common/DataBlock"
 import type { ProvidedValueDisplayProps } from "requirements/requirementProvidedValues"
-import { GUILD_PIN_CONTRACTS } from "utils/guildCheckout/constants"
+import { isGuildPinSupportedChain } from "utils/guildCheckout/utils"
 import { Chain } from "wagmiConfig/chains"
 import useNftMetadata, { useNftMetadataWithTraits } from "../hooks/useNftMetadata"
 
@@ -17,7 +18,9 @@ const NftAmountProvidedValue = ({ requirement }: ProvidedValueDisplayProps) => {
   const requirementAddress = requirement.address as `0x${string}`
 
   const isGuildPin =
-    GUILD_PIN_CONTRACTS[requirementChain] === requirement?.address?.toLowerCase()
+    isGuildPinSupportedChain(requirementChain) &&
+    consts.PinContractAddresses[requirementChain] ===
+      requirement?.address?.toLowerCase()
   const guildIdAttribute =
     isGuildPin &&
     requirement.data?.attributes?.find((attr) => attr.trait_type === "guildId")

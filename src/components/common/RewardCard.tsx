@@ -44,16 +44,24 @@ const RewardCard = ({
     flexDir={{ base: "column", sm: "row", md: "column", lg: "row", xl: "column" }}
     gap={5}
     justifyContent="space-between"
+    alignItems={{
+      base: "stretch",
+      sm: "center",
+      md: "stretch",
+      lg: "center",
+      xl: "stretch",
+    }}
     {...rest}
   >
     {cornerButton && (
-      <Box position="absolute" top={2} right={2}>
+      <HStack position="absolute" top={2} right={2}>
         {cornerButton}
-      </Box>
+      </HStack>
     )}
     <Flex
       justifyContent={"space-between"}
       flexDirection={{ base: "column", md: "row" }}
+      w="full"
     >
       <HStack spacing={3} minHeight={10}>
         {typeof image === "string" ? (
