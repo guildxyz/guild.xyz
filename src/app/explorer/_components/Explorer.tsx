@@ -9,6 +9,7 @@ import { Card } from "@/components/ui/Card"
 import { Input } from "@/components/ui/Input"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/ToggleGroup"
 import { useYourGuilds } from "@/hooks/useYourGuilds"
+import { cn } from "@/lib/utils"
 import {
   MagnifyingGlass,
   Plus,
@@ -24,8 +25,10 @@ import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import { useGetKeyForSWRWithOptionalAuth } from "hooks/useGetKeyForSWRWithOptionalAuth"
 import useIsStuck from "hooks/useIsStuck"
 import { useScrollBatchedRendering } from "hooks/useScrollBatchedRendering"
-import { useSetAtom } from "jotai"
+import useScrollspy from "hooks/useScrollSpy"
+import { useAtom, useAtomValue, useSetAtom } from "jotai"
 import Image from "next/image"
+import Link from "next/link"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { Suspense, memo, useRef } from "react"
 import { useEffect, useState } from "react"
@@ -33,9 +36,9 @@ import { type SWRConfiguration } from "swr"
 import useSWRInfinite from "swr/infinite"
 import { GuildBase, SearchParams } from "types"
 import { smoothScrollTo } from "utils/smoothScrollTo"
-import { isSearchStuckAtom } from "../atoms"
+import { StickyBar } from "../../../v2/components/StickyBar"
+import { activeSectionAtom, isNavStuckAtom, isSearchStuckAtom } from "../atoms"
 import { ActiveSection } from "../types"
-import { StickyBar } from "./StickyBar"
 
 export const Explorer = ({ searchParams }: { searchParams: SearchParams }) => {
   const setIsSearchStuck = useSetAtom(isSearchStuckAtom)
@@ -43,7 +46,7 @@ export const Explorer = ({ searchParams }: { searchParams: SearchParams }) => {
 
   return (
     <>
-      <StickyBar />
+      <ExplorerStickyBar />
       <YourGuilds />
 
       <section id={ActiveSection.ExploreGuilds} className="flex flex-col gap-5">
@@ -58,6 +61,92 @@ export const Explorer = ({ searchParams }: { searchParams: SearchParams }) => {
         <GuildInfiniteScroll searchParams={searchParams} />
       </section>
     </>
+  )
+}
+
+const ExplorerStickyBarNav = () => {
+  const isNavStuck = useAtomValue(isNavStuckAtom)
+  const isSearchStuck = useAtomValue(isSearchStuckAtom)
+  const [activeSection, setActiveSection] = useAtom(activeSectionAtom)
+  const spyActiveSection = useScrollspy(Object.values(ActiveSection), 100)
+  useEffect(() => {
+    if (!spyActiveSection) return
+    setActiveSection(spyActiveSection as ActiveSection)
+  }, [spyActiveSection, setActiveSection])
+
+  return (
+    <ToggleGroup
+      type="single"
+      className="gap-2"
+      size={isSearchStuck ? "sm" : "lg"}
+      variant={isNavStuck ? "secondary" : "mono"}
+      onValueChange={(value) => value && setActiveSection(value as ActiveSection)}
+      value={activeSection}
+    >
+      <ToggleGroupItem
+        value={ActiveSection.YourGuilds}
+        className={cn("rounded-xl transition-all", {
+          "rounded-lg": isSearchStuck,
+        })}
+        onClick={() => smoothScrollTo(ActiveSection.YourGuilds)}
+      >
+        Your guilds
+      </ToggleGroupItem>
+      <ToggleGroupItem
+        value={ActiveSection.ExploreGuilds}
+        className={cn("rounded-xl transition-all", {
+          "rounded-lg": isSearchStuck,
+        })}
+        onClick={() => smoothScrollTo(ActiveSection.ExploreGuilds)}
+      >
+        Explore guilds
+      </ToggleGroupItem>
+    </ToggleGroup>
+  )
+}
+
+const ExplorerStickyBarCreateGuildLink = () => {
+  const isNavStuck = useAtomValue(isNavStuckAtom)
+  return (
+    <Link
+      href="/create-guild"
+      aria-label="Create guild"
+      prefetch={false}
+      className={buttonVariants({
+        variant: "ghost",
+        size: "sm",
+        className: [
+          // Temporarily, until we don't migrate the scrollable Tabs component
+          "min-h-11 w-11 gap-1.5 px-0 sm:min-h-0 sm:w-auto sm:px-3",
+          {
+            "text-white": !isNavStuck,
+          },
+        ],
+      })}
+    >
+      <Plus />
+      <span className="hidden sm:inline-block">Create guild</span>
+    </Link>
+  )
+}
+
+const ExplorerStickyBar = () => {
+  const { isWeb3Connected } = useWeb3ConnectionManager()
+  const setIsNavStuck = useSetAtom(isNavStuckAtom)
+  const isSearchStuck = useAtomValue(isSearchStuckAtom)
+
+  return (
+    <StickyBar
+      setIsStuck={setIsNavStuck}
+      className={{
+        "h-12": isSearchStuck,
+      }}
+    >
+      <div className="relative flex w-full items-center justify-between">
+        <ExplorerStickyBarNav />
+        {isWeb3Connected && <ExplorerStickyBarCreateGuildLink />}
+      </div>
+    </StickyBar>
   )
 }
 
