@@ -374,4 +374,5 @@ export const REQUIREMENT_DISPLAY_COMPONENTS = {
   PARALLEL_TRAIT: dynamic<RequirementProps>(
     () => import("requirements/Parallel/ParallelRequirement")
   ),
+  // @ts-ignore: TODO: migrate to backend types to resolve error
 } as const satisfies Record<RequirementType, ComponentType<RequirementProps>>

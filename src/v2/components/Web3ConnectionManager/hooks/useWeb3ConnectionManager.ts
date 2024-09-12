@@ -14,9 +14,9 @@ const safeContextAtom = atom(false)
 
 export function useWeb3ConnectionManager(): {
   isInSafeContext: boolean
-  isWeb3Connected: boolean
+  isWeb3Connected: boolean | null
   address?: `0x${string}`
-  type?: UserProfile["addresses"][number]["walletType"]
+  type: UserProfile["addresses"][number]["walletType"] | null
   disconnect: () => void
   signMessage: (message: string) => Promise<string>
 } {

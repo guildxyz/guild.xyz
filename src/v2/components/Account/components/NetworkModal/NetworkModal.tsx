@@ -21,6 +21,9 @@ const NetworkModal = ({
       onPointerDownOutside={onClose}
       onEscapeKeyDown={onClose}
       size="4xl"
+      /** temporary to support opening NetworkModal from the account Popover, we'll be able to remove
+       * all zIndexes when getting rid of Chakra, and so will be able to remove this */
+      overlayClasses="z-popover"
     >
       <DialogCloseButton onClick={onClose} />
       <DialogHeader>
