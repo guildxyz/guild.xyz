@@ -126,6 +126,7 @@ export type ActivityLogAction = {
     rolePlatform?: number
   }
   children?: Array<ActivityLogAction>
+  xpAmount?: number
 }
 
 export const activityLogActionIcons: Record<

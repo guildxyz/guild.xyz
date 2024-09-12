@@ -5,6 +5,7 @@ import { Skeleton } from "@/components/ui/Skeleton"
 import { cn } from "@/lib/utils"
 import { PropsWithChildren } from "react"
 import { RequiredFields } from "types"
+import pluralize from "utils/pluralize"
 import {
   User,
   useFarcasterProfile,
@@ -12,7 +13,6 @@ import {
 } from "../_hooks/useFarcasterProfile"
 import { useProfile } from "../_hooks/useProfile"
 import { useReferredUsers } from "../_hooks/useReferredUsers"
-import pluralize from "utils/pluralize"
 
 type DisplayableUser = RequiredFields<User, "pfp_url" | "display_name">
 

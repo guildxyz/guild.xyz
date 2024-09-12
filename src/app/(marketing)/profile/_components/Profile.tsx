@@ -1,6 +1,7 @@
 "use client"
 import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { Card } from "@/components/ui/Card"
+import { ProgressIndicator, ProgressRoot } from "@/components/ui/Progress"
 import { cn } from "@/lib/utils"
 import { Info } from "@phosphor-icons/react"
 import { PropsWithChildren } from "react"
@@ -8,8 +9,11 @@ import { ContributionCard } from "../_components/ContributionCard"
 import { EditContributions } from "../_components/EditContributions"
 import { ProfileOwnerGuard } from "../_components/ProfileOwnerGuard"
 import { useContributions } from "../_hooks/useContributions"
+import { useExperienceProgression } from "../_hooks/useExperienceProgression"
 import { useProfile } from "../_hooks/useProfile"
 import { useReferredUsers } from "../_hooks/useReferredUsers"
+import { ActivityChart } from "./ActivityChart"
+import { LevelBadge } from "./LevelBadge"
 import { ProfileMainSkeleton } from "./ProfileSkeleton"
 import { RecentActivity } from "./RecentActivity/RecentActivity"
 import RecentActivityFallback from "./RecentActivity/RecentActivityFallback"
@@ -19,12 +23,49 @@ export const Profile = () => {
   const { data: contributions } = useContributions()
   const { data: referredUsers } = useReferredUsers()
   const { isWeb3Connected } = useWeb3ConnectionManager()
+  const xp = useExperienceProgression()
 
-  if (!profile || !contributions || !referredUsers) return <ProfileMainSkeleton />
+  if (!profile || !contributions || !referredUsers || !xp)
+    return <ProfileMainSkeleton />
 
   return (
     <>
-      <div className="mb-3 flex items-center justify-between" data-theme="dark">
+      <div className="mb-12">
+        <div data-theme="dark" className="mb-3">
+          <SectionTitle>Experience</SectionTitle>
+        </div>
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+          <Card className="flex items-center gap-4 p-6">
+            <LevelBadge
+              levelIndex={xp.levelIndex}
+              rank={xp.rank}
+              size="lg"
+              className=""
+            />
+            <div className="-mt-1 flex grow flex-col gap-2">
+              <div className="flex flex-col justify-between sm:flex-row">
+                <h3 className="font-bold capitalize">{xp.rank.title}</h3>
+                <p className="text-muted-foreground">
+                  {`${xp.experienceCount} / ${xp.level} XP`}
+                </p>
+              </div>
+              <ProgressRoot>
+                <ProgressIndicator
+                  value={xp.progress}
+                  style={{ background: xp.rank.color }}
+                />
+              </ProgressRoot>
+            </div>
+          </Card>
+          <Card className="space-y-3 p-6 pt-5">
+            <div className="flex flex-col items-start justify-between gap-2 sm:flex-row">
+              <h3 className="font-bold">Engagement this month</h3>
+            </div>
+            <ActivityChart />
+          </Card>
+        </div>
+      </div>
+      <div className="mb-3 flex items-center justify-between">
         <SectionTitle>Top contributions</SectionTitle>
         <ProfileOwnerGuard>
           <EditContributions />
@@ -48,7 +89,7 @@ export const Profile = () => {
           <ContributionCard contribution={contribution} key={contribution.id} />
         ))}
       </div>
-      <div className="mt-16">
+      <div className="mt-14">
         <SectionTitle className="mb-3">Recent activity</SectionTitle>
         {isWeb3Connected ? <RecentActivity /> : <RecentActivityFallback />}
       </div>

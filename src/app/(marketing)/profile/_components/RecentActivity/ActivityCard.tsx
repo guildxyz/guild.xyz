@@ -1,6 +1,7 @@
 "use client"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
+import { Badge } from "@/components/ui/Badge"
 import { Card } from "@/components/ui/Card"
 import { cn } from "@/lib/utils"
 import { Guild } from "@guildxyz/types"
@@ -60,23 +61,30 @@ export const ActivityCard = ({ activity }: { activity: ActivityLogAction }) => {
           </div>
         </div>
       )}
-      <div className="px-5 py-6">
-        <h3 className="space-x-1.5 font-bold">
-          <ProfileActionLabel activity={activity} />
-        </h3>
-        <div className="mt-1 flex flex-wrap items-center gap-2">
-          <ClientOnly>
-            <p className="text-muted-foreground">
-              {(() => {
-                const since = Date.now() - parseInt(activity.timestamp)
-                const sinceMinutes = since / MINUTE_IN_MS
-                return sinceMinutes === 0
-                  ? "Just now"
-                  : `${formatRelativeTimeFromNow(since)} ago`
-              })()}
-            </p>
-          </ClientOnly>
+      <div className="flex flex-1 items-center justify-between gap-2 px-5 py-6">
+        <div>
+          <h3 className="space-x-1.5 font-bold">
+            <ProfileActionLabel activity={activity} />
+          </h3>
+          <div className="mt-1 flex flex-wrap items-center gap-3">
+            <ClientOnly>
+              <p className="text-muted-foreground">
+                {(() => {
+                  const since = Date.now() - parseInt(activity.timestamp)
+                  const sinceMinutes = since / MINUTE_IN_MS
+                  return sinceMinutes === 0
+                    ? "Just now"
+                    : `${formatRelativeTimeFromNow(since)} ago`
+                })()}
+              </p>
+            </ClientOnly>
+          </div>
         </div>
+        {activity.xpAmount && (
+          <Badge colorScheme="yellow" className="align-text-top font-bold">
+            +{activity.xpAmount} XP
+          </Badge>
+        )}
       </div>
     </Card>
   )

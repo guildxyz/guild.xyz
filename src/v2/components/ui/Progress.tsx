@@ -5,7 +5,7 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
-const Progress = React.forwardRef<
+const ProgressRoot = React.forwardRef<
   React.ElementRef<typeof ProgressPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root>
 >(({ className, value, ...props }, ref) => (
@@ -16,13 +16,24 @@ const Progress = React.forwardRef<
       className
     )}
     {...props}
-  >
-    <ProgressPrimitive.Indicator
-      className="h-full w-full flex-1 rounded-r-full bg-primary transition-all"
-      style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
-    />
-  </ProgressPrimitive.Root>
+  />
 ))
-Progress.displayName = ProgressPrimitive.Root.displayName
 
-export { Progress }
+const ProgressIndicator = React.forwardRef<
+  React.ElementRef<
+    React.FunctionComponent<ProgressPrimitive.ProgressIndicatorProps>
+  >,
+  ProgressPrimitive.ProgressIndicatorProps & { value: number }
+>(({ className, value, style, ...props }, ref) => (
+  <ProgressPrimitive.Indicator
+    className={cn(
+      "h-full w-full flex-1 rounded-r-full bg-primary transition-all",
+      className
+    )}
+    style={{ transform: `translateX(-${(1 - (value || 0)) * 100}%)`, ...style }}
+    ref={ref}
+    {...props}
+  />
+))
+
+export { ProgressIndicator, ProgressRoot }

@@ -92,6 +92,7 @@
     /* we plan to add the whole alpha color palettes */
     --whiteAlpha-800: rgba(255, 255, 255, 0.80);
     --blackAlpha-800: rgba(0, 0, 0, 0.80);
+    --blackAlpha-300: rgba(0, 0, 0, 0.30);
 
     --discord: 233 78% 63%;
     --discord-hover: 243 75% 59%;
@@ -129,7 +130,7 @@
     --gather_town: 232, 66%, 55%;
     --cyan: 190, 100%, 42%;
     --blue: 217, 91%, 60%;
-    --gold: 35, 39%, 60%;
+    --gold: 40 67% 51%;
     --gray: 240, 4%, 46%;
     
     --sm: 640px;

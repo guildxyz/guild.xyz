@@ -1,4 +1,5 @@
 import { CheckMark } from "@/components/CheckMark"
+import { CircularProgressBar } from "@/components/CircularProgressBar"
 import { CopyableAddress } from "@/components/CopyableAddress"
 import { GuildAvatar } from "@/components/GuildAvatar"
 import { ProfileAvatar } from "@/components/ProfileAvatar"
@@ -13,6 +14,7 @@ import {
   DialogBody,
   DialogCloseButton,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/Dialog"
@@ -26,6 +28,8 @@ import {
 import { Separator } from "@/components/ui/Separator"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip"
 import { useUserPublic } from "@/hooks/useUserPublic"
+import { LevelBadge } from "@app/(marketing)/profile/_components/LevelBadge"
+import { useExperienceProgression } from "@app/(marketing)/profile/_hooks/useExperienceProgression"
 import { ArrowRight, DotsThreeVertical } from "@phosphor-icons/react"
 import { SignOut } from "@phosphor-icons/react/dist/ssr"
 import useUser from "components/[guild]/hooks/useUser"
@@ -48,6 +52,7 @@ const AccountModal = () => {
 
   const { address: evmAddress, chainId } = useAccount()
   const domain = useResolveAddress(evmAddress)
+  const xp = useExperienceProgression(true)
 
   const handleLogout = () => {
     const keysToRemove = Object.keys({ ...window.localStorage }).filter((key) =>
@@ -74,6 +79,7 @@ const AccountModal = () => {
 
         <DialogHeader>
           <DialogTitle>Account</DialogTitle>
+          <DialogDescription className="sr-only" />
         </DialogHeader>
 
         <DialogBody scroll>
@@ -81,13 +87,30 @@ const AccountModal = () => {
             <>
               {guildProfile ? (
                 <div className="mb-8 flex gap-3">
-                  <Avatar size="2xl" className="mr-2 self-center border-2">
-                    <ProfileAvatar
-                      username={guildProfile.username}
-                      profileImageUrl={guildProfile.profileImageUrl}
-                    />
-                  </Avatar>
-                  <div className="flex w-full flex-col">
+                  {xp && (
+                    <div className="relative mr-2 flex aspect-square items-center justify-center">
+                      <CircularProgressBar
+                        progress={xp.progress}
+                        color={xp.rank.color}
+                        className="absolute inset-0 size-full"
+                      />
+                      <Avatar
+                        size="2xl"
+                        className="m-1.5 flex items-center justify-center rounded-full border"
+                      >
+                        <ProfileAvatar
+                          username={guildProfile.username}
+                          profileImageUrl={guildProfile.profileImageUrl}
+                        />
+                      </Avatar>
+                      <LevelBadge
+                        levelIndex={xp.levelIndex}
+                        rank={xp.rank}
+                        className="absolute right-0.5 bottom-0.5"
+                      />
+                    </div>
+                  )}
+                  <div className="flex w-full flex-col justify-center">
                     <h3 className=" flex items-center font-bold">
                       <span className="max-w-52 truncate">
                         {guildProfile.name || guildProfile.username}
@@ -95,7 +118,9 @@ const AccountModal = () => {
                       <CheckMark className="ml-0.5 inline-block fill-yellow-500" />
                     </h3>
                     <div className="text-muted-foreground text-sm">
-                      @{guildProfile.username}
+                      {xp
+                        ? `${xp.experienceCount} / ${xp.level} XP`
+                        : `@${guildProfile.username}`}
                     </div>
                     <div className="mt-2 flex gap-1.5">
                       <Anchor

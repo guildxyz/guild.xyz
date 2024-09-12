@@ -1,5 +1,7 @@
 "use client"
+
 import { CheckMark } from "@/components/CheckMark"
+import { CircularProgressBar } from "@/components/CircularProgressBar"
 import { LayoutContainer } from "@/components/Layout"
 import { ProfileAvatar } from "@/components/ProfileAvatar"
 import { Avatar } from "@/components/ui/Avatar"
@@ -7,15 +9,19 @@ import { Button } from "@/components/ui/Button"
 import { Card } from "@/components/ui/Card"
 import { Pencil } from "@phosphor-icons/react"
 import { ProfileOwnerGuard } from "../_components/ProfileOwnerGuard"
+import { useExperienceProgression } from "../_hooks/useExperienceProgression"
 import { useProfile } from "../_hooks/useProfile"
 import { EditProfile } from "./EditProfile/EditProfile"
+import { LevelBadge } from "./LevelBadge"
 import { ProfileHeroSkeleton } from "./ProfileSkeleton"
 import { ProfileSocialCounters } from "./ProfileSocialCounters"
 
 export const ProfileHero = () => {
   const { data: profile } = useProfile()
+  const xp = useExperienceProgression()
 
-  if (!profile) return <ProfileHeroSkeleton />
+  if (!profile || !xp) return <ProfileHeroSkeleton />
+  const { rank, levelIndex, progress } = xp
 
   return (
     <LayoutContainer>
@@ -36,12 +42,26 @@ export const ProfileHero = () => {
             </Card>
           </EditProfile>
         </ProfileOwnerGuard>
-        <Avatar className="relative mb-6 flex size-40 items-center justify-center rounded-full border-2 md:size-48">
-          <ProfileAvatar
-            username={profile.username}
-            profileImageUrl={profile.profileImageUrl}
+        <div className="relative mb-6 flex size-44 items-center justify-center md:size-56">
+          <CircularProgressBar
+            progress={progress}
+            color={rank.color}
+            strokeWidth={5}
+            className="absolute inset-0 size-full"
           />
-        </Avatar>
+          <Avatar className="flex size-40 items-center justify-center rounded-full border md:size-48">
+            <ProfileAvatar
+              username={profile.username}
+              profileImageUrl={profile.profileImageUrl}
+            />
+          </Avatar>
+          <LevelBadge
+            size="lg"
+            levelIndex={levelIndex}
+            rank={rank}
+            className="absolute right-2 bottom-2 md:right-3 md:bottom-3"
+          />
+        </div>
         <h1 className="break-all text-center font-extrabold text-3xl leading-tight tracking-tight md:text-4xl">
           {profile.name || profile.username}
           <CheckMark className="ml-2 inline size-6 fill-yellow-500 align-baseline" />
