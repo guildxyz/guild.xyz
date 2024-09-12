@@ -21,7 +21,7 @@ export const ProfileHero = () => {
   const xp = useExperienceProgression()
 
   if (!profile || !xp) return <ProfileHeroSkeleton />
-  const { rank, levelIndex, progress } = xp
+  const { rank, level, progress } = xp
 
   return (
     <LayoutContainer>
@@ -57,7 +57,7 @@ export const ProfileHero = () => {
           </Avatar>
           <LevelBadge
             size="lg"
-            levelIndex={levelIndex}
+            level={level}
             rank={rank}
             className="absolute right-2 bottom-2 md:right-3 md:bottom-3"
           />

@@ -1,5 +1,4 @@
 export const MAX_LEVEL = 100
-export const MAX_XP = 11e4
 export const RANKS = [
   { color: "#78c93d", title: "novice", polygonCount: 20 },
   { color: "#88d525", title: "learner", polygonCount: 20 },
