@@ -67,7 +67,7 @@ const VisitLinkRequirement = ({ ...props }: RequirementProps) => {
 
   const isCustomName = data?.customName !== getDefaultVisitLinkCustomName(data)
   const [, first, , link, , second] = isCustomName
-    ? VISIT_LINK_REGEX.exec(data.customName) ?? []
+    ? (VISIT_LINK_REGEX.exec(data.customName) ?? [])
     : []
 
   const onVisit = () => {

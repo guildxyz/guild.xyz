@@ -109,7 +109,7 @@ const DiscordGuildSetup = ({
   return (
     <SimpleGrid columns={{ base: 1, md: 2 }} spacing={{ base: 3, md: 4 }}>
       <AnimatePresence>
-        {(selectedServerOption ? [selectedServerOption] : servers ?? [])
+        {(selectedServerOption ? [selectedServerOption] : (servers ?? []))
           .filter(
             guildPlatformsOfRole
               ? (serverData) =>
