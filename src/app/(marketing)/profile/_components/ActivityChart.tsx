@@ -72,7 +72,7 @@ const ActivityChartChildren = ({
   const xScale = useMemo(
     () =>
       scaleBand<string>({
-        range: [0, Math.min(data.length * 18, xMax)],
+        range: [0, Math.min(data.length * 14, xMax)],
         round: true,
         domain: data.map(getX),
         padding: 0,
