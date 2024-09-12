@@ -148,7 +148,11 @@ const ActivityChartChildren = ({
         >
           <strong>+{tooltipData.amount} XP</strong>
           <div className="text-muted-foreground">
-            {new Date(tooltipData.createdAt).toLocaleDateString()}
+            {new Date(tooltipData.createdAt).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+            })}
           </div>
         </TooltipInPortal>
       )}

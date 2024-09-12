@@ -59,7 +59,7 @@ export const Profile = () => {
           </Card>
           <Card className="space-y-3 p-6 pt-5">
             <div className="flex flex-col items-start justify-between gap-2 sm:flex-row">
-              <h3 className="font-bold">Engagement this month</h3>
+              <h3 className="font-bold">Recent engagement</h3>
             </div>
             <ActivityChart />
           </Card>
