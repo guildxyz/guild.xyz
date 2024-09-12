@@ -3,7 +3,7 @@
 import { Card } from "@/components/ui/Card"
 import { cn } from "@/lib/utils"
 import { AnimatePresence, LayoutGroup, motion } from "framer-motion"
-import { ChooseGuildTemplateCard } from "./ChooseGuildTemplateCard"
+import { ChooseGuildTemplate } from "./ChooseGuildTemplate"
 import { CreateGuildCard } from "./CreateGuildCard"
 import { useCreateGuildContext } from "./CreateGuildProvider"
 
@@ -26,7 +26,7 @@ const CreateGuildContent = () => {
           {step === "GENERAL_DETAILS" ? (
             <CreateGuildCard key="GENERAL_DETAILS" />
           ) : step === "CHOOSE_TEMPLATE" ? (
-            <ChooseGuildTemplateCard key="CHOOSE_TEMPLATE" />
+            <ChooseGuildTemplate key="CHOOSE_TEMPLATE" />
           ) : null}
         </AnimatePresence>
       </MotionCard>

@@ -1,8 +1,9 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
-import { Button, buttonVariants } from "@/components/ui/Button"
+import { buttonVariants } from "@/components/ui/Button"
 import { Skeleton } from "@/components/ui/Skeleton"
 import { cn } from "@/lib/utils"
 import { AnimationProps, motion } from "framer-motion"
+import { CreateGuildButton } from "./CreateGuildButton"
 import { useCreateGuildContext } from "./CreateGuildProvider"
 
 type Variants = Record<"hide" | "show", AnimationProps["animate"]>
@@ -44,9 +45,7 @@ const slideFadeInVariants = {
 
 const contentVariants = categoryListVariants
 
-const MotionButton = motion(Button)
-
-const ChooseGuildTemplateCard = () => {
+const ChooseGuildTemplate = () => {
   const { templates } = useCreateGuildContext()
 
   return (
@@ -73,7 +72,7 @@ const ChooseGuildTemplateCard = () => {
           >
             <Avatar className="row-span-2 size-8">
               <AvatarImage
-                src={template.imageUrl}
+                src={template.imageUrl ?? ""}
                 alt={`${template.name} logo`}
                 width={32}
                 height={48}
@@ -110,16 +109,12 @@ const ChooseGuildTemplateCard = () => {
             </motion.p>
           </div>
 
-          <MotionButton
-            colorScheme="success"
-            className="px-6"
-            variants={slideFadeInVariants}
-          >
-            Create guild
-          </MotionButton>
+          <motion.div variants={slideFadeInVariants}>
+            <CreateGuildButton />
+          </motion.div>
         </div>
       </motion.div>
     </motion.div>
   )
 }
-export { ChooseGuildTemplateCard }
+export { ChooseGuildTemplate }
