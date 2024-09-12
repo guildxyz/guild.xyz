@@ -4,7 +4,6 @@ import { Card } from "@/components/ui/Card"
 import { ProgressIndicator, ProgressRoot } from "@/components/ui/Progress"
 import { cn } from "@/lib/utils"
 import { Info } from "@phosphor-icons/react"
-import ParentSize from "@visx/responsive/lib/components/ParentSize"
 import { PropsWithChildren } from "react"
 import { ContributionCard } from "../_components/ContributionCard"
 import { EditContributions } from "../_components/EditContributions"
@@ -62,13 +61,7 @@ export const Profile = () => {
             <div className="flex flex-col items-start justify-between gap-2 sm:flex-row">
               <h3 className="font-bold">Engagement this month</h3>
             </div>
-            <div className="h-7">
-              <ParentSize>
-                {({ width, height }) => (
-                  <ActivityChart width={width} height={height} />
-                )}
-              </ParentSize>
-            </div>
+            <ActivityChart />
           </Card>
         </div>
       </div>

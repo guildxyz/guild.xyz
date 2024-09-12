@@ -2,6 +2,7 @@ import { Skeleton } from "@/components/ui/Skeleton"
 import { Schemas } from "@guildxyz/types"
 import { localPoint } from "@visx/event"
 import { Group } from "@visx/group"
+import ParentSize from "@visx/responsive/lib/components/ParentSize"
 import { scaleBand, scaleLinear } from "@visx/scale"
 import { Bar } from "@visx/shape"
 import { useTooltip, useTooltipInPortal } from "@visx/tooltip"
@@ -21,7 +22,8 @@ export type BarsProps = {
 }
 
 let tooltipTimeout: number
-export const ActivityChartChildren = ({
+
+const ActivityChartChildren = ({
   width,
   height,
   rawData,
@@ -144,10 +146,21 @@ export const ActivityChartChildren = ({
   )
 }
 
-export const ActivityChart = ({ width, height }: BarsProps) => {
+export const ActivityChart = () => {
   const { data: rawData } = useExperiences({ count: false })
-  if (!rawData) return <Skeleton style={{ width, height }} />
+
+  if (!rawData) return <Skeleton className="h-7 w-full" />
+
   if (rawData.length === 0)
     return <p className="text-muted-foreground">There's no activity this month</p>
-  return <ActivityChartChildren height={height} width={width} rawData={rawData} />
+
+  return (
+    <div className="h-7">
+      <ParentSize>
+        {({ width, height }) => (
+          <ActivityChartChildren height={height} width={width} rawData={rawData} />
+        )}
+      </ParentSize>
+    </div>
+  )
 }
