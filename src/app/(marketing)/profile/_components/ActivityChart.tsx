@@ -75,7 +75,7 @@ const ActivityChartChildren = ({
         range: [0, Math.min(data.length * 18, xMax)],
         round: true,
         domain: data.map(getX),
-        padding: 0.4,
+        padding: 0,
       }),
     [xMax]
   )
@@ -107,7 +107,7 @@ const ActivityChartChildren = ({
                   width={barWidth}
                   height={yMax}
                   fill="transparent"
-                  className="cursor-pointer hover:fill-card-foreground/10"
+                  className="cursor-pointer px-0.5 hover:fill-card-foreground/10"
                   onMouseLeave={() => {
                     tooltipTimeout = window.setTimeout(() => {
                       hideTooltip()
@@ -127,9 +127,9 @@ const ActivityChartChildren = ({
                 <Bar
                   className="pointer-events-none"
                   ry={4}
-                  x={barX}
+                  x={barX && barX + 2}
                   y={barY}
-                  width={barWidth}
+                  width={barWidth - 4}
                   height={barHeight}
                   fill={xp?.rank.color}
                 />
