@@ -1,6 +1,6 @@
-import { Stack } from "@chakra-ui/react"
+import { Box, Flex, HStack, Icon, Stack, Text } from "@chakra-ui/react"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { ArrowRight } from "@phosphor-icons/react"
+import { ArrowRight, Info } from "@phosphor-icons/react"
 import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hooks/useAddRewardDiscardAlert"
 import CreateFormForm from "components/[guild]/CreateFormModal/components/CreateFormForm"
 import useCreateForm from "components/[guild]/CreateFormModal/hooks/useCreateForm"
@@ -64,18 +64,23 @@ const AddFormPanel = ({ onAdd }: AddRewardPanelProps) => {
         <Stack spacing={6}>
           <ContinueWithExistingFormAlert {...{ onAdd }} />
           <CreateFormForm />
-          <Button
-            colorScheme="green"
-            rightIcon={<ArrowRight />}
-            w="max-content"
-            ml="auto"
-            onClick={methods.handleSubmit(onSubmit, console.error)}
-            loadingText="Creating form"
-            isLoading={isLoading}
-            isDisabled={!fields?.length}
-          >
-            Create form & continue
-          </Button>
+          <Flex mt="4" justifyContent="space-between" alignItems="end">
+            <Text colorScheme="gray" fontSize={"sm"}>
+              <Icon d="inline-flex" mr="1" mt="-1.5px" as={Info} />
+              You can edit everything later
+            </Text>
+            <Button
+              colorScheme="green"
+              rightIcon={<ArrowRight />}
+              w="max-content"
+              onClick={methods.handleSubmit(onSubmit, console.error)}
+              loadingText="Creating form"
+              isLoading={isLoading}
+              isDisabled={!fields?.length}
+            >
+              Create form & continue
+            </Button>
+          </Flex>
         </Stack>
       </DefaultAddRewardPanelWrapper>
     </FormProvider>
