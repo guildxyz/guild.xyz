@@ -1,5 +1,6 @@
 import {
   Box,
+  Divider,
   FormControl,
   FormLabel,
   Input,
@@ -14,6 +15,7 @@ import { LayoutGroup, Reorder, motion } from "framer-motion"
 import { useFieldArray, useFormContext } from "react-hook-form"
 import getFieldIndexesToSwap from "utils/getFieldsToSwap"
 import FormCardEditable from "./FormCardEditable"
+import Switch from "components/common/Switch"
 
 const MotionAddCard = motion(AddCard)
 
@@ -86,6 +88,8 @@ const CreateFormForm = () => {
         </LayoutGroup>
         <FormErrorMessage>{errors.fields?.message}</FormErrorMessage>
       </Box>
+      <Divider mt="3" />
+      <Switch title="Allow editing answers" description="If allowed, members can edit their responses after they've submitted the form" {...register("isEditable")} />
     </Stack>
   )
 }
