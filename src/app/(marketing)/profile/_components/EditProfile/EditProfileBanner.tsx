@@ -24,6 +24,7 @@ export const EditProfileBanner = ({
                 style={{
                   filter: "brightness(50%)",
                 }}
+                className="size-full object-cover"
               />
             ) : (
               <div
