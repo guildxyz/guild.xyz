@@ -5,12 +5,40 @@ import fetcher from "utils/fetcher"
 import { GUILD_TEMPLATES_CACHE_KEY, TEMPLATE_GUILD_URL_NAMES } from "./constants"
 import { GuildTemplate } from "./types"
 
+/**
+ * We got Zod errors when we passed "null" values to our API. We should definitely think about a better solution here, but for now I wrote this util to just remove nulls from an object so we'll always submit valid data.
+ */
+const removeNullProperties = <ObjectType extends Record<string, any>>(
+  obj: ObjectType
+) => {
+  if (obj === null || typeof obj !== "object") return {} as ObjectType
+
+  const mapped = structuredClone(obj)
+
+  Object.keys(mapped).forEach((key: keyof typeof mapped) => {
+    if (mapped[key] === null) delete mapped[key]
+
+    if (
+      Array.isArray(mapped[key]) &&
+      mapped[key].every((v: ObjectType[keyof ObjectType]) => typeof v === "object")
+    )
+      mapped[key] = mapped[key].map((v: ObjectType[keyof ObjectType]) =>
+        removeNullProperties(v)
+      )
+
+    if (typeof mapped[key] === "object")
+      mapped[key] = removeNullProperties(mapped[key])
+  })
+
+  return mapped
+}
+
 const fetcherOptions = {
   headers: {
     "x-guild-service": "APP",
     "x-guild-auth": env.GUILD_API_KEY,
   },
-} satisfies Parameters<typeof fetcher>[1]
+} as const satisfies Parameters<typeof fetcher>[1]
 
 const fetchTemplate = async (templateUrl: string): Promise<GuildTemplate> => {
   const [guild, roles, guildPlatforms]: [Guild, Role[], GuildReward[]] =
@@ -22,7 +50,7 @@ const fetchTemplate = async (templateUrl: string): Promise<GuildTemplate> => {
 
   const guildTemplate = {
     ...guild,
-    roles: roles.map((role) => ({ ...role, rolePlatforms: [] })),
+    roles: roles.map((role) => ({ ...role, rolePlatforms: [], requirements: [] })),
     guildPlatforms,
   } satisfies GuildTemplate
 
@@ -40,7 +68,21 @@ const fetchTemplate = async (templateUrl: string): Promise<GuildTemplate> => {
       (guildTemplate.roles[roleIndex].rolePlatforms = rolePlatformArray)
   )
 
-  return guildTemplate
+  const requirementArrays = await Promise.all(
+    roles.map((role) =>
+      fetcher(
+        `/v2/guilds/${templateUrl}/roles/${role.id}/requirements`,
+        fetcherOptions
+      )
+    )
+  )
+
+  requirementArrays.forEach(
+    (requirementArray, roleIndex) =>
+      (guildTemplate.roles[roleIndex].requirements = requirementArray)
+  )
+
+  return removeNullProperties(guildTemplate)
 }
 
 export const fetchTemplates = unstable_cache(
