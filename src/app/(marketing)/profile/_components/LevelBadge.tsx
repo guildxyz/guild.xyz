@@ -5,7 +5,7 @@ import { Rank } from "../[username]/types"
 const levelBadgeVariants = cva("flex items-center justify-center", {
   variants: {
     size: {
-      md: "text-md size-7 text-xs",
+      md: "size-7 text-xs",
       lg: "text-lg md:text-xl size-10 md:size-12",
     },
   },
