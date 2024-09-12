@@ -1,4 +1,4 @@
-import { Box, Flex, HStack, Icon, Stack, Text } from "@chakra-ui/react"
+import { Flex, Icon, Stack, Text } from "@chakra-ui/react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { ArrowRight, Info } from "@phosphor-icons/react"
 import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hooks/useAddRewardDiscardAlert"
