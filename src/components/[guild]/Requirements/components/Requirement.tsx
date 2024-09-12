@@ -12,6 +12,8 @@ import Visibility from "components/[guild]/Visibility"
 import dynamic from "next/dynamic"
 import React, { ComponentType, PropsWithChildren } from "react"
 import { useFormContext } from "react-hook-form"
+import ReactMarkdown from "react-markdown"
+import remarkGfm from "remark-gfm"
 import { useRequirementContext } from "./RequirementContext"
 import { RequirementImage, RequirementImageCircle } from "./RequirementImage"
 import ResetRequirementButton from "./ResetRequirementButton"
@@ -71,9 +73,21 @@ const Requirement = ({
       <VStack alignItems={"flex-start"} alignSelf="center" spacing={1.5}>
         <ChildrenWrapper display="inline-block">
           {requirement?.isNegated && <Tag mr="2">DON'T</Tag>}
-          {requirement?.type === "LINK_VISIT"
-            ? children
-            : requirement?.data?.customName || children}
+          {requirement?.type === "LINK_VISIT" ? (
+            children
+          ) : requirement?.data?.customName ? (
+            <div className="prose prose-custom dark:prose-invert">
+              <ReactMarkdown
+                allowedElements={["a", "p", "code", "del", "strong", "em"]}
+                unwrapDisallowed
+                remarkPlugins={[remarkGfm]}
+              >
+                {requirement.data.customName}
+              </ReactMarkdown>
+            </div>
+          ) : (
+            children
+          )}
           {!setValue ? (
             <Visibility
               visibilityRoleId={requirement?.visibilityRoleId || null}
