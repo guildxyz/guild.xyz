@@ -1,11 +1,8 @@
-import { HStack, Text, useDisclosure } from "@chakra-ui/react"
+import { Text, useDisclosure } from "@chakra-ui/react"
 import { consts } from "@guildxyz/types"
 import { ImageData } from "@nouns/assets"
 import { ArrowSquareOut } from "@phosphor-icons/react"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
-import DynamicPurchaseRequirement from "components/[guild]/Requirements/components/GuildCheckout/DynamicPurchaseRequirement"
-import { GuildCheckoutProvider } from "components/[guild]/Requirements/components/GuildCheckout/components/GuildCheckoutContext"
-import PurchaseTransactionStatusModal from "components/[guild]/Requirements/components/GuildCheckout/components/PurchaseTransactionStatusModal"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
@@ -110,14 +107,16 @@ const NftRequirement = (props: RequirementProps) => {
       }
       isImageLoading={nftDataLoading}
       footer={
-        <HStack spacing={4}>
-          <GuildCheckoutProvider>
-            <DynamicPurchaseRequirement />
-            <PurchaseTransactionStatusModal />
-          </GuildCheckoutProvider>
+        // This feature is temporarily disabled
+        // <HStack spacing={4}>
+        //   <GuildCheckoutProvider>
+        //     <DynamicPurchaseRequirement />
+        //     <PurchaseTransactionStatusModal />
+        //   </GuildCheckoutProvider>
 
-          <BlockExplorerUrl />
-        </HStack>
+        //   <BlockExplorerUrl />
+        // </HStack>
+        <BlockExplorerUrl />
       }
       {...props}
     >

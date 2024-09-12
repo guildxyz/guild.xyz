@@ -54,9 +54,9 @@ const RewardCard = ({
     {...rest}
   >
     {cornerButton && (
-      <Box position="absolute" top={2} right={2}>
+      <HStack position="absolute" top={2} right={2}>
         {cornerButton}
-      </Box>
+      </HStack>
     )}
     <Flex
       justifyContent={"space-between"}
