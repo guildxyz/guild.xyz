@@ -8,8 +8,11 @@ interface ProfileAvatarProps
 
 export const ProfileAvatar = ({ username, profileImageUrl }: ProfileAvatarProps) => {
   const avatarIndex =
-    Math.abs(username.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0)) %
-    64
+    (Math.abs(
+      username.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0)
+    ) %
+      64) +
+    1
   const PixelAvatarFallback = dynamic(
     () => import(`static/avatars/${avatarIndex}.svg`)
   )
