@@ -166,7 +166,7 @@ export const ActivityChart = () => {
   if (!rawData) return <Skeleton className="h-7 w-full" />
 
   if (rawData.length === 0)
-    return <p className="text-muted-foreground">There's no activity this month</p>
+    return <p className="text-muted-foreground">There's no recent activity</p>
 
   return (
     <div className="h-7">

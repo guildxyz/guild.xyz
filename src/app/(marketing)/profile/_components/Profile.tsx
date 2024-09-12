@@ -1,5 +1,6 @@
 "use client"
 import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import { Badge } from "@/components/ui/Badge"
 import { Card } from "@/components/ui/Card"
 import { ProgressIndicator, ProgressRoot } from "@/components/ui/Progress"
 import { cn } from "@/lib/utils"
@@ -36,18 +37,17 @@ export const Profile = () => {
         </div>
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
           <Card className="flex items-center gap-4 p-6">
-            <LevelBadge
-              levelIndex={xp.levelIndex}
-              rank={xp.rank}
-              size="lg"
-              className=""
-            />
-            <div className="-mt-1 flex grow flex-col gap-2">
+            <LevelBadge level={xp.level} rank={xp.rank} size="lg" className="" />
+            <div className="-mt-1 flex grow flex-col gap-3">
               <div className="flex flex-col justify-between sm:flex-row">
                 <h3 className="font-bold capitalize">{xp.rank.title}</h3>
-                <p className="text-muted-foreground">
-                  {`${xp.experienceCount} / ${xp.level} XP`}
-                </p>
+                <Badge variant="outline">
+                  {`${xp.currentLevelXp} -> `}
+                  <span className="font-bold text-foreground">
+                    {xp.experienceCount} XP
+                  </span>
+                  {` -> ${xp.nextLevelXp}`}
+                </Badge>
               </div>
               <ProgressRoot>
                 <ProgressIndicator
