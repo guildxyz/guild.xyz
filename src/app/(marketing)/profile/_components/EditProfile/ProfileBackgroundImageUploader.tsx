@@ -27,7 +27,7 @@ export const ProfileBackgroundImageUploader = ({
       description,
     })
 
-  const { isDragActive, getRootProps } = useDropzone({
+  const { isDragActive, getRootProps, getInputProps } = useDropzone({
     multiple: false,
     noClick: false,
     onDrop: (accepted, fileRejections) => {
@@ -53,9 +53,10 @@ export const ProfileBackgroundImageUploader = ({
   return (
     <Tooltip>
       <TooltipTrigger>
-        <label {...getRootProps()} className={buttonVariants(buttonProps as any)}>
+        <div {...getRootProps()} className={buttonVariants(buttonProps as any)}>
+        <input {...getInputProps()} hidden />
           {isDragActive ? <UploadSimple weight="bold" size={24} /> : children}
-        </label>
+        </div>
       </TooltipTrigger>
       <TooltipContent side="bottom">{tooltipLabel}</TooltipContent>
     </Tooltip>
