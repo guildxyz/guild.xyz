@@ -15,6 +15,7 @@ import getRandomInt from "utils/getRandomInt"
 import { CreateGuildFormType, CreateGuildStep, GuildTemplate } from "../types"
 
 const defaultValues = {
+  templateId: 0,
   name: "",
   imageUrl: "",
   contacts: [

@@ -1,15 +1,15 @@
 "use client"
 
 import { Button } from "@/components/ui/Button"
-import { useFormContext } from "react-hook-form"
+import { useFormContext, useWatch } from "react-hook-form"
 import { useCreateGuild } from "../_hooks/useCreateGuild"
 import { CreateGuildFormType } from "../types"
 
 const CreateGuildButton = () => {
-  const { handleSubmit } = useFormContext<CreateGuildFormType>()
+  const { control, handleSubmit } = useFormContext<CreateGuildFormType>()
   const { onSubmit, isLoading } = useCreateGuild()
 
-  // const templateId = useWatch({ control, name: "templateId" })
+  const templateId = useWatch({ control, name: "templateId" })
 
   return (
     <Button
@@ -17,7 +17,7 @@ const CreateGuildButton = () => {
       isLoading={isLoading}
       loadingText="Creating guild"
       onClick={handleSubmit(onSubmit)}
-      // disabled={!templateId}
+      disabled={!templateId}
     >
       Create guild
     </Button>
