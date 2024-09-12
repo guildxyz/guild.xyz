@@ -100,30 +100,40 @@ const ActivityChartChildren = ({
             const barX = xScale(x)
             const barY = yMax - barHeight
             return (
-              <Bar
-                ry={4}
-                key={currentXp.id}
-                x={barX}
-                y={barY}
-                width={barWidth}
-                height={barHeight}
-                fill={xp?.rank.color}
-                onMouseLeave={() => {
-                  tooltipTimeout = window.setTimeout(() => {
-                    hideTooltip()
-                  }, 300)
-                }}
-                onMouseMove={(event) => {
-                  if (tooltipTimeout) clearTimeout(tooltipTimeout)
-                  const eventSvgCoords = localPoint(event)
-                  const left = (barX || 0) + barWidth / 2
-                  showTooltip({
-                    tooltipData: currentXp,
-                    tooltipTop: eventSvgCoords?.y,
-                    tooltipLeft: left,
-                  })
-                }}
-              />
+              <g key={currentXp.id}>
+                <rect
+                  x={barX}
+                  y={0}
+                  width={barWidth}
+                  height={yMax}
+                  fill="transparent"
+                  className="cursor-pointer hover:fill-card-foreground/10"
+                  onMouseLeave={() => {
+                    tooltipTimeout = window.setTimeout(() => {
+                      hideTooltip()
+                    }, 120)
+                  }}
+                  onMouseMove={(event) => {
+                    if (tooltipTimeout) clearTimeout(tooltipTimeout)
+                    const eventSvgCoords = localPoint(event)
+                    const left = (barX || 0) + barWidth / 2
+                    showTooltip({
+                      tooltipData: currentXp,
+                      tooltipTop: eventSvgCoords?.y,
+                      tooltipLeft: left,
+                    })
+                  }}
+                />
+                <Bar
+                  className="pointer-events-none"
+                  ry={4}
+                  x={barX}
+                  y={barY}
+                  width={barWidth}
+                  height={barHeight}
+                  fill={xp?.rank.color}
+                />
+              </g>
             )
           })}
         </Group>
