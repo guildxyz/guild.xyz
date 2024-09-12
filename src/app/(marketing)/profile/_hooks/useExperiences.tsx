@@ -16,7 +16,12 @@ export const useExperiences = <T extends boolean>({
   )
   return useSWRImmutable<T extends true ? number : Schemas["Experience"][]>(
     profile
-      ? `/v2/profiles/${profile.username}/experiences?${params.toString()}`
+      ? [
+          `/v2/profiles/${profile.username}/experiences`,
+          params.size && params.toString(),
+        ]
+          .filter(Boolean)
+          .join("?")
       : null
   )
 }
