@@ -29,7 +29,9 @@ export const CircularProgressBar: React.FC<CircularProgressBarProps> = ({
       className={className}
     >
       <circle
-        className={cn({ "stroke-background": !bgColor })}
+        className={cn({
+          "stroke-background dark:stroke-[var(--blackAlpha-300)]": !bgColor,
+        })}
         cx={size / 2}
         cy={size / 2}
         r={radius}

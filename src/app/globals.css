@@ -92,6 +92,7 @@
     /* we plan to add the whole alpha color palettes */
     --whiteAlpha-800: rgba(255, 255, 255, 0.80);
     --blackAlpha-800: rgba(0, 0, 0, 0.80);
+    --blackAlpha-300: rgba(0, 0, 0, 0.30);
 
     --discord: 233 78% 63%;
     --discord-hover: 243 75% 59%;

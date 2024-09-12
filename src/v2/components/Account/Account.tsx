@@ -3,7 +3,6 @@
 import { CircularProgressBar } from "@/components/CircularProgressBar"
 import { useDisclosure } from "@/hooks/useDisclosure"
 import { cn } from "@/lib/utils"
-import { LevelBadge } from "@app/(marketing)/profile/_components/LevelBadge"
 import { useExperienceProgression } from "@app/(marketing)/profile/_hooks/useExperienceProgression"
 import { Bell } from "@phosphor-icons/react"
 import { SignIn } from "@phosphor-icons/react/dist/ssr"
@@ -85,7 +84,7 @@ export const Account = () => {
       >
         {guildProfile ? (
           <div className="flex items-center gap-2">
-            <div className="relative p-1">
+            <div className="relative p-0.5">
               {xp && (
                 <CircularProgressBar
                   className="absolute inset-0 size-full"
@@ -110,7 +109,6 @@ export const Account = () => {
                   : `@${guildProfile.username}`}
               </div>
             </div>
-            {xp && <LevelBadge levelIndex={xp.levelIndex} rank={xp.rank} />}
           </div>
         ) : (
           <div className="flex items-center gap-3">

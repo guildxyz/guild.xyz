@@ -96,7 +96,7 @@ const AccountModal = () => {
                       />
                       <Avatar
                         size="2xl"
-                        className="m-2 flex items-center justify-center rounded-full border-2"
+                        className="m-1.5 flex items-center justify-center rounded-full border"
                       >
                         <ProfileAvatar
                           username={guildProfile.username}
@@ -106,11 +106,11 @@ const AccountModal = () => {
                       <LevelBadge
                         levelIndex={xp.levelIndex}
                         rank={xp.rank}
-                        className="absolute right-0 bottom-0 size-8"
+                        className="absolute right-0.5 bottom-0.5"
                       />
                     </div>
                   )}
-                  <div className="flex w-full flex-col">
+                  <div className="flex w-full flex-col justify-center">
                     <h3 className=" flex items-center font-bold">
                       <span className="max-w-52 truncate">
                         {guildProfile.name || guildProfile.username}
