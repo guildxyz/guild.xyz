@@ -107,16 +107,20 @@ export const SocialAccountUI = ({
 
 // TODO: we should move these to `rewards.ts` eventually
 const PLATFORM_COLORS = {
-  DISCORD: "bg-discord hover:bg-discord-hover active:bg-discord-active",
-  TELEGRAM: "bg-telegram hover:bg-telegram-hover active:bg-telegram-active",
-  EMAIL: "bg-email hover:bg-email-hover active:bg-email-active",
-  GOOGLE: "bg-google hover:bg-google-hover active:bg-google-active",
-  TWITTER_V1: "bg-twitter hover:bg-twitter-hover active:bg-twitter-active",
-  TWITTER: "bg-twitter hover:bg-twitter-hover active:bg-twitter-active",
-  GITHUB: "bg-github hover:bg-github-hover active:bg-github-active",
-  POLYGON_ID: "bg-polygonid hover:bg-polygonid-hover active:bg-polygonid-active",
-  FARCASTER: "bg-farcaster hover:bg-farcaster-hover active:bg-farcaster-active",
-  WORLD_ID: "bg-worldid hover:bg-worldid-hover active:bg-worldid-active",
+  DISCORD: "bg-discord hover:bg-discord-hover active:bg-discord-active text-white",
+  TELEGRAM:
+    "bg-telegram hover:bg-telegram-hover active:bg-telegram-active text-white",
+  EMAIL: "bg-email hover:bg-email-hover active:bg-email-active text-white",
+  GOOGLE: "bg-google hover:bg-google-hover active:bg-google-active text-white",
+  TWITTER_V1:
+    "bg-twitter hover:bg-twitter-hover active:bg-twitter-active text-white",
+  TWITTER: "bg-twitter hover:bg-twitter-hover active:bg-twitter-active text-white",
+  GITHUB: "bg-github hover:bg-github-hover active:bg-github-active text-white",
+  POLYGON_ID:
+    "bg-polygonid hover:bg-polygonid-hover active:bg-polygonid-active text-white",
+  FARCASTER:
+    "bg-farcaster hover:bg-farcaster-hover active:bg-farcaster-active text-white",
+  WORLD_ID: "bg-worldid hover:bg-worldid-hover active:bg-worldid-active text-white",
 } satisfies Partial<Record<PlatformName, string>>
 
 const ConnectPlatformButton = ({

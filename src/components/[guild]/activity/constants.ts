@@ -24,7 +24,10 @@ import {
   Star,
   StarHalf,
   TextT,
+  UserCircleCheck,
+  UserCircleDashed,
   UserCircleGear,
+  UserCirclePlus,
   UserFocus,
   UserList,
   UserMinus,
@@ -32,6 +35,7 @@ import {
 } from "@phosphor-icons/react"
 import { ForwardRefExoticComponent, RefAttributes } from "react"
 
+// TODO: these are duplicated (and extended) types, we should move them to backend types
 export enum ACTION {
   // Guild
   CreateGuild = "create guild",
@@ -90,6 +94,12 @@ export enum ACTION {
   UpdateDescription = "UpdateDescription",
   UpdateLogic = "UpdateLogic",
   UpdateTheme = "UpdateTheme",
+
+  // Profile
+  UpdateProfile = "update profile",
+  CreateProfile = "create profile",
+  DeleteProfile = "delete profile",
+  ReferProfile = "refer profile",
 }
 
 export enum ActivityLogActionGroup {
@@ -116,6 +126,7 @@ export type ActivityLogAction = {
     rolePlatform?: number
   }
   children?: Array<ActivityLogAction>
+  xpAmount?: number
 }
 
 export const activityLogActionIcons: Record<
@@ -312,6 +323,24 @@ export const activityLogActionIcons: Record<
   [ACTION.UpdateTheme]: {
     as: PaintBrushBroad,
     color: "blue.400",
+  },
+
+  // Profile
+  [ACTION.UpdateProfile]: {
+    as: UserCircleGear,
+    color: "blue.400",
+  },
+  [ACTION.CreateProfile]: {
+    as: UserCircleCheck,
+    color: "green.500",
+  },
+  [ACTION.DeleteProfile]: {
+    as: UserCircleDashed,
+    color: "green.500",
+  },
+  [ACTION.ReferProfile]: {
+    as: UserCirclePlus,
+    color: "green.500",
   },
 }
 

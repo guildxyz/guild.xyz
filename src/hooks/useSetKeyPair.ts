@@ -97,6 +97,7 @@ const useSetKeyPair = (submitOptions?: UseSubmitOptions) => {
   const mutateOptionalAuthSWRKey = useMutateOptionalAuthSWRKey()
 
   const setSubmitResponse = useSubmit(
+    // @ts-ignore
     async ({
       signProps,
     }: {
@@ -178,6 +179,7 @@ const useSetKeyPair = (submitOptions?: UseSubmitOptions) => {
       return { keyPair: generatedKeys, user: userProfile }
     },
 
+    // @ts-ignore
     {
       ...submitOptions,
       onError: (error) => {

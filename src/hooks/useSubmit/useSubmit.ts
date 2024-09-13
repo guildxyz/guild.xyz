@@ -21,7 +21,12 @@ type FetcherFunction<ResponseType> = ({
 
 const useSubmit = <DataType, ResponseType>(
   fetch: (data?: DataType) => Promise<ResponseType>,
-  { onSuccess, onError, allowThrow }: UseSubmitOptions<ResponseType> = {}
+  {
+    onSuccess,
+    onError,
+    allowThrow,
+    onOptimistic,
+  }: UseSubmitOptions<ResponseType> = {}
 ) => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [error, setError] = useState<any>(undefined)
@@ -31,7 +36,9 @@ const useSubmit = <DataType, ResponseType>(
     (data?: DataType): Promise<ResponseType> => {
       setIsLoading(true)
       setError(undefined)
-      return fetch(data)
+      const response = fetch(data)
+      onOptimistic?.(response, data)
+      return response
         .then((d) => {
           onSuccess?.(d)
           setResponse(d)
@@ -47,7 +54,7 @@ const useSubmit = <DataType, ResponseType>(
         })
         .finally(() => setIsLoading(false))
     },
-    [allowThrow, fetch, onError, onSuccess]
+    [allowThrow, fetch, onError, onSuccess, onOptimistic]
   )
 
   return {

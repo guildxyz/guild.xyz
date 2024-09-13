@@ -1,5 +1,5 @@
 import { Icon, Text } from "@chakra-ui/react"
-import { Coins } from "@phosphor-icons/react"
+import { Coins, Warning } from "@phosphor-icons/react"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
 import BuyPass from "components/[guild]/Requirements/components/GuildCheckout/BuyPass"
 import { GuildCheckoutProvider } from "components/[guild]/Requirements/components/GuildCheckout/components/GuildCheckoutContext"
@@ -18,7 +18,7 @@ import PaymentTransactionStatusModal from "../../components/[guild]/Requirements
 import WithdrawButton from "./components/WithdrawButton"
 import useVault from "./hooks/useVault"
 
-const PaymentRequirement = (props: RequirementProps): JSX.Element => {
+const OriginalPaymentRequirement = (props: RequirementProps): JSX.Element => {
   const { isAdmin } = useGuildPermission()
 
   const {
@@ -108,6 +108,16 @@ const PaymentRequirement = (props: RequirementProps): JSX.Element => {
         </DataBlock>
         <Text as="span">{` on ${CHAIN_CONFIG[chain].name}`}</Text>
       </>
+    </Requirement>
+  )
+}
+
+const PaymentRequirement = (props: RequirementProps) => {
+  const { type } = useRequirementContext()
+  return (
+    <Requirement image={<Icon as={Warning} boxSize={5} color="orange.300" />}>
+      {`Unsupported requirement type: `}
+      <DataBlock>{type}</DataBlock>
     </Requirement>
   )
 }

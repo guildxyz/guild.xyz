@@ -56,9 +56,10 @@
     --success-subtle: 141 79% 85%;
     --success-subtle-foreground: var(--success);
 
-    --banner: 240 4% 16%;
-    --banner-dark: 240 2% 12%;
-    --banner-foreground: 210 20% 98%;
+    /* these are stored as hex so it's consistent with custom values on profiles with backgroundImageUrl. We plan to migrate all colors to hex values */
+    --banner: #27272a;
+    --banner-dark: #1e1e1f;
+    --banner-foreground: #f9fafb;
     --banner-opacity: 1;
 
     --muted: 0 0% 100%;
@@ -88,6 +89,11 @@
     --alert-error: 0 78% 98%;
     --alert-error-icon: 0 84% 60%;
 
+    /* we plan to add the whole alpha color palettes */
+    --whiteAlpha-800: rgba(255, 255, 255, 0.80);
+    --blackAlpha-800: rgba(0, 0, 0, 0.80);
+    --blackAlpha-300: rgba(0, 0, 0, 0.30);
+
     --discord: 233 78% 63%;
     --discord-hover: 243 75% 59%;
     --discord-active: 245 58% 51%;
@@ -112,9 +118,22 @@
     --polygonid: 259 59% 59%;
     --polygonid-hover: 258 50% 52%;
     --polygonid-active: 256 44% 42%;
-    --farcaster: 238 76% 69%;
-    --farcaster-hover: 239 75% 64%;
-    --farcaster-active: 239 75% 58%;
+
+    --farcaster: 261 55% 61%;
+    --farcaster-hover: 261 55% 55%;
+    --farcaster-active: 239 75% 50%;
+
+    /**
+     * Missing reward colors to work with the current Chakra driven solution.
+     * Should find a better solution when we ditch Chakra and won't need to be backward compatible
+     *
+     * Examples of usage -> new: RewardBadge, old: RewardTag
+     */
+    --gather_town: 232, 66%, 55%;
+    --cyan: 190, 100%, 42%;
+    --blue: 217, 91%, 60%;
+    --gold: 40 67% 51%;
+    --gray: 240, 4%, 46%;
 
     --sm: 640px;
     --md: 768px;
@@ -122,7 +141,7 @@
     --xl: 1280px;
   }
 
-  :root[data-theme="dark"] {
+  :root[data-theme="dark"], [data-theme="dark"] {
     --background: 240 3.7% 15.88%;
     --foreground: 210 20% 98%;
 
@@ -175,7 +194,7 @@
     --success-subtle: 141 79% 85%;
     --success-subtle-foreground: var(--success-subtle);
 
-    --banner: 240 3% 22%;
+    --banner: #36363a;
 
     --muted: 240 3% 13%;
     --muted-foreground: 240 5% 60%;

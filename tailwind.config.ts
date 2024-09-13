@@ -1,4 +1,3 @@
-import { background } from "@chakra-ui/react"
 import type { Config } from "tailwindcss"
 
 const config = {
@@ -25,9 +24,9 @@ const config = {
       },
       colors: {
         banner: {
-          DEFAULT: "hsl(var(--banner))",
-          dark: "hsl(var(--banner-dark))",
-          foreground: "hsl(var(--banner-foreground))"
+          DEFAULT: "var(--banner)",
+          dark: "var(--banner-dark)",
+          foreground: "var(--banner-foreground)"
         },
         border: {
           DEFAULT: "hsl(var(--border))",
@@ -177,6 +176,10 @@ const config = {
         banner: "var(--banner-opacity)"
       },
       keyframes: {
+        wiggle: {
+          '0%, 100%': { transform: 'rotate(-3deg)' },
+          '50%': { transform: 'rotate(3deg)' },
+        },
         "accordion-down": {
           from: { height: "0" },
           to: { height: "var(--radix-accordion-content-height)" },
@@ -199,6 +202,7 @@ const config = {
         },
       },
       animation: {
+        wiggle: 'wiggle 1s ease-in-out infinite',
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "caret-blink": "caret-blink 1.25s ease-out infinite",
@@ -211,8 +215,8 @@ const config = {
         modal: "1400",
         popover: "1500",
         toast: "1700",
-        tooltip: "1800", 
-      },
+        tooltip: "1800",
+      }
     },
   },
   plugins: [

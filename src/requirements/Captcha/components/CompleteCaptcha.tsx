@@ -23,7 +23,6 @@ import ErrorAlert from "components/common/ErrorAlert"
 import { Modal } from "components/common/Modal"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import { useFetcherWithSign } from "hooks/useFetcherWithSign"
-import { useEffect } from "react"
 import useSWRImmutable from "swr/immutable"
 import useVerifyCaptcha from "../hooks/useVerifyCaptcha"
 
@@ -31,6 +30,7 @@ const CompleteCaptcha = (props: ButtonProps): JSX.Element => {
   const { id: userId } = useUser()
   const { id, roleId } = useRequirementContext()
   const { onOpen, onClose, isOpen } = useDisclosure()
+  const { triggerMembershipUpdate } = useMembershipUpdate()
 
   const { reqAccesses } = useRoleMembership(roleId)
 
@@ -54,7 +54,7 @@ const CompleteCaptcha = (props: ButtonProps): JSX.Element => {
       <CompleteCaptchaModal
         onClose={onClose}
         isOpen={isOpen}
-        shouldTriggerMembershipUpdate
+        onComplete={() => triggerMembershipUpdate({ roleIds: [roleId] })}
       />
     </>
   )
@@ -67,12 +67,7 @@ type Props = {
   shouldTriggerMembershipUpdate?: boolean
 }
 
-const CompleteCaptchaModal = ({
-  isOpen,
-  onClose,
-  onComplete,
-  shouldTriggerMembershipUpdate,
-}: Props) => {
+const CompleteCaptchaModal = ({ isOpen, onClose, onComplete }: Props) => {
   const fetcherWithSign = useFetcherWithSign()
   const {
     data: getGateCallbackData,
@@ -84,22 +79,17 @@ const CompleteCaptchaModal = ({
       : null,
     fetcherWithSign
   )
-  const { triggerMembershipUpdate } = useMembershipUpdate()
-  const { onSubmit, isLoading, response } = useVerifyCaptcha(
-    shouldTriggerMembershipUpdate ? () => triggerMembershipUpdate() : undefined
-  )
+
+  const { onSubmit, isLoading } = useVerifyCaptcha(() => {
+    onComplete?.()
+    onClose()
+  })
 
   const onVerify = (token: string) =>
     onSubmit({
       callback: getGateCallbackData?.callbackUrl,
       token,
     })
-
-  useEffect(() => {
-    if (!response) return
-    onComplete?.()
-    onClose()
-  }, [response, onComplete, onClose])
 
   return (
     <Modal

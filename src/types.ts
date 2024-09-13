@@ -137,15 +137,13 @@ type User = {
   sharedSocials: UserProfile["sharedSocials"]
   publicKey?: string
   isSuperAdmin: boolean
-
   captchaVerifiedSince: Date
-
+  guildProfile: Schemas["Profile"] | null
   emails: {
     emailAddress: string
     pending: boolean
     createdAt: Date
   }
-
   farcasterProfiles: FarcasterProfile[]
 }
 
@@ -743,6 +741,8 @@ type DetailedPinLeaderboardUserData = {
 }
 
 type SearchParams = { [key: string]: string | string[] | undefined }
+
+export type RequiredFields<T, K extends keyof T> = T & Required<Pick<T, K>>
 
 export { ValidationMethod }
 export type {

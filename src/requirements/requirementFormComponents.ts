@@ -365,6 +365,7 @@ export const REQUIREMENT_FORM_COMPONENTS = {
   PARALLEL_TRAIT: dynamic<RequirementFormProps>(
     () => import("requirements/Parallel/ParallelForm")
   ),
+  // @ts-ignore: TODO: migrate to backend types to resolve error
 } as const satisfies Record<
   RequirementType,
   ReturnType<typeof dynamic<RequirementFormProps>> | null

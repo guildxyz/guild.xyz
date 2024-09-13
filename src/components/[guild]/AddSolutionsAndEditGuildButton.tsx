@@ -14,6 +14,8 @@ const AddSolutionsAndEditGuildButton = () => {
   const { textColor, buttonColorScheme } = useThemeContext()
 
   const buttonProps = {
+    size: { base: "xl", smd: "md" },
+    variant: { base: "ghost", smd: "solid" },
     ...(!isStickyActionStuck && !isMobile
       ? {
           color: `${textColor} !important`,
@@ -31,8 +33,6 @@ const AddSolutionsAndEditGuildButton = () => {
       <ButtonGroup
         isAttached
         w={{ base: "full", smd: "auto" }}
-        size={{ base: "xl", smd: "md" }}
-        variant={{ base: "ghost", smd: "solid" }}
         color="WindowText"
         flexDir={{ base: "row-reverse", smd: "row" }}
       >

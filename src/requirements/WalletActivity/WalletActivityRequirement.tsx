@@ -6,7 +6,7 @@ import {
   IconProps,
   Wallet,
 } from "@phosphor-icons/react"
-import DataBlockWithDate from "components/[guild]/Requirements/components/DataBlockWithDate"
+import { BeforeAfterDates } from "components/[guild]/Requirements/components/DataBlockWithDate"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
@@ -16,6 +16,7 @@ import DataBlock from "components/common/DataBlock"
 import DataBlockWithCopy from "components/common/DataBlockWithCopy"
 import { ForwardRefExoticComponent, RefAttributes } from "react"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
+import pluralize from "utils/pluralize"
 import shortenHex from "utils/shortenHex"
 
 const requirementIcons: Record<
@@ -46,36 +47,6 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
 
   const maxAmount = requirement.data?.timestamps?.maxAmount
   const minAmount = requirement.data?.timestamps?.minAmount
-
-  const getFirstTxContent = () => {
-    if (maxAmount && minAmount === undefined)
-      return (
-        <>
-          {`Have your first transaction before `}
-          <DataBlockWithDate timestamp={maxAmount} />
-        </>
-      )
-
-    if (maxAmount === undefined && minAmount)
-      return (
-        <>
-          {`Have your first transaction after `}
-          <DataBlockWithDate timestamp={minAmount} />
-        </>
-      )
-
-    if (maxAmount && minAmount)
-      return (
-        <>
-          {`Have your first transaction between `}
-          <DataBlockWithDate timestamp={minAmount} />
-          {` and `}
-          <DataBlockWithDate timestamp={maxAmount} />
-        </>
-      )
-
-    return <>Have at least one transaction</>
-  }
 
   const getFirstTxRelativeContent = () => {
     const formattedMin = formatRelativeTimeFromNow(minAmount)
@@ -122,7 +93,13 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
       {(() => {
         switch (requirement.type) {
           case "COVALENT_FIRST_TX":
-            return getFirstTxContent()
+            if (!minAmount && !maxAmount) return "Have at least one transaction"
+            return (
+              <>
+                Have your first transaction
+                <BeforeAfterDates minTs={minAmount} maxTs={maxAmount} />
+              </>
+            )
           case "COVALENT_FIRST_TX_RELATIVE":
             return getFirstTxRelativeContent()
           case "COVALENT_CONTRACT_DEPLOY":
@@ -130,27 +107,8 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
               <>
                 {`Deployed ${
                   requirement.data.txCount > 1 ? requirement.data.txCount : "a"
-                } contract${requirement.data.txCount > 1 ? "s" : ""}`}
-                {requirement.data.timestamps.maxAmount &&
-                requirement.data.timestamps.minAmount ? (
-                  <>
-                    {" between "}
-                    <DataBlockWithDate
-                      timestamp={requirement.data.timestamps.minAmount}
-                    />
-                    {" and "}
-                    <DataBlockWithDate
-                      timestamp={requirement.data.timestamps.maxAmount}
-                    />
-                  </>
-                ) : requirement.data.timestamps.minAmount ? (
-                  <>
-                    {" before "}
-                    <DataBlockWithDate
-                      timestamp={requirement.data.timestamps.minAmount}
-                    />
-                  </>
-                ) : null}
+                } ${pluralize(requirement.data.txCount, "contract", false)}`}
+                <BeforeAfterDates minTs={minAmount} maxTs={maxAmount} />
               </>
             )
           case "COVALENT_CONTRACT_DEPLOY_RELATIVE": {
@@ -199,26 +157,7 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
                   </>
                 )}
 
-                {requirement.data.timestamps.maxAmount &&
-                requirement.data.timestamps.minAmount ? (
-                  <>
-                    {" between "}
-                    <DataBlockWithDate
-                      timestamp={requirement.data.timestamps.minAmount}
-                    />
-                    {" and "}
-                    <DataBlockWithDate
-                      timestamp={requirement.data.timestamps.maxAmount}
-                    />
-                  </>
-                ) : requirement.data.timestamps.minAmount ? (
-                  <>
-                    {" before "}
-                    <DataBlockWithDate
-                      timestamp={requirement.data.timestamps.minAmount}
-                    />
-                  </>
-                ) : null}
+                <BeforeAfterDates minTs={minAmount} maxTs={maxAmount} />
               </>
             )
           case "COVALENT_TX_COUNT_RELATIVE": {
