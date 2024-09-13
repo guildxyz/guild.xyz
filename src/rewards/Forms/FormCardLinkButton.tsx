@@ -1,4 +1,4 @@
-import { Check } from "@phosphor-icons/react"
+import { ArrowRight, Check } from "@phosphor-icons/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useGuildForm } from "components/[guild]/hooks/useGuildForms"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
@@ -21,29 +21,48 @@ const FormCardLinkButton = ({ platform }: Props) => {
 
   const { userSubmission, isValidating } = useUserFormSubmission(form)
 
-  if (isAdmin && !!userSubmission)
+  if (isFormsValidating || isValidating) return <RewardCardButton isLoading />
+  if (!form) return <RewardCardButton isDisabled>Form not found</RewardCardButton>
+
+  if (!userSubmission)
+    return (
+      <RewardCardButton
+        as={Link}
+        prefetch={false}
+        href={`/${urlName}/forms/${form?.id}`}
+        colorScheme={rewards.FORM.colorScheme}
+      >
+        Fill form
+      </RewardCardButton>
+    )
+
+  if (isAdmin)
     return (
       <RewardCardButton
         as={Link}
         href={`/${urlName}/forms/${form?.id}/responses`}
         prefetch={false}
-        variant="outline"
+        rightIcon={<ArrowRight />}
       >
         View responses
       </RewardCardButton>
     )
 
+  if (form.isEditable)
+    return (
+      <RewardCardButton
+        as={Link}
+        prefetch={false}
+        href={`/${urlName}/forms/${form?.id}`}
+        variant="outline"
+      >
+        View / edit response
+      </RewardCardButton>
+    )
+
   return (
-    <RewardCardButton
-      as={Link}
-      isDisabled={!form || !!userSubmission}
-      isLoading={isFormsValidating || isValidating}
-      prefetch={false}
-      href={!!form && !userSubmission ? `/${urlName}/forms/${form?.id}` : "#"}
-      colorScheme={rewards.FORM.colorScheme}
-      leftIcon={userSubmission && <Check />}
-    >
-      {userSubmission ? "Already submitted" : "Fill form"}
+    <RewardCardButton leftIcon={<Check />} isDisabled variant="outline">
+      Already submitted
     </RewardCardButton>
   )
 }

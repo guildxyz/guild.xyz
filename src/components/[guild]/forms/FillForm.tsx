@@ -10,22 +10,29 @@ import useCustomPosthogEvents from "hooks/useCustomPosthogEvents"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
-import { Controller, FormProvider, useForm } from "react-hook-form"
+import { useState } from "react"
+import { Controller, FormProvider, UseFormProps, useForm } from "react-hook-form"
 import { useUserFormSubmission } from "rewards/Forms/hooks/useFormSubmissions"
 import { PlatformType } from "types"
 import fetcher from "utils/fetcher"
 import useMembershipUpdate from "../JoinModal/hooks/useMembershipUpdate"
 import useGuild from "../hooks/useGuild"
+import useUser from "../hooks/useUser"
 import FillFormProgress from "./FillFormProgress"
 import SuccessfullySubmittedForm from "./SuccessfullySubmittedForm"
 
-type Props = {
-  form: Schemas["Form"]
-}
+type FormProp = { form: Schemas["Form"] }
 
-const FillForm = ({ form }: Props) => {
+type Props = FormProp & {
+  method?: "POST" | "PUT"
+} & UseFormProps
+
+const FillForm = ({ form, method = "POST", ...config }: Props) => {
   const { id: guildId } = useGuild()
-  const methods = useForm()
+  const { id: userId } = useUser()
+  const [hasSubmitted, setHasSubmitted] = useState(false)
+
+  const methods = useForm(config)
   const {
     control,
     formState: { errors },
@@ -39,7 +46,7 @@ const FillForm = ({ form }: Props) => {
     (fieldId) => requiredFieldIds.includes(fieldId) && !formValues[fieldId]
   )
 
-  const { userSubmission, mutate: mutateSubmission } = useUserFormSubmission(form)
+  const { mutate: mutateSubmission } = useUserFormSubmission(form)
   const { triggerMembershipUpdate } = useMembershipUpdate()
 
   const { rewardClaimed } = useCustomPosthogEvents()
@@ -48,10 +55,13 @@ const FillForm = ({ form }: Props) => {
   const showErrorToast = useShowErrorToast()
   const { onSubmit, isLoading } = useSubmitWithSign(
     (signedValidation) =>
-      fetcher(`/v2/guilds/${guildId}/forms/${form.id}/user-submissions`, {
-        ...signedValidation,
-        method: "POST",
-      }),
+      fetcher(
+        `/v2/guilds/${guildId}/forms/${form.id}/user-submissions${method === "PUT" ? `/${userId}` : ""}`,
+        {
+          ...signedValidation,
+          method,
+        }
+      ),
     {
       onSuccess: (res) => {
         rewardClaimed(PlatformType.FORM)
@@ -59,6 +69,7 @@ const FillForm = ({ form }: Props) => {
           status: "success",
           title: "Successfully submitted form",
         })
+        setHasSubmitted(true)
         mutateSubmission(res, {
           revalidate: false,
         })
@@ -68,9 +79,7 @@ const FillForm = ({ form }: Props) => {
     }
   )
 
-  if (!form) return <FillFormSkeleton />
-
-  if (!!userSubmission) return <SuccessfullySubmittedForm />
+  if (hasSubmitted) return <SuccessfullySubmittedForm />
 
   return (
     <FormProvider {...methods}>
@@ -129,6 +138,27 @@ const FillForm = ({ form }: Props) => {
   )
 }
 
+const FillFormWrapper = ({ form }: FormProp) => {
+  const { userSubmission, isLoading } = useUserFormSubmission(form)
+
+  if (!form || isLoading) return <FillFormSkeleton />
+
+  if (!userSubmission) return <FillForm form={form} />
+
+  if (form.isEditable)
+    return (
+      <FillForm
+        form={form}
+        method="PUT"
+        defaultValues={
+          userSubmission && mapAnswersToObject(userSubmission.submissionAnswers)
+        }
+      />
+    )
+
+  return <SuccessfullySubmittedForm />
+}
+
 const FillFormSkeleton = () => (
   <Stack spacing={2}>
     {[...Array(3)].map((_, i) => (
@@ -142,4 +172,16 @@ const FillFormSkeleton = () => (
   </Stack>
 )
 
-export default FillForm
+const stringifyDbValue = (dbValue: any) => {
+  if (!dbValue) return ""
+  if (Array.isArray(dbValue)) return dbValue.map((option: any) => `${option}`)
+  return `${dbValue}`
+}
+
+const mapAnswersToObject = (answers: any) =>
+  answers.reduce((acc: any, curr: any) => {
+    acc[curr.fieldId] = stringifyDbValue(curr.value)
+    return acc
+  }, {})
+
+export default FillFormWrapper

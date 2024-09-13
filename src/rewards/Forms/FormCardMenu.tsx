@@ -1,5 +1,5 @@
-import { MenuItem, useDisclosure } from "@chakra-ui/react"
-import { PencilSimple, Table } from "@phosphor-icons/react"
+import { MenuDivider, MenuItem, useDisclosure } from "@chakra-ui/react"
+import { PencilSimple, User } from "@phosphor-icons/react"
 import RemovePlatformMenuItem from "components/[guild]/AccessHub/components/RemovePlatformMenuItem"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useGuildForm } from "components/[guild]/hooks/useGuildForms"
@@ -29,14 +29,16 @@ const FormCardMenu = ({ platformGuildId }: Props): JSX.Element => {
           Edit form
         </MenuItem>
 
-        <LinkMenuItem
-          href={`/${urlName}/forms/${formId}/responses`}
-          icon={<Table />}
-        >
-          View responses
-        </LinkMenuItem>
-
         <RemovePlatformMenuItem platformGuildId={platformGuildId} />
+
+        {form?.isEditable && (
+          <>
+            <MenuDivider />
+            <LinkMenuItem href={`/${urlName}/forms/${formId}`} icon={<User />}>
+              View / edit my response
+            </LinkMenuItem>
+          </>
+        )}
       </PlatformCardMenu>
 
       {!!form && <EditFormModal isOpen={isOpen} onClose={onClose} form={form} />}
