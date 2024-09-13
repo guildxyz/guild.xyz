@@ -11,6 +11,7 @@ import {
   ontology,
   palm,
   taikoKatlaTestnet,
+  world,
   x1,
 } from "static/customChains"
 import {
@@ -190,6 +191,7 @@ export const wagmiConfig = IS_TEST
         mode,
         lisk as Chain,
         cronoszkEVM,
+        world,
       ],
       transports: {
         [mainnet.id]: http(),
@@ -255,6 +257,7 @@ export const wagmiConfig = IS_TEST
         [mode.id]: http(),
         [lisk.id]: http(),
         [cronoszkEVM.id]: http(),
+        [world.id]: http(),
       },
       ssr: true,
       connectors: [
