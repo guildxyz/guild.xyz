@@ -1,14 +1,23 @@
-import { MAX_LEVEL, RANKS } from "../[username]/constants"
+import { MAX_LEVEL, RANKS, XP_SUM } from "../[username]/constants"
 import { useExperiences } from "../_hooks/useExperiences"
 
-const generateExponentialArray = (steps: number, exponent: number): number[] => {
-  return Array.from({ length: steps }, (_, i) => Math.pow(i, exponent))
+const generateExponentialArray = (
+  steps: number,
+  sum: number,
+  exponent: number
+): number[] => {
+  const baseSum = (Math.pow(exponent, steps) - 1) / (exponent - 1)
+  const scaleFactor = sum / baseSum
+  return Array.from({ length: steps }, (_, i) => Math.pow(exponent, i) * scaleFactor)
 }
 
 export const calculateXpProgression = ({
   experienceCount,
 }: { experienceCount: number }) => {
-  const levels = generateExponentialArray(MAX_LEVEL, 2).map((num) => Math.floor(num))
+  if (MAX_LEVEL < 1) throw new Error(`max level must be positive`)
+  const levels = generateExponentialArray(MAX_LEVEL, XP_SUM, 1.008)
+    .map((num) => Math.floor(num))
+    .map((value, _, arr) => value - arr[0])
   const levelIndex = levels.findIndex((xp) => experienceCount < xp)
   const level = levelIndex === -1 ? MAX_LEVEL : levelIndex
   const currentLevelXp = level > 0 ? levels[level - 1] : 0
