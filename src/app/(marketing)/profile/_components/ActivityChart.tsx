@@ -170,9 +170,9 @@ const ActivityChartChildren = ({
           applyPositionStyle
           className="rounded border bg-card py-2 text-sm"
         >
-          <div className="px-2">
+          <div className="flex items-baseline gap-3 px-2">
             <strong>+{tooltipData.sum.amount} XP</strong>
-            <div className="text-muted-foreground">
+            <div className="text-muted-foreground text-xs">
               {new Date(tooltipData.sum.createdAt).toLocaleDateString("en-US", {
                 year: "numeric",
                 month: "short",
