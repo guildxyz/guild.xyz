@@ -18,7 +18,6 @@ export const calculateXpProgression = ({
   const levels = generateExponentialArray(MAX_LEVEL, XP_SUM, 1.008)
     .map((num) => Math.floor(num))
     .map((value, _, arr) => value - arr[0])
-  console.log(levels)
   const levelIndex = levels.findIndex((xp) => experienceCount < xp)
   const level = levelIndex === -1 ? MAX_LEVEL : levelIndex
   const currentLevelXp = level > 0 ? levels[level - 1] : 0
