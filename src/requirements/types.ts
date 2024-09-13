@@ -3,9 +3,7 @@ import { Icon } from "@phosphor-icons/react"
 import { UseControllerProps } from "react-hook-form"
 import { Requirement } from "types"
 
-export type RequirementType =
-  | Schemas["Requirement"]["type"]
-  | "WORLD_ID_VERIFICATION"
+export type RequirementType = Schemas["Requirement"]["type"]
 
 export type RequirementFormProps = {
   baseFieldPath: string
