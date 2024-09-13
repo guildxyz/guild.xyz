@@ -27,7 +27,7 @@ const WorldIDForm = ({ baseFieldPath }: RequirementFormProps) => {
     <div className="flex flex-col items-start gap-4">
       <FormField
         control={control}
-        name={`${baseFieldPath}.data.id`}
+        name={`${baseFieldPath}.data.verificationLevel`}
         render={({ field }) => (
           <FormItem className="w-full">
             <FormLabel>Verification level</FormLabel>

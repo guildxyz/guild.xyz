@@ -14,7 +14,7 @@ const WorldIDRequirement = (props: RequirementProps) => {
       footer={<ConnectRequirementPlatformButton />}
       {...props}
     >
-      {`Have a World ID account connected with ${data.id === "orb" ? "Orb" : "Device"} verification level`}
+      {`Have a World ID account connected with ${data.verificationLevel === "orb" ? "Orb" : "Device"} verification level`}
     </Requirement>
   )
 }
