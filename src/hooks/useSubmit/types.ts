@@ -40,6 +40,7 @@ export type MessageParams = {
 export type UseSubmitOptions<ResponseType = void> = {
   onSuccess?: (response: ResponseType) => void
   onError?: (error: any) => void
+  onOptimistic?: (response: Promise<ResponseType>, payload: any) => void
 
   // Use catefully! If this is set to true, a .onSubmit() call can reject!
   allowThrow?: boolean

@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   description:
     "Automated membership management for the platforms your community already uses.",
   icons: {
-    icon: "guild-icon.png",
+    icon: "/guild-icon.png",
   },
 }
 

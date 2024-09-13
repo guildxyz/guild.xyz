@@ -3,8 +3,12 @@ import { Slot } from "@radix-ui/react-slot"
 import { HTMLAttributes, forwardRef } from "react"
 import { Anchor } from "../ui/Anchor"
 
-const Layout = ({ children, ...props }: HTMLAttributes<HTMLDivElement>) => (
-  <div className="flex min-h-screen flex-col" {...props}>
+const Layout = ({
+  className,
+  children,
+  ...props
+}: HTMLAttributes<HTMLDivElement>) => (
+  <div className={cn("flex min-h-screen flex-col", className)} {...props}>
     {children}
   </div>
 )
@@ -83,27 +87,29 @@ const LayoutMain = ({ children, className, ...props }: LayoutContainerProps) => 
   </LayoutContainer>
 )
 
-const LayoutFooter = ({ className, ...props }: LayoutContainerProps) => (
+const LayoutFooter = ({ className, children, ...props }: LayoutContainerProps) => (
   <LayoutContainer className={cn("mt-auto", className)} {...props} asChild>
     <footer>
-      <p className="my-8 text-center text-muted-foreground text-sm">
-        {`This website is `}
-        <Anchor
-          href="https://github.com/guildxyz/guild.xyz"
-          target="_blank"
-          showExternal
-        >
-          open source
-        </Anchor>
-        {`, and built on the `}
-        <Anchor
-          target="_blank"
-          href="https://www.npmjs.com/package/@guildxyz/sdk"
-          showExternal
-        >
-          Guild SDK
-        </Anchor>
-      </p>
+      {children || (
+        <p className="my-8 text-center text-muted-foreground text-sm">
+          {`This website is `}
+          <Anchor
+            href="https://github.com/guildxyz/guild.xyz"
+            target="_blank"
+            showExternal
+          >
+            open source
+          </Anchor>
+          {`, and built on the `}
+          <Anchor
+            target="_blank"
+            href="https://www.npmjs.com/package/@guildxyz/sdk"
+            showExternal
+          >
+            Guild SDK
+          </Anchor>
+        </p>
+      )}
     </footer>
   </LayoutContainer>
 )

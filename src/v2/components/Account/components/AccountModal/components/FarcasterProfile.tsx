@@ -65,6 +65,8 @@ const FarcasterProfile = () => {
 const ConnectFarcasterButton = ({
   onSuccess,
   isReconnection: _,
+  className,
+  children,
   ...props
 }: ButtonProps & { onSuccess?: () => void; isReconnection?: boolean }) => {
   const { captureEvent } = usePostHogContext()
@@ -190,10 +192,13 @@ const ConnectFarcasterButton = ({
         size="sm"
         disabled={farcasterProfiles?.length > 0}
         isLoading={signedKeyRequest.isLoading}
-        className="ml-auto bg-farcaster text-white hover:bg-farcaster-hover active:bg-farcaster-active"
+        className={cn(
+          "ml-auto bg-farcaster text-white hover:bg-farcaster-hover active:bg-farcaster-active",
+          className
+        )}
         {...props}
       >
-        Connect
+        {children ?? "Connect"}
       </Button>
 
       <Dialog open={isOpen}>
