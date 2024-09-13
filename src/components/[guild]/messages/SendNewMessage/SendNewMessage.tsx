@@ -137,7 +137,7 @@ const SendNewMessage = (props: ButtonProps) => {
                         {isReachableUsersLoading ? (
                           <Spinner size="xs" />
                         ) : (
-                          reachableUsers?.length ?? 0
+                          (reachableUsers?.length ?? 0)
                         )}
                       </Text>
                       <Text

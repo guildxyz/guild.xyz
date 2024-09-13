@@ -1,4 +1,4 @@
-import { MAX_LEVEL, MAX_XP, RANKS } from "../[username]/constants"
+import { MAX_LEVEL, RANKS, XP_SUM } from "../[username]/constants"
 import { useExperiences } from "../_hooks/useExperiences"
 
 const generateExponentialArray = (
@@ -14,19 +14,21 @@ const generateExponentialArray = (
 export const calculateXpProgression = ({
   experienceCount,
 }: { experienceCount: number }) => {
-  const levels = generateExponentialArray(MAX_LEVEL, MAX_XP, 1.03).map((num) =>
-    Math.floor(num)
+  if (MAX_LEVEL < 1) throw new Error(`max level must be positive`)
+  const levels = generateExponentialArray(MAX_LEVEL, XP_SUM, 1.008)
+    .map((num) => Math.floor(num))
+    .map((value, _, arr) => value - arr[0])
+  const levelIndex = levels.findIndex((xp) => experienceCount < xp)
+  const level = levelIndex === -1 ? MAX_LEVEL : levelIndex
+  const currentLevelXp = level > 0 ? levels[level - 1] : 0
+  const nextLevelXp = level < MAX_LEVEL ? levels[level] : levels[MAX_LEVEL - 1]
+  const progress = Math.min(
+    (experienceCount - currentLevelXp) / (nextLevelXp - currentLevelXp),
+    1
   )
-  let levelIndex = levels.findIndex((level) => experienceCount < level)
-  levelIndex = levelIndex === -1 ? levels.length - 1 : levelIndex
-  const level = levels.at(levelIndex)
-  const levelInRank = Math.floor(MAX_LEVEL / RANKS.length)
-  const rankIndex = Math.max(0, Math.floor((levelIndex - 1) / levelInRank))
-  const rank = RANKS.at(rankIndex)
-  if (!rank || !level) throw new Error("failed to calculate rank")
-  const nextLevel = levels.at(levelIndex + 1)
-  const progress = experienceCount / (nextLevel || experienceCount)
-  return { progress, rank, levelIndex, experienceCount, level }
+  const rank = RANKS[Math.floor(level / (MAX_LEVEL / RANKS.length))]
+
+  return { progress, rank, currentLevelXp, nextLevelXp, experienceCount, level }
 }
 
 export const useExperienceProgression = (showOwnProfile?: boolean) => {

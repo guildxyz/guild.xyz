@@ -43,7 +43,7 @@ const FormPage = ({ formId }: Props) => {
   useEffect(() => {
     if (!isMembershipUpdateDone) return
     mutateForm()
-  }, [isMembershipUpdateDone, mutateForm])
+  }, [isMembershipUpdateDone])
 
   const relevantGuildPlatform = guildPlatforms.find(
     (gp) => gp.platformGuildData?.formId === formId

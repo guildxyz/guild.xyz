@@ -18,7 +18,7 @@ const PointsReward = ({ platform }: RewardProps) => {
   const { dynamicUserAmount } = useDynamicRewardUserAmount(platform)
 
   const score = platform?.dynamicAmount
-    ? dynamicUserAmount ?? "some"
+    ? (dynamicUserAmount ?? "some")
     : platform.platformRoleData?.score
 
   const iconColor = useColorModeValue("green.500", "green.300")

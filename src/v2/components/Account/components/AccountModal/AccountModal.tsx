@@ -104,7 +104,7 @@ const AccountModal = () => {
                         />
                       </Avatar>
                       <LevelBadge
-                        levelIndex={xp.levelIndex}
+                        level={xp.level}
                         rank={xp.rank}
                         className="absolute right-0.5 bottom-0.5"
                       />
@@ -117,10 +117,21 @@ const AccountModal = () => {
                       </span>
                       <CheckMark className="ml-0.5 inline-block fill-yellow-500" />
                     </h3>
-                    <div className="text-muted-foreground text-sm">
-                      {xp
-                        ? `${xp.experienceCount} / ${xp.level} XP`
-                        : `@${guildProfile.username}`}
+                    <div className="flex gap-2 text-muted-foreground text-sm">
+                      <span>@{guildProfile.username}</span>
+                      <Separator orientation="vertical" />
+                      {xp && (
+                        <Tooltip>
+                          <TooltipTrigger>{xp.experienceCount} XP</TooltipTrigger>
+                          <TooltipContent>
+                            {`${xp.currentLevelXp} -> `}
+                            <span className="font-bold">
+                              {xp.experienceCount} XP
+                            </span>
+                            {` -> ${xp.nextLevelXp}`}
+                          </TooltipContent>
+                        </Tooltip>
+                      )}
                     </div>
                     <div className="mt-2 flex gap-1.5">
                       <Anchor

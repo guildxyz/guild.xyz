@@ -54,7 +54,7 @@ export const ProfileBackgroundImageUploader = ({
     <Tooltip>
       <TooltipTrigger>
         <div {...getRootProps()} className={buttonVariants(buttonProps as any)}>
-        <input {...getInputProps()} hidden />
+          <input {...getInputProps()} hidden />
           {isDragActive ? <UploadSimple weight="bold" size={24} /> : children}
         </div>
       </TooltipTrigger>

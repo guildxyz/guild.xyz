@@ -55,7 +55,7 @@ const UserTag = forwardRef<Props, "span">(
           <TagLeftIcon mr={0.5} as={GuildAvatar} address={address} size={3} />
         )}
         <TagLabel>
-          {address ? shortenHex(address, 3) : userId ?? "Unknown user"}
+          {address ? shortenHex(address, 3) : (userId ?? "Unknown user")}
         </TagLabel>
         {rightIcon && <TagRightIcon as={rightIcon} />}
       </Tag>
