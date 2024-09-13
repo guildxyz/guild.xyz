@@ -37,13 +37,13 @@ const SelectRoleOrSetRequirements = ({ isRoleSelectorDisabled }: Props) => {
 
   const alreadyUsedRoles = new Set(
     existingGuildPlatform
-      ? roles
+      ? (roles
           ?.filter((role) =>
             role.rolePlatforms?.some(
               (rp) => rp.guildPlatformId === existingGuildPlatform.id
             )
           )
-          ?.map((role) => role.id) ?? []
+          ?.map((role) => role.id) ?? [])
       : []
   )
 

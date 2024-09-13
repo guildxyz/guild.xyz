@@ -242,27 +242,27 @@ const useBalancy = (
     holders?.addresses ??
     (!!baseFieldPath
       ? requirement?.data?.validAddresses
-      : (logic === "OR"
-          ? [
-              ...new Set(
-                allowlists
-                  ?.flat()
-                  ?.filter(Boolean)
-                  ?.map((addr) => addr.toLowerCase())
-              ),
-            ]
-          : [
-              ...allowlists?.reduce(
-                (prev, curr) =>
-                  new Set(
-                    curr?.filter((addr) => !!addr && prev.has(addr.toLowerCase())) ??
-                      []
-                  ),
+      : logic === "OR"
+        ? [
+            ...new Set(
+              allowlists
+                ?.flat()
+                ?.filter(Boolean)
+                ?.map((addr) => addr.toLowerCase())
+            ),
+          ]
+        : [
+            ...allowlists?.reduce(
+              (prev, curr) =>
                 new Set(
-                  allowlists?.[0]?.filter(Boolean)?.map((addr) => addr.toLowerCase())
-                )
-              ),
-            ]) || undefined)
+                  curr?.filter((addr) => !!addr && prev.has(addr.toLowerCase())) ??
+                    []
+                ),
+              new Set(
+                allowlists?.[0]?.filter(Boolean)?.map((addr) => addr.toLowerCase())
+              )
+            ),
+          ])
 
   return {
     addresses,

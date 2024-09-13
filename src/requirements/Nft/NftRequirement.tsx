@@ -135,9 +135,9 @@ const NftRequirement = (props: RequirementProps) => {
 
       {nftName ||
         (!requirement.name || requirement.name === "-"
-          ? metadata?.slug ?? (
+          ? (metadata?.slug ?? (
               <DataBlock>{shortenHex(requirementAddress, 3)}</DataBlock>
-            )
+            ))
           : requirement.name !== "-" && requirement.name)}
 
       {requirement.data?.attributes?.length ? (

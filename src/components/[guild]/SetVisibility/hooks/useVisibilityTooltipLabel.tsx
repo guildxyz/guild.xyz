@@ -16,7 +16,8 @@ const useVisibilityTooltipLabel = (
 
   const tooltipDescription =
     visibility !== "PRIVATE" ? (
-      VISIBILITY_DATA[visibility]?.description ?? VISIBILITY_DATA.PUBLIC.description
+      (VISIBILITY_DATA[visibility]?.description ??
+      VISIBILITY_DATA.PUBLIC.description)
     ) : !visibilityRoleId ? (
       "Only visible to role holders"
     ) : (

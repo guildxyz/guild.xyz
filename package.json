@@ -31,7 +31,7 @@
     "@emotion/styled": "^11.11.0",
     "@fuels/connectors": "^0.5.0",
     "@fuels/react": "^0.20.0",
-    "@guildxyz/types": "^1.10.10",
+    "@guildxyz/types": "^1.10.13",
     "@hcaptcha/react-hcaptcha": "^1.4.4",
     "@hookform/resolvers": "^3.3.4",
     "@lexical/code": "^0.12.0",
@@ -128,7 +128,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.8.3",
+    "@biomejs/biome": "1.9.0",
     "@chromatic-com/storybook": "^1.6.0",
     "@hookform/devtools": "^4.3.0",
     "@playwright/test": "^1.45.3",

@@ -17,8 +17,8 @@ const PointsPreview = (): JSX.Element => {
   const { guildPlatform } = useGuildPlatform(guildPlatformId)
   const { name, imageUrl } =
     guildPlatformId && guildPlatformId !== CREATE_NEW_OPTION
-      ? guildPlatform.platformGuildData ?? {}
-      : platformGuildData ?? {}
+      ? (guildPlatform.platformGuildData ?? {})
+      : (platformGuildData ?? {})
 
   return (
     <RewardPreview

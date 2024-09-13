@@ -23,7 +23,7 @@ export const RewardBadge: FunctionComponent<{
   const rewardName = reward?.platformGuildName ?? reward?.data?.name
   const name =
     reward?.platformId === PlatformType.DISCORD
-      ? role?.name ?? "Unknown role"
+      ? (role?.name ?? "Unknown role")
       : rewardName
 
   const Icon = rewards[reward?.platformName]?.icon
