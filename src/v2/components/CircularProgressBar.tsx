@@ -40,10 +40,13 @@ export const CircularProgressBar: React.FC<CircularProgressBarProps> = ({
         strokeWidth={strokeWidth}
       />
       <circle
-        className={cn("transition-all ease-out", {
+        className={cn("transition ease-out", {
           "stroke-primary": !color,
         })}
-        style={{ transitionDuration: "3.33s" }}
+        style={{
+          transitionDuration: "3.33s",
+          transitionProperty: "stroke-dashoffset",
+        }}
         cx={size / 2}
         cy={size / 2}
         r={radius}
@@ -51,7 +54,7 @@ export const CircularProgressBar: React.FC<CircularProgressBarProps> = ({
         stroke={color}
         strokeWidth={strokeWidth}
         strokeDasharray={circumference}
-        strokeDashoffset={offset}
+        strokeDashoffset={offset || 0}
         strokeLinecap="round"
         transform={`rotate(-90 ${size / 2} ${size / 2})`}
       />

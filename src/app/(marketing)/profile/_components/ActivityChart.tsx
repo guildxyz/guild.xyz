@@ -72,10 +72,10 @@ const ActivityChartChildren = ({
   const xScale = useMemo(
     () =>
       scaleBand<string>({
-        range: [0, Math.min(data.length * 18, xMax)],
+        range: [0, Math.min(data.length * 14, xMax)],
         round: true,
         domain: data.map(getX),
-        padding: 0.4,
+        padding: 0,
       }),
     [xMax]
   )
@@ -100,30 +100,40 @@ const ActivityChartChildren = ({
             const barX = xScale(x)
             const barY = yMax - barHeight
             return (
-              <Bar
-                ry={4}
-                key={currentXp.id}
-                x={barX}
-                y={barY}
-                width={barWidth}
-                height={barHeight}
-                fill={xp?.rank.color}
-                onMouseLeave={() => {
-                  tooltipTimeout = window.setTimeout(() => {
-                    hideTooltip()
-                  }, 300)
-                }}
-                onMouseMove={(event) => {
-                  if (tooltipTimeout) clearTimeout(tooltipTimeout)
-                  const eventSvgCoords = localPoint(event)
-                  const left = (barX || 0) + barWidth / 2
-                  showTooltip({
-                    tooltipData: currentXp,
-                    tooltipTop: eventSvgCoords?.y,
-                    tooltipLeft: left,
-                  })
-                }}
-              />
+              <g key={currentXp.id}>
+                <rect
+                  x={barX}
+                  y={0}
+                  width={barWidth}
+                  height={yMax}
+                  fill="transparent"
+                  className="cursor-pointer px-0.5 hover:fill-card-foreground/10"
+                  onMouseLeave={() => {
+                    tooltipTimeout = window.setTimeout(() => {
+                      hideTooltip()
+                    }, 120)
+                  }}
+                  onMouseMove={(event) => {
+                    if (tooltipTimeout) clearTimeout(tooltipTimeout)
+                    const eventSvgCoords = localPoint(event)
+                    const left = (barX || 0) + barWidth / 2
+                    showTooltip({
+                      tooltipData: currentXp,
+                      tooltipTop: eventSvgCoords?.y,
+                      tooltipLeft: left,
+                    })
+                  }}
+                />
+                <Bar
+                  className="pointer-events-none"
+                  ry={4}
+                  x={barX && barX + 2}
+                  y={barY}
+                  width={barWidth - 4}
+                  height={barHeight}
+                  fill={xp?.rank.color}
+                />
+              </g>
             )
           })}
         </Group>
@@ -138,7 +148,11 @@ const ActivityChartChildren = ({
         >
           <strong>+{tooltipData.amount} XP</strong>
           <div className="text-muted-foreground">
-            {new Date(tooltipData.createdAt).toLocaleDateString()}
+            {new Date(tooltipData.createdAt).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+            })}
           </div>
         </TooltipInPortal>
       )}
@@ -152,7 +166,7 @@ export const ActivityChart = () => {
   if (!rawData) return <Skeleton className="h-7 w-full" />
 
   if (rawData.length === 0)
-    return <p className="text-muted-foreground">There's no activity this month</p>
+    return <p className="text-muted-foreground">There's no recent activity</p>
 
   return (
     <div className="h-7">

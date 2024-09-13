@@ -15,17 +15,12 @@ const levelBadgeVariants = cva("flex items-center justify-center", {
 })
 
 type LevelBadgeProps = {
-  levelIndex: number
+  level: number
   rank: Rank
   className?: string
 } & VariantProps<typeof levelBadgeVariants>
 
-export const LevelBadge = ({
-  rank,
-  levelIndex,
-  size,
-  className,
-}: LevelBadgeProps) => {
+export const LevelBadge = ({ rank, level, size, className }: LevelBadgeProps) => {
   return (
     <div className={levelBadgeVariants({ size, className })}>
       <Polygon
@@ -34,7 +29,7 @@ export const LevelBadge = ({
         className="brightness-75"
       />
       <span className="-mt-0.5 absolute font-bold font-display text-white">
-        {levelIndex}
+        {level}
       </span>
     </div>
   )
