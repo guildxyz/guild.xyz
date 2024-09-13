@@ -21,7 +21,7 @@ const ChooseGuildTemplateButton = () => {
           <Button
             colorScheme="info"
             size="xl"
-            disabled={isWeb3Connected}
+            disabled={!!isWeb3Connected}
             onClick={() => setIsWalletSelectorModalOpen(true)}
             className="w-full"
           >

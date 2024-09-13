@@ -9,7 +9,7 @@ const CreateGuildButton = () => {
   const { control, handleSubmit } = useFormContext<CreateGuildFormType>()
   const { onSubmit, isLoading } = useCreateGuild()
 
-  const templateId = useWatch({ control, name: "templateId" })
+  const roles = useWatch({ control, name: "roles" })
 
   return (
     <Button
@@ -17,7 +17,7 @@ const CreateGuildButton = () => {
       isLoading={isLoading}
       loadingText="Creating guild"
       onClick={handleSubmit(onSubmit)}
-      disabled={!templateId}
+      disabled={!roles?.length}
     >
       Create guild
     </Button>

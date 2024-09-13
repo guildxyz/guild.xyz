@@ -11,11 +11,13 @@ import {
   useState,
 } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import getRandomInt from "utils/getRandomInt"
-import { CreateGuildFormType, CreateGuildStep, GuildTemplate } from "../types"
+import {
+  CreatableGuildTemplate,
+  CreateGuildFormType,
+  CreateGuildStep,
+} from "../types"
 
 const defaultValues = {
-  templateId: 0,
   name: "",
   imageUrl: "",
   contacts: [
@@ -30,21 +32,11 @@ const defaultValues = {
    * Temporarily creating a default Member role, later the users will be able to pick from Guild Templates
    */
   urlName: "",
-  roles: [
-    {
-      name: "Member",
-      imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
-      requirements: [
-        {
-          type: "FREE",
-        },
-      ],
-    },
-  ],
+  roles: [],
 } satisfies CreateGuildFormType
 
 const CreateGuildContext = createContext<{
-  templates: GuildTemplate[]
+  templates: CreatableGuildTemplate[]
   step: CreateGuildStep
   setStep: Dispatch<SetStateAction<CreateGuildStep>>
 }>({
@@ -56,7 +48,9 @@ const CreateGuildContext = createContext<{
 const CreateGuildProvider = ({
   templates,
   children,
-}: PropsWithChildren<{ templates: GuildTemplate[] }>) => {
+}: PropsWithChildren<{
+  templates: CreatableGuildTemplate[]
+}>) => {
   const methods = useForm<CreateGuildFormType>({
     mode: "all",
     resolver: zodResolver(schemas.GuildCreationPayloadSchema),

@@ -9,17 +9,20 @@ import {
 
 export type CreateGuildFormType = Pick<
   Schemas["GuildCreationPayload"],
-  "name" | "urlName" | "imageUrl" | "contacts" | "roles" | "theme"
-> & {
-  templateId: number
-}
+  "name" | "urlName" | "imageUrl" | "contacts" | "roles" | "theme" | "guildPlatforms"
+>
 
-export type GuildTemplate = Omit<Guild, "name" | "urlName"> & {
-  id: number
-  name?: string
-  urlName?: string
+export type GuildTemplate = Pick<
+  Guild,
+  "name" | "urlName" | "imageUrl" | "theme"
+> & {
   roles: (Role & { rolePlatforms: RoleReward[]; requirements: Requirement[] })[]
   guildPlatforms: GuildReward[]
 }
+
+export type CreatableGuildTemplate = Pick<
+  CreateGuildFormType,
+  "roles" | "guildPlatforms" | "theme" | "name" | "imageUrl" | "urlName"
+>
 
 export type CreateGuildStep = "GENERAL_DETAILS" | "CHOOSE_TEMPLATE"

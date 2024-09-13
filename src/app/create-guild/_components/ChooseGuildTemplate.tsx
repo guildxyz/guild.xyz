@@ -1,8 +1,11 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
 import { buttonVariants } from "@/components/ui/Button"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/RadioGroup"
 import { Skeleton } from "@/components/ui/Skeleton"
 import { cn } from "@/lib/utils"
 import { AnimationProps, motion } from "framer-motion"
+import { useFormContext } from "react-hook-form"
+import { CreateGuildFormType } from "../types"
 import { CreateGuildButton } from "./CreateGuildButton"
 import { useCreateGuildContext } from "./CreateGuildProvider"
 
@@ -45,8 +48,10 @@ const slideFadeInVariants = {
 
 const contentVariants = categoryListVariants
 
+const MotionRadioGroup = motion(RadioGroup)
 const ChooseGuildTemplate = () => {
   const { templates } = useCreateGuildContext()
+  const { setValue } = useFormContext<CreateGuildFormType>()
 
   return (
     <motion.div
@@ -55,36 +60,50 @@ const ChooseGuildTemplate = () => {
       initial="hide"
       animate="show"
     >
-      <motion.div
-        className="flex flex-col gap-2 bg-card-secondary p-6"
+      <MotionRadioGroup
+        className="gap-2 bg-card-secondary p-6"
         variants={categoryListVariants}
+        onValueChange={(newTemplateUrlName) => {
+          const template = templates.find((t) => t.urlName === newTemplateUrlName)
+          setValue("theme", template?.theme)
+          setValue("roles", template?.roles ?? [])
+          setValue("guildPlatforms", template?.guildPlatforms)
+        }}
       >
         {templates.map((template) => (
-          <motion.div
-            key={template.id}
-            className={cn(
-              buttonVariants({
-                variant: "ghost",
-                className: "flex h-16 justify-start gap-4 border border-border p-4",
-              })
-            )}
-            variants={categoryVariants}
-          >
-            <Avatar className="row-span-2 size-8">
-              <AvatarImage
-                src={template.imageUrl ?? ""}
-                alt={`${template.name} logo`}
-                width={32}
-                height={48}
-              />
-              <AvatarFallback>
-                <Skeleton className="size-full" />
-              </AvatarFallback>
-            </Avatar>
-            <span className="font-bold">{template.name}</span>
+          <motion.div key={template.urlName} variants={categoryVariants}>
+            <RadioGroupItem
+              value={template.urlName}
+              id={template.urlName}
+              className="hidden [&~label]:data-[state=checked]:border-primary [&~label]:data-[state=checked]:ring-1 [&~label]:data-[state=checked]:ring-primary"
+            />
+            <label
+              htmlFor={template.urlName}
+              tabIndex={0}
+              className={cn(
+                buttonVariants({
+                  variant: "ghost",
+                  className:
+                    "flex h-16 justify-start gap-4 border border-border p-4",
+                })
+              )}
+            >
+              <Avatar className="row-span-2 size-8">
+                <AvatarImage
+                  src={template.imageUrl ?? ""}
+                  alt={`${template.name} logo`}
+                  width={32}
+                  height={48}
+                />
+                <AvatarFallback>
+                  <Skeleton className="size-full" />
+                </AvatarFallback>
+              </Avatar>
+              <span className="font-bold">{template.name}</span>
+            </label>
           </motion.div>
         ))}
-      </motion.div>
+      </MotionRadioGroup>
 
       <motion.div
         className="col-span-2 flex flex-col gap-6 p-6"
@@ -97,15 +116,15 @@ const ChooseGuildTemplate = () => {
           Choose a template
         </motion.div>
         <div className="flex items-end justify-center gap-6">
-          <div className="flex flex-col gap-1">
+          <div className="flex w-full flex-col gap-1">
             <motion.span className="font-bold" variants={slideFadeInVariants}>
-              DeFi
+              Choose a template
             </motion.span>
             <motion.p
               className="text-muted-foreground"
               variants={slideFadeInVariants}
             >
-              Motivate and reward users for their participation and contributions.
+              You can now choose a Guild template now.
             </motion.p>
           </div>
 
