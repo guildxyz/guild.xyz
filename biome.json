@@ -11,7 +11,14 @@
   },
   "files": {
     "include": ["src", "playwright", "playwright.config.ts"],
-    "ignore": ["node_modules", ".next", "public", ".out", "package-lock.json"]
+    "ignore": [
+      "node_modules",
+      ".next",
+      "public",
+      ".out",
+      "package-lock.json",
+      "*.css"
+    ]
   },
   "organizeImports": {
     "enabled": true

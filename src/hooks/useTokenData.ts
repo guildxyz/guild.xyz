@@ -42,15 +42,15 @@ const useTokenData = (chain: Chain, address: string, onFinish?: () => void) => {
   const name =
     isCoin && chain
       ? CHAIN_CONFIG[chain].nativeCurrency.name
-      : tokenDataFromApi?.name ?? swrResponse.data?.name
+      : (tokenDataFromApi?.name ?? swrResponse.data?.name)
   const symbol =
     isCoin && chain
       ? CHAIN_CONFIG[chain].nativeCurrency.symbol
-      : swrResponse.data?.symbol ?? tokenDataFromApi?.symbol
+      : (swrResponse.data?.symbol ?? tokenDataFromApi?.symbol)
   const decimals =
     isCoin && chain
       ? CHAIN_CONFIG[chain].nativeCurrency.decimals
-      : tokenDataFromApi?.decimals ?? swrResponse.data?.decimals
+      : (tokenDataFromApi?.decimals ?? swrResponse.data?.decimals)
   const logoURI =
     isCoin && chain ? CHAIN_CONFIG[chain].iconUrl : tokenDataFromApi?.logoURI
 

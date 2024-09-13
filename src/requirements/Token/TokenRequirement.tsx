@@ -24,11 +24,11 @@ const TokenRequirement = ({ ...rest }: Props) => {
       image={
         requirement.type === "COIN"
           ? CHAIN_CONFIG[requirementChain]?.nativeCurrency?.iconUrl
-          : data?.logoURI ?? (
+          : (data?.logoURI ?? (
               <Text as="span" fontWeight="bold" fontSize="xx-small">
                 ERC20
               </Text>
-            )
+            ))
       }
       isImageLoading={isValidating}
       footer={
@@ -57,7 +57,7 @@ const TokenRequirement = ({ ...rest }: Props) => {
       } ${
         requirement.type === "COIN"
           ? CHAIN_CONFIG[requirementChain].nativeCurrency.symbol
-          : data?.symbol ?? requirement.symbol
+          : (data?.symbol ?? requirement.symbol)
       }`}
     </Requirement>
   )

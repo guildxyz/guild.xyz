@@ -56,14 +56,14 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
     (
       (estimatedPriceInSellToken ?? 0) +
       (estimatedGuildFeeInSellToken ?? 0) +
-      (isNativeCurrency ? estimatedGasInFloat ?? 0 : 0)
+      (isNativeCurrency ? (estimatedGasInFloat ?? 0) : 0)
     )?.toFixed(3)
   )
   const maxPriceSum = Number(
     (
       (maxPriceInSellToken ?? 0) +
       (maxGuildFeeInSellToken ?? 0) +
-      (isNativeCurrency ? estimatedGasInFloat ?? 0 : 0)
+      (isNativeCurrency ? (estimatedGasInFloat ?? 0) : 0)
     )?.toFixed(3)
   )
 
@@ -82,8 +82,8 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
                   {estimatedPriceInUSD && estimatedGuildFeeInUSD
                     ? `$${(
                         estimatedPriceInUSD +
-                        estimatedGuildFeeInUSD +
-                        (estimatedGasInUSD ?? 0)
+                          estimatedGuildFeeInUSD +
+                          (estimatedGasInUSD ?? 0)
                       )?.toFixed(2)}`
                     : "$0.00"}
                   {" = "}

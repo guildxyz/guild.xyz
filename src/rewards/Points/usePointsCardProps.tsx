@@ -13,7 +13,7 @@ const usePointsCardProps: CardPropsHook = (
   const { dynamicUserAmount } = useDynamicRewardUserAmount(rolePlatform)
 
   const score = !!rolePlatform?.dynamicAmount
-    ? dynamicUserAmount ?? "some"
+    ? (dynamicUserAmount ?? "some")
     : rolePlatform?.platformRoleData?.score
 
   const bgColor = useColorModeValue("gray.700", "gray.600")

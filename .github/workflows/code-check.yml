@@ -10,8 +10,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Setup Biome
+        uses: biomejs/setup-biome@v2.2.1
       - name: Run Biome
-        run: npx biome ci --reporter=github .
+        run: biome ci --reporter=github .
   type:
     runs-on: ubuntu-latest
     steps:
