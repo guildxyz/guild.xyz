@@ -127,6 +127,7 @@ const JoinModal = ({
               <CollapsibleContent>
                 <div className="mb-3 flex w-full flex-col items-stretch gap-3">
                   <WalletAuthButton />
+                  {renderedSteps?.length > 0 && <Separator />}
                   {renderedSteps}
                 </div>
               </CollapsibleContent>
