@@ -6,12 +6,7 @@ const CheckboxExample = (props: CheckboxProps) => {
   return (
     <div className="flex items-center space-x-2">
       <Checkbox id="terms" {...props} />
-      <Label
-        htmlFor="terms"
-        className="peer-disabled:cursor-not-allowed peer-disabled:opacity-50"
-      >
-        Accept terms and conditions
-      </Label>
+      <Label htmlFor="terms">Accept terms and conditions</Label>
     </div>
   )
 }

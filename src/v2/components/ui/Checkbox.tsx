@@ -15,12 +15,12 @@ const Checkbox = forwardRef<
   <CheckboxPrimitive.Root
     ref={ref}
     className={cn(
-      "peer relative size-4 shrink-0 rounded-sm border-2 border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:border-0 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground",
+      "relative size-4 shrink-0 rounded-sm border-2 border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:border-0 data-[state=checked]:bg-info data-[state=checked]:text-info-foreground [&~label]:cursor-pointer [&~label]:disabled:cursor-not-allowed [&~label]:disabled:opacity-50",
       className
     )}
     {...props}
   >
-    <CheckboxPrimitive.Indicator className="absolute inset-0 flex items-center justify-center rounded-full bg-primary">
+    <CheckboxPrimitive.Indicator className="absolute inset-0 flex items-center justify-center rounded-full bg-info">
       <Check className="size-[75%]" weight="bold" />
     </CheckboxPrimitive.Indicator>
   </CheckboxPrimitive.Root>
