@@ -165,10 +165,5 @@
     "typescript": "^5.5.3",
     "webpack-bugsnag-plugins": "^1.8.0"
   },
-  "snyk": true,
-  "overrides": {
-    "@coinbase/waas-sdk-viem": {
-      "viem": "^2.8.4"
-    }
-  }
+  "snyk": true
 }
