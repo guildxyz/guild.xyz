@@ -20,26 +20,17 @@ import { useAtomValue } from "jotai"
 import dynamic from "next/dynamic"
 import { ComponentType, Fragment } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import { RequirementType } from "requirements/types"
+
 import rewards from "rewards"
 import { PlatformName } from "types"
 import ConnectPlatform from "./components/ConnectPlatform"
-import ShareSocialsCheckbox from "./components/ShareSocialsCheckbox"
+import { ShareSocialsCheckbox } from "./components/ShareSocialsCheckbox"
 import WalletAuthButton from "./components/WalletAuthButton"
 import GetRewardsJoinStep from "./components/progress/GetRewardsJoinStep"
 import GetRolesJoinStep from "./components/progress/GetRolesJoinStep"
 import SatisfyRequirementsJoinStep from "./components/progress/SatisfyRequirementsJoinStep"
 import useJoin from "./hooks/useJoin"
-
-type Props = {
-  isOpen: boolean
-  onClose: () => void
-}
-
-type JoinForm = { shareSocials?: boolean }
-
-type ExtractPrefix<T> = T extends `${infer Prefix}_${string}` ? Prefix : T
-type Joinable = PlatformName | ExtractPrefix<RequirementType>
+import { JoinForm, Joinable } from "./types"
 
 const customJoinStep: Partial<Record<Joinable, ComponentType<unknown>>> = {
   POLYGON: dynamic(() => import("./components/ConnectPolygonIDJoinStep")),
@@ -47,7 +38,13 @@ const customJoinStep: Partial<Record<Joinable, ComponentType<unknown>>> = {
   EMAIL: dynamic(() => import("./components/ConnectEmailJoinStep")),
 }
 
-const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
+const JoinModal = ({
+  isOpen,
+  onClose,
+}: {
+  isOpen: boolean
+  onClose: () => void
+}): JSX.Element => {
   const { isWeb3Connected } = useWeb3ConnectionManager()
   const isWalletSelectorModalOpen = useAtomValue(walletSelectorModalAtom)
   const { name, requiredPlatforms, featureFlags } = useGuild()
