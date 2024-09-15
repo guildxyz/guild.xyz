@@ -148,7 +148,7 @@ test("user is not eligible - can't mint nft", async ({
 
   const roleCard = await page.locator(`#role-${UNHAPPY_PATH_ROLE_ID}`)
   const nftRewardCardButton = await roleCard.locator("a", {
-    hasText: "Collect NFT",
+    hasText: NFT_REWARD_CARD_BUTTON_TEXT,
   })
   const collectNFTPageURL = await nftRewardCardButton.getAttribute("href")
   await nftRewardCardButton.click()
@@ -181,6 +181,49 @@ test("user is not eligible - can't mint nft", async ({
   await expect(errorToast).toBeVisible({
     timeout: 30_000,
   })
+})
+
+test("user is eligible - can mint nft", async ({ pageWithKeyPair: { page } }) => {
+  await page.goto(GUILD_CHECKOUT_TEST_GUILD_URL_NAME)
+
+  await page.waitForResponse("**/v2/users/*/memberships?guildId=*", {
+    timeout: 30_000,
+  })
+
+  const roleCard = await page.locator(`#role-${HAPPY_PATH_ROLE_ID}`)
+  const nftRewardCardButton = await roleCard.locator("a", {
+    hasText: NFT_REWARD_CARD_BUTTON_TEXT,
+  })
+  const collectNFTPageURL = await nftRewardCardButton.getAttribute("href")
+  await nftRewardCardButton.click()
+  await page.waitForURL(collectNFTPageURL ?? "")
+
+  const title = await page.locator("h2")
+  await expect(title).toHaveText(NFT_2_NAME)
+
+  const collectNFTButton = await page.getByTestId("collect-nft-button")
+  await expect(collectNFTButton).toBeEnabled({
+    timeout: 30_000,
+  })
+
+  await collectNFTButton.click()
+  await page.waitForResponse("**/v2/guilds/*/roles/*/role-platforms/*/claim")
+
+  const successToast = await page.locator("li[role='status']", {
+    hasText: SUCCESS_TOAST_TEXT,
+  })
+  await expect(successToast).toBeVisible({
+    timeout: 30_000,
+  })
+
+  const successModal = await page.getByRole("dialog", {
+    name: "Success",
+  })
+  await expect(successModal).toBeVisible({
+    timeout: 30_000,
+  })
+  const modalCloseButton = await successModal.getByText("Close")
+  await modalCloseButton.click()
 })
 
 // Utils, constants
@@ -236,9 +279,11 @@ const UNLIMITED_SEGMENT_LOCATOR = "> label:first-child > div:last-child"
 const getNumberInputLocator = (numberInputName: string) =>
   `input[name='${numberInputName}']`
 
+const NFT_REWARD_CARD_BUTTON_TEXT = new RegExp("(Collect NFT|View NFT details)")
 const NFT_1_NAME = "Cypress Gang #1"
 const UNHAPPY_PATH_ROLE_ID = 91062
 const NOT_ELIGIBLE_TOAST_TEXT = "You're not eligible for claiming this reward"
 const NFT_2_NAME = "Cypress Gang #2"
 const HAPPY_PATH_ROLE_ID = 91063
 const COLLECT_BUTTON_TEXT_REGEX = new RegExp("(Check access & collect|Collect now)")
+const SUCCESS_TOAST_TEXT = "Successfully collected NFT!"
