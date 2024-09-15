@@ -135,6 +135,52 @@ test("fill nft form and deploy a contract", async ({
   await expect(successToast).toBeVisible({ timeout: 30_000 })
 })
 
+test("user is not eligible - can't mint nft", async ({
+  pageWithKeyPair: { page },
+}) => {
+  await page.goto(GUILD_CHECKOUT_TEST_GUILD_URL_NAME)
+
+  await page.waitForResponse("**/v2/users/*/memberships?guildId=*")
+
+  const roleCard = await page.locator(`#role-${UNHAPPY_PATH_ROLE_ID}`)
+  const nftRewardCardButton = await roleCard.locator("a", {
+    hasText: "Collect NFT",
+  })
+  const collectNFTPageURL = await nftRewardCardButton.getAttribute("href")
+  await nftRewardCardButton.click()
+  await page.waitForURL(collectNFTPageURL ?? "")
+
+  const title = await page.locator("h2")
+  await expect(title).toHaveText(NFT_1_NAME)
+
+  const collectNFTButton = await page.getByTestId("collect-nft-button")
+  await expect(collectNFTButton).toBeEnabled({
+    timeout: 30_000,
+  })
+  const whaleButton = await page.locator("button", {
+    hasText: "whale",
+  })
+  await whaleButton.click()
+  await expect(collectNFTButton).toBeDisabled()
+  await expect(collectNFTButton).toHaveText("Insufficient balance")
+  const shrimpButton = await page.locator("button", {
+    hasText: "Shrimp",
+  })
+  await shrimpButton.click()
+  await expect(collectNFTButton).toBeEnabled()
+  await expect(collectNFTButton).toHaveText(COLLECT_BUTTON_TEXT_REGEX)
+
+  await collectNFTButton.click()
+  await page.waitForResponse("**/v2/guilds/*/roles/*/role-platforms/*/claim")
+
+  const errorToast = await page.getByText(NOT_ELIGIBLE_TOAST_TEXT)
+  await expect(errorToast).toBeVisible({
+    timeout: 30_000,
+  })
+})
+
+// Utils, constants
+
 const testSegmentedControlWithNumberInput = async (
   addNFTModal: Locator,
   segmentedControlLocator: Locator,
@@ -185,3 +231,10 @@ const testSegmentedControlWithNumberInputReset = async (
 const UNLIMITED_SEGMENT_LOCATOR = "> label:first-child > div:last-child"
 const getNumberInputLocator = (numberInputName: string) =>
   `input[name='${numberInputName}']`
+
+const NFT_1_NAME = "Cypress Gang #1"
+const UNHAPPY_PATH_ROLE_ID = 91062
+const NOT_ELIGIBLE_TOAST_TEXT = "You're not eligible for claiming this reward"
+const NFT_2_NAME = "Cypress Gang #2"
+const HAPPY_PATH_ROLE_ID = 91063
+const COLLECT_BUTTON_TEXT_REGEX = new RegExp("(Check access & collect|Collect now)")

@@ -85,7 +85,7 @@ const CollectNftButton = ({
 
   return (
     <Button
-      data-test="collect-nft-button"
+      data-testid="collect-nft-button"
       size="lg"
       isLoading={isLoading}
       loadingText={loadingText}
