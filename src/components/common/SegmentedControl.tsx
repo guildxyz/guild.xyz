@@ -63,6 +63,7 @@ const SegmentedControl = <TOption extends SegmentedControlOption>({
       gap={1}
       {...styleProps}
       {...getRootProps()}
+      data-testid={`${useRadioGroupProps.name}-segmented-control`}
     >
       {options.map((option) => (
         <SegmentedControlButton

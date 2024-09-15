@@ -8,7 +8,6 @@ import {
   ModalContent,
   ModalHeader,
   Stack,
-  useBreakpointValue,
   useColorMode,
 } from "@chakra-ui/react"
 import { useAddRewardContext } from "components/[guild]/AddRewardContext"
@@ -54,8 +53,6 @@ const SolutionsPanel = ({
   })
 
   const { startSessionRecording } = usePostHogContext()
-
-  const isMobile = useBreakpointValue({ base: true, md: false })
 
   const onSelectReward = (platform: PlatformName) => {
     if (platform === "CONTRACT_CALL") startSessionRecording()
