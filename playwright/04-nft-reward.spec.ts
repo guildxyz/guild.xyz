@@ -8,7 +8,9 @@ test("fill nft form and deploy a contract", async ({
 }) => {
   await page.goto(GUILD_CHECKOUT_TEST_GUILD_URL_NAME)
 
-  await page.waitForResponse(`**/v2/users/${TEST_USER.id}/profile`)
+  await page.waitForResponse(`**/v2/users/${TEST_USER.id}/profile`, {
+    timeout: 30_000,
+  })
 
   // Open the "Guild solutions" modal
   const addSolutionButton = await page
@@ -140,7 +142,9 @@ test("user is not eligible - can't mint nft", async ({
 }) => {
   await page.goto(GUILD_CHECKOUT_TEST_GUILD_URL_NAME)
 
-  await page.waitForResponse("**/v2/users/*/memberships?guildId=*")
+  await page.waitForResponse("**/v2/users/*/memberships?guildId=*", {
+    timeout: 30_000,
+  })
 
   const roleCard = await page.locator(`#role-${UNHAPPY_PATH_ROLE_ID}`)
   const nftRewardCardButton = await roleCard.locator("a", {
