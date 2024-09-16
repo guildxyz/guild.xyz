@@ -1,8 +1,8 @@
 "use client"
 import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
-import { Badge } from "@/components/ui/Badge"
 import { Card } from "@/components/ui/Card"
 import { ProgressIndicator, ProgressRoot } from "@/components/ui/Progress"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip"
 import { cn } from "@/lib/utils"
 import { Info } from "@phosphor-icons/react"
 import { PropsWithChildren } from "react"
@@ -49,13 +49,16 @@ export const Profile = () => {
             <div className="-mt-1 flex grow flex-col gap-3">
               <div className="flex flex-col justify-between sm:flex-row">
                 <h3 className="font-bold capitalize">{xp.rank.title}</h3>
-                <Badge variant="outline">
-                  {`${xp.currentLevelXp} -> `}
-                  <span className="font-bold text-foreground">
-                    {xp.experienceCount} XP
-                  </span>
-                  {` -> ${xp.nextLevelXp}`}
-                </Badge>
+                <Tooltip>
+                  <TooltipTrigger className="self-end text-muted-foreground text-sm underline decoration-dotted underline-offset-2">
+                    {`${xp.experienceCount} / ${xp.nextLevelXp} XP`}
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    {`${xp.currentLevelXp} -> `}
+                    <span className="font-bold">{xp.experienceCount} XP</span>
+                    {` -> ${xp.nextLevelXp}`}
+                  </TooltipContent>
+                </Tooltip>
               </div>
               <ProgressRoot>
                 <ProgressIndicator
