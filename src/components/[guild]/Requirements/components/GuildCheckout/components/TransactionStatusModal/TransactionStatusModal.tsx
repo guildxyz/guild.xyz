@@ -40,7 +40,7 @@ const TransactionStatusModal = ({
           {txError
             ? "Transaction failed"
             : txSuccess
-              ? successTitle ?? "Successful payment"
+              ? (successTitle ?? "Successful payment")
               : txHash
                 ? "Transaction is processing..."
                 : title}

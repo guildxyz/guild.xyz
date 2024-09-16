@@ -14,7 +14,13 @@ const PanelDescription = () => {
   })
 
   return (
-    <Editable fontSize={"sm"} {...field} placeholder={"Description"} as={HStack}>
+    <Editable
+      fontSize={"sm"}
+      {...field}
+      placeholder={"Description"}
+      as={HStack}
+      wordBreak={"break-word"}
+    >
       <EditablePreview />
       <EditableTextarea m="0px !important" />
       <EditableControls />

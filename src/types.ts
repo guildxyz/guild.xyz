@@ -1,5 +1,6 @@
 import {
   FarcasterProfile,
+  Guild as GuildFromTypesPackage,
   Logic,
   Schemas,
   SocialLinks,
@@ -14,34 +15,12 @@ import { z } from "zod"
 
 export const FUEL_ADDRESS_REGEX = /^0x[a-f0-9]{64}$/i
 
-type Token = {
-  address: `0x${string}`
-  name: string
-  symbol: string
-  decimals: number
-}
-
 type DiscordError = { error: string; errorDescription: string }
 
 type WalletError = { code: number; message: string }
 
 type Rest = {
   [x: string]: any
-}
-
-type Theme = {
-  color?: string
-  backgroundImage?: string
-  backgroundCss?: string
-}
-
-type CoingeckoToken = {
-  chainId: number
-  address: string
-  name: string
-  symbol: string
-  decimals: number
-  logoURI: string
 }
 
 type Poap = {
@@ -136,21 +115,14 @@ type User = {
   sharedSocials: UserProfile["sharedSocials"]
   publicKey?: string
   isSuperAdmin: boolean
-
   captchaVerifiedSince: Date
-
+  guildProfile: Schemas["Profile"] | null
   emails: {
     emailAddress: string
     pending: boolean
     createdAt: Date
   }
-
   farcasterProfiles: FarcasterProfile[]
-}
-
-type BaseUser = {
-  id: number
-  createdAt: Date
 }
 
 type GuildBase = {
@@ -183,7 +155,7 @@ type SimpleGuild = {
   onboardingComplete: boolean
   memberCount: number
   guildPin?: GuildPinConfig
-  theme: Theme
+  theme: GuildFromTypesPackage["theme"]
 }
 
 type GuildAdmin = {
@@ -597,7 +569,7 @@ type Guild = {
   contacts?: GuildContact[]
   createdAt: string
   admins: GuildAdmin[]
-  theme: Theme
+  theme: GuildFromTypesPackage["theme"]
   guildPlatforms: GuildPlatform[]
   roles: Role[]
   groups: Group[]
@@ -677,13 +649,6 @@ enum ValidationMethod {
   FUEL = 4,
 }
 
-type RequestMintLinksForm = {
-  event_id: number
-  requested_codes: number
-  secret_code: string
-  redeem_type: string
-}
-
 type Without<First, Second> = {
   [P in Exclude<keyof First, keyof Second>]?: never
 }
@@ -742,11 +707,11 @@ type DetailedPinLeaderboardUserData = {
 
 type SearchParams = { [key: string]: string | string[] | undefined }
 
+export type RequiredFields<T, K extends keyof T> = T & Required<Pick<T, K>>
+
 export { ValidationMethod }
 export type {
-  BaseUser,
   ClientStateRequirementCreateResponse,
-  CoingeckoToken,
   DetailedPinLeaderboardUserData as DetailedUserLeaderboardData,
   DiscordError,
   GitPoap,
@@ -765,7 +730,6 @@ export type {
   PlatformGuildData,
   PlatformName,
   Poap,
-  RequestMintLinksForm,
   Requirement,
   RequirementCreateResponseOutput,
   RequirementCreationPayloadWithTempID,
@@ -779,7 +743,6 @@ export type {
   SimpleRole,
   SocialLinkKey,
   SocialLinks,
-  Token,
   Trait,
   User,
   UserAddress,

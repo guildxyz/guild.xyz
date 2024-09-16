@@ -5,6 +5,7 @@ import { Spinner } from "@phosphor-icons/react"
 import useUser from "components/[guild]/hooks/useUser"
 import { env } from "env"
 import { useFetcherWithSign } from "hooks/useFetcherWithSign"
+import { useGetKeyForSWRWithOptionalAuth } from "hooks/useGetKeyForSWRWithOptionalAuth"
 import { useScrollBatchedRendering } from "hooks/useScrollBatchedRendering"
 import { memo, useRef } from "react"
 import { SWRConfiguration } from "swr"
@@ -24,6 +25,7 @@ const GuildCards = ({ guildData }: { guildData?: GuildBase[] }) => {
 
 const useExploreGuilds = (searchParams?: SearchParams) => {
   const { isSuperAdmin } = useUser()
+  const getKeyForSWRWithOptionalAuth = useGetKeyForSWRWithOptionalAuth()
   const fetcherWithSign = useFetcherWithSign()
   const options: SWRConfiguration = {
     dedupingInterval: 60_000,
@@ -47,7 +49,7 @@ const useExploreGuilds = (searchParams?: SearchParams) => {
       }
 
       const urlString = url.pathname + url.search
-      if (isSuperAdmin) return [urlString, { method: "GET", body: {} }]
+      if (isSuperAdmin) return getKeyForSWRWithOptionalAuth(urlString)
       return urlString
     },
     isSuperAdmin ? fetcherWithSign : options,

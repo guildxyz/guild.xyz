@@ -1,96 +1,97 @@
 "use client"
-
-import { CheckMark } from "@/components/CheckMark"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
-import { AvatarGroup } from "@/components/ui/AvatarGroup"
-import { Separator } from "@/components/ui/Separator"
-import { Skeleton } from "@/components/ui/Skeleton"
+import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import { Badge } from "@/components/ui/Badge"
+import { Card } from "@/components/ui/Card"
+import { ProgressIndicator, ProgressRoot } from "@/components/ui/Progress"
 import { cn } from "@/lib/utils"
+import { Info } from "@phosphor-icons/react"
 import { PropsWithChildren } from "react"
 import { ContributionCard } from "../_components/ContributionCard"
 import { EditContributions } from "../_components/EditContributions"
-import { OperatedGuildCard } from "../_components/OperatedGuildCard"
 import { ProfileOwnerGuard } from "../_components/ProfileOwnerGuard"
-import { RecentActivity } from "../_components/RecentActivity"
 import { useContributions } from "../_hooks/useContributions"
+import { useExperienceProgression } from "../_hooks/useExperienceProgression"
 import { useProfile } from "../_hooks/useProfile"
 import { useReferredUsers } from "../_hooks/useReferredUsers"
-import { EditProfile } from "./EditProfile/EditProfile"
-import { ProfileSkeleton } from "./ProfileSkeleton"
+import { ActivityChart } from "./ActivityChart"
+import { LevelBadge } from "./LevelBadge"
+import { ProfileMainSkeleton } from "./ProfileSkeleton"
+import { RecentActivity } from "./RecentActivity/RecentActivity"
+import RecentActivityFallback from "./RecentActivity/RecentActivityFallback"
 
 export const Profile = () => {
   const { data: profile } = useProfile()
   const { data: contributions } = useContributions()
   const { data: referredUsers } = useReferredUsers()
+  const { isWeb3Connected } = useWeb3ConnectionManager()
+  const xp = useExperienceProgression()
 
-  if (!profile || !contributions || !referredUsers) return <ProfileSkeleton />
+  if (!profile || !contributions || !referredUsers || !xp)
+    return <ProfileMainSkeleton />
 
   return (
     <>
-      <div className="relative mb-12 flex flex-col items-center pt-12 md:mb-20 md:pt-14">
-        <ProfileOwnerGuard>
-          <EditProfile />
-        </ProfileOwnerGuard>
-        <div className="relative mb-6 flex items-center justify-center">
-          <Avatar className="size-40 md:size-48">
-            <AvatarImage
-              src={profile.profileImageUrl ?? ""}
-              alt="profile"
-              width={192}
-              height={192}
-            />
-            <AvatarFallback>
-              <Skeleton className="size-full" />
-            </AvatarFallback>
-          </Avatar>
+      <div className="mb-12">
+        <div data-theme="dark" className="mb-3">
+          <SectionTitle>Experience</SectionTitle>
         </div>
-        <h1 className="break-all text-center font-extrabold text-3xl leading-tight tracking-tight md:text-4xl">
-          {profile.name}
-          <CheckMark className="ml-2 inline size-6 fill-yellow-500 align-baseline" />
-        </h1>
-        <div className="font-medium text-muted-foreground">@{profile.username}</div>
-        <p className="mt-4 max-w-md text-pretty text-center text-lg text-muted-foreground md:mt-6">
-          {profile.bio}
-        </p>
-        <div className="mt-8 grid grid-cols-[repeat(3,auto)] gap-x-6 gap-y-4 sm:grid-cols-[repeat(5,auto)]">
-          <div className="flex flex-col items-center leading-tight">
-            <div className="font-bold text-lg">{referredUsers.length}</div>
-            <div className="text-muted-foreground">Guildmates</div>
-          </div>
-          <Separator orientation="vertical" className="h-10 md:h-12" />
-          <div className="flex flex-col items-center leading-tight">
-            <div className="font-bold md:text-lg">0</div>
-            <div className="text-muted-foreground">Followers</div>
-          </div>
-          <Separator orientation="vertical" className="hidden h-12 sm:block" />
-          <div className="col-span-3 flex items-center gap-2 place-self-center sm:col-span-1">
-            <AvatarGroup imageUrls={["", ""]} count={8} />
-            <div className="text-muted-foreground leading-tight">
-              Followed by <span className="font-bold">Hoho</span>,<br />
-              <span className="font-bold">Hihi</span> and 22 others
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+          <Card className="flex items-center gap-4 p-6">
+            <LevelBadge level={xp.level} rank={xp.rank} size="lg" className="" />
+            <div className="-mt-1 flex grow flex-col gap-3">
+              <div className="flex flex-col justify-between sm:flex-row">
+                <h3 className="font-bold capitalize">{xp.rank.title}</h3>
+                <Badge variant="outline">
+                  {`${xp.currentLevelXp} -> `}
+                  <span className="font-bold text-foreground">
+                    {xp.experienceCount} XP
+                  </span>
+                  {` -> ${xp.nextLevelXp}`}
+                </Badge>
+              </div>
+              <ProgressRoot>
+                <ProgressIndicator
+                  value={xp.progress}
+                  style={{ background: xp.rank.color }}
+                />
+              </ProgressRoot>
             </div>
-          </div>
+          </Card>
+          <Card className="space-y-3 p-6 pt-5">
+            <div className="flex flex-col items-start justify-between gap-2 sm:flex-row">
+              <h3 className="font-bold">Recent engagement</h3>
+            </div>
+            <ActivityChart />
+          </Card>
         </div>
       </div>
-      <SectionTitle className="mb-3">Operated guilds</SectionTitle>
-      <OperatedGuildCard />
-      <div className="mt-8 mb-3 flex items-center justify-between">
+      <div className="mb-3 flex items-center justify-between">
         <SectionTitle>Top contributions</SectionTitle>
         <ProfileOwnerGuard>
           <EditContributions />
         </ProfileOwnerGuard>
       </div>
       <div className="grid grid-cols-1 gap-3">
-        {contributions.map((contribution) => (
+        {contributions.length === 0 && (
+          <Card className="flex gap-2 border border-info p-4">
+            <Info weight="fill" size={32} className="text-info" />
+            <div>
+              <h3 className="mb-1 font-bold text-md">
+                Contributions will appear here
+              </h3>
+              <p className="text-muted-foreground">
+                This profile doesn't have any contribution yet
+              </p>
+            </div>
+          </Card>
+        )}
+        {contributions.slice(0, 3).map((contribution) => (
           <ContributionCard contribution={contribution} key={contribution.id} />
         ))}
       </div>
-      <div className="mt-8">
+      <div className="mt-14">
         <SectionTitle className="mb-3">Recent activity</SectionTitle>
-        <RecentActivity />
-        <p className="mt-2 font-semibold text-muted-foreground">
-          &hellip; only last 20 actions are shown
-        </p>
+        {isWeb3Connected ? <RecentActivity /> : <RecentActivityFallback />}
       </div>
     </>
   )
@@ -100,5 +101,7 @@ const SectionTitle = ({
   className,
   children,
 }: PropsWithChildren<{ className?: string }>) => (
-  <h2 className={cn("font-bold sm:text-lg", className)}>{children}</h2>
+  <h2 className={cn("font-bold text-foreground sm:text-lg", className)}>
+    {children}
+  </h2>
 )

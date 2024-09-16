@@ -39,10 +39,6 @@ export const env = createEnv({
     OPENSEA_API_KEY: z.string(),
     SOUND_API_KEY: z.string(),
     ZEROX_API_KEY: z.string(),
-
-    // NPM
-    WAAS_VIEM_URL: z.string(),
-    WAAS_WEB_URL: z.string(),
   },
   client: {
     // Guild APIs
@@ -128,8 +124,5 @@ export const env = createEnv({
     OPENSEA_API_KEY: process.env.OPENSEA_API_KEY,
     SOUND_API_KEY: process.env.SOUND_API_KEY,
     ZEROX_API_KEY: process.env.ZEROX_API_KEY,
-
-    WAAS_VIEM_URL: process.env.WAAS_VIEM_URL,
-    WAAS_WEB_URL: process.env.WAAS_WEB_URL,
   },
 })

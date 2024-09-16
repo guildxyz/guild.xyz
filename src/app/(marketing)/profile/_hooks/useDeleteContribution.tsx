@@ -13,9 +13,11 @@ export const useDeleteContribution = ({
   const { data: profile } = useProfile()
   const contributions = useContributions()
 
+  if (!profile)
+    throw new Error("Tried to delete contribution outside profile context")
   const update = async (signedValidation: SignedValidation) => {
     return fetcher(
-      `/v2/profiles/${(profile as Schemas["Profile"]).username}/contributions/${contributionId}`,
+      `/v2/profiles/${profile.username}/contributions/${contributionId}`,
       {
         method: "DELETE",
         ...signedValidation,
@@ -41,7 +43,7 @@ export const useDeleteContribution = ({
       )
     },
     onSuccess: () => {
-      revalidateContributions()
+      revalidateContributions({ username: profile.username })
     },
     onError: (response) => {
       toast({

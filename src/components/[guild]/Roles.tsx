@@ -5,7 +5,7 @@ import RoleCard from "components/[guild]/RoleCard/RoleCard"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useScrollBatchedRendering } from "hooks/useScrollBatchedRendering"
 import dynamic from "next/dynamic"
-import { useMemo, useState } from "react"
+import { useState } from "react"
 import useGuildPermission from "./hooks/useGuildPermission"
 import useRoleGroup from "./hooks/useRoleGroup"
 
@@ -21,36 +21,27 @@ const Roles = () => {
   const { isAdmin } = useGuildPermission()
 
   const group = useRoleGroup()
-  const roles = allRoles.filter((role) =>
-    !!group ? role.groupId === group.id : !role.groupId
-  )
+  const roles =
+    allRoles?.filter((role) =>
+      !!group ? role.groupId === group.id : !role.groupId
+    ) ?? []
 
-  // temporary, will order roles already in the SQL query in the future
-  const sortedRoles = useMemo(() => {
-    if (roles?.every((role) => role.position === null)) {
-      const byMembers = roles?.sort(
-        (role1, role2) => role2.memberCount - role1.memberCount
-      )
-      return byMembers
-    }
-
-    return (
-      roles?.sort((role1, role2) => {
-        if (role1.position === null) return 1
-        if (role2.position === null) return -1
-        return role1.position - role2.position
-      }) ?? []
-    )
-  }, [roles])
-
-  const publicRoles = sortedRoles.filter((role) => role.visibility !== "HIDDEN")
-  const hiddenRoles = sortedRoles.filter((role) => role.visibility === "HIDDEN")
+  const publicRoles = roles.filter((role) => role.visibility !== "HIDDEN")
+  const hiddenRoles = roles.filter((role) => role.visibility === "HIDDEN")
 
   const [renderedRolesCount, setRenderedRolesCount] = useState(BATCH_SIZE)
   const rolesEl = useScrollBatchedRendering({
     batchSize: BATCH_SIZE,
-    disableRendering: roles?.length <= renderedRolesCount,
+    disableRendering: publicRoles?.length <= renderedRolesCount,
     setElementCount: setRenderedRolesCount,
+  })
+
+  const [renderedHiddenRolesCount, setRenderedHiddenRolesCount] =
+    useState(BATCH_SIZE)
+  const hiddenRolesEl = useScrollBatchedRendering({
+    batchSize: BATCH_SIZE,
+    disableRendering: hiddenRoles?.length <= renderedHiddenRolesCount,
+    setElementCount: setRenderedHiddenRolesCount,
   })
 
   return (
@@ -70,7 +61,7 @@ const Roles = () => {
         <DynamicNoRolesAlert />
       )}
 
-      {!!publicRoles?.length && roles?.length > renderedRolesCount && (
+      {!!publicRoles?.length && publicRoles?.length > renderedRolesCount && (
         <Center pt={6}>
           <Spinner />
         </Center>
@@ -78,16 +69,24 @@ const Roles = () => {
 
       {!!hiddenRoles?.length && (
         <CollapsibleRoleSection
+          ref={hiddenRolesEl}
           id="hiddenRoles"
           roleCount={hiddenRoles.length}
           label="hidden"
           defaultIsOpen
           mt={2}
         >
-          {hiddenRoles.map((role) => (
-            <RoleCard key={role.id} role={role} />
-          ))}
+          {hiddenRoles.map((role, i) => {
+            if (i > renderedHiddenRolesCount - 1) return null
+            return <RoleCard key={role.id} role={role} />
+          })}
         </CollapsibleRoleSection>
+      )}
+
+      {!!hiddenRoles?.length && hiddenRoles.length > renderedHiddenRolesCount && (
+        <Center pt={6}>
+          <Spinner />
+        </Center>
       )}
     </>
   )

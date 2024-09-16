@@ -11,6 +11,8 @@ export const useCreateContribution = () => {
   const { data: profile } = useProfile()
   const contributions = useContributions()
 
+  if (!profile)
+    throw new Error("Tried to create contribution outside profile context")
   const update = async (signedValidation: SignedValidation) => {
     return fetcher(
       `/v2/profiles/${(profile as Schemas["Profile"]).username}/contributions`,
@@ -37,9 +39,8 @@ export const useCreateContribution = () => {
           revalidate: false,
           rollbackOnError: true,
           optimisticData: () => {
-            // @ts-expect-error: incorrect types coming from lib
             const fakeContribution: Schemas["Contribution"] = {
-              ...(payload as Schemas["ContributionUpdate"]),
+              ...payload,
               id: -1,
               userId: profile.userId,
             }
@@ -51,7 +52,7 @@ export const useCreateContribution = () => {
       )
     },
     onSuccess: () => {
-      revalidateContributions()
+      revalidateContributions({ username: profile.username })
     },
     onError: (response) => {
       toast({
@@ -64,6 +65,6 @@ export const useCreateContribution = () => {
   return {
     ...submitWithSign,
     onSubmit: (payload: Schemas["ContributionUpdate"]) =>
-      profile && submitWithSign.onSubmit(payload),
+      submitWithSign.onSubmit(payload),
   }
 }

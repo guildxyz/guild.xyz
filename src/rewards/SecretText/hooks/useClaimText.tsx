@@ -103,7 +103,7 @@ const useClaimText = (rolePlatformId: number) => {
 
   return {
     error: claim.error,
-    response: uniqueValue ? { uniqueValue } : responseFromCache ?? claim.response,
+    response: uniqueValue ? { uniqueValue } : (responseFromCache ?? claim.response),
     isLoading: claim.isLoading,
     onSubmit: onClaimTextSubmit,
     modalProps: {

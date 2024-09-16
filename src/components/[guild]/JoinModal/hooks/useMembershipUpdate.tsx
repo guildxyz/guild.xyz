@@ -5,6 +5,7 @@ import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useMembership from "components/explorer/hooks/useMembership"
 import useCustomPosthogEvents from "hooks/useCustomPosthogEvents"
 import { useFetcherWithSign } from "hooks/useFetcherWithSign"
+import { useGetKeyForSWRWithOptionalAuth } from "hooks/useGetKeyForSWRWithOptionalAuth"
 import useSubmit from "hooks/useSubmit"
 import { UseSubmitOptions } from "hooks/useSubmit/types"
 import { atom, useAtom } from "jotai"
@@ -60,15 +61,18 @@ const useMembershipUpdate = ({
     getGuildPlatformsOfRoles(accessedRoleIds, guild).map(({ id }) => id)
   )
 
+  const getKeyForSWRWithOptionalAuth = useGetKeyForSWRWithOptionalAuth()
+
   const submit = async (data?): Promise<string> => {
     setIsGettingJob(true)
 
-    const initialPollResult: JoinJob[] = await fetcherWithSign([
-      `/v2/actions/join?${new URLSearchParams({
-        guildId: `${guild?.id}`,
-      }).toString()}`,
-      { method: "GET" },
-    ]).catch(() => null as JoinJob[])
+    const initialPollResult: JoinJob[] = await fetcherWithSign(
+      getKeyForSWRWithOptionalAuth(
+        `/v2/actions/join?${new URLSearchParams({
+          guildId: `${guild?.id}`,
+        }).toString()}`
+      )
+    ).catch(() => null as JoinJob[])
 
     const jobAlreadyInProgress = initialPollResult?.find((job) => !job.done)
 

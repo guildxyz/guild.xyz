@@ -72,12 +72,6 @@ const DynamicRecheckAccessesAndLeaveButton = dynamic(
     ssr: false,
   }
 )
-const DynamicMembersExporter = dynamic(
-  () => import("components/[guild]/Members/components/MembersExporter"),
-  {
-    ssr: false,
-  }
-)
 const DynamicDiscordBotPermissionsChecker = dynamic(
   () => import("components/[guild]/DiscordBotPermissionsChecker"),
   {
@@ -128,13 +122,12 @@ const GuildPage = (): JSX.Element => {
           <LayoutHeadline className="max-w-screen-xl pt-12">
             <GuildPageImageAndName />
 
-            <div className="ml-auto">
+            <div className="ml-auto flex gap-2">
+              {!isMember && <JoinButton />}
               {isAdmin && isDetailed ? (
                 <DynamicAddSolutionsAndEditGuildButton />
-              ) : !isMember ? (
-                <JoinButton />
               ) : (
-                <DynamicRecheckAccessesAndLeaveButton />
+                isMember && <DynamicRecheckAccessesAndLeaveButton />
               )}
             </div>
           </LayoutHeadline>
@@ -177,7 +170,6 @@ const GuildPage = (): JSX.Element => {
             <Roles />
           </Section>
 
-          {isAdmin && <DynamicMembersExporter />}
           {isAdmin && <DynamicActiveStatusUpdates />}
         </LayoutMain>
 

@@ -1,20 +1,23 @@
 import { useToast } from "@/components/ui/hooks/useToast"
-import { Schemas } from "@guildxyz/types"
+import { Schemas, schemas } from "@guildxyz/types"
+import useUser from "components/[guild]/hooks/useUser"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
-import { useParams, useRouter } from "next/navigation"
+import { UseSubmitOptions } from "hooks/useSubmit/types"
+import { useRouter } from "next/navigation"
 import fetcher from "utils/fetcher"
 import { revalidateContributions } from "../_server_actions/revalidateContributions"
 import { revalidateProfile } from "../_server_actions/revalidateProfile"
 import { useProfile } from "./useProfile"
 
-export const useUpdateProfile = () => {
+export const useUpdateProfile = ({ onSuccess }: UseSubmitOptions) => {
   const { toast } = useToast()
   const router = useRouter()
-  const params = useParams<{ username: string }>()
-  const { mutate, data: profile } = useProfile()
+  const { mutate: mutateProfile, data: profile } = useProfile()
+  const user = useUser()
 
+  if (!profile) throw new Error("Tried to update profile outside profile context")
   const updateProfile = async (signedValidation: SignedValidation) => {
-    return fetcher(`/v2/profiles/${params?.username}`, {
+    return fetcher(`/v2/profiles/${profile.username}`, {
       method: "PUT",
       ...signedValidation,
     })
@@ -22,18 +25,21 @@ export const useUpdateProfile = () => {
 
   const submitWithSign = useSubmitWithSign<Schemas["Profile"]>(updateProfile, {
     onOptimistic: (response, payload) => {
-      mutate(() => response, {
+      mutateProfile(() => response, {
         revalidate: false,
         rollbackOnError: true,
-        optimisticData: () => payload,
+        optimisticData: () => ({ ...profile, ...payload }),
       })
     },
     onSuccess: async (response) => {
-      await revalidateProfile()
-      if (profile?.username !== response.username) {
-        await revalidateContributions()
+      user.mutate()
+      revalidateProfile({ username: profile.username })
+      if (profile.username !== response.username) {
+        mutateProfile()
+        revalidateContributions({ username: profile.username })
         router.replace(`/profile/${response.username}`)
       }
+      onSuccess?.()
     },
     onError: (response) => {
       toast({
@@ -46,6 +52,6 @@ export const useUpdateProfile = () => {
   return {
     ...submitWithSign,
     onSubmit: (payload: Schemas["ProfileUpdate"]) =>
-      params?.username && submitWithSign.onSubmit(payload),
+      submitWithSign.onSubmit(schemas.ProfileUpdateSchema.parse(payload)),
   }
 }

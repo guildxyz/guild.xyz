@@ -8,10 +8,12 @@ const badgeVariants = cva(
     variants: {
       variant: {
         default: "bg-[hsl(var(--badge-bg)/0.24)] text-[hsl(var(--badge-color))]",
+        outline: "border text-muted-foreground",
       },
       colorScheme: {
         gray: "[--badge-bg:var(--secondary-subtle)] [--badge-color:var(--secondary-subtle-foreground)]",
         blue: "[--badge-bg:var(--info-subtle)] [--badge-color:var(--info-subtle-foreground)]",
+        yellow: "[--badge-bg:var(--gold)] [--badge-color:var(--gold)]",
       },
       size: {
         sm: "text-xs h-5",

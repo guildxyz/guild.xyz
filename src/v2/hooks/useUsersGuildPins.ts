@@ -1,13 +1,11 @@
 import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import { consts } from "@guildxyz/types"
 import useUser from "components/[guild]/hooks/useUser"
 import guildPinAbi from "static/abis/guildPin"
 import useSWRImmutable from "swr/immutable"
 import { GuildPinMetadata, User } from "types"
 import base64ToObject from "utils/base64ToObject"
-import {
-  GUILD_PIN_CONTRACTS,
-  GuildPinsSupportedChain,
-} from "utils/guildCheckout/constants"
+import { GuildPinsSupportedChain } from "utils/guildCheckout/constants"
 import ipfsToGuildGateway from "utils/ipfsToGuildGateway"
 import {
   http,
@@ -26,7 +24,7 @@ const getUsersGuildPinIdsOnChain = async (
 ) => {
   const contracts = Array.from({ length: Number(balance) }, (_, i) => ({
     abi: guildPinAbi,
-    address: GUILD_PIN_CONTRACTS[chain],
+    address: consts.PinContractAddresses[chain],
     functionName: "tokenOfOwnerByIndex",
     args: [address, BigInt(i)],
   }))
@@ -70,7 +68,7 @@ const getPinTokenURIsForPinIds = async (
 ) => {
   const contractCalls = pinIds.map((tokenId) => ({
     abi: guildPinAbi,
-    address: GUILD_PIN_CONTRACTS[chain],
+    address: consts.PinContractAddresses[chain],
     functionName: "tokenURI",
     args: [tokenId],
   }))
@@ -140,7 +138,7 @@ const fetchGuildPinsOnChain = async (
   try {
     balance = await publicClient.readContract({
       abi: guildPinAbi,
-      address: GUILD_PIN_CONTRACTS[chain],
+      address: consts.PinContractAddresses[chain],
       functionName: "balanceOf",
       args: [address],
     })
@@ -194,7 +192,7 @@ const fetchGuildPins = async ([_, addresses, includeTestnets]: [
   boolean,
 ]) => {
   const TESTNET_KEYS: GuildPinsSupportedChain[] = ["SEPOLIA"]
-  const guildPinChains = Object.keys(GUILD_PIN_CONTRACTS).filter((key) =>
+  const guildPinChains = Object.keys(consts.PinContractAddresses).filter((key) =>
     includeTestnets ? true : !TESTNET_KEYS.includes(key as GuildPinsSupportedChain)
   ) as GuildPinsSupportedChain[]
 

@@ -1,6 +1,6 @@
 "use client"
 
-import { Avatar, AvatarImage } from "@/components/ui/Avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
 import { Button } from "@/components/ui/Button"
 import { Card } from "@/components/ui/Card"
 import {
@@ -23,9 +23,8 @@ import {
 import { useToast } from "@/components/ui/hooks/useToast"
 import { useYourGuilds } from "@/hooks/useYourGuilds"
 import { Guild, MembershipResult, Role, Schemas } from "@guildxyz/types"
-import { X } from "@phosphor-icons/react"
+import { WarningCircle, X } from "@phosphor-icons/react"
 import { PencilSimple } from "@phosphor-icons/react"
-import { AvatarFallback } from "@radix-ui/react-avatar"
 import { DialogDescription } from "@radix-ui/react-dialog"
 import { useState } from "react"
 import useSWRImmutable from "swr/immutable"
@@ -112,11 +111,19 @@ export const EditContributions = () => {
       <DialogContent size="lg" className="bg-background">
         <DialogHeader>
           <DialogTitle>Edit top contributions</DialogTitle>
-          <DialogDescription />
+          <DialogDescription className="sr-only" />
           <DialogCloseButton />
         </DialogHeader>
         <DialogBody className="gap-7">
           <div className="flex flex-col gap-3">
+            {guilds && guilds.length === 0 && (
+              <Card className="flex gap-2 border border-destructive-subtle p-4 text-destructive-subtle">
+                <WarningCircle size={32} weight="fill" />
+                <h3 className="font-medium">
+                  You have no verified guild membership to select from
+                </h3>
+              </Card>
+            )}
             {contributions.data?.slice(0, 3).map((contribution) => (
               <EditContributionCard
                 contribution={contribution}
@@ -132,6 +139,7 @@ export const EditContributions = () => {
               <div className="pb-2">
                 <Label>Guild</Label>
                 <Select
+                  disabled={guilds?.length === 0}
                   onValueChange={(value) => {
                     setGuildId(value)
                     setRoleId("")
@@ -183,6 +191,8 @@ export const EditContributions = () => {
                     })
                     return
                   }
+                  setGuildId("")
+                  setRoleId("")
                   createContribution.onSubmit({
                     guildId: parseInt(guildId),
                     roleId: parseInt(roleId),
@@ -242,7 +252,7 @@ const RoleSelectItem = ({
           />
           <AvatarFallback />
         </Avatar>
-        {data.name}
+        <span className="line-clamp-1">{data.name}</span>
       </div>
     </SelectItem>
   )

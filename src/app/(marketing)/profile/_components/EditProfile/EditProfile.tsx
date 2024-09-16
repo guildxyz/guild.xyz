@@ -1,13 +1,12 @@
 "use client"
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
 import { Button } from "@/components/ui/Button"
-import { Card } from "@/components/ui/Card"
 import {
   Dialog,
   DialogBody,
   DialogCloseButton,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -21,24 +20,22 @@ import {
   FormLabel,
 } from "@/components/ui/Form"
 import { Input } from "@/components/ui/Input"
-import { Separator } from "@/components/ui/Separator"
 import { Textarea } from "@/components/ui/Textarea"
-import { toast } from "@/components/ui/hooks/useToast"
 import { useDisclosure } from "@/hooks/useDisclosure"
-import { cn } from "@/lib/utils"
+import { filterOnDirtyFormFields } from "@/lib/filterOnDirtyFormFields"
 import { Schemas, schemas } from "@guildxyz/types"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Pencil, User } from "@phosphor-icons/react"
-import useDropzone from "hooks/useDropzone"
 import usePinata from "hooks/usePinata"
-import { useState } from "react"
+import useSubmitWithUpload from "hooks/useSubmitWithUpload"
+import { PropsWithChildren } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import { useDeleteProfile } from "../../_hooks/useDeleteProfile"
 import { useProfile } from "../../_hooks/useProfile"
 import { useUpdateProfile } from "../../_hooks/useUpdateProfile"
 import { EditProfileBanner } from "./EditProfileBanner"
+import { EditProfileDropdown } from "./EditProfileDropdown"
+import { EditProfilePicture } from "./EditProfilePicture"
 
-export const EditProfile = () => {
+export const EditProfile = ({ children }: PropsWithChildren<any>) => {
   const { data: profile } = useProfile()
   const form = useForm<Schemas["Profile"]>({
     resolver: zodResolver(schemas.ProfileUpdateSchema),
@@ -48,103 +45,50 @@ export const EditProfile = () => {
     mode: "onTouched",
   })
   const disclosure = useDisclosure()
-  const editProfile = useUpdateProfile()
+  const { onSubmit, isLoading } = useUpdateProfile({ onSuccess: disclosure.onClose })
 
-  async function onSubmit(values: Schemas["Profile"]) {
-    await editProfile.onSubmit(schemas.ProfileUpdateSchema.parse(values))
-    if (editProfile.error) return
-    disclosure.onClose()
-  }
-
-  const { isUploading, onUpload } = usePinata({
+  const profilePicUploader = usePinata({
     control: form.control,
     fieldToSetOnSuccess: "profileImageUrl",
-    onError: (error) => {
-      toast({
-        variant: "error",
-        title: "Failed to upload file",
-        description: error,
-      })
-    },
   })
 
-  const [uploadProgress, setUploadProgress] = useState(0)
-  const { isDragActive, getRootProps } = useDropzone({
-    multiple: false,
-    noClick: false,
-    onDrop: (acceptedFiles) => {
-      if (!acceptedFiles[0]) return
-      onUpload({
-        data: [acceptedFiles[0]],
-        onProgress: setUploadProgress,
-      })
-    },
-    onError: (error) => {
-      toast({
-        variant: "error",
-        title: `Failed to upload file`,
-        description: error.message,
-      })
-    },
+  const backgroundUploader = usePinata({
+    control: form.control,
+    fieldToSetOnSuccess: "backgroundImageUrl",
   })
 
-  const deleteProfile = useDeleteProfile()
+  const { handleSubmit, isUploadingShown, uploadLoadingText } = useSubmitWithUpload(
+    form.handleSubmit((params) => {
+      onSubmit(filterOnDirtyFormFields(params, form.formState.dirtyFields))
+    }),
+    profilePicUploader.isUploading || backgroundUploader.isUploading
+  )
 
   return (
     <Dialog onOpenChange={disclosure.setValue} open={disclosure.isOpen}>
-      <DialogTrigger asChild>
-        <Card className="absolute top-0 right-0 rounded-xl">
-          <Button variant="solid">
-            <Pencil weight="bold" />
-            Edit profile
-          </Button>
-        </Card>
-      </DialogTrigger>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <FormProvider {...form}>
-        <DialogContent size="lg" className="bg-background" scrollBody>
+        <DialogContent size="lg" className="bg-background">
           <DialogHeader>
             <DialogTitle>Edit profile</DialogTitle>
+            <DialogDescription className="sr-only" />
             <DialogCloseButton />
           </DialogHeader>
-          <DialogBody scroll className="!pb-8">
+          <DialogBody>
             <div className="relative mb-20">
-              <EditProfileBanner />
-              <FormField
-                control={form.control}
-                name="profileImageUrl"
-                render={({ field }) => (
-                  <Button
-                    variant="unstyled"
-                    type="button"
-                    className={cn(
-                      "-bottom-2 absolute left-4 size-28 translate-y-1/2 rounded-full border border-dotted",
-                      { "border-solid": field.value }
-                    )}
-                    {...getRootProps()}
-                  >
-                    <Avatar className="size-36 bg-muted">
-                      {field.value && (
-                        <AvatarImage
-                          src={field.value}
-                          width={144}
-                          height={144}
-                          alt="profile avatar"
-                        />
-                      )}
-                      <AvatarFallback className="bg-muted">
-                        <User size={38} />
-                      </AvatarFallback>
-                    </Avatar>
-                  </Button>
-                )}
+              <EditProfileBanner backgroundUploader={backgroundUploader} />
+              <EditProfilePicture
+                uploader={profilePicUploader}
+                className="-bottom-2 absolute left-4 translate-y-1/2 bg-muted"
               />
+              <EditProfileDropdown uploader={profilePicUploader} />
             </div>
 
             <FormField
               control={form.control}
               name="name"
               render={({ field }) => (
-                <FormItem className="pb-2">
+                <FormItem className="pb-3">
                   <FormLabel>Name</FormLabel>
                   <FormControl>
                     <Input
@@ -161,7 +105,7 @@ export const EditProfile = () => {
               control={form.control}
               name="username"
               render={({ field }) => (
-                <FormItem className="pb-2">
+                <FormItem className="pb-3">
                   <FormLabel aria-required="true">Username</FormLabel>
                   <FormControl>
                     <Input placeholder="" required {...field} />
@@ -188,25 +132,13 @@ export const EditProfile = () => {
                 </FormItem>
               )}
             />
-            <Separator className="my-4" />
-            <div>
-              <p className="mb-2 font-medium">Danger zone</p>
-              <Button
-                onClick={deleteProfile.onSubmit}
-                variant="subtle"
-                type="button"
-                colorScheme="destructive"
-                size="sm"
-              >
-                Delete profile
-              </Button>
-            </div>
           </DialogBody>
-          <DialogFooter className="border-border-muted border-t py-4">
+          <DialogFooter className="py-8">
             <Button
-              isLoading={editProfile.isLoading}
+              isLoading={isLoading || isUploadingShown}
+              loadingText={uploadLoadingText ?? "Saving"}
               colorScheme="success"
-              onClick={form.handleSubmit(onSubmit)}
+              onClick={handleSubmit}
               disabled={!form.formState.isValid}
             >
               Save

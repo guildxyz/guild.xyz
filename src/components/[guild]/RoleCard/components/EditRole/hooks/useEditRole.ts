@@ -50,7 +50,7 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
         { revalidate: false }
       )
 
-      triggerMembershipUpdate()
+      triggerMembershipUpdate({ roleIds: [roleId] })
     },
     onError: (err) => showErrorToast(err),
   })

@@ -3,6 +3,6 @@ const pluralize = (
   noun: string,
   includeNumber = true,
   suffix = "s"
-) => `${includeNumber ? count ?? 0 : ""} ${noun}${count !== 1 ? suffix : ""}`
+) => `${includeNumber ? (count ?? 0) : ""} ${noun}${count !== 1 ? suffix : ""}`
 
 export default pluralize

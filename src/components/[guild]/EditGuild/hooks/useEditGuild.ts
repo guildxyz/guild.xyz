@@ -393,7 +393,7 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
         guildUpdateResult?.urlName &&
         guildUpdateResult.urlName !== guild?.urlName
       ) {
-        router.push(guildUpdateResult.urlName)
+        router.push(`/${guildUpdateResult.urlName}/dashboard`)
       }
     },
     onError: (err) => showErrorToast(err),

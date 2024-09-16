@@ -47,7 +47,7 @@ const BuyTotal = (): JSX.Element => {
         )
       : tokenData?.decimals
         ? Number(formatUnits(fee, tokenData.decimals)) +
-          (isNativeCurrency ? estimatedGasInFloat ?? 0 : 0)
+          (isNativeCurrency ? (estimatedGasInFloat ?? 0) : 0)
         : 0
     : 0
 

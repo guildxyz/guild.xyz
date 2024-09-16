@@ -1,10 +1,8 @@
-import { HStack, Text, useDisclosure } from "@chakra-ui/react"
+import { Text, useDisclosure } from "@chakra-ui/react"
+import { consts } from "@guildxyz/types"
 import { ImageData } from "@nouns/assets"
 import { ArrowSquareOut } from "@phosphor-icons/react"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
-import DynamicPurchaseRequirement from "components/[guild]/Requirements/components/GuildCheckout/DynamicPurchaseRequirement"
-import { GuildCheckoutProvider } from "components/[guild]/Requirements/components/GuildCheckout/components/GuildCheckoutContext"
-import PurchaseTransactionStatusModal from "components/[guild]/Requirements/components/GuildCheckout/components/PurchaseTransactionStatusModal"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
@@ -17,7 +15,7 @@ import { Fragment } from "react"
 import SearchableVirtualListModal from "requirements/common/SearchableVirtualListModal"
 import useSWRImmutable from "swr/immutable"
 import { Trait } from "types"
-import { GUILD_PIN_CONTRACTS } from "utils/guildCheckout/constants"
+import { isGuildPinSupportedChain } from "utils/guildCheckout/utils"
 import shortenHex from "utils/shortenHex"
 import { Chain } from "wagmiConfig/chains"
 import useNftMetadata, {
@@ -49,7 +47,9 @@ const NftRequirement = (props: RequirementProps) => {
 
   // This is a really basic solution, and it'll only handle the "Joined Guild" NFTs. We should probably think about a better solution in the future.
   const isGuildPin =
-    GUILD_PIN_CONTRACTS[requirementChain] === requirementAddress.toLowerCase()
+    isGuildPinSupportedChain(requirementChain) &&
+    consts.PinContractAddresses[requirementChain] ===
+      requirementAddress.toLowerCase()
 
   const guildIdAttribute =
     isGuildPin &&
@@ -107,14 +107,16 @@ const NftRequirement = (props: RequirementProps) => {
       }
       isImageLoading={nftDataLoading}
       footer={
-        <HStack spacing={4}>
-          <GuildCheckoutProvider>
-            <DynamicPurchaseRequirement />
-            <PurchaseTransactionStatusModal />
-          </GuildCheckoutProvider>
+        // This feature is temporarily disabled
+        // <HStack spacing={4}>
+        //   <GuildCheckoutProvider>
+        //     <DynamicPurchaseRequirement />
+        //     <PurchaseTransactionStatusModal />
+        //   </GuildCheckoutProvider>
 
-          <BlockExplorerUrl />
-        </HStack>
+        //   <BlockExplorerUrl />
+        // </HStack>
+        <BlockExplorerUrl />
       }
       {...props}
     >
@@ -133,9 +135,9 @@ const NftRequirement = (props: RequirementProps) => {
 
       {nftName ||
         (!requirement.name || requirement.name === "-"
-          ? metadata?.slug ?? (
+          ? (metadata?.slug ?? (
               <DataBlock>{shortenHex(requirementAddress, 3)}</DataBlock>
-            )
+            ))
           : requirement.name !== "-" && requirement.name)}
 
       {requirement.data?.attributes?.length ? (

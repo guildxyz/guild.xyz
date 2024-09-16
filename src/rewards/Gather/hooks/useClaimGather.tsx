@@ -77,7 +77,7 @@ const useClaimGather = (rolePlatformId: number) => {
   return {
     error: claim.error,
     isLoading: claim.isLoading,
-    response: uniqueValue ? { uniqueValue } : responseFromCache ?? claim.response,
+    response: uniqueValue ? { uniqueValue } : (responseFromCache ?? claim.response),
     onSubmit: () => onClaimGatherSubmit(),
     modalProps: {
       isOpen,

@@ -4,7 +4,7 @@ import ConfirmationAlert from "components/create-guild/Requirements/components/C
 import useDeleteGuild from "./hooks/useDeleteGuild"
 
 const DeleteGuildButton = (): JSX.Element => {
-  const { onSubmit, isLoading } = useDeleteGuild()
+  const { onSubmit, isLoading, isSigning } = useDeleteGuild()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   return (
@@ -21,6 +21,7 @@ const DeleteGuildButton = (): JSX.Element => {
         title="Delete guild"
         description="Are you sure you want to delete this guild?"
         confirmationText="Delete"
+        loadingText={isSigning && "Check your wallet"}
       />
     </>
   )

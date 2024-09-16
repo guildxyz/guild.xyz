@@ -3,7 +3,7 @@ import { useAccount, useProvider, useWallet } from "@fuels/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
-import { useToastWithTweetButton } from "hooks/useToast"
+import { useToastWithShareButtons } from "hooks/useToastWithShareButtons"
 import { useState } from "react"
 import fetcher from "utils/fetcher"
 import parseFuelAddress from "utils/parseFuelAddress"
@@ -37,7 +37,7 @@ const useMintFuelGuildPin = () => {
 
   const { data: fee } = useFuelGuildPinFee()
 
-  const toastWithTweetButton = useToastWithTweetButton()
+  const toastWithShareButtons = useToastWithShareButtons()
   const showErrorToast = useShowErrorToast()
 
   const { provider } = useProvider()
@@ -140,9 +140,9 @@ const useMintFuelGuildPin = () => {
 
     captureEvent("Minted Fuel Guild Pin (GuildCheckout)", postHogOptions)
 
-    toastWithTweetButton({
+    toastWithShareButtons({
       title: "Successfully minted Guild Pin!",
-      tweetText: `Just minted my Guild Pin for joining ${name}!\nguild.xyz/${urlName}`,
+      shareText: `Just minted my Guild Pin for joining ${name}!\nguild.xyz/${urlName}`,
     })
   }
 

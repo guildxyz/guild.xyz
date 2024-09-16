@@ -8,24 +8,18 @@ import {
 } from "@chakra-ui/react"
 import DisplayCard from "components/common/DisplayCard"
 import Image from "next/image"
-
-export type Props = {
-  title: string
-  imageUrl: string
-  description: string
-  bgImageUrl: string
-  onClick?: (data?: any) => void
-  children?: JSX.Element
-}
+import { PropsWithChildren } from "react"
+import { SolutionCardData } from "solutions"
 
 const SolutionCard = ({
   title,
   description,
   imageUrl,
   bgImageUrl,
+  handlerParam,
   onClick,
   children,
-}: Props) => {
+}: PropsWithChildren<SolutionCardData & { onClick?: (data?: any) => void }>) => {
   const circleBgColor = useColorModeValue("whiteAlpha.300", "blackAlpha.300")
   const borderColor = useColorModeValue("blackAlpha.300", "whiteAlpha.200")
   const cardBg = useColorModeValue("white", "var(--chakra-colors-gray-800)")
@@ -38,6 +32,7 @@ const SolutionCard = ({
 
   return (
     <DisplayCard
+      data-testid={`${handlerParam.replace("_", "-").toLowerCase()}-solution`}
       as="button"
       textAlign="left"
       boxShadow={boxShadow}

@@ -2,7 +2,6 @@ import { ColorPicker } from "@/components/ui/ColorPicker"
 import { FormControl, FormLabel } from "@chakra-ui/react"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import {} from "react"
 import { useFormContext } from "react-hook-form"
 
 type Props = {

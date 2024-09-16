@@ -1,6 +1,8 @@
+import { consts } from "@guildxyz/types"
 import { FetchPriceResponse } from "pages/api/fetchPrice"
-import { Chains } from "wagmiConfig/chains"
+import { Chain, Chains } from "wagmiConfig/chains"
 import {
+  GuildPinsSupportedChain,
   NULL_ADDRESS,
   PurchaseAssetData,
   getAssetsCallParams,
@@ -142,4 +144,11 @@ const flipPath = (pathToFlip: string): string => {
   return flippedPath
 }
 
-export { flipPath, generateGetAssetsParams }
+const isGuildPinSupportedChain = (
+  chain?: Chain | string
+): chain is GuildPinsSupportedChain => {
+  if (!chain) return false
+  return Object.keys(consts.PinContractAddresses).includes(chain)
+}
+
+export { flipPath, generateGetAssetsParams, isGuildPinSupportedChain }

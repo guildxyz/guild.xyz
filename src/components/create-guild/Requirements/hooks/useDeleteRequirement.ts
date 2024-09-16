@@ -11,8 +11,9 @@ const useDeleteRequirement = (
   requirementId: number,
   onSuccess?: () => void
 ) => {
-  const { id } = useGuild()
-  const { mutate: mutateRequirements } = useRequirements(roleId)
+  const { id, roles, mutateGuild } = useGuild()
+  const role = roles?.find((r) => r.id === roleId)
+  const { data: requirements, mutate: mutateRequirements } = useRequirements(roleId)
   const { triggerMembershipUpdate } = useMembershipUpdate()
 
   const toast = useToast()
@@ -32,6 +33,35 @@ const useDeleteRequirement = (
       })
       onSuccess?.()
 
+      if (
+        role?.logic === "ANY_OF" &&
+        (role.anyOfNum ?? 0) === (requirements?.length ?? 0) - 1
+      ) {
+        mutateGuild(
+          (prevGuild) =>
+            prevGuild
+              ? {
+                  ...prevGuild,
+                  roles: prevGuild.roles.map((r) => {
+                    if (r.id !== roleId) return r
+
+                    /**
+                     * We want to keep the role's original behaviour after deleting a requirement.
+                     *
+                     * E.g.: The role has 4 requirements and `anyOfNum` is set to 3, so the users should satisfy at least 3 requirements. If we delete a requirement, the role will have 3 requirements, which means the users should satisfy all of them, that's why we change `logic` to `AND` & set `anyOfNum` to `undefined` here.
+                     */
+                    return {
+                      ...r,
+                      logic: "AND",
+                      anyOfNum: undefined,
+                    }
+                  }),
+                }
+              : undefined,
+          { revalidate: false }
+        )
+      }
+
       /**
        * Delaying state change so we can close the modal and return focus to the
        * delete button before the card unmounts, so the page doesn't jump to the top
@@ -46,7 +76,7 @@ const useDeleteRequirement = (
         )
       }, 200)
 
-      triggerMembershipUpdate()
+      triggerMembershipUpdate({ roleIds: [roleId] })
     },
     onError: (error) => showErrorToast(error),
   })

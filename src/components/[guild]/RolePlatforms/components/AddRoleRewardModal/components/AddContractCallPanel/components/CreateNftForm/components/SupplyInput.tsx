@@ -49,6 +49,7 @@ const SupplyInput = () => {
       <GridItem as={FormControl} colSpan={{ base: 3, md: 2 }}>
         <FormLabel>Supply</FormLabel>
         <SegmentedControl
+          name="supply-type"
           options={options}
           value={supplyType}
           onChange={(newSupplyType) =>

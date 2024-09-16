@@ -92,6 +92,7 @@
     /* we plan to add the whole alpha color palettes */
     --whiteAlpha-800: rgba(255, 255, 255, 0.80);
     --blackAlpha-800: rgba(0, 0, 0, 0.80);
+    --blackAlpha-300: rgba(0, 0, 0, 0.30);
 
     --discord: 233 78% 63%;
     --discord-hover: 243 75% 59%;
@@ -120,13 +121,25 @@
     --farcaster-hover: 261 55% 55%;
     --farcaster-active: 239 75% 50%;
 
+    /**
+     * Missing reward colors to work with the current Chakra driven solution.
+     * Should find a better solution when we ditch Chakra and won't need to be backward compatible
+     *
+     * Examples of usage -> new: RewardBadge, old: RewardTag
+     */
+    --gather_town: 232, 66%, 55%;
+    --cyan: 190, 100%, 42%;
+    --blue: 217, 91%, 60%;
+    --gold: 40 67% 51%;
+    --gray: 240, 4%, 46%;
+
     --sm: 640px;
     --md: 768px;
     --lg: 1024px;
     --xl: 1280px;
   }
 
-  :root[data-theme="dark"] {
+  :root[data-theme="dark"], [data-theme="dark"] {
     --background: 240 3.7% 15.88%;
     --foreground: 210 20% 98%;
 

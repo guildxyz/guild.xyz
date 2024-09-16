@@ -17,6 +17,7 @@ import Button from "components/common/Button"
 import ErrorAlert from "components/common/ErrorAlert"
 import { env } from "env"
 import { useFetcherWithSign } from "hooks/useFetcherWithSign"
+import { useGetKeyForSWRWithOptionalAuth } from "hooks/useGetKeyForSWRWithOptionalAuth"
 import useToast from "hooks/useToast"
 import { QRCodeSVG } from "qrcode.react"
 import { useEffect } from "react"
@@ -39,6 +40,8 @@ const ConnectDIDModal = ({
   const toast = useToast()
 
   const fetcherWithSign = useFetcherWithSign()
+  const getKeyForSWRWithOptionalAuth = useGetKeyForSWRWithOptionalAuth()
+
   const {
     data: qrCode,
     isValidating,
@@ -46,12 +49,9 @@ const ConnectDIDModal = ({
     mutate,
   } = useSWRImmutable(
     isOpen
-      ? [
-          `${env.NEXT_PUBLIC_POLYGONID_API}/v1/users/${userId}/polygon-id/auth`,
-          {
-            method: "GET",
-          },
-        ]
+      ? getKeyForSWRWithOptionalAuth(
+          `${env.NEXT_PUBLIC_POLYGONID_API}/v1/users/${userId}/polygon-id/auth`
+        )
       : null,
     fetcherWithSign
   )

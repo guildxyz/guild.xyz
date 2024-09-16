@@ -4,6 +4,7 @@ import { dystopian, inter } from "fonts"
 import { type ReactNode, Suspense } from "react"
 import "./globals.css"
 import { cn } from "@/lib/utils"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import type { Metadata, Viewport } from "next"
 import NextTopLoader from "nextjs-toploader"
 
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
   description:
     "Automated membership management for the platforms your community already uses.",
   icons: {
-    icon: "guild-icon.png",
+    icon: "/guild-icon.png",
   },
 }
 
@@ -56,6 +57,8 @@ export default function RootLayout({ children }: RootLayoutProps) {
             pointerEvents: "none",
           }}
         />
+
+        <SpeedInsights />
       </body>
     </html>
   )

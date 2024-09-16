@@ -13,9 +13,11 @@ export const useUpdateContribution = ({
   const { data: profile } = useProfile()
   const contributions = useContributions()
 
+  if (!profile)
+    throw new Error("Tried to update contribution outside profile context")
   const update = async (signedValidation: SignedValidation) => {
     return fetcher(
-      `/v2/profiles/${(profile as Schemas["Profile"]).username}/contributions/${contributionId}`,
+      `/v2/profiles/${profile.username}/contributions/${contributionId}`,
       {
         method: "PUT",
         ...signedValidation,
@@ -49,7 +51,7 @@ export const useUpdateContribution = ({
       )
     },
     onSuccess: () => {
-      revalidateContributions()
+      revalidateContributions({ username: profile.username })
     },
     onError: (response) => {
       toast({
@@ -62,6 +64,6 @@ export const useUpdateContribution = ({
   return {
     ...submitWithSign,
     onSubmit: (payload: Schemas["ContributionUpdate"]) =>
-      profile && submitWithSign.onSubmit(payload),
+      submitWithSign.onSubmit(payload),
   }
 }

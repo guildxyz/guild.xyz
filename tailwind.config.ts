@@ -1,4 +1,3 @@
-import { background } from "@chakra-ui/react"
 import type { Config } from "tailwindcss"
 
 const config = {

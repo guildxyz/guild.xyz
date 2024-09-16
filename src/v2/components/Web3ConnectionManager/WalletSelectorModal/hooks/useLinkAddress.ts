@@ -3,12 +3,14 @@ import { addressLinkParamsAtom } from "@/components/Providers/atoms"
 import { AddressLinkParams } from "@/components/Providers/types"
 import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { useUserPublic } from "@/hooks/useUserPublic"
+import { UserProfile } from "@guildxyz/types"
+import { useMutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import useSubmit from "hooks/useSubmit"
 import { SignProps } from "hooks/useSubmit/types"
 import { useAtom } from "jotai"
 import randomBytes from "randombytes"
 import { useEffect } from "react"
-import { mutate } from "swr"
+import { useSWRConfig } from "swr"
 import { fetcherWithSign } from "utils/fetcher"
 import { deleteKeyPairFromIdb, getKeyPairFromIdb } from "utils/keyPair"
 import { WalletClient } from "viem"
@@ -23,12 +25,10 @@ const getAddressLinkProof = async (
   const nonce = randomBytes(32).toString("hex")
   const message = `Address: ${addr}\nNonce: ${nonce}\n Timestamp: ${timestamp}`
   const signature = walletClient
-    ? walletClient?.account?.type === "local"
-      ? await walletClient.account.signMessage({ message })
-      : await walletClient.signMessage({
-          message,
-          account: walletClient.account,
-        })
+    ? await walletClient.signMessage({
+        message,
+        account: walletClient.account,
+      })
     : await signMessage(message)
 
   return { address: addr, nonce, timestamp, signature }
@@ -63,6 +63,9 @@ const useLinkAddress = () => {
     checkAndDeleteKeys(currentUserId).then(() => deleteKeys())
   }, [addressLinkParams, currentUserId, deleteKeys])
 
+  const { mutate } = useSWRConfig()
+  const mutateOptionalAuthSWRKey = useMutateOptionalAuthSWRKey()
+
   return useSubmit(
     async ({
       userId,
@@ -96,10 +99,10 @@ const useLinkAddress = () => {
       )
 
       // Update signed profile data with new address
-      await mutate(
-        [`/v2/users/${userId}/profile`, { method: "GET", body: {} }],
+      await mutateOptionalAuthSWRKey<UserProfile>(
+        `/v2/users/${userId}/profile`,
         (prev) => ({
-          ...(prev ?? {}),
+          ...prev,
           addresses: [...(prev?.addresses ?? []), newAddress],
         }),
         { revalidate: false }

@@ -43,7 +43,7 @@ const FormPage = ({ formId }: Props) => {
   useEffect(() => {
     if (!isMembershipUpdateDone) return
     mutateForm()
-  }, [isMembershipUpdateDone, mutateForm])
+  }, [isMembershipUpdateDone])
 
   const relevantGuildPlatform = guildPlatforms.find(
     (gp) => gp.platformGuildData?.formId === formId
@@ -111,6 +111,7 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
   if (!formId)
     return {
       notFound: true,
+      revalidate: 300,
     }
 
   const endpoint = `/v2/guilds/guild-page/${params.guild}`
@@ -119,6 +120,7 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
   if (!guild.id)
     return {
       notFound: true,
+      revalidate: 300,
     }
 
   guild.isFallback = true

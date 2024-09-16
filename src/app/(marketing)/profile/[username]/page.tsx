@@ -7,14 +7,33 @@ import {
   LayoutMain,
 } from "@/components/Layout"
 import { SWRProvider } from "@/components/SWRProvider"
-import { Anchor } from "@/components/ui/Anchor"
-import { Guild, Role, Schemas } from "@guildxyz/types"
-import { ArrowRight } from "@phosphor-icons/react/dist/ssr"
+import { FarcasterProfile, Guild, Role, Schemas } from "@guildxyz/types"
 import { env } from "env"
+import { Metadata } from "next"
 import Image from "next/image"
-import { notFound, redirect } from "next/navigation"
+import { notFound } from "next/navigation"
+import { JoinProfileAction } from "../_components/JoinProfileAction"
 import { Profile } from "../_components/Profile"
 import { ProfileColorBanner } from "../_components/ProfileColorBanner"
+import { ProfileHero } from "../_components/ProfileHero"
+
+type PageProps = { params: { username: string } }
+
+export const generateMetadata = async ({ params: { username } }: PageProps) => {
+  const { profile } = await fetchPublicProfileData({
+    username,
+    fetchFallback: false,
+  })
+  return {
+    title: `${profile.name || profile.username} (@${profile.username}) | Guild.xyz`,
+    description: profile.bio,
+    openGraph: {
+      images: [profile.profileImageUrl, profile.backgroundImageUrl].filter(
+        Boolean
+      ) as string[],
+    },
+  } satisfies Metadata
+}
 
 const api = env.NEXT_PUBLIC_API
 
@@ -22,29 +41,94 @@ async function ssrFetcher<T>(...args: Parameters<typeof fetch>) {
   return (await fetch(...args)).json() as T
 }
 
-const fetchPublicProfileData = async ({ username }: { username: string }) => {
-  const contributionsRequest = new URL(`v2/profiles/${username}/contributions`, api)
+const fetchPublicProfileData = async ({
+  username,
+  fetchFallback = true,
+}: { username: string; fetchFallback?: boolean }) => {
   const profileRequest = new URL(`v2/profiles/${username}`, api)
   const profileResponse = await fetch(profileRequest, {
     next: {
-      tags: ["profile"],
+      tags: [profileRequest.pathname],
       revalidate: 3600,
     },
   })
 
   if (profileResponse.status === 404) notFound()
-  if (!profileResponse.ok) redirect("/error")
+  if (!profileResponse.ok) throw new Error("couldn't to fetch /profile")
 
   const profile = (await profileResponse.json()) as Schemas["Profile"]
-  const contributions = await ssrFetcher<Schemas["Contribution"][]>(
-    contributionsRequest,
+  if (!fetchFallback) {
+    return { profile }
+  }
+  const farcasterProfilesRequest = new URL(
+    `/v2/users/${profile.userId}/farcaster-profiles`,
+    api
+  )
+  const farcasterProfiles = await ssrFetcher<FarcasterProfile[]>(
+    farcasterProfilesRequest,
     {
       next: {
-        tags: ["contributions"],
+        tags: [farcasterProfilesRequest.pathname],
         revalidate: 3600,
       },
     }
   )
+  const fcProfile = farcasterProfiles.at(0)
+  const neynarRequest =
+    fcProfile &&
+    new URL(
+      `https://api.neynar.com/v2/farcaster/user/bulk?api_key=NEYNAR_API_DOCS&fids=${fcProfile.fid}`
+    )
+  const fcFollowers =
+    neynarRequest &&
+    (await ssrFetcher(neynarRequest, {
+      next: {
+        revalidate: 12 * 3600,
+      },
+    }))
+
+  const referredUsersRequest = new URL(
+    `/v2/profiles/${username}/referred-users`,
+    api
+  )
+  const referredUsers = await ssrFetcher<Schemas["Profile"][]>(
+    referredUsersRequest,
+    {
+      next: {
+        tags: [profileRequest.pathname],
+        revalidate: 3600,
+      },
+    }
+  )
+  const contributionsRequest = new URL(`v2/profiles/${username}/contributions`, api)
+  const contributions = await ssrFetcher<Schemas["Contribution"][]>(
+    contributionsRequest,
+    {
+      next: {
+        tags: [contributionsRequest.pathname],
+        revalidate: 3600,
+      },
+    }
+  )
+  const collectionRequests = contributions.map(
+    ({ id }) =>
+      new URL(`v2/profiles/${username}/contributions/${id}/collection`, api)
+  )
+  let collections: Schemas["ContributionCollection"][] | undefined
+  try {
+    collections = await Promise.all(
+      collectionRequests.map((req) =>
+        ssrFetcher<Schemas["ContributionCollection"]>(req, {
+          next: {
+            tags: ["collections"],
+            revalidate: 3600,
+          },
+        })
+      )
+    )
+  } catch (e) {
+    console.error(e)
+  }
   const roleRequests = contributions.map(
     ({ roleId, guildId }) => new URL(`v2/guilds/${guildId}/roles/${roleId}`, api)
   )
@@ -69,25 +153,60 @@ const fetchPublicProfileData = async ({ username }: { username: string }) => {
       })
     )
   )
-  const guildsZipped = Object.fromEntries(
-    guildRequests.map(({ pathname }, i) => [pathname, guilds[i]])
+  const collectionsZipped = collections
+    ? collectionRequests.map(({ pathname }, i) => [pathname, collections[i]])
+    : []
+  const guildsZipped = guildRequests.map(({ pathname }, i) => [pathname, guilds[i]])
+  const rolesZipped = roleRequests.map(({ pathname }, i) => [pathname, roles[i]])
+  const experiencesRequest = new URL(`/v2/profiles/${username}/experiences`, api)
+  const experiences = await ssrFetcher<Schemas["Experience"][]>(experiencesRequest, {
+    next: {
+      revalidate: 1200,
+    },
+  })
+  const experienceCountRequest = new URL(
+    `/v2/profiles/${username}/experiences?count=true`,
+    api
   )
-  const rolesZipped = Object.fromEntries(
-    roleRequests.map(({ pathname }, i) => [pathname, roles[i]])
-  )
+  const experienceCount = await ssrFetcher<number>(experienceCountRequest, {
+    next: {
+      revalidate: 1200,
+    },
+  })
+
   return {
     profile,
-    fallback: {
-      [profileRequest.pathname]: profile,
-      [contributionsRequest.pathname]: contributions,
-      ...guildsZipped,
-      ...rolesZipped,
-    },
+    fallback: Object.fromEntries(
+      [
+        [profileRequest.pathname, profile],
+        [contributionsRequest.pathname, contributions],
+        [farcasterProfilesRequest.pathname, farcasterProfiles],
+        [neynarRequest?.href, fcFollowers],
+        [referredUsersRequest.pathname, referredUsers],
+        [experiencesRequest.pathname, experiences],
+        [
+          experienceCountRequest.pathname + experienceCountRequest.search,
+          experienceCount,
+        ],
+        ...collectionsZipped,
+        ...guildsZipped,
+        ...rolesZipped,
+      ].filter(([key, value]) => key && value)
+    ),
   }
 }
 
-const Page = async ({ params: { username } }: { params: { username: string } }) => {
-  const { fallback, profile } = await fetchPublicProfileData({ username })
+const Page = async ({ params: { username } }: PageProps) => {
+  let profileData: Awaited<ReturnType<typeof fetchPublicProfileData>>
+  try {
+    profileData = await fetchPublicProfileData({ username })
+  } catch (error) {
+    const e = error instanceof Error ? error : undefined
+    throw new Error(
+      ["Failed to retrieve profile data", e?.message].filter(Boolean).join(": ")
+    )
+  }
+  const { profile, fallback } = profileData
 
   const isBgColor = profile.backgroundImageUrl?.startsWith("#")
 
@@ -97,14 +216,16 @@ const Page = async ({ params: { username } }: { params: { username: string } }) 
         fallback,
       }}
     >
-      <Layout
-        style={
-          isBgColor ? { ["--banner" as string]: profile.backgroundImageUrl } : {}
-        }
-      >
-        <LayoutHero className="pb-4 md:pb-10">
+      <Layout>
+        <LayoutHero className="pb-0">
           <Header />
-          <LayoutBanner className="-bottom-[600px]">
+          <LayoutBanner
+            className="-bottom-[100px]"
+            data-theme="dark"
+            style={
+              isBgColor ? { ["--banner" as string]: profile.backgroundImageUrl } : {}
+            }
+          >
             {isBgColor ? (
               <ProfileColorBanner />
             ) : (
@@ -114,6 +235,7 @@ const Page = async ({ params: { username } }: { params: { username: string } }) 
                   fill
                   sizes="100vw"
                   alt="profile background image"
+                  priority
                   style={{
                     filter: "brightness(50%)",
                     objectFit: "cover",
@@ -123,25 +245,18 @@ const Page = async ({ params: { username } }: { params: { username: string } }) 
             )}
             <div className="absolute inset-0 bg-gradient-to-t from-background" />
           </LayoutBanner>
+          <ProfileHero />
         </LayoutHero>
         <LayoutMain className="top-0">
           <Profile />
         </LayoutMain>
         <LayoutFooter className="pt-28 pb-5">
           <p className="text-center font-medium text-muted-foreground">
-            Guild Profiles are currently in invite only early access, only available
-            to{" "}
-            <Anchor
-              href={"#"}
-              className="inline-flex items-center gap-1"
-              variant="muted"
-            >
-              Subscribers
-              <ArrowRight />
-            </Anchor>
+            Guild Profiles are currently in early access.
           </p>
         </LayoutFooter>
       </Layout>
+      <JoinProfileAction />
     </SWRProvider>
   )
 }

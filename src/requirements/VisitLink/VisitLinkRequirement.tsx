@@ -61,13 +61,13 @@ const VisitLinkRequirement = ({ ...props }: RequirementProps) => {
 
   const showErrorToast = useShowErrorToast()
   const { onSubmit } = useSubmitWithSign(visitLink, {
-    onSuccess: () => triggerMembershipUpdate(),
+    onSuccess: () => triggerMembershipUpdate({ roleIds: [roleId] }),
     onError: () => showErrorToast("Something went wrong"),
   })
 
   const isCustomName = data?.customName !== getDefaultVisitLinkCustomName(data)
   const [, first, , link, , second] = isCustomName
-    ? VISIT_LINK_REGEX.exec(data.customName) ?? []
+    ? (VISIT_LINK_REGEX.exec(data.customName) ?? [])
     : []
 
   const onVisit = () => {

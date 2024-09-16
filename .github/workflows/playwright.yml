@@ -26,6 +26,7 @@ jobs:
         env:
           DEPLOYMENT_URL: ${{ github.event.deployment_status.target_url }}
           ANVIL_FORK_URL: ${{ secrets.ANVIL_FORK_URL }}
+          ANVIL_FORK_KEY: ${{ secrets.ANVIL_FORK_KEY }}
           NEXT_PUBLIC_E2E_WALLET_MNEMONIC: ${{ secrets.E2E_WALLET_MNEMONIC }}
         run: npm run test
       - uses: actions/upload-artifact@v4

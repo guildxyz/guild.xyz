@@ -11,7 +11,6 @@ import useVisibilityModalProps from "components/[guild]/SetVisibility/hooks/useV
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import rewards, { CAPACITY_TIME_PLATFORMS } from "rewards"
-import { cardSettings } from "rewards/CardSettings"
 import NftAvailabilityTags from "rewards/ContractCall/components/NftAvailabilityTags"
 import { cardPropsHooks } from "rewards/cardPropsHooks"
 import {
@@ -27,9 +26,6 @@ import useUpdateRolePlatformVisibility from "../hooks/useUpdateRolePlatformVisib
 type Props = {
   rolePlatform: RolePlatform
 }
-
-// TODO: needs backend support
-const EDIT_SUPPORTED = false
 
 const ExistingRolePlatformCard = ({ rolePlatform }: Props) => {
   const { guildPlatforms } = useGuild()
@@ -69,9 +65,14 @@ const ExistingRolePlatformCard = ({ rolePlatform }: Props) => {
     guildPlatform.platformGuildData.function ===
       ContractCallFunction.DEPRECATED_SIMPLE_CLAIM
 
-  const cardSettingsComponent = cardSettings[type]
   const useCardProps = cardPropsHooks[type]
   const { isPlatform } = rewards[type]
+
+  const shouldRenderCustomContentRow =
+    CAPACITY_TIME_PLATFORMS.includes(type) ||
+    type === "CONTRACT_CALL" ||
+    isLegacyContractCallReward ||
+    !!rolePlatform.dynamicAmount
 
   return (
     <RolePlatformProvider
@@ -108,70 +109,70 @@ const ExistingRolePlatformCard = ({ rolePlatform }: Props) => {
           <RemovePlatformButton {...{ removeButtonColor, isPlatform }} />
         }
         actionRow={
-          EDIT_SUPPORTED ? (
-            cardSettingsComponent && (
-              <>
-                <Button
-                  size="sm"
-                  onClick={onEditOpen}
-                  ml={{ base: 0, md: 3 }}
-                  mt={{ base: 5, md: 0 }}
-                >
-                  Edit
-                </Button>
-                <EditRolePlatformModal
-                  rolePlatform={{ ...rolePlatform, guildPlatform }}
-                  isOpen={isEditOpen}
-                  onClose={onEditClose}
-                  onSubmit={(updateData) => {
-                    onEdit({ ...rolePlatform, ...updateData })
-                    onEditClose()
-                  }}
-                />
-              </>
-            )
-          ) : (
-            <></>
-          )
+          // TODO: we could add a prop for this in the rewards config if we'll need to support editing rolePlatforms for multiple reward types
+          type === "POINTS" ? (
+            <>
+              <Button
+                size="sm"
+                onClick={onEditOpen}
+                ml={{ base: 0, md: 3 }}
+                mt={{ base: 5, md: 0 }}
+              >
+                Edit
+              </Button>
+              <EditRolePlatformModal
+                rolePlatform={{ ...rolePlatform, guildPlatform }}
+                isOpen={isEditOpen}
+                onClose={onEditClose}
+                onSubmit={(updateData) => {
+                  onEdit({ ...rolePlatform, ...updateData })
+                  onEditClose()
+                }}
+              />
+            </>
+          ) : undefined
         }
         contentRow={
-          <>
-            {CAPACITY_TIME_PLATFORMS.includes(type) || isLegacyContractCallReward ? (
-              <AvailabilitySetup
-                platformType={type}
-                rolePlatform={rolePlatform}
-                defaultValues={{
-                  capacity: rolePlatform.capacity,
-                  startTime: rolePlatform.startTime,
-                  endTime: rolePlatform.endTime,
-                }}
-                onDone={({ capacity, endTime, startTime }) =>
-                  onAvailabilityChange({
-                    rolePlatform,
-                    capacity,
-                    startTime,
-                    endTime,
-                  })
-                }
-                isLoading={isAvailabilityLoading}
-              />
-            ) : type === "CONTRACT_CALL" ? (
-              <NftAvailabilityTags
-                guildPlatform={guildPlatform}
-                rolePlatform={rolePlatform}
-                mt={1}
-              />
-            ) : null}
-            {!!rolePlatform.dynamicAmount && (
-              <DynamicTag
-                rolePlatform={
-                  { ...rolePlatform, guildPlatform: guildPlatform } as RolePlatform
-                }
-                editDisabled
-                mt={1}
-              />
-            )}
-          </>
+          shouldRenderCustomContentRow ? (
+            <>
+              {CAPACITY_TIME_PLATFORMS.includes(type) ||
+              isLegacyContractCallReward ? (
+                <AvailabilitySetup
+                  platformType={type}
+                  rolePlatform={rolePlatform}
+                  defaultValues={{
+                    capacity: rolePlatform.capacity,
+                    startTime: rolePlatform.startTime,
+                    endTime: rolePlatform.endTime,
+                  }}
+                  onDone={({ capacity, endTime, startTime }) =>
+                    onAvailabilityChange({
+                      rolePlatform,
+                      capacity,
+                      startTime,
+                      endTime,
+                    })
+                  }
+                  isLoading={isAvailabilityLoading}
+                />
+              ) : type === "CONTRACT_CALL" ? (
+                <NftAvailabilityTags
+                  guildPlatform={guildPlatform}
+                  rolePlatform={rolePlatform}
+                  mt={1}
+                />
+              ) : null}
+              {!!rolePlatform.dynamicAmount && (
+                <DynamicTag
+                  rolePlatform={
+                    { ...rolePlatform, guildPlatform: guildPlatform } as RolePlatform
+                  }
+                  editDisabled
+                  mt={1}
+                />
+              )}
+            </>
+          ) : undefined
         }
       />
     </RolePlatformProvider>
