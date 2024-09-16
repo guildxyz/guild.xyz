@@ -15,6 +15,7 @@ const StickyAction = ({ children }: PropsWithChildren) => {
     <>
       <DesktopHeaderBar isOpen={isStickyActionStuck}>{children}</DesktopHeaderBar>
       <div
+        data-testid="layout-action"
         ref={ref}
         className={cn(
           "max-sm:fixed max-sm:right-0 max-sm:bottom-0 max-sm:left-0 max-sm:z-10 max-sm:border-t max-sm:bg-card max-sm:shadow-2xl",
