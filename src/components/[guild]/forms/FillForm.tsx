@@ -150,9 +150,7 @@ const FillFormWrapper = ({ form }: FormProp) => {
       <FillForm
         form={form}
         method="PUT"
-        defaultValues={
-          userSubmission && mapAnswersToObject(userSubmission.submissionAnswers)
-        }
+        defaultValues={mapAnswersToObject(userSubmission.submissionAnswers)}
       />
     )
 
