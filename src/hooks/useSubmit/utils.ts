@@ -86,26 +86,19 @@ export const sign = async ({
 
     params.chainId ||= chainId || `${walletClient.chain.id}`
 
-    if (walletClient?.account?.type === "local") {
-      // For local accounts, we request the signature on the account. Otherwise it sends a personal_sign to the rpc
-      sig = await walletClient.account.signMessage({
+    sig = await walletClient
+      .signMessage({
+        account: address,
         message: getMessageToSign(params),
       })
-    } else {
-      sig = await walletClient
-        .signMessage({
-          account: address,
-          message: getMessageToSign(params),
-        })
-        .catch((error) => {
-          if (error instanceof UnauthorizedProviderError) {
-            throw new Error(
-              "Your wallet is not connected. It might be because your browser locked it after a period of time."
-            )
-          }
-          throw error
-        })
-    }
+      .catch((error) => {
+        if (error instanceof UnauthorizedProviderError) {
+          throw new Error(
+            "Your wallet is not connected. It might be because your browser locked it after a period of time."
+          )
+        }
+        throw error
+      })
   }
 
   return [payload, { params, sig }]
