@@ -4,10 +4,8 @@ import { Card } from "@/components/ui/Card"
 import { Skeleton } from "@/components/ui/Skeleton"
 import { Icon } from "@phosphor-icons/react"
 import {
-  ArrowFatUp,
   Calendar,
   FolderSimpleUser,
-  ShootingStar,
   Star,
   User,
 } from "@phosphor-icons/react/dist/ssr"
@@ -79,10 +77,6 @@ export const OperatedGuild = ({ guildBase }: { guildBase: GuildBase }) => {
           </EmphasizedData>{" "}
           members
         </OperatedGuildDetail>
-        <OperatedGuildDetail Icon={ArrowFatUp}>
-          Avg level of members:
-          <EmphasizedData>___</EmphasizedData>
-        </OperatedGuildDetail>
         <OperatedGuildDetail Icon={FolderSimpleUser}>
           <EmphasizedData>{guildBase.rolesCount}</EmphasizedData>
           roles
@@ -90,11 +84,6 @@ export const OperatedGuild = ({ guildBase }: { guildBase: GuildBase }) => {
         <OperatedGuildDetail Icon={Star}>
           <EmphasizedData>{rewardCount}</EmphasizedData>
           rewards in total
-        </OperatedGuildDetail>
-        <OperatedGuildDetail Icon={ShootingStar}>
-          In the top
-          <EmphasizedData>__%</EmphasizedData>
-          of guilds
         </OperatedGuildDetail>
         {createdAt && (
           <OperatedGuildDetail Icon={Calendar}>
