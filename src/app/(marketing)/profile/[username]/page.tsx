@@ -174,6 +174,9 @@ const fetchPublicProfileData = async ({
     },
   })
 
+  const operatedGuildsRequest = new URL(`/v2/guilds?username=${username}`, api)
+  const operatedGuilds = await ssrFetcher<Guild[]>(operatedGuildsRequest)
+
   return {
     profile,
     fallback: Object.fromEntries(
@@ -187,6 +190,10 @@ const fetchPublicProfileData = async ({
         [
           experienceCountRequest.pathname + experienceCountRequest.search,
           experienceCount,
+        ],
+        [
+          operatedGuildsRequest.pathname + operatedGuildsRequest.search,
+          operatedGuilds,
         ],
         ...collectionsZipped,
         ...guildsZipped,

@@ -6,6 +6,8 @@ import { ProgressIndicator, ProgressRoot } from "@/components/ui/Progress"
 import { cn } from "@/lib/utils"
 import { Info } from "@phosphor-icons/react"
 import { PropsWithChildren } from "react"
+import useSWRImmutable from "swr/immutable"
+import { GuildBase } from "types"
 import { ContributionCard } from "../_components/ContributionCard"
 import { EditContributions } from "../_components/EditContributions"
 import { ProfileOwnerGuard } from "../_components/ProfileOwnerGuard"
@@ -15,6 +17,7 @@ import { useProfile } from "../_hooks/useProfile"
 import { useReferredUsers } from "../_hooks/useReferredUsers"
 import { ActivityChart } from "./ActivityChart"
 import { LevelBadge } from "./LevelBadge"
+import { OperatedGuild } from "./OperatedGuilds"
 import { ProfileMainSkeleton } from "./ProfileSkeleton"
 import { RecentActivity } from "./RecentActivity/RecentActivity"
 import RecentActivityFallback from "./RecentActivity/RecentActivityFallback"
@@ -25,6 +28,13 @@ export const Profile = () => {
   const { data: referredUsers } = useReferredUsers()
   const { isWeb3Connected } = useWeb3ConnectionManager()
   const xp = useExperienceProgression()
+  let { data: operatedGuilds } = useSWRImmutable<GuildBase[]>(
+    profile ? `/v2/guilds?username=${profile.username}` : null
+  )
+  operatedGuilds = operatedGuilds
+    ?.filter((guild) => guild.isAdmin)
+    .sort((a, b) => a.memberCount - b.memberCount)
+    .slice(0, 2)
 
   if (!profile || !contributions || !referredUsers || !xp)
     return <ProfileMainSkeleton />
@@ -65,6 +75,16 @@ export const Profile = () => {
           </Card>
         </div>
       </div>
+      {operatedGuilds && (
+        <div className="mb-12">
+          <SectionTitle className="mb-3">Operated guilds</SectionTitle>
+          <div className="flex flex-col gap-5">
+            {operatedGuilds.map((guild) => (
+              <OperatedGuild guildBase={guild} key={guild.id} />
+            ))}
+          </div>
+        </div>
+      )}
       <div className="mb-3 flex items-center justify-between">
         <SectionTitle>Top contributions</SectionTitle>
         <ProfileOwnerGuard>
