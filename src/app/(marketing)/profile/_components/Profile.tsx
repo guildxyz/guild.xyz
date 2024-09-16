@@ -79,7 +79,7 @@ export const Profile = () => {
       {!!operatedGuilds?.length && (
         <div className="mb-12">
           <SectionTitle className="mb-3">Operated guilds</SectionTitle>
-          <div className="flex flex-col gap-5">
+          <div className="flex flex-col gap-3">
             {operatedGuilds.map((guild) => (
               <OperatedGuild guildBase={guild} key={guild.id} />
             ))}
