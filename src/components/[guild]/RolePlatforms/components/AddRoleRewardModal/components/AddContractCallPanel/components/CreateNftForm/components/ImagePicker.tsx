@@ -59,6 +59,7 @@ const ImagePicker = () => {
       <WrapperElement borderRadius="xl">
         <AspectRatio ratio={1}>
           <Button
+            data-testid="nft-image-picker"
             p={0}
             borderWidth={1}
             variant="ghost"

@@ -12,7 +12,12 @@ const AddSolutionsButton = (buttonProps: ButtonProps) => {
 
   return (
     <>
-      <Button leftIcon={<Plus />} onClick={onOpen} {...buttonProps}>
+      <Button
+        leftIcon={<Plus />}
+        onClick={onOpen}
+        data-testid="add-solutions-button"
+        {...buttonProps}
+      >
         Add solution
       </Button>
       <AddSolutionsModal />

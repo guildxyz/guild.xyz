@@ -5,7 +5,9 @@ import { test } from "./fixtures"
 test("can mint guild pin", async ({ pageWithKeyPair: { page } }) => {
   await page.goto(GUILD_CHECKOUT_TEST_GUILD_URL_NAME)
 
-  await page.waitForResponse("**/v2/users/*/memberships?guildId=*")
+  await page.waitForResponse("**/v2/users/*/memberships?guildId=*", {
+    timeout: 30_000,
+  })
 
   const mintGuildPinButton = await page.getByTestId("mint-guild-pin-button")
   await mintGuildPinButton.click()

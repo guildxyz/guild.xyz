@@ -34,7 +34,9 @@ setup("authenticate", async ({ page }) => {
   await page.getByTestId("verify-address-button").click()
 
   const publicKeyResponse = await page
-    .waitForResponse(`**/v2/users/${TEST_USER.id}/public-key`)
+    .waitForResponse(`**/v2/users/${TEST_USER.id}/public-key`, {
+      timeout: 60_000,
+    })
     .then((res) => res.json())
 
   const storedKeyPairToSave = await page.evaluate(

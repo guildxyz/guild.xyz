@@ -10,7 +10,11 @@ We use Playwright for E2E testing. When running our tests, we create a viem [Tes
 curl -L https://foundry.paradigm.xyz | bash
 foundryup
 ```
-3. Either run the frontend in dev mode (`npm run dev`) or build it (`npm run build`) and run the tests. You can pick between several different modes, e.g. `npm run test` will just run the tests and print the output, `npm run test:ui` will open the Playwright runner, where you can see the console, network tab, etc., and `npm run test:debug` will open a Chromium browser where you can inspect the page during the test.
+3. You might also need to install a browser which you can use for testing:
+```sh
+npx playwright install chromium 
+```
+4. Either run the frontend in dev mode (`npm run dev`) or build it (`npm run build`) and run the tests. You can pick between several different modes, e.g. `npm run test` will just run the tests and print the output, `npm run test:ui` will open the Playwright runner, where you can see the console, network tab, etc., and `npm run test:debug` will open a Chromium browser where you can inspect the page during the test.
 
 ## Writing tests
 

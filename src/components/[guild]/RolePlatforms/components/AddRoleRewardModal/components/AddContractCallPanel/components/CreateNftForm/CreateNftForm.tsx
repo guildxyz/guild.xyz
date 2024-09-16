@@ -63,7 +63,7 @@ const CreateNftForm = ({ onSuccess }: Props) => {
       <NftDataForm
         submitButton={
           <Button
-            data-test="create-nft-button"
+            data-testid="create-nft-button"
             colorScheme="indigo"
             isDisabled={!isEvmConnected || shouldSwitchChain || isLoading}
             isLoading={isLoading}
