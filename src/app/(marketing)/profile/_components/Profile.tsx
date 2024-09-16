@@ -73,7 +73,7 @@ export const Profile = () => {
           </Card>
         </div>
       </div>
-      {operatedGuilds && (
+      {!!operatedGuilds?.length && (
         <div className="mb-12">
           <SectionTitle className="mb-3">Operated guilds</SectionTitle>
           <div className="flex flex-col gap-5">

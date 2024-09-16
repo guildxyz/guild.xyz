@@ -133,14 +133,24 @@ const fetchPublicProfileData = async ({
   }
   const operatedGuildsRequest = new URL(`/v2/guilds?username=${username}`, api)
   const operatedGuilds = await ssrFetcher<GuildBase[]>(operatedGuildsRequest)
-  const selectedOperatedGuilds = selectOperatedGuilds({ guilds: operatedGuilds })
+  const selectedOperatedGuildRequests = selectOperatedGuilds({
+    guilds: operatedGuilds,
+  }).map(({ id }) => new URL(`v2/guilds/guild-page/${id}`, api))
+  const selectedOperatedGuilds = await Promise.all(
+    selectedOperatedGuildRequests.map((req) =>
+      ssrFetcher<Guild>(req, {
+        next: {
+          revalidate: 3 * 3600,
+        },
+      })
+    )
+  )
   const roleRequests = contributions.map(
     ({ roleId, guildId }) => new URL(`v2/guilds/${guildId}/roles/${roleId}`, api)
   )
-  const guildRequests = [
-    ...contributions,
-    ...selectedOperatedGuilds.map(({ id }) => ({ guildId: id })),
-  ].map(({ guildId }) => new URL(`v2/guilds/${guildId}`, api))
+  const guildRequests = contributions.map(
+    ({ guildId }) => new URL(`v2/guilds/${guildId}`, api)
+  )
   const guilds = await Promise.all(
     guildRequests.map((req) =>
       ssrFetcher<Guild>(req, {
@@ -164,6 +174,9 @@ const fetchPublicProfileData = async ({
     : []
   const guildsZipped = guildRequests.map(({ pathname }, i) => [pathname, guilds[i]])
   const rolesZipped = roleRequests.map(({ pathname }, i) => [pathname, roles[i]])
+  const selectedOperatedGuildsZipped = selectedOperatedGuildRequests.map(
+    ({ pathname }, i) => [pathname, selectedOperatedGuilds[i]]
+  )
   const experiencesRequest = new URL(`/v2/profiles/${username}/experiences`, api)
   const experiences = await ssrFetcher<Schemas["Experience"][]>(experiencesRequest, {
     next: {
@@ -198,6 +211,7 @@ const fetchPublicProfileData = async ({
           operatedGuildsRequest.pathname + operatedGuildsRequest.search,
           operatedGuilds,
         ],
+        ...selectedOperatedGuildsZipped,
         ...collectionsZipped,
         ...guildsZipped,
         ...rolesZipped,
@@ -217,7 +231,6 @@ const Page = async ({ params: { username } }: PageProps) => {
     )
   }
   const { profile, fallback } = profileData
-
   const isBgColor = profile.backgroundImageUrl?.startsWith("#")
 
   return (
