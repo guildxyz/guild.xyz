@@ -33,6 +33,9 @@ test("fill nft form and deploy a contract", async ({
 
   // Test every basic input field inside the NFT form
   const nameInput = await addNFTModal.locator("input[name='name']")
+  await nameInput.focus()
+  await nameInput.blur()
+  await expect(nameInput).toHaveAttribute("aria-invalid", "true")
   await nameInput.fill("E2E test NFT")
 
   const metadataDescriptionTextarea = await addNFTModal.getByLabel(
@@ -107,11 +110,13 @@ test("fill nft form and deploy a contract", async ({
   // Test the "Limit claiming time" panel
   const limitClaimingTimePanel = await addNFTModal.getByText("Limit claiming time")
   await limitClaimingTimePanel.click()
-
   const startTimeInput = await addNFTModal.locator("input[name='startTime']")
   await expect(startTimeInput).toBeVisible()
   const endTimeInput = await addNFTModal.locator("input[name='endTime']")
   await expect(endTimeInput).toBeVisible()
+  await limitClaimingTimePanel.click()
+  await expect(startTimeInput).toBeHidden()
+  await expect(endTimeInput).toBeHidden()
 
   /**
    * Media input - Playwright doesn't work with react-dropzone, so we just set the file input's value manually here
