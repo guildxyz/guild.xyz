@@ -151,7 +151,6 @@
     "autoprefixer": "^10.4.19",
     "circular-dependency-plugin": "^5.2.2",
     "dotenv": "^16.4.5",
-    "dotenv-cli": "^7.4.1",
     "dpdm": "^3.14.0",
     "event-stream": "^4.0.1",
     "husky": "^8.0.3",
