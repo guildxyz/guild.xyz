@@ -2,7 +2,7 @@ import { expect } from "@playwright/test"
 import { TEST_USER } from "./constants"
 import { test } from "./fixtures"
 
-test("set auth state from json", async ({ pageWithKeyPair: { page } }) => {
+test("restore auth state from json", async ({ pageWithKeyPair: { page } }) => {
   await page.goto("/explorer")
 
   const accountCard = await page.getByTestId("account-card")
