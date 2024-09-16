@@ -15,6 +15,7 @@ import { useContributions } from "../_hooks/useContributions"
 import { useExperienceProgression } from "../_hooks/useExperienceProgression"
 import { useProfile } from "../_hooks/useProfile"
 import { useReferredUsers } from "../_hooks/useReferredUsers"
+import { selectOperatedGuilds } from "../_utils/selectOperatedGuilds"
 import { ActivityChart } from "./ActivityChart"
 import { LevelBadge } from "./LevelBadge"
 import { OperatedGuild } from "./OperatedGuilds"
@@ -31,10 +32,7 @@ export const Profile = () => {
   let { data: operatedGuilds } = useSWRImmutable<GuildBase[]>(
     profile ? `/v2/guilds?username=${profile.username}` : null
   )
-  operatedGuilds = operatedGuilds
-    ?.filter((guild) => guild.isAdmin)
-    .sort((a, b) => a.memberCount - b.memberCount)
-    .slice(0, 2)
+  operatedGuilds = operatedGuilds && selectOperatedGuilds({ guilds: operatedGuilds })
 
   if (!profile || !contributions || !referredUsers || !xp)
     return <ProfileMainSkeleton />

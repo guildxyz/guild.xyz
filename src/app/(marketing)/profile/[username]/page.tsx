@@ -12,10 +12,12 @@ import { env } from "env"
 import { Metadata } from "next"
 import Image from "next/image"
 import { notFound } from "next/navigation"
+import { GuildBase } from "types"
 import { JoinProfileAction } from "../_components/JoinProfileAction"
 import { Profile } from "../_components/Profile"
 import { ProfileColorBanner } from "../_components/ProfileColorBanner"
 import { ProfileHero } from "../_components/ProfileHero"
+import { selectOperatedGuilds } from "../_utils/selectOperatedGuilds"
 
 type PageProps = { params: { username: string } }
 
@@ -129,12 +131,16 @@ const fetchPublicProfileData = async ({
   } catch (e) {
     console.error(e)
   }
+  const operatedGuildsRequest = new URL(`/v2/guilds?username=${username}`, api)
+  const operatedGuilds = await ssrFetcher<GuildBase[]>(operatedGuildsRequest)
+  const selectedOperatedGuilds = selectOperatedGuilds({ guilds: operatedGuilds })
   const roleRequests = contributions.map(
     ({ roleId, guildId }) => new URL(`v2/guilds/${guildId}/roles/${roleId}`, api)
   )
-  const guildRequests = contributions.map(
-    ({ guildId }) => new URL(`v2/guilds/${guildId}`, api)
-  )
+  const guildRequests = [
+    ...contributions,
+    ...selectedOperatedGuilds.map(({ id }) => ({ guildId: id })),
+  ].map(({ guildId }) => new URL(`v2/guilds/${guildId}`, api))
   const guilds = await Promise.all(
     guildRequests.map((req) =>
       ssrFetcher<Guild>(req, {
@@ -173,9 +179,6 @@ const fetchPublicProfileData = async ({
       revalidate: 1200,
     },
   })
-
-  const operatedGuildsRequest = new URL(`/v2/guilds?username=${username}`, api)
-  const operatedGuilds = await ssrFetcher<Guild[]>(operatedGuildsRequest)
 
   return {
     profile,
