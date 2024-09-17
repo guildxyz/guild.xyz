@@ -64,7 +64,13 @@ const AddFormPanel = ({ onAdd }: AddRewardPanelProps) => {
         <Stack spacing={6}>
           <ContinueWithExistingFormAlert {...{ onAdd }} />
           <CreateFormForm />
-          <Flex mt="4" justifyContent="space-between" alignItems="end">
+          <Flex
+            mt="4"
+            justifyContent={{ base: "center", sm: "space-between" }}
+            alignItems={{ base: "center", sm: "end" }}
+            flexDir={{ base: "column-reverse", sm: "row" }}
+            gap={4}
+          >
             <Text colorScheme="gray" fontSize={"sm"}>
               <Icon d="inline-flex" mr="1" mt="-1.5px" as={Info} />
               You can edit everything later
@@ -72,7 +78,7 @@ const AddFormPanel = ({ onAdd }: AddRewardPanelProps) => {
             <Button
               colorScheme="green"
               rightIcon={<ArrowRight />}
-              w="max-content"
+              w={{ base: "full", sm: "max-content" }}
               onClick={methods.handleSubmit(onSubmit, console.error)}
               loadingText="Creating form"
               isLoading={isLoading}
