@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils"
 import { CircleNotch } from "@phosphor-icons/react/dist/ssr"
 import { Slot } from "@radix-ui/react-slot"
 import { type VariantProps, cva } from "class-variance-authority"
-import { ButtonHTMLAttributes, forwardRef } from "react"
+import { ButtonHTMLAttributes, ReactNode, forwardRef } from "react"
 
 const buttonVariants = cva(
   "font-semibold inline-flex items-center justify-center whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-4 focus:ring-ring disabled:pointer-events-none disabled:opacity-50 rounded-xl text-base text-ellipsis overflow-hidden gap-1.5 cursor-pointer",
@@ -61,6 +61,8 @@ export interface ButtonProps
     VariantProps<typeof buttonVariants> {
   isLoading?: boolean
   loadingText?: string
+  leftIcon?: ReactNode
+  rightIcon?: ReactNode
   asChild?: boolean
 }
 
@@ -74,6 +76,8 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       isLoading,
       loadingText,
       disabled,
+      leftIcon,
+      rightIcon,
       asChild = false,
       children,
       ...props
@@ -89,15 +93,23 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {...props}
         disabled={isLoading || disabled}
       >
-        {isLoading ? <CircleNotch weight="bold" className="animate-spin" /> : null}
+        {isLoading ? (
+          <CircleNotch weight="bold" className="animate-spin" />
+        ) : (
+          leftIcon
+        )}
 
         {isLoading ? (
-          <span>{loadingText}</span>
+          loadingText ? (
+            <span>{loadingText}</span>
+          ) : null
         ) : typeof children === "string" ? (
           <span>{children}</span>
         ) : (
           children
         )}
+
+        {rightIcon}
       </Comp>
     )
   }

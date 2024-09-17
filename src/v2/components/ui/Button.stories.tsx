@@ -1,15 +1,27 @@
+import { CircleDashed } from "@phosphor-icons/react/dist/ssr"
 import type { Meta, StoryObj } from "@storybook/react"
-
 import { Button, ButtonProps } from "./Button"
 
-const meta: Meta<typeof Button> = {
+type ButtonExampleProps = Omit<ButtonProps, "leftIcon" | "rightIcon"> & {
+  leftIcon?: boolean
+  rightIcon?: boolean
+}
+const ButtonExample = (props: ButtonExampleProps) => (
+  <Button
+    {...props}
+    leftIcon={props.leftIcon ? <CircleDashed weight="bold" /> : undefined}
+    rightIcon={props.rightIcon ? <CircleDashed weight="bold" /> : undefined}
+  />
+)
+
+const meta: Meta<typeof ButtonExample> = {
   title: "Design system/Button",
-  component: Button,
+  component: ButtonExample,
 }
 
 export default meta
 
-type Story = StoryObj<typeof Button>
+type Story = StoryObj<typeof ButtonExample>
 
 export const Solid: Story = {
   args: {
@@ -19,6 +31,9 @@ export const Solid: Story = {
     colorScheme: "primary",
     isLoading: false,
     disabled: false,
+    leftIcon: false,
+    rightIcon: false,
+    loadingText: "",
   },
   argTypes: {
     size: {
@@ -43,6 +58,14 @@ export const Solid: Story = {
       },
     },
     disabled: {
+      type: "boolean",
+      control: "boolean",
+    },
+    leftIcon: {
+      type: "boolean",
+      control: "boolean",
+    },
+    rightIcon: {
       type: "boolean",
       control: "boolean",
     },
