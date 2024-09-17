@@ -66,6 +66,7 @@ const MintPerAddressInput = () => {
       <GridItem as={FormControl} colSpan={{ base: 3, md: 2 }}>
         <FormLabel>Claiming per address</FormLabel>
         <SegmentedControl
+          name="mint-limit-type"
           options={options}
           value={mintLimitType}
           onChange={(newSupplyType: MintLimitType) =>
