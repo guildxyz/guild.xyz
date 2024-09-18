@@ -1,79 +1,76 @@
-import { ButtonProps, HStack, Text, Tooltip } from "@chakra-ui/react"
-import Button from "components/common/Button"
-import { PropsWithChildren } from "react"
+import { Button, ButtonProps } from "@/components/ui/Button"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip"
+import { cn } from "@/lib/utils"
+import { PropsWithChildren, ReactNode } from "react"
 import JoinStepIndicator from "./JoinStepIndicator"
 
 type JoinStepUIProps = {
   title: string
-  titleRightElement?: JSX.Element
+  titleRightElement?: ReactNode
   isRequired?: boolean
   isDone: boolean
 }
 
 type JoinStepProps = {
-  buttonLabel: string | JSX.Element
-  isDisabled?: string
-  icon: JSX.Element
-  colorScheme: string
-} & JoinStepUIProps &
-  Omit<ButtonProps, "isDisabled">
+  disabledText?: string
+  buttonProps: ButtonProps
+} & JoinStepUIProps
 
 const JoinStep = ({
   title,
   titleRightElement,
-  buttonLabel,
   isRequired,
-  icon,
-  colorScheme,
   isDone,
+  disabledText,
+  buttonProps,
   children,
-  ...buttonProps
 }: PropsWithChildren<JoinStepProps>) => (
   <JoinStepUI {...{ isDone, title, titleRightElement, isRequired }}>
-    <Tooltip
-      isDisabled={!buttonProps.isDisabled}
-      label={buttonProps.isDisabled}
-      shouldWrapChildren
-    >
-      <Button
-        leftIcon={icon}
-        colorScheme={colorScheme}
-        flexShrink="0"
-        minW="max-content"
-        maxW={isDone && "40"}
-        {...buttonProps}
-        isDisabled={isDone || buttonProps.isDisabled}
-      >
-        {buttonLabel}
-      </Button>
+    <Tooltip open={buttonProps.disabled ? undefined : false}>
+      <TooltipTrigger className="cursor-default">
+        <Button
+          {...buttonProps}
+          disabled={isDone || buttonProps.disabled}
+          className={cn(
+            "max-w-max shrink-0",
+            {
+              "max-w-40": isDone,
+            },
+            buttonProps.className
+          )}
+        >
+          {buttonProps.children}
+        </Button>
+      </TooltipTrigger>
+
+      <TooltipContent>
+        <span>{disabledText}</span>
+      </TooltipContent>
     </Tooltip>
+
     {children}
   </JoinStepUI>
 )
 
-export const JoinStepUI = ({
+const JoinStepUI = ({
   isDone,
   title,
   isRequired,
   titleRightElement,
   children,
 }: PropsWithChildren<JoinStepUIProps>) => (
-  <HStack>
-    <JoinStepIndicator status={isDone ? "DONE" : "INACTIVE"} />
-
-    <HStack w="full">
-      <Text fontWeight="bold" noOfLines={1}>
+  <div className="flex w-full items-center justify-between gap-2">
+    <div className="flex items-center gap-2">
+      <JoinStepIndicator status={isDone ? "DONE" : "INACTIVE"} />
+      <span className="text-ellipsis font-bold">
         {title}
-        {isRequired && (
-          <Text as="span" color="red.300">
-            {` *`}
-          </Text>
-        )}
-      </Text>
+        {isRequired && <span className="text-destructive">{` *`}</span>}
+      </span>
       {titleRightElement}
-    </HStack>
+    </div>
+
     {children}
-  </HStack>
+  </div>
 )
 
-export default JoinStep
+export { JoinStep, JoinStepUI }

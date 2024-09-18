@@ -1,9 +1,9 @@
 import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
-import { Icon, useDisclosure } from "@chakra-ui/react"
-import { Robot } from "@phosphor-icons/react"
+import { useDisclosure } from "@/hooks/useDisclosure"
+import { Robot } from "@phosphor-icons/react/dist/ssr"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import { CompleteCaptchaModal } from "requirements/Captcha/components/CompleteCaptcha"
-import JoinStep from "./JoinStep"
+import { JoinStep } from "./JoinStep"
 
 const CompleteCaptchaJoinStep = (): JSX.Element => {
   const { isWeb3Connected } = useWeb3ConnectionManager()
@@ -20,13 +20,18 @@ const CompleteCaptchaJoinStep = (): JSX.Element => {
     <>
       <JoinStep
         isDone={isDone}
-        colorScheme="cyan"
-        icon={<Icon as={Robot} />}
         title="Complete CAPTCHA"
-        buttonLabel={isDone ? "Completed" : "Complete"}
-        onClick={onOpen}
-        isDisabled={!isWeb3Connected && "Connect wallet first"}
-        isLoading={isLoading}
+        disabledText="Connect wallet first"
+        buttonProps={{
+          leftIcon: <Robot weight="bold" />,
+          disabled: !isWeb3Connected,
+          isLoading,
+          // TODO: extract it to a constant, just like we did with PLATFORM_COLORS
+          className:
+            "bg-cyan-500 hover:bg-cyan-600 hover:dark:bg-cyan-400 active:bg-cyan-700 active:dark:bg-cyan-300 text-white",
+          onClick: onOpen,
+          children: isDone ? "Completed" : "Complete",
+        }}
       />
 
       <CompleteCaptchaModal

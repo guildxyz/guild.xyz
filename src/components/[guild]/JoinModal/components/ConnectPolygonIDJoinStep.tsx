@@ -1,8 +1,8 @@
 import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
-import { Img, useDisclosure } from "@chakra-ui/react"
+import { useDisclosure } from "@/hooks/useDisclosure"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import { ConnectPolygonIDModal } from "requirements/PolygonID/components/ConnectPolygonID"
-import JoinStep from "./JoinStep"
+import { JoinStep } from "./JoinStep"
 
 const ConnectPolygonIDJoinStep = (): JSX.Element => {
   const { isWeb3Connected } = useWeb3ConnectionManager()
@@ -17,13 +17,20 @@ const ConnectPolygonIDJoinStep = (): JSX.Element => {
     <>
       <JoinStep
         isDone={isDone}
-        colorScheme="purple"
-        icon={<Img src="/requirementLogos/polygonId_white.svg" width="1.5em" />}
         title="Connect PolygonID"
-        buttonLabel={isDone ? "Connected" : "Connect"}
-        onClick={onOpen}
-        isDisabled={!isWeb3Connected && "Connect wallet first"}
-        isLoading={isLoading}
+        disabledText="Connect wallet first"
+        buttonProps={{
+          leftIcon: (
+            <img src="/requirementLogos/polygonId_white.svg" width="1.5em" />
+          ),
+          disabled: !isWeb3Connected,
+          isLoading,
+          // TODO: extract it to a constant, just like we did with PLATFORM_COLORS
+          className:
+            "bg-purple-500 hover:bg-purple-600 active:bg-purple-700 text-white",
+          onClick: onOpen,
+          children: isDone ? "Connected" : "Connect",
+        }}
       />
 
       <ConnectPolygonIDModal

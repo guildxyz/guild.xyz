@@ -1,15 +1,14 @@
+import { PLATFORM_COLORS } from "@/components/Account/components/AccountModal/components/SocialAccount"
 import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
-import { Icon } from "@chakra-ui/react"
 import usePlatformsToReconnect from "components/[guild]/hooks/usePlatformsToReconnect"
 import useUser from "components/[guild]/hooks/useUser"
-import Script from "next/script"
 import { useEffect } from "react"
 import { useFormContext } from "react-hook-form"
 import rewards from "rewards"
 import { PlatformName } from "types"
 import useConnectPlatform from "../hooks/useConnectPlatform"
 import useMembershipUpdate from "../hooks/useMembershipUpdate"
-import ConnectAccount from "./ConnectAccount"
+import { JoinStep } from "./JoinStep"
 
 type Props = {
   platform: PlatformName
@@ -46,33 +45,41 @@ const ConnectPlatform = ({ platform }: Props) => {
     platform === "TWITTER_V1" ? " (v1)" : ""
   }`
 
+  const isDisabled = !isWeb3Connected
+  const isConnected =
+    !!platformFromDb?.platformUserData?.username || !!platformFromDb?.platformUserId
+  const buttonLabel =
+    platformFromDb?.platformUserData?.username ?? platformFromDb?.platformUserId
+
+  const Icon = rewards[platform].icon
+
   return (
-    <ConnectAccount
-      account={accountName}
-      icon={<Icon as={rewards[platform].icon} />}
-      colorScheme={rewards[platform].colorScheme as string}
-      isConnected={
-        platformFromDb?.platformUserData?.username ?? platformFromDb?.platformUserId
+    <JoinStep
+      isDone={!isReconnect && isConnected}
+      title={
+        isReconnect
+          ? `Reconnect ${accountName}`
+          : isConnected
+            ? `${accountName} connected`
+            : `Connect ${accountName}`
       }
-      isReconnect={isReconnect}
-      isLoading={isLoading || (!platformUsers && isLoadingUser)}
-      onClick={onConnect}
-      {...{ loadingText }}
-      isDisabled={
-        (platform === "TWITTER" ||
-          platform === "TWITTER_V1" ||
-          platform === "DISCORD") &&
-        !isWeb3Connected &&
-        "Connect wallet first"
-      }
-    >
-      {platform === "TELEGRAM" && (
-        <Script
-          strategy="lazyOnload"
-          src="https://telegram.org/js/telegram-widget.js?19"
-        />
-      )}
-    </ConnectAccount>
+      disabledText="Connect wallet first"
+      buttonProps={{
+        leftIcon: Icon ? <Icon weight="bold" /> : undefined,
+        disabled: isDisabled,
+        isLoading: isLoading || (!platformUsers && isLoadingUser),
+        loadingText,
+        onClick: onConnect,
+        className: PLATFORM_COLORS[platform],
+        children: isDisabled
+          ? "Connect wallet first"
+          : isReconnect
+            ? "Reconnect"
+            : isConnected
+              ? buttonLabel
+              : "Connect",
+      }}
+    />
   )
 }
 
