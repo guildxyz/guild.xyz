@@ -1,5 +1,5 @@
 import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
-import { Button } from "@/components/ui/Button"
+import { IconButton } from "@/components/ui/IconButton"
 import { useDisclosure } from "@/hooks/useDisclosure"
 import { LinkBreak } from "@phosphor-icons/react/dist/ssr"
 import { useAccount } from "wagmi"
@@ -19,22 +19,24 @@ export const NetworkIndicator = () => {
   return (
     <>
       {type === "EVM" ? (
-        <Button
+        <IconButton
+          aria-label="Open network modal"
           variant="ghost"
           onClick={() => openNetworkModal()}
           size="xs"
-          className="-my-0.5 w-6 px-0"
-        >
-          {CHAIN_CONFIG[Chains[chainId]] ? (
-            <img
-              src={CHAIN_CONFIG[Chains[chainId]].iconUrl}
-              alt={CHAIN_CONFIG[Chains[chainId]].name}
-              className="size-4"
-            />
-          ) : (
-            <LinkBreak weight="bold" />
-          )}
-        </Button>
+          className="-my-0.5"
+          icon={
+            CHAIN_CONFIG[Chains[chainId]] ? (
+              <img
+                src={CHAIN_CONFIG[Chains[chainId]].iconUrl}
+                alt={CHAIN_CONFIG[Chains[chainId]].name}
+                className="size-4"
+              />
+            ) : (
+              <LinkBreak weight="bold" />
+            )
+          }
+        />
       ) : (
         <img src="/walletLogos/fuel.svg" alt="Fuel" className="size-4" />
       )}

@@ -13,8 +13,7 @@ const NotFound = () => {
 
       <div className="flex flex-col gap-4 sm:flex-row">
         <a href="/explorer">
-          <Button colorScheme="primary" size="lg">
-            <House weight="bold" />
+          <Button colorScheme="primary" size="lg" leftIcon={<House weight="bold" />}>
             Go to home page
           </Button>
         </a>

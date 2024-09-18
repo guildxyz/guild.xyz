@@ -29,15 +29,17 @@ export default function Error({
 
       <div className="flex flex-col gap-4 sm:flex-row">
         <a href="/explorer">
-          <Button colorScheme="primary" size="lg">
-            <House weight="bold" />
+          <Button colorScheme="primary" size="lg" leftIcon={<House weight="bold" />}>
             Go to home page
           </Button>
         </a>
 
-        <Button size="lg" onClick={triggerChat}>
-          <ChatCircle weight="bold" />
-          <span>Contact support</span>
+        <Button
+          size="lg"
+          onClick={triggerChat}
+          leftIcon={<ChatCircle weight="bold" />}
+        >
+          Contact support
         </Button>
       </div>
     </div>

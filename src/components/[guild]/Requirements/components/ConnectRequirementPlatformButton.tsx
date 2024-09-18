@@ -105,9 +105,9 @@ const ConnectRequirementPlatformButton = ({
       isLoading={isLoading}
       loadingText={loadingText}
       className={cn(PLATFORM_COLORS[platform], className)}
+      leftIcon={!!IconComponent && <IconComponent />}
       {...props}
     >
-      {!!IconComponent && <IconComponent />}
       {`${isReconnection ? "Reconnect" : "Connect"} ${
         rewards[platform]?.name === "X" ? "" : rewards[platform]?.name
       }`}

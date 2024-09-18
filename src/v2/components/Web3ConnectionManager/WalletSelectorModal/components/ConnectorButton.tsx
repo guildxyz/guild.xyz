@@ -52,21 +52,20 @@ const ConnectorButton = ({ connector, pendingConnector, connect, error }: Props)
         !error
       }
       loadingText={`${connectorName} - connecting...`}
+      leftIcon={
+        connectorIcon ? (
+          <div className="flex size-6 items-center justify-center">
+            <img src={connectorIcon} className="h-6" alt={`${connectorName} logo`} />
+          </div>
+        ) : (
+          <Wallet weight="bold" className="size-6" />
+        )
+      }
       data-testid={`${connector.id}-connector-button`}
     >
-      {connectorIcon ? (
-        <div className="flex size-6 items-center justify-center">
-          <img src={connectorIcon} className="h-6" alt={`${connectorName} logo`} />
-        </div>
-      ) : (
-        <Wallet weight="bold" className="size-6" />
-      )}
-
-      <span>
-        {connector?.id === COINBASE_WALLET_SDK_ID
-          ? `Sign in with ${connectorName}`
-          : connectorName}
-      </span>
+      {connector?.id === COINBASE_WALLET_SDK_ID
+        ? `Sign in with ${connectorName}`
+        : connectorName}
     </Button>
   )
 }

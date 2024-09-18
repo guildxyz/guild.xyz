@@ -122,9 +122,9 @@ export const StartProfile: CreateProfileStep = ({ data: chainData }) => {
                 variant="ghost"
                 size="lg"
                 onClick={() => setMethod(CreateMethod.FromBlank)}
+                rightIcon={<ArrowRight weight="bold" />}
               >
                 I don't have a Farcaster profile
-                <ArrowRight weight="bold" />
               </Button>
             </>
           ) : (

@@ -3,12 +3,13 @@ import { VariantProps, cva } from "class-variance-authority"
 import { forwardRef } from "react"
 import { Button, ButtonProps } from "./Button"
 
-const iconButtonVariants = cva("p-0", {
+const iconButtonVariants = cva("p-0 shrink-0", {
   variants: {
     size: {
-      sm: "size-8",
+      xs: "size-6 text-xs",
+      sm: "size-8 text-sm",
       md: "size-10",
-      lg: "size-12",
+      lg: "size-12 text-lg",
     },
   },
   defaultVariants: {

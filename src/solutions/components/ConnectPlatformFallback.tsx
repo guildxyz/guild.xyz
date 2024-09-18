@@ -38,8 +38,8 @@ export const ConnectPlatformFallback = ({ platform, children, ...rest }: Props) 
         isLoading={isLoading}
         loadingText={loadingText}
         className={PLATFORM_COLORS[platform] ?? ""}
+        leftIcon={reward.icon && <reward.icon />}
       >
-        {reward.icon && <reward.icon />}
         Connect
       </Button>
     </Card>
