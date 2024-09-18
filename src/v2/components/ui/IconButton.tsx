@@ -30,7 +30,7 @@ export interface IconButtonProps
     >,
     VariantProps<typeof iconButtonVariants> {
   "aria-label": string
-  icon: ButtonProps["leftIcon"] // TODO: uncomment this in the Button refactor PR
+  icon: ButtonProps["leftIcon"]
 }
 
 const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
