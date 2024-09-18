@@ -7,7 +7,7 @@ import { ProfileAvatar } from "@/components/ProfileAvatar"
 import { Avatar } from "@/components/ui/Avatar"
 import { Button } from "@/components/ui/Button"
 import { Card } from "@/components/ui/Card"
-import { Pencil } from "@phosphor-icons/react"
+import { PencilSimple } from "@phosphor-icons/react/dist/ssr"
 import { ProfileOwnerGuard } from "../_components/ProfileOwnerGuard"
 import { useExperienceProgression } from "../_hooks/useExperienceProgression"
 import { useProfile } from "../_hooks/useProfile"
@@ -34,9 +34,9 @@ export const ProfileHero = () => {
             <Card className="absolute top-3 right-0 rounded-xl md:top-8">
               <Button
                 variant="solid"
+                leftIcon={<PencilSimple weight="bold" />}
                 className="max-sm:h-8 max-sm:px-3 max-sm:text-sm"
               >
-                <Pencil weight="bold" />
                 Edit profile
               </Button>
             </Card>

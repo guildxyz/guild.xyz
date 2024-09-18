@@ -94,9 +94,9 @@ export const PromptReferrer: CreateProfileStep = ({ dispatchAction, data }) => {
               finalReferrer?.username !== form.watch("username")
             }
             isLoading={referrer.isLoading}
+            rightIcon={<ArrowRight weight="bold" />}
           >
             Continue
-            <ArrowRight weight="bold" />
           </Button>
         </form>
       </FormProvider>

@@ -8,7 +8,7 @@ import useConnectorNameAndIcon from "@/components/Web3ConnectionManager/hooks/us
 import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { Anchor } from "@/components/ui/Anchor"
 import { Avatar } from "@/components/ui/Avatar"
-import { Button, buttonVariants } from "@/components/ui/Button"
+import { buttonVariants } from "@/components/ui/Button"
 import {
   Dialog,
   DialogBody,
@@ -25,6 +25,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/DropdownMenu"
+import { IconButton } from "@/components/ui/IconButton"
 import { Separator } from "@/components/ui/Separator"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip"
 import { useUserPublic } from "@/hooks/useUserPublic"
@@ -148,13 +149,12 @@ const AccountModal = () => {
                       </Anchor>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button
-                            className="aspect-square"
+                          <IconButton
+                            aria-label="Open menu"
                             variant="outline"
                             size="sm"
-                          >
-                            <DotsThreeVertical weight="bold" className="min-w-4" />
-                          </Button>
+                            icon={<DotsThreeVertical weight="bold" />}
+                          />
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>
                           <DropdownMenuLabel className="mt-2 flex gap-1 px-4 text-muted-foreground">
@@ -196,15 +196,14 @@ const AccountModal = () => {
 
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <Button
-                        size="icon"
-                        variant="outline"
-                        className="ml-auto size-8"
-                        onClick={handleLogout}
+                      <IconButton
                         aria-label="Disconnect"
-                      >
-                        <SignOut weight="bold" className="size-3" />
-                      </Button>
+                        icon={<SignOut weight="bold" className="size-3" />}
+                        variant="outline"
+                        size="sm"
+                        className="ml-auto"
+                        onClick={handleLogout}
+                      />
                     </TooltipTrigger>
                     <TooltipContent>
                       <span>Disconnect</span>

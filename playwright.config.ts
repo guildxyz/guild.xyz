@@ -11,7 +11,7 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  workers: process.env.CI ? 3 : undefined,
   reporter: "html",
   outputDir: "playwright/results/",
 
@@ -41,7 +41,7 @@ export default defineConfig({
 
   webServer: [
     {
-      command: `anvil --fork-url=${process.env.ANVIL_FORK_URL} --fork-block-number=6373425 -m='${process.env.NEXT_PUBLIC_E2E_WALLET_MNEMONIC}' --fork-header='Authorization: ${process.env.ANVIL_FORK_KEY}'`,
+      command: `anvil --fork-url=${process.env.ANVIL_FORK_URL} --fork-block-number=6697000 -m='${process.env.NEXT_PUBLIC_E2E_WALLET_MNEMONIC}' --balance=1 --fork-header='Authorization: ${process.env.ANVIL_FORK_KEY}'`,
       port: 8545,
     },
     {

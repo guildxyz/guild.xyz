@@ -25,12 +25,10 @@ const getAddressLinkProof = async (
   const nonce = randomBytes(32).toString("hex")
   const message = `Address: ${addr}\nNonce: ${nonce}\n Timestamp: ${timestamp}`
   const signature = walletClient
-    ? walletClient?.account?.type === "local"
-      ? await walletClient.account.signMessage({ message })
-      : await walletClient.signMessage({
-          message,
-          account: walletClient.account,
-        })
+    ? await walletClient.signMessage({
+        message,
+        account: walletClient.account,
+      })
     : await signMessage(message)
 
   return { address: addr, nonce, timestamp, signature }

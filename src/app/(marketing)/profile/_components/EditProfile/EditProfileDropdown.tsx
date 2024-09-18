@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/Button"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -6,6 +5,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/DropdownMenu"
+import { IconButton } from "@/components/ui/IconButton"
 import { uploadImageUrlToPinata } from "@/lib/uploadImageUrlToPinata"
 import {
   ArrowsClockwise,
@@ -33,31 +33,37 @@ export const EditProfileDropdown: FunctionComponent<{ uploader: Uploader }> = ({
         className="-bottom-2 absolute right-0 translate-y-full"
         asChild
       >
-        <Button variant="ghost" size="icon-sm">
-          <DotsThreeVertical weight="bold" />
-        </Button>
+        <IconButton
+          aria-label="Open menu"
+          icon={<DotsThreeVertical weight="bold" />}
+          variant="ghost"
+          size="sm"
+        />
       </DropdownMenuTrigger>
       <DropdownMenuContent className="p-0">
         {farcasterProfile && (
-          <DropdownMenuItem
-            className="flex gap-2 px-4 py-6 font-semibold"
-            onClick={() => {
-              if (farcasterProfile.username) {
-                setValue("name", farcasterProfile.username, {
-                  shouldValidate: true,
+          <>
+            <DropdownMenuItem
+              className="flex gap-2 px-4 py-6 font-semibold"
+              onClick={() => {
+                if (farcasterProfile.username) {
+                  setValue("name", farcasterProfile.username, {
+                    shouldValidate: true,
+                  })
+                }
+                if (!farcasterProfile.avatar) return
+                uploadImageUrlToPinata({
+                  onUpload: uploader.onUpload,
+                  image: new URL(farcasterProfile.avatar),
                 })
-              }
-              if (!farcasterProfile.avatar) return
-              uploadImageUrlToPinata({
-                onUpload: uploader.onUpload,
-                image: new URL(farcasterProfile.avatar),
-              })
-            }}
-          >
-            <ArrowsClockwise weight="bold" /> Fill data by Farcaster
-          </DropdownMenuItem>
+              }}
+            >
+              <ArrowsClockwise weight="bold" /> Fill data by Farcaster
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+          </>
         )}
-        <DropdownMenuSeparator />
+
         <DropdownMenuItem
           onClick={(e) => {
             // keep dropdown open to show loading state

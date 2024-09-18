@@ -19,11 +19,11 @@ const RecentActivityFallback = () => {
         's activity
       </p>
       <Button
+        leftIcon={<SignIn weight="bold" />}
         onClick={() => setIsWalletSelectorModalOpen(true)}
         colorScheme="primary"
       >
-        <SignIn weight="bold" size={24} />
-        <span>Sign in</span>
+        Sign in
       </Button>
     </Card>
   )

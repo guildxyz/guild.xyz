@@ -17,6 +17,7 @@ import {
   FormItem,
   FormLabel,
 } from "@/components/ui/Form"
+import { IconButton } from "@/components/ui/IconButton"
 import { Input } from "@/components/ui/Input"
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/InputOTP"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip"
@@ -212,15 +213,13 @@ const ConnectEmailButton = ({
                   <div className="flex w-full flex-col items-center gap-4">
                     <p className="text-center">
                       {`Enter the code we've sent to ${email} `}
-                      <Button
+                      <IconButton
+                        icon={<PencilSimple weight="bold" />}
                         variant="ghost"
                         className="relative top-0.5 size-5 rounded-full"
-                        size="icon"
                         aria-label="Use different email address"
                         onClick={differentEmail}
-                      >
-                        <PencilSimple weight="bold" />
-                      </Button>
+                      />
                     </p>
 
                     <FormField
@@ -312,23 +311,20 @@ const ConnectEmailButton = ({
           },
           className
         )}
-        {...props}
-      >
-        {emails?.pending ? (
-          <>
-            {/* TODO: maybe move this out to a CSS variable? */}
+        leftIcon={
+          emails?.pending ? (
             <Warning
               weight="bold"
+              // TODO: maybe move this out to a CSS variable?
               className="mr-1 text-orange-400 dark:text-orange-200"
             />
-            Verify
-          </>
-        ) : (
-          <>
-            {leftIcon}
-            {emails?.emailAddress || "Connect"}
-          </>
-        )}
+          ) : (
+            leftIcon
+          )
+        }
+        {...props}
+      >
+        {emails?.pending ? "Verify" : emails?.emailAddress || "Connect"}
       </Button>
     </>
   )

@@ -1,6 +1,5 @@
 import { useMemo } from "react"
 import useSWRImmutable from "swr/immutable"
-import { Token } from "types"
 import { CHAIN_CONFIG, Chain } from "wagmiConfig/chains"
 import useTokens from "./useTokens"
 
@@ -26,14 +25,16 @@ const useTokenData = (chain: Chain, address: string, onFinish?: () => void) => {
     )
   }, [tokensFromApi, address])
 
-  const swrResponse = useSWRImmutable<Token>(
-    shouldFetch ? `/v2/util/chains/${chain}/contracts/${address}/symbol` : null,
-    {
-      errorRetryInterval: 100,
-      shouldRetryOnError: address?.toLowerCase() !== ENS_ADDRESS,
-      ...(onFinish ? { onSuccess: onFinish, onError: onFinish } : {}),
-    }
-  )
+  const swrResponse = useSWRImmutable<{
+    address: `0x${string}`
+    name: string
+    symbol: string
+    decimals: number
+  }>(shouldFetch ? `/v2/util/chains/${chain}/contracts/${address}/symbol` : null, {
+    errorRetryInterval: 100,
+    shouldRetryOnError: address?.toLowerCase() !== ENS_ADDRESS,
+    ...(onFinish ? { onSuccess: onFinish, onError: onFinish } : {}),
+  })
 
   /**
    * Doing this instead of using initialData to make sure it fetches when shouldFetch

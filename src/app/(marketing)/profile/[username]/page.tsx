@@ -12,10 +12,12 @@ import { env } from "env"
 import { Metadata } from "next"
 import Image from "next/image"
 import { notFound } from "next/navigation"
+import { GuildBase } from "types"
 import { JoinProfileAction } from "../_components/JoinProfileAction"
 import { Profile } from "../_components/Profile"
 import { ProfileColorBanner } from "../_components/ProfileColorBanner"
 import { ProfileHero } from "../_components/ProfileHero"
+import { selectOperatedGuilds } from "../_utils/selectOperatedGuilds"
 
 type PageProps = { params: { username: string } }
 
@@ -129,6 +131,20 @@ const fetchPublicProfileData = async ({
   } catch (e) {
     console.error(e)
   }
+  const operatedGuildsRequest = new URL(`/v2/guilds?username=${username}`, api)
+  const operatedGuilds = await ssrFetcher<GuildBase[]>(operatedGuildsRequest)
+  const selectedOperatedGuildRequests = selectOperatedGuilds({
+    guilds: operatedGuilds,
+  }).map(({ id }) => new URL(`v2/guilds/guild-page/${id}`, api))
+  const selectedOperatedGuilds = await Promise.all(
+    selectedOperatedGuildRequests.map((req) =>
+      ssrFetcher<Guild>(req, {
+        next: {
+          revalidate: 3 * 3600,
+        },
+      })
+    )
+  )
   const roleRequests = contributions.map(
     ({ roleId, guildId }) => new URL(`v2/guilds/${guildId}/roles/${roleId}`, api)
   )
@@ -158,6 +174,9 @@ const fetchPublicProfileData = async ({
     : []
   const guildsZipped = guildRequests.map(({ pathname }, i) => [pathname, guilds[i]])
   const rolesZipped = roleRequests.map(({ pathname }, i) => [pathname, roles[i]])
+  const selectedOperatedGuildsZipped = selectedOperatedGuildRequests.map(
+    ({ pathname }, i) => [pathname, selectedOperatedGuilds[i]]
+  )
   const experiencesRequest = new URL(`/v2/profiles/${username}/experiences`, api)
   const experiences = await ssrFetcher<Schemas["Experience"][]>(experiencesRequest, {
     next: {
@@ -188,6 +207,11 @@ const fetchPublicProfileData = async ({
           experienceCountRequest.pathname + experienceCountRequest.search,
           experienceCount,
         ],
+        [
+          operatedGuildsRequest.pathname + operatedGuildsRequest.search,
+          operatedGuilds,
+        ],
+        ...selectedOperatedGuildsZipped,
         ...collectionsZipped,
         ...guildsZipped,
         ...rolesZipped,
@@ -207,7 +231,6 @@ const Page = async ({ params: { username } }: PageProps) => {
     )
   }
   const { profile, fallback } = profileData
-
   const isBgColor = profile.backgroundImageUrl?.startsWith("#")
 
   return (
