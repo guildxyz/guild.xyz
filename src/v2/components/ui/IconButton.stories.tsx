@@ -2,10 +2,14 @@ import { CircleDashed } from "@phosphor-icons/react/dist/ssr"
 import { Meta, StoryObj } from "@storybook/react"
 import { IconButton, IconButtonProps } from "./IconButton"
 
-type IconButtonExampleProps = Omit<IconButtonProps, "icon">
+type IconButtonExampleProps = Omit<IconButtonProps, "aria-label" | "icon">
 
 const IconButtonExample = (props: IconButtonExampleProps) => (
-  <IconButton {...props} icon={<CircleDashed weight="bold" />} />
+  <IconButton
+    {...props}
+    aria-label="IconButton example"
+    icon={<CircleDashed weight="bold" />}
+  />
 )
 
 const meta: Meta<typeof IconButtonExample> = {

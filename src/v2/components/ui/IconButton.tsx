@@ -19,7 +19,13 @@ const iconButtonVariants = cva("p-0", {
 export interface IconButtonProps
   extends Omit<
       ButtonProps,
-      "size" | "loadingText" | "leftIcon" | "rightIcon" | "asChild" | "children"
+      | "size"
+      | "loadingText"
+      | "leftIcon"
+      | "rightIcon"
+      | "asChild"
+      | "children"
+      | "aria-label"
     >,
     VariantProps<typeof iconButtonVariants> {
   "aria-label": string
