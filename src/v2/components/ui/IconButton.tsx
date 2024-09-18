@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils"
 import { VariantProps, cva } from "class-variance-authority"
-import { ReactNode, forwardRef } from "react"
+import { forwardRef } from "react"
 import { Button, ButtonProps } from "./Button"
 
 const iconButtonVariants = cva("p-0", {
@@ -29,8 +29,7 @@ export interface IconButtonProps
     >,
     VariantProps<typeof iconButtonVariants> {
   "aria-label": string
-  // icon: ButtonProps["leftIcon"] // TODO: uncomment this in the Button refactor PR
-  icon: ReactNode
+  icon: ButtonProps["leftIcon"] // TODO: uncomment this in the Button refactor PR
 }
 
 const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
