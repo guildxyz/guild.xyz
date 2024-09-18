@@ -243,6 +243,7 @@ const SubscribeToMessages = () => {
         <IconButton
           colorScheme="info"
           icon={<ArrowRight />}
+          size="sm"
           aria-label="Subscribe to messages"
         />
       </DialogTrigger>
