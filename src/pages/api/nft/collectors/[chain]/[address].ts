@@ -1,3 +1,4 @@
+import { CONTRACT_CALL_SUPPORTED_CHAINS } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
 import { env } from "env"
 import { NextApiHandler } from "next"
 import { topCollectorsSupportedChains } from "pages/[guild]/collect/[chain]/[address]"
@@ -34,9 +35,11 @@ export const alchemyApiUrl: Record<
   SEPOLIA: `https://eth-sepolia.g.alchemy.com/nft/v3/${env.SEPOLIA_ALCHEMY_KEY}/getOwnersForContract`,
 }
 
+// TODO: just use Zod.
 export const validateNftChain = (value: string | string[]): Chain => {
   const valueAsString = value?.toString()?.toUpperCase()
-  if (!value || !Object.keys(alchemyApiUrl).includes(valueAsString)) return null
+  if (!value || !CONTRACT_CALL_SUPPORTED_CHAINS.includes(valueAsString as any))
+    return null
   return valueAsString as Chain
 }
 export const validateNftAddress = (value: string | string[]): `0x${string}` => {
