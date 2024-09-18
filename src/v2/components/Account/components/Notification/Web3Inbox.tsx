@@ -11,6 +11,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/Dialog"
+import { IconButton } from "@/components/ui/IconButton"
 import { useToast } from "@/components/ui/hooks/useToast"
 import { useDisclosure } from "@/hooks/useDisclosure"
 import { cn, toDateTimeString } from "@/lib/utils"
@@ -239,9 +240,12 @@ const SubscribeToMessages = () => {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button className="size-8 min-w-8 px-0" colorScheme="info">
-          <ArrowRight />
-        </Button>
+        <IconButton
+          colorScheme="info"
+          icon={<ArrowRight />}
+          size="sm"
+          aria-label="Subscribe to messages"
+        />
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

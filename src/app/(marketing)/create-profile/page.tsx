@@ -58,9 +58,9 @@ const Page = () => {
           size="lg"
           className="w-full"
           isLoading={isClient && isWeb3Connected === null}
+          leftIcon={<SignIn weight="bold" />}
         >
-          <SignIn weight="bold" />
-          <span>Sign in</span>
+          Sign in
         </Button>
       </div>
     </div>

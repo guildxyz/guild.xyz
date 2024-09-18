@@ -1,14 +1,15 @@
 import { cn } from "@/lib/utils"
 import { VariantProps, cva } from "class-variance-authority"
-import { ReactNode, forwardRef } from "react"
+import { forwardRef } from "react"
 import { Button, ButtonProps } from "./Button"
 
-const iconButtonVariants = cva("p-0", {
+const iconButtonVariants = cva("p-0 shrink-0", {
   variants: {
     size: {
-      sm: "size-8",
+      xs: "size-6 text-xs",
+      sm: "size-8 text-sm",
       md: "size-10",
-      lg: "size-12",
+      lg: "size-12 text-lg",
     },
   },
   defaultVariants: {
@@ -29,8 +30,7 @@ export interface IconButtonProps
     >,
     VariantProps<typeof iconButtonVariants> {
   "aria-label": string
-  // icon: ButtonProps["leftIcon"] // TODO: uncomment this in the Button refactor PR
-  icon: ReactNode
+  icon: ButtonProps["leftIcon"]
 }
 
 const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(

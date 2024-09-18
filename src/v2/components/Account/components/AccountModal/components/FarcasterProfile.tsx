@@ -15,6 +15,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/Dialog"
+import { IconButton } from "@/components/ui/IconButton"
 import { Separator } from "@/components/ui/Separator"
 import { Skeleton } from "@/components/ui/Skeleton"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip"
@@ -250,10 +251,10 @@ const ConnectFarcasterButton = ({
 
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button
+                    <IconButton
                       size="xs"
                       variant="ghost"
-                      className="w-6 px-0 text-muted-foreground"
+                      className="text-muted-foreground"
                       disabled={!shouldEnableRegenerateButton}
                       isLoading={signedKeyRequest.isLoading}
                       aria-label="Regenerate Farcaster QR code"
@@ -261,9 +262,8 @@ const ConnectFarcasterButton = ({
                         captureEvent("[farcaster] manual qr regeneration")
                         onRegenerate()
                       }}
-                    >
-                      <ArrowCounterClockwise weight="bold" />
-                    </Button>
+                      icon={<ArrowCounterClockwise weight="bold" />}
+                    />
                   </TooltipTrigger>
                   <TooltipContent>
                     <span>Regenerate now</span>

@@ -25,9 +25,9 @@ const LinkAddressButton = (props: ButtonProps) => {
         setIsWalletSelectorModalOpen(true)
       }}
       loadingText="Check your wallet"
+      leftIcon={<Plus weight="bold" />}
       {...props}
     >
-      <Plus weight="bold" />
       Link address
     </Button>
   )

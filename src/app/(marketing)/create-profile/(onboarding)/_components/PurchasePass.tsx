@@ -24,12 +24,12 @@ export const PurchasePass: CreateProfileStep = ({ dispatchAction, data }) => {
       <div className="mt-8 mb-4 px-8">
         <Button
           onClick={() => dispatchAction({ action: "previous" })}
-          className="h-auto p-0"
+          className="h-auto p-0 font-bold font-display"
           size="lg"
           variant="unstyled"
+          leftIcon={<ArrowLeft weight="bold" />}
         >
-          <ArrowLeft weight="bold" />
-          <span className="font-bold font-display">Purchase Pass</span>
+          Purchase Pass
         </Button>
       </div>
       <article className="flex flex-col items-center pb-6 text-center">
@@ -83,9 +83,13 @@ export const PurchasePass: CreateProfileStep = ({ dispatchAction, data }) => {
                 <div>Total</div>
                 <div>---</div>
               </div>
-              <Button colorScheme="info" className="w-full" disabled>
+              <Button
+                colorScheme="info"
+                className="w-full"
+                disabled
+                rightIcon={<Info weight="bold" />}
+              >
                 Allow Guild to use your ETH
-                <Info />
               </Button>
               <Button variant="subtle" className="w-full" disabled>
                 Purchase
