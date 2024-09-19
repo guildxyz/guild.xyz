@@ -71,13 +71,7 @@ const ConnectPlatform = ({ platform }: Props) => {
         loadingText,
         onClick: onConnect,
         className: PLATFORM_COLORS[platform],
-        children: isDisabled
-          ? "Connect wallet first"
-          : isReconnect
-            ? "Reconnect"
-            : isConnected
-              ? buttonLabel
-              : "Connect",
+        children: isReconnect ? "Reconnect" : isConnected ? buttonLabel : "Connect",
       }}
     />
   )
