@@ -1,70 +1,56 @@
-import {
-  Circle,
-  CircularProgress,
-  Icon,
-  Spinner,
-  useColorModeValue,
-} from "@chakra-ui/react"
-import { Check, X } from "@phosphor-icons/react"
+import { CircularProgressBar } from "@/components/CircularProgressBar"
+import { Check, CircleNotch, X } from "@phosphor-icons/react/dist/ssr"
 
 export type JoinStepIndicatorProps =
   | { status: "INACTIVE" | "DONE" | "NO_ACCESS" | "LOADING" }
   | { status: "PROGRESS"; progress: number }
 
 const JoinStepIndicator = (props: JoinStepIndicatorProps) => {
-  const color = useColorModeValue("black", "white")
-
   switch (props.status) {
     case "DONE": {
       return (
-        <Circle size="5" bg="green.500">
-          <Icon weight="bold" color="white" as={Check} boxSize="0.8em" />
-        </Circle>
+        <div className="flex size-5 items-center justify-center rounded-full bg-green-500">
+          <Check weight="bold" color="white" className="size-3" />
+        </div>
       )
     }
 
     case "NO_ACCESS": {
       return (
-        <Circle size="5" bg="gray.500">
-          <Icon weight="bold" color="white" as={X} boxSize="0.7em" />
-        </Circle>
+        <div className="flex size-5 items-center justify-center rounded-full bg-gray">
+          <X weight="bold" color="white" className="size-3" />
+        </div>
       )
     }
 
     case "INACTIVE": {
       return (
-        <Circle
-          size="5"
-          bg="blackAlpha.100"
-          borderWidth={"1px"}
-          borderColor="whiteAlpha.100"
-        />
+        <div className="flex size-5 items-center justify-center rounded-full border border-border-muted bg-card-secondary" />
       )
     }
 
     case "LOADING": {
       return (
-        <Circle border={"1px transparent"}>
-          <Spinner boxSize="5" opacity=".6" />
-        </Circle>
+        <div className="flex size-5 items-center justify-center">
+          <CircleNotch
+            weight="bold"
+            className="size-5 animate-spin opacity-60 duration-500 [scale:1.1]"
+          />
+        </div>
       )
     }
 
     case "PROGRESS": {
       return (
-        <CircularProgress
-          value={props.progress}
-          size="5"
-          color={color}
-          sx={{
-            "> svg > .chakra-progress__track": {
-              stroke: "var(--chakra-colors-blackAlpha-200)",
-            },
-          }}
+        <CircularProgressBar
+          progress={props.progress / 100}
+          strokeWidth={15}
+          color="hsl(var(--info))"
+          className="size-5"
         />
       )
     }
   }
 }
 
-export default JoinStepIndicator
+export { JoinStepIndicator }

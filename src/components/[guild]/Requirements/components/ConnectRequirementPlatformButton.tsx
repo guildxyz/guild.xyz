@@ -5,8 +5,8 @@ import { Button, ButtonProps } from "@/components/ui/Button"
 import { cn } from "@/lib/utils"
 import { useToast } from "@chakra-ui/react"
 import type { Icon } from "@phosphor-icons/react"
-import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
-import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
+import { useConnectPlatform } from "components/[guild]/JoinModal/hooks/useConnectPlatform"
+import { useMembershipUpdate } from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useUser from "components/[guild]/hooks/useUser"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import REQUIREMENTS from "requirements"
@@ -105,9 +105,9 @@ const ConnectRequirementPlatformButton = ({
       isLoading={isLoading}
       loadingText={loadingText}
       className={cn(PLATFORM_COLORS[platform], className)}
+      leftIcon={!!IconComponent && <IconComponent />}
       {...props}
     >
-      {!!IconComponent && <IconComponent />}
       {`${isReconnection ? "Reconnect" : "Connect"} ${
         rewards[platform]?.name === "X" ? "" : rewards[platform]?.name
       }`}

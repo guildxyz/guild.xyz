@@ -7,7 +7,6 @@ import useEmblaCarousel, { type UseEmblaCarouselType } from "embla-carousel-reac
 import { Button } from "@/components/ui/Button"
 import { cn } from "@/lib/utils"
 import {
-  ComponentProps,
   ComponentPropsWithRef,
   FunctionComponent,
   HTMLAttributes,
@@ -19,6 +18,7 @@ import {
   useEffect,
   useState,
 } from "react"
+import { IconButton, IconButtonProps } from "./IconButton"
 
 type CarouselApi = UseEmblaCarouselType[1]
 type UseCarouselParameters = Parameters<typeof useEmblaCarousel>
@@ -204,17 +204,16 @@ CarouselItem.displayName = "CarouselItem"
 
 const CarouselPrevious = forwardRef<
   HTMLButtonElement,
-  ComponentProps<typeof Button>
->(({ className, variant = "outline", size = "icon", ...props }, ref) => {
+  Omit<IconButtonProps, "aria-label" | "size" | "icon">
+>(({ className, variant = "outline", ...props }, ref) => {
   const { orientation, scrollPrev, canScrollPrev } = useCarousel()
 
   return (
-    <Button
+    <IconButton
       ref={ref}
       variant={variant}
-      size={size}
       className={cn(
-        "absolute h-8 w-8 rounded-full",
+        "absolute rounded-full",
         orientation === "horizontal"
           ? "-left-12 -translate-y-1/2 top-1/2"
           : "-top-12 -translate-x-1/2 left-1/2 rotate-90",
@@ -222,41 +221,39 @@ const CarouselPrevious = forwardRef<
       )}
       disabled={!canScrollPrev}
       onClick={scrollPrev}
+      icon={<ArrowLeft weight="bold" />}
+      aria-label="Previous slide"
       {...props}
-    >
-      <ArrowLeft className="h-4 w-4" />
-      <span className="sr-only">Previous slide</span>
-    </Button>
+    />
   )
 })
 CarouselPrevious.displayName = "CarouselPrevious"
 
-const CarouselNext = forwardRef<HTMLButtonElement, ComponentProps<typeof Button>>(
-  ({ className, variant = "outline", size = "icon", ...props }, ref) => {
-    const { orientation, scrollNext, canScrollNext } = useCarousel()
+const CarouselNext = forwardRef<
+  HTMLButtonElement,
+  Omit<IconButtonProps, "aria-label" | "size" | "icon">
+>(({ className, variant = "outline", ...props }, ref) => {
+  const { orientation, scrollNext, canScrollNext } = useCarousel()
 
-    return (
-      <Button
-        ref={ref}
-        variant={variant}
-        size={size}
-        className={cn(
-          "absolute h-8 w-8 rounded-full",
-          orientation === "horizontal"
-            ? "-right-12 -translate-y-1/2 top-1/2"
-            : "-bottom-12 -translate-x-1/2 left-1/2 rotate-90",
-          className
-        )}
-        disabled={!canScrollNext}
-        onClick={scrollNext}
-        {...props}
-      >
-        <ArrowRight className="h-4 w-4" />
-        <span className="sr-only">Next slide</span>
-      </Button>
-    )
-  }
-)
+  return (
+    <IconButton
+      ref={ref}
+      variant={variant}
+      className={cn(
+        "absolute rounded-full",
+        orientation === "horizontal"
+          ? "-right-12 -translate-y-1/2 top-1/2"
+          : "-bottom-12 -translate-x-1/2 left-1/2 rotate-90",
+        className
+      )}
+      disabled={!canScrollNext}
+      onClick={scrollNext}
+      icon={<ArrowRight weight="bold" />}
+      aria-label="Next slide"
+      {...props}
+    />
+  )
+})
 CarouselNext.displayName = "CarouselNext"
 
 type UseCarouselDotButton = {
@@ -315,7 +312,6 @@ const CarouselDotButton: FunctionComponent<PropType> = ({
   return (
     <Button
       variant="unstyled"
-      size="icon"
       className={cn(
         "size-3 rounded-full bg-accent",
         {

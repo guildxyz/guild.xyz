@@ -4,7 +4,7 @@ import useCreateRole from "components/create-guild/hooks/useCreateRole"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { PlatformType, Requirement, RolePlatform } from "types"
 import getRandomInt from "utils/getRandomInt"
-import useMembershipUpdate from "../JoinModal/hooks/useMembershipUpdate"
+import { useMembershipUpdate } from "../JoinModal/hooks/useMembershipUpdate"
 import useGuild from "../hooks/useGuild"
 import useAddReward from "./hooks/useAddReward"
 

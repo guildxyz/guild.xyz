@@ -1,5 +1,5 @@
 import { Text } from "@chakra-ui/react"
-import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
+import { useMembershipUpdate } from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useUser from "components/[guild]/hooks/useUser"
 import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import useShowErrorToast from "hooks/useShowErrorToast"

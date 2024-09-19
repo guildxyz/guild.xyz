@@ -61,14 +61,16 @@ const FuelConnectorButtons = () => {
             }}
             isLoading={connector.name === activatingConnector}
             loadingText="Connecting..."
+            leftIcon={
+              <div className="flex size-6 items-center justify-center">
+                <img
+                  src={connectorIcons[connector.name]}
+                  className="size-6"
+                  alt={connector.name}
+                />
+              </div>
+            }
           >
-            <div className="flex size-6 items-center justify-center">
-              <img
-                src={connectorIcons[connector.name]}
-                className="size-6"
-                alt={connector.name}
-              />
-            </div>
             {connector.name}
           </Button>
         ))}

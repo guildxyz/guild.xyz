@@ -3,7 +3,7 @@ import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import { useGetKeyForSWRWithOptionalAuth } from "hooks/useGetKeyForSWRWithOptionalAuth"
 import { User } from "types"
 
-export default function useFetchUserEmail() {
+export function useFetchUserEmail() {
   const { id } = useUser()
   const fetcherWithSign = useFetcherWithSign()
   const getKeyForSWRWithOptionalAuth = useGetKeyForSWRWithOptionalAuth()

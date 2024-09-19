@@ -1,21 +1,22 @@
+import { ToastAction } from "@/components/ui/Toast"
+import { useToast } from "@/components/ui/hooks/useToast"
 import { JoinJob } from "@guildxyz/types"
-import { CircleWavyCheck } from "@phosphor-icons/react"
+import { CircleWavyCheck } from "@phosphor-icons/react/dist/ssr"
 import { GUILD_PIN_MAINTENANCE } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPin/constants"
 import { useMintGuildPinContext } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
 import { UseSubmitOptions } from "hooks/useSubmit/types"
-import { useToastWithButton } from "hooks/useToast"
 import { useToastWithShareButtons } from "hooks/useToastWithShareButtons"
 import { useRouter } from "next/router"
 import { useState } from "react"
-import useMembershipUpdate from "./useMembershipUpdate"
+import { useMembershipUpdate } from "./useMembershipUpdate"
 
 const useJoin = ({ onSuccess, onError }: UseSubmitOptions<JoinJob>) => {
   const guild = useGuild()
   const user = useUser()
   const toastWithShareButtons = useToastWithShareButtons()
-  const toastWithButton = useToastWithButton()
+  const { toast } = useToast()
   const [isNoAccess, setIsNoAccess] = useState(false)
 
   const mintGuildPinContext = useMintGuildPinContext()
@@ -40,15 +41,17 @@ const useJoin = ({ onSuccess, onError }: UseSubmitOptions<JoinJob>) => {
           guild.guildPin?.isActive &&
           !GUILD_PIN_MAINTENANCE
         ) {
-          toastWithButton({
-            status: "success",
+          toast({
+            variant: "success",
+
             title: "Successfully joined guild",
             description: "Let others know as well by minting it onchain",
-            buttonProps: {
-              leftIcon: <CircleWavyCheck weight="fill" />,
-              children: "Mint Guild Pin",
-              onClick: onOpen,
-            },
+            action: (
+              <ToastAction altText="Try again" onClick={onOpen}>
+                <CircleWavyCheck weight="fill" />
+                <span> Mint Guild Pin</span>
+              </ToastAction>
+            ),
           })
         } else {
           toastWithShareButtons({
@@ -78,4 +81,4 @@ const useJoin = ({ onSuccess, onError }: UseSubmitOptions<JoinJob>) => {
   }
 }
 
-export default useJoin
+export { useJoin }

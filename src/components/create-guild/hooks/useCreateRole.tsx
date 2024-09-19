@@ -1,6 +1,6 @@
 import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import { useYourGuilds } from "@/hooks/useYourGuilds"
-import processConnectorError from "components/[guild]/JoinModal/utils/processConnectorError"
+import { processConnectorError } from "components/[guild]/JoinModal/utils/processConnectorError"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useRoleGroup from "components/[guild]/hooks/useRoleGroup"
 import useCustomPosthogEvents from "hooks/useCustomPosthogEvents"

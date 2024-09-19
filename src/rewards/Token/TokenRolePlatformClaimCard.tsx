@@ -1,5 +1,5 @@
 import { HStack, Heading, Stack, Text, useColorMode } from "@chakra-ui/react"
-import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
+import { useMembershipUpdate } from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useRole from "components/[guild]/hooks/useRole"
 import Button from "components/common/Button"

@@ -1,5 +1,5 @@
 import { ToastId } from "@chakra-ui/react"
-import processConnectorError from "components/[guild]/JoinModal/utils/processConnectorError"
+import { processConnectorError } from "components/[guild]/JoinModal/utils/processConnectorError"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import useActiveStatusUpdates from "hooks/useActiveStatusUpdates"

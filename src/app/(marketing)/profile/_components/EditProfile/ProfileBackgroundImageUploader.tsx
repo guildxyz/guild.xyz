@@ -1,6 +1,8 @@
-import { ButtonProps, buttonVariants } from "@/components/ui/Button"
+import { buttonVariants } from "@/components/ui/Button"
+import { IconButtonProps } from "@/components/ui/IconButton"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip"
 import { useToast } from "@/components/ui/hooks/useToast"
+import { cn } from "@/lib/utils"
 import { UploadSimple } from "@phosphor-icons/react"
 import Button from "components/common/Button"
 import useDropzone from "hooks/useDropzone"
@@ -10,12 +12,13 @@ import { PropsWithChildren, useState } from "react"
 type Props = {
   uploader: Uploader
   tooltipLabel: string
-} & ButtonProps
+} & Omit<IconButtonProps, "size" | "rightIcon" | "aria-label">
 
 export const ProfileBackgroundImageUploader = ({
   uploader: { isUploading, onUpload },
   children,
   tooltipLabel,
+  icon,
   ...buttonProps
 }: PropsWithChildren<Props>): JSX.Element => {
   const [progress, setProgress] = useState<number>(0)
@@ -45,7 +48,7 @@ export const ProfileBackgroundImageUploader = ({
 
   if (isUploading)
     return (
-      <Button {...buttonProps} isDisabled>
+      <Button {...buttonProps} leftIcon={icon} isDisabled>
         {(progress * 100).toFixed(0)}%
       </Button>
     )
@@ -53,9 +56,17 @@ export const ProfileBackgroundImageUploader = ({
   return (
     <Tooltip>
       <TooltipTrigger>
-        <div {...getRootProps()} className={buttonVariants(buttonProps as any)}>
+        <div
+          {...getRootProps()}
+          className={cn(
+            buttonVariants({
+              ...buttonProps,
+              className: [...(buttonProps.className ?? ""), "size-10"],
+            })
+          )}
+        >
           <input {...getInputProps()} hidden />
-          {isDragActive ? <UploadSimple weight="bold" size={24} /> : children}
+          {isDragActive ? <UploadSimple weight="bold" /> : icon}
         </div>
       </TooltipTrigger>
       <TooltipContent side="bottom">{tooltipLabel}</TooltipContent>

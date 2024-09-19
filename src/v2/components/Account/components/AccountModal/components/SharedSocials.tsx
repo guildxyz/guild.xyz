@@ -55,8 +55,7 @@ const SharedSocials = () => {
     <Dialog>
       <DialogTrigger asChild>
         {!guildSharedSocial ? (
-          <Button {...buttonProps}>
-            <Shield weight="bold" />
+          <Button {...buttonProps} leftIcon={<Shield weight="bold" />}>
             {`Shared with ${pluralize(
               sharedSocials?.filter(
                 (sharedSocial) => sharedSocial.isShared !== false
@@ -68,13 +67,12 @@ const SharedSocials = () => {
           <Button
             {...buttonProps}
             className={cn(buttonProps.className, "text-success")}
+            leftIcon={<ShieldCheck weight="bold" />}
           >
-            <ShieldCheck weight="bold" />
             Shared with guild
           </Button>
         ) : (
-          <Button {...buttonProps}>
-            <Shield weight="bold" />
+          <Button {...buttonProps} leftIcon={<Shield weight="bold" />}>
             Hidden to guild
           </Button>
         )}
@@ -181,14 +179,16 @@ const ShareSocialsWithGuildSelect = ({
             className={cn("ml-auto shrink-0", {
               "text-success": isSharedBoolean,
             })}
+            leftIcon={
+              isSharedBoolean ? (
+                <ShieldCheck weight="bold" />
+              ) : (
+                <Shield weight="bold" />
+              )
+            }
+            rightIcon={<CaretDown weight="bold" />}
           >
-            {isSharedBoolean ? (
-              <ShieldCheck weight="bold" />
-            ) : (
-              <Shield weight="bold" />
-            )}
             {isSharedBoolean ? "Shared" : "Hidden"}
-            <CaretDown weight="bold" />
           </Button>
         </DropdownMenuTrigger>
 

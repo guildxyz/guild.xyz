@@ -25,14 +25,16 @@ const NetworkButton = ({ chain, requestNetworkChange }: Props) => {
           className={cn("w-full justify-start", {
             "border-2": isCurrentChain,
           })}
+          leftIcon={
+            /* Most of these icons are SVGs or small PNGs, so we don't need to optimize them */
+            /* eslint-disable-next-line @next/next/no-img-element */
+            <img
+              src={CHAIN_CONFIG[chain].iconUrl}
+              alt={`${CHAIN_CONFIG[chain].name} logo`}
+              className="size-6"
+            />
+          }
         >
-          {/* Most of these icons are SVGs or small PNGs, so we don't need to optimize them */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={CHAIN_CONFIG[chain].iconUrl}
-            alt={`${CHAIN_CONFIG[chain].name} logo`}
-            className="size-6"
-          />
           <span className="truncate">{CHAIN_CONFIG[chain].name}</span>
         </Button>
       </TooltipTrigger>

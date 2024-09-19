@@ -1,4 +1,4 @@
-import { useDisclosure } from "@chakra-ui/react"
+import { useDisclosure } from "@/hooks/useDisclosure"
 import useGuild from "components/[guild]/hooks/useGuild"
 import {
   Dispatch,
@@ -90,7 +90,7 @@ const MintGuildPinProviderComponent = ({
   }, [isPinVisible, isActivateModalOpen, guildCheckoutContext.isOpen])
 
   const shouldFetchImage =
-    featureFlags.includes("GUILD_CREDENTIAL") &&
+    featureFlags?.includes("GUILD_CREDENTIAL") &&
     id &&
     typeof pinType === "number" &&
     isPinVisible

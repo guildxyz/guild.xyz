@@ -1,19 +1,28 @@
-import type { Meta, StoryObj } from "@storybook/react"
+import { CircleDashed } from "@phosphor-icons/react/dist/ssr"
+import { Meta, StoryObj } from "@storybook/react"
+import { IconButton, IconButtonProps } from "./IconButton"
 
-import { Button, ButtonProps } from "./Button"
+type IconButtonExampleProps = Omit<IconButtonProps, "aria-label" | "icon">
 
-const meta: Meta<typeof Button> = {
-  title: "Design system/Button",
-  component: Button,
+const IconButtonExample = (props: IconButtonExampleProps) => (
+  <IconButton
+    {...props}
+    aria-label="IconButton example"
+    icon={<CircleDashed weight="bold" />}
+  />
+)
+
+const meta: Meta<typeof IconButtonExample> = {
+  title: "Design system/IconButton",
+  component: IconButtonExample,
 }
 
 export default meta
 
-type Story = StoryObj<typeof Button>
+type Story = StoryObj<typeof IconButton>
 
 export const Solid: Story = {
   args: {
-    children: "Solid",
     size: "md",
     variant: "solid",
     colorScheme: "primary",
@@ -24,7 +33,7 @@ export const Solid: Story = {
     size: {
       type: "string",
       control: "select",
-      options: ["xs", "sm", "md", "lg", "xl"] satisfies ButtonProps["size"][],
+      options: ["sm", "md", "lg"] satisfies IconButtonProps["size"][],
     },
     colorScheme: {
       type: "string",
@@ -35,7 +44,7 @@ export const Solid: Story = {
         "info",
         "destructive",
         "success",
-      ] satisfies ButtonProps["colorScheme"][],
+      ] satisfies IconButtonProps["colorScheme"][],
     },
     variant: {
       control: {
@@ -46,11 +55,6 @@ export const Solid: Story = {
       type: "boolean",
       control: "boolean",
     },
-    asChild: {
-      control: {
-        disable: true,
-      },
-    },
   },
 }
 
@@ -58,7 +62,6 @@ export const Outline: Story = {
   args: {
     ...Solid.args,
     variant: "outline",
-    children: "Outline",
   },
   argTypes: {
     ...Solid.argTypes,
@@ -69,7 +72,6 @@ export const Ghost: Story = {
   args: {
     ...Solid.args,
     variant: "ghost",
-    children: "Ghost",
   },
   argTypes: {
     ...Solid.argTypes,
@@ -80,7 +82,6 @@ export const Subtle: Story = {
   args: {
     ...Solid.args,
     variant: "subtle",
-    children: "Subtle",
   },
   argTypes: {
     ...Solid.argTypes,

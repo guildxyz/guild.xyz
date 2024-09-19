@@ -1,7 +1,7 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useMemo } from "react"
 import { JoinState } from "../../utils/mapAccessJobState"
-import ProgressJoinStep from "./components/ProgressJoinStep"
+import { ProgressJoinStep } from "./components/ProgressJoinStep"
 
 const GetRewardsJoinStep = ({ joinState }: { joinState: JoinState }) => {
   const status = useMemo(() => {
@@ -49,4 +49,4 @@ const GetRewardsJoinStep = ({ joinState }: { joinState: JoinState }) => {
   )
 }
 
-export default GetRewardsJoinStep
+export { GetRewardsJoinStep }

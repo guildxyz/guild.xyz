@@ -89,7 +89,7 @@ const useFormSubmissions = (formId, queryString) => {
   return { data: flattenedData, ...rest }
 }
 
-const useUserFormSubmission = (form: Schemas["Form"]) => {
+const useUserFormSubmission = (form?: Schemas["Form"]) => {
   const { id } = useUser()
   const fetcherWithSign = useFetcherWithSign()
   const getKeyForSWRWithOptionalAuth = useGetKeyForSWRWithOptionalAuth()

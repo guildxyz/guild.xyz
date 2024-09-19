@@ -1,5 +1,5 @@
 import { ButtonProps, LinkProps } from "@chakra-ui/react"
-import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
+import { useConnectPlatform } from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import useUser from "components/[guild]/hooks/useUser"
 import useToast from "hooks/useToast"
 import rewards from "rewards"

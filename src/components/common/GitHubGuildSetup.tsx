@@ -9,7 +9,7 @@ import {
   SimpleGrid,
   VStack,
 } from "@chakra-ui/react"
-import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
+import { useConnectPlatform } from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import RepoCard, { RepoSkeletonCard } from "components/create-guild/github/RepoCard"
 import SearchBar from "components/explorer/SearchBar"
 import useGateables from "hooks/useGateables"

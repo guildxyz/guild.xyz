@@ -7,4 +7,4 @@ const processDiscordError = (error: DiscordError): ErrorInfo => ({
   description: error.errorDescription,
 })
 
-export default processDiscordError
+export { processDiscordError }
