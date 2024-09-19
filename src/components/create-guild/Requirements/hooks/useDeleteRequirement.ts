@@ -1,4 +1,4 @@
-import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
+import { useMembershipUpdate } from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useRequirements from "components/[guild]/hooks/useRequirements"
 import useShowErrorToast from "hooks/useShowErrorToast"

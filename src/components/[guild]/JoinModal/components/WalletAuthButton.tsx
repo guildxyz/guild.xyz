@@ -23,4 +23,4 @@ const WalletAuthButton = (): JSX.Element => {
   )
 }
 
-export default WalletAuthButton
+export { WalletAuthButton }

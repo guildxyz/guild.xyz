@@ -7,7 +7,7 @@ import { LinkButton } from "components/common/LinkMenuItem"
 import useToast from "hooks/useToast"
 import { atom, useAtom, useSetAtom } from "jotai"
 import { useAccount } from "wagmi"
-import useMembershipUpdate from "../JoinModal/hooks/useMembershipUpdate"
+import { useMembershipUpdate } from "../JoinModal/hooks/useMembershipUpdate"
 import useGuild from "../hooks/useGuild"
 
 const isHiddenAtom = atom(false)

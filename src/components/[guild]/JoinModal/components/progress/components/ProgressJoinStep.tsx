@@ -1,7 +1,7 @@
 import { Collapsible, CollapsibleContent } from "@/components/ui/Collapsible"
 import { cn } from "@/lib/utils"
 import { HTMLAttributes, PropsWithChildren, ReactNode } from "react"
-import JoinStepIndicator from "../../JoinStepIndicator"
+import { JoinStepIndicator } from "../../JoinStepIndicator"
 
 type Props = {
   title: string
@@ -60,4 +60,4 @@ const ProgressJoinStep = ({
   </div>
 )
 
-export default ProgressJoinStep
+export { ProgressJoinStep }

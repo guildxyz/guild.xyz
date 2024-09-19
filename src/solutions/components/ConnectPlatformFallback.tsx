@@ -1,7 +1,7 @@
 import { PLATFORM_COLORS } from "@/components/Account/components/AccountModal/components/SocialAccount"
 import { Button } from "@/components/ui/Button"
 import { Card } from "@/components/ui/Card"
-import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
+import { useConnectPlatform } from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import useUser from "components/[guild]/hooks/useUser"
 import rewards from "rewards"
 import { PlatformName, Rest } from "types"

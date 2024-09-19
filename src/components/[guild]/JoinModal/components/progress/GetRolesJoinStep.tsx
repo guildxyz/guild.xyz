@@ -1,6 +1,6 @@
 import { useMemo } from "react"
 import { JoinState } from "../../utils/mapAccessJobState"
-import ProgressJoinStep from "./components/ProgressJoinStep"
+import { ProgressJoinStep } from "./components/ProgressJoinStep"
 
 const GetRolesJoinStep = ({ joinState }: { joinState: JoinState }) => {
   const status = useMemo(() => {
@@ -29,4 +29,4 @@ const GetRolesJoinStep = ({ joinState }: { joinState: JoinState }) => {
   )
 }
 
-export default GetRolesJoinStep
+export { GetRolesJoinStep }

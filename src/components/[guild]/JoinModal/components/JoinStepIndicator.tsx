@@ -53,4 +53,4 @@ const JoinStepIndicator = (props: JoinStepIndicatorProps) => {
   }
 }
 
-export default JoinStepIndicator
+export { JoinStepIndicator }

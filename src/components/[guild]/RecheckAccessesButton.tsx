@@ -20,10 +20,10 @@ import useToast from "hooks/useToast"
 import { useAtom } from "jotai"
 import { atomWithStorage } from "jotai/utils"
 import { useEffect, useMemo, useState } from "react"
-import GetRewardsJoinStep from "./JoinModal/components/progress/GetRewardsJoinStep"
-import GetRolesJoinStep from "./JoinModal/components/progress/GetRolesJoinStep"
-import SatisfyRequirementsJoinStep from "./JoinModal/components/progress/SatisfyRequirementsJoinStep"
-import useMembershipUpdate from "./JoinModal/hooks/useMembershipUpdate"
+import { GetRewardsJoinStep } from "./JoinModal/components/progress/GetRewardsJoinStep"
+import { GetRolesJoinStep } from "./JoinModal/components/progress/GetRolesJoinStep"
+import { SatisfyRequirementsJoinStep } from "./JoinModal/components/progress/SatisfyRequirementsJoinStep"
+import { useMembershipUpdate } from "./JoinModal/hooks/useMembershipUpdate"
 
 const TIMEOUT = 60_000
 

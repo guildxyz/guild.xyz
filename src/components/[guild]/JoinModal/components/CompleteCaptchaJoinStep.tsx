@@ -43,4 +43,5 @@ const CompleteCaptchaJoinStep = (): JSX.Element => {
   )
 }
 
+// biome-ignore lint/style/noDefaultExport: we only load this component dynamically, so it's much more convenient to use a default export here
 export default CompleteCaptchaJoinStep

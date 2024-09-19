@@ -6,8 +6,8 @@ import { useEffect } from "react"
 import { useFormContext } from "react-hook-form"
 import rewards from "rewards"
 import { PlatformName } from "types"
-import useConnectPlatform from "../hooks/useConnectPlatform"
-import useMembershipUpdate from "../hooks/useMembershipUpdate"
+import { useConnectPlatform } from "../hooks/useConnectPlatform"
+import { useMembershipUpdate } from "../hooks/useMembershipUpdate"
 import { JoinStep } from "./JoinStep"
 
 type Props = {
@@ -77,4 +77,4 @@ const ConnectPlatform = ({ platform }: Props) => {
   )
 }
 
-export default ConnectPlatform
+export { ConnectPlatform }

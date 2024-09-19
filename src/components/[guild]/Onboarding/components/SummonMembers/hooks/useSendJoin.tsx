@@ -1,4 +1,4 @@
-import processConnectorError from "components/[guild]/JoinModal/utils/processConnectorError"
+import { processConnectorError } from "components/[guild]/JoinModal/utils/processConnectorError"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import useShowErrorToast from "hooks/useShowErrorToast"

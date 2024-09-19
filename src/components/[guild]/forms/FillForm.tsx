@@ -15,7 +15,7 @@ import { Controller, FormProvider, UseFormProps, useForm } from "react-hook-form
 import { useUserFormSubmission } from "rewards/Forms/hooks/useFormSubmissions"
 import { PlatformType } from "types"
 import fetcher from "utils/fetcher"
-import useMembershipUpdate from "../JoinModal/hooks/useMembershipUpdate"
+import { useMembershipUpdate } from "../JoinModal/hooks/useMembershipUpdate"
 import useGuild from "../hooks/useGuild"
 import useUser from "../hooks/useUser"
 import FillFormProgress from "./FillFormProgress"

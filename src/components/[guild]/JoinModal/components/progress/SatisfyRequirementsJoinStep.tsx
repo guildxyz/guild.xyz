@@ -1,6 +1,6 @@
 import { HTMLAttributes, ReactNode, useMemo } from "react"
 import { JoinState } from "../../utils/mapAccessJobState"
-import ProgressJoinStep from "./components/ProgressJoinStep"
+import { ProgressJoinStep } from "./components/ProgressJoinStep"
 
 const SatisfyRequirementsJoinStep = ({
   joinState,
@@ -55,5 +55,4 @@ const SatisfyRequirementsJoinStep = ({
   )
 }
 
-export { ProgressJoinStep }
-export default SatisfyRequirementsJoinStep
+export { ProgressJoinStep, SatisfyRequirementsJoinStep }

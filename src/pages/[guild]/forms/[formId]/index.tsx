@@ -1,7 +1,7 @@
 import { Box, Icon } from "@chakra-ui/react"
 import { Question } from "@phosphor-icons/react"
 import { JoinModalProvider } from "components/[guild]/JoinModal/JoinModalProvider"
-import useActiveMembershipUpdate from "components/[guild]/JoinModal/hooks/useActiveMembershipUpdate"
+import { useActiveMembershipUpdate } from "components/[guild]/JoinModal/hooks/useActiveMembershipUpdate"
 import RoleRequirements from "components/[guild]/Requirements"
 import { RoleRequirementsSkeleton } from "components/[guild]/Requirements/RoleRequirements"
 import Requirement from "components/[guild]/Requirements/components/Requirement"

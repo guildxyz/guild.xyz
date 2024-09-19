@@ -10,7 +10,7 @@ import { UseSubmitOptions } from "hooks/useSubmit/types"
 import { useToastWithShareButtons } from "hooks/useToastWithShareButtons"
 import { useRouter } from "next/router"
 import { useState } from "react"
-import useMembershipUpdate from "./useMembershipUpdate"
+import { useMembershipUpdate } from "./useMembershipUpdate"
 
 const useJoin = ({ onSuccess, onError }: UseSubmitOptions<JoinJob>) => {
   const guild = useGuild()
@@ -81,4 +81,4 @@ const useJoin = ({ onSuccess, onError }: UseSubmitOptions<JoinJob>) => {
   }
 }
 
-export default useJoin
+export { useJoin }

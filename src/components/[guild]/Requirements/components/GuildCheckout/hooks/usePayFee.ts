@@ -1,5 +1,5 @@
 import { usePostHogContext } from "@/components/Providers/PostHogProvider"
-import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
+import { useMembershipUpdate } from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmitTransaction from "hooks/useSubmitTransaction"

@@ -33,4 +33,4 @@ const processConnectorError = (error: string): string | undefined => {
   }
 }
 
-export default processConnectorError
+export { processConnectorError }

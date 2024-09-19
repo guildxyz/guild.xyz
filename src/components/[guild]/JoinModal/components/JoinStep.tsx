@@ -2,7 +2,7 @@ import { Button, ButtonProps } from "@/components/ui/Button"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip"
 import { cn } from "@/lib/utils"
 import { PropsWithChildren, ReactNode } from "react"
-import JoinStepIndicator from "./JoinStepIndicator"
+import { JoinStepIndicator } from "./JoinStepIndicator"
 
 type JoinStepUIProps = {
   title: string

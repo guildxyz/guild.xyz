@@ -8,7 +8,7 @@ import {
   Tooltip,
   useDisclosure,
 } from "@chakra-ui/react"
-import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
+import { useMembershipUpdate } from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
