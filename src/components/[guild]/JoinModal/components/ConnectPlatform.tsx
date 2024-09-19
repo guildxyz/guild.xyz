@@ -46,8 +46,7 @@ const ConnectPlatform = ({ platform }: Props) => {
   }`
 
   const isDisabled = !isWeb3Connected
-  const isConnected =
-    !!platformFromDb?.platformUserData?.username || !!platformFromDb?.platformUserId
+  const isConnected = !!platformFromDb
   const buttonLabel =
     platformFromDb?.platformUserData?.username ?? platformFromDb?.platformUserId
 
