@@ -27,7 +27,7 @@ const ConnectPolygonIDJoinStep = (): JSX.Element => {
           isLoading,
           // TODO: extract it to a constant, just like we did with PLATFORM_COLORS
           className:
-            "bg-purple-500 hover:bg-purple-600 active:bg-purple-700 text-white",
+            "bg-purple-500 hover:bg-purple-600 hover:dark:bg-purple-400 active:bg-purple-700 active:dark:bg-purple-300 text-white",
           onClick: onOpen,
           children: isDone ? "Connected" : "Connect",
         }}
