@@ -96,7 +96,7 @@
     --blackAlpha-100: rgba(0, 0, 0, 0.1);
 
     /* not sure about this approach, we should think about this one too */
-    --gray: 240 3% 46% /* gray.500 from Chakra */
+    --gray: 240 3% 46%; /* gray.500 from Chakra */
 
     --discord: 233 78% 63%;
     --discord-hover: 243 75% 59%;
