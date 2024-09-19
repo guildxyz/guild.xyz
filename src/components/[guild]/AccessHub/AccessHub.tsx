@@ -1,5 +1,4 @@
-import { Collapse, SimpleGrid } from "@chakra-ui/react"
-import ClientOnly from "components/common/ClientOnly"
+import { Collapsible, CollapsibleContent } from "@/components/ui/Collapsible"
 import useMembership from "components/explorer/hooks/useMembership"
 import dynamic from "next/dynamic"
 import useGuild from "../hooks/useGuild"
@@ -32,34 +31,19 @@ const AccessHub = (): JSX.Element => {
   const showAccessHub = isAdmin || (hasVisiblePages && !group) || shouldShowGuildPin
 
   return (
-    <ClientOnly>
-      <Collapse
-        in={showAccessHub}
-        unmountOnExit
-        style={{
-          width: "calc(100% + 20px)",
-          paddingBottom: 10,
-          marginBottom: -10,
-          paddingInline: 10,
-          marginInline: -10,
-        }}
+    <Collapsible open={showAccessHub} className="w-full">
+      <CollapsibleContent
+        // So we don't cut the shadows
+        className="-m-2 w-[calc(100%+1rem)] p-2"
       >
-        <SimpleGrid
-          columns={{
-            base: 1,
-            md: 2,
-            lg: 3,
-            xl: 4,
-          }}
-          gap={4}
-        >
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           <CampaignCards />
           {isAdmin && <DynamicCreatedPageCard />}
           {shouldShowGuildPin && <DynamicGuildPinRewardCard />}
-        </SimpleGrid>
-      </Collapse>
-    </ClientOnly>
+        </div>
+      </CollapsibleContent>
+    </Collapsible>
   )
 }
 
-export default AccessHub
+export { AccessHub }

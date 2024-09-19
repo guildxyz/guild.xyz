@@ -10,7 +10,7 @@ import {
 } from "@/components/Layout"
 import { Anchor } from "@/components/ui/Anchor"
 import { Center, Heading, Spinner } from "@chakra-ui/react"
-import AccessHub from "components/[guild]/AccessHub"
+import { AccessHub } from "components/[guild]/AccessHub"
 import { GuildPageBanner } from "components/[guild]/GuildPageBanner"
 import { GuildPageImageAndName } from "components/[guild]/GuildPageImageAndName"
 import { JoinButton } from "components/[guild]/JoinButton"
