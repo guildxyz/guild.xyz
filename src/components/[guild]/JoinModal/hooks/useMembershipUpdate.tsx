@@ -10,9 +10,9 @@ import useSubmit from "hooks/useSubmit"
 import { UseSubmitOptions } from "hooks/useSubmit/types"
 import { atom, useAtom } from "jotai"
 import useUsersPoints from "rewards/Points/useUsersPoints"
-import getGuildPlatformsOfRoles from "../utils/getGuildPlatformsOfRoles"
-import mapAccessJobState from "../utils/mapAccessJobState"
-import useActiveMembershipUpdate from "./useActiveMembershipUpdate"
+import { getGuildPlatformsOfRoles } from "../utils/getGuildPlatformsOfRoles"
+import { mapAccessJobState } from "../utils/mapAccessJobState"
+import { useActiveMembershipUpdate } from "./useActiveMembershipUpdate"
 
 export type JoinData = {
   oauthData: any
@@ -158,4 +158,4 @@ const useMembershipUpdate = ({
   }
 }
 
-export default useMembershipUpdate
+export { useMembershipUpdate }

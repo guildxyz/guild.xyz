@@ -1,6 +1,6 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 
-export default function getGuildPlatformsOfRoles(
+export function getGuildPlatformsOfRoles(
   roleIds: number[],
   guild: ReturnType<typeof useGuild>
 ) {

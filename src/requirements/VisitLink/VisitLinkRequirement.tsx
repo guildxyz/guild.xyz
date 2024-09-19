@@ -15,7 +15,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import { ArrowSquareOut, Link as LinkIcon } from "@phosphor-icons/react"
-import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
+import { useMembershipUpdate } from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"

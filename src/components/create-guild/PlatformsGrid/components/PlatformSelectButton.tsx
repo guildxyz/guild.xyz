@@ -12,7 +12,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import { ArrowSquareIn, CaretRight, IconProps } from "@phosphor-icons/react"
-import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
+import { useConnectPlatform } from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import useUser from "components/[guild]/hooks/useUser"
 import DisplayCard from "components/common/DisplayCard"
 import { useSetAtom } from "jotai"

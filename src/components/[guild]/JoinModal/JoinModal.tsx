@@ -1,55 +1,35 @@
 import { walletSelectorModalAtom } from "@/components/Providers/atoms"
 import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import { anchorVariants } from "@/components/ui/Anchor"
+import { Button } from "@/components/ui/Button"
+import { Collapsible, CollapsibleContent } from "@/components/ui/Collapsible"
 import {
-  Box,
-  Collapse,
-  Divider,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
-  StackProps,
-  Text,
-  VStack,
-} from "@chakra-ui/react"
-import { ArrowRight } from "@phosphor-icons/react"
+  Dialog,
+  DialogBody,
+  DialogCloseButton,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/Dialog"
+import { Separator } from "@/components/ui/Separator"
+import { useErrorToast } from "@/components/ui/hooks/useErrorToast"
+import { cn } from "@/lib/utils"
+import { ArrowRight } from "@phosphor-icons/react/dist/ssr"
 import useGuild from "components/[guild]/hooks/useGuild"
-import Button from "components/common/Button"
-import { Modal } from "components/common/Modal"
-import ModalButton from "components/common/ModalButton"
-import DynamicDevTool from "components/create-guild/DynamicDevTool"
-import useShowErrorToast from "hooks/useShowErrorToast"
 import { useAtomValue } from "jotai"
 import dynamic from "next/dynamic"
-import { ComponentType, useRef } from "react"
+import { ComponentType, Fragment } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import { RequirementType } from "requirements/types"
 import rewards from "rewards"
 import { PlatformName } from "types"
-import ConnectPlatform from "./components/ConnectPlatform"
-import ShareSocialsCheckbox from "./components/ShareSocialsCheckbox"
-import WalletAuthButton from "./components/WalletAuthButton"
-import GetRewardsJoinStep from "./components/progress/GetRewardsJoinStep"
-import GetRolesJoinStep from "./components/progress/GetRolesJoinStep"
-import SatisfyRequirementsJoinStep from "./components/progress/SatisfyRequirementsJoinStep"
-import useJoin from "./hooks/useJoin"
-
-type Props = {
-  isOpen: boolean
-  onClose: () => void
-}
-
-type ExtractPrefix<T> = T extends `${infer Prefix}_${string}` ? Prefix : T
-type Joinable = PlatformName | ExtractPrefix<RequirementType>
-
-const JOIN_STEP_VSTACK_PROPS: StackProps = {
-  spacing: "3",
-  alignItems: "stretch",
-  w: "full",
-  divider: <Divider />,
-  mb: "3",
-}
+import { ConnectPlatform } from "./components/ConnectPlatform"
+import { ShareSocialsCheckbox } from "./components/ShareSocialsCheckbox"
+import { WalletAuthButton } from "./components/WalletAuthButton"
+import { GetRewardsJoinStep } from "./components/progress/GetRewardsJoinStep"
+import { GetRolesJoinStep } from "./components/progress/GetRolesJoinStep"
+import { SatisfyRequirementsJoinStep } from "./components/progress/SatisfyRequirementsJoinStep"
+import { useJoin } from "./hooks/useJoin"
+import { JoinForm, Joinable } from "./types"
 
 const customJoinStep: Partial<Record<Joinable, ComponentType<unknown>>> = {
   POLYGON: dynamic(() => import("./components/ConnectPolygonIDJoinStep")),
@@ -57,158 +37,180 @@ const customJoinStep: Partial<Record<Joinable, ComponentType<unknown>>> = {
   EMAIL: dynamic(() => import("./components/ConnectEmailJoinStep")),
 }
 
-const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
+const JoinModal = ({
+  isOpen,
+  onClose,
+}: {
+  isOpen: boolean
+  onClose: () => void
+}): JSX.Element => {
   const { isWeb3Connected } = useWeb3ConnectionManager()
   const isWalletSelectorModalOpen = useAtomValue(walletSelectorModalAtom)
   const { name, requiredPlatforms, featureFlags } = useGuild()
 
-  const methods = useForm({
+  const methods = useForm<JoinForm>({
     mode: "all",
     defaultValues: {
-      platforms: {},
-      ...(featureFlags.includes("CRM") ? { shareSocials: true } : {}),
+      shareSocials: featureFlags?.includes("CRM") ? true : undefined,
     },
   })
   const { handleSubmit } = methods
 
-  const renderedSteps = (requiredPlatforms ?? []).map((platform) => {
+  const renderedSteps = (requiredPlatforms ?? []).map((platform, index) => {
+    const shouldRenderSeparator = index < (requiredPlatforms?.length ?? 0) - 1
+
     if (platform in customJoinStep) {
       const ConnectComponent = customJoinStep[platform]
-      return <ConnectComponent key={platform} />
+      if (!ConnectComponent) return null
+      return (
+        <Fragment key={platform}>
+          <ConnectComponent />
+          {shouldRenderSeparator && <Separator />}
+        </Fragment>
+      )
     }
 
     if (!rewards[platform]?.isPlatform) return null
 
-    return <ConnectPlatform key={platform} platform={platform as PlatformName} />
+    return (
+      <Fragment key={platform}>
+        <ConnectPlatform platform={platform as PlatformName} />
+        {shouldRenderSeparator && <Separator />}
+      </Fragment>
+    )
   })
 
-  const errorToast = useShowErrorToast()
+  const errorToast = useErrorToast()
 
   const { isLoading, onSubmit, joinProgress, reset } = useJoin({
-    onSuccess: () => {
-      methods.setValue("platforms", {})
-      onClose()
-    },
+    onSuccess: () => onClose(),
     onError: (err) => {
       errorToast(err)
       reset()
     },
   })
 
-  const onJoin = (data) =>
+  const onJoin = (data: JoinForm) => {
     onSubmit({
       shareSocials: data?.shareSocials,
-      platforms:
-        data &&
-        Object.entries(data.platforms ?? {})
-          .filter(([_, value]) => !!value)
-          .map(([key, value]: any) => ({
-            name: key,
-            ...value,
-          })),
     })
+  }
 
-  const isInDetailedProgressState =
-    joinProgress?.state === "MANAGING_ROLES" ||
-    joinProgress?.state === "MANAGING_REWARDS" ||
-    joinProgress?.state === "FINISHED"
+  const isInDetailedProgressState = !!joinProgress
+    ? joinProgress?.state === "MANAGING_ROLES" ||
+      joinProgress?.state === "MANAGING_REWARDS" ||
+      joinProgress?.state === "FINISHED"
+    : false
 
-  const hasNoAccess = joinProgress?.state === "NO_ACCESS"
+  const hasNoAccess = !!joinProgress && joinProgress.state === "NO_ACCESS"
 
   const { roles } = useGuild()
 
   const onClick = () => {
     onClose()
-    window.location.hash = `role-${roles[0]?.id}`
+    window.location.hash = `role-${roles?.[0]?.id}`
   }
-  // so we don't focus the TopRecheckAccessesButton button after join
-  const dummyFinalFocusRef = useRef(null)
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      finalFocusRef={dummyFinalFocusRef}
-      // So focus management works properly
-      trapFocus={!isWalletSelectorModalOpen}
+    <Dialog
+      open={isOpen}
+      onOpenChange={(newIsOpen) => (!newIsOpen ? onClose() : {})}
     >
-      <ModalOverlay />
-      <ModalContent>
-        <FormProvider {...methods}>
-          <ModalHeader>Join {name}</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody pt="0">
-            <Collapse in={!isInDetailedProgressState}>
-              <VStack {...JOIN_STEP_VSTACK_PROPS}>
-                <WalletAuthButton />
-                {renderedSteps}
-              </VStack>
-            </Collapse>
+      <DialogContent trapFocus={!isWalletSelectorModalOpen}>
+        <DialogHeader>
+          <DialogTitle>{`Join ${name}`}</DialogTitle>
+        </DialogHeader>
 
-            {/* wrapper box to apply the margin when the collapse is `display: none` too */}
-            <Box mb={isInDetailedProgressState ? 2.5 : 8}>
-              <Collapse in={isLoading || hasNoAccess}>
-                {!isInDetailedProgressState && <Divider mb={3} />}
-                <SatisfyRequirementsJoinStep
-                  joinState={joinProgress}
-                  spacing={2.5}
-                  fallbackText={
-                    hasNoAccess && (
-                      <Text color="initial">
-                        {`You're not eligible with your connected accounts. `}
-                        <Button
-                          variant="link"
-                          rightIcon={<ArrowRight />}
-                          onClick={onClick}
-                          iconSpacing={1.5}
-                        >
-                          See requirements
-                        </Button>
-                      </Text>
-                    )
-                  }
-                />
-              </Collapse>
-            </Box>
+        <DialogBody>
+          <FormProvider {...methods}>
+            <Collapsible open={!isInDetailedProgressState}>
+              <CollapsibleContent>
+                <div className="mb-3 flex w-full flex-col items-stretch gap-3">
+                  <WalletAuthButton />
+                  {renderedSteps?.length > 0 && <Separator />}
+                  {renderedSteps}
+                </div>
+              </CollapsibleContent>
+            </Collapsible>
 
-            {isInDetailedProgressState && <Divider my={2.5} />}
+            {/* Wrapper div to apply the margin when the collapse is `display: none` too */}
+            <div
+              className={cn("mb-8", {
+                "mb-2.5": isInDetailedProgressState,
+              })}
+            >
+              <Collapsible open={isLoading || hasNoAccess}>
+                <CollapsibleContent>
+                  {!isInDetailedProgressState && <Separator className="mb-3" />}
+                  <SatisfyRequirementsJoinStep
+                    joinState={joinProgress}
+                    fallbackText={
+                      hasNoAccess && (
+                        <p>
+                          {`You're not eligible with your connected accounts. `}
+                          <Button
+                            variant="unstyled"
+                            className={anchorVariants({
+                              variant: "muted",
+                              className: "h-auto p-0",
+                            })}
+                            rightIcon={<ArrowRight weight="bold" />}
+                            onClick={onClick}
+                          >
+                            See requirements
+                          </Button>
+                        </p>
+                      )
+                    }
+                    className="gap-2.5"
+                  />
+                </CollapsibleContent>
+              </Collapsible>
+            </div>
 
-            <Collapse in={isInDetailedProgressState}>
-              <VStack {...JOIN_STEP_VSTACK_PROPS} spacing={2.5} mb={6}>
-                <GetRolesJoinStep joinState={joinProgress} />
+            {isInDetailedProgressState && <Separator className="mb-2.5" />}
 
-                <GetRewardsJoinStep joinState={joinProgress} />
-              </VStack>
-            </Collapse>
+            <Collapsible open={isInDetailedProgressState}>
+              <CollapsibleContent>
+                <div className="mb-6 flex w-full flex-col items-stretch gap-2.5">
+                  <GetRolesJoinStep joinState={joinProgress} />
+                  <Separator />
+                  <GetRewardsJoinStep joinState={joinProgress} />
+                </div>
+              </CollapsibleContent>
+            </Collapsible>
 
-            <Collapse in={!(isLoading || hasNoAccess)}>
-              {featureFlags.includes("CRM") && <ShareSocialsCheckbox />}
-            </Collapse>
+            <Collapsible open={!(isLoading || hasNoAccess)}>
+              <CollapsibleContent>
+                {featureFlags?.includes("CRM") && <ShareSocialsCheckbox />}
+              </CollapsibleContent>
+            </Collapsible>
 
-            <ModalButton
-              mt="2"
-              onClick={handleSubmit(onJoin)}
-              colorScheme={hasNoAccess ? "gray" : "green"}
+            <Button
+              colorScheme={hasNoAccess ? "secondary" : "success"}
               variant={hasNoAccess ? "outline" : "solid"}
               size={hasNoAccess ? "md" : "lg"}
+              onClick={handleSubmit(onJoin)}
               isLoading={isLoading}
               loadingText={
-                joinProgress?.state === "FINISHED"
+                !!joinProgress && joinProgress.state === "FINISHED"
                   ? "Finalizing results"
                   : !!joinProgress
                     ? "See status above"
                     : "Checking access"
               }
-              isDisabled={!isWeb3Connected}
+              disabled={!isWeb3Connected}
+              className="mt-2"
             >
               {hasNoAccess ? "Recheck access" : "Check access to join"}
-            </ModalButton>
-          </ModalBody>
-        </FormProvider>
-      </ModalContent>
-      <DynamicDevTool control={methods.control} />
-    </Modal>
+            </Button>
+          </FormProvider>
+        </DialogBody>
+
+        <DialogCloseButton />
+      </DialogContent>
+    </Dialog>
   )
 }
 
-export default JoinModal
+export { JoinModal }

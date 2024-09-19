@@ -148,4 +148,4 @@ const useActiveMembershipUpdate = ({
   }
 }
 
-export default useActiveMembershipUpdate
+export { useActiveMembershipUpdate }

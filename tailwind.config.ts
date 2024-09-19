@@ -23,6 +23,7 @@ const config = {
         display: ["var(--font-dystopian,sans-serif)"],
       },
       colors: {
+        gray: "hsl(var(--gray))",
         banner: {
           DEFAULT: "var(--banner)",
           dark: "var(--banner-dark)",
