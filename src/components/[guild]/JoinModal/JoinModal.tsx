@@ -1,5 +1,7 @@
 import { walletSelectorModalAtom } from "@/components/Providers/atoms"
 import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import { anchorVariants } from "@/components/ui/Anchor"
+import { Button } from "@/components/ui/Button"
 import { Collapsible, CollapsibleContent } from "@/components/ui/Collapsible"
 import {
   Dialog,
@@ -10,12 +12,10 @@ import {
   DialogTitle,
 } from "@/components/ui/Dialog"
 import { Separator } from "@/components/ui/Separator"
+import { useErrorToast } from "@/components/ui/hooks/useErrorToast"
 import { cn } from "@/lib/utils"
-import { ArrowRight } from "@phosphor-icons/react"
+import { ArrowRight } from "@phosphor-icons/react/dist/ssr"
 import useGuild from "components/[guild]/hooks/useGuild"
-import Button from "components/common/Button"
-import ModalButton from "components/common/ModalButton"
-import useShowErrorToast from "hooks/useShowErrorToast"
 import { useAtomValue } from "jotai"
 import dynamic from "next/dynamic"
 import { ComponentType, Fragment } from "react"
@@ -80,7 +80,7 @@ const JoinModal = ({
     )
   })
 
-  const errorToast = useShowErrorToast()
+  const errorToast = useErrorToast()
 
   const { isLoading, onSubmit, joinProgress, reset } = useJoin({
     onSuccess: () => onClose(),
@@ -96,12 +96,13 @@ const JoinModal = ({
     })
   }
 
-  const isInDetailedProgressState =
-    joinProgress?.state === "MANAGING_ROLES" ||
-    joinProgress?.state === "MANAGING_REWARDS" ||
-    joinProgress?.state === "FINISHED"
+  const isInDetailedProgressState = !!joinProgress
+    ? joinProgress?.state === "MANAGING_ROLES" ||
+      joinProgress?.state === "MANAGING_REWARDS" ||
+      joinProgress?.state === "FINISHED"
+    : false
 
-  const hasNoAccess = joinProgress?.state === "NO_ACCESS"
+  const hasNoAccess = !!joinProgress && joinProgress.state === "NO_ACCESS"
 
   const { roles } = useGuild()
 
@@ -149,10 +150,13 @@ const JoinModal = ({
                         <p>
                           {`You're not eligible with your connected accounts. `}
                           <Button
-                            variant="link"
-                            rightIcon={<ArrowRight />}
+                            variant="unstyled"
+                            className={anchorVariants({
+                              variant: "muted",
+                              className: "h-auto p-0",
+                            })}
+                            rightIcon={<ArrowRight weight="bold" />}
                             onClick={onClick}
-                            iconSpacing={1.5}
                           >
                             See requirements
                           </Button>
@@ -182,24 +186,24 @@ const JoinModal = ({
               </CollapsibleContent>
             </Collapsible>
 
-            <ModalButton
-              mt="2"
-              onClick={handleSubmit(onJoin)}
-              colorScheme={hasNoAccess ? "gray" : "green"}
+            <Button
+              colorScheme={hasNoAccess ? "secondary" : "success"}
               variant={hasNoAccess ? "outline" : "solid"}
               size={hasNoAccess ? "md" : "lg"}
+              onClick={handleSubmit(onJoin)}
               isLoading={isLoading}
               loadingText={
-                joinProgress?.state === "FINISHED"
+                !!joinProgress && joinProgress.state === "FINISHED"
                   ? "Finalizing results"
                   : !!joinProgress
                     ? "See status above"
                     : "Checking access"
               }
-              isDisabled={!isWeb3Connected}
+              disabled={!isWeb3Connected}
+              className="mt-2"
             >
               {hasNoAccess ? "Recheck access" : "Check access to join"}
-            </ModalButton>
+            </Button>
           </FormProvider>
         </DialogBody>
 
