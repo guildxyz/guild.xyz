@@ -21,7 +21,7 @@ const ConnectPolygonIDJoinStep = (): JSX.Element => {
         disabledText="Connect wallet first"
         buttonProps={{
           leftIcon: (
-            <img src="/requirementLogos/polygonId_white.svg" width="1.5em" />
+            <img src="/requirementLogos/polygonId_white.svg" className="size-6" />
           ),
           disabled: !isWeb3Connected,
           isLoading,
