@@ -20,7 +20,6 @@ import { useAtomValue } from "jotai"
 import dynamic from "next/dynamic"
 import { ComponentType, Fragment } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-
 import rewards from "rewards"
 import { PlatformName } from "types"
 import ConnectPlatform from "./components/ConnectPlatform"

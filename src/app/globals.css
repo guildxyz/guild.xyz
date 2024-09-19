@@ -90,9 +90,13 @@
     --alert-error-icon: 0 84% 60%;
 
     /* we plan to add the whole alpha color palettes */
-    --whiteAlpha-800: rgba(255, 255, 255, 0.80);
-    --blackAlpha-800: rgba(0, 0, 0, 0.80);
-    --blackAlpha-300: rgba(0, 0, 0, 0.30);
+    --whiteAlpha-800: rgba(255, 255, 255, 0.8);
+    --blackAlpha-800: rgba(0, 0, 0, 0.8);
+    --blackAlpha-300: rgba(0, 0, 0, 0.3);
+    --blackAlpha-100: rgba(0, 0, 0, 0.1);
+
+    /* not sure about this approach, we should think about this one too */
+    --gray: 240 3% 46% /* gray.500 from Chakra */
 
     --discord: 233 78% 63%;
     --discord-hover: 243 75% 59%;
