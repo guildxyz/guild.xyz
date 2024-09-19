@@ -28,7 +28,7 @@ const ProgressJoinStep = ({
 }: PropsWithChildren<Props> & HTMLAttributes<HTMLDivElement>) => (
   <div className={cn("flex items-start gap-2.5 py-2.5", className)} {...props}>
     <div
-      className={cn("h-11", {
+      className={cn("flex h-11 items-center justify-center", {
         "h-6": status === "INACTIVE",
       })}
     >
