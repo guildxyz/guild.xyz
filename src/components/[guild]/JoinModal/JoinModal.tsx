@@ -144,7 +144,6 @@ const JoinModal = ({
                   {!isInDetailedProgressState && <Separator className="mb-3" />}
                   <SatisfyRequirementsJoinStep
                     joinState={joinProgress}
-                    spacing={2.5}
                     fallbackText={
                       hasNoAccess && (
                         <p>
@@ -163,6 +162,7 @@ const JoinModal = ({
                         </p>
                       )
                     }
+                    className="gap-2.5"
                   />
                 </CollapsibleContent>
               </Collapsible>
