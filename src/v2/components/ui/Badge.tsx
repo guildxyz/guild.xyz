@@ -51,4 +51,4 @@ const Badge = forwardRef<ElementRef<"div">, BadgeProps>(
   )
 )
 
-export { Badge, badgeVariants }
+export { Badge }

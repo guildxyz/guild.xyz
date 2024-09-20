@@ -2,12 +2,11 @@
 
 import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import { useErrorToast } from "@/components/ui/hooks/useErrorToast"
-import type { Message } from "@/hooks/useOauthPopupWindow"
 import { PlatformName } from "@guildxyz/types"
 import { useRouter } from "next/navigation"
 import { useCallback, useEffect } from "react"
 import timeoutPromise from "utils/timeoutPromise"
-import { OAuthLocalStorageInfo, OAuthResponse } from "./types"
+import { Message, OAuthLocalStorageInfo, OAuthResponse } from "./types"
 
 const OAUTH_CONFIRMATION_TIMEOUT_MS = 500
 

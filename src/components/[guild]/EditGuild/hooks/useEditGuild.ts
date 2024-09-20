@@ -14,10 +14,10 @@ type Props = {
   guildId?: string | number
 }
 
-export const countFailed = (arr: Record<string, string>[]) =>
+const countFailed = (arr: Record<string, string>[]) =>
   arr.filter((res) => !!res.error).length
 
-export const getCorrelationId = (arr: Record<string, string>[]) =>
+const getCorrelationId = (arr: Record<string, string>[]) =>
   arr.filter((res) => !!res.error)[0]?.correlationId
 
 const getError = (arr: Record<string, string>[]) =>

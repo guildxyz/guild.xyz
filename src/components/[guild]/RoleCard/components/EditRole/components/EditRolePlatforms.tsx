@@ -11,15 +11,12 @@ import useRole from "components/[guild]/hooks/useRole"
 import AddCard from "components/common/AddCard"
 import Button from "components/common/Button"
 import Section from "components/common/Section"
-import { atom } from "jotai"
 import useAddRolePlatform from "../hooks/useAddRolePlatform"
 import ExistingRolePlatformCard from "./ExistingRolePlatformCard"
 
 type Props = {
   roleId?: number
 }
-
-export const openRewardSettingsGuildPlatformIdAtom = atom(0)
 
 const EditRolePlatforms = ({ roleId }: Props) => {
   const { onOpen } = useAddRewardContext()

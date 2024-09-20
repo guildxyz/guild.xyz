@@ -16,7 +16,7 @@ import CovalentTxCount from "./components/CovalentTxCount"
 import CovalentTxCountRelative from "./components/CovalentTxCountRelative"
 
 // These can be extended for additional Covalent support
-export const COVALENT_CHAINS = new Set<Chain>([
+const COVALENT_CHAINS = new Set<Chain>([
   "ETHEREUM",
   "POLYGON",
   "POLYGON_ZKEVM",

@@ -1,7 +1,7 @@
 import { atom, useAtom } from "jotai"
 import { useEffect } from "react"
 
-export const isAddRewardPanelDirtyAtom = atom(false)
+const isAddRewardPanelDirtyAtom = atom(false)
 
 export const useAddRewardDiscardAlert = (isDirty?: boolean) => {
   const [isAddRewardPanelDirty, setIsAddRewardPanelDirty] = useAtom<boolean>(

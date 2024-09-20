@@ -11,7 +11,7 @@ import { AddRewardPanelProps } from "rewards"
 import { PlatformGuildData, PlatformType } from "types"
 import { uuidv7 } from "uuidv7"
 import { CreateForm } from "."
-import DefaultAddRewardPanelWrapper from "../../DefaultAddRewardPanelWrapper"
+import { DefaultAddRewardPanelWrapper } from "../../DefaultAddRewardPanelWrapper"
 import ContinueWithExistingFormAlert from "./components/ContinueWithExistingFormAlert"
 
 const defaultValues: CreateForm = {

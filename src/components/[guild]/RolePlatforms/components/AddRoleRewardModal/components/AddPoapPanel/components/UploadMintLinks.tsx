@@ -9,7 +9,7 @@ import { ImportPoapForm } from "../AddPoapPanel"
 const LEGACY_POAP_MINT_LINK_BASE = "http://poap.xyz/claim/"
 const POAP_MINT_LINK_BASE = "http://poap.xyz/mint/"
 
-export const validatePoapLinks = (links: string[]) =>
+const validatePoapLinks = (links: string[]) =>
   links
     .filter(Boolean)
     .map((link) => link.toLowerCase())

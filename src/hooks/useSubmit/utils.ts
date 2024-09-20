@@ -12,7 +12,7 @@ import { Chain, Chains, supportedChains } from "wagmiConfig/chains"
 import { DEFAULT_MESSAGE } from "./constants"
 import { FuelSignProps, MessageParams, SignProps, Validation } from "./types"
 
-export const signWithKeyPair = (keyPair: CryptoKeyPair, params: MessageParams) =>
+const signWithKeyPair = (keyPair: CryptoKeyPair, params: MessageParams) =>
   window.crypto.subtle
     .sign(
       { name: "ECDSA", hash: "SHA-512" },
@@ -34,7 +34,7 @@ export const getMessage = ({
     chainId ? `\nChainId: ${chainId}` : ""
   }${hash ? `\nHash: ${hash}` : ""}\nNonce: ${nonce}\nTimestamp: ${ts}`
 
-export const createMessageParams = (
+const createMessageParams = (
   address: `0x${string}`,
   ts: number,
   msg: string,
@@ -104,7 +104,7 @@ export const sign = async ({
   return [payload, { params, sig }]
 }
 
-export const chainsOfAddressWithDeployedContract = async (
+const chainsOfAddressWithDeployedContract = async (
   address: `0x${string}`
 ): Promise<Chain[]> => {
   const LOCALSTORAGE_KEY = `chainsWithByteCode_${address.toLowerCase()}`

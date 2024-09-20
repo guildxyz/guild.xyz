@@ -12,7 +12,7 @@ type CoingeckoToken = {
   logoURI: string
 }
 
-export const TokenApiURLs: Record<Chain, string[]> = {
+const TokenApiURLs: Record<Chain, string[]> = {
   ETHEREUM: ["https://tokens.coingecko.com/uniswap/all.json"],
   BSC: ["https://tokens.coingecko.com/binance-smart-chain/all.json"],
   GNOSIS: [

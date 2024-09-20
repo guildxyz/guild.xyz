@@ -19,7 +19,7 @@ import useResolveAddress from "hooks/useResolveAddress"
 import useGuild from "../hooks/useGuild"
 import { WalletTag } from "./Identities"
 import { ClickableCrmRoleTag } from "./RoleTags"
-import UserPlatformTags from "./UserPlatformTags"
+import { UserPlatformTags } from "./UserPlatformTags"
 import { Member } from "./useMembers"
 
 type Props = {

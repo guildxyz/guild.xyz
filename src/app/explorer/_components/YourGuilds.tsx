@@ -69,5 +69,3 @@ export const YourGuilds = () => {
     </section>
   )
 }
-
-export { useYourGuilds }

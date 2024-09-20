@@ -7,7 +7,7 @@ import {
 import { UserProfile } from "@guildxyz/types"
 import { atom, useAtom } from "jotai"
 import { useEffect } from "react"
-import parseFuelAddress from "utils/parseFuelAddress"
+import { parseFuelAddress } from "utils/parseFuelAddress"
 import { useAccount, useDisconnect, useSignMessage } from "wagmi"
 
 const safeContextAtom = atom(false)

@@ -1,5 +1,5 @@
 import { AddRewardPanelProps } from "rewards"
-import DefaultAddRewardPanelWrapper from "../../DefaultAddRewardPanelWrapper"
+import { DefaultAddRewardPanelWrapper } from "../../DefaultAddRewardPanelWrapper"
 import CreateNftForm from "./components/CreateNftForm"
 
 const AddContractCallPanel = ({ onAdd }: AddRewardPanelProps) => (
