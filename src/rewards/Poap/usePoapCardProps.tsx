@@ -1,7 +1,7 @@
 import AvailabilityTags from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { CardPropsHook } from "rewards/types"
-import { GuildPlatformWithOptionalId, PlatformName } from "types"
+import { GuildPlatformWithOptionalId } from "types"
 import { poapData } from "./data"
 
 const usePoapCardProps: CardPropsHook = (
@@ -16,7 +16,7 @@ const usePoapCardProps: CardPropsHook = (
 
   return {
     name: platformGuildData?.name || poapData.name,
-    type: "POAP" as PlatformName,
+    type: "POAP",
     image: platformGuildData?.imageUrl || poapData.imageUrl,
     info: rolePlatform && <AvailabilityTags rolePlatform={rolePlatform} mt={1} />,
   }

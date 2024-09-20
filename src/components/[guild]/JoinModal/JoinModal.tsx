@@ -21,7 +21,6 @@ import dynamic from "next/dynamic"
 import { ComponentType, Fragment } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import rewards from "rewards"
-import { PlatformName } from "types"
 import { ConnectPlatform } from "./components/ConnectPlatform"
 import { ShareSocialsCheckbox } from "./components/ShareSocialsCheckbox"
 import { WalletAuthButton } from "./components/WalletAuthButton"
@@ -74,7 +73,7 @@ const JoinModal = ({
 
     return (
       <Fragment key={platform}>
-        <ConnectPlatform platform={platform as PlatformName} />
+        <ConnectPlatform platform={platform} />
         {shouldRenderSeparator && <Separator />}
       </Fragment>
     )
