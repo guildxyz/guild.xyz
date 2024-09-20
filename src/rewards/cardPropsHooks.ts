@@ -6,7 +6,6 @@ import useGithubCardProps from "./Github/useGithubCardProps"
 import useGoogleCardProps from "./Google/useGoogleCardProps"
 import usePoapCardProps from "./Poap/usePoapCardProps"
 import usePointsCardProps from "./Points/usePointsCardProps"
-import usePolygonIDCardProps from "./PolygonID/usePolygonIDCardProps"
 import useSecretTextCardProps from "./SecretText/useSecretTextCardProps"
 import useTelegramCardProps from "./Telegram/useTelegramCardProps"
 import useTokenCardProps from "./Token/hooks/useTokenCardProps"
@@ -15,7 +14,6 @@ import { CardPropsHook, RewardComponentMap } from "./types"
 
 export const cardPropsHooks = {
   GATHER_TOWN: useGatherCardProps,
-  POLYGON_ID: usePolygonIDCardProps,
   TELEGRAM: useTelegramCardProps,
   POAP: usePoapCardProps,
   POINTS: usePointsCardProps,

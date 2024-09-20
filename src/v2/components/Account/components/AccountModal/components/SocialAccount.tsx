@@ -116,8 +116,6 @@ const PLATFORM_COLORS = {
     "bg-twitter hover:bg-twitter-hover active:bg-twitter-active text-white",
   TWITTER: "bg-twitter hover:bg-twitter-hover active:bg-twitter-active text-white",
   GITHUB: "bg-github hover:bg-github-hover active:bg-github-active text-white",
-  POLYGON_ID:
-    "bg-polygonid hover:bg-polygonid-hover active:bg-polygonid-active text-white",
   FARCASTER:
     "bg-farcaster hover:bg-farcaster-hover active:bg-farcaster-active text-white",
 } satisfies Partial<Record<PlatformName, string>>

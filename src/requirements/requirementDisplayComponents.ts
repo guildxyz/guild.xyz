@@ -217,12 +217,6 @@ export const REQUIREMENT_DISPLAY_COMPONENTS = {
   UNISWAP_V3_POSITIONS: dynamic<RequirementProps>(
     () => import("requirements/Uniswap/UniswapRequirement")
   ),
-  POLYGON_ID_BASIC: dynamic<RequirementProps>(
-    () => import("requirements/PolygonID/PolygonIDRequirement")
-  ),
-  POLYGON_ID_QUERY: dynamic<RequirementProps>(
-    () => import("requirements/PolygonID/PolygonIDRequirement")
-  ),
   GITCOIN_PASS: dynamic<RequirementProps>(
     () => import("requirements/GitcoinPassport/GitcoinPassportRequirement")
   ),

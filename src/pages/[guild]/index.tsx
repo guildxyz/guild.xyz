@@ -32,7 +32,6 @@ import dynamic from "next/dynamic"
 import Head from "next/head"
 import ErrorPage from "pages/_error"
 import { useEffect } from "react"
-import { MintPolygonIDProofProvider } from "rewards/PolygonID/components/MintPolygonIDProofProvider"
 import { SWRConfig } from "swr"
 import { Guild, SocialLinkKey } from "types"
 import fetcher from "utils/fetcher"
@@ -231,11 +230,9 @@ const GuildPageWrapper = ({ fallback }: Props): JSX.Element => {
       <SWRConfig value={fallback && { fallback }}>
         <ThemeProvider>
           <MintGuildPinProvider>
-            <MintPolygonIDProofProvider>
-              <JoinModalProvider>
-                <GuildPage />
-              </JoinModalProvider>
-            </MintPolygonIDProofProvider>
+            <JoinModalProvider>
+              <GuildPage />
+            </JoinModalProvider>
           </MintGuildPinProvider>
         </ThemeProvider>
       </SWRConfig>
