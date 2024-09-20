@@ -1,4 +1,4 @@
-import REQUIREMENTS_DATA from "./requirements"
+import { REQUIREMENTS_DATA } from "./requirements"
 import { RequirementData, RequirementType } from "./types"
 
 // transform it to an object with types as keys so we don't have to use .find() every time

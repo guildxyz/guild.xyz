@@ -11,7 +11,7 @@ import { useFormState, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements/types"
 import parseFromObject from "utils/parseFromObject"
 
-export const WEB3INBOX_APPS = ["GUILD", "WEB3INBOX", "SHEFI"] as const
+const WEB3INBOX_APPS = ["GUILD", "WEB3INBOX", "SHEFI"] as const
 export const APP_DETAILS: Record<
   (typeof WEB3INBOX_APPS)[number],
   {

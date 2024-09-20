@@ -4,14 +4,11 @@ import TransitioningPlatformIcons from "components/[guild]/RolePlatforms/compone
 import AddCard from "components/common/AddCard"
 import Button from "components/common/Button"
 import Section from "components/common/Section"
-import { atom } from "jotai"
 import { useFieldArray, useFormContext } from "react-hook-form"
 import { RoleFormType, RolePlatform } from "types"
 import NewRolePlatformCard from "../AddAndOrderRoles/components/NewRolePlatformCard"
 import { AddRewardProvider, useAddRewardContext } from "../AddRewardContext"
 import AddRoleRewardModal from "./components/AddRoleRewardModal"
-
-export const openRewardSettingsGuildPlatformIdAtom = atom(0)
 
 const AddRolePlatforms = () => {
   const { onOpen } = useAddRewardContext()

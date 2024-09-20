@@ -4,7 +4,7 @@ import { FormProvider, useForm } from "react-hook-form"
 import { AddRewardPanelProps } from "rewards"
 import { ConnectPlatformFallback } from "solutions/components/ConnectPlatformFallback"
 import { PlatformType } from "types"
-import DefaultAddRewardPanelWrapper from "../DefaultAddRewardPanelWrapper"
+import { DefaultAddRewardPanelWrapper } from "../DefaultAddRewardPanelWrapper"
 
 const defaultValues = {
   platformGuildId: null,

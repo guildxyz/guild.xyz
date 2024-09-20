@@ -167,7 +167,7 @@ const CrmTbodyRoleTag = memo(
   })
 )
 
-export const CrmRoleTag = memo(
+const CrmRoleTag = memo(
   forwardRef<RoleTagProps, "span">(({ role, amount: amountProp, ...rest }, ref) => {
     if (!role) return null
 

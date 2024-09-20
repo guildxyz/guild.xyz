@@ -3,7 +3,7 @@ import { useMemo } from "react"
 import { useWatch } from "react-hook-form"
 
 export const UNISWAP_POOL_URL = /https:\/\/app\.uniswap\.org\/pools\/([0-9]+)/i
-export const UNISWAP_POOL_EXPLORER_URL =
+const UNISWAP_POOL_EXPLORER_URL =
   /^https:\/\/app\.uniswap\.org\/explore\/pools\/([^\/]+)\//
 
 export type UniswapChains = (typeof consts.UniswapV3PositionsChains)[number]

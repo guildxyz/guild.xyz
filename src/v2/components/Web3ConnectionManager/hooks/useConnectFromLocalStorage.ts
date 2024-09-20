@@ -1,7 +1,7 @@
 import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import { useToast } from "@/components/ui/hooks/useToast"
-import type { Message } from "@/hooks/useOauthPopupWindow"
 import { useUserPublic } from "@/hooks/useUserPublic"
+import { Message } from "@app/oauth/types"
 import { useConnect } from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import useUser from "components/[guild]/hooks/useUser"
 import { useEffect } from "react"
@@ -57,4 +57,4 @@ const useConnectFromLocalStorage = () => {
   }, [keyPair, platformUsers, onSubmit, toast, captureEvent])
 }
 
-export default useConnectFromLocalStorage
+export { useConnectFromLocalStorage }

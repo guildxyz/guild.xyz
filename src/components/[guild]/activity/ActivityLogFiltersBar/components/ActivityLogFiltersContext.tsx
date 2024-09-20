@@ -34,7 +34,7 @@ export const FILTER_NAMES: Record<SupportedSearchOption, string> = {
   action: "Action",
 }
 
-export const SUPPORTED_QUERY_PARAMS = [
+const SUPPORTED_QUERY_PARAMS = [
   "order",
   "limit",
   "offset",

@@ -45,5 +45,3 @@ export const DefaultAddRewardPanelWrapper = ({
     </ModalContent>
   )
 }
-
-export default DefaultAddRewardPanelWrapper

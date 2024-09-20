@@ -1,14 +1,10 @@
 import {
   Box,
-  Center,
   Flex,
   HStack,
   Heading,
-  Skeleton,
-  SkeletonCircle,
   Stack,
   Text,
-  VStack,
   useColorModeValue,
 } from "@chakra-ui/react"
 import Card, { useCardBg } from "components/common/Card"
@@ -152,36 +148,6 @@ const LeaderboardAirdropCard = () => {
   )
 }
 
-const LeaderboardAirdopSkeleton = () => {
-  const positionBgColor = useColorModeValue("gray.50", "blackAlpha.300")
-  const positionBorderColor = useColorModeValue("gray.200", "gray.600")
-
-  return (
-    <Card>
-      <HStack spacing={0}>
-        <Center
-          minW={{ base: 16, sm: 24 }}
-          maxW={{ base: 16, sm: 24 }}
-          placeSelf="stretch"
-          bgColor={positionBgColor}
-          borderRightWidth={1}
-          borderRightColor={positionBorderColor}
-        >
-          <Skeleton boxSize={{ base: 6, sm: 8 }} />
-        </Center>
-        <HStack spacing={4} px={{ base: 5, md: 6 }} py={{ base: 5, md: 7 }}>
-          <SkeletonCircle boxSize={10} />
-
-          <VStack alignItems="start" spacing={0}>
-            <Skeleton w={48} />
-            <Skeleton w={24} h={4} />
-          </VStack>
-        </HStack>
-      </HStack>
-    </Card>
-  )
-}
-
 const LeaderboardAirdropCardWrapper = ({
   guildPlatform,
 }: {
@@ -200,7 +166,4 @@ const LeaderboardAirdropCardWrapper = ({
   )
 }
 
-export {
-  LeaderboardAirdopSkeleton,
-  LeaderboardAirdropCardWrapper as LeaderboardAirdropCard,
-}
+export { LeaderboardAirdropCardWrapper as LeaderboardAirdropCard }

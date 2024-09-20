@@ -11,7 +11,7 @@ const generateExponentialArray = (
   return Array.from({ length: steps }, (_, i) => Math.pow(exponent, i) * scaleFactor)
 }
 
-export const calculateXpProgression = ({
+const calculateXpProgression = ({
   experienceCount,
 }: { experienceCount: number }) => {
   if (MAX_LEVEL < 1) throw new Error(`max level must be positive`)
