@@ -8,7 +8,6 @@ export const env = createEnv({
     BALANCY_TOKEN: z.string(),
 
     // Vercel
-    LEADERBOARD_REVALIDATION_SECRET: z.string(),
     KV_REST_API_READ_ONLY_TOKEN: z.string(),
     KV_REST_API_TOKEN: z.string(),
     KV_REST_API_URL: z.string(),
@@ -96,7 +95,6 @@ export const env = createEnv({
     GUILD_API_KEY: process.env.GUILD_API_KEY,
     BALANCY_TOKEN: process.env.BALANCY_TOKEN,
 
-    LEADERBOARD_REVALIDATION_SECRET: process.env.LEADERBOARD_REVALIDATION_SECRET,
     KV_REST_API_READ_ONLY_TOKEN: process.env.KV_REST_API_READ_ONLY_TOKEN,
     KV_REST_API_TOKEN: process.env.KV_REST_API_TOKEN,
     KV_REST_API_URL: process.env.KV_REST_API_URL,
