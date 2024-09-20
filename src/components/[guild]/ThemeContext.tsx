@@ -16,14 +16,26 @@ import {
 const ThemeContext = createContext<{
   localThemeColor: string
   setLocalThemeColor: Dispatch<SetStateAction<string>>
-  localBackgroundImage: string
-  setLocalBackgroundImage: Dispatch<SetStateAction<string>>
+  localBackgroundImage?: string
+  setLocalBackgroundImage: Dispatch<SetStateAction<string | undefined>>
   textColor: string
   buttonColorScheme: string
   avatarBg: string
-} | null>(null)
+}>({
+  localThemeColor: "#27272a",
+  setLocalThemeColor: () => {
+    /* empty */
+  },
+  localBackgroundImage: undefined,
+  setLocalBackgroundImage: () => {
+    /* empty */
+  },
+  textColor: "inherit",
+  buttonColorScheme: "secondary",
+  avatarBg: "#27272a",
+})
 
-const ThemeProvider = memo(({ children }: PropsWithChildren<any>): JSX.Element => {
+const ThemeProvider = memo(({ children }: PropsWithChildren): JSX.Element => {
   const { theme } = useGuild()
   const { backgroundImage } = theme ?? {}
   const themeColorFallback = useColorModeValue("#27272a", "#18181b")
