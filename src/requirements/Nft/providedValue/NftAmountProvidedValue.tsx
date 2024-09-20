@@ -7,7 +7,7 @@ import { isGuildPinSupportedChain } from "utils/guildCheckout/utils"
 import { Chain } from "wagmiConfig/chains"
 import useNftMetadata, { useNftMetadataWithTraits } from "../hooks/useNftMetadata"
 
-export function hasOnlyTypeProperty(obj) {
+function hasOnlyTypeProperty(obj) {
   const keys = Object.keys(obj)
   return keys.length === 1 && keys[0] === "type"
 }

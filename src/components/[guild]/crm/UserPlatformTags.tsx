@@ -70,5 +70,3 @@ const getPlatformUrl = (platformAccount: PlatformAccountDetails) => {
 
   return platformUrls[platformId]
 }
-
-export default UserPlatformTags

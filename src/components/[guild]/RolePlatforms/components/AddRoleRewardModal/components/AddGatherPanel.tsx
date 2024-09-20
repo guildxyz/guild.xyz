@@ -9,7 +9,7 @@ import {
   gatherSpaceUrlToSpaceId,
 } from "rewards/Gather/useGatherCardProps"
 import { PlatformType } from "types"
-import DefaultAddRewardPanelWrapper from "../DefaultAddRewardPanelWrapper"
+import { DefaultAddRewardPanelWrapper } from "../DefaultAddRewardPanelWrapper"
 
 export type AddGatherFormType = {
   gatherApiKey: string

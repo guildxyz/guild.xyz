@@ -211,4 +211,4 @@ const useSubmitWithSign = <ResponseType>(
 }
 
 export default useSubmit
-export { useSubmitWithSign, useSubmitWithSignWithParamKeyPair }
+export { useSubmitWithSign }

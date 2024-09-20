@@ -84,17 +84,8 @@ export const ZEROX_API_URLS: Partial<
   SEPOLIA: "https://sepolia.api.0x.org",
 }
 
-export const RESERVOIR_API_URLS: Partial<Record<Chain, string>> = {
-  // ETHEREUM: "https://api.reservoir.tools",
-  // GOERLI: "https://api-goerli.reservoir.tools",
-  // POLYGON: "https://api-polygon.reservoir.tools",
-  // OPTIMISM: "https://api-optimism.reservoir.tools",
-}
-
 export const purchaseSupportedChains: Partial<Record<RequirementType, string[]>> = {
   ERC20: Object.keys(ZEROX_API_URLS),
-  ERC721: Object.keys(RESERVOIR_API_URLS),
-  ERC1155: Object.keys(RESERVOIR_API_URLS),
 }
 
 export const allPurchaseSupportedChains: Chain[] = [
@@ -135,7 +126,7 @@ export type PurchaseAssetData = {
 export type BuyTokenType = "COIN" | "ERC20"
 
 // amount: bigint, expiration: bigint, nonce: bigint, spender: string, sigDeadline: bigint, data: Uint8Array
-export const permit2PermitFakeParams = [
+const permit2PermitFakeParams = [
   BigInt("1461501637330902918203684832716283019655932542975"),
   BigInt("1706751423"),
   BigInt(0),

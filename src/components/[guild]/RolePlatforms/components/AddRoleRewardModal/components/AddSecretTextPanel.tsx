@@ -11,7 +11,7 @@ import UniqueTextDataForm, {
   UniqueTextRewardForm,
 } from "rewards/UniqueText/UniqueTextDataForm"
 import { PlatformGuildData, PlatformName, PlatformType } from "types"
-import DefaultAddRewardPanelWrapper from "../DefaultAddRewardPanelWrapper"
+import { DefaultAddRewardPanelWrapper } from "../DefaultAddRewardPanelWrapper"
 
 enum TextPlatformName {
   TEXT,

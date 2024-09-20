@@ -339,5 +339,3 @@ export const REQUIREMENTS_DATA = [
     isNegatable: true,
   },
 ] as const satisfies RequirementData[]
-
-export default REQUIREMENTS_DATA

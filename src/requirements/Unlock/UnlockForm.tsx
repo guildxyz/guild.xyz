@@ -91,5 +91,4 @@ const UnlockForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
   )
 }
 
-export { supportedChains as unlockSupportedChains }
 export default UnlockForm

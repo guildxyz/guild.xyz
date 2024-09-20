@@ -85,6 +85,5 @@ const ApiRequirementHandlerProvider = ({
 export {
   ApiRequirementHandlerProvider,
   ClientStateRequirementHandlerProvider,
-  RequirementHandlerContext,
   useRequirementHandlerContext,
 }

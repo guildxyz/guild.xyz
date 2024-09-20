@@ -3,7 +3,7 @@ import { useWatch } from "react-hook-form"
 import { AddRewardPanelProps } from "rewards"
 import { ConnectPlatformFallback } from "solutions/components/ConnectPlatformFallback"
 import { PlatformGuildData, PlatformType } from "types"
-import DefaultAddRewardPanelWrapper from "../DefaultAddRewardPanelWrapper"
+import { DefaultAddRewardPanelWrapper } from "../DefaultAddRewardPanelWrapper"
 
 const AddDiscordPanel = ({ onAdd }: AddRewardPanelProps) => {
   // TODO: we could somehow extract this piece of logis from here to make sure that AddDiscordPanel doesn't depend on the role form's state

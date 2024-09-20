@@ -195,5 +195,5 @@ const RewardWrapper = ({ platform, ...props }: RewardProps) => {
   )
 }
 
-export { Reward, RewardIcon, getRewardLabel }
+export { RewardIcon }
 export default RewardWrapper

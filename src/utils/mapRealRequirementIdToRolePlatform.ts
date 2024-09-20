@@ -8,7 +8,7 @@ type Props = {
   onMissingId?: () => void
 }
 
-export const mapRealRequirementIdToRolePlatform = ({
+const mapRealRequirementIdToRolePlatform = ({
   rolePlatform,
   requirementIdMap,
   roleId,

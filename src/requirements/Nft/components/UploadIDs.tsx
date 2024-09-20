@@ -2,7 +2,7 @@ import { File } from "@phosphor-icons/react"
 import Button from "components/common/Button"
 import useDropzone from "hooks/useDropzone"
 
-export const INVALID_TOKEN_IDS_ERROR = {
+const INVALID_TOKEN_IDS_ERROR = {
   type: "validate",
   message: "Token IDs must only contain numbers",
 }
