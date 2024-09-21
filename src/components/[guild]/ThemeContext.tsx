@@ -67,7 +67,7 @@ const ThemeProvider = memo(({ children }: PropsWithChildren): JSX.Element => {
     textColor === "whiteAlpha.900" ? "whiteAlpha" : "blackAlpha"
 
   const bannerForegroundHSL = createColor(
-    generatedColors["--chakra-colors-primary-800"]
+    generatedColors.chakraVariables["--chakra-colors-primary-800"]
   )
     .hsl()
     .array()
@@ -87,13 +87,25 @@ const ThemeProvider = memo(({ children }: PropsWithChildren): JSX.Element => {
         avatarBg,
       }}
     >
-      <style>
-        {`:root, [data-theme] {${Object.entries(generatedColors ?? {})
-          .map(([key, value]) => `${key}: ${value};`)
-          .join("")}
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `:root, [data-theme] {${Object.entries(
+            generatedColors.chakraVariables ?? {}
+          )
+            .map(([key, value]) => `${key}: ${value};`)
+            .join("")}
+          ${Object.entries(generatedColors.tailwindVariables.light ?? {})
+            .map(([key, value]) => `${key}: ${value};`)
+            .join("")}
           ${textColor === "primary.800" ? `--banner-foreground:${bannerForegroundHSL[0].toFixed(2)} ${bannerForegroundHSL[1].toFixed(2)}% ${bannerForegroundHSL[2].toFixed(2)}%` : ""};--banner-opacity:${bannerOpacity};
-          }`}
-      </style>
+          }
+          :root[data-theme="dark"], [data-theme="dark"] {${Object.entries(
+            generatedColors.tailwindVariables.dark ?? {}
+          )
+            .map(([key, value]) => `${key}: ${value};`)
+            .join("")}`,
+        }}
+      ></style>
       {children}
     </ThemeContext.Provider>
   )

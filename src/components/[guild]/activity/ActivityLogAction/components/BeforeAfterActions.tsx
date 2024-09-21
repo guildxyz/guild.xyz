@@ -167,7 +167,7 @@ const BeforeAfterActions = (): JSX.Element => {
             before={
               <Flex
                 sx={{
-                  ...previousColorPalette,
+                  ...previousColorPalette.chakraVariables,
                 }}
               >
                 <Box
@@ -186,7 +186,7 @@ const BeforeAfterActions = (): JSX.Element => {
             after={
               <Flex
                 sx={{
-                  ...currentColorPalette,
+                  ...currentColorPalette.chakraVariables,
                 }}
               >
                 <Box
