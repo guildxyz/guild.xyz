@@ -11,7 +11,7 @@ import {
 import { ArrowRight } from "@phosphor-icons/react"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import GuildLogo from "components/common/GuildLogo"
-import useColorPalette from "hooks/useColorPalette"
+import { useColorPalette } from "hooks/useColorPalette"
 import { Requirement } from "types"
 import { useActivityLog } from "../../ActivityLogContext"
 import { ACTION } from "../../constants"

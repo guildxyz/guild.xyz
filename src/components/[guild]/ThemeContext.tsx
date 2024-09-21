@@ -1,6 +1,6 @@
 import { useColorMode, useColorModeValue } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useColorPalette, { createColor } from "hooks/useColorPalette"
+import { createColor, useColorPalette } from "hooks/useColorPalette"
 import {
   Dispatch,
   PropsWithChildren,

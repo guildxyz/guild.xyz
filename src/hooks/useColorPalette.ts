@@ -165,4 +165,4 @@ const useColorPalette = (
   }, [prefix, colorCode, colorMode])
 }
 
-export default useColorPalette
+export { useColorPalette }
