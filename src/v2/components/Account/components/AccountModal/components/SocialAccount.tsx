@@ -141,7 +141,7 @@ const ConnectPlatformButton = ({
   }
 
   const { isLoading, response, onConnect } = useConnectPlatform(
-    type as PlatformName,
+    type,
     onSuccess,
     isReconnect
   )

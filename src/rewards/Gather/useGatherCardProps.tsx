@@ -2,7 +2,7 @@ import { Circle, Img, useColorModeValue } from "@chakra-ui/react"
 import AvailabilityTags from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { CardPropsHook } from "rewards/types"
-import { GuildPlatform, PlatformName } from "types"
+import { GuildPlatform } from "types"
 import { gatherData } from "./data"
 
 const useGatherCardProps: CardPropsHook = (guildPlatform: GuildPlatform) => {
@@ -15,7 +15,7 @@ const useGatherCardProps: CardPropsHook = (guildPlatform: GuildPlatform) => {
     .find((rp) => rp.guildPlatformId === guildPlatform.id)
   return {
     name: guildPlatform.platformGuildData?.name ?? gatherData.name,
-    type: "GATHER_TOWN" as PlatformName,
+    type: "GATHER_TOWN",
     image: (
       <Circle size={10} bgColor={bgColor} overflow="hidden">
         <Img src={gatherData.imageUrl} boxSize={10} color="white" />

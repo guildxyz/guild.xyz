@@ -54,8 +54,8 @@ const Category = ({
                 {...item}
                 onClick={
                   item.handlerType === "reward"
-                    ? () => onSelectReward(item.handlerParam as PlatformName)
-                    : () => onSelectSolution(item.handlerParam as SolutionName)
+                    ? () => onSelectReward(item.handlerParam)
+                    : () => onSelectSolution(item.handlerParam)
                 }
               />
             </CardMotionWrapper>
