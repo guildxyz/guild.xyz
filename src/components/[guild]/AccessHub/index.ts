@@ -1,3 +1,3 @@
-import AccessHub from "./AccessHub"
+import { AccessHub } from "./AccessHub"
 
-export default AccessHub
+export { AccessHub }
