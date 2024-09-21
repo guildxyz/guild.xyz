@@ -26,7 +26,13 @@ export const Default: Story = {
     colorScheme: {
       type: "string",
       control: "select",
-      options: ["gray", "blue"] satisfies BadgeProps["colorScheme"][],
+      options: [
+        "gray",
+        "green",
+        "blue",
+        "orange",
+        "gold",
+      ] satisfies BadgeProps["colorScheme"][],
     },
     size: {
       type: "string",
