@@ -13,7 +13,11 @@ const badgeVariants = cva(
       colorScheme: {
         gray: "[--badge-bg:var(--secondary-subtle)] [--badge-color:var(--secondary-subtle-foreground)]",
         blue: "[--badge-bg:var(--info-subtle)] [--badge-color:var(--info-subtle-foreground)]",
-        yellow: "[--badge-bg:var(--gold)] [--badge-color:var(--gold)]",
+        green:
+          "[--badge-bg:var(--success-subtle)] [--badge-color:var(--success-subtle-foreground)]",
+        orange:
+          "[--badge-bg:var(--warning-subtle)] [--badge-color:var(--warning-subtle-foreground)]",
+        gold: "[--badge-bg:var(--gold)] [--badge-color:var(--gold)]",
       },
       size: {
         sm: "text-xs h-5",
