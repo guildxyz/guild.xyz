@@ -1,10 +1,8 @@
 "use client"
 
 import { CircularProgressBar } from "@/components/CircularProgressBar"
-import { useDisclosure } from "@/hooks/useDisclosure"
 import { cn } from "@/lib/utils"
 import { useExperienceProgression } from "@app/(marketing)/profile/_hooks/useExperienceProgression"
-import { Bell } from "@phosphor-icons/react"
 import { SignIn } from "@phosphor-icons/react/dist/ssr"
 import useUser from "components/[guild]/hooks/useUser"
 import useResolveAddress from "hooks/useResolveAddress"
@@ -18,15 +16,12 @@ import { useWeb3ConnectionManager } from "../Web3ConnectionManager/hooks/useWeb3
 import { Avatar } from "../ui/Avatar"
 import { Button } from "../ui/Button"
 import { Card } from "../ui/Card"
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/Popover"
 import { Skeleton } from "../ui/Skeleton"
-import { NotificationContent } from "./components/Notification/NotificationContent"
 
 export const Account = () => {
   const { address, isWeb3Connected } = useWeb3ConnectionManager()
   const setIsAccountModalOpen = useSetAtom(accountModalAtom)
   const setIsWalletSelectorModalOpen = useSetAtom(walletSelectorModalAtom)
-  const { isOpen, setValue } = useDisclosure()
 
   const domainName = useResolveAddress(address)
   const { addresses, guildProfile, isLoading } = useUser()
@@ -57,30 +52,11 @@ export const Account = () => {
     )
   }
   return (
-    <Card className="flex items-center overflow-visible" data-testid="account-card">
-      <Popover open={isOpen} onOpenChange={setValue}>
-        <PopoverTrigger asChild>
-          <Button
-            variant="ghost"
-            className="rounded-r-none rounded-l-2xl border-border border-r"
-            aria-label="Notifications"
-            onClick={() => {
-              if (isOpen) return
-              captureEvent("opened UserActivityLogPopover")
-            }}
-          >
-            <Bell weight="bold" />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-[min(100vw,theme(space.96))] px-0">
-          <NotificationContent />
-        </PopoverContent>
-      </Popover>
-
+    <Card data-testid="account-card">
       <Button
         variant="ghost"
         onClick={() => setIsAccountModalOpen(true)}
-        className="rounded-r-2xl rounded-l-none"
+        className="rounded-2xl"
       >
         {guildProfile ? (
           <div className="flex items-center gap-2">
