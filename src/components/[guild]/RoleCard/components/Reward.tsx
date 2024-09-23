@@ -20,7 +20,7 @@ import useMembership, {
 import { useMemo, useState } from "react"
 import rewards from "rewards"
 import rewardComponents from "rewards/components"
-import { PlatformType, RolePlatform } from "types"
+import { PlatformName, PlatformType, RolePlatform } from "types"
 import capitalize from "utils/capitalize"
 import { RewardDisplay } from "./RewardDisplay"
 import { RewardIconProps, RewardProps } from "./types"
@@ -135,10 +135,12 @@ const RewardIcon = ({
   transition,
 }: RewardIconProps) => {
   const [doIconFallback, setDoIconFallback] = useState(false)
+
+  const rewardConfig =
+    rewards[PlatformType[guildPlatform.platformId] as PlatformName]
+
   const props = {
-    src:
-      guildPlatform.platformGuildData?.imageUrl ??
-      rewards[PlatformType[guildPlatform.platformId]].imageUrl,
+    src: guildPlatform.platformGuildData?.imageUrl ?? rewardConfig?.imageUrl,
     alt: guildPlatform.platformGuildName,
     boxSize: 6,
     rounded: "full",
@@ -146,6 +148,8 @@ const RewardIcon = ({
       setDoIconFallback(true)
     },
   }
+
+  if (!rewardConfig) return null
 
   const circleBgColor = useColorModeValue("gray.700", "gray.600")
   const circleProps = {
@@ -156,11 +160,7 @@ const RewardIcon = ({
   if (doIconFallback || !props.src) {
     return (
       <Circle {...circleProps}>
-        <Icon
-          as={rewards[PlatformType[guildPlatform.platformId]].icon}
-          color="white"
-          boxSize={3}
-        />
+        <Icon as={rewardConfig.icon} color="white" boxSize={3} />
       </Circle>
     )
   }
