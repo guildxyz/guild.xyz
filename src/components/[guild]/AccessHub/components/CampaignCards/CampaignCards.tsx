@@ -1,12 +1,13 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
 import { Badge } from "@/components/ui/Badge"
+import { buttonVariants } from "@/components/ui/Button"
 import { Card } from "@/components/ui/Card"
 import { Skeleton } from "@/components/ui/Skeleton"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip"
+import { cn } from "@/lib/utils"
 import { ArrowRight, EyeSlash, Plus } from "@phosphor-icons/react/dist/ssr"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
-import Button from "components/common/Button"
 import dynamic from "next/dynamic"
 import Link from "next/link"
 import { useRouter } from "next/router"
@@ -80,25 +81,23 @@ const CampaignCards = () => {
               </div>
             </div>
             {groupHasRoles ? (
-              <Button
-                as={Link}
-                colorScheme="primary"
+              <Link
+                className={cn(buttonVariants({ colorScheme: "primary" }))}
                 href={`/${guildUrlName}/${urlName}`}
-                rightIcon={<ArrowRight weight="bold" />}
                 prefetch={false}
               >
-                View page
-              </Button>
+                <span>View page</span>
+                <ArrowRight weight="bold" />
+              </Link>
             ) : (
-              <Button
-                as={Link}
-                variant="outline"
+              <Link
+                className={cn(buttonVariants({ variant: "outline" }))}
                 href={`/${guildUrlName}/${urlName}`}
-                leftIcon={<Plus weight="bold" />}
                 prefetch={false}
               >
-                Add roles
-              </Button>
+                <Plus weight="bold" />
+                <span>Add roles</span>
+              </Link>
             )}
           </Card>
         )

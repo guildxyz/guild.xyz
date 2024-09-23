@@ -1,6 +1,6 @@
 import { useColorMode, useColorModeValue } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useColorPalette, { createColor } from "hooks/useColorPalette"
+import { createColor, useColorPalette } from "hooks/useColorPalette"
 import {
   Dispatch,
   PropsWithChildren,
@@ -16,14 +16,26 @@ import {
 const ThemeContext = createContext<{
   localThemeColor: string
   setLocalThemeColor: Dispatch<SetStateAction<string>>
-  localBackgroundImage: string
-  setLocalBackgroundImage: Dispatch<SetStateAction<string>>
+  localBackgroundImage?: string
+  setLocalBackgroundImage: Dispatch<SetStateAction<string | undefined>>
   textColor: string
   buttonColorScheme: string
   avatarBg: string
-} | null>(null)
+}>({
+  localThemeColor: "#27272a",
+  setLocalThemeColor: () => {
+    /* empty */
+  },
+  localBackgroundImage: undefined,
+  setLocalBackgroundImage: () => {
+    /* empty */
+  },
+  textColor: "inherit",
+  buttonColorScheme: "secondary",
+  avatarBg: "#27272a",
+})
 
-const ThemeProvider = memo(({ children }: PropsWithChildren<any>): JSX.Element => {
+const ThemeProvider = memo(({ children }: PropsWithChildren): JSX.Element => {
   const { theme } = useGuild()
   const { backgroundImage } = theme ?? {}
   const themeColorFallback = useColorModeValue("#27272a", "#18181b")
@@ -55,7 +67,7 @@ const ThemeProvider = memo(({ children }: PropsWithChildren<any>): JSX.Element =
     textColor === "whiteAlpha.900" ? "whiteAlpha" : "blackAlpha"
 
   const bannerForegroundHSL = createColor(
-    generatedColors["--chakra-colors-primary-800"]
+    generatedColors.chakraVariables["--chakra-colors-primary-800"]
   )
     .hsl()
     .array()
@@ -75,13 +87,25 @@ const ThemeProvider = memo(({ children }: PropsWithChildren<any>): JSX.Element =
         avatarBg,
       }}
     >
-      <style>
-        {`:root, [data-theme] {${Object.entries(generatedColors ?? {})
-          .map(([key, value]) => `${key}: ${value};`)
-          .join("")}
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `:root, [data-theme] {${Object.entries(
+            generatedColors.chakraVariables ?? {}
+          )
+            .map(([key, value]) => `${key}: ${value};`)
+            .join("")}
+          ${Object.entries(generatedColors.tailwindVariables.light ?? {})
+            .map(([key, value]) => `${key}: ${value};`)
+            .join("")}
           ${textColor === "primary.800" ? `--banner-foreground:${bannerForegroundHSL[0].toFixed(2)} ${bannerForegroundHSL[1].toFixed(2)}% ${bannerForegroundHSL[2].toFixed(2)}%` : ""};--banner-opacity:${bannerOpacity};
-          }`}
-      </style>
+          }
+          :root[data-theme="dark"], [data-theme="dark"] {${Object.entries(
+            generatedColors.tailwindVariables.dark ?? {}
+          )
+            .map(([key, value]) => `${key}: ${value};`)
+            .join("")}`,
+        }}
+      ></style>
       {children}
     </ThemeContext.Provider>
   )

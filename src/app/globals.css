@@ -56,6 +56,13 @@
     --success-subtle: 141 79% 85%;
     --success-subtle-foreground: var(--success);
 
+    --warning: 24 75% 50%;
+    --warning-hover: 20 71% 44%;
+    --warning-active: 16 65% 37%;
+    --warning-foreground: 0 0% 100%;
+    --warning-subtle: 33 90% 65%;
+    --warning-subtle-foreground: var(--warning);
+
     /* these are stored as hex so it's consistent with custom values on profiles with backgroundImageUrl. We plan to migrate all colors to hex values */
     --banner: #27272a;
     --banner-dark: #1e1e1f;
@@ -192,6 +199,13 @@
     --success-foreground: 0 0% 100%;
     --success-subtle: 141 79% 85%;
     --success-subtle-foreground: var(--success-subtle);
+
+    --warning: 24 75% 50%;
+    --warning-hover: 27 84% 57%;
+    --warning-active: 33 90% 65%;
+    --warning-foreground: 0 0% 100%;
+    --warning-subtle: 33 90% 65%;
+    --warning-subtle-foreground: var(--warning-subtle);
 
     --banner: #36363a;
 

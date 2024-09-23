@@ -8,7 +8,7 @@ import {
   LayoutMain,
 } from "@/components/Layout"
 import { Center, Heading, Spinner } from "@chakra-ui/react"
-import AccessHub from "components/[guild]/AccessHub"
+import { AccessHub } from "components/[guild]/AccessHub"
 import { GroupPageImageAndName } from "components/[guild]/GroupPageImageAndName"
 import { GuildPageBanner } from "components/[guild]/GuildPageBanner"
 import { JoinButton } from "components/[guild]/JoinButton"
