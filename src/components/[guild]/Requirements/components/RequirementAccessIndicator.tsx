@@ -16,9 +16,6 @@ import dynamic from "next/dynamic"
 import RequirementAccessIndicatorUI from "./RequirementAccessIndicatorUI"
 import { useRequirementContext } from "./RequirementContext"
 
-const DynamicConnectPolygonID = dynamic(
-  () => import("requirements/PolygonID/components/ConnectPolygonID")
-)
 const DynamicCompleteCaptcha = dynamic(
   () => import("requirements/Captcha/components/CompleteCaptcha")
 )
@@ -80,9 +77,7 @@ const RequirementAccessIndicator = () => {
               : "Connect account to check access"}
         </PopoverHeader>
         <PopoverFooter {...POPOVER_FOOTER_STYLES}>
-          {type === "POLYGON_ID_QUERY" || type === "POLYGON_ID_BASIC" ? (
-            <DynamicConnectPolygonID size="sm" iconSpacing={2} />
-          ) : type === "CAPTCHA" ? (
+          {type === "CAPTCHA" ? (
             <DynamicCompleteCaptcha size="sm" iconSpacing={2} />
           ) : type.startsWith("GITCOIN_") ? (
             <DynamicSetupPassport size="sm" />

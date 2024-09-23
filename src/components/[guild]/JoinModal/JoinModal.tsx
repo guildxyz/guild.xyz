@@ -31,7 +31,6 @@ import { useJoin } from "./hooks/useJoin"
 import { JoinForm, Joinable } from "./types"
 
 const customJoinStep: Partial<Record<Joinable, ComponentType<unknown>>> = {
-  POLYGON: dynamic(() => import("./components/ConnectPolygonIDJoinStep")),
   CAPTCHA: dynamic(() => import("./components/CompleteCaptchaJoinStep")),
   EMAIL: dynamic(() => import("./components/ConnectEmailJoinStep")),
 }

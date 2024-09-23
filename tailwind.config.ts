@@ -165,11 +165,6 @@ const config = {
           hover: "hsl(var(--github-hover))",
           active: "hsl(var(--github-active))",
         },
-        polygonid: {
-          DEFAULT: "hsl(var(--polygonid))",
-          hover: "hsl(var(--polygonid-hover))",
-          active: "hsl(var(--polygonid-active))",
-        },
         farcaster: {
           DEFAULT: "hsl(var(--farcaster))",
           hover: "hsl(var(--farcaster-hover))",
