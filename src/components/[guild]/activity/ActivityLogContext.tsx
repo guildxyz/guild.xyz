@@ -96,7 +96,6 @@ type Props = {
   withSearchParams?: boolean
   isInfinite?: boolean
   limit?: number
-  userId?: number
   guildId?: number
 }
 
@@ -104,7 +103,6 @@ const ActivityLogProvider = ({
   withSearchParams = true,
   isInfinite = true,
   limit = DEFAULT_LIMIT,
-  userId,
   guildId,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
@@ -123,7 +121,7 @@ const ActivityLogProvider = ({
     previousPageData: ActivityLogActionResponse
   ) => {
     if (
-      (!guildId && !userId && !isSuperadminActivityLog) ||
+      (!guildId && !isSuperadminActivityLog) ||
       !keyPair ||
       (previousPageData?.entries && !previousPageData.entries.length)
     )
@@ -136,7 +134,6 @@ const ActivityLogProvider = ({
     }
 
     if (guildId) queryWithRelevantParams.guildId = guildId.toString()
-    if (userId) queryWithRelevantParams.userId = userId.toString()
 
     const searchParams = new URLSearchParams(queryWithRelevantParams)
 
@@ -190,11 +187,7 @@ const ActivityLogProvider = ({
     }
   )
 
-  const activityLogType: ActivityLogType = isSuperadminActivityLog
-    ? "all"
-    : !!userId
-      ? "user"
-      : "guild"
+  const activityLogType: ActivityLogType = isSuperadminActivityLog ? "all" : "guild"
 
   const value = {
     ...ogSWRInfiniteResponse,

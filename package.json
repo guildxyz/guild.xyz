@@ -79,8 +79,6 @@
     "@visx/scale": "^3.5.0",
     "@visx/shape": "^3.5.0",
     "@visx/tooltip": "^3.3.0",
-    "@web3inbox/core": "^1.1.0",
-    "@web3inbox/react": "^1.1.0",
     "@zag-js/combobox": "^0.16.0",
     "@zag-js/react": "^0.16.0",
     "chakra-react-select": "4.7.6",
