@@ -43,7 +43,6 @@ export const env = createEnv({
     // Guild APIs
     NEXT_PUBLIC_API: z.string(),
     NEXT_PUBLIC_BALANCY_API: z.string(),
-    NEXT_PUBLIC_POLYGONID_API: z.string(),
 
     // Captcha
     NEXT_PUBLIC_RECAPTCHA_SITE_KEY: z.string(),
@@ -70,7 +69,6 @@ export const env = createEnv({
   runtimeEnv: {
     NEXT_PUBLIC_API: process.env.NEXT_PUBLIC_API,
     NEXT_PUBLIC_BALANCY_API: process.env.NEXT_PUBLIC_BALANCY_API,
-    NEXT_PUBLIC_POLYGONID_API: process.env.NEXT_PUBLIC_POLYGONID_API,
 
     NEXT_PUBLIC_RECAPTCHA_SITE_KEY: process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY,
 

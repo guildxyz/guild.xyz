@@ -81,7 +81,7 @@ export const ActivityCard = ({ activity }: { activity: ActivityLogAction }) => {
           </div>
         </div>
         {activity.xpAmount && (
-          <Badge colorScheme="yellow" className="align-text-top font-bold">
+          <Badge colorScheme="gold" className="align-text-top font-bold">
             +{activity.xpAmount} XP
           </Badge>
         )}

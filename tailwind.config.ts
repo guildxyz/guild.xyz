@@ -86,6 +86,14 @@ const config = {
           subtle: "hsl(var(--success-subtle))",
           "subtle-foreground": "hsl(var(--success-subtle-foreground))",
         },
+        warning: {
+          DEFAULT: "hsl(var(--warning))",
+          hover: "hsl(var(--warning-hover))",
+          active: "hsl(var(--warning-active))",
+          foreground: "hsl(var(--warning-foreground))",
+          subtle: "hsl(var(--warning-subtle))",
+          "subtle-foreground": "hsl(var(--warning-subtle-foreground))",
+        },
         muted: {
           DEFAULT: "hsl(var(--muted))",
           foreground: "hsl(var(--muted-foreground))",
@@ -156,11 +164,6 @@ const config = {
           DEFAULT: "hsl(var(--github))",
           hover: "hsl(var(--github-hover))",
           active: "hsl(var(--github-active))",
-        },
-        polygonid: {
-          DEFAULT: "hsl(var(--polygonid))",
-          hover: "hsl(var(--polygonid-hover))",
-          active: "hsl(var(--polygonid-active))",
         },
         farcaster: {
           DEFAULT: "hsl(var(--farcaster))",

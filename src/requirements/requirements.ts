@@ -184,12 +184,6 @@ export const REQUIREMENTS_DATA = [
     isNegatable: true,
   },
   {
-    icon: "/requirementLogos/polygonId.svg",
-    name: "PolygonID",
-    types: ["POLYGON_ID_QUERY", "POLYGON_ID_BASIC"],
-    isNegatable: true,
-  },
-  {
     icon: "/requirementLogos/gitcoin-passport.svg",
     name: "Gitcoin Passport",
     types: ["GITCOIN_PASS", "GITCOIN_STAMP", "GITCOIN_SCORE"],

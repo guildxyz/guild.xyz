@@ -8,7 +8,6 @@ import { githubData } from "rewards/Github/data"
 import { googleData } from "rewards/Google/data"
 import { poapData } from "rewards/Poap/data"
 import { pointsData } from "rewards/Points/data"
-import { polygonIdData } from "rewards/PolygonID/data"
 import { secretTextData } from "rewards/SecretText/data"
 import { telegramData } from "rewards/Telegram/data"
 import { tokenData } from "rewards/Token/data"
@@ -25,7 +24,6 @@ const rewards: Rewards = {
   GATHER_TOWN: gatherData,
   FORM: formData,
   POINTS: pointsData,
-  POLYGON_ID: polygonIdData,
   UNIQUE_TEXT: uniqueTextData,
   TEXT: secretTextData,
   CONTRACT_CALL: contractCallData,

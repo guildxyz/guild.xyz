@@ -29,10 +29,6 @@ export const categories = [
     label: "Engagement",
     value: "engagement",
   },
-  {
-    label: "Sybil Protection",
-    value: "sybil",
-  },
 ] as const
 
 export const memberships: SolutionCardData[] = [
@@ -136,16 +132,5 @@ export const engagement: SolutionCardData[] = [
     bgImageUrl: "/solutions/text-bg.jpg",
     handlerType: "reward",
     handlerParam: "TEXT",
-  },
-]
-
-export const sybil: SolutionCardData[] = [
-  {
-    title: "PolygonID credentials",
-    description: "Self-Sovereign Identity Solution with Zero-Knowledge Proofs",
-    imageUrl: "/requirementLogos/polygonId.svg",
-    bgImageUrl: "/solutions/polygon-bg.jpg",
-    handlerType: "reward",
-    handlerParam: "POLYGON_ID",
   },
 ]

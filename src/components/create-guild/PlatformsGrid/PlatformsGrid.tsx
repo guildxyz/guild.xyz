@@ -1,7 +1,7 @@
 import { Box, Heading, SimpleGrid, Stack, StackProps } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import rewards from "rewards"
-import { PlatformName, PlatformType } from "types"
+import { PlatformName } from "types"
 import PlatformSelectButton from "./components/PlatformSelectButton"
 
 type Props = {
@@ -44,16 +44,6 @@ const PlatformsGrid = ({ onSelection, disabledRewards, ...rest }: Props) => {
       platform: "GATHER_TOWN",
       description: "Manage spaces",
     },
-    ...(!guildPlatforms.find(
-      (platform) => platform.platformId === PlatformType.POLYGON_ID
-    )
-      ? [
-          {
-            platform: "POLYGON_ID",
-            description: "Prove role membership",
-          } as PlatformsGridData,
-        ]
-      : []),
     {
       platform: "TEXT",
       description: "Gate special content, links, etc",
@@ -69,7 +59,7 @@ const PlatformsGrid = ({ onSelection, disabledRewards, ...rest }: Props) => {
       description: "Gamification utility",
       isGeneral: true,
     },
-    ...(featureFlags.includes("ERC20")
+    ...(featureFlags?.includes("ERC20")
       ? [
           {
             platform: "ERC20",

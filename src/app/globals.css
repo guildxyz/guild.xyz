@@ -56,6 +56,13 @@
     --success-subtle: 141 79% 85%;
     --success-subtle-foreground: var(--success);
 
+    --warning: 24 75% 50%;
+    --warning-hover: 20 71% 44%;
+    --warning-active: 16 65% 37%;
+    --warning-foreground: 0 0% 100%;
+    --warning-subtle: 33 90% 65%;
+    --warning-subtle-foreground: var(--warning);
+
     /* these are stored as hex so it's consistent with custom values on profiles with backgroundImageUrl. We plan to migrate all colors to hex values */
     --banner: #27272a;
     --banner-dark: #1e1e1f;
@@ -117,9 +124,6 @@
     --github: 0 0% 20%;
     --github-hover: 0 0% 18%;
     --github-active: 0 0% 15%;
-    --polygonid: 259 59% 59%;
-    --polygonid-hover: 258 50% 52%;
-    --polygonid-active: 256 44% 42%;
 
     --farcaster: 261 55% 61%;
     --farcaster-hover: 261 55% 55%;
@@ -196,6 +200,13 @@
     --success-subtle: 141 79% 85%;
     --success-subtle-foreground: var(--success-subtle);
 
+    --warning: 24 75% 50%;
+    --warning-hover: 27 84% 57%;
+    --warning-active: 33 90% 65%;
+    --warning-foreground: 0 0% 100%;
+    --warning-subtle: 33 90% 65%;
+    --warning-subtle-foreground: var(--warning-subtle);
+
     --banner: #36363a;
 
     --muted: 240 3% 13%;
@@ -235,8 +246,6 @@
     --google-active: 212 96% 78%;
     --github-hover: 0 0% 44%;
     --github-active: 0 0% 68%;
-    --polygonid-hover: 260 73% 70%;
-    --polygonid-active: 262 81% 77%;
     --farcaster-hover: 239 75% 75%;
     --farcaster-active: 238 76% 81%;
   }
