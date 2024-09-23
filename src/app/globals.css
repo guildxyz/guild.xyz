@@ -54,7 +54,8 @@
     --success-active: 142 72% 29%;
     --success-foreground: 0 0% 100%;
     --success-subtle: 141 79% 85%;
-    --success-subtle-foreground: var(--success);
+    /* --success-subtle-foreground: var(--success); */
+    --success-subtle-foreground: 142 76% 36%; /* green 600 */
 
     --warning: 24 75% 50%;
     --warning-hover: 20 71% 44%;
