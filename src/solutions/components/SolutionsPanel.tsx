@@ -11,7 +11,6 @@ import {
   useColorMode,
 } from "@chakra-ui/react"
 import { useAddRewardContext } from "components/[guild]/AddRewardContext"
-import useGuild from "components/[guild]/hooks/useGuild"
 import SegmentedControl from "components/common/SegmentedControl"
 import SearchBar from "components/explorer/SearchBar"
 import { AnimatePresence } from "framer-motion"
@@ -25,10 +24,9 @@ import {
   engagement,
   memberships,
   nft,
-  sybil,
   tokens,
 } from "solutions"
-import { PlatformName, PlatformType } from "types"
+import { PlatformName } from "types"
 import Category from "./Category"
 
 const categoryOptions = [{ label: "All", value: "all" }, ...categories]
@@ -39,7 +37,6 @@ const SolutionsPanel = ({
   setSolution: (name: SolutionName) => void
 }) => {
   const { setStep, setSelection } = useAddRewardContext()
-  const { guildPlatforms } = useGuild()
 
   const [search, setSearch] = useState("")
 
@@ -65,16 +62,9 @@ const SolutionsPanel = ({
     setStep("SOLUTION_SETUP")
   }
 
-  const showPolygonId = !guildPlatforms?.some(
-    (gp) => gp.platformId === PlatformType.POLYGON_ID
-  )
-
   const categoryItems: Record<CategoryValue, SolutionCardData[]> = {
     engagement,
     memberships,
-    sybil: sybil.filter(
-      (solution) => showPolygonId || solution.handlerParam !== "POLYGON_ID"
-    ),
     nft,
     tokens,
   }

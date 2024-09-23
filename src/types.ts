@@ -74,7 +74,6 @@ type PlatformName =
   | "EMAIL"
   | "UNIQUE_TEXT"
   | "TEXT"
-  | "POLYGON_ID"
   | "POINTS"
   | "FORM"
   | "GATHER_TOWN"
@@ -634,7 +633,6 @@ export enum PlatformType {
   UNIQUE_TEXT = 9,
   TEXT = 10,
   GUILD_PIN = 11,
-  POLYGON_ID = 12,
   POINTS = 13,
   POAP = 14,
   FORM = 15,
