@@ -1,10 +1,12 @@
 import { accountModalAtom } from "@/components/Providers/atoms"
+import { Badge, BadgeProps } from "@/components/ui/Badge"
 import { Button } from "@/components/ui/Button"
 import { Separator } from "@/components/ui/Separator"
 import { cn } from "@/lib/utils"
 import {
   CaretDown,
   Check,
+  CircleNotch,
   LockSimple,
   Warning,
   X,
@@ -17,11 +19,8 @@ import useMembership, {
   useRoleMembership,
 } from "components/explorer/hooks/useMembership"
 import { useSetAtom } from "jotai"
+import { ReactNode } from "react"
 import { useMediaQuery } from "usehooks-ts"
-import {
-  ACCESS_INDICATOR_CLASSNAME,
-  AccessIndicatorUI,
-} from "./components/AccessIndicatorUI"
 
 type Props = {
   roleId: number
@@ -193,5 +192,35 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
     </div>
   )
 }
+
+const ACCESS_INDICATOR_CLASSNAME =
+  "flex shrink-0 justify-between rounded-bl-lg rounded-br-lg rounded-tl-none rounded-tr-none px-5 py-2 md:justify-start md:px-3 md:py-0 md:rounded-tl-lg md:rounded-tr-lg text-sm"
+
+const AccessIndicatorUI = ({
+  isLoading,
+  colorScheme,
+  icon,
+  label,
+  className,
+}: {
+  isLoading?: boolean
+  colorScheme: BadgeProps["colorScheme"]
+  icon?: ReactNode
+  label: string
+  className?: string
+}): JSX.Element => (
+  <Badge
+    size="lg"
+    colorScheme={colorScheme}
+    className={cn(ACCESS_INDICATOR_CLASSNAME, "h-8", className)}
+  >
+    {isLoading ? (
+      <CircleNotch weight="bold" className="animate-spin duration-500" />
+    ) : (
+      icon
+    )}
+    <span>{label}</span>
+  </Badge>
+)
 
 export { AccessIndicator }
