@@ -1,56 +1,38 @@
-import {
-  ChakraProps,
-  Spinner,
-  Tag,
-  TagLabel,
-  TagLeftIcon,
-  TagRightIcon,
-  useBreakpointValue,
-} from "@chakra-ui/react"
-import { Rest } from "types"
+import { Badge, BadgeProps } from "@/components/ui/Badge"
+import { cn } from "@/lib/utils"
+import { CircleNotch } from "@phosphor-icons/react/dist/ssr"
+import { ReactNode } from "react"
 
 type Props = {
   isLoading?: boolean
-  colorScheme: string
-  icon?: any // TODO: proper type
+  colorScheme: BadgeProps["colorScheme"]
+  icon?: ReactNode
   label: string
-} & Rest
-
-const STYLES: ChakraProps = {
-  flexShrink: 0,
-  borderRadius: "lg",
-  borderTopRadius: { base: 0, md: "lg" },
-  justifyContent: { base: "space-between", md: "start" },
-  px: { base: 5, md: 3 },
-  py: { base: 2, md: 0 },
+  className?: string
 }
+
+const ACCESS_INDICATOR_CLASSNAME =
+  "flex shrink-0 justify-between rounded-bl-lg rounded-br-lg rounded-tl-none rounded-tr-none px-5 py-2 md:justify-start md:px-3 md:py-0 md:rounded-tl-lg md:rounded-tr-lg text-sm"
 
 const AccessIndicatorUI = ({
   isLoading,
   colorScheme,
   icon,
   label,
-  ...rest
-}: Props): JSX.Element => {
-  const IconComponent = useBreakpointValue({ base: TagRightIcon, md: TagLeftIcon })
+  className,
+}: Props): JSX.Element => (
+  <Badge
+    size="lg"
+    colorScheme={colorScheme}
+    className={cn(ACCESS_INDICATOR_CLASSNAME, "h-8", className)}
+  >
+    {isLoading ? (
+      <CircleNotch weight="bold" className="animate-spin duration-500" />
+    ) : (
+      icon
+    )}
+    <span>{label}</span>
+  </Badge>
+)
 
-  return (
-    <Tag
-      title={label}
-      size="lg"
-      h="8"
-      colorScheme={colorScheme}
-      {...STYLES}
-      {...rest}
-    >
-      <TagLabel fontSize="sm" order={{ md: 1 }}>
-        {label}
-      </TagLabel>
-
-      <IconComponent as={isLoading ? Spinner : icon} boxSize={3} />
-    </Tag>
-  )
-}
-
-export default AccessIndicatorUI
-export { STYLES as ACCESS_INDICATOR_STYLES }
+export { AccessIndicatorUI, ACCESS_INDICATOR_CLASSNAME }

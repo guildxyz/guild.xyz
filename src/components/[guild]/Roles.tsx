@@ -1,6 +1,5 @@
 import { Center, Spinner, Stack } from "@chakra-ui/react"
 import CollapsibleRoleSection from "components/[guild]/CollapsibleRoleSection"
-import { RequirementErrorConfigProvider } from "components/[guild]/Requirements/RequirementErrorConfigContext"
 import RoleCard from "components/[guild]/RoleCard"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useScrollBatchedRendering } from "hooks/useScrollBatchedRendering"
@@ -47,14 +46,12 @@ const Roles = () => {
   return (
     <>
       {publicRoles.length ? (
-        <RequirementErrorConfigProvider>
-          <Stack ref={rolesEl} spacing={4}>
-            {publicRoles.map((role, i) => {
-              if (i > renderedRolesCount - 1) return null
-              return <RoleCard key={role.id} role={role} />
-            })}
-          </Stack>
-        </RequirementErrorConfigProvider>
+        <Stack ref={rolesEl} spacing={4}>
+          {publicRoles.map((role, i) => {
+            if (i > renderedRolesCount - 1) return null
+            return <RoleCard key={role.id} role={role} />
+          })}
+        </Stack>
       ) : !!group && isAdmin ? (
         <DynamicAddRoleCard />
       ) : (

@@ -2,7 +2,7 @@ import { ConnectEmailButton } from "@/components/Account/components/AccountModal
 import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip"
 import { cn } from "@/lib/utils"
-import { EnvelopeSimple } from "@phosphor-icons/react"
+import { EnvelopeSimple } from "@phosphor-icons/react/dist/ssr"
 import useUser from "components/[guild]/hooks/useUser"
 import { JoinStepUI } from "./JoinStep"
 
@@ -20,7 +20,7 @@ const ConnectEmailJoinStep = (): JSX.Element => {
             disabled={!isWeb3Connected || isDone}
             size="md"
             className={cn("min-w-max shrink-0", { "max-w-40": isDone })}
-            leftIcon={<EnvelopeSimple />}
+            leftIcon={<EnvelopeSimple weight="bold" />}
           />
         </TooltipTrigger>
 
