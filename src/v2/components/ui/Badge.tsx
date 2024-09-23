@@ -7,7 +7,8 @@ const badgeVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-[hsl(var(--badge-bg)/0.24)] text-[hsl(var(--badge-color))]",
+        default:
+          "bg-[hsl(var(--badge-bg)/0.32)] dark:bg-[hsl(var(--badge-bg)/0.16)] text-[hsl(var(--badge-color))]",
         outline: "border text-muted-foreground",
       },
       colorScheme: {
