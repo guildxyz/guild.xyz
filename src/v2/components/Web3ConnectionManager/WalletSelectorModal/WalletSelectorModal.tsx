@@ -39,8 +39,13 @@ type Props = {
 }
 
 const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
-  const { isWeb3Connected, isInSafeContext, disconnect, address } =
-    useWeb3ConnectionManager()
+  const {
+    isWeb3Connected,
+    isInSafeContext,
+    disconnect,
+    address,
+    isWalletClientLoading,
+  } = useWeb3ConnectionManager()
 
   const { connectors, error, connect, variables, isPending } = useConnect()
 
@@ -241,9 +246,18 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
               }}
               disabled={!id && !publicUserError}
               isLoading={
-                linkAddress.isLoading || set.isLoading || (!id && !publicUserError)
+                isWalletClientLoading ||
+                linkAddress.isLoading ||
+                set.isLoading ||
+                (!id && !publicUserError)
               }
-              loadingText={!id ? "Looking for keypairs" : "Check your wallet"}
+              loadingText={
+                isWalletClientLoading
+                  ? "Loading wallet"
+                  : !id
+                    ? "Looking for keypairs"
+                    : "Check your wallet"
+              }
               className="mb-4 w-full"
               data-testid="verify-address-button"
             >
