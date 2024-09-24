@@ -6,7 +6,7 @@ import { JoinModal } from "./JoinModal"
 
 const JoinModalContext = createContext<() => void>(() => {})
 
-const JoinModalProvider = ({ children }: PropsWithChildren<any>): JSX.Element => {
+const JoinModalProvider = ({ children }: PropsWithChildren): JSX.Element => {
   const query = useClearUrlQuery()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { isMember } = useMembership()
