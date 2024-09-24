@@ -20,7 +20,6 @@ import useMembership, {
 } from "components/explorer/hooks/useMembership"
 import { useSetAtom } from "jotai"
 import { ReactNode } from "react"
-import { useMediaQuery } from "usehooks-ts"
 
 type Props = {
   roleId: number
@@ -39,7 +38,6 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
   const setIsAccountModalOpen = useSetAtom(accountModalAtom)
   const { isMember } = useMembership()
   const openJoinModal = useOpenJoinModal()
-  const isMobile = useMediaQuery("(max-width: 640px")
 
   const { data: requirements } = useRequirements(roleId)
   const requirementsWithErrors =
@@ -51,8 +49,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
   if (!isMember)
     return (
       <Button
-        leftIcon={!isMobile && <LockSimple weight="bold" className="size-[0.9em]" />}
-        rightIcon={isMobile && <LockSimple weight="bold" className="size-[0.9em]" />}
+        leftIcon={<LockSimple weight="bold" />}
         size="sm"
         onClick={openJoinModal}
         className={ACCESS_INDICATOR_CLASSNAME}
@@ -194,7 +191,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
 }
 
 const ACCESS_INDICATOR_CLASSNAME =
-  "flex shrink-0 justify-between rounded-bl-lg rounded-br-lg rounded-tl-none rounded-tr-none px-5 py-2 md:justify-start md:px-3 md:py-0 md:rounded-tl-lg md:rounded-tr-lg text-sm"
+  "flex flex-row-reverse md:flex-row shrink-0 justify-between rounded-bl-lg rounded-br-lg rounded-tl-none rounded-tr-none px-5 py-2 md:justify-start md:px-3 md:py-0 md:rounded-tl-lg md:rounded-tr-lg text-sm"
 
 const AccessIndicatorUI = ({
   isLoading,
