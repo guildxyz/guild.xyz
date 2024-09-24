@@ -22,7 +22,6 @@ import useStayConnectedToast from "components/[guild]/StayConnectedToast"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
-import InfoBanner from "components/_app/InfoBanner"
 import { BackToExplorerButton } from "components/common/Layout/components/BackToExplorerButton"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
@@ -97,16 +96,6 @@ const GuildPage = (): JSX.Element => {
       {featureFlags?.includes("ONGOING_ISSUES") && <DynamicOngoingIssuesBanner />}
 
       <Layout>
-        {/* temporary */}
-        {urlName === "base" && (
-          <InfoBanner>
-            <b>Important Notice: Discord Role Distribution Delay</b> We are currently
-            experiencing a delay in Discord role distribution due to Discord's API
-            rate limit and the high volume of new members. While this process may
-            take longer than usual, we kindly ask for your patience and
-            understanding.
-          </InfoBanner>
-        )}
         <LayoutHero className="pb-24">
           <LayoutBanner>
             <GuildPageBanner />
