@@ -1,8 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/react"
 import { Button } from "./Button"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./Tooltip"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipContentProps,
+  TooltipProvider,
+  TooltipTrigger,
+} from "./Tooltip"
 
-const TooltipExample = () => (
+const TooltipExample = (tooltipContentProps: TooltipContentProps) => (
   <TooltipProvider>
     <Tooltip>
       <TooltipTrigger asChild>
@@ -10,7 +16,7 @@ const TooltipExample = () => (
           Hover me!
         </Button>
       </TooltipTrigger>
-      <TooltipContent>
+      <TooltipContent {...tooltipContentProps}>
         <p>This is a tooltip!</p>
       </TooltipContent>
     </Tooltip>
@@ -27,3 +33,8 @@ export default meta
 type Story = StoryObj<typeof TooltipExample>
 
 export const Default: Story = {}
+export const Popover: Story = {
+  args: {
+    variant: "popover",
+  },
+}
