@@ -8,7 +8,7 @@ import { UserProfile } from "@guildxyz/types"
 import { atom, useAtom } from "jotai"
 import { useEffect } from "react"
 import { parseFuelAddress } from "utils/parseFuelAddress"
-import { useAccount, useDisconnect, useSignMessage } from "wagmi"
+import { useAccount, useDisconnect, useSignMessage, useWalletClient } from "wagmi"
 
 const safeContextAtom = atom(false)
 
@@ -18,7 +18,8 @@ export function useWeb3ConnectionManager(): {
   address?: `0x${string}`
   type: UserProfile["addresses"][number]["walletType"] | null
   disconnect: () => void
-  signMessage: (message: string) => Promise<string>
+  signMessage: (message: string) => Promise<string> | undefined
+  isWalletClientLoading: boolean
 } {
   const [isInSafeContext, setIsInSafeContext] = useAtom(safeContextAtom)
 
@@ -52,6 +53,7 @@ export function useWeb3ConnectionManager(): {
   const { disconnect: disconnectEvm } = useDisconnect()
   const { disconnect: disconnectFuel } = useFuelDisconnect()
 
+  const { data: walletClient } = useWalletClient()
   const { wallet: fuelWallet } = useWallet()
 
   const disconnect = () => {
@@ -64,7 +66,7 @@ export function useWeb3ConnectionManager(): {
     if (type === "EVM") {
       return signMessageAsync({ account: evmAddress, message })
     }
-    return fuelWallet.signMessage(message)
+    return fuelWallet?.signMessage(message)
   }
 
   return {
@@ -74,5 +76,6 @@ export function useWeb3ConnectionManager(): {
     type,
     disconnect,
     signMessage,
+    isWalletClientLoading: !!address && !walletClient && !fuelWallet,
   }
 }
