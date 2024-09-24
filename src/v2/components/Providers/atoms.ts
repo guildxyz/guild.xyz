@@ -10,5 +10,6 @@ export const addressLinkParamsAtom = atom<AddressLinkParams>({
 })
 export const walletLinkHelperModalAtom = atom(false)
 export const platformMergeAlertAtom = atom<
-  false | { addressOrDomain: string; platformName: PlatformName }
+  | false
+  | { addressOrDomain: string; platformName: PlatformName; onConnect?: () => void }
 >(false)
