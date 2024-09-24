@@ -89,9 +89,9 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
         >
           <div
             className={cn(
-              "-mr-1.5 w-0 overflow-hidden text-left transition-all duration-200",
+              "-mr-1.5 w-0 overflow-hidden text-left opacity-0 transition-all duration-200",
               {
-                "mr-1.5 w-[5.25rem]": !isOpen,
+                "mr-1.5 w-[5.25rem] opacity-100": !isOpen,
               }
             )}
           >
