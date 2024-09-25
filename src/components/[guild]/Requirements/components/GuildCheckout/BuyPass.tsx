@@ -26,7 +26,6 @@ import { useRequirementContext } from "../RequirementContext"
 import BuyTotal from "./components/BuyTotal"
 import { useGuildCheckoutContext } from "./components/GuildCheckoutContext"
 import PaymentFeeCurrency from "./components/PaymentFeeCurrency"
-import PaymentMethodButtons from "./components/PaymentMethodButtons"
 import { UnlockingRewards } from "./components/PaymentTransactionStatusModal"
 import TOSCheckbox from "./components/TOSCheckbox"
 import BuyAllowanceButton from "./components/buttons/BuyAllowanceButton"
@@ -110,8 +109,6 @@ const BuyPass = () => {
           </ModalBody>
 
           <ModalFooter pt={8} flexDir="column">
-            <PaymentMethodButtons />
-
             <Stack spacing={8} w="full">
               <PaymentFeeCurrency />
               <BuyTotal />

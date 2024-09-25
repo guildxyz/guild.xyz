@@ -15,7 +15,6 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import { useMintGuildPinContext } from "../../MintGuildPinContext"
-import AlphaTag from "../../components/AlphaTag"
 import GuildPinImage from "../../components/GuildPinImage"
 import { GUILD_PIN_MAINTENANCE } from "../constants"
 import FuelGuildPinFees from "./FuelGuildPinFees"
@@ -72,7 +71,6 @@ const MintFuelGuildPin = () => {
             <Text as="span" mr={2}>
               Mint Guild Pin
             </Text>
-            <AlphaTag />
           </ModalHeader>
           <ModalCloseButton />
 
