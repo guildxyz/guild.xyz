@@ -1,41 +1,27 @@
 import { accountModalAtom } from "@/components/Providers/atoms"
+import { Badge, BadgeProps } from "@/components/ui/Badge"
+import { Button } from "@/components/ui/Button"
 import {
-  ButtonGroup,
-  Collapse,
-  HStack,
-  Icon,
-  List,
-  ListIcon,
-  ListItem,
-  PopoverBody,
-  PopoverFooter,
-  PopoverHeader,
-  Stack,
-  Tag,
-  Text,
-  useDisclosure,
-} from "@chakra-ui/react"
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/Collapsible"
 import {
   ArrowSquareIn,
   CaretDown,
   Check,
   DotsThree,
-  IconProps,
   LockSimple,
   Warning,
   X,
-} from "@phosphor-icons/react"
+} from "@phosphor-icons/react/dist/ssr"
 import RecheckAccessesButton from "components/[guild]/RecheckAccessesButton"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useRequirements from "components/[guild]/hooks/useRequirements"
-import Button from "components/common/Button"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import { useSetAtom } from "jotai"
+import { ReactNode } from "react"
 import capitalize from "utils/capitalize"
-import {
-  POPOVER_FOOTER_STYLES,
-  POPOVER_HEADER_STYLES,
-} from "./RequirementAccessIndicator"
 import RequirementAccessIndicatorUI from "./RequirementAccessIndicatorUI"
 
 type Props = {
@@ -117,11 +103,7 @@ const HiddenRequirementAccessIndicator = ({ roleId }: Props) => {
         : count.accessed > 0
   )
     return (
-      <RequirementAccessIndicatorUI
-        colorScheme={"green"}
-        circleBgSwatch={{ light: 400, dark: 300 }}
-        icon={Check}
-      >
+      <RequirementAccessIndicatorUI colorScheme="green" icon={Check}>
         <HiddenRequirementAccessIndicatorPopover
           count={count}
           errorMessages={hiddenReqsErrorMessages}
@@ -133,8 +115,7 @@ const HiddenRequirementAccessIndicator = ({ roleId }: Props) => {
   if (count.platformErrored === hiddenReqsAccessData?.length)
     return (
       <RequirementAccessIndicatorUI
-        colorScheme={"blue"}
-        circleBgSwatch={{ light: 300, dark: 300 }}
+        colorScheme="blue"
         icon={LockSimple}
         isAlwaysOpen={!hasRoleAccess}
       >
@@ -149,8 +130,7 @@ const HiddenRequirementAccessIndicator = ({ roleId }: Props) => {
   if (count.errored === hiddenReqsAccessData?.length)
     return (
       <RequirementAccessIndicatorUI
-        colorScheme={"orange"}
-        circleBgSwatch={{ light: 300, dark: 300 }}
+        colorScheme="orange"
         icon={Warning}
         isAlwaysOpen={!hasRoleAccess}
       >
@@ -164,14 +144,13 @@ const HiddenRequirementAccessIndicator = ({ roleId }: Props) => {
 
   return (
     <RequirementAccessIndicatorUI
-      colorScheme={"gray"}
-      circleBgSwatch={{ light: 300, dark: 500 }}
+      colorScheme="gray"
       icon={count.notAccessed === hiddenReqsAccessData?.length ? X : DotsThree}
       isAlwaysOpen={!hasRoleAccess}
     >
       <HiddenRequirementAccessIndicatorPopover
         count={count}
-        errorMessages={hiddenReqsErrorMessages}
+        errorMessages={["OMG", "Oh no, anyway"]}
         roleId={roleId}
       />
     </RequirementAccessIndicatorUI>
@@ -197,62 +176,57 @@ const HiddenRequirementAccessIndicatorPopover = ({
   const setIsAccountModalOpen = useSetAtom(accountModalAtom)
 
   return (
-    <>
-      <PopoverHeader {...POPOVER_HEADER_STYLES}>
-        {`Satisfaction of secret requirements with your connected accounts:`}
-      </PopoverHeader>
-      <PopoverBody>
-        <Stack>
-          <CountAccessIndicatorUI
-            count={count.accessed}
-            colorScheme="green"
-            icon={Check}
-            label="satisfied"
-          />
-          <CountAccessIndicatorUI
-            count={count.notAccessed}
-            colorScheme="gray"
-            icon={X}
-            label="not satisfied"
-          />
-          <CountAccessIndicatorUI
-            count={count.platformErrored}
-            colorScheme="blue"
-            icon={LockSimple}
-            label="connect / reconnect needed"
-            errorMessages={errorMessages}
-          />
-          <CountAccessIndicatorUI
-            count={count.errored}
-            colorScheme="orange"
-            icon={Warning}
-            label="couldn't check access"
-            errorMessages={errorMessages}
-          />
-        </Stack>
-      </PopoverBody>
-      <PopoverFooter {...POPOVER_FOOTER_STYLES} pt="3">
-        <ButtonGroup size="sm">
-          <Button
-            variant="outline"
-            rightIcon={<Icon as={ArrowSquareIn} />}
-            onClick={() => setIsAccountModalOpen(true)}
-          >
-            View connections
-          </Button>
-          <RecheckAccessesButton roleId={roleId} />
-        </ButtonGroup>
-      </PopoverFooter>
-    </>
+    <div className="flex flex-col gap-2">
+      <p className="font-semibold">
+        Satisfaction of secret requirements with your connected accounts:
+      </p>
+
+      <CountAccessIndicatorUI
+        count={count.accessed}
+        colorScheme="green"
+        icon={<Check weight="bold" />}
+        label="satisfied"
+      />
+      <CountAccessIndicatorUI
+        count={count.notAccessed}
+        colorScheme="gray"
+        icon={<X weight="bold" />}
+        label="not satisfied"
+      />
+      <CountAccessIndicatorUI
+        count={count.platformErrored}
+        colorScheme="blue"
+        icon={<LockSimple weight="bold" />}
+        label="connect / reconnect needed"
+        errorMessages={errorMessages}
+      />
+      <CountAccessIndicatorUI
+        count={count.errored}
+        colorScheme="orange"
+        icon={<Warning weight="bold" />}
+        label="couldn't check access"
+        errorMessages={errorMessages}
+      />
+
+      <div className="mt-2 flex justify-end gap-2">
+        <Button
+          size="sm"
+          variant="outline"
+          rightIcon={<ArrowSquareIn weight="bold" />}
+          onClick={() => setIsAccountModalOpen(true)}
+        >
+          View connections
+        </Button>
+        <RecheckAccessesButton roleId={roleId} size="sm" />
+      </div>
+    </div>
   )
 }
 
 type CountAccessIndicatorUIProps = {
   count: number
-  colorScheme: string
-  icon: React.ForwardRefExoticComponent<
-    IconProps & React.RefAttributes<SVGSVGElement>
-  >
+  colorScheme: BadgeProps["colorScheme"]
+  icon: ReactNode
   label: string
   errorMessages?: string[]
 }
@@ -264,87 +238,62 @@ const CountAccessIndicatorUI = ({
   label,
   errorMessages,
 }: CountAccessIndicatorUIProps) => {
-  const { isOpen, onToggle } = useDisclosure()
-
   if (!count) return
 
   if (errorMessages?.length)
     return (
-      <Stack w="full" spacing={0}>
-        <Button
-          display="flex"
-          justifyContent="start"
-          w="max-content"
-          h="auto"
-          p={0}
-          variant="unstyled"
-          fontWeight="normal"
-          onClick={onToggle}
-          leftIcon={
-            <Tag colorScheme={colorScheme} px="2" py="2" flexShrink={0}>
-              <Icon as={icon} boxSize="3" />
-            </Tag>
-          }
-          rightIcon={
-            <Icon
-              as={CaretDown}
-              boxSize={3}
-              transition="transform 0.2s ease"
-              transform={`rotate(${isOpen ? "-180" : "0"}deg)`}
-            />
-          }
-        >
-          <Text as="span" fontWeight={"semibold"}>
-            {count}
-          </Text>
-          {` ${label}`}
-        </Button>
-
-        <Collapse in={isOpen} animateOpacity>
-          <Stack pt={1.5} pl={9} spacing={0.5}>
-            <Text
-              as="span"
-              fontWeight="bold"
-              fontSize="xs"
-              textTransform="uppercase"
-              colorScheme="gray"
+      <div className="flex w-full flex-col">
+        <Collapsible>
+          <CollapsibleTrigger className="group flex items-center gap-1.5">
+            <Badge
+              colorScheme={colorScheme}
+              className="size-6 max-w-none shrink-0 justify-center p-0"
             >
-              {count > 1 ? "Errors:" : "Error:"}
-            </Text>
-            <List fontSize="sm">
-              {errorMessages.map((msg, i) => (
-                <ListItem key={i}>
-                  <ListIcon
-                    as={Warning}
-                    weight="fill"
-                    color="gray.500"
-                    position="relative"
-                    top={-0.5}
-                    mr={1}
-                  />
-                  <Text as="span" colorScheme="gray">
-                    {capitalize(msg)}
-                  </Text>
-                </ListItem>
-              ))}
-            </List>
-          </Stack>
-        </Collapse>
-      </Stack>
+              {icon}
+            </Badge>
+
+            <span>
+              <span className="font-semibold">{count}</span>
+              {` ${label}`}
+            </span>
+
+            <CaretDown
+              weight="bold"
+              className="group-[[data-state=open]]:-rotate-180 transfrom duration-200"
+            />
+          </CollapsibleTrigger>
+          <CollapsibleContent>
+            <div className="flex flex-col gap-0.5 pt-1 pl-9">
+              <span className="font-bold text-muted-foreground text-xs uppercase">
+                {count > 1 ? "Errors:" : "Error:"}
+              </span>
+              <ul className="text-sm">
+                {errorMessages.map((msg, i) => (
+                  <li key={i} className="flex items-center gap-1">
+                    <Warning weight="fill" className="text-muted-foreground" />
+                    <span className="text-muted-foreground">{capitalize(msg)}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </CollapsibleContent>
+        </Collapsible>
+      </div>
     )
 
   return (
-    <HStack>
-      <Tag colorScheme={colorScheme} px="2" py="2" flexShrink={0}>
-        <Icon as={icon} boxSize="3" />
-      </Tag>
-      <Text>
-        <Text as="span" fontWeight={"semibold"}>
-          {count}
-        </Text>
+    <div className="flex gap-1.5">
+      <Badge
+        className="size-6 max-w-none shrink-0 justify-center p-0"
+        colorScheme={colorScheme}
+      >
+        {icon}
+      </Badge>
+      <p>
+        <span className="font-semibold">{count}</span>
         {` ${label}`}
-      </Text>
-    </HStack>
+      </p>
+    </div>
   )
 }
 
