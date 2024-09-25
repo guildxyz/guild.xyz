@@ -30,10 +30,10 @@ export async function GET(req: NextRequest) {
     )
 
     const jsonResponse = await fetch(leaderboardRequest)
-    if (!jsonResponse.ok) {
-      throw new Error("failed to fetch leaderboard")
-    }
     const jsonData = await jsonResponse.json()
+    if (!jsonResponse.ok) {
+      throw new Error(JSON.stringify(jsonData))
+    }
     const csvData = convertLeaderboardToCsv(jsonData)
 
     return new Response(csvData, {
