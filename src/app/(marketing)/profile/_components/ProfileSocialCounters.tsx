@@ -93,7 +93,7 @@ export const ProfileSocialCounters = ({ className }: any) => {
                       key={user.userId}
                       className="flex items-center gap-2 pb-3.5"
                     >
-                      <Avatar>
+                      <Avatar className="border">
                         <ProfileAvatar
                           username={user.username}
                           profileImageUrl={user.profileImageUrl}
