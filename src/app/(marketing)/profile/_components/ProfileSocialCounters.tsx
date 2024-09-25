@@ -1,8 +1,26 @@
 import FarcasterImage from "@/../static/socialIcons/farcaster.svg"
+import { CopyLink } from "@/components/CopyLink"
+import { ProfileAvatar } from "@/components/ProfileAvatar"
+import { Anchor } from "@/components/ui/Anchor"
+import { Avatar } from "@/components/ui/Avatar"
 import { AvatarGroup } from "@/components/ui/AvatarGroup"
+import { Card } from "@/components/ui/Card"
+import {
+  Dialog,
+  DialogBody,
+  DialogCloseButton,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/Dialog"
+import { ScrollArea } from "@/components/ui/ScrollArea"
 import { Separator } from "@/components/ui/Separator"
 import { Skeleton } from "@/components/ui/Skeleton"
 import { cn } from "@/lib/utils"
+import { REFERRER_USER_SEARCH_PARAM_KEY } from "@app/(marketing)/create-profile/(onboarding)/constants"
+import { EnvelopeOpen } from "@phosphor-icons/react"
 import { PropsWithChildren } from "react"
 import { RequiredFields } from "types"
 import pluralize from "utils/pluralize"
@@ -13,6 +31,7 @@ import {
 } from "../_hooks/useFarcasterProfile"
 import { useProfile } from "../_hooks/useProfile"
 import { useReferredUsers } from "../_hooks/useReferredUsers"
+import { ProfileOwnerGuard } from "./ProfileOwnerGuard"
 
 type DisplayableUser = RequiredFields<User, "pfp_url" | "display_name">
 
@@ -24,6 +43,9 @@ export const ProfileSocialCounters = ({ className }: any) => {
   const relevantFollowersFiltered = relevantFollowers?.filter(
     (user) => user && user.pfp_url && user.display_name
   ) as undefined | DisplayableUser[]
+  const inviteLink =
+    profile &&
+    `https://guild.xyz/create-profile/prompt-referrer?${REFERRER_USER_SEARCH_PARAM_KEY}=${profile.username}`
 
   return (
     <div
@@ -33,7 +55,74 @@ export const ProfileSocialCounters = ({ className }: any) => {
       )}
     >
       {referredUsers ? (
-        <SocialCountTile count={referredUsers.length}>Guildmates</SocialCountTile>
+        <Dialog>
+          <DialogTrigger className="group">
+            <SocialCountTile count={referredUsers.length}>
+              <div className="underline decoration-dotted underline-offset-4 transition-colors group-hover:text-foreground">
+                Guildmates
+              </div>
+            </SocialCountTile>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Guildmates</DialogTitle>
+              <DialogDescription>
+                Profiles created using this referral
+              </DialogDescription>
+              <DialogCloseButton />
+            </DialogHeader>
+            <DialogBody>
+              <ProfileOwnerGuard>
+                {inviteLink && (
+                  <Card className="mb-8 space-y-4 border border-info bg-card-secondary p-4">
+                    <div className="flex items-center gap-3">
+                      <EnvelopeOpen className="size-8 text-info" weight="fill" />
+                      <p className="flex-1 text-pretty font-medium">
+                        Share this link with friends and earn XP by gathering
+                        Guildmates!
+                      </p>
+                    </div>
+                    <CopyLink href={inviteLink} />
+                  </Card>
+                )}
+              </ProfileOwnerGuard>
+              <ScrollArea className="h-96">
+                {referredUsers.length ? (
+                  referredUsers.map((user) => (
+                    <div
+                      key={user.userId}
+                      className="flex items-center gap-2 pb-3.5"
+                    >
+                      <Avatar>
+                        <ProfileAvatar
+                          username={user.username}
+                          profileImageUrl={user.profileImageUrl}
+                        />
+                      </Avatar>
+                      <div className="leading-tight">
+                        <div className="max-w-64 truncate">
+                          {user.name || user.username}
+                        </div>
+                        <Anchor
+                          href={`/profile/${user.username}`}
+                          variant="muted"
+                          target="_blank"
+                          className="text-sm"
+                        >
+                          @{user.username}
+                        </Anchor>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-muted-foreground">
+                    This profile has no guildmates to show yet.
+                  </p>
+                )}
+              </ScrollArea>
+            </DialogBody>
+          </DialogContent>
+        </Dialog>
       ) : (
         <Skeleton className="h-12 w-20" />
       )}
