@@ -71,7 +71,6 @@
     "@tanstack/react-table": "^8.13.2",
     "@tanstack/react-virtual": "^3.5.0",
     "@types/three": "^0.166.0",
-    "@vercel/kv": "^1.0.1",
     "@vercel/speed-insights": "^1.0.12",
     "@visx/event": "^3.3.0",
     "@visx/group": "^3.3.0",

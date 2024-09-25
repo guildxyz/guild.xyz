@@ -33,14 +33,6 @@ const TokenRequirement = ({ ...rest }: Props) => {
       isImageLoading={isValidating}
       footer={
         requirement?.type === "ERC20" ? (
-          // This feature is temporarily disabled
-          // <HStack spacing="4">
-          //   <GuildCheckoutProvider>
-          //     <DynamicPurchaseRequirement />
-          //     <PurchaseTransactionStatusModal />
-          //   </GuildCheckoutProvider>
-          //   <BlockExplorerUrl />
-          // </HStack>
           <BlockExplorerUrl />
         ) : requirement?.type === "COIN" ? (
           <RequirementChainIndicator />
