@@ -20,6 +20,7 @@ const ThemeContext = createContext<{
   setLocalBackgroundImage: Dispatch<SetStateAction<string | undefined>>
   textColor: string
   buttonColorScheme: string
+  buttonColorSchemeClassName: string // Temp, until we finish the Tailwind migration
   avatarBg: string
 }>({
   localThemeColor: "#27272a",
@@ -32,6 +33,7 @@ const ThemeContext = createContext<{
   },
   textColor: "inherit",
   buttonColorScheme: "secondary",
+  buttonColorSchemeClassName: "",
   avatarBg: "#27272a",
 })
 
@@ -66,6 +68,11 @@ const ThemeProvider = memo(({ children }: PropsWithChildren): JSX.Element => {
   const buttonColorScheme =
     textColor === "whiteAlpha.900" ? "whiteAlpha" : "blackAlpha"
 
+  const buttonColorSchemeClassName =
+    textColor === "whiteAlpha.900"
+      ? "bg-white/[0.16] hover:bg-white/[0.24] active:bg-white/[0.36] text-banner-foreground"
+      : "bg-black/[0.06] hover:bg-black/[0.08] active:bg-black/[0.16] text-banner-foreground"
+
   const bannerForegroundHSL = createColor(
     generatedColors.chakraVariables["--chakra-colors-primary-800"]
   )
@@ -84,6 +91,7 @@ const ThemeProvider = memo(({ children }: PropsWithChildren): JSX.Element => {
         setLocalBackgroundImage,
         textColor,
         buttonColorScheme,
+        buttonColorSchemeClassName,
         avatarBg,
       }}
     >

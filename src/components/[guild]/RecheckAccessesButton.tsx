@@ -1,22 +1,11 @@
-import {
-  ButtonProps,
-  Divider,
-  Icon,
-  IconButton,
-  Popover,
-  PopoverArrow,
-  PopoverBody,
-  PopoverContent,
-  PopoverHeader,
-  PopoverTrigger,
-  Portal,
-  Text,
-  VStack,
-} from "@chakra-ui/react"
-import { ArrowsClockwise, Check } from "@phosphor-icons/react"
+import { IconButton, IconButtonProps } from "@/components/ui/IconButton"
+import { Separator } from "@/components/ui/Separator"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip"
+import { useErrorToast } from "@/components/ui/hooks/useErrorToast"
+import { useToast } from "@/components/ui/hooks/useToast"
+import { cn } from "@/lib/utils"
+import { ArrowsClockwise, Check } from "@phosphor-icons/react/dist/ssr"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
-import useShowErrorToast from "hooks/useShowErrorToast"
-import useToast from "hooks/useToast"
 import { useAtom } from "jotai"
 import { atomWithStorage } from "jotai/utils"
 import { useEffect, useMemo, useState } from "react"
@@ -30,15 +19,7 @@ const TIMEOUT = 60_000
 type Props = {
   tooltipLabel?: string
   roleId?: number
-} & ButtonProps
-
-const POPOVER_HEADER_STYLES = {
-  fontWeight: "medium",
-  border: 0,
-  fontSize: "sm",
-  py: "1.5",
-  px: "3",
-}
+} & Omit<IconButtonProps, "aria-label" | "icon">
 
 const latestResendDateAtom = atomWithStorage("latestResendDate", 0)
 
@@ -47,8 +28,8 @@ const RecheckAccessesButton = ({
   roleId,
   ...rest
 }: Props): JSX.Element => {
-  const toast = useToast()
-  const showErrorToast = useShowErrorToast()
+  const { toast } = useToast()
+  const errorToast = useErrorToast()
   const [isFinished, setIsFinished] = useState(false)
 
   const { reqAccesses } = useRoleMembership(roleId)
@@ -79,7 +60,7 @@ const RecheckAccessesButton = ({
   } = useMembershipUpdate({
     onSuccess: () => {
       toast({
-        status: "success",
+        variant: "success",
         title: `Successfully updated ${roleId ? "role access" : "accesses"}`,
       })
       setIsFinished(true)
@@ -92,7 +73,7 @@ const RecheckAccessesButton = ({
     onError: (error) => {
       const errorMsg = "Couldn't update accesses"
       const correlationId = error.correlationId
-      showErrorToast(
+      errorToast(
         correlationId
           ? {
               error: errorMsg,
@@ -115,92 +96,74 @@ const RecheckAccessesButton = ({
   const isDisabled = isLoading || !!isFinished || !canResend
 
   return (
-    <Popover trigger="hover" placement="bottom" isLazy>
-      <PopoverTrigger>
+    <Tooltip>
+      <TooltipTrigger
+        className={cn({
+          "cursor-default": isDisabled,
+        })}
+      >
         <IconButton
+          {...rest}
           aria-label="Re-check accesses"
           icon={
             isFinished ? (
-              <Check />
+              <Check weight="bold" />
             ) : (
-              <Icon
-                as={ArrowsClockwise}
-                animation={shouldBeLoading ? "rotate 1s infinite linear" : undefined}
+              <ArrowsClockwise
+                weight="bold"
+                className={cn({
+                  "animate-spin": shouldBeLoading,
+                })}
               />
             )
           }
-          // artificial disabled state, so the popover still works
-          {...(isDisabled
-            ? {
-                opacity: 0.5,
-                cursor: "default",
-                _hover: { bg: undefined },
-                _focus: { bg: undefined },
-                _active: { bg: undefined },
-              }
-            : {
-                onClick: () =>
-                  triggerMembershipUpdate(roleId && { roleIds: [roleId] }),
-              })}
-          {...rest}
+          disabled={isDisabled}
+          onClick={() => triggerMembershipUpdate(roleId && { roleIds: [roleId] })}
         />
-      </PopoverTrigger>
-      <Portal>
-        <PopoverContent
-          {...(!shouldBeLoading ? { minW: "max-content", w: "unset" } : {})}
-        >
-          <PopoverArrow />
-          {isFinished ? (
-            <PopoverHeader {...POPOVER_HEADER_STYLES}>
-              {`Successfully updated ${roleId ? "access" : "accesses"}`}
-            </PopoverHeader>
-          ) : isLoading ? (
-            shouldBeLoading ? (
-              <PopoverBody pb={3} px={4}>
-                <VStack
-                  spacing={2.5}
-                  alignItems={"flex-start"}
-                  divider={<Divider />}
-                >
-                  <SatisfyRequirementsJoinStep joinState={joinProgress} />
-                  {!currentlyCheckedRoleIds?.length && (
-                    <GetRolesJoinStep joinState={joinProgress} />
-                  )}
-                  <GetRewardsJoinStep joinState={joinProgress} />
-                </VStack>
-              </PopoverBody>
-            ) : (
-              <PopoverHeader {...POPOVER_HEADER_STYLES}>
-                {`Checking ${
-                  roleId ? "another role" : "a specific role"
-                } is in progress`}
-              </PopoverHeader>
-            )
-          ) : canResend ? (
-            <PopoverHeader {...POPOVER_HEADER_STYLES}>{tooltipLabel}</PopoverHeader>
+      </TooltipTrigger>
+      <TooltipContent variant="popover" className="text-left">
+        {isFinished ? (
+          <p className="font-medium">{`Successfully updated ${roleId ? "access" : "accesses"}`}</p>
+        ) : isLoading ? (
+          shouldBeLoading ? (
+            <div className="flex flex-col gap-1.5 px-1.5">
+              <SatisfyRequirementsJoinStep joinState={joinProgress} />
+              <Separator />
+              {!currentlyCheckedRoleIds?.length && (
+                <>
+                  <GetRolesJoinStep joinState={joinProgress} />
+                  <Separator />
+                </>
+              )}
+              <GetRewardsJoinStep joinState={joinProgress} />
+            </div>
           ) : (
-            <PopoverHeader {...POPOVER_HEADER_STYLES}>
-              {tooltipLabel}
-              <Text
-                colorScheme="gray"
-                w="full"
-                fontSize="sm"
-                fontWeight={"medium"}
-                mt="1"
-              >
-                Only usable once per minute.
-                <br />
-                Last checked at: {lastCheckedAt.toLocaleTimeString()}
-              </Text>
-            </PopoverHeader>
-          )}
-        </PopoverContent>
-      </Portal>
-    </Popover>
+            <p className="font-medium">
+              {`Checking ${
+                roleId ? "another role" : "a specific role"
+              } is in progress`}
+            </p>
+          )
+        ) : canResend ? (
+          <p className="font-medium">{tooltipLabel}</p>
+        ) : (
+          <>
+            <p className="font-medium">{tooltipLabel}</p>
+            <p className="mt-1 font-medium text-muted-foreground">
+              Only usable once per minute.
+              <br />
+              Last checked at: {lastCheckedAt.toLocaleTimeString()}
+            </p>
+          </>
+        )}
+      </TooltipContent>
+    </Tooltip>
   )
 }
 
-const TopRecheckAccessesButton = (props: ButtonProps) => (
+const TopRecheckAccessesButton = (
+  props: Omit<IconButtonProps, "aria-label" | "icon">
+) => (
   <RecheckAccessesButton
     tooltipLabel="Re-check accesses & send rewards"
     {...props}
