@@ -1,19 +1,17 @@
 import { accountModalAtom } from "@/components/Providers/atoms"
+import { Button } from "@/components/ui/Button"
 import {
-  ButtonGroup,
-  Icon,
-  PopoverBody,
-  PopoverFooter,
-  PopoverHeader,
-  Text,
-} from "@chakra-ui/react"
-import { ArrowSquareIn, Check, LockSimple, Warning, X } from "@phosphor-icons/react"
+  ArrowSquareIn,
+  Check,
+  LockSimple,
+  Warning,
+  X,
+} from "@phosphor-icons/react/dist/ssr"
 import RecheckAccessesButton from "components/[guild]/RecheckAccessesButton"
-import Button from "components/common/Button"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import { useSetAtom } from "jotai"
 import dynamic from "next/dynamic"
-import RequirementAccessIndicatorUI from "./RequirementAccessIndicatorUI"
+import { RequirementAccessIndicatorUI } from "./RequirementAccessIndicatorUI"
 import { useRequirementContext } from "./RequirementContext"
 
 const DynamicCompleteCaptcha = dynamic(
@@ -43,17 +41,8 @@ const RequirementAccessIndicator = () => {
 
   if (reqAccessData?.access)
     return (
-      <RequirementAccessIndicatorUI
-        colorScheme={"green"}
-        circleBgSwatch={{ light: 400, dark: 300 }}
-        icon={Check}
-      >
-        <PopoverHeader {...POPOVER_HEADER_STYLES}>
-          <Text as="span" mr="2">
-            🎉
-          </Text>
-          Requirement satisfied
-        </PopoverHeader>
+      <RequirementAccessIndicatorUI colorScheme="green" icon={Check}>
+        <p className="font-semibold">🎉 Requirement satisfied</p>
       </RequirementAccessIndicatorUI>
     )
 
@@ -64,19 +53,18 @@ const RequirementAccessIndicator = () => {
   )
     return (
       <RequirementAccessIndicatorUI
-        colorScheme={"blue"}
-        circleBgSwatch={{ light: 300, dark: 300 }}
+        colorScheme="blue"
         icon={LockSimple}
         isAlwaysOpen={!hasRoleAccess}
       >
-        <PopoverHeader {...POPOVER_HEADER_STYLES}>
+        <p className="font-semibold">
           {type === "CAPTCHA"
             ? "Complete CAPTCHA to check access"
             : type.startsWith("GITCOIN_")
               ? "Setup GitCoin Passport to check access"
               : "Connect account to check access"}
-        </PopoverHeader>
-        <PopoverFooter {...POPOVER_FOOTER_STYLES}>
+        </p>
+        <div className="mt-2 flex justify-end">
           {type === "CAPTCHA" ? (
             <DynamicCompleteCaptcha size="sm" iconSpacing={2} />
           ) : type.startsWith("GITCOIN_") ? (
@@ -84,19 +72,18 @@ const RequirementAccessIndicator = () => {
           ) : (
             <DynamicConnectRequirementPlatformButton className="gap-2" size="sm" />
           )}
-        </PopoverFooter>
+        </div>
       </RequirementAccessIndicatorUI>
     )
 
   if (reqAccessData?.access === null) {
     return (
       <RequirementAccessIndicatorUI
-        colorScheme={"orange"}
-        circleBgSwatch={{ light: 300, dark: 300 }}
+        colorScheme="orange"
         icon={Warning}
         isAlwaysOpen={!hasRoleAccess}
       >
-        <PopoverHeader {...POPOVER_HEADER_STYLES}>
+        <p className="font-semibold">
           {reqAccessData?.errorMsg
             ? `Error: ${reqAccessData.errorMsg}`
             : `Couldn't check access`}
@@ -106,23 +93,22 @@ const RequirementAccessIndicator = () => {
             ml="2"
             variant={"outline"}
           />
-        </PopoverHeader>
+        </p>
       </RequirementAccessIndicatorUI>
     )
   }
 
   return (
     <RequirementAccessIndicatorUI
-      colorScheme={"gray"}
-      circleBgSwatch={{ light: 300, dark: 500 }}
+      colorScheme="gray"
       icon={X}
       isAlwaysOpen={!hasRoleAccess}
     >
-      <PopoverHeader {...POPOVER_HEADER_STYLES}>
+      <p className="font-semibold">
         {`Requirement not satisfied with your connected accounts`}
-      </PopoverHeader>
+      </p>
       {reqAccessData?.amount !== null && !!data?.minAmount && (
-        <PopoverBody pt="0">
+        <p>
           {isNegated
             ? `Expected max amount is ${data.minAmount}${
                 data.maxAmount ? `-${data.maxAmount}` : ""
@@ -132,35 +118,21 @@ const RequirementAccessIndicator = () => {
               } but you ${data.maxAmount ? "" : "only"} have ${
                 reqAccessData?.amount
               }`}
-        </PopoverBody>
+        </p>
       )}
-      <PopoverFooter {...POPOVER_FOOTER_STYLES}>
-        <ButtonGroup size="sm">
-          <Button
-            rightIcon={<Icon as={ArrowSquareIn} />}
-            onClick={() => setIsAccountModalOpen(true)}
-            variant="outline"
-          >
-            View connections
-          </Button>
-          <RecheckAccessesButton roleId={roleId} />
-        </ButtonGroup>
-      </PopoverFooter>
+      <div className="mt-2 flex justify-end gap-2">
+        <Button
+          size="sm"
+          variant="outline"
+          rightIcon={<ArrowSquareIn weight="bold" />}
+          onClick={() => setIsAccountModalOpen(true)}
+        >
+          View connections
+        </Button>
+        <RecheckAccessesButton roleId={roleId} size="sm" />
+      </div>
     </RequirementAccessIndicatorUI>
   )
 }
 
-export const POPOVER_HEADER_STYLES = {
-  fontWeight: "semibold",
-  border: "0",
-  px: "3",
-}
-
-export const POPOVER_FOOTER_STYLES = {
-  display: "flex",
-  justifyContent: "flex-end",
-  border: "0",
-  pt: "2",
-}
-
-export default RequirementAccessIndicator
+export { RequirementAccessIndicator }

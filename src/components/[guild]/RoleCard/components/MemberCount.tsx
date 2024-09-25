@@ -18,7 +18,6 @@ import {
   Text,
 } from "@chakra-ui/react"
 import { Users } from "@phosphor-icons/react"
-import { POPOVER_HEADER_STYLES } from "components/[guild]/Requirements/components/RequirementAccessIndicator"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useUser from "components/[guild]/hooks/useUser"
@@ -82,7 +81,7 @@ export const MemberCountWithSyncIndicator = ({
         <Portal>
           <PopoverContent>
             <PopoverArrow />
-            <PopoverHeader {...POPOVER_HEADER_STYLES} pb="0">
+            <PopoverHeader fontWeight="semibold" border={0} px={3} pb={0}>
               Syncing members
             </PopoverHeader>
             <PopoverBody pt="1">
