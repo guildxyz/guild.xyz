@@ -11,7 +11,7 @@ import RecheckAccessesButton from "components/[guild]/RecheckAccessesButton"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import { useSetAtom } from "jotai"
 import dynamic from "next/dynamic"
-import RequirementAccessIndicatorUI from "./RequirementAccessIndicatorUI"
+import { RequirementAccessIndicatorUI } from "./RequirementAccessIndicatorUI"
 import { useRequirementContext } from "./RequirementContext"
 
 const DynamicCompleteCaptcha = dynamic(
@@ -135,4 +135,4 @@ const RequirementAccessIndicator = () => {
   )
 }
 
-export default RequirementAccessIndicator
+export { RequirementAccessIndicator }

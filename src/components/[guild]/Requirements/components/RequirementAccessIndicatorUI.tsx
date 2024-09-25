@@ -66,4 +66,4 @@ const RequirementAccessIndicatorUI = ({
   )
 }
 
-export default RequirementAccessIndicatorUI
+export { RequirementAccessIndicatorUI }

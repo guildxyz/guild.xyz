@@ -8,7 +8,7 @@ import { REQUIREMENT_DISPLAY_COMPONENTS } from "requirements/requirementDisplayC
 import { Requirement as RequirementType, Rest } from "types"
 import { CHAIN_CONFIG } from "wagmiConfig/chains"
 import Requirement from "./Requirement"
-import RequirementAccessIndicator from "./RequirementAccessIndicator"
+import { RequirementAccessIndicator } from "./RequirementAccessIndicator"
 import { RequirementProvider, useRequirementContext } from "./RequirementContext"
 
 type Props = {

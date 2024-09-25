@@ -22,7 +22,7 @@ import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import { useSetAtom } from "jotai"
 import { ReactNode } from "react"
 import capitalize from "utils/capitalize"
-import RequirementAccessIndicatorUI from "./RequirementAccessIndicatorUI"
+import { RequirementAccessIndicatorUI } from "./RequirementAccessIndicatorUI"
 
 type Props = {
   roleId: number
@@ -297,4 +297,4 @@ const CountAccessIndicatorUI = ({
   )
 }
 
-export default HiddenRequirementAccessIndicator
+export { HiddenRequirementAccessIndicator }

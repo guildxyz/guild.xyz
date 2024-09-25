@@ -22,7 +22,7 @@ import { RoleCardCollapseProps } from "../RoleCard"
 import useRequirements from "../hooks/useRequirements"
 import AnyOfHeader from "./components/AnyOfHeader"
 import ExpandRequirementsButton from "./components/ExpandRequirementsButton"
-import HiddenRequirementAccessIndicator from "./components/HiddenRequirementAccessIndicator"
+import { HiddenRequirementAccessIndicator } from "./components/HiddenRequirementAccessIndicator"
 import RequirementComponent, { RequirementSkeleton } from "./components/Requirement"
 import RequirementDisplayComponent from "./components/RequirementDisplayComponent"
 
