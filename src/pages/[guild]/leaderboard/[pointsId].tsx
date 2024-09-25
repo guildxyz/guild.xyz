@@ -1,6 +1,4 @@
 import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
-import { Anchor } from "@/components/ui/Anchor"
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip"
 import {
   Alert,
   AlertDescription,
@@ -32,7 +30,6 @@ import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import { BackButton } from "components/common/Layout/components/BackButton"
 import Section from "components/common/Section"
-import { env } from "env"
 import { useScrollBatchedRendering } from "hooks/useScrollBatchedRendering"
 import { useRouter } from "next/router"
 import ErrorPage from "pages/_error"
@@ -201,27 +198,6 @@ const Leaderboard = () => {
           </>
         </Section>
       </Stack>
-      <Tooltip>
-        <TooltipTrigger>
-          <Anchor
-            className="mt-6"
-            showExternal
-            variant="highlighted"
-            target="_blank"
-            href={
-              new URL(
-                `v2/guilds/${guildId}/points/${pointsId}/leaderboard?isAllUser=true`,
-                env.NEXT_PUBLIC_API
-              ).href
-            }
-          >
-            View raw leaderboard
-          </Anchor>
-        </TooltipTrigger>
-        <TooltipContent>
-          Loading might take a while, depeding on member count
-        </TooltipContent>
-      </Tooltip>
     </Layout>
   )
 }

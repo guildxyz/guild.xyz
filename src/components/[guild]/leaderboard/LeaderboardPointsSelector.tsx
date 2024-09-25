@@ -2,16 +2,19 @@ import {
   ButtonGroup,
   Center,
   Divider,
+  IconButton,
   Img,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
   Portal,
+  Tooltip,
 } from "@chakra-ui/react"
-import { CaretDown } from "@phosphor-icons/react"
+import { CaretDown, Export } from "@phosphor-icons/react"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
+import { env } from "env"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import Star from "static/icons/star.svg"
@@ -21,7 +24,7 @@ import useGuildPermission from "../hooks/useGuildPermission"
 import RecalculateLeaderboardButton from "./RecalculateLeaderboardButton"
 
 const LeaderboardPointsSelector = () => {
-  const { urlName } = useGuild()
+  const { urlName, id: guildId } = useGuild()
   const router = useRouter()
 
   const { isAdmin } = useGuildPermission()
@@ -30,9 +33,30 @@ const LeaderboardPointsSelector = () => {
   if (pointsRewards.length < 2) {
     if (isAdmin)
       return (
-        <Card borderRadius="xl" flexShrink={0}>
-          <RecalculateLeaderboardButton />
-        </Card>
+        <ButtonGroup>
+          <Card>
+            <Tooltip label="Loading might take a while, depeding on member count">
+              <a
+                target="_blank"
+                href={
+                  new URL(
+                    `v2/guilds/${guildId}/points/${router.query.pointsId}/leaderboard?isAllUser=true`,
+                    env.NEXT_PUBLIC_API
+                  ).href
+                }
+              >
+                <IconButton
+                  icon={<Export />}
+                  size="sm"
+                  aria-label="view raw leaderboard data"
+                />
+              </a>
+            </Tooltip>
+          </Card>
+          <Card>
+            <RecalculateLeaderboardButton />
+          </Card>
+        </ButtonGroup>
       )
 
     return null
