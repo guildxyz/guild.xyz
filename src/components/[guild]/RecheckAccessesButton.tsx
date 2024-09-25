@@ -1,3 +1,5 @@
+import { useErrorToast } from "@/components/ui/hooks/useErrorToast"
+import { useToast } from "@/components/ui/hooks/useToast"
 import {
   ButtonProps,
   Divider,
@@ -14,8 +16,6 @@ import {
 } from "@chakra-ui/react"
 import { ArrowsClockwise, Check } from "@phosphor-icons/react/dist/ssr"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
-import useShowErrorToast from "hooks/useShowErrorToast"
-import useToast from "hooks/useToast"
 import { useAtom } from "jotai"
 import { atomWithStorage } from "jotai/utils"
 import { useEffect, useMemo, useState } from "react"
@@ -46,8 +46,8 @@ const RecheckAccessesButton = ({
   roleId,
   ...rest
 }: Props): JSX.Element => {
-  const toast = useToast()
-  const showErrorToast = useShowErrorToast()
+  const { toast } = useToast()
+  const errorToast = useErrorToast()
   const [isFinished, setIsFinished] = useState(false)
 
   const { reqAccesses } = useRoleMembership(roleId)
@@ -78,7 +78,7 @@ const RecheckAccessesButton = ({
   } = useMembershipUpdate({
     onSuccess: () => {
       toast({
-        status: "success",
+        variant: "success",
         title: `Successfully updated ${roleId ? "role access" : "accesses"}`,
       })
       setIsFinished(true)
@@ -91,7 +91,7 @@ const RecheckAccessesButton = ({
     onError: (error) => {
       const errorMsg = "Couldn't update accesses"
       const correlationId = error.correlationId
-      showErrorToast(
+      errorToast(
         correlationId
           ? {
               error: errorMsg,
