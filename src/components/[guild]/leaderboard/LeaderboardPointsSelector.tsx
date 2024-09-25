@@ -14,7 +14,6 @@ import {
 import { CaretDown, Export } from "@phosphor-icons/react"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
-import { env } from "env"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import Star from "static/icons/star.svg"
@@ -37,13 +36,8 @@ const LeaderboardPointsSelector = () => {
           <Card>
             <Tooltip label="Loading might take a while, depeding on member count">
               <a
-                target="_blank"
-                href={
-                  new URL(
-                    `v2/guilds/${guildId}/points/${router.query.pointsId}/leaderboard?isAllUser=true`,
-                    env.NEXT_PUBLIC_API
-                  ).href
-                }
+                download
+                href={`/api/leaderboard?guildId=${guildId}&pointsId=${router.query.pointsId}`}
               >
                 <IconButton
                   icon={<Export />}
