@@ -33,7 +33,6 @@ const RequirementAccessIndicatorUI = ({
           if (isAlwaysOpen || !open) return
           setOpenCount((count) => count + 1)
         }}
-        open
       >
         <TooltipTrigger asChild>
           <div
