@@ -2,9 +2,9 @@ import { ConnectEmailButton } from "@/components/Account/components/AccountModal
 import { ConnectFarcasterButton } from "@/components/Account/components/AccountModal/components/FarcasterProfile"
 import { PLATFORM_COLORS } from "@/components/Account/components/AccountModal/components/SocialAccount"
 import { Button, ButtonProps } from "@/components/ui/Button"
+import { useToast } from "@/components/ui/hooks/useToast"
 import { cn } from "@/lib/utils"
-import { useToast } from "@chakra-ui/react"
-import type { Icon } from "@phosphor-icons/react"
+import type { Icon } from "@phosphor-icons/react/dist/lib/types"
 import { useConnectPlatform } from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import { useMembershipUpdate } from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useUser from "components/[guild]/hooks/useUser"
@@ -29,7 +29,7 @@ const RequirementConnectButton = (props: ButtonProps) => {
   const { reqAccesses } = useRoleMembership(roleId)
   const { triggerMembershipUpdate } = useMembershipUpdate()
 
-  const toast = useToast()
+  const { toast } = useToast()
 
   const isReconnection = reqAccesses?.some(
     (req) => req.requirementId === id && req.errorType === "PLATFORM_CONNECT_INVALID"
@@ -51,9 +51,9 @@ const RequirementConnectButton = (props: ButtonProps) => {
   const onSuccess = () => {
     triggerMembershipUpdate()
     toast({
+      variant: "success",
       title: `Successfully connected ${rewards[platform].name}`,
       description: `Your access is being re-checked...`,
-      status: "success",
     })
   }
 
