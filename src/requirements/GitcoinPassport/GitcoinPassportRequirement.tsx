@@ -23,7 +23,7 @@ import { useRequirementContext } from "components/[guild]/Requirements/component
 import DataBlock from "components/common/DataBlock"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import { scorers } from "./components/Score"
-import SetupPassport from "./components/SetupPassport"
+import { SetupPassport } from "./components/SetupPassport"
 
 type Keys = "stamp" | "issuer" | "credType" | "minAmount" | "maxAmount"
 const nameByKey: Record<Keys, string> = {
