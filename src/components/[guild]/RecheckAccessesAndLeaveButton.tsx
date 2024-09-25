@@ -1,21 +1,26 @@
+import { cn } from "@/lib/utils"
 import { ButtonGroup, Divider } from "@chakra-ui/react"
 import LeaveButton from "./LeaveButton"
 import { TopRecheckAccessesButton } from "./RecheckAccessesButton"
 import { useThemeContext } from "./ThemeContext"
 
 const RecheckAccessesAndLeaveButton = () => {
-  const { textColor, buttonColorScheme } = useThemeContext()
+  const { textColor, buttonColorScheme, buttonColorSchemeClassName } =
+    useThemeContext()
 
-  const buttonProps = {
+  const chakraButtonProps = {
     color: textColor,
     colorScheme: buttonColorScheme,
   }
 
   return (
     <ButtonGroup isAttached>
-      <TopRecheckAccessesButton {...buttonProps} />
+      <TopRecheckAccessesButton
+        // TODO: find a better solution for this once we migrate the whole guild page to Tailwind
+        className={cn(buttonColorSchemeClassName, "h-11 rounded-r-none")}
+      />
       <Divider orientation="vertical" h="var(--chakra-sizes-11)" />
-      <LeaveButton {...buttonProps} />
+      <LeaveButton {...chakraButtonProps} />
     </ButtonGroup>
   )
 }

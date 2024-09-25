@@ -90,8 +90,8 @@ const RequirementAccessIndicator = () => {
           <RecheckAccessesButton
             roleId={roleId}
             size="sm"
-            ml="2"
-            variant={"outline"}
+            variant="outline"
+            className="ml-2"
           />
         </p>
       </RequirementAccessIndicatorUI>

@@ -137,20 +137,8 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
         <RecheckAccessesButton
           roleId={roleId}
           size="sm"
-          h="8"
-          // {...ACCESS_INDICATOR_STYLES}
-          {...{
-            flexShrink: 0,
-            borderRadius: "lg",
-            borderTopRadius: { base: 0, md: "lg" },
-            justifyContent: { base: "space-between", md: "start" },
-            px: { base: 5, md: 3 },
-            py: { base: 2, md: 0 },
-          }}
-          borderTopLeftRadius="0 !important"
-          borderBottomLeftRadius="0 !important"
-          // Card's `overflow: clip` isn't enough in Safari
-          borderBottomRightRadius={{ base: "2xl", md: "lg" }}
+          // Card's `overflow: clip` isn't enough in Safari, that's why we added rounded-br
+          className="w-auto rounded-l-none rounded-tr-none rounded-br-2xl px-5 md:rounded-tr-lg md:rounded-br-lg md:px-3"
         />
       </div>
     )
@@ -171,20 +159,8 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
       <RecheckAccessesButton
         roleId={roleId}
         size="sm"
-        h="8"
-        // {...ACCESS_INDICATOR_STYLES}
-        {...{
-          flexShrink: 0,
-          borderRadius: "lg",
-          borderTopRadius: { base: 0, md: "lg" },
-          justifyContent: { base: "space-between", md: "start" },
-          px: { base: 5, md: 3 },
-          py: { base: 2, md: 0 },
-        }}
-        borderTopLeftRadius="0 !important"
-        borderBottomLeftRadius="0 !important"
-        // Card's `overflow: clip` isn't enough in Safari
-        borderBottomRightRadius={{ base: "2xl", md: "lg" }}
+        // Card's `overflow: clip` isn't enough in Safari, that's why we added rounded-br
+        className="w-auto rounded-l-none rounded-tr-none rounded-br-2xl px-5 md:rounded-tr-lg md:rounded-br-lg md:px-3"
       />
     </div>
   )
