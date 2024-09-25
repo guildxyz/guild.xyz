@@ -1,6 +1,6 @@
-import { fetchNativeCurrencyPriceInUSD } from "pages/api/fetchPrice"
 import useSWR from "swr"
 import useSWRImmutable from "swr/immutable"
+import { fetchNativeCurrencyPriceInUSD } from "utils/guildCheckout/utils"
 import { EstimateContractGasParameters, formatUnits } from "viem"
 import { useChainId, useGasPrice, usePublicClient, useWalletClient } from "wagmi"
 import { CHAIN_CONFIG, Chain, Chains } from "wagmiConfig/chains"

@@ -106,18 +106,7 @@ const NftRequirement = (props: RequirementProps) => {
         )
       }
       isImageLoading={nftDataLoading}
-      footer={
-        // This feature is temporarily disabled
-        // <HStack spacing={4}>
-        //   <GuildCheckoutProvider>
-        //     <DynamicPurchaseRequirement />
-        //     <PurchaseTransactionStatusModal />
-        //   </GuildCheckoutProvider>
-
-        //   <BlockExplorerUrl />
-        // </HStack>
-        <BlockExplorerUrl />
-      }
+      footer={<BlockExplorerUrl />}
       {...props}
     >
       {"Own "}
