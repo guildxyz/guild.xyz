@@ -1,7 +1,6 @@
 import {
   ButtonProps,
   Divider,
-  Icon,
   IconButton,
   Popover,
   PopoverArrow,
@@ -13,7 +12,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react"
-import { ArrowsClockwise, Check } from "@phosphor-icons/react"
+import { ArrowsClockwise, Check } from "@phosphor-icons/react/dist/ssr"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
@@ -121,11 +120,12 @@ const RecheckAccessesButton = ({
           aria-label="Re-check accesses"
           icon={
             isFinished ? (
-              <Check />
+              <Check weight="bold" />
             ) : (
-              <Icon
-                as={ArrowsClockwise}
-                animation={shouldBeLoading ? "rotate 1s infinite linear" : undefined}
+              <ArrowsClockwise
+                weight="bold"
+                // TODO
+                // animation={shouldBeLoading ? "rotate 1s infinite linear" : undefined}
               />
             )
           }
