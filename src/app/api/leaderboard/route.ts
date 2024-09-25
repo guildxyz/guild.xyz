@@ -14,14 +14,14 @@ const convertLeaderboardToCsv = ({
   return headers + rows
 }
 
-const propsSchema = z.object({
+const searchParamsSchema = z.object({
   guildId: z.coerce.number().positive(),
   pointsId: z.coerce.number().positive(),
 })
 
 export async function GET(req: NextRequest) {
   try {
-    const { guildId, pointsId } = propsSchema.parse(
+    const { guildId, pointsId } = searchParamsSchema.parse(
       Object.fromEntries(req.nextUrl.searchParams)
     )
     const leaderboardRequest = new URL(
@@ -31,7 +31,7 @@ export async function GET(req: NextRequest) {
 
     const jsonResponse = await fetch(leaderboardRequest)
     if (!jsonResponse.ok) {
-      throw new Error("Failed to fetch leaderboard")
+      throw new Error("failed to fetch leaderboard")
     }
     const jsonData = await jsonResponse.json()
     const csvData = convertLeaderboardToCsv(jsonData)
