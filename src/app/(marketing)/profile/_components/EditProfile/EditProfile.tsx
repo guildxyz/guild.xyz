@@ -1,6 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/Button"
+import { Checkbox } from "@/components/ui/Checkbox"
 import {
   Dialog,
   DialogBody,
@@ -59,7 +60,12 @@ export const EditProfile = ({ children }: PropsWithChildren<any>) => {
 
   const { handleSubmit, isUploadingShown, uploadLoadingText } = useSubmitWithUpload(
     form.handleSubmit((params) => {
-      onSubmit(filterOnDirtyFormFields(params, form.formState.dirtyFields))
+      onSubmit(
+        filterOnDirtyFormFields(params, {
+          ...form.formState.dirtyFields,
+          showActivityLog: true,
+        })
+      )
     }),
     profilePicUploader.isUploading || backgroundUploader.isUploading
   )
@@ -118,7 +124,7 @@ export const EditProfile = ({ children }: PropsWithChildren<any>) => {
               control={form.control}
               name="bio"
               render={({ field }) => (
-                <FormItem className="">
+                <FormItem className="pb-3">
                   <FormLabel>Bio</FormLabel>
                   <FormControl>
                     <Textarea
@@ -128,6 +134,26 @@ export const EditProfile = ({ children }: PropsWithChildren<any>) => {
                       value={field.value ?? undefined}
                     />
                   </FormControl>
+                  <FormErrorMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="showActivityLog"
+              render={({ field }) => (
+                <FormItem>
+                  <div className="flex items-center gap-2">
+                    <FormControl>
+                      <Checkbox
+                        {...field}
+                        value={undefined}
+                        onCheckedChange={field.onChange}
+                        checked={!!field.value}
+                      />
+                    </FormControl>
+                    <FormLabel className="mb-0">Show recent activities</FormLabel>
+                  </div>
                   <FormErrorMessage />
                 </FormItem>
               )}
