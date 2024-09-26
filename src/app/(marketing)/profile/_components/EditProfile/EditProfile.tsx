@@ -1,6 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/Button"
+import { Checkbox } from "@/components/ui/Checkbox"
 import {
   Dialog,
   DialogBody,
@@ -127,6 +128,19 @@ export const EditProfile = ({ children }: PropsWithChildren<any>) => {
                       {...field}
                       value={field.value ?? undefined}
                     />
+                  </FormControl>
+                  <FormErrorMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="showActivityLog"
+              render={({ field }) => (
+                <FormItem className="">
+                  <FormLabel>Show recent activities</FormLabel>
+                  <FormControl>
+                    <Checkbox {...field} value={field.value?.toString()} />
                   </FormControl>
                   <FormErrorMessage />
                 </FormItem>
