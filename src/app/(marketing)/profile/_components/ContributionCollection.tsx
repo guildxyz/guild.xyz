@@ -48,7 +48,7 @@ export const ContributionCollection = ({
             <div className="relative grid size-64 place-items-center overflow-hidden bg-background">
               <Image
                 src={pin.href}
-                className="absolute size-full translate-y-1/3 rotate-45 scale-125 blur-3xl saturate-150"
+                className="absolute size-full translate-y-1/2 rotate-180 scale-x-90 scale-y-125 blur-3xl saturate-150"
                 alt="guild pin"
                 width={32}
                 height={32}
