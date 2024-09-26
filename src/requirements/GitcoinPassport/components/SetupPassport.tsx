@@ -1,26 +1,23 @@
-import { Link } from "@chakra-ui/next-js"
-import { ButtonProps } from "@chakra-ui/react"
-import { ArrowSquareOut } from "@phosphor-icons/react"
-import Button from "components/common/Button"
+import { ButtonProps, buttonVariants } from "@/components/ui/Button"
+import { cn } from "@/lib/utils"
+import { ArrowSquareOut } from "@phosphor-icons/react/dist/ssr"
 
-const SetupPassport = (buttonProps: ButtonProps) => (
-  <Link
+const SetupPassport = ({ size = "xs" }: { size?: ButtonProps["size"] }) => (
+  // We only use this color scheme here, so we haven't made a custom button variant for it
+  <a
+    className={cn(
+      buttonVariants({
+        size,
+        className:
+          "bg-teal-600 text-white hover:bg-teal-700 active:bg-teal-800 dark:active:bg-teal-400 dark:hover:bg-teal-500",
+      })
+    )}
     href="https://passport.gitcoin.co"
-    isExternal
-    _hover={{
-      textDecoration: "none",
-    }}
+    target="_blank"
   >
-    <Button
-      size="xs"
-      colorScheme="teal"
-      rightIcon={<ArrowSquareOut />}
-      iconSpacing="1"
-      {...buttonProps}
-    >
-      Setup Passport
-    </Button>
-  </Link>
+    <span>Setup Passport</span>
+    <ArrowSquareOut weight="bold" />
+  </a>
 )
 
-export default SetupPassport
+export { SetupPassport }

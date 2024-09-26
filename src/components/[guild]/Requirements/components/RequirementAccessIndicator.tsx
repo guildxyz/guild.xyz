@@ -17,8 +17,10 @@ import { useRequirementContext } from "./RequirementContext"
 const DynamicCompleteCaptcha = dynamic(
   () => import("requirements/Captcha/components/CompleteCaptcha")
 )
-const DynamicSetupPassport = dynamic(
-  () => import("requirements/GitcoinPassport/components/SetupPassport")
+const DynamicSetupPassport = dynamic(() =>
+  import("requirements/GitcoinPassport/components/SetupPassport").then(
+    (module) => module.SetupPassport
+  )
 )
 const DynamicConnectRequirementPlatformButton = dynamic(
   () => import("./ConnectRequirementPlatformButton")
