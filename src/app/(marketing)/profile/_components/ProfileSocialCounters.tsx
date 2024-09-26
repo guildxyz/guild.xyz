@@ -4,7 +4,7 @@ import { ProfileAvatar } from "@/components/ProfileAvatar"
 import { Anchor } from "@/components/ui/Anchor"
 import { Avatar } from "@/components/ui/Avatar"
 import { AvatarGroup } from "@/components/ui/AvatarGroup"
-import { Card } from "@/components/ui/Card"
+import { Badge } from "@/components/ui/Badge"
 import {
   Dialog,
   DialogBody,
@@ -20,7 +20,6 @@ import { Separator } from "@/components/ui/Separator"
 import { Skeleton } from "@/components/ui/Skeleton"
 import { cn } from "@/lib/utils"
 import { REFERRER_USER_SEARCH_PARAM_KEY } from "@app/(marketing)/create-profile/(onboarding)/constants"
-import { EnvelopeOpen } from "@phosphor-icons/react"
 import { PropsWithChildren } from "react"
 import { RequiredFields } from "types"
 import pluralize from "utils/pluralize"
@@ -65,34 +64,35 @@ export const ProfileSocialCounters = ({ className }: any) => {
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Guildmates</DialogTitle>
+              <DialogTitle className="flex items-center gap-3">
+                Guildmates
+                <Badge size="sm" className="font-sans">
+                  {referredUsers.length}
+                </Badge>
+              </DialogTitle>
               <DialogDescription>
-                Profiles created using this referral
+                <ProfileOwnerGuard reverseLogic>
+                  Profiles created using this referral
+                </ProfileOwnerGuard>
               </DialogDescription>
               <DialogCloseButton />
             </DialogHeader>
             <DialogBody>
               <ProfileOwnerGuard>
                 {inviteLink && (
-                  <Card className="mb-8 space-y-4 border border-info bg-card-secondary p-4">
-                    <div className="flex items-center gap-3">
-                      <EnvelopeOpen className="size-8 text-info" weight="fill" />
-                      <p className="flex-1 text-pretty font-medium">
-                        Share this link with friends and earn XP by gathering
-                        Guildmates!
-                      </p>
-                    </div>
+                  <>
+                    <p className="mb-2 text-pretty font-medium">
+                      Share this link and earn XP for each user who joins:
+                    </p>
                     <CopyLink href={inviteLink} />
-                  </Card>
+                    <Separator className="my-8" />
+                  </>
                 )}
               </ProfileOwnerGuard>
               <ScrollArea className="h-96">
                 {referredUsers.length ? (
                   referredUsers.map((user) => (
-                    <div
-                      key={user.userId}
-                      className="flex items-center gap-2 pb-3.5"
-                    >
+                    <div key={user.userId} className="flex items-center gap-2 pb-4">
                       <Avatar className="border">
                         <ProfileAvatar
                           username={user.username}

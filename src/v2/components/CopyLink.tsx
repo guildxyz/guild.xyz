@@ -1,4 +1,4 @@
-import { Check, Clipboard } from "@phosphor-icons/react"
+import { Check, Copy } from "@phosphor-icons/react"
 import { useState } from "react"
 import { useCopyToClipboard } from "usehooks-ts"
 import { IconButton } from "./ui/IconButton"
@@ -11,7 +11,7 @@ export const CopyLink = ({ href }: { href: string }) => {
     <div className="flex rounded-lg border bg-card">
       <ScrollArea className="whitespace-nowrap px-2 py-2.5 font-mono text-muted-foreground text-sm">
         {href}
-        <ScrollBar orientation="horizontal" />
+        <ScrollBar orientation="horizontal" className="invisible" />
       </ScrollArea>
       <IconButton
         className="flex items-center justify-center rounded-none border-l"
@@ -24,7 +24,7 @@ export const CopyLink = ({ href }: { href: string }) => {
           showSuccess ? (
             <Check className="size-5 text-success-subtle-foreground" />
           ) : (
-            <Clipboard className="size-5" />
+            <Copy className="size-5" />
           )
         }
         aria-label="copy to clipboard"
