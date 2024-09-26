@@ -199,6 +199,10 @@ const config = {
           from: { height: "var(--radix-collapsible-content-height)", opacity: "1" },
           to: { height: "0", opacity: "0" },
         },
+        float: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-10px)' },
+        },
       },
       animation: {
         wiggle: 'wiggle 1s ease-in-out infinite',
@@ -207,6 +211,7 @@ const config = {
         "caret-blink": "caret-blink 1.25s ease-out infinite",
         "collapse-open": "collapse-open 200ms ease-out",
         "collapse-closed": "collapse-closed 200ms ease-out",
+        float: 'float 3s ease-in-out infinite',
       },
       zIndex: {
         // Using these from Chakra UI until we use both design systems at the same time
