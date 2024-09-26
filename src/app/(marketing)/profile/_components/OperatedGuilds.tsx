@@ -97,7 +97,7 @@ export const OperatedGuild = ({ guildBase }: { guildBase: GuildBase }) => {
                 <EmphasizedData>{createdAt}</EmphasizedData>
               </TooltipTrigger>
               <TooltipContent>
-                Created at {new Date(guild.createdAt).toLocaleDateString()}
+                Created at {new Date(guild.createdAt).toUTCString()}
               </TooltipContent>
             </Tooltip>{" "}
             ago
