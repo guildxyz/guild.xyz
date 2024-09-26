@@ -1,3 +1,4 @@
+import { Anchor } from "@/components/ui/Anchor"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
 import { Separator } from "@/components/ui/Separator"
 import { Guild, Role, Schemas } from "@guildxyz/types"
@@ -31,9 +32,11 @@ export const ContributionCardView = ({
           <div className="font-extrabold text-muted-foreground text-xs uppercase">
             TOP ROLE
           </div>
-          <h3 className="mb-1 font-bold font-display text-lg tracking-tight md:text-xl">
-            {role.name}
-          </h3>
+          <Anchor href={`/${guild.urlName}#role-${role.id}`} target="_blank">
+            <h3 className="mb-1 font-bold font-display text-lg tracking-tight md:text-xl">
+              {role.name}
+            </h3>
+          </Anchor>
           <div className="flex items-center gap-2 text-muted-foreground">
             <Users weight="bold" className="min-w-min" />
             <p className="line-clamp-1 text-sm">

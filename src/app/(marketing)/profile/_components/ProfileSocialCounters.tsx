@@ -2,8 +2,7 @@ import FarcasterImage from "@/../static/socialIcons/farcaster.svg"
 import { CopyLink } from "@/components/CopyLink"
 import { ProfileAvatar } from "@/components/ProfileAvatar"
 import { Anchor } from "@/components/ui/Anchor"
-import { Avatar } from "@/components/ui/Avatar"
-import { AvatarGroup } from "@/components/ui/AvatarGroup"
+import { Avatar, AvatarFallback } from "@/components/ui/Avatar"
 import { Badge } from "@/components/ui/Badge"
 import {
   Dialog,
@@ -20,6 +19,7 @@ import { Separator } from "@/components/ui/Separator"
 import { Skeleton } from "@/components/ui/Skeleton"
 import { cn } from "@/lib/utils"
 import { REFERRER_USER_SEARCH_PARAM_KEY } from "@app/(marketing)/create-profile/(onboarding)/constants"
+import { AvatarImage } from "@radix-ui/react-avatar"
 import { PropsWithChildren } from "react"
 import { RequiredFields } from "types"
 import pluralize from "utils/pluralize"
@@ -175,24 +175,46 @@ const RelevantFollowers = ({
 
   return (
     <div className="flex items-center gap-2">
-      <AvatarGroup
-        imageUrls={relevantFollowers.slice(0, 3).map(({ pfp_url }) => pfp_url)}
-        count={relevantFollowers.length}
-      />
+      <div className="ml-3 flex">
+        {relevantFollowers.slice(0, 3).map(({ pfp_url, fid, username }) => (
+          <Anchor
+            href={`https://warpcast.com/${username}`}
+            target="_blank"
+            key={fid}
+          >
+            <Avatar className="-ml-3 border">
+              <AvatarImage
+                src={pfp_url}
+                alt="avatar"
+                className="size-full object-cover"
+              />
+              <AvatarFallback />
+            </Avatar>
+          </Anchor>
+        ))}
+      </div>
       <div
-        className={cn("max-w-72 text-balance text-muted-foreground leading-tight", {
+        className={cn("max-w-80 text-balance text-muted-foreground leading-tight", {
           "max-w-64": !secondFc,
         })}
       >
         Followed by{" "}
-        <span className="inline-block max-w-24 truncate align-bottom font-bold">
+        <Anchor
+          href={`https://warpcast.com/${firstFc.username}`}
+          target="_blank"
+          className="inline-block max-w-24 truncate align-bottom font-bold"
+        >
           {firstFc.display_name}
           {secondFc && <span className="font-normal">,&nbsp;</span>}
-        </span>
+        </Anchor>
         {secondFc && (
-          <span className="inline-block max-w-24 truncate align-bottom font-bold">
+          <Anchor
+            href={`https://warpcast.com/${secondFc.username}`}
+            target="_blank"
+            className="inline-block max-w-24 truncate align-bottom font-bold"
+          >
             {secondFc.display_name}
-          </span>
+          </Anchor>
         )}
         {!!remainingFollowers && ` and ${pluralize(remainingFollowers, "other")}`} on
         Farcaster
