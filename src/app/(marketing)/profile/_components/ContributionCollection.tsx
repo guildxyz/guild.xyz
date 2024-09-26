@@ -55,7 +55,7 @@ export const ContributionCollection = ({
               />
               <Avatar
                 size="lg"
-                className="size-48 animate-float border"
+                className="mt-2.5 size-48 animate-float border"
                 style={{ animationDuration: "4s" }}
               >
                 <AvatarImage
@@ -71,7 +71,9 @@ export const ContributionCollection = ({
               <div className="space-x-1">
                 <Badge size="sm">Guild Pin</Badge>
               </div>
-              <h3 className="my-2 inline-block font-bold">Minted {guild.name}</h3>
+              <h3 className="my-2 inline-block font-bold">
+                Minted <span className="font-display">{guild.name}</span> pin
+              </h3>
             </article>
           </HoverCardContent>
         </HoverCard>
