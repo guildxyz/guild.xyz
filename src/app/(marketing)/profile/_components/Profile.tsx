@@ -110,10 +110,26 @@ export const Profile = () => {
           <ContributionCard contribution={contribution} key={contribution.id} />
         ))}
       </div>
-      <div className="mt-14">
-        <SectionTitle className="mb-3">Recent activity</SectionTitle>
-        {isWeb3Connected ? <RecentActivity /> : <RecentActivityFallback />}
-      </div>
+      {profile.showActivityLog ? (
+        <div className="mt-14">
+          <SectionTitle className="mb-3">Recent activity</SectionTitle>
+          {isWeb3Connected ? <RecentActivity /> : <RecentActivityFallback />}
+        </div>
+      ) : (
+        <ProfileOwnerGuard>
+          <div className="mt-14">
+            <SectionTitle className="mb-3">Recent activity</SectionTitle>
+            <div className="flex flex-wrap gap-2">
+              <Info className="size-6 text-info" weight="fill" />
+              <p className="text-muted-foreground">
+                Your recent activity is hidden, which can be changed in the{" "}
+                <strong>Edit profile</strong> section. This message is only visible
+                for you.
+              </p>
+            </div>
+          </div>
+        </ProfileOwnerGuard>
+      )}
     </>
   )
 }
