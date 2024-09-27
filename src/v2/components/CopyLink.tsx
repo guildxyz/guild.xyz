@@ -8,7 +8,7 @@ export const CopyLink = ({ href }: { href: string }) => {
   const [_, copy] = useCopyToClipboard()
   const [showSuccess, setShowSuccess] = useState(false)
   return (
-    <div className="flex rounded-lg border bg-card">
+    <div className="flex overflow-hidden rounded-lg border bg-secondary">
       <ScrollArea className="whitespace-nowrap px-2 py-2.5 font-mono text-muted-foreground text-sm">
         {href}
         <ScrollBar orientation="horizontal" className="invisible" />
@@ -22,12 +22,13 @@ export const CopyLink = ({ href }: { href: string }) => {
         }}
         icon={
           showSuccess ? (
-            <Check className="size-5 text-success-subtle-foreground" />
+            <Check weight="bold" className="text-success-subtle-foreground" />
           ) : (
-            <Copy className="size-5" />
+            <Copy weight="bold" />
           )
         }
         aria-label="copy to clipboard"
+        variant="ghost"
       />
     </div>
   )
