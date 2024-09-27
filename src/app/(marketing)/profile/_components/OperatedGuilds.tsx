@@ -19,11 +19,6 @@ import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 
 export const OperatedGuild = ({ guildBase }: { guildBase: GuildBase }) => {
   const guild = useGuild(guildBase.id)
-  const createdAt =
-    guild.createdAt &&
-    formatRelativeTimeFromNow(
-      Date.now().valueOf() - new Date(guild.createdAt).valueOf()
-    )
   const rewardCount =
     guild.guildPlatforms &&
     guild.guildPlatforms.length +
@@ -89,15 +84,22 @@ export const OperatedGuild = ({ guildBase }: { guildBase: GuildBase }) => {
           <EmphasizedData>{rewardCount}</EmphasizedData>
           rewards in total
         </OperatedGuildDetail>
-        {createdAt && guild.createdAt && (
+        {guild.createdAt && (
           <OperatedGuildDetail Icon={Calendar}>
             Created{" "}
             <Tooltip>
               <TooltipTrigger>
-                <EmphasizedData>{createdAt}</EmphasizedData>
+                <EmphasizedData>
+                  {formatRelativeTimeFromNow(
+                    Date.now().valueOf() - new Date(guild.createdAt).valueOf()
+                  )}
+                </EmphasizedData>
               </TooltipTrigger>
               <TooltipContent>
-                Created at {new Date(guild.createdAt).toUTCString()}
+                Created at{" "}
+                <time className="ml-1 font-medium font-mono">
+                  {new Date(guild.createdAt).toLocaleString()}
+                </time>
               </TooltipContent>
             </Tooltip>{" "}
             ago
