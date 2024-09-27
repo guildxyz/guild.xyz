@@ -14,7 +14,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/Dialog"
-import { ScrollArea } from "@/components/ui/ScrollArea"
 import { Separator } from "@/components/ui/Separator"
 import { Skeleton } from "@/components/ui/Skeleton"
 import { cn } from "@/lib/utils"
@@ -62,11 +61,11 @@ export const ProfileSocialCounters = ({ className }: any) => {
               </div>
             </SocialCountTile>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent scrollBody>
             <DialogHeader>
-              <DialogTitle className="flex items-center gap-3">
+              <DialogTitle className="flex items-center gap-2">
                 Guildmates
-                <Badge size="sm" className="font-sans">
+                <Badge size="sm" className="relative top-0.5 font-sans">
                   {referredUsers.length}
                 </Badge>
               </DialogTitle>
@@ -74,52 +73,53 @@ export const ProfileSocialCounters = ({ className }: any) => {
                 <ProfileOwnerGuard reverseLogic>
                   Profiles created using this referral
                 </ProfileOwnerGuard>
+
+                <ProfileOwnerGuard>
+                  {inviteLink && (
+                    <>
+                      <p className="mt-4 mb-2 text-pretty font-medium">
+                        Share this link and earn XP for each user who joins:
+                      </p>
+                      <CopyLink href={inviteLink} />
+                    </>
+                  )}
+                </ProfileOwnerGuard>
               </DialogDescription>
               <DialogCloseButton />
             </DialogHeader>
-            <DialogBody>
-              <ProfileOwnerGuard>
-                {inviteLink && (
-                  <>
-                    <p className="mb-2 text-pretty font-medium">
-                      Share this link and earn XP for each user who joins:
-                    </p>
-                    <CopyLink href={inviteLink} />
-                    <Separator className="my-8" />
-                  </>
-                )}
-              </ProfileOwnerGuard>
-              <ScrollArea className="h-96">
-                {referredUsers.length ? (
-                  referredUsers.map((user) => (
-                    <div key={user.userId} className="flex items-center gap-2 pb-4">
-                      <Avatar className="border">
-                        <ProfileAvatar
-                          username={user.username}
-                          profileImageUrl={user.profileImageUrl}
-                        />
-                      </Avatar>
-                      <div className="leading-tight">
-                        <div className="max-w-64 truncate">
-                          {user.name || user.username}
-                        </div>
-                        <Anchor
-                          href={`/profile/${user.username}`}
-                          variant="muted"
-                          target="_blank"
-                          className="text-sm"
-                        >
-                          @{user.username}
-                        </Anchor>
+            <DialogBody className="border-t bg-card-secondary pt-8" scroll>
+              {referredUsers.length ? (
+                referredUsers.map((user) => (
+                  <div
+                    key={user.userId}
+                    className="mb-3 flex items-center gap-2 border-border-muted border-b pb-3 last:border-b-0"
+                  >
+                    <Avatar className="border">
+                      <ProfileAvatar
+                        username={user.username}
+                        profileImageUrl={user.profileImageUrl}
+                      />
+                    </Avatar>
+                    <div className="leading-tight">
+                      <div className="max-w-64 truncate">
+                        {user.name || user.username}
                       </div>
+                      <Anchor
+                        href={`/profile/${user.username}`}
+                        variant="muted"
+                        target="_blank"
+                        className="text-sm"
+                      >
+                        @{user.username}
+                      </Anchor>
                     </div>
-                  ))
-                ) : (
-                  <p className="text-muted-foreground">
-                    This profile has no guildmates to show yet.
-                  </p>
-                )}
-              </ScrollArea>
+                  </div>
+                ))
+              ) : (
+                <p className="text-muted-foreground">
+                  This profile has no guildmates to show yet.
+                </p>
+              )}
             </DialogBody>
           </DialogContent>
         </Dialog>
