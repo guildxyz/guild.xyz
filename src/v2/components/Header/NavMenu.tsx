@@ -3,7 +3,6 @@
 import { cn } from "@/lib/utils"
 import {
   Book,
-  CircleWavyCheck,
   Code,
   DiscordLogo,
   File,
@@ -54,11 +53,6 @@ export const NavMenu = () => (
           <NavButton href="/create-guild">
             <Plus weight="bold" />
             Create guild
-          </NavButton>
-
-          <NavButton href="/leaderboard">
-            <CircleWavyCheck weight="bold" />
-            Guild Pins leaderboard
           </NavButton>
 
           <NavButton href="https://help.guild.xyz">
