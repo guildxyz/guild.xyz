@@ -63,9 +63,9 @@ export const ProfileSocialCounters = ({ className }: any) => {
           </DialogTrigger>
           <DialogContent scrollBody>
             <DialogHeader>
-              <DialogTitle className="flex items-center gap-3">
+              <DialogTitle className="flex items-center gap-2">
                 Guildmates
-                <Badge size="sm" className="font-sans">
+                <Badge size="sm" className="relative top-0.5 font-sans">
                   {referredUsers.length}
                 </Badge>
               </DialogTitle>
