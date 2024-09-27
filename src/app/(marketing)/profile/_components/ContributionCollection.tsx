@@ -42,7 +42,13 @@ export const ContributionCollection = ({
         <HoverCard openDelay={100} closeDelay={100}>
           <HoverCardTrigger>
             <Avatar size="lg" className="-ml-3 border-2 border-card">
-              <AvatarImage src={pin.href} alt="guild pin" width={32} height={32} />
+              <AvatarImage
+                src={pin.href}
+                alt="guild pin"
+                width={32}
+                height={32}
+                unoptimized
+              />
               <AvatarFallback />
             </Avatar>
           </HoverCardTrigger>
@@ -54,6 +60,7 @@ export const ContributionCollection = ({
                 alt="guild pin"
                 width={32}
                 height={32}
+                unoptimized
               />
               <Avatar
                 size="lg"
@@ -65,6 +72,7 @@ export const ContributionCollection = ({
                   alt="guild pin"
                   width={192}
                   height={192}
+                  unoptimized
                 />
                 <AvatarFallback />
               </Avatar>
