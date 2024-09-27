@@ -8,9 +8,11 @@ import {
 } from "@/components/ui/HoverCard"
 import { Guild, GuildReward, Schemas } from "@guildxyz/types"
 import { Ranking } from "@phosphor-icons/react"
+import { ArrowRight } from "@phosphor-icons/react/dist/ssr"
 import { GuildAction } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import { env } from "env"
 import Image from "next/image"
+import { ReactNode } from "react"
 import Star from "static/icons/star.svg"
 import useSWRImmutable from "swr/immutable"
 import shortenHex from "utils/shortenHex"
@@ -37,7 +39,7 @@ export const ContributionCollection = ({
   return (
     <>
       {pin && (
-        <HoverCard openDelay={100}>
+        <HoverCard openDelay={100} closeDelay={100}>
           <HoverCardTrigger>
             <Avatar size="lg" className="-ml-3 border-2 border-card">
               <AvatarImage src={pin.href} alt="guild pin" width={32} height={32} />
@@ -67,19 +69,16 @@ export const ContributionCollection = ({
                 <AvatarFallback />
               </Avatar>
             </div>
-            <article className="border-t p-3">
-              <div className="space-x-1">
-                <Badge size="sm">Guild Pin</Badge>
-              </div>
-              <h3 className="my-2 inline-block font-bold">
-                Minted <span className="font-display">{guild.name}</span> pin
-              </h3>
-            </article>
+
+            <CollectionItemHoverCardDetails
+              badges={<Badge size="sm">Guild Pin</Badge>}
+              title={`Minted ${guild.name} pin`}
+            />
           </HoverCardContent>
         </HoverCard>
       )}
       {collectionNft?.data.imageUrl && (
-        <HoverCard openDelay={100}>
+        <HoverCard openDelay={100} closeDelay={100}>
           <HoverCardTrigger>
             <Avatar size="lg" className="-ml-3 border-2 border-card">
               <AvatarImage
@@ -98,25 +97,19 @@ export const ContributionCollection = ({
               width={256}
               height={256}
             />
-            <article className="border-t p-3">
-              <div className="space-x-1">
-                <Badge size="sm">NFT</Badge>
-                <Badge size="sm" variant="outline">
-                  {shortenHex(collectionNft.data.contractAddress)}
-                </Badge>
-              </div>
-              <h3 className="my-2 inline-block font-bold">
-                <Anchor
-                  href={`/${guild.urlName}/collect/${collectionNft.data.chain}/${collectionNft.data.contractAddress}`}
-                  target="_blank"
-                >
-                  {collectionNft.data.name}
-                </Anchor>
-              </h3>
-              <p className="text-muted-foreground text-sm leading-normal">
-                {collectionNft.data.description}
-              </p>
-            </article>
+            <CollectionItemHoverCardDetails
+              badges={
+                <>
+                  <Badge size="sm">NFT</Badge>
+                  <Badge size="sm" variant="outline">
+                    {shortenHex(collectionNft.data.contractAddress)}
+                  </Badge>
+                </>
+              }
+              title={collectionNft.data.name ?? "Unknown NFT"}
+              href={`/${guild.urlName}/collect/${collectionNft.data.chain}/${collectionNft.data.contractAddress}`}
+              description={collectionNft.data.description}
+            />
           </HoverCardContent>
         </HoverCard>
       )}
@@ -151,3 +144,38 @@ export const ContributionCollection = ({
     </>
   )
 }
+
+const CollectionItemHoverCardDetails = ({
+  badges,
+  title,
+  href,
+  description,
+}: {
+  badges: ReactNode
+  title: string
+  href?: string
+  description?: string
+}) => (
+  <article className="flex flex-col gap-2 border-t p-3">
+    <div className="space-x-1">{badges}</div>
+
+    <section className="flex flex-col">
+      <h3 className="font-bold">
+        {href ? (
+          <Anchor href={href} target="_blank" variant="unstyled" className="group">
+            {title}
+            <ArrowRight
+              weight="bold"
+              className="mx-1 mb-0.5 inline opacity-0 transition-opacity group-hover:opacity-100"
+            />
+          </Anchor>
+        ) : (
+          title
+        )}
+      </h3>
+      {!!description && (
+        <p className="text-muted-foreground text-sm leading-normal">{description}</p>
+      )}
+    </section>
+  </article>
+)
