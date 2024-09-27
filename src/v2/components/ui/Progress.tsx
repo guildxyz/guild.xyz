@@ -1,13 +1,17 @@
 "use client"
 
-import * as ProgressPrimitive from "@radix-ui/react-progress"
-import * as React from "react"
-
 import { cn } from "@/lib/utils"
+import * as ProgressPrimitive from "@radix-ui/react-progress"
+import {
+  ComponentPropsWithoutRef,
+  ElementRef,
+  FunctionComponent,
+  forwardRef,
+} from "react"
 
-const ProgressRoot = React.forwardRef<
-  React.ElementRef<typeof ProgressPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root>
+const ProgressRoot = forwardRef<
+  ElementRef<typeof ProgressPrimitive.Root>,
+  ComponentPropsWithoutRef<typeof ProgressPrimitive.Root>
 >(({ className, value, ...props }, ref) => (
   <ProgressPrimitive.Root
     ref={ref}
@@ -19,10 +23,8 @@ const ProgressRoot = React.forwardRef<
   />
 ))
 
-const ProgressIndicator = React.forwardRef<
-  React.ElementRef<
-    React.FunctionComponent<ProgressPrimitive.ProgressIndicatorProps>
-  >,
+const ProgressIndicator = forwardRef<
+  ElementRef<FunctionComponent<ProgressPrimitive.ProgressIndicatorProps>>,
   ProgressPrimitive.ProgressIndicatorProps & { value: number }
 >(({ className, value, style, ...props }, ref) => (
   <ProgressPrimitive.Indicator
