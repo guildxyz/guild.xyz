@@ -20,6 +20,8 @@ import {
   FormLabel,
 } from "@/components/ui/Form"
 import { Input } from "@/components/ui/Input"
+import { Separator } from "@/components/ui/Separator"
+import { Switch } from "@/components/ui/Switch"
 import { Textarea } from "@/components/ui/Textarea"
 import { useDisclosure } from "@/hooks/useDisclosure"
 import { filterOnDirtyFormFields } from "@/lib/filterOnDirtyFormFields"
@@ -59,7 +61,12 @@ export const EditProfile = ({ children }: PropsWithChildren<any>) => {
 
   const { handleSubmit, isUploadingShown, uploadLoadingText } = useSubmitWithUpload(
     form.handleSubmit((params) => {
-      onSubmit(filterOnDirtyFormFields(params, form.formState.dirtyFields))
+      onSubmit(
+        filterOnDirtyFormFields(params, {
+          ...form.formState.dirtyFields,
+          showActivityLog: true,
+        })
+      )
     }),
     profilePicUploader.isUploading || backgroundUploader.isUploading
   )
@@ -118,7 +125,7 @@ export const EditProfile = ({ children }: PropsWithChildren<any>) => {
               control={form.control}
               name="bio"
               render={({ field }) => (
-                <FormItem className="">
+                <FormItem className="pb-3">
                   <FormLabel>Bio</FormLabel>
                   <FormControl>
                     <Textarea
@@ -128,6 +135,28 @@ export const EditProfile = ({ children }: PropsWithChildren<any>) => {
                       value={field.value ?? undefined}
                     />
                   </FormControl>
+                  <FormErrorMessage />
+                </FormItem>
+              )}
+            />
+
+            <Separator className="mt-4 mb-6 bg-border-muted" />
+
+            <FormField
+              control={form.control}
+              name="showActivityLog"
+              render={({ field: { value, onChange, ...field } }) => (
+                <FormItem>
+                  <div className="flex items-center gap-2">
+                    <FormControl>
+                      <Switch
+                        {...field}
+                        checked={!!value}
+                        onCheckedChange={onChange}
+                      />
+                    </FormControl>
+                    <FormLabel className="mb-0">Show recent activities</FormLabel>
+                  </div>
                   <FormErrorMessage />
                 </FormItem>
               )}

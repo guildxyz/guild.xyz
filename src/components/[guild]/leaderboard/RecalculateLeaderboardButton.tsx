@@ -50,6 +50,7 @@ const RecalculateLeaderboardButton = ({ size = "FULL" }: Props) => {
       hasArrow
     >
       <IconButton
+        rounded="none"
         size="sm"
         aria-label="Refresh leaderboard"
         icon={<ArrowsClockwise />}

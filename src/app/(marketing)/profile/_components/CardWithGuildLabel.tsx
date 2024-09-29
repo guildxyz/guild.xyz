@@ -1,3 +1,4 @@
+import { Anchor } from "@/components/ui/Anchor"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
 import { Card } from "@/components/ui/Card"
 import { cn } from "@/lib/utils"
@@ -31,14 +32,16 @@ export const CardWithGuildLabel = ({
             />
             <AvatarFallback />
           </Avatar>
-          <div
+          <Anchor
+            href={`/${guild.urlName}`}
+            target="_blank"
             className={cn(
               "-mt-0.5 truncate font-bold font-display text-foreground text-sm",
               color && (color.isDark() ? "text-white" : "text-black")
             )}
           >
             {guild.name}
-          </div>
+          </Anchor>
         </div>
       </div>
       <div className="mt-9 size-full rounded-2xl bg-card sm:mt-0 sm:ml-8">

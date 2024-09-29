@@ -1,7 +1,9 @@
 import { CheckMark } from "@/components/CheckMark"
+import { Anchor } from "@/components/ui/Anchor"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
 import { Card } from "@/components/ui/Card"
 import { Skeleton } from "@/components/ui/Skeleton"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip"
 import { Icon } from "@phosphor-icons/react"
 import {
   Calendar,
@@ -17,11 +19,6 @@ import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 
 export const OperatedGuild = ({ guildBase }: { guildBase: GuildBase }) => {
   const guild = useGuild(guildBase.id)
-  const createdAt =
-    guild.createdAt &&
-    formatRelativeTimeFromNow(
-      Date.now().valueOf() - new Date(guild.createdAt).valueOf()
-    )
   const rewardCount =
     guild.guildPlatforms &&
     guild.guildPlatforms.length +
@@ -59,12 +56,14 @@ export const OperatedGuild = ({ guildBase }: { guildBase: GuildBase }) => {
               <Skeleton className="size-full" />
             </AvatarFallback>
           </Avatar>
-          <h3 className="text-center font-bold font-display text-lg text-white lg:text-xl">
-            {guildBase.name}
-            {guildBase.tags.includes("VERIFIED") && (
-              <CheckMark className="ml-2 inline-block size-6 align-text-top" />
-            )}
-          </h3>
+          <Anchor href={`/${guildBase.urlName}`} target="_blank">
+            <h3 className="text-center font-bold font-display text-lg text-white lg:text-xl">
+              {guildBase.name}
+              {guildBase.tags.includes("VERIFIED") && (
+                <CheckMark className="ml-2 inline-block size-6 align-text-top" />
+              )}
+            </h3>
+          </Anchor>
         </div>
       </div>
       <div className="grid grow justify-stretch gap-2 p-5 sm:grid-cols-2">
@@ -85,10 +84,24 @@ export const OperatedGuild = ({ guildBase }: { guildBase: GuildBase }) => {
           <EmphasizedData>{rewardCount}</EmphasizedData>
           rewards in total
         </OperatedGuildDetail>
-        {createdAt && (
+        {guild.createdAt && (
           <OperatedGuildDetail Icon={Calendar}>
-            Created
-            <EmphasizedData>{createdAt}</EmphasizedData>
+            Created{" "}
+            <Tooltip>
+              <TooltipTrigger>
+                <EmphasizedData>
+                  {formatRelativeTimeFromNow(
+                    Date.now().valueOf() - new Date(guild.createdAt).valueOf()
+                  )}
+                </EmphasizedData>
+              </TooltipTrigger>
+              <TooltipContent>
+                Created at{" "}
+                <time className="ml-1 font-medium font-mono">
+                  {new Date(guild.createdAt).toLocaleString()}
+                </time>
+              </TooltipContent>
+            </Tooltip>{" "}
             ago
           </OperatedGuildDetail>
         )}
