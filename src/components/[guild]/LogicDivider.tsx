@@ -1,8 +1,7 @@
-import { Divider, Flex, HStack, useColorMode } from "@chakra-ui/react"
+import { Separator } from "@/components/ui/Separator"
+import { cn } from "@/lib/utils"
 import { Logic } from "@guildxyz/types"
-import { Rest } from "types"
-
-type Props = { logic: Logic } & Rest
+type Props = { logic: Logic; className?: string }
 
 export const formattedLogic: Record<Logic, string> = {
   AND: "AND",
@@ -10,31 +9,15 @@ export const formattedLogic: Record<Logic, string> = {
   ANY_OF: "OR",
 }
 
-const LogicDivider = ({ logic, ...rest }: Props): JSX.Element => {
-  const { colorMode } = useColorMode()
+const LogicDivider = ({ logic, className }: Props): JSX.Element => (
+  <div className={cn("flex items-center gap-4 py-2", className)}>
+    <Separator variant="muted" className="shrink" />
+    {/* TODO: Not sure if this custom text color is a good practice or not, we should think about it */}
+    <div className="flex items-center justify-center font-bold text-muted-foreground/50 text-xs">
+      {formattedLogic[logic]}
+    </div>
+    <Separator variant="muted" className="shrink" />
+  </div>
+)
 
-  return (
-    <HStack py={3} width="full" {...rest} spacing={4}>
-      <Divider
-        width="full"
-        borderColor={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.400"}
-      />
-      <Flex
-        alignItems="center"
-        justifyContent="center"
-        fontSize="xs"
-        fontWeight="bold"
-        color={colorMode === "light" ? "blackAlpha.500" : "whiteAlpha.400"}
-        flexShrink={0}
-      >
-        {formattedLogic[logic]}
-      </Flex>
-      <Divider
-        width="full"
-        borderColor={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.400"}
-      />
-    </HStack>
-  )
-}
-
-export default LogicDivider
+export { LogicDivider }
