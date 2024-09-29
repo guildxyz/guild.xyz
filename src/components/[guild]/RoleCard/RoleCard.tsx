@@ -1,3 +1,4 @@
+import { useMeasure } from "@/hooks/useMeasure"
 import {
   Collapse,
   Flex,
@@ -10,19 +11,16 @@ import {
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import ClientOnly from "components/common/ClientOnly"
-import useMembership, {
-  useRoleMembership,
-} from "components/explorer/hooks/useMembership"
 import dynamic from "next/dynamic"
-import { memo, useEffect, useRef } from "react"
+import { memo, useEffect } from "react"
 import { Role } from "types"
-import RoleRequirements from "../Requirements"
+import { RoleRequirements } from "../Requirements/RoleRequirements"
 import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
 import { AccessIndicator } from "./components/AccessIndicator"
 import { RoleCardMemberCount } from "./components/MemberCount"
 import { RewardIcon } from "./components/Reward"
-import RoleDescription from "./components/RoleDescription"
+import { RoleDescription } from "./components/RoleDescription"
 import RoleHeader from "./components/RoleHeader"
 import RoleRequirementsSection, {
   RoleRequirementsSectionHeader,
@@ -33,20 +31,21 @@ type Props = {
   role: Role
 }
 
+const MIN_HEIGHT = "22rem"
+
 const DynamicEditRole = dynamic(() => import("./components/EditRole"))
 
 const RoleCard = memo(({ role }: Props) => {
   const { guildPlatforms, isDetailed } = useGuild()
   const { isAdmin } = useGuildPermission()
-  const { isMember } = useMembership()
-  const { hasRoleAccess } = useRoleMembership(role.id)
+
   /**
    * If using defaultIsOpen: !hasAccess, the RewardIcons doesn't show initially in
    * collapsed state when going back to explorer -> coming back to guild until
    * opening and closing the role, because the same layoutId is mounted twice and it
    * animates to the later one in the DOM (the hidden Rewards below)
    */
-  const { isOpen, onClose, onOpen, onToggle } = useDisclosure({
+  const { isOpen, onToggle } = useDisclosure({
     defaultIsOpen: true,
   })
   const {
@@ -54,8 +53,6 @@ const RoleCard = memo(({ role }: Props) => {
     onToggle: onToggleExpanded,
     onClose: onCloseExpanded,
   } = useDisclosure()
-  const descriptionRef = useRef<HTMLDivElement>(null)
-  const initialRequirementsRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (!isOpen) onCloseExpanded()
@@ -64,6 +61,9 @@ const RoleCard = memo(({ role }: Props) => {
   const isMobile = useBreakpointValue({ base: true, md: false }, { fallback: "md" })
 
   const collapsedHeight = isMobile && role.visibility === "PUBLIC" ? "90px" : "94px"
+
+  const { ref: leftColumnRef, bounds: leftColumnBounds } =
+    useMeasure<HTMLDivElement>()
 
   return (
     <Card
@@ -89,7 +89,11 @@ const RoleCard = memo(({ role }: Props) => {
     >
       <Collapse in={isOpen} startingHeight={collapsedHeight}>
         <SimpleGrid columns={{ base: 1, md: 2 }}>
-          <Flex direction="column">
+          <Flex
+            direction="column"
+            ref={leftColumnRef}
+            minH={{ base: "none", md: MIN_HEIGHT }}
+          >
             <RoleHeader {...{ role, isOpen }}>
               {!isOpen && (
                 <HStack
@@ -146,21 +150,20 @@ const RoleCard = memo(({ role }: Props) => {
                  */
                 {...(!isOpen && ({ inert: "true" } as any))}
               >
-                <RoleDescription
-                  description={role.description}
-                  {...{
-                    isExpanded,
-                    onToggleExpanded,
-                    descriptionRef,
-                    initialRequirementsRef,
-                  }}
-                />
+                {<RoleDescription description={role.description} />}
               </SlideFade>
             )}
 
             <RoleRewards role={role} isOpen={isOpen} />
           </Flex>
-          <RoleRequirementsSection isOpen={isOpen}>
+          <RoleRequirementsSection
+            isOpen={isOpen}
+            maxH={
+              leftColumnBounds && !isMobile
+                ? `max(${MIN_HEIGHT},${leftColumnBounds.height}px)`
+                : MIN_HEIGHT
+            }
+          >
             <RoleRequirementsSectionHeader isOpen={isOpen}>
               <Spacer />
               <ClientOnly>
@@ -175,8 +178,7 @@ const RoleCard = memo(({ role }: Props) => {
                 isOpen,
                 isExpanded,
                 onToggleExpanded,
-                descriptionRef,
-                initialRequirementsRef,
+                // descriptionRef,
               }}
             />
           </RoleRequirementsSection>

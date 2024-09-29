@@ -2,7 +2,7 @@ import { Box, Icon } from "@chakra-ui/react"
 import { Question } from "@phosphor-icons/react"
 import { JoinModalProvider } from "components/[guild]/JoinModal/JoinModalProvider"
 import { useActiveMembershipUpdate } from "components/[guild]/JoinModal/hooks/useActiveMembershipUpdate"
-import RoleRequirements from "components/[guild]/Requirements"
+import { RoleRequirements } from "components/[guild]/Requirements/RoleRequirements"
 import { RoleRequirementsSkeleton } from "components/[guild]/Requirements/RoleRequirements"
 import Requirement from "components/[guild]/Requirements/components/Requirement"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
@@ -78,7 +78,7 @@ const FormPage = ({ formId }: Props) => {
       ) : (
         <FormNoAccess isMember={isMember}>
           {!!role ? (
-            <RoleRequirements role={role} isOpen isExpanded />
+            <RoleRequirements role={role} isOpen />
           ) : (
             <Box px={5} pb={5}>
               {isLoading ? (

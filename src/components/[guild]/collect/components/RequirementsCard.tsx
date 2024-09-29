@@ -1,6 +1,6 @@
-import { Box, Icon, Stack, useColorModeValue, useDisclosure } from "@chakra-ui/react"
+import { Box, Icon, Stack, useColorModeValue } from "@chakra-ui/react"
 import { Question } from "@phosphor-icons/react"
-import RoleRequirements from "components/[guild]/Requirements"
+import { RoleRequirements } from "components/[guild]/Requirements/RoleRequirements"
 import Requirement from "components/[guild]/Requirements/components/Requirement"
 import { RoleRequirementsSectionHeader } from "components/[guild]/RoleCard/components/RoleRequirementsSection"
 import Card from "components/common/Card"
@@ -15,8 +15,6 @@ type Props = {
 const RequirementsCard = ({ role, children }: PropsWithChildren<Props>) => {
   const requirementsSectionBgColor = useColorModeValue("gray.50", "blackAlpha.300")
   const requirementsSectionBorderColor = useColorModeValue("gray.200", "gray.600")
-
-  const { isOpen: isExpanded, onToggle: onToggleExpanded } = useDisclosure()
 
   return (
     <CardMotionWrapper>
@@ -39,14 +37,7 @@ const RequirementsCard = ({ role, children }: PropsWithChildren<Props>) => {
               </Requirement>
             </Box>
           ) : (
-            <RoleRequirements
-              {...{
-                role,
-                isExpanded,
-                onToggleExpanded,
-                isOpen: true,
-              }}
-            />
+            <RoleRequirements role={role} isOpen />
           )}
         </Stack>
 
