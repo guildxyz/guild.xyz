@@ -1,4 +1,3 @@
-import { useMeasure } from "@/hooks/useMeasure"
 import {
   Collapse,
   Flex,
@@ -12,7 +11,6 @@ import {
 import Card from "components/common/Card"
 import ClientOnly from "components/common/ClientOnly"
 import dynamic from "next/dynamic"
-import { memo, useEffect } from "react"
 import { Role } from "types"
 import { RoleRequirements } from "../Requirements/RoleRequirements"
 import useGuild from "../hooks/useGuild"
@@ -35,7 +33,7 @@ const MIN_HEIGHT = "22rem"
 
 const DynamicEditRole = dynamic(() => import("./components/EditRole"))
 
-const RoleCard = memo(({ role }: Props) => {
+const RoleCard = ({ role }: Props) => {
   const { guildPlatforms, isDetailed } = useGuild()
   const { isAdmin } = useGuildPermission()
 
@@ -48,22 +46,10 @@ const RoleCard = memo(({ role }: Props) => {
   const { isOpen, onToggle } = useDisclosure({
     defaultIsOpen: true,
   })
-  const {
-    isOpen: isExpanded,
-    onToggle: onToggleExpanded,
-    onClose: onCloseExpanded,
-  } = useDisclosure()
-
-  useEffect(() => {
-    if (!isOpen) onCloseExpanded()
-  }, [isOpen, onCloseExpanded])
 
   const isMobile = useBreakpointValue({ base: true, md: false }, { fallback: "md" })
 
   const collapsedHeight = isMobile && role.visibility === "PUBLIC" ? "90px" : "94px"
-
-  const { ref: leftColumnRef, bounds: leftColumnBounds } =
-    useMeasure<HTMLDivElement>()
 
   return (
     <Card
@@ -89,12 +75,8 @@ const RoleCard = memo(({ role }: Props) => {
     >
       <Collapse in={isOpen} startingHeight={collapsedHeight}>
         <SimpleGrid columns={{ base: 1, md: 2 }}>
-          <Flex
-            direction="column"
-            ref={leftColumnRef}
-            minH={{ base: "none", md: MIN_HEIGHT }}
-          >
-            <RoleHeader {...{ role, isOpen }}>
+          <Flex direction="column" minH={{ base: "none", md: MIN_HEIGHT }}>
+            <RoleHeader role={role} isOpen={isOpen}>
               {!isOpen && (
                 <HStack
                   flex="1 0 auto"
@@ -156,14 +138,7 @@ const RoleCard = memo(({ role }: Props) => {
 
             <RoleRewards role={role} isOpen={isOpen} />
           </Flex>
-          <RoleRequirementsSection
-            isOpen={isOpen}
-            maxH={
-              leftColumnBounds && !isMobile
-                ? `max(${MIN_HEIGHT},${leftColumnBounds.height}px)`
-                : MIN_HEIGHT
-            }
-          >
+          <RoleRequirementsSection isOpen={isOpen}>
             <RoleRequirementsSectionHeader isOpen={isOpen}>
               <Spacer />
               <ClientOnly>
@@ -172,15 +147,7 @@ const RoleCard = memo(({ role }: Props) => {
                 )}
               </ClientOnly>
             </RoleRequirementsSectionHeader>
-            <RoleRequirements
-              {...{
-                role,
-                isOpen,
-                isExpanded,
-                onToggleExpanded,
-                // descriptionRef,
-              }}
-            />
+            <RoleRequirements role={role} isOpen={isOpen} />
           </RoleRequirementsSection>
         </SimpleGrid>
       </Collapse>
@@ -190,6 +157,6 @@ const RoleCard = memo(({ role }: Props) => {
       </ClientOnly>
     </Card>
   )
-})
+}
 
 export default RoleCard

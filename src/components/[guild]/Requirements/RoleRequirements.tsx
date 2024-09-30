@@ -20,7 +20,7 @@ const RoleRequirements = ({ role, isOpen }: Props) => {
   return (
     <div
       className={cn(
-        "custom-scrollbar scroll-shadow flex flex-col overflow-y-auto opacity-0",
+        "custom-scrollbar scroll-shadow flex flex-grow basis-80 flex-col overflow-y-auto opacity-0 md:basis-0",
         {
           "opacity-100": isOpen,
         }

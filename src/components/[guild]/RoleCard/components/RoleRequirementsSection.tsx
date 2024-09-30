@@ -3,7 +3,6 @@ import { PropsWithChildren } from "react"
 
 const RoleRequirementsSection = ({
   isOpen = true,
-  maxH,
   children,
 }: PropsWithChildren<any>) => {
   const requirementsSectionBgColor = useColorModeValue("gray.50", "blackAlpha.300")
@@ -11,7 +10,6 @@ const RoleRequirementsSection = ({
 
   return (
     <Flex
-      maxH={maxH}
       direction="column"
       bgColor={isOpen && requirementsSectionBgColor}
       borderLeftWidth={{ base: 0, md: 1 }}

@@ -68,7 +68,7 @@ const Requirement = ({
           </ImageWrapper>
         </RequirementImageCircle>
       </Box>
-      <VStack alignItems={"flex-start"} alignSelf="center" spacing={1.5}>
+      <VStack alignItems={"flex-start"} alignSelf="center" spacing={0.5}>
         <ChildrenWrapper display="inline-block">
           {requirement?.isNegated && <Tag mr="2">DON'T</Tag>}
           {requirement?.type === "LINK_VISIT"
