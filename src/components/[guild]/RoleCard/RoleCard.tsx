@@ -20,7 +20,8 @@ import { RoleCardMemberCount } from "./components/MemberCount"
 import { RewardIcon } from "./components/Reward"
 import { RoleDescription } from "./components/RoleDescription"
 import { RoleHeader } from "./components/RoleHeader"
-import RoleRequirementsSection, {
+import {
+  RoleRequirementsSection,
   RoleRequirementsSectionHeader,
 } from "./components/RoleRequirementsSection"
 import { RoleRewards } from "./components/RoleRewards"
