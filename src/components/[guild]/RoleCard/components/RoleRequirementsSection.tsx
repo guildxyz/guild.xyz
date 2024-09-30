@@ -1,11 +1,10 @@
 import { cn } from "@/lib/utils"
-import { HStack, Text } from "@chakra-ui/react"
 import { PropsWithChildren } from "react"
 
 const RoleRequirementsSection = ({
   isOpen = true,
   children,
-}: PropsWithChildren<any>) => {
+}: PropsWithChildren<{ isOpen?: boolean }>) => {
   return (
     <div
       className={cn("flex flex-col border-transparent transition-colors", {
@@ -20,32 +19,27 @@ const RoleRequirementsSection = ({
 const RoleRequirementsSectionHeader = ({
   isOpen = true,
   children,
-}: PropsWithChildren<any>) => (
-  <HStack
-    w="full"
-    p={5}
-    pb={0}
-    mb={{ base: 4, md: 6 }}
-    transform={!isOpen && "translateY(10px)"}
-    transition="transform .2s"
+}: PropsWithChildren<{ isOpen?: boolean }>) => (
+  <div
+    className={cn(
+      "mb-4 flex items-center justify-between p-5 pb-0 transition-transform md:mb-6",
+      {
+        "translate-y-2": !isOpen,
+      }
+    )}
   >
-    <Text
-      as="span"
-      mt="1"
-      mr="2"
-      fontSize="xs"
-      fontWeight="bold"
-      color="gray"
-      textTransform="uppercase"
-      noOfLines={1}
-      opacity={isOpen ? 1 : 0}
-      pointerEvents={!isOpen ? "none" : "auto"}
-      transition="opacity .2s"
+    <span
+      className={cn(
+        "pointer-events-none mt-1 mr-2 text-ellipsis font-bold text-muted-foreground text-xs uppercase opacity-0 transition-opacity",
+        {
+          "pointer-events-auto opacity-100": isOpen,
+        }
+      )}
     >
       Unlock rewards
-    </Text>
+    </span>
     {children}
-  </HStack>
+  </div>
 )
 
 export { RoleRequirementsSection, RoleRequirementsSectionHeader }
