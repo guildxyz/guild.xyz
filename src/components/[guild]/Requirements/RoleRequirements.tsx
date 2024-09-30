@@ -23,6 +23,7 @@ const RoleRequirements = ({ role, isOpen }: Props) => {
         "custom-scrollbar scroll-shadow flex flex-grow basis-80 flex-col overflow-y-auto opacity-0 md:basis-0",
         {
           "opacity-100": isOpen,
+          "basis-full": (requirements?.length ?? 0) < 3,
         }
       )}
       inert={!isOpen}
