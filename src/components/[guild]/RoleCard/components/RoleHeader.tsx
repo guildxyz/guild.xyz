@@ -1,33 +1,32 @@
-import { HStack, Heading, Wrap } from "@chakra-ui/react"
+import { cn } from "@/lib/utils"
 import Visibility from "components/[guild]/Visibility"
 import GuildLogo from "components/common/GuildLogo"
 import { PropsWithChildren } from "react"
 
 const RoleHeader = ({ role, isOpen = true, children }: PropsWithChildren<any>) => (
-  <HStack spacing={3} p={5}>
-    <HStack spacing={4} minW={0}>
+  <div className="flex items-center gap-3 p-5">
+    <div className="flex items-center gap-4">
       <GuildLogo imageUrl={role.imageUrl} size={{ base: "48px", md: "52px" }} />
-      <Wrap spacingX={3} spacingY={1}>
-        <Heading
-          as="h3"
-          fontSize="xl"
-          fontFamily="display"
-          minW={0}
-          overflowWrap={"break-word"}
-          noOfLines={!isOpen && 1}
-          mt="-1px !important"
+      <div className="flex flex-wrap gap-2">
+        <h3
+          className={cn(
+            "-mt-px break-words font-bold font-display text-xl leading-tight",
+            {
+              "line-clamp-1": !isOpen,
+            }
+          )}
         >
           {role.name}
-        </Heading>
+        </h3>
         <Visibility
           visibilityRoleId={role.visibilityRoleId}
           entityVisibility={role.visibility}
           showTagLabel
         />
-      </Wrap>
-    </HStack>
+      </div>
+    </div>
     {children}
-  </HStack>
+  </div>
 )
 
-export default RoleHeader
+export { RoleHeader }
