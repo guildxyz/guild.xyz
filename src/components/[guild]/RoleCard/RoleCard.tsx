@@ -1,7 +1,6 @@
 import { Card } from "@/components/ui/Card"
 import { useDisclosure } from "@/hooks/useDisclosure"
 import { cn } from "@/lib/utils"
-import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import {
   AnimatePresence,
   AnimationProps,
@@ -72,9 +71,8 @@ const DynamicEditRole = dynamic(() => import("./components/EditRole"))
 const RoleCard = ({ role }: Props) => {
   const { guildPlatforms, isDetailed } = useGuild()
   const { isAdmin } = useGuildPermission()
-  const { hasRoleAccess } = useRoleMembership(role.id)
   const { isOpen, onToggle } = useDisclosure({
-    defaultIsOpen: !hasRoleAccess,
+    defaultIsOpen: true,
   })
 
   const isMobile = useMediaQuery("(max-width: 640px")
