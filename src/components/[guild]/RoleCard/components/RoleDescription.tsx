@@ -5,15 +5,16 @@ import { useMeasure } from "@/hooks/useMeasure"
 import { cn } from "@/lib/utils"
 import { ArrowDown } from "@phosphor-icons/react/dist/ssr"
 import { LazyMotion, domAnimation, m } from "framer-motion"
+import { HTMLAttributes } from "react"
 import parseDescription from "utils/parseDescription"
 
 const MAX_INITIAL_DESCRIPTION_HEIGHT = 192
 
-type Props = {
+interface Props extends Pick<HTMLAttributes<HTMLDivElement>, "inert" | "className"> {
   description: string
 }
 
-const RoleDescription = ({ description }: Props) => {
+const RoleDescription = ({ description, className, ...props }: Props) => {
   const { ref, bounds } = useMeasure<HTMLDivElement>()
 
   const shouldShowViewMoreButton =
@@ -23,7 +24,7 @@ const RoleDescription = ({ description }: Props) => {
   return (
     <LazyMotion features={domAnimation}>
       <m.div
-        className="group relative overflow-hidden px-5 pb-3 "
+        className={cn("group relative overflow-hidden px-5 pb-3", className)}
         animate={
           shouldShowViewMoreButton
             ? {
@@ -31,6 +32,7 @@ const RoleDescription = ({ description }: Props) => {
               }
             : undefined
         }
+        {...props}
       >
         <div ref={ref}>{parseDescription(description)}</div>
 

@@ -18,18 +18,13 @@ import { shouldUseReCAPTCHAAtom } from "utils/recaptcha"
 import { WagmiProvider } from "wagmi"
 import { wagmiConfig } from "wagmiConfig"
 import "../app/globals.css"
-/**
- * Polyfill HTML inert property for Firefox support:
- * https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/inert#browser_compatibility
- */
 import { AccountModal } from "@/components/Account/components/AccountModal"
+import AppErrorBoundary from "@/components/AppErrorBoundary"
 import { IntercomProvider } from "@/components/Providers/IntercomProvider"
 import { Toaster } from "@/components/ui/Toaster"
+import { TooltipProvider } from "@/components/ui/Tooltip"
 import { LegacyPostHogProvider } from "components/_app/LegacyPostHogProvider"
 import { LegacyWeb3ConnectionManager } from "components/_app/LegacyWeb3ConnectionManager"
-import "wicg-inert"
-import AppErrorBoundary from "@/components/AppErrorBoundary"
-import { TooltipProvider } from "@/components/ui/Tooltip"
 import NextTopLoader from "nextjs-toploader"
 
 const DynamicReCAPTCHA = dynamic(() => import("v2/components/ReCAPTCHA"))

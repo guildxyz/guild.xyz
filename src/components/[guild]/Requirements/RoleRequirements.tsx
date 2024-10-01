@@ -26,7 +26,8 @@ const RoleRequirements = ({ role, isOpen }: Props) => {
           "basis-full": (requirements?.length ?? 0) < 3,
         }
       )}
-      inert={!isOpen}
+      // boolean values didn't work, I guess that's a bug
+      inert={!isOpen ? ("true" as unknown as boolean) : undefined}
     >
       {role.logic === "ANY_OF" && <AnyOfHeader anyOfNum={role.anyOfNum} />}
       <div className="flex flex-col p-5 pt-0">
@@ -37,7 +38,7 @@ const RoleRequirements = ({ role, isOpen }: Props) => {
             {requirements?.map((requirement, i) => (
               <div
                 className={cn(
-                  "w-full translate-y-2 animate-in opacity-0 transition-all duration-200",
+                  "w-full translate-y-2 opacity-0 transition-all duration-200",
                   {
                     "translate-y-0 opacity-100": isOpen,
                   }
@@ -54,7 +55,7 @@ const RoleRequirements = ({ role, isOpen }: Props) => {
             {(role.hiddenRequirements || requirements?.length === 0) && (
               <div
                 className={cn(
-                  "w-full translate-y-2 animate-in opacity-0 transition-all duration-200",
+                  "w-full translate-y-2 opacity-0 transition-all duration-200",
                   {
                     "translate-y-0 opacity-100": isOpen,
                   }
