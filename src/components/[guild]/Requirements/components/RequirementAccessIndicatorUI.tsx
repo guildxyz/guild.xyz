@@ -1,5 +1,10 @@
 import { Badge, BadgeProps } from "@/components/ui/Badge"
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipPortal,
+  TooltipTrigger,
+} from "@/components/ui/Tooltip"
 import { cn } from "@/lib/utils"
 import { Icon } from "@phosphor-icons/react/dist/lib/types"
 import { PropsWithChildren, useState } from "react"
@@ -53,13 +58,16 @@ const RequirementAccessIndicatorUI = ({
             </Badge>
           </div>
         </TooltipTrigger>
-        <TooltipContent variant="popover" side="left" className="p-2.5 text-left">
-          {!isAlwaysOpen && [5, 10].includes(openCount)
-            ? openCount === 5
-              ? "👀"
-              : "🙈"
-            : children}
-        </TooltipContent>
+
+        <TooltipPortal>
+          <TooltipContent variant="popover" side="left" className="p-2.5 text-left">
+            {!isAlwaysOpen && [5, 10].includes(openCount)
+              ? openCount === 5
+                ? "👀"
+                : "🙈"
+              : children}
+          </TooltipContent>
+        </TooltipPortal>
       </Tooltip>
     </div>
   )
