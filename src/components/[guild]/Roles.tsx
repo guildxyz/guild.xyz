@@ -1,6 +1,6 @@
 import { Center, Spinner, Stack } from "@chakra-ui/react"
 import CollapsibleRoleSection from "components/[guild]/CollapsibleRoleSection"
-import RoleCard from "components/[guild]/RoleCard"
+import { RoleCard } from "components/[guild]/RoleCard"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useScrollBatchedRendering } from "hooks/useScrollBatchedRendering"
 import dynamic from "next/dynamic"

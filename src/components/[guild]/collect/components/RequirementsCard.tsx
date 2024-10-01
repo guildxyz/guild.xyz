@@ -1,8 +1,6 @@
-import { Box, Icon, Stack, useColorModeValue, useDisclosure } from "@chakra-ui/react"
-import { Question } from "@phosphor-icons/react"
-import RoleRequirements from "components/[guild]/Requirements"
-import Requirement from "components/[guild]/Requirements/components/Requirement"
-import { RoleRequirementsSectionHeader } from "components/[guild]/RoleCard/components/RoleRequirementsSection"
+import { Stack, useColorModeValue } from "@chakra-ui/react"
+import { RoleRequirements } from "components/[guild]/Requirements/RoleRequirements"
+import useGuild from "components/[guild]/hooks/useGuild"
 import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { PropsWithChildren } from "react"
@@ -13,10 +11,9 @@ type Props = {
 }
 
 const RequirementsCard = ({ role, children }: PropsWithChildren<Props>) => {
+  const { isValidating } = useGuild()
   const requirementsSectionBgColor = useColorModeValue("gray.50", "blackAlpha.300")
   const requirementsSectionBorderColor = useColorModeValue("gray.200", "gray.600")
-
-  const { isOpen: isExpanded, onToggle: onToggleExpanded } = useDisclosure()
 
   return (
     <CardMotionWrapper>
@@ -29,25 +26,13 @@ const RequirementsCard = ({ role, children }: PropsWithChildren<Props>) => {
           borderBottomWidth={!!children ? 1 : 0}
           borderColor={requirementsSectionBorderColor}
         >
-          <RoleRequirementsSectionHeader />
-
-          {/* If the role is private, we can't display the requirements */}
-          {!role ? (
-            <Box w="full" p={5} pt={0}>
-              <Requirement image={<Icon as={Question} boxSize={5} />}>
-                Some secret requirements
-              </Requirement>
-            </Box>
-          ) : (
-            <RoleRequirements
-              {...{
-                role,
-                isExpanded,
-                onToggleExpanded,
-                isOpen: true,
-              }}
-            />
-          )}
+          <RoleRequirements
+            role={role}
+            isOpen
+            withScroll
+            isRoleLoading={isValidating}
+            className="pt-5 md:basis-auto"
+          />
         </Stack>
 
         {children}

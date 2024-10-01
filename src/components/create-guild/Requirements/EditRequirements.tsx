@@ -1,5 +1,5 @@
 import { Collapse, Stack } from "@chakra-ui/react"
-import LogicDivider from "components/[guild]/LogicDivider"
+import { LogicDivider } from "components/[guild]/LogicDivider"
 import useRequirements from "components/[guild]/hooks/useRequirements"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { SectionTitle } from "components/common/Section"

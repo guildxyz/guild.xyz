@@ -1,6 +1,6 @@
 import { SimpleGrid, Text, useDisclosure } from "@chakra-ui/react"
 import { useAddRewardContext } from "components/[guild]/AddRewardContext"
-import LogicDivider from "components/[guild]/LogicDivider"
+import { LogicDivider } from "components/[guild]/LogicDivider"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { DISPLAY_CARD_INTERACTIVITY_STYLES } from "components/common/DisplayCard"
 import { useState } from "react"
@@ -148,7 +148,7 @@ const SelectExistingPlatform = ({ onClose, onSelect }: Props) => {
         />
       )}
 
-      <LogicDivider logic="OR" px="0" my="5" />
+      <LogicDivider logic="OR" className="my-5 px-0" />
     </>
   )
 }

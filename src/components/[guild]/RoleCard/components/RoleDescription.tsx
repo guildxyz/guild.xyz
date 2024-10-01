@@ -1,138 +1,73 @@
-import {
-  Box,
-  Center,
-  Collapse,
-  Flex,
-  Icon,
-  useColorModeValue,
-} from "@chakra-ui/react"
-import { ArrowDown, ArrowUp } from "@phosphor-icons/react"
-import Button from "components/common/Button"
-import { useEffect, useState } from "react"
+import { Button } from "@/components/ui/Button"
+import { Card } from "@/components/ui/Card"
+import { useDisclosure } from "@/hooks/useDisclosure"
+import { useMeasure } from "@/hooks/useMeasure"
+import { cn } from "@/lib/utils"
+import { ArrowDown } from "@phosphor-icons/react/dist/ssr"
+import { HTMLAttributes } from "react"
 import parseDescription from "utils/parseDescription"
-import { RoleCardCollapseProps } from ".."
 
-const MAX_INITIAL_DESCRIPTION_HEIGHT = 160
+const MAX_INITIAL_DESCRIPTION_HEIGHT = 192 // 12rem
 
-type Props = {
+interface Props extends Pick<HTMLAttributes<HTMLDivElement>, "inert" | "className"> {
   description: string
-} & RoleCardCollapseProps
-
-const RoleDescription = (props: Props) => {
-  const { description, descriptionRef } = props
-
-  const descriptionHeight =
-    descriptionRef.current?.getBoundingClientRect().height || 24
-
-  if (descriptionHeight <= MAX_INITIAL_DESCRIPTION_HEIGHT)
-    return (
-      <Box ref={descriptionRef} px={5} pb={3} wordBreak="break-word">
-        {parseDescription(description)}
-      </Box>
-    )
-
-  return <CollapsableRoleDescription {...props} />
 }
 
-const CollapsableRoleDescription = ({
-  description,
-  descriptionRef,
-  initialRequirementsRef,
-  isExpanded,
-  onToggleExpanded,
-}: Props) => {
-  const [maxInitialReqsHeight, setMaxInitialReqsHeight] = useState(
-    MAX_INITIAL_DESCRIPTION_HEIGHT
-  )
+const RoleDescription = ({ description, className, ...props }: Props) => {
+  const { ref, bounds } = useMeasure<HTMLDivElement>()
 
-  useEffect(() => {
-    if (!initialRequirementsRef.current) return
-
-    const observer = new ResizeObserver((entries) => {
-      const reqsHeight = entries[0].contentRect.height
-      if (reqsHeight > MAX_INITIAL_DESCRIPTION_HEIGHT)
-        setMaxInitialReqsHeight(MAX_INITIAL_DESCRIPTION_HEIGHT)
-    })
-
-    observer.observe(initialRequirementsRef.current)
-
-    return () => {
-      observer.disconnect()
-    }
-  }, [initialRequirementsRef])
-
-  const shadowColor = useColorModeValue(
-    "var(--chakra-colors-gray-300)",
-    "var(--chakra-colors-gray-800)"
-  )
-  const buttonWrapperBg = useColorModeValue("white", "gray.700")
-  const buttonColor = useColorModeValue("blackAlpha.500", "gray.400")
-
-  const BUTTON_DEFAULT_STYLES = {
-    opacity: 0,
-    transform: "translateY(10px)",
-  }
-  const BUTTON_HOVER_STYLES = {
-    opacity: 1,
-    transform: !isExpanded && "translateY(0px)",
-  }
+  const shouldShowViewMoreButton =
+    !!bounds && bounds.height > MAX_INITIAL_DESCRIPTION_HEIGHT
+  const { isOpen, onToggle } = useDisclosure()
 
   return (
-    <Collapse
-      in={isExpanded}
-      startingHeight={maxInitialReqsHeight}
-      style={{ position: "relative" }}
+    <div
+      className={cn(
+        // Defining an initial max height to avoid a jump on initial load
+        "group relative max-h-[12rem] overflow-hidden px-5 pb-3 transition-all",
+        className
+      )}
+      style={
+        shouldShowViewMoreButton
+          ? {
+              height: isOpen ? bounds.height : MAX_INITIAL_DESCRIPTION_HEIGHT,
+              maxHeight: "none",
+            }
+          : undefined
+      }
+      {...props}
     >
-      <Box
-        ref={descriptionRef}
-        px={5}
-        pb={10}
-        wordBreak="break-word"
-        {...(!isExpanded && { cursor: "pointer", onClick: onToggleExpanded })}
-        _hover={{ "+ .expand": BUTTON_HOVER_STYLES }}
-      >
-        {parseDescription(description)}
-      </Box>
+      <div ref={ref}>{parseDescription(description)}</div>
 
-      <Center
-        className="expand"
-        pos="absolute"
-        bottom={2}
-        left={0}
-        right={0}
-        zIndex={1}
-        transition="opacity .1s, transform .1s"
-        {...(isExpanded ? BUTTON_HOVER_STYLES : BUTTON_DEFAULT_STYLES)}
-        _hover={BUTTON_HOVER_STYLES}
-      >
-        <Flex borderRadius={"md"} bg={buttonWrapperBg} p="1px" shadow="sm">
-          <Button
-            size="xs"
-            color={buttonColor}
-            borderRadius="md"
-            onClick={onToggleExpanded}
-            textTransform="uppercase"
-            fontWeight="bold"
-            rightIcon={<Icon as={isExpanded ? ArrowUp : ArrowDown} />}
-          >
-            {isExpanded ? "Collapse" : "Click to expand"}
-          </Button>
-        </Flex>
-      </Center>
-
-      <Box
-        position="absolute"
-        bottom={0}
-        left={0}
-        right={0}
-        height={6}
-        bgGradient={`linear-gradient(to top, ${shadowColor}, transparent)`}
-        pointerEvents="none"
-        opacity={isExpanded ? 0 : 0.6}
-        transition="opacity 0.2s ease"
-      />
-    </Collapse>
+      {shouldShowViewMoreButton && (
+        <div
+          className={cn(
+            "absolute bottom-0 left-0 flex w-full justify-center break-words bg-gradient-to-t from-black/10 to-transparent pb-2 transition-colors dark:from-black/25",
+            {
+              "from-transparent dark:from-transparent": isOpen,
+            }
+          )}
+        >
+          <Card className="opacity-0 transition-opacity group-hover:opacity-100">
+            <Button
+              size="xs"
+              onClick={() => onToggle()}
+              rightIcon={
+                <ArrowDown
+                  weight="bold"
+                  className={cn({
+                    "-rotate-180": isOpen,
+                  })}
+                />
+              }
+            >
+              {isOpen ? "Collapse" : "Click to expand"}
+            </Button>
+          </Card>
+        </div>
+      )}
+    </div>
   )
 }
 
-export default RoleDescription
+export { RoleDescription }

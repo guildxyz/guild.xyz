@@ -1,6 +1,6 @@
 import { ChakraProps, Collapse, Stack, Wrap } from "@chakra-ui/react"
 import { Schemas } from "@guildxyz/types"
-import LogicDivider from "components/[guild]/LogicDivider"
+import { LogicDivider } from "components/[guild]/LogicDivider"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { SectionTitle } from "components/common/Section"
 import { AnimatePresence } from "framer-motion"

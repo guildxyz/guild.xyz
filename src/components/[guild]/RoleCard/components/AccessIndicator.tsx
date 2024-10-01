@@ -52,7 +52,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
         leftIcon={<LockSimple weight="bold" />}
         size="sm"
         onClick={openJoinModal}
-        className={ACCESS_INDICATOR_CLASSNAME}
+        className={cn(ACCESS_INDICATOR_CLASSNAME, "w-full sm:max-w-max")}
       >
         Join Guild to check access
       </Button>
@@ -65,7 +65,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
           colorScheme="green"
           label="You have access"
           icon={<Check weight="bold" />}
-          className="max-w-none flex-grow rounded-br-none md:rounded-tr-none"
+          className="flex-grow rounded-br-none sm:rounded-tr-none"
         />
         <Separator
           orientation="vertical"
@@ -84,7 +84,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
           onClick={onToggle}
           className={cn(
             ACCESS_INDICATOR_CLASSNAME,
-            "!rounded-tl-none rounded-br-2xl rounded-bl-none md:rounded-br-lg"
+            "!rounded-tl-none rounded-br-2xl rounded-bl-none sm:rounded-br-lg"
           )}
         >
           <div
@@ -118,7 +118,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
         size="sm"
         leftIcon={<LockSimple weight="bold" />}
         onClick={() => setIsAccountModalOpen(true)}
-        className={ACCESS_INDICATOR_CLASSNAME}
+        className={cn(ACCESS_INDICATOR_CLASSNAME, "w-full sm:max-w-max")}
       >
         Reconnect needed to check access
       </Button>
@@ -131,14 +131,14 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
           colorScheme="orange"
           label="Couldn't check access"
           icon={<Warning weight="bold" />}
-          className="max-w-none flex-grow rounded-br-none md:rounded-tr-none"
+          className="flex-grow rounded-br-none sm:rounded-tr-none"
         />
         <Separator orientation="vertical" className="h-8 dark:bg-white/25" />
         <RecheckAccessesButton
           roleId={roleId}
           size="sm"
           // Card's `overflow: clip` isn't enough in Safari, that's why we added rounded-br
-          className="w-auto rounded-l-none rounded-tr-none rounded-br-2xl px-5 md:rounded-tr-lg md:rounded-br-lg md:px-3"
+          className="w-auto rounded-l-none rounded-tr-none rounded-br-2xl px-5 sm:rounded-tr-lg sm:rounded-br-lg sm:px-3"
         />
       </div>
     )
@@ -153,21 +153,21 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
             : ""
         }`}
         icon={<X weight="bold" />}
-        className="max-w-none flex-grow rounded-br-none md:rounded-tr-none"
+        className="flex-grow rounded-br-none sm:rounded-tr-none"
       />
       <Separator orientation="vertical" className="h-8 dark:bg-white/25" />
       <RecheckAccessesButton
         roleId={roleId}
         size="sm"
         // Card's `overflow: clip` isn't enough in Safari, that's why we added rounded-br
-        className="w-auto rounded-l-none rounded-tr-none rounded-br-2xl px-5 md:rounded-tr-lg md:rounded-br-lg md:px-3"
+        className="w-auto rounded-l-none rounded-tr-none rounded-br-2xl px-5 sm:rounded-tr-lg sm:rounded-br-lg sm:px-3"
       />
     </div>
   )
 }
 
 const ACCESS_INDICATOR_CLASSNAME =
-  "flex flex-row-reverse md:flex-row shrink-0 justify-between rounded-bl-lg rounded-br-lg rounded-tl-none rounded-tr-none px-5 py-2 md:justify-start md:px-3 md:py-0 md:rounded-tl-lg md:rounded-tr-lg text-sm"
+  "max-w-none flex flex-row-reverse sm:flex-row shrink-0 justify-between rounded-bl-lg rounded-br-lg rounded-tl-none rounded-tr-none px-5 py-2 sm:justify-start sm:px-3 sm:py-0 sm:rounded-tl-lg sm:rounded-tr-lg text-sm"
 
 const AccessIndicatorUI = ({
   isLoading,

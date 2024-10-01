@@ -9,7 +9,7 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { CaretRight } from "@phosphor-icons/react"
-import LogicDivider from "components/[guild]/LogicDivider"
+import { LogicDivider } from "components/[guild]/LogicDivider"
 import { useRequirementHandlerContext } from "components/[guild]/RequirementHandlerContext"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import DisplayCard from "components/common/DisplayCard"
@@ -86,7 +86,7 @@ const BaseValueModal = ({ isOpen, onClose, onSelect }: Props) => {
                   )}
                 </Stack>
 
-                <LogicDivider logic="OR" my={2} />
+                <LogicDivider logic="OR" className="my-2" />
                 <AddRequirement onAdd={onAddRequirement} providerTypesOnly />
               </>
             ) : (

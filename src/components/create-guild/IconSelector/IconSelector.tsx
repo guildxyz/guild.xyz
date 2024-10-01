@@ -25,7 +25,7 @@ import {
 } from "@chakra-ui/react"
 import { Image } from "@phosphor-icons/react"
 import { CreateGuildFormType } from "app/create-guild/types"
-import LogicDivider from "components/[guild]/LogicDivider"
+import { LogicDivider } from "components/[guild]/LogicDivider"
 import GuildLogo from "components/common/GuildLogo"
 import { Modal } from "components/common/Modal"
 import { Uploader } from "hooks/usePinata/usePinata"
@@ -135,7 +135,7 @@ const IconSelector = ({
                 minH={minH}
                 onGeneratedBlobChange={onGeneratedBlobChange}
               />
-              <LogicDivider logic="OR" px="0" my="5" />
+              <LogicDivider logic="OR" className="my-5 px-0" />
               <FormControl>
                 <FormLabel>Choose from default icons</FormLabel>
                 <Tabs
