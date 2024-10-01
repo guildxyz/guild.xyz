@@ -7,7 +7,7 @@ import { ArrowDown } from "@phosphor-icons/react/dist/ssr"
 import { HTMLAttributes } from "react"
 import parseDescription from "utils/parseDescription"
 
-const MAX_INITIAL_DESCRIPTION_HEIGHT = 192
+const MAX_INITIAL_DESCRIPTION_HEIGHT = 192 // 12rem
 
 interface Props extends Pick<HTMLAttributes<HTMLDivElement>, "inert" | "className"> {
   description: string
@@ -22,12 +22,17 @@ const RoleDescription = ({ description, className, ...props }: Props) => {
 
   return (
     <div
-      className={cn("group relative overflow-hidden px-5 pb-3", className)}
+      className={cn(
+        // Defining an initial max height to avoid a jump on initial load
+        "group relative max-h-[12rem] overflow-hidden px-5 pb-3",
+        className
+      )}
       style={
         shouldShowViewMoreButton
           ? {
               transition: "height 0.2s ease-out",
               height: isOpen ? bounds.height : MAX_INITIAL_DESCRIPTION_HEIGHT,
+              maxHeight: "none",
             }
           : undefined
       }
