@@ -5,7 +5,8 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import dynamic from "next/dynamic"
 import { PropsWithChildren } from "react"
-import { Role } from "types"
+import rewards from "rewards"
+import { PlatformName, PlatformType, Role } from "types"
 import HiddenRewards from "./HiddenRewards"
 
 type Props = {
@@ -29,6 +30,11 @@ const RoleRewards = ({ role, isOpen }: Props) => {
           const guildPlatform = guildPlatforms?.find(
             (gp) => gp.id === rolePlatform.guildPlatformId
           )
+
+          if (
+            !rewards[PlatformType[guildPlatform?.platformId ?? -1] as PlatformName]
+          )
+            return
 
           return (
             <SlideFade
