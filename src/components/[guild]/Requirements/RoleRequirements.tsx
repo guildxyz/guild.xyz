@@ -10,28 +10,42 @@ import RequirementComponent, { RequirementSkeleton } from "./components/Requirem
 import RequirementDisplayComponent from "./components/RequirementDisplayComponent"
 
 type Props = {
-  role: Role
+  role?: Role // Role can be undefined when the role is private
+  isRoleLoading?: boolean // In some cases we want to control the loading state from outside of the component
   isOpen: boolean
+  withScroll?: boolean
+  className?: string
 }
 
-const RoleRequirements = ({ role, isOpen }: Props) => {
+const RoleRequirements = ({
+  role,
+  isOpen,
+  withScroll,
+  isRoleLoading,
+  className,
+}: Props) => {
   const { data: requirements, isLoading } = useRequirements(role?.id)
 
   return (
     <div
       className={cn(
-        "custom-scrollbar scroll-shadow flex flex-grow basis-80 flex-col overflow-y-auto opacity-0 md:basis-0",
+        "custom-scrollbar flex w-full flex-grow basis-80 flex-col overflow-y-auto opacity-0 md:basis-0",
         {
           "opacity-100": isOpen,
           "basis-full": (requirements?.length ?? 0) < 3,
-        }
+          "scroll-shadow": withScroll,
+        },
+        className
       )}
       // boolean values didn't work, I guess that's a bug
       inert={!isOpen ? ("true" as unknown as boolean) : undefined}
     >
-      {role.logic === "ANY_OF" && <AnyOfHeader anyOfNum={role.anyOfNum} />}
+      {role?.logic === "ANY_OF" && <AnyOfHeader anyOfNum={role.anyOfNum} />}
       <div className="flex flex-col p-5 pt-0">
-        {isLoading && !requirements ? (
+        {/* If the role is private, we can't display the requirements */}
+        {!role && !isRoleLoading ? (
+          <SomeSecretRequirements />
+        ) : isRoleLoading || (isLoading && !requirements) ? (
           <RoleRequirementsSkeleton />
         ) : (
           <div className="flex flex-col">
@@ -49,10 +63,12 @@ const RoleRequirements = ({ role, isOpen }: Props) => {
                 key={i}
               >
                 <RequirementDisplayComponent requirement={requirement} />
-                {i < requirements?.length - 1 && <LogicDivider logic={role.logic} />}
+                {i < requirements?.length - 1 && (
+                  <LogicDivider logic={role?.logic ?? "AND"} />
+                )}
               </div>
             ))}
-            {(role.hiddenRequirements || requirements?.length === 0) && (
+            {(role?.hiddenRequirements || requirements?.length === 0) && (
               <div
                 className={cn(
                   "w-full translate-y-2 opacity-0 transition-all duration-200",
@@ -65,9 +81,9 @@ const RoleRequirements = ({ role, isOpen }: Props) => {
                 }}
               >
                 {(requirements?.length ?? 0) > 0 && (
-                  <LogicDivider logic={role.logic} />
+                  <LogicDivider logic={role?.logic ?? "AND"} />
                 )}
-                <SomeSecretRequirements roleId={role.id} />
+                {role && <SomeSecretRequirements roleId={role.id} />}
               </div>
             )}
           </div>
@@ -77,10 +93,12 @@ const RoleRequirements = ({ role, isOpen }: Props) => {
   )
 }
 
-const SomeSecretRequirements = ({ roleId }: { roleId: number }) => (
+const SomeSecretRequirements = ({ roleId }: { roleId?: number }) => (
   <RequirementComponent
     image={<Question weight="bold" className="size-5" />}
-    rightElement={<HiddenRequirementAccessIndicator roleId={roleId} />}
+    rightElement={
+      roleId ? <HiddenRequirementAccessIndicator roleId={roleId} /> : undefined
+    }
   >
     Some secret requirements
   </RequirementComponent>

@@ -180,7 +180,7 @@ const RoleCard = ({ role }: Props) => {
                 />
               )}
             </RoleRequirementsSectionHeader>
-            <RoleRequirements role={role} isOpen={isOpen} />
+            <RoleRequirements role={role} isOpen={isOpen} withScroll />
           </RoleRequirementsSection>
         </m.div>
 

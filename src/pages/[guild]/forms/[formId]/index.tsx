@@ -1,10 +1,6 @@
-import { Box, Icon } from "@chakra-ui/react"
-import { Question } from "@phosphor-icons/react"
 import { JoinModalProvider } from "components/[guild]/JoinModal/JoinModalProvider"
 import { useActiveMembershipUpdate } from "components/[guild]/JoinModal/hooks/useActiveMembershipUpdate"
 import { RoleRequirements } from "components/[guild]/Requirements/RoleRequirements"
-import { RoleRequirementsSkeleton } from "components/[guild]/Requirements/RoleRequirements"
-import Requirement from "components/[guild]/Requirements/components/Requirement"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import GuildImageAndName from "components/[guild]/collect/components/GuildImageAndName"
 import FillForm from "components/[guild]/forms/FillForm"
@@ -27,7 +23,7 @@ type Props = {
 }
 
 const FormPage = ({ formId }: Props) => {
-  const { roles, imageUrl, guildPlatforms, isLoading } = useGuild()
+  const { roles, imageUrl, guildPlatforms, isValidating } = useGuild()
 
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
 
@@ -77,19 +73,7 @@ const FormPage = ({ formId }: Props) => {
         <FillForm form={form} />
       ) : (
         <FormNoAccess isMember={isMember}>
-          {!!role ? (
-            <RoleRequirements role={role} isOpen />
-          ) : (
-            <Box px={5} pb={5}>
-              {isLoading ? (
-                <RoleRequirementsSkeleton />
-              ) : (
-                <Requirement image={<Icon as={Question} boxSize={5} />}>
-                  Some secret requirements
-                </Requirement>
-              )}
-            </Box>
-          )}
+          {<RoleRequirements role={role} isRoleLoading={isValidating} isOpen />}
         </FormNoAccess>
       )}
     </Layout>
