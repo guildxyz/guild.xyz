@@ -24,13 +24,12 @@ const RoleDescription = ({ description, className, ...props }: Props) => {
     <div
       className={cn(
         // Defining an initial max height to avoid a jump on initial load
-        "group relative max-h-[12rem] overflow-hidden px-5 pb-3",
+        "group relative max-h-[12rem] overflow-hidden px-5 pb-3 transition-all",
         className
       )}
       style={
         shouldShowViewMoreButton
           ? {
-              transition: "height 0.2s ease-out",
               height: isOpen ? bounds.height : MAX_INITIAL_DESCRIPTION_HEIGHT,
               maxHeight: "none",
             }
