@@ -263,7 +263,8 @@
 }
 
 @layer utilities {
-  .scroll-shadow {
+  .scroll-shadow,
+  .scroll-shadow [data-radix-scroll-area-viewport] {
     --scroll-shadow-bg: hsl(var(--card-secondary));
     --scroll-shadow-from: rgba(0, 0, 0, 0.1);
     --scroll-shadow-to: rgba(0, 0, 0, 0);

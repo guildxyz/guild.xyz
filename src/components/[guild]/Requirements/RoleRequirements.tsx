@@ -1,3 +1,4 @@
+import { ScrollArea } from "@/components/ui/ScrollArea"
 import { cn } from "@/lib/utils"
 import { Question } from "@phosphor-icons/react/dist/ssr"
 import { Fragment } from "react"
@@ -27,9 +28,9 @@ const RoleRequirements = ({
   const { data: requirements, isLoading } = useRequirements(role?.id)
 
   return (
-    <div
+    <ScrollArea
       className={cn(
-        "custom-scrollbar flex w-full flex-grow basis-80 flex-col overflow-y-auto opacity-0 md:basis-0",
+        "flex w-full flex-grow basis-80 flex-col overflow-y-auto opacity-0 md:basis-0",
         {
           "opacity-100": isOpen,
           "basis-full": (requirements?.length ?? 0) < 3,
@@ -89,7 +90,7 @@ const RoleRequirements = ({
           </div>
         )}
       </div>
-    </div>
+    </ScrollArea>
   )
 }
 
