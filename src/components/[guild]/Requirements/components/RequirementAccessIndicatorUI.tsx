@@ -60,7 +60,11 @@ const RequirementAccessIndicatorUI = ({
         </TooltipTrigger>
 
         <TooltipPortal>
-          <TooltipContent variant="popover" side="left" className="p-2.5 text-left">
+          <TooltipContent
+            variant="popover"
+            side="left"
+            className="max-w-[75vw] p-2.5 text-left sm:max-w-none"
+          >
             {!isAlwaysOpen && [5, 10].includes(openCount)
               ? openCount === 5
                 ? "👀"

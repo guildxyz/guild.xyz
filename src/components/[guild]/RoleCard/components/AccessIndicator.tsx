@@ -12,7 +12,7 @@ import {
   X,
 } from "@phosphor-icons/react/dist/ssr"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
-import RecheckAccessesButton from "components/[guild]/RecheckAccessesButton"
+import { RecheckAccessesButton } from "components/[guild]/RecheckAccessesButton"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useRequirements from "components/[guild]/hooks/useRequirements"
 import useMembership, {

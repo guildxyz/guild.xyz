@@ -170,5 +170,4 @@ const TopRecheckAccessesButton = (
   />
 )
 
-export default RecheckAccessesButton
-export { TopRecheckAccessesButton }
+export { RecheckAccessesButton, TopRecheckAccessesButton }

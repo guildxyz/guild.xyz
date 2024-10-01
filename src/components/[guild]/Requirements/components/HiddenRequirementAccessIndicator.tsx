@@ -15,7 +15,7 @@ import {
   Warning,
   X,
 } from "@phosphor-icons/react/dist/ssr"
-import RecheckAccessesButton from "components/[guild]/RecheckAccessesButton"
+import { RecheckAccessesButton } from "components/[guild]/RecheckAccessesButton"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useRequirements from "components/[guild]/hooks/useRequirements"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"

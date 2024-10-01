@@ -1,13 +1,14 @@
 import { accountModalAtom } from "@/components/Providers/atoms"
-import { Button } from "@/components/ui/Button"
+import { Button, ButtonProps } from "@/components/ui/Button"
 import {
   ArrowSquareIn,
+  ArrowsClockwise,
   Check,
   LockSimple,
   Warning,
   X,
 } from "@phosphor-icons/react/dist/ssr"
-import RecheckAccessesButton from "components/[guild]/RecheckAccessesButton"
+import { useMembershipUpdate } from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import { useSetAtom } from "jotai"
 import dynamic from "next/dynamic"
@@ -89,12 +90,7 @@ const RequirementAccessIndicator = () => {
           {reqAccessData?.errorMsg
             ? `Error: ${reqAccessData.errorMsg}`
             : `Couldn't check access`}
-          <RecheckAccessesButton
-            roleId={roleId}
-            size="sm"
-            variant="outline"
-            className="ml-2"
-          />
+          <RecheckAccessButton className="ml-2" />
         </p>
       </RequirementAccessIndicatorUI>
     )
@@ -122,18 +118,42 @@ const RequirementAccessIndicator = () => {
               }`}
         </p>
       )}
-      <div className="mt-2 flex justify-end gap-2">
+      <div className="mt-2 flex flex-wrap justify-end gap-2">
         <Button
           size="sm"
           variant="outline"
           rightIcon={<ArrowSquareIn weight="bold" />}
           onClick={() => setIsAccountModalOpen(true)}
+          className="w-full sm:w-max"
         >
           View connections
         </Button>
-        <RecheckAccessesButton roleId={roleId} size="sm" />
+        <RecheckAccessButton className="w-full sm:w-max" />
       </div>
     </RequirementAccessIndicatorUI>
+  )
+}
+
+const RecheckAccessButton = (props: ButtonProps) => {
+  const { roleId } = useRequirementContext()
+  const { isLoading, triggerMembershipUpdate } = useMembershipUpdate()
+
+  return (
+    <Button
+      size="sm"
+      variant="outline"
+      leftIcon={<ArrowsClockwise weight="bold" />}
+      isLoading={isLoading}
+      onClick={() =>
+        triggerMembershipUpdate({
+          roleIds: [roleId],
+        })
+      }
+      loadingText="Checking access"
+      {...props}
+    >
+      Re-check access
+    </Button>
   )
 }
 
