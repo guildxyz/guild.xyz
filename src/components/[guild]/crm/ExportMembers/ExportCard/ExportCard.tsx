@@ -8,7 +8,7 @@ import {
   Tooltip,
 } from "@chakra-ui/react"
 import { Download } from "@phosphor-icons/react"
-import MemberCount from "components/[guild]/RoleCard/components/MemberCount"
+import { MemberCount } from "components/[guild]/RoleCard/components/MemberCount"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
@@ -53,7 +53,10 @@ const ExportCard = ({ exp }: { exp: ExportData }) => {
         </Box>
         {exp.status === "FINISHED" ? (
           <>
-            <MemberCount memberCount={exp.data.count} mt="0" mr="0.5" size="sm" />
+            <MemberCount
+              memberCount={exp.data.count}
+              className="!bg-transparent mt-0 mr-0.5 text-muted-foreground"
+            />
             <DownloadExportButton filename={exp.filename} />
           </>
         ) : exp.status === "FAILED" ? (

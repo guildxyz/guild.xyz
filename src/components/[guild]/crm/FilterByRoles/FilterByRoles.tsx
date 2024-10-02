@@ -233,6 +233,7 @@ const RoleCheckbox = memo(({ role, isChecked, onChange }: RoleCheckboxProps) => 
           roleId={role.id}
           memberCount={role.memberCount}
           size="sm"
+          className="!bg-transparent text-muted-foreground"
         />
       </HStack>
     </Checkbox>
