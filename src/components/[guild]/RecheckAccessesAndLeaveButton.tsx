@@ -17,7 +17,10 @@ const RecheckAccessesAndLeaveButton = () => {
     <ButtonGroup isAttached>
       <TopRecheckAccessesButton
         // TODO: find a better solution for this once we migrate the whole guild page to Tailwind
-        className={cn(buttonColorSchemeClassName, "h-11 rounded-r-none")}
+        className={cn(
+          buttonColorSchemeClassName,
+          "h-11 rounded-r-none text-banner-foreground"
+        )}
       />
       <Divider orientation="vertical" h="var(--chakra-sizes-11)" />
       <LeaveButton {...chakraButtonProps} />

@@ -3,13 +3,13 @@ import { LayoutTitle } from "@/components/Layout"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
 import { Skeleton } from "@/components/ui/Skeleton"
 import { cn } from "@/lib/utils"
-import MemberCount from "./RoleCard/components/MemberCount"
+import { MemberCount } from "./RoleCard/components/MemberCount"
 import { useThemeContext } from "./ThemeContext"
 import useGuild from "./hooks/useGuild"
 
 const GuildPageImageAndName = () => {
   const { imageUrl, name, tags, memberCount } = useGuild()
-  const { avatarBg, textColor, buttonColorScheme } = useThemeContext()
+  const { avatarBg, buttonColorSchemeClassName } = useThemeContext()
 
   return (
     <>
@@ -33,9 +33,11 @@ const GuildPageImageAndName = () => {
 
         <MemberCount
           memberCount={memberCount ?? 0}
-          bgColor={`${buttonColorScheme}.200`}
-          color={textColor}
-          maxW="max-content"
+          className={cn(
+            buttonColorSchemeClassName,
+            // TODO: we're essentially resetting bg color in hover/active states, this looks quite hacky, so we should find a better solution here
+            "max-w-max hover:bg-[''] active:bg-['']"
+          )}
         />
       </div>
     </>
