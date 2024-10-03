@@ -1,6 +1,5 @@
 import { usePostHogContext } from "@/components/Providers/PostHogProvider"
-import { Icon } from "@chakra-ui/react"
-import { Warning } from "@phosphor-icons/react"
+import { Warning } from "@phosphor-icons/react/dist/ssr"
 import DataBlock from "components/common/DataBlock"
 import { PropsWithChildren } from "react"
 import { ErrorBoundary } from "react-error-boundary"
@@ -16,6 +15,10 @@ type Props = {
   rightElement?: JSX.Element
 } & Rest
 
+export const RequirementWarningIcon = () => (
+  <Warning weight="bold" className="size-5 text-warning-subtle-foreground" />
+)
+
 const RequirementDisplayComponent = ({
   requirement,
   rightElement = <RequirementAccessIndicator />,
@@ -25,7 +28,7 @@ const RequirementDisplayComponent = ({
 
   if (!!requirement.chain && !CHAIN_CONFIG[requirement.chain])
     return (
-      <Requirement image={<Icon as={Warning} boxSize={5} color="orange.300" />}>
+      <Requirement image={<RequirementWarningIcon />}>
         {`Unsupported requirement chain: `}
         <DataBlock>{requirement.chain}</DataBlock>
       </Requirement>
@@ -33,7 +36,7 @@ const RequirementDisplayComponent = ({
 
   if (!RequirementComponent)
     return (
-      <Requirement image={<Icon as={Warning} boxSize={5} color="orange.300" />}>
+      <Requirement image={<RequirementWarningIcon />}>
         {`Unsupported requirement type: `}
         <DataBlock>{requirement.type}</DataBlock>
       </Requirement>
@@ -64,11 +67,8 @@ export const InvalidRequirementErrorBoundary = ({
   return (
     <ErrorBoundary
       fallback={
-        <Requirement
-          image={<Icon as={Warning} boxSize={5} color="orange.300" />}
-          rightElement={rightElement}
-        >
-          {`Invalid requirement: `}
+        <Requirement image={<RequirementWarningIcon />} rightElement={rightElement}>
+          {"Invalid requirement: "}
           <DataBlock>{requirement.type}</DataBlock>
         </Requirement>
       }
