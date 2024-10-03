@@ -1,7 +1,7 @@
 import { HStack, Wrap } from "@chakra-ui/react"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
 import { RequirementLinkButton } from "components/[guild]/Requirements/components/RequirementButton"
-import RequirementChainIndicator from "components/[guild]/Requirements/components/RequirementChainIndicator"
+import { RequirementChainIndicator } from "components/[guild]/Requirements/components/RequirementChainIndicator"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 
 export const EAS_SCAN_BASE = {

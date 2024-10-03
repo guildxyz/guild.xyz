@@ -10,7 +10,7 @@ import { BeforeAfterDates } from "components/[guild]/Requirements/components/Dat
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
-import RequirementChainIndicator from "components/[guild]/Requirements/components/RequirementChainIndicator"
+import { RequirementChainIndicator } from "components/[guild]/Requirements/components/RequirementChainIndicator"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import { DataBlock } from "components/common/DataBlock"
 import { DataBlockWithCopy } from "components/common/DataBlockWithCopy"

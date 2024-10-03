@@ -3,7 +3,7 @@ import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockEx
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
-import RequirementChainIndicator from "components/[guild]/Requirements/components/RequirementChainIndicator"
+import { RequirementChainIndicator } from "components/[guild]/Requirements/components/RequirementChainIndicator"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import useTokenData from "hooks/useTokenData"
 import { CHAIN_CONFIG, Chain } from "wagmiConfig/chains"
