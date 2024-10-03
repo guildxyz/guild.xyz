@@ -42,9 +42,7 @@ export const ColorPicker = ({ fieldName, onChange }: Props) => {
                   as={Palette}
                   pos="absolute"
                   pointerEvents={"none"}
-                  color={
-                    isIconLight ? "var(--whiteAlpha-800)" : "var(--blackAlpha-800)"
-                  }
+                  color={isIconLight ? "white" : "black"}
                 />
               </div>
               <Input

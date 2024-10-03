@@ -1,6 +1,6 @@
 import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import { Warning } from "@phosphor-icons/react/dist/ssr"
-import DataBlock from "components/common/DataBlock"
+import { DataBlock } from "components/common/DataBlock"
 import { PropsWithChildren } from "react"
 import { ErrorBoundary } from "react-error-boundary"
 import { REQUIREMENT_DISPLAY_COMPONENTS } from "requirements/requirementDisplayComponents"

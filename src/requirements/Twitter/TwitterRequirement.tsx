@@ -1,14 +1,14 @@
 import { Icon, Text } from "@chakra-ui/react"
 import { ArrowSquareOut } from "@phosphor-icons/react"
 import ConnectRequirementPlatformButton from "components/[guild]/Requirements/components/ConnectRequirementPlatformButton"
-import DataBlockWithDate from "components/[guild]/Requirements/components/DataBlockWithDate"
+import { DataBlockWithDate } from "components/[guild]/Requirements/components/DataBlockWithDate"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import useUser from "components/[guild]/hooks/useUser"
-import DataBlock from "components/common/DataBlock"
-import DataBlockWithCopy from "components/common/DataBlockWithCopy"
+import { DataBlock } from "components/common/DataBlock"
+import { DataBlockWithCopy } from "components/common/DataBlockWithCopy"
 import XLogo from "static/icons/x.svg"
 import useSWRImmutable from "swr/immutable"
 import { PlatformType } from "types"

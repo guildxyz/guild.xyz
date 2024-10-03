@@ -21,7 +21,7 @@ import Requirement, {
 } from "components/[guild]/Requirements/components/Requirement"
 import { RequirementButton } from "components/[guild]/Requirements/components/RequirementButton"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import DataBlock from "components/common/DataBlock"
+import { DataBlock } from "components/common/DataBlock"
 import shortenHex from "utils/shortenHex"
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i

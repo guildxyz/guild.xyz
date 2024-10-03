@@ -1,4 +1,4 @@
-import DataBlock from "components/common/DataBlock"
+import { DataBlock } from "components/common/DataBlock"
 
 type Props = {
   timestamp: number
@@ -49,4 +49,4 @@ export const BeforeAfterDates = ({
   return null
 }
 
-export default DataBlockWithDate
+export { DataBlockWithDate }

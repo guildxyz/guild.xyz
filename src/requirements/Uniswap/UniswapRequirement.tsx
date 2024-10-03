@@ -5,7 +5,7 @@ import Requirement, {
 import { RequirementLinkButton } from "components/[guild]/Requirements/components/RequirementButton"
 import RequirementChainIndicator from "components/[guild]/Requirements/components/RequirementChainIndicator"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import DataBlock from "components/common/DataBlock"
+import { DataBlock } from "components/common/DataBlock"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import REQUIREMENTS from "requirements"
 import { Chains } from "wagmiConfig/chains"

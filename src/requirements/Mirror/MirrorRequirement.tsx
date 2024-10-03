@@ -4,7 +4,7 @@ import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import DataBlock from "components/common/DataBlock"
+import { DataBlock } from "components/common/DataBlock"
 import shortenHex from "utils/shortenHex"
 import { Chain } from "wagmiConfig/chains"
 import useMirrorEdition from "./hooks/useMirrorEdition"

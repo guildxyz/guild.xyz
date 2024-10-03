@@ -24,6 +24,11 @@ const config = {
       },
       colors: {
         gray: "hsl(var(--gray))",
+        blackAlpha: {
+          DEFAULT: "var(--blackAlpha-medium)",
+          soft: "var(--blackAlpha-soft)",
+          hard: "var(--blackAlpha-hard)",
+        },
         banner: {
           DEFAULT: "var(--banner)",
           dark: "var(--banner-dark)",

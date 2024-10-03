@@ -6,7 +6,7 @@ import Requirement, {
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import useUser from "components/[guild]/hooks/useUser"
-import DataBlockWithCopy from "components/common/DataBlockWithCopy"
+import { DataBlockWithCopy } from "components/common/DataBlockWithCopy"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import REQUIREMENTS from "requirements"
 import FarcasterAction from "./components/FarcasterAction"

@@ -1,6 +1,6 @@
 import Requirement from "components/[guild]/Requirements/components/Requirement"
 import { RequirementWarningIcon } from "components/[guild]/Requirements/components/RequirementDisplayComponent"
-import DataBlock from "components/common/DataBlock"
+import { DataBlock } from "components/common/DataBlock"
 import { PropsWithChildren } from "react"
 import RequirementBaseCard from "./RequirementBaseCard"
 

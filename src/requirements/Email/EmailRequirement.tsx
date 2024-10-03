@@ -5,7 +5,7 @@ import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import DataBlock from "components/common/DataBlock"
+import { DataBlock } from "components/common/DataBlock"
 
 const EmailRequirement = (props: RequirementProps) => {
   const { data, type } = useRequirementContext()

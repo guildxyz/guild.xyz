@@ -9,7 +9,7 @@ import Requirement, {
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import { RequirementWarningIcon } from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
-import DataBlock from "components/common/DataBlock"
+import { DataBlock } from "components/common/DataBlock"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import useToken from "hooks/useToken"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"

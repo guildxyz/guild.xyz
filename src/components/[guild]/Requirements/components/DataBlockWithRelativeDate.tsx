@@ -1,4 +1,4 @@
-import DataBlock from "components/common/DataBlock"
+import { DataBlock } from "components/common/DataBlock"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 
 type Props = {
@@ -9,4 +9,4 @@ const DataBlockWithRelativeDate = ({ timestamp }: Props): JSX.Element => (
   <DataBlock>{formatRelativeTimeFromNow(timestamp)}</DataBlock>
 )
 
-export default DataBlockWithRelativeDate
+export { DataBlockWithRelativeDate }

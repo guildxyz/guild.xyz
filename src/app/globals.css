@@ -97,11 +97,10 @@
     --alert-error: 0 78% 98%;
     --alert-error-icon: 0 84% 60%;
 
-    /* we plan to add the whole alpha color palettes */
-    --whiteAlpha-800: rgba(255, 255, 255, 0.8);
-    --blackAlpha-800: rgba(0, 0, 0, 0.8);
-    --blackAlpha-300: rgba(0, 0, 0, 0.3);
-    --blackAlpha-100: rgba(0, 0, 0, 0.1);
+    --blackAlpha-soft: rgba(0, 0, 0, 0.06);
+    --blackAlpha-medium: rgba(0, 0, 0, 0.16);
+    --blackAlpha-hard: rgba(0, 0, 0, 0.8);
+
 
     /* not sure about this approach, we should think about this one too */
     --gray: 240 3% 46%; /* gray.500 from Chakra */
