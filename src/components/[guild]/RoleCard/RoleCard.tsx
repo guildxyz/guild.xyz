@@ -23,7 +23,10 @@ import {
   RoleRequirementsSection,
   RoleRequirementsSectionHeader,
 } from "./components/RoleRequirementsSection"
-import { RoleRewards } from "./components/RoleRewards"
+
+const DynamicRoleRewards = dynamic(() =>
+  import("./components/RoleRewards").then((module) => module.RoleRewards)
+)
 
 type Props = {
   role: Role
@@ -157,7 +160,7 @@ const RoleCard = ({ role }: Props) => {
 
             {role.description && (
               <RoleDescription
-                description={role.description}
+                role={role}
                 // boolean values didn't work, I guess that's a bug
                 inert={!isOpen ? ("true" as unknown as boolean) : undefined}
                 className={cn("translate-y-2 opacity-0 duration-200", {
@@ -166,7 +169,9 @@ const RoleCard = ({ role }: Props) => {
               />
             )}
 
-            <RoleRewards role={role} isOpen={isOpen} />
+            {role.rolePlatforms?.length > 0 && (
+              <DynamicRoleRewards role={role} isOpen={isOpen} />
+            )}
           </div>
           <RoleRequirementsSection isOpen={isOpen}>
             <RoleRequirementsSectionHeader isOpen={isOpen}>
