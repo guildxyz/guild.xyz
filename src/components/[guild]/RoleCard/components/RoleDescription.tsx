@@ -28,13 +28,14 @@ const RoleDescription = ({ role, className, ...props }: Props) => {
   return (
     <div
       className={cn(
-        "group relative overflow-hidden px-5 pb-3 transition-all",
+        "group relative overflow-hidden px-5 pb-4 transition-all",
         className
       )}
       style={
         shouldShowViewMoreButton
           ? {
-              height: isOpen ? bounds.height : maxDescriptionHeight,
+              // + 16 is pb-4 (1rem)
+              height: isOpen ? bounds.height + 16 : maxDescriptionHeight,
               maxHeight: "none",
             }
           : {
