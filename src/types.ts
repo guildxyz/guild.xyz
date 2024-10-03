@@ -462,13 +462,17 @@ type Trait = {
   }
 }
 
-type Requirement = z.output<typeof schemas.RequirementSchema>
-type RequirementCreateResponseOutput = z.output<
-  typeof schemas.RequirementCreateResponseSchema
+type Requirement = Exclude<
+  z.output<typeof schemas.RequirementSchema>,
+  { type: "WORLD_ID_VERIFICATION" }
+>
+type RequirementCreateResponseOutput = Exclude<
+  z.output<typeof schemas.RequirementCreateResponseSchema>,
+  { type: "WORLD_ID_VERIFICATION" }
 >
 
 type ClientStateRequirementCreateResponse = Omit<
-  Schemas["RequirementCreateResponse"],
+  Exclude<Schemas["RequirementCreateResponse"], { type: "WORLD_ID_VERIFICATION" }>,
   /**
    * These props won't be included in the response when we only store the requirement
    * object on client side, so we omit them from the type & add them back as optional
