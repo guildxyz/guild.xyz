@@ -5,6 +5,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import { useScrollBatchedRendering } from "hooks/useScrollBatchedRendering"
 import dynamic from "next/dynamic"
 import { useState } from "react"
+import { Role } from "types"
 import useGuildPermission from "./hooks/useGuildPermission"
 import useRoleGroup from "./hooks/useRoleGroup"
 
@@ -14,6 +15,29 @@ const DynamicAddRoleCard = dynamic(
   () => import("components/[guild]/[group]/AddRoleCard")
 )
 const DynamicNoRolesAlert = dynamic(() => import("components/[guild]/NoRolesAlert"))
+
+const getHighlightedRoleId = () => {
+  if (typeof window === "undefined") return undefined
+  return window.location.hash.startsWith("#role-")
+    ? window.location.hash.split("-")[1]
+    : undefined
+}
+
+/**
+ * We have a fake lazy load on  the roles list, so sometimes we can't jump to the role which is defined in window.location.hash, because it is not rendered yet. That's why we move the highlighted role to the first place when we have a role ID in the hash.
+ */
+const sortHighlightedRoleFirst = (roles: Role[]): Role[] => {
+  const highlightedRoleId = getHighlightedRoleId()
+  if (!highlightedRoleId) return roles
+
+  const highlightedRole = roles.find(
+    (role) => role.id.toString() === highlightedRoleId
+  )
+
+  return highlightedRole
+    ? [highlightedRole, ...roles.filter((role) => role.id !== highlightedRole.id)]
+    : roles
+}
 
 const Roles = () => {
   const { roles: allRoles } = useGuild()
@@ -25,8 +49,12 @@ const Roles = () => {
       !!group ? role.groupId === group.id : !role.groupId
     ) ?? []
 
-  const publicRoles = roles.filter((role) => role.visibility !== "HIDDEN")
-  const hiddenRoles = roles.filter((role) => role.visibility === "HIDDEN")
+  const publicRoles = sortHighlightedRoleFirst(
+    roles.filter((role) => role.visibility !== "HIDDEN")
+  )
+  const hiddenRoles = sortHighlightedRoleFirst(
+    roles.filter((role) => role.visibility === "HIDDEN")
+  )
 
   const [renderedRolesCount, setRenderedRolesCount] = useState(BATCH_SIZE)
   const rolesEl = useScrollBatchedRendering({
