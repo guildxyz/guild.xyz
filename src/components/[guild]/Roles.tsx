@@ -28,6 +28,8 @@ const getHighlightedRoleId = () => {
  */
 const sortHighlightedRoleFirst = (roles: Role[]): Role[] => {
   const highlightedRoleId = getHighlightedRoleId()
+  if (!highlightedRoleId) return roles
+
   const highlightedRole = roles.find(
     (role) => role.id.toString() === highlightedRoleId
   )
