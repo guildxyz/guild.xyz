@@ -5,39 +5,46 @@ import { useMeasure } from "@/hooks/useMeasure"
 import { cn } from "@/lib/utils"
 import { ArrowDown } from "@phosphor-icons/react/dist/ssr"
 import { HTMLAttributes } from "react"
+import { Role } from "types"
 import parseDescription from "utils/parseDescription"
 
-const MAX_INITIAL_DESCRIPTION_HEIGHT = 192 // 12rem
+const MAX_INITIAL_DESCRIPTION_HEIGHT_WITH_REWARDS = 192 // 12rem
+const MAX_INITIAL_DESCRIPTION_HEIGHT = 260 // 16.25rem (22rem - 92px, the height of the role card's header)
 
 interface Props extends Pick<HTMLAttributes<HTMLDivElement>, "inert" | "className"> {
-  description: string
+  role: Role
 }
 
-const RoleDescription = ({ description, className, ...props }: Props) => {
+const RoleDescription = ({ role, className, ...props }: Props) => {
+  const maxDescriptionHeight =
+    role.rolePlatforms?.length > 0
+      ? MAX_INITIAL_DESCRIPTION_HEIGHT_WITH_REWARDS
+      : MAX_INITIAL_DESCRIPTION_HEIGHT
   const { ref, bounds } = useMeasure<HTMLDivElement>()
 
-  const shouldShowViewMoreButton =
-    !!bounds && bounds.height > MAX_INITIAL_DESCRIPTION_HEIGHT
+  const shouldShowViewMoreButton = !!bounds && bounds.height > maxDescriptionHeight
   const { isOpen, onToggle } = useDisclosure()
 
   return (
     <div
       className={cn(
-        // Defining an initial max height to avoid a jump on initial load
-        "group relative max-h-[12rem] overflow-hidden px-5 pb-3 transition-all",
+        "group relative overflow-hidden px-5 pb-3 transition-all",
         className
       )}
       style={
         shouldShowViewMoreButton
           ? {
-              height: isOpen ? bounds.height : MAX_INITIAL_DESCRIPTION_HEIGHT,
+              height: isOpen ? bounds.height : maxDescriptionHeight,
               maxHeight: "none",
             }
-          : undefined
+          : {
+              // Defining an initial max height to avoid a jump on initial load
+              maxHeight: maxDescriptionHeight,
+            }
       }
       {...props}
     >
-      <div ref={ref}>{parseDescription(description)}</div>
+      <div ref={ref}>{parseDescription(role.description)}</div>
 
       {shouldShowViewMoreButton && (
         <div

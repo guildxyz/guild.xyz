@@ -157,7 +157,7 @@ const RoleCard = ({ role }: Props) => {
 
             {role.description && (
               <RoleDescription
-                description={role.description}
+                role={role}
                 // boolean values didn't work, I guess that's a bug
                 inert={!isOpen ? ("true" as unknown as boolean) : undefined}
                 className={cn("translate-y-2 opacity-0 duration-200", {
