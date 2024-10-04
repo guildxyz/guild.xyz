@@ -3,7 +3,8 @@ import { consts } from "@guildxyz/types"
 import { ImageData } from "@nouns/assets"
 import { ArrowSquareOut } from "@phosphor-icons/react"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
-import Requirement, {
+import {
+  Requirement,
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"

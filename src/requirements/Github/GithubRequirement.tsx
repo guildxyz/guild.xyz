@@ -4,7 +4,8 @@ import { GithubLogo } from "@phosphor-icons/react"
 import ConnectRequirementPlatformButton from "components/[guild]/Requirements/components/ConnectRequirementPlatformButton"
 import { DataBlockWithDate } from "components/[guild]/Requirements/components/DataBlockWithDate"
 import { DataBlockWithRelativeDate } from "components/[guild]/Requirements/components/DataBlockWithRelativeDate"
-import Requirement, {
+import {
+  Requirement,
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"

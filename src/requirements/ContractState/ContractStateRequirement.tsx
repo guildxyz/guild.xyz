@@ -16,7 +16,8 @@ import {
 } from "@chakra-ui/react"
 import { CaretDown, Function } from "@phosphor-icons/react/dist/ssr"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
-import Requirement, {
+import {
+  Requirement,
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { RequirementButton } from "components/[guild]/Requirements/components/RequirementButton"

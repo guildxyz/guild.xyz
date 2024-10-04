@@ -31,7 +31,7 @@ const RequirementAccessIndicatorUI = ({
   const [openCount, setOpenCount] = useState(0)
 
   return (
-    <div className="flex items-center justify-center pl-6">
+    <div className="flex size-7 items-center justify-end">
       <Tooltip
         // just an easter egg appreciating the cool morphing animation we have
         onOpenChange={(open) => {

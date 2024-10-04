@@ -10,9 +10,9 @@ const RequirementImageCircle = ({
   children,
 }: PropsWithChildren<Props>) =>
   isImageLoading ? (
-    <Skeleton className="size-11 rounded-full" />
+    <Skeleton className="size-11 shrink-0 rounded-full" />
   ) : (
-    <div className="flex size-11 items-center justify-center overflow-hidden rounded-full bg-blackAlpha-soft dark:bg-blackAlpha">
+    <div className="flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-blackAlpha-soft dark:bg-blackAlpha">
       {children}
     </div>
   )

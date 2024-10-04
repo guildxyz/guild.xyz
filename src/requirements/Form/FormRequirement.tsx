@@ -1,6 +1,7 @@
 import { Link } from "@chakra-ui/next-js"
 import { Icon, Skeleton, Text, Tooltip } from "@chakra-ui/react"
-import Requirement, {
+import {
+  Requirement,
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"

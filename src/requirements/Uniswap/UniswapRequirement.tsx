@@ -1,5 +1,6 @@
 import { HStack, Skeleton } from "@chakra-ui/react"
-import Requirement, {
+import {
+  Requirement,
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { RequirementLink } from "components/[guild]/Requirements/components/RequirementButton"

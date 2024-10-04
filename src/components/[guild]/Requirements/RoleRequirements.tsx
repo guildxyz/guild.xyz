@@ -7,7 +7,10 @@ import { LogicDivider } from "../LogicDivider"
 import useRequirements from "../hooks/useRequirements"
 import { AnyOfHeader } from "./components/AnyOfHeader"
 import { HiddenRequirementAccessIndicator } from "./components/HiddenRequirementAccessIndicator"
-import RequirementComponent, { RequirementSkeleton } from "./components/Requirement"
+import {
+  Requirement as RequirementComponent,
+  RequirementSkeleton,
+} from "./components/Requirement"
 import { RequirementDisplayComponent } from "./components/RequirementDisplayComponent"
 
 type Props = {

@@ -7,7 +7,8 @@ import {
   Wallet,
 } from "@phosphor-icons/react"
 import { BeforeAfterDates } from "components/[guild]/Requirements/components/DataBlockWithDate"
-import Requirement, {
+import {
+  Requirement,
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { RequirementChainIndicator } from "components/[guild]/Requirements/components/RequirementChainIndicator"

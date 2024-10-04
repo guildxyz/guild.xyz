@@ -14,7 +14,8 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import { CaretDown } from "@phosphor-icons/react/dist/ssr"
-import Requirement, {
+import {
+  Requirement,
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { RequirementButton } from "components/[guild]/Requirements/components/RequirementButton"

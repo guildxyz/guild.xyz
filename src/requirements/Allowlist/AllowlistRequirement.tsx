@@ -2,7 +2,8 @@ import { Fade, HStack, Icon, Text, useDisclosure } from "@chakra-ui/react"
 import { Schemas } from "@guildxyz/types"
 import { ArrowSquareIn, ListPlus } from "@phosphor-icons/react"
 import RequirementConnectButton from "components/[guild]/Requirements/components/ConnectRequirementPlatformButton"
-import Requirement, {
+import {
+  Requirement,
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"

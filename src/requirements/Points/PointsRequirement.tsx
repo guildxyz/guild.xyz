@@ -1,7 +1,8 @@
 import { Link } from "@chakra-ui/next-js"
 import { Skeleton } from "@chakra-ui/react"
 import { GuildReward } from "@guildxyz/types"
-import Requirement, {
+import {
+  Requirement,
   RequirementProps,
   RequirementSkeleton,
 } from "components/[guild]/Requirements/components/Requirement"

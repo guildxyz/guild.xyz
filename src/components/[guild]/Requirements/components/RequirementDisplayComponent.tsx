@@ -6,7 +6,7 @@ import { ErrorBoundary } from "react-error-boundary"
 import { REQUIREMENT_DISPLAY_COMPONENTS } from "requirements/requirementDisplayComponents"
 import { Requirement as RequirementType } from "types"
 import { CHAIN_CONFIG } from "wagmiConfig/chains"
-import Requirement, { RequirementProps } from "./Requirement"
+import { Requirement, RequirementProps } from "./Requirement"
 import { RequirementAccessIndicator } from "./RequirementAccessIndicator"
 import { RequirementProvider, useRequirementContext } from "./RequirementContext"
 
