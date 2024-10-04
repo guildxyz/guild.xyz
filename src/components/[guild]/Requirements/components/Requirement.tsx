@@ -15,7 +15,7 @@ import { useFormContext } from "react-hook-form"
 import { useRequirementContext } from "./RequirementContext"
 import { RequirementImage, RequirementImageCircle } from "./RequirementImage"
 import ResetRequirementButton from "./ResetRequirementButton"
-import ViewOriginalPopover from "./ViewOriginalPopover"
+import { ViewOriginalPopover } from "./ViewOriginalPopover"
 const DataProviderRequirement = dynamic(() => import("./DataProviderRequirement"))
 
 export type RequirementProps = PropsWithChildren<{
@@ -86,7 +86,7 @@ const Requirement = ({
         <HStack wrap={"wrap"}>
           {showViewOriginal && (
             <ViewOriginalPopover>
-              <HStack p={3} gap={4}>
+              <HStack gap={4}>
                 <RequirementImageCircle isImageLoading={isImageLoading}>
                   <RequirementImage image={image} />
                 </RequirementImageCircle>

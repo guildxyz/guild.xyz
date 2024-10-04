@@ -27,7 +27,7 @@ import {
 import ResetRequirementButton, {
   getDefaultVisitLinkCustomName,
 } from "components/[guild]/Requirements/components/ResetRequirementButton"
-import ViewOriginalPopover from "components/[guild]/Requirements/components/ViewOriginalPopover"
+import { ViewOriginalPopover } from "components/[guild]/Requirements/components/ViewOriginalPopover"
 import useUser from "components/[guild]/hooks/useUser"
 import { Alert } from "components/common/Modal"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
@@ -107,7 +107,7 @@ const VisitLinkRequirement = ({ ...props }: RequirementProps) => {
       footer={
         (isCustomName || !!data?.customImage) && (
           <ViewOriginalPopover>
-            <HStack p={3} gap={4}>
+            <HStack gap={4}>
               <RequirementImageCircle>
                 <RequirementImage image={<Icon as={LinkIcon} boxSize={6} />} />
               </RequirementImageCircle>
