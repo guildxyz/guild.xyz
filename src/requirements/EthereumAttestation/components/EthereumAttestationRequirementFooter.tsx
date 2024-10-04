@@ -1,4 +1,3 @@
-import { HStack, Wrap } from "@chakra-ui/react"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
 import { RequirementLink } from "components/[guild]/Requirements/components/RequirementButton"
 import { RequirementChainIndicator } from "components/[guild]/Requirements/components/RequirementChainIndicator"
@@ -16,25 +15,29 @@ export const EAS_SCAN_BASE = {
 } as const
 
 const EthereumAttestationRequirementFooter = () => {
-  const { type, data, chain } = useRequirementContext()
+  const { type, data, chain } = useRequirementContext<
+    "COINBASE_EAS_ATTESTED_BY" | "EAS_ATTESTED_BY" | "EAS_ATTEST"
+  >()
 
   return (
-    <Wrap spacing={4} spacingY={2}>
+    <>
       <RequirementChainIndicator />
-      <HStack spacing={4}>
-        <RequirementLink
-          href={`${EAS_SCAN_BASE[chain ?? "ETHEREUM"]}/${data?.schemaId}`}
-          imageUrl="/requirementLogos/eas.png"
-          label="Schema"
-        />
-        <BlockExplorerUrl
-          path="address"
-          address={data?.attester ?? data?.recipient}
-          label={type === "EAS_ATTEST" ? "Recipient" : "Attester"}
-        />
-      </HStack>
-    </Wrap>
+
+      <RequirementLink
+        href={`${EAS_SCAN_BASE[chain ?? "ETHEREUM"]}/${data?.schemaId}`}
+        imageUrl="/requirementLogos/eas.png"
+        label="Schema"
+        className="ml-1"
+      />
+
+      <BlockExplorerUrl
+        path="address"
+        address={type === "EAS_ATTEST" ? data.recipient : data.attester}
+        label={type === "EAS_ATTEST" ? "Recipient" : "Attester"}
+        className="mx-1"
+      />
+    </>
   )
 }
 
-export default EthereumAttestationRequirementFooter
+export { EthereumAttestationRequirementFooter }

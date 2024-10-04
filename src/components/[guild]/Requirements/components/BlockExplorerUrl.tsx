@@ -9,6 +9,7 @@ type Props = {
   address?: string
   label?: string
   path?: string
+  className?: string
 }
 
 const BlockExplorerUrl = ({
@@ -16,6 +17,7 @@ const BlockExplorerUrl = ({
   address: addressProp,
   label,
   path: pathProp,
+  className,
 }: Props): JSX.Element => {
   const { colorMode } = useColorMode()
   const { chain, type, address, data } = useRequirementContext()
@@ -39,6 +41,7 @@ const BlockExplorerUrl = ({
       href={url}
       imageUrl={CHAIN_CONFIG[chainProp ?? chain].blockExplorerIconUrl[colorMode]}
       label={label ?? "View on explorer"}
+      className={className}
     />
   )
 }

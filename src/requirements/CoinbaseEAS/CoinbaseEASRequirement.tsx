@@ -5,7 +5,7 @@ import {
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import CountryFlagAndName from "requirements/CoinbaseEAS/components/CountryFlagAndName"
-import EthereumAttestationRequirementFooter from "requirements/EthereumAttestation/components/EthereumAttestationRequirementFooter"
+import { EthereumAttestationRequirementFooter } from "requirements/EthereumAttestation/components/EthereumAttestationRequirementFooter"
 import { EAS_CB_VERIFIED_ACCOUNT_SCHEMA_ID } from "./CoinbaseEASForm"
 
 const CoinbaseEASRequirement = (props: RequirementProps): JSX.Element => {

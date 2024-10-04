@@ -62,7 +62,7 @@ const Requirement = ({
             : requirement?.data?.customName || children}
         </ChildrenWrapper>
 
-        <div className="flex flex-wrap items-center gap-2 has-[>*]:mt-1">
+        <div className="flex flex-wrap items-center gap-1.5 has-[>*]:mt-1">
           {!setValue && (
             <Visibility
               visibilityRoleId={requirement?.visibilityRoleId || null}

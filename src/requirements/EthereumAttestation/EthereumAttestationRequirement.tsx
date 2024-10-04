@@ -8,7 +8,7 @@ import { DataBlock } from "components/common/DataBlock"
 import { DataBlockWithCopy } from "components/common/DataBlockWithCopy"
 import useResolveAddress from "hooks/useResolveAddress"
 import shortenHex from "utils/shortenHex"
-import EthereumAttestationRequirementFooter from "./components/EthereumAttestationRequirementFooter"
+import { EthereumAttestationRequirementFooter } from "./components/EthereumAttestationRequirementFooter"
 
 const EthereumAttestationRequirement = (props: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext()
