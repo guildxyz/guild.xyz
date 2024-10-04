@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react"
 import { ArrowsClockwise, Lightning } from "@phosphor-icons/react"
 import { useRequirementHandlerContext } from "components/[guild]/RequirementHandlerContext"
-import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
+import { RequirementDisplayComponent } from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import AddCard from "components/common/AddCard"
 import Button from "components/common/Button"
 import Card from "components/common/Card"

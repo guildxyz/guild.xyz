@@ -8,7 +8,7 @@ import useRequirements from "../hooks/useRequirements"
 import { AnyOfHeader } from "./components/AnyOfHeader"
 import { HiddenRequirementAccessIndicator } from "./components/HiddenRequirementAccessIndicator"
 import RequirementComponent, { RequirementSkeleton } from "./components/Requirement"
-import RequirementDisplayComponent from "./components/RequirementDisplayComponent"
+import { RequirementDisplayComponent } from "./components/RequirementDisplayComponent"
 
 type Props = {
   role?: Role // Role can be undefined when the role is private

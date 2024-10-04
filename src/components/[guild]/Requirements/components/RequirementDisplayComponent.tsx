@@ -4,16 +4,15 @@ import { DataBlock } from "components/common/DataBlock"
 import { PropsWithChildren } from "react"
 import { ErrorBoundary } from "react-error-boundary"
 import { REQUIREMENT_DISPLAY_COMPONENTS } from "requirements/requirementDisplayComponents"
-import { Requirement as RequirementType, Rest } from "types"
+import { Requirement as RequirementType } from "types"
 import { CHAIN_CONFIG } from "wagmiConfig/chains"
-import Requirement from "./Requirement"
+import Requirement, { RequirementProps } from "./Requirement"
 import { RequirementAccessIndicator } from "./RequirementAccessIndicator"
 import { RequirementProvider, useRequirementContext } from "./RequirementContext"
 
-type Props = {
+interface Props extends RequirementProps {
   requirement: RequirementType
-  rightElement?: JSX.Element
-} & Rest
+}
 
 export const RequirementWarningIcon = () => (
   <Warning weight="bold" className="size-5 text-warning-subtle-foreground" />
@@ -86,4 +85,4 @@ export const InvalidRequirementErrorBoundary = ({
   )
 }
 
-export default RequirementDisplayComponent
+export { RequirementDisplayComponent }

@@ -1,5 +1,5 @@
 import { Center, HStack, Stack, Text, useBreakpointValue } from "@chakra-ui/react"
-import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
+import { RequirementDisplayComponent } from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import { PropsWithChildren } from "react"
 import { Requirement } from "types"
 import { ACTION } from "../../constants"
