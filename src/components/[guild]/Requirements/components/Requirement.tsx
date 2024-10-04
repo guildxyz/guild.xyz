@@ -71,7 +71,7 @@ const Requirement = ({
           </ImageWrapper>
         </RequirementImageCircle>
       </Box>
-      <VStack alignItems={"flex-start"} alignSelf="center" spacing={0.5}>
+      <VStack alignItems={"flex-start"} alignSelf="center" spacing={1}>
         <ChildrenWrapper display="inline-block">
           {requirement?.isNegated && <Tag mr="2">DON'T</Tag>}
           {requirement?.type === "LINK_VISIT"
@@ -80,7 +80,7 @@ const Requirement = ({
         </ChildrenWrapper>
 
         {shouldShowFooter && (
-          <div className="flex flex-wrap items-center gap-1.5">
+          <div className="flex flex-wrap items-center gap-2">
             {!setValue && (
               <Visibility
                 visibilityRoleId={requirement?.visibilityRoleId || null}

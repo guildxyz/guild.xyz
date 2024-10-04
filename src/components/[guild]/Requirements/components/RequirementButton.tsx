@@ -21,6 +21,7 @@ const RequirementButton = forwardRef(
           [anchorVariants({ variant: "muted", className: "px-0" })]:
             variant === "unstyled",
         },
+        "h-5 rounded-md",
         className
       )}
       {...buttonProps}
@@ -52,6 +53,7 @@ const RequirementLink = ({
           variant === "link" ? "unstyled" : (variant as ButtonProps["variant"]),
         size: "xs",
         className: [
+          "h-5 rounded-md",
           {
             [anchorVariants({ variant: "muted", className: "px-0" })]:
               variant === "link",
