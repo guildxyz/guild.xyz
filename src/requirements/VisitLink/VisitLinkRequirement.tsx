@@ -66,7 +66,8 @@ const VisitLinkRequirement = ({ ...props }: RequirementProps) => {
     onError: () => showErrorToast("Something went wrong"),
   })
 
-  const isCustomName = data?.customName !== getDefaultVisitLinkCustomName(data)
+  const isCustomName =
+    !!data?.customName && data.customName !== getDefaultVisitLinkCustomName(data)
   const [, first, , link, , second] = isCustomName
     ? (VISIT_LINK_REGEX.exec(data.customName) ?? [])
     : []
