@@ -6,7 +6,7 @@ import React, { ComponentType, PropsWithChildren } from "react"
 import { useFormContext } from "react-hook-form"
 import { useRequirementContext } from "./RequirementContext"
 import { RequirementImage, RequirementImageCircle } from "./RequirementImage"
-import ResetRequirementButton from "./ResetRequirementButton"
+import { ResetRequirementButton } from "./ResetRequirementButton"
 import { ViewOriginalPopover } from "./ViewOriginalPopover"
 
 const DataProviderRequirement = dynamic(() => import("./DataProviderRequirement"))

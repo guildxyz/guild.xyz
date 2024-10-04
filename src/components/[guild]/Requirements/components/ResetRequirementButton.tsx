@@ -1,4 +1,4 @@
-import { Button } from "@chakra-ui/react"
+import { Button } from "@/components/ui/Button"
 import { Schemas } from "@guildxyz/types"
 import useEditRequirement from "components/create-guild/Requirements/hooks/useEditRequirement"
 import { useFormContext, useWatch } from "react-hook-form"
@@ -26,7 +26,7 @@ const ResetNewRequirementButton = ({ requirement }: Props) => {
   }
 
   return (
-    <Button size={"sm"} onClick={onReset} flexShrink={0}>
+    <Button size="sm" onClick={onReset}>
       Reset to original
     </Button>
   )
@@ -42,7 +42,7 @@ const ResetExistingRequirementButton = ({ requirement }: Props) => {
 
   return (
     <Button
-      size={"sm"}
+      size="sm"
       isLoading={isLoading}
       onClick={() =>
         onSubmit({
@@ -54,7 +54,6 @@ const ResetExistingRequirementButton = ({ requirement }: Props) => {
           },
         })
       }
-      flexShrink={0}
     >
       Reset to original
     </Button>
@@ -69,4 +68,4 @@ const ResetRequirementButton = () => {
   return <ResetNewRequirementButton {...{ requirement }} />
 }
 
-export default ResetRequirementButton
+export { ResetRequirementButton }

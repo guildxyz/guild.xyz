@@ -25,7 +25,8 @@ import {
   RequirementImage,
   RequirementImageCircle,
 } from "components/[guild]/Requirements/components/RequirementImage"
-import ResetRequirementButton, {
+import {
+  ResetRequirementButton,
   getDefaultVisitLinkCustomName,
 } from "components/[guild]/Requirements/components/ResetRequirementButton"
 import { ViewOriginalPopover } from "components/[guild]/Requirements/components/ViewOriginalPopover"
