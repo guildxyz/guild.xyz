@@ -8,7 +8,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react"
-import Visibility from "components/[guild]/Visibility"
+import { Visibility } from "components/[guild]/Visibility"
 import dynamic from "next/dynamic"
 import React, { ComponentType, PropsWithChildren } from "react"
 import { useFormContext } from "react-hook-form"
@@ -53,6 +53,9 @@ const Requirement = ({
   const ChildrenWrapper = childrenWrapper ?? Box
   const ImageWrapper = imageWrapper ?? React.Fragment
 
+  const shouldShowFooter =
+    showViewOriginal || !!footer || requirement?.visibility !== "PUBLIC"
+
   return (
     <SimpleGrid
       spacing={4}
@@ -74,37 +77,39 @@ const Requirement = ({
           {requirement?.type === "LINK_VISIT"
             ? children
             : requirement?.data?.customName || children}
-          {!setValue ? (
-            <Visibility
-              visibilityRoleId={requirement?.visibilityRoleId || null}
-              entityVisibility={requirement?.visibility ?? "PUBLIC"}
-              ml="1"
-            />
-          ) : null}
         </ChildrenWrapper>
 
-        <HStack wrap={"wrap"}>
-          {showViewOriginal && (
-            <ViewOriginalPopover>
-              <HStack gap={4}>
-                <RequirementImageCircle isImageLoading={isImageLoading}>
-                  <RequirementImage image={image} />
-                </RequirementImageCircle>
-                <Stack
-                  direction={{ base: "column", md: "row" }}
-                  alignItems={{ base: "flex-start", md: "center" }}
-                  spacing={{ base: 2, md: 5 }}
-                >
-                  <Text wordBreak="break-word" flexGrow={1}>
-                    {children}
-                  </Text>
-                  {!!setValue && <ResetRequirementButton />}
-                </Stack>
-              </HStack>
-            </ViewOriginalPopover>
-          )}
-          {footer}
-        </HStack>
+        {shouldShowFooter && (
+          <div className="flex flex-wrap items-center gap-1.5">
+            {!setValue && (
+              <Visibility
+                visibilityRoleId={requirement?.visibilityRoleId || null}
+                entityVisibility={requirement?.visibility ?? "PUBLIC"}
+                size="sm"
+              />
+            )}
+            {footer}
+            {showViewOriginal && (
+              <ViewOriginalPopover>
+                <HStack gap={4}>
+                  <RequirementImageCircle isImageLoading={isImageLoading}>
+                    <RequirementImage image={image} />
+                  </RequirementImageCircle>
+                  <Stack
+                    direction={{ base: "column", md: "row" }}
+                    alignItems={{ base: "flex-start", md: "center" }}
+                    spacing={{ base: 2, md: 5 }}
+                  >
+                    <Text wordBreak="break-word" flexGrow={1}>
+                      {children}
+                    </Text>
+                    {!!setValue && <ResetRequirementButton />}
+                  </Stack>
+                </HStack>
+              </ViewOriginalPopover>
+            )}
+          </div>
+        )}
       </VStack>
       {rightElement}
     </SimpleGrid>

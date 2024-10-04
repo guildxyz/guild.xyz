@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils"
-import Visibility from "components/[guild]/Visibility"
+import { Visibility } from "components/[guild]/Visibility"
 import GuildLogo from "components/common/GuildLogo"
 import { PropsWithChildren } from "react"
 
@@ -21,7 +21,6 @@ const RoleHeader = ({ role, isOpen = true, children }: PropsWithChildren<any>) =
         <Visibility
           visibilityRoleId={role.visibilityRoleId}
           entityVisibility={role.visibility}
-          showTagLabel
         />
       </div>
     </div>

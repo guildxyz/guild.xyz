@@ -11,7 +11,6 @@ import { ArrowSquareOut, LockSimple } from "@phosphor-icons/react"
 import usePlatformAccessButton from "components/[guild]/AccessHub/components/usePlatformAccessButton"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import { ApiRequirementHandlerProvider } from "components/[guild]/RequirementHandlerContext"
-import Visibility from "components/[guild]/Visibility"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import useMembership, {
@@ -118,12 +117,6 @@ const Reward = ({ role, platform, withLink, isLinkColorful }: RewardProps) => {
             </Text>
           )}
         </>
-      }
-      rightElement={
-        <Visibility
-          visibilityRoleId={platform.visibilityRoleId}
-          entityVisibility={platform.visibility}
-        />
       }
     />
   )
