@@ -1,9 +1,10 @@
 import { Link, Text } from "@chakra-ui/react"
-import Requirement, {
+import {
+  Requirement,
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import DataBlock from "components/common/DataBlock"
+import { DataBlock } from "components/common/DataBlock"
 import { usePoap } from "./hooks/usePoaps"
 
 const PoapRequirement = (props: RequirementProps) => {

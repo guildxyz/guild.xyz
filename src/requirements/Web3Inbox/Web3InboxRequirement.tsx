@@ -1,6 +1,7 @@
 import { Link, Text } from "@chakra-ui/react"
 import { ArrowSquareOut } from "@phosphor-icons/react"
-import Requirement, {
+import {
+  Requirement,
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"

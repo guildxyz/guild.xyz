@@ -26,7 +26,7 @@ import {
 import { Info, Plus, X } from "@phosphor-icons/react"
 import Button from "components/common/Button"
 import ControlledSelect from "components/common/ControlledSelect"
-import DataBlockWithCopy from "components/common/DataBlockWithCopy"
+import { DataBlockWithCopy } from "components/common/DataBlockWithCopy"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { useMemo } from "react"
 import { Controller, useFieldArray, useFormContext, useWatch } from "react-hook-form"

@@ -1,3 +1,4 @@
+import { PLATFORM_COLORS } from "@/components/Account/components/AccountModal/components/SocialAccount"
 import { RequirementButton } from "components/[guild]/Requirements/components/RequirementButton"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import useUser from "components/[guild]/hooks/useUser"
@@ -38,9 +39,7 @@ export default function FarcasterAction() {
 
   return (
     <RequirementButton
-      colorScheme="FARCASTER"
       variant="solid"
-      color={undefined}
       isLoading={isLoading}
       onClick={() => {
         if (type === "FARCASTER_LIKE") {
@@ -64,6 +63,7 @@ export default function FarcasterAction() {
           })
         }
       }}
+      className={PLATFORM_COLORS.FARCASTER}
     >
       {type === "FARCASTER_FOLLOW" && farcasterUser?.display_name
         ? `Follow ${farcasterUser?.display_name}`

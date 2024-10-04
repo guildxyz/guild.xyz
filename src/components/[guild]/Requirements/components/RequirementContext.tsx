@@ -1,5 +1,6 @@
 import { schemas } from "@guildxyz/types"
 import { PropsWithChildren, createContext, useContext } from "react"
+import { RequirementType } from "requirements/types"
 import { Requirement } from "types"
 import { z } from "zod"
 
@@ -24,12 +25,11 @@ const RequirementProvider = ({
   )
 }
 
-type ReqType = z.output<typeof schemas.RequirementSchema>["type"]
-const useRequirementContext = <RequirementType extends ReqType>() => {
+const useRequirementContext = <T extends RequirementType>() => {
   const requirement = useContext(RequirementContext)
   return requirement as unknown as Extract<
     z.output<typeof schemas.RequirementSchema>,
-    { type: RequirementType }
+    { type: T }
   >
 }
 

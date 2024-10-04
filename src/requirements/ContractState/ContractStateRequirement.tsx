@@ -14,14 +14,15 @@ import {
   Tr,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { CaretDown, Function } from "@phosphor-icons/react"
+import { CaretDown, Function } from "@phosphor-icons/react/dist/ssr"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
-import Requirement, {
+import {
+  Requirement,
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { RequirementButton } from "components/[guild]/Requirements/components/RequirementButton"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import DataBlock from "components/common/DataBlock"
+import { DataBlock } from "components/common/DataBlock"
 import shortenHex from "utils/shortenHex"
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
@@ -39,7 +40,7 @@ const ContractStateRequirement = (props: RequirementProps) => {
 
           <Popover placement="bottom">
             <PopoverTrigger>
-              <RequirementButton rightIcon={<Icon as={CaretDown} />}>
+              <RequirementButton rightIcon={<CaretDown weight="bold" />}>
                 View query
               </RequirementButton>
             </PopoverTrigger>

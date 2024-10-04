@@ -1,7 +1,7 @@
 import { HStack, Text } from "@chakra-ui/react"
 import { consts } from "@guildxyz/types"
 import useGuild from "components/[guild]/hooks/useGuild"
-import DataBlock from "components/common/DataBlock"
+import { DataBlock } from "components/common/DataBlock"
 import type { ProvidedValueDisplayProps } from "requirements/requirementProvidedValues"
 import { isGuildPinSupportedChain } from "utils/guildCheckout/utils"
 import { Chain } from "wagmiConfig/chains"

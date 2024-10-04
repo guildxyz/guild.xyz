@@ -11,7 +11,7 @@ import {
 import { CaretRight } from "@phosphor-icons/react"
 import { LogicDivider } from "components/[guild]/LogicDivider"
 import { useRequirementHandlerContext } from "components/[guild]/RequirementHandlerContext"
-import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
+import { RequirementDisplayComponent } from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import DisplayCard from "components/common/DisplayCard"
 import { Modal } from "components/common/Modal"
 import AddRequirement from "components/create-guild/Requirements/components/AddRequirement"

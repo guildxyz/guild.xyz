@@ -29,6 +29,7 @@ const useVisibilityTooltipLabel = (
             bgColor={"blackAlpha.600"}
             name={role.name}
             imageUrl={role.imageUrl}
+            mx="0.5"
           />
         ) : (
           "selected"

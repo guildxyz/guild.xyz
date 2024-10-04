@@ -24,6 +24,11 @@ const config = {
       },
       colors: {
         gray: "hsl(var(--gray))",
+        blackAlpha: {
+          DEFAULT: "var(--blackAlpha-medium)",
+          soft: "var(--blackAlpha-soft)",
+          hard: "var(--blackAlpha-hard)",
+        },
         banner: {
           DEFAULT: "var(--banner)",
           dark: "var(--banner-dark)",
@@ -169,6 +174,11 @@ const config = {
           DEFAULT: "hsl(var(--farcaster))",
           hover: "hsl(var(--farcaster-hover))",
           active: "hsl(var(--farcaster-active))",
+        },
+        uniswap: {
+          DEFAULT: "hsl(var(--uniswap))",
+          hover: "hsl(var(--uniswap-hover))",
+          active: "hsl(var(--uniswap-active))",
         },
       },
       opacity: {

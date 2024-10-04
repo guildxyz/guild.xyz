@@ -1,9 +1,10 @@
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
-import Requirement, {
+import {
+  Requirement,
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import DataBlock from "components/common/DataBlock"
+import { DataBlock } from "components/common/DataBlock"
 import shortenHex from "utils/shortenHex"
 
 const Rep3Requirement = (props: RequirementProps): JSX.Element => {

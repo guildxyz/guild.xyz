@@ -1,5 +1,4 @@
 import {
-  Icon,
   Popover,
   PopoverArrow,
   PopoverBody,
@@ -7,14 +6,15 @@ import {
   PopoverTrigger,
   Portal,
 } from "@chakra-ui/react"
-import { CaretDown } from "@phosphor-icons/react"
-import DataBlockWithDate from "components/[guild]/Requirements/components/DataBlockWithDate"
-import Requirement, {
+import { CaretDown } from "@phosphor-icons/react/dist/ssr"
+import { DataBlockWithDate } from "components/[guild]/Requirements/components/DataBlockWithDate"
+import {
+  Requirement,
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { RequirementButton } from "components/[guild]/Requirements/components/RequirementButton"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import DataBlock from "components/common/DataBlock"
+import { DataBlock } from "components/common/DataBlock"
 import useSWRImmutable from "swr/immutable"
 import pluralize from "utils/pluralize"
 import SnapshotSpaceLink from "./components/SnapshotSpaceLink"
@@ -40,7 +40,7 @@ const SnapshotRequirement = (props: RequirementProps): JSX.Element => {
         Object.keys(requirement.data.strategies[0].params ?? {}).length && (
           <Popover placement="bottom">
             <PopoverTrigger>
-              <RequirementButton rightIcon={<Icon as={CaretDown} />}>
+              <RequirementButton rightIcon={<CaretDown weight="bold" />}>
                 View parameters
               </RequirementButton>
             </PopoverTrigger>

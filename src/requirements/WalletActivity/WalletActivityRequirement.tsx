@@ -7,13 +7,14 @@ import {
   Wallet,
 } from "@phosphor-icons/react"
 import { BeforeAfterDates } from "components/[guild]/Requirements/components/DataBlockWithDate"
-import Requirement, {
+import {
+  Requirement,
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
-import RequirementChainIndicator from "components/[guild]/Requirements/components/RequirementChainIndicator"
+import { RequirementChainIndicator } from "components/[guild]/Requirements/components/RequirementChainIndicator"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import DataBlock from "components/common/DataBlock"
-import DataBlockWithCopy from "components/common/DataBlockWithCopy"
+import { DataBlock } from "components/common/DataBlock"
+import { DataBlockWithCopy } from "components/common/DataBlockWithCopy"
 import { ForwardRefExoticComponent, RefAttributes } from "react"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 import pluralize from "utils/pluralize"

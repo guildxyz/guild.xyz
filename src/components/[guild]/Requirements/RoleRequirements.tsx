@@ -5,10 +5,13 @@ import { Fragment } from "react"
 import { Role } from "types"
 import { LogicDivider } from "../LogicDivider"
 import useRequirements from "../hooks/useRequirements"
-import AnyOfHeader from "./components/AnyOfHeader"
+import { AnyOfHeader } from "./components/AnyOfHeader"
 import { HiddenRequirementAccessIndicator } from "./components/HiddenRequirementAccessIndicator"
-import RequirementComponent, { RequirementSkeleton } from "./components/Requirement"
-import RequirementDisplayComponent from "./components/RequirementDisplayComponent"
+import {
+  Requirement as RequirementComponent,
+  RequirementSkeleton,
+} from "./components/Requirement"
+import { RequirementDisplayComponent } from "./components/RequirementDisplayComponent"
 
 type Props = {
   role?: Role // Role can be undefined when the role is private

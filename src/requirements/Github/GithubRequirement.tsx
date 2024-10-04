@@ -2,13 +2,14 @@ import { Link } from "@chakra-ui/next-js"
 import { Icon } from "@chakra-ui/react"
 import { GithubLogo } from "@phosphor-icons/react"
 import ConnectRequirementPlatformButton from "components/[guild]/Requirements/components/ConnectRequirementPlatformButton"
-import DataBlockWithDate from "components/[guild]/Requirements/components/DataBlockWithDate"
-import DataBlockWithRelativeDate from "components/[guild]/Requirements/components/DataBlockWithRelativeDate"
-import Requirement, {
+import { DataBlockWithDate } from "components/[guild]/Requirements/components/DataBlockWithDate"
+import { DataBlockWithRelativeDate } from "components/[guild]/Requirements/components/DataBlockWithRelativeDate"
+import {
+  Requirement,
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import DataBlock from "components/common/DataBlock"
+import { DataBlock } from "components/common/DataBlock"
 import pluralize from "utils/pluralize"
 
 const GithubRequirement = (props: RequirementProps) => {
