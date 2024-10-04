@@ -14,7 +14,7 @@ import {
   Tr,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { CaretDown, Function } from "@phosphor-icons/react"
+import { CaretDown, Function } from "@phosphor-icons/react/dist/ssr"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
 import Requirement, {
   RequirementProps,
@@ -39,7 +39,7 @@ const ContractStateRequirement = (props: RequirementProps) => {
 
           <Popover placement="bottom">
             <PopoverTrigger>
-              <RequirementButton rightIcon={<Icon as={CaretDown} />}>
+              <RequirementButton rightIcon={<CaretDown weight="bold" />}>
                 View query
               </RequirementButton>
             </PopoverTrigger>

@@ -1,18 +1,12 @@
-import {
-  Icon,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-  Portal,
-} from "@chakra-ui/react"
-import { CaretDown } from "@phosphor-icons/react"
+import { Popover, PopoverContent, PopoverTrigger, Portal } from "@chakra-ui/react"
+import { CaretDown } from "@phosphor-icons/react/dist/ssr"
 import { PropsWithChildren } from "react"
 import { RequirementButton } from "./RequirementButton"
 
 const ViewOriginalPopover = ({ children }: PropsWithChildren<unknown>) => (
   <Popover placement="bottom-start">
     <PopoverTrigger>
-      <RequirementButton rightIcon={<Icon as={CaretDown} />}>
+      <RequirementButton rightIcon={<CaretDown weight="bold" />}>
         View original
       </RequirementButton>
     </PopoverTrigger>

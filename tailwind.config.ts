@@ -175,6 +175,11 @@ const config = {
           hover: "hsl(var(--farcaster-hover))",
           active: "hsl(var(--farcaster-active))",
         },
+        uniswap: {
+          DEFAULT: "hsl(var(--uniswap))",
+          hover: "hsl(var(--uniswap-hover))",
+          active: "hsl(var(--uniswap-active))",
+        },
       },
       opacity: {
         banner: "var(--banner-opacity)"

@@ -1,6 +1,6 @@
 import { HStack, Wrap } from "@chakra-ui/react"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
-import { RequirementLinkButton } from "components/[guild]/Requirements/components/RequirementButton"
+import { RequirementLink } from "components/[guild]/Requirements/components/RequirementButton"
 import { RequirementChainIndicator } from "components/[guild]/Requirements/components/RequirementChainIndicator"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 
@@ -22,12 +22,11 @@ const EthereumAttestationRequirementFooter = () => {
     <Wrap spacing={4} spacingY={2}>
       <RequirementChainIndicator />
       <HStack spacing={4}>
-        <RequirementLinkButton
+        <RequirementLink
           href={`${EAS_SCAN_BASE[chain ?? "ETHEREUM"]}/${data?.schemaId}`}
           imageUrl="/requirementLogos/eas.png"
-        >
-          Schema
-        </RequirementLinkButton>
+          label="Schema"
+        />
         <BlockExplorerUrl
           path="address"
           address={data?.attester ?? data?.recipient}

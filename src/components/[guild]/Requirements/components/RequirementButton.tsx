@@ -1,39 +1,72 @@
-import { Img } from "@chakra-ui/react"
-import { ArrowSquareOut } from "@phosphor-icons/react"
-import Button from "components/common/Button"
+import { Anchor, AnchorProps, anchorVariants } from "@/components/ui/Anchor"
+import { Button, ButtonProps, buttonVariants } from "@/components/ui/Button"
+import { cn } from "@/lib/utils"
+import { ArrowSquareOut } from "@phosphor-icons/react/dist/ssr"
 import { PropsWithChildren, forwardRef } from "react"
-import { Rest } from "types"
 
-type Props = PropsWithChildren<Rest>
+type Props = PropsWithChildren<ButtonProps>
 
-const RequirementButton = forwardRef(({ children, ...rest }: Props, ref: any) => (
-  <Button
-    ref={ref}
-    variant={"link"}
-    size="xs"
-    fontWeight={"medium"}
-    color="gray"
-    iconSpacing={rest.isLoading ? 2 : 1}
-    loadingText="Loading..."
-    {...rest}
-  >
-    {children}
-  </Button>
-))
-
-type LinkProps = Props & { imageUrl: string }
-
-const RequirementLinkButton = ({ children, imageUrl, ...rest }: LinkProps) => (
-  <RequirementButton
-    as="a"
-    target="_blank"
-    rel="noopener"
-    leftIcon={<Img src={imageUrl} alt="Link image" boxSize={3} mr="1" />}
-    rightIcon={<ArrowSquareOut />}
-    {...rest}
-  >
-    {children}
-  </RequirementButton>
+const RequirementButton = forwardRef(
+  (
+    { variant = "unstyled", className, children, ...buttonProps }: Props,
+    ref: any
+  ) => (
+    <Button
+      ref={ref}
+      size="xs"
+      loadingText="Loading..."
+      variant={variant}
+      className={cn(
+        {
+          [anchorVariants({ variant: "muted", className: "px-0" })]:
+            variant === "unstyled",
+        },
+        className
+      )}
+      {...buttonProps}
+    >
+      {children}
+    </Button>
+  )
 )
 
-export { RequirementButton, RequirementLinkButton }
+interface LinkProps extends Omit<AnchorProps, "variant"> {
+  label: string
+  imageUrl: string
+  variant?: Omit<ButtonProps["variant"], "unstyled"> | "link"
+}
+
+const RequirementLink = ({
+  label,
+  imageUrl,
+  className,
+  variant = "link",
+  ...anchorProps
+}: LinkProps) => (
+  <Anchor
+    target="_blank"
+    rel="noopener"
+    className={cn(
+      buttonVariants({
+        variant:
+          variant === "link" ? "unstyled" : (variant as ButtonProps["variant"]),
+        size: "xs",
+        className: [
+          {
+            [anchorVariants({ variant: "muted", className: "px-0" })]:
+              variant === "link",
+            "hover:no-underline": variant !== "link",
+          },
+          className,
+        ],
+      })
+    )}
+    {...anchorProps}
+  >
+    <img src={imageUrl} alt="Link image" className="size-3" />
+    <span>{label}</span>
+    <ArrowSquareOut weight="bold" />
+  </Anchor>
+)
+
+export { RequirementButton, RequirementLink }

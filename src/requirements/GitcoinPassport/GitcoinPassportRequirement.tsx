@@ -1,5 +1,4 @@
 import {
-  Icon,
   Popover,
   PopoverArrow,
   PopoverBody,
@@ -14,7 +13,7 @@ import {
   Tr,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { CaretDown } from "@phosphor-icons/react"
+import { CaretDown } from "@phosphor-icons/react/dist/ssr"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
@@ -56,7 +55,7 @@ const GitcoinPassportRequirement = ({ ...rest }: RequirementProps): JSX.Element 
             Object.keys(requirement.data ?? {}).length > 0 && (
               <Popover placement="bottom">
                 <PopoverTrigger>
-                  <RequirementButton rightIcon={<Icon as={CaretDown} />}>
+                  <RequirementButton rightIcon={<CaretDown weight="bold" />}>
                     View parameters
                   </RequirementButton>
                 </PopoverTrigger>

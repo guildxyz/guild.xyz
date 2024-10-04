@@ -126,8 +126,12 @@
     --github-active: 0 0% 15%;
 
     --farcaster: 261 55% 61%;
-    --farcaster-hover: 261 55% 55%;
-    --farcaster-active: 239 75% 50%;
+    --farcaster-hover: 261 55% 49%;
+    --farcaster-active: 261 54% 37%;
+
+    --uniswap: 331 100% 45%;
+    --uniswap-hover: 332 100% 35%;
+    --uniswap-active: 331 100% 25%;
 
     /**
      * Missing reward colors to work with the current Chakra driven solution.
@@ -246,8 +250,13 @@
     --google-active: 212 96% 78%;
     --github-hover: 0 0% 44%;
     --github-active: 0 0% 68%;
-    --farcaster-hover: 239 75% 75%;
-    --farcaster-active: 238 76% 81%;
+
+    --farcaster-hover: 261 54% 69%;
+    --farcaster-active: 262 54% 77%;
+
+    --uniswap-hover: 331 100% 55%;
+    --uniswap-active: 331 100% 65%;
+
   }
 }
 
