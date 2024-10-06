@@ -1,4 +1,3 @@
-import { Text } from "@chakra-ui/react"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
 import {
   Requirement,
@@ -26,9 +25,7 @@ const TokenRequirement = ({ ...rest }: Props) => {
         requirement.type === "COIN"
           ? CHAIN_CONFIG[requirementChain]?.nativeCurrency?.iconUrl
           : (data?.logoURI ?? (
-              <Text as="span" fontWeight="bold" fontSize="xx-small">
-                ERC20
-              </Text>
+              <span className="font-bold text-[xx-small]">ERC20</span>
             ))
       }
       isImageLoading={isValidating}
