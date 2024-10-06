@@ -1,4 +1,3 @@
-import { Img, Text } from "@chakra-ui/react"
 import {
   Requirement,
   RequirementProps,
@@ -13,15 +12,15 @@ const CoinbaseEASRequirement = (props: RequirementProps): JSX.Element => {
 
   return (
     <Requirement
-      image={<Img src="/requirementLogos/coinbase.png" />}
+      image={<img src="/requirementLogos/coinbase.png" />}
       footer={<EthereumAttestationRequirementFooter />}
       {...props}
     >
       {data.schemaId === EAS_CB_VERIFIED_ACCOUNT_SCHEMA_ID ? (
-        <Text as="span">Verify your account</Text>
+        "Verify your account"
       ) : (
         <>
-          <Text as="span">Verify your country</Text>
+          <span>Verify your country</span>
           {data.val && <CountryFlagAndName code={data.val} />}
         </>
       )}
