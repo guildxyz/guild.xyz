@@ -1,11 +1,10 @@
-import { Icon } from "@chakra-ui/react"
+import { IconProps } from "@phosphor-icons/react/dist/lib/types"
 import {
   ArrowsLeftRight,
   Coins,
   FileText,
-  IconProps,
   Wallet,
-} from "@phosphor-icons/react"
+} from "@phosphor-icons/react/dist/ssr"
 import { BeforeAfterDates } from "components/[guild]/Requirements/components/DataBlockWithDate"
 import {
   Requirement,
@@ -56,38 +55,40 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
     if (maxAmount && !minAmount)
       return (
         <>
-          {`Have a transaction more than `}
+          <span>{`Have a transaction more than `}</span>
           <DataBlock>{formattedMax}</DataBlock>
-          {` old`}
+          <span>{` old`}</span>
         </>
       )
 
     if (!maxAmount && minAmount)
       return (
         <>
-          {`Have a transaction less than `}
+          <span>{`Have a transaction less than `}</span>
           <DataBlock>{formattedMin}</DataBlock>
-          {` old`}
+          <span>{` old`}</span>
         </>
       )
 
     if (maxAmount && minAmount)
       return (
         <>
-          {`Have a transaction that is more than `}
+          <span>{`Have a transaction that is more than `}</span>
           <DataBlock>{formattedMax}</DataBlock>
-          {` old and less than `}
+          <span>{` old and less than `}</span>
           <DataBlock>{formattedMin}</DataBlock>
-          {` old`}
+          <span>{` old`}</span>
         </>
       )
 
-    return <>Have at least one transaction</>
+    return "Have at least one transaction"
   }
+
+  const IconComponent = requirementIcons[requirement.type]
 
   return (
     <Requirement
-      image={<Icon as={requirementIcons[requirement.type]} boxSize={6} />}
+      image={<IconComponent weight="bold" className="size-6" />}
       footer={<RequirementChainIndicator />}
       {...props}
     >
@@ -97,7 +98,7 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
             if (!minAmount && !maxAmount) return "Have at least one transaction"
             return (
               <>
-                Have your first transaction
+                <span>Have your first transaction</span>
                 <BeforeAfterDates minTs={minAmount} maxTs={maxAmount} />
               </>
             )
@@ -106,9 +107,11 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
           case "COVALENT_CONTRACT_DEPLOY":
             return (
               <>
-                {`Deployed ${
-                  requirement.data.txCount > 1 ? requirement.data.txCount : "a"
-                } ${pluralize(requirement.data.txCount, "contract", false)}`}
+                <span>
+                  {`Deployed ${
+                    requirement.data.txCount > 1 ? requirement.data.txCount : "a"
+                  } ${pluralize(requirement.data.txCount, "contract", false)}`}
+                </span>
                 <BeforeAfterDates minTs={minAmount} maxTs={maxAmount} />
               </>
             )
@@ -123,19 +126,21 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
 
             return (
               <>
-                {`Deployed ${
-                  requirement.data.txCount > 1 ? requirement.data.txCount : "a"
-                } contract${requirement.data.txCount > 1 ? "s" : ""}`}
+                <span>
+                  {`Deployed ${
+                    requirement.data.txCount > 1 ? requirement.data.txCount : "a"
+                  } contract${requirement.data.txCount > 1 ? "s" : ""}`}
+                </span>
                 {formattedMaxAmount && formattedMinAmount ? (
                   <>
-                    {" between the last "}
+                    <span>{" between the last "}</span>
                     <DataBlock>{formattedMinAmount}</DataBlock>
-                    {" - "}
+                    <span>{" - "}</span>
                     <DataBlock>{formattedMaxAmount}</DataBlock>
                   </>
                 ) : formattedMinAmount ? (
                   <>
-                    {" in the last "}
+                    <span>{" in the last "}</span>
                     <DataBlock>{formattedMinAmount}</DataBlock>
                   </>
                 ) : null}
@@ -145,13 +150,15 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
           case "COVALENT_TX_COUNT":
             return (
               <>
-                {`Have ${
-                  requirement.data.txCount > 1 ? requirement.data.txCount : "a"
-                } transaction${requirement.data.txCount > 1 ? "s" : ""}`}
+                <span>
+                  {`Have ${
+                    requirement.data.txCount > 1 ? requirement.data.txCount : "a"
+                  } transaction${requirement.data.txCount > 1 ? "s" : ""}`}
+                </span>
 
                 {requirement.address && (
                   <>
-                    {" to/from "}
+                    <span>{" to/from "}</span>
                     <DataBlockWithCopy text={requirement.address}>
                       {shortenHex(requirement.address, 3)}
                     </DataBlockWithCopy>
@@ -172,19 +179,21 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
 
             return (
               <>
-                {`Have ${
-                  requirement.data.txCount > 1 ? requirement.data.txCount : "a"
-                } transaction${requirement.data.txCount > 1 ? "s" : ""}`}
+                <span>
+                  {`Have ${
+                    requirement.data.txCount > 1 ? requirement.data.txCount : "a"
+                  } transaction${requirement.data.txCount > 1 ? "s" : ""}`}
+                </span>
                 {formattedMaxAmount && formattedMinAmount ? (
                   <>
-                    {" between the last "}
+                    <span>{" between the last "}</span>
                     <DataBlock>{formattedMinAmount}</DataBlock>
-                    {" - "}
+                    <span>{" - "}</span>
                     <DataBlock>{formattedMaxAmount}</DataBlock>
                   </>
                 ) : formattedMinAmount ? (
                   <>
-                    {" in the last "}
+                    <span>{" in the last "}</span>
                     <DataBlock>{formattedMinAmount}</DataBlock>
                   </>
                 ) : null}

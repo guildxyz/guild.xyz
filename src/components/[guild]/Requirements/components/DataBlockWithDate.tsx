@@ -23,7 +23,7 @@ export const BeforeAfterDates = ({
   if (maxTs && minTs === undefined)
     return (
       <>
-        {` before `}
+        <span>{` before `}</span>
         <DataBlockWithDate timestamp={maxTs} />
       </>
     )
@@ -31,7 +31,7 @@ export const BeforeAfterDates = ({
   if (maxTs === undefined && minTs)
     return (
       <>
-        {` after `}
+        <span>{` after `}</span>
         <DataBlockWithDate timestamp={minTs} />
       </>
     )
@@ -39,9 +39,9 @@ export const BeforeAfterDates = ({
   if (maxTs && minTs)
     return (
       <>
-        {` between `}
+        <span>{` between `}</span>
         <DataBlockWithDate timestamp={minTs} />
-        {` and `}
+        <span>{` and `}</span>
         <DataBlockWithDate timestamp={maxTs} />
       </>
     )

@@ -6,10 +6,9 @@ import {
   ListChecks,
   Parachute,
   Robot,
-  Wallet,
   Wrench,
 } from "@phosphor-icons/react"
-import { LockOpen } from "@phosphor-icons/react/dist/ssr"
+import { LockOpen, Wallet } from "@phosphor-icons/react/dist/ssr"
 import { VISIT_LINK_REGEX } from "requirements/VisitLink/VisitLinkRequirement"
 import { emailData } from "rewards/Email/data"
 import { formData } from "rewards/Forms/data"
