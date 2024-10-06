@@ -2,7 +2,7 @@ import { Badge } from "@/components/ui/Badge"
 import { Skeleton } from "@/components/ui/Skeleton"
 import { Visibility } from "components/[guild]/Visibility"
 import dynamic from "next/dynamic"
-import React, { ComponentType, PropsWithChildren } from "react"
+import React, { ComponentType, PropsWithChildren, ReactNode } from "react"
 import { useFormContext } from "react-hook-form"
 import { useRequirementContext } from "./RequirementContext"
 import { RequirementImage, RequirementImageCircle } from "./RequirementImage"
@@ -13,9 +13,9 @@ const DataProviderRequirement = dynamic(() => import("./DataProviderRequirement"
 
 export type RequirementProps = PropsWithChildren<{
   isImageLoading?: boolean
-  image?: string | JSX.Element
-  footer?: JSX.Element
-  rightElement?: JSX.Element
+  image?: ReactNode
+  footer?: ReactNode
+  rightElement?: ReactNode
   imageWrapper?: ComponentType<unknown>
   childrenWrapper?: ComponentType<unknown>
   showViewOriginal?: boolean
