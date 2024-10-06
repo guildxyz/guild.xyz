@@ -1,4 +1,9 @@
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipPortal,
+  TooltipTrigger,
+} from "@/components/ui/Tooltip"
 import { useCopyToClipboard } from "@/hooks/useCopyToClipboard"
 import { Check } from "@phosphor-icons/react/dist/ssr"
 import { PropsWithChildren } from "react"
@@ -21,10 +26,13 @@ const DataBlockWithCopy = ({
           <span>{children ?? text}</span>
         </DataBlock>
       </TooltipTrigger>
-      <TooltipContent side="top" className="flex items-center gap-1.5">
-        {hasCopied && <Check weight="bold" className="text-success" />}
-        <span>{hasCopied ? "Copied" : "Click to copy"}</span>
-      </TooltipContent>
+
+      <TooltipPortal>
+        <TooltipContent side="top" className="flex items-center gap-1.5">
+          {hasCopied && <Check weight="bold" className="text-success" />}
+          <span>{hasCopied ? "Copied" : "Click to copy"}</span>
+        </TooltipContent>
+      </TooltipPortal>
     </Tooltip>
   )
 }
