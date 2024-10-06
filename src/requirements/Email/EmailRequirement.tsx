@@ -1,5 +1,4 @@
-import { Icon } from "@chakra-ui/react"
-import { EnvelopeSimple } from "@phosphor-icons/react"
+import { EnvelopeSimple } from "@phosphor-icons/react/dist/ssr"
 import RequirementConnectButton from "components/[guild]/Requirements/components/ConnectRequirementPlatformButton"
 import {
   Requirement,
@@ -13,7 +12,7 @@ const EmailRequirement = (props: RequirementProps) => {
 
   return (
     <Requirement
-      image={<Icon as={EnvelopeSimple} boxSize={6} />}
+      image={<EnvelopeSimple weight="bold" className="size-6" />}
       footer={<RequirementConnectButton />}
       {...props}
     >
@@ -21,7 +20,8 @@ const EmailRequirement = (props: RequirementProps) => {
         "Have a verified email address"
       ) : (
         <>
-          Have a verified email with domain <DataBlock>{data?.domain}</DataBlock>
+          <span>{"Have a verified email with domain "}</span>
+          <DataBlock>{data?.domain}</DataBlock>
         </>
       )}
     </Requirement>
