@@ -265,12 +265,6 @@ export const REQUIREMENTS_DATA = [
     isNegatable: true,
   },
   {
-    icon: "/requirementLogos/mirror.svg",
-    name: "Mirror",
-    types: ["MIRROR_COLLECT"],
-    isNegatable: true,
-  },
-  {
     icon: "/requirementLogos/sound.png",
     name: "Sound",
     types: [
@@ -283,22 +277,9 @@ export const REQUIREMENTS_DATA = [
     isNegatable: true,
   },
   {
-    icon: "/requirementLogos/disco.png",
-    name: "Disco",
-
-    types: ["DISCO"],
-    isNegatable: true,
-  },
-  {
     icon: "/requirementLogos/unlock.png",
     name: "Unlock",
     types: ["UNLOCK"],
-    isNegatable: true,
-  },
-  {
-    icon: "/requirementLogos/juicebox.png",
-    name: "Juicebox",
-    types: ["JUICEBOX"],
     isNegatable: true,
   },
   {
@@ -317,18 +298,6 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/yup.svg",
     name: "Yup",
     types: ["YUP"],
-    isNegatable: true,
-  },
-  {
-    icon: "/requirementLogos/rep3.png",
-    name: "Rep3",
-    types: ["REP3"],
-    isNegatable: true,
-  },
-  {
-    icon: "/requirementLogos/parallel.png",
-    name: "Parallel",
-    types: ["PARALLEL_ID", "PARALLEL_SANCTIONS_SAFE", "PARALLEL_TRAIT"],
     isNegatable: true,
   },
 ] as const satisfies RequirementData[]
