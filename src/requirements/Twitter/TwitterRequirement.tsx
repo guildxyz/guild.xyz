@@ -1,5 +1,4 @@
-import { Icon, Text } from "@chakra-ui/react"
-import { ArrowSquareOut } from "@phosphor-icons/react"
+import { XLogo } from "@phosphor-icons/react/dist/ssr"
 import ConnectRequirementPlatformButton from "components/[guild]/Requirements/components/ConnectRequirementPlatformButton"
 import { DataBlockWithDate } from "components/[guild]/Requirements/components/DataBlockWithDate"
 import {
@@ -10,8 +9,7 @@ import { useRequirementContext } from "components/[guild]/Requirements/component
 import useUser from "components/[guild]/hooks/useUser"
 import { DataBlock } from "components/common/DataBlock"
 import { DataBlockWithCopy } from "components/common/DataBlockWithCopy"
-import XLogo from "static/icons/x.svg"
-import useSWRImmutable from "swr/immutable"
+import { RequirementType } from "requirements/types"
 import { PlatformType } from "types"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 import pluralize from "../../utils/pluralize"
@@ -20,7 +18,16 @@ import TwitterListLink from "./components/TwitterListLink"
 import TwitterTweetLink from "./components/TwitterTweetLink"
 import TwitterUserLink from "./components/TwitterUserLink"
 
-const requirementIntentAction: Record<string, TwitterIntentAction> = {
+type TwitterRequirementType =
+  | Extract<RequirementType, `TWITTER_${string}`>
+  /**
+   * Looks odd, but "LINK_VISIT" & the V2 Twitter requirements use the same schema, so we need to add this here in order to get proper types
+   */
+  | "LINK_VISIT"
+
+const requirementIntentAction: Partial<
+  Record<TwitterRequirementType, TwitterIntentAction>
+> = {
   TWITTER_FOLLOW_V2: "follow",
   TWITTER_LIKE_V2: "like",
   TWITTER_RETWEET_V2: "retweet",
@@ -30,29 +37,25 @@ const requirementIntentAction: Record<string, TwitterIntentAction> = {
 export const TWITTER_HANDLE_REGEX = /^[a-z0-9_]+$/i
 
 const TwitterRequirement = (props: RequirementProps) => {
-  const requirement = useRequirementContext()
+  const requirement = useRequirementContext<TwitterRequirementType>()
   const { id: userId, platformUsers } = useUser()
   const isTwitterConnected = platformUsers?.find(
     (pu) => pu.platformId === PlatformType.TWITTER_V1
   )
 
-  const { data: twitterAvatar } = useSWRImmutable(
-    // requirement.data?.id && TWITTER_HANDLE_REGEX.test(requirement.data.id)
-    false ? `/v2/third-party/twitter/users/${requirement.data.id}/avatar` : null
-  )
-
   return (
     <Requirement
-      image={
-        (["TWITTER_FOLLOW", "TWITTER_FOLLOWED_BY"].includes(requirement.type) &&
-          twitterAvatar) || <Icon as={XLogo} boxSize={6} />
-      }
+      image={<XLogo weight="bold" className="size-6" />}
       footer={
-        requirementIntentAction[requirement.type] && !!userId ? (
+        requirement.type in requirementIntentAction && !!userId ? (
           !isTwitterConnected ? (
             <ConnectRequirementPlatformButton />
           ) : (
-            <TwitterIntent action={requirementIntentAction[requirement.type]} />
+            <TwitterIntent
+              action={
+                requirementIntentAction[requirement.type] as TwitterIntentAction
+              }
+            />
           )
         ) : (
           <ConnectRequirementPlatformButton />
@@ -61,125 +64,104 @@ const TwitterRequirement = (props: RequirementProps) => {
       {...props}
     >
       {(() => {
-        const minAmount = Math.floor(requirement.data?.minAmount)
+        const minAmount = Math.floor(
+          "minAmount" in requirement.data ? requirement.data.minAmount : 0
+        )
 
         switch (requirement.type) {
           case "TWITTER_NAME":
             return (
               <>
-                <Text as="span">{'Have "'}</Text>
+                <span>{'Have "'}</span>
                 <DataBlockWithCopy text={requirement.data.id} />
-                <Text as="span">{'" in your X username'}</Text>
+                <span>{'" in your X username'}</span>
               </>
             )
           case "TWITTER_BIO":
             return (
               <>
-                <Text as="span">{'Have "'}</Text>
+                <span>{'Have "'}</span>
                 <DataBlockWithCopy text={requirement.data.id} />
-                <Text as="span">{'" in your X bio'}</Text>
+                <span>{'" in your X bio'}</span>
               </>
             )
           case "TWITTER_FOLLOWER_COUNT":
-            return (
-              <Text as="span">
-                {`Have at least ${pluralize(minAmount, "follower")} on X`}
-              </Text>
-            )
+            return `Have at least ${pluralize(minAmount, "follower")} on X`
           case "TWITTER_FOLLOWING_COUNT":
-            return (
-              <Text as="span">
-                {`Follow at least ${pluralize(minAmount, "account")} on X`}
-              </Text>
-            )
-
+            return `Follow at least ${pluralize(minAmount, "account")} on X`
           case "TWITTER_TWEET_COUNT":
-            return (
-              <Text as="span">
-                {`Have at least ${pluralize(minAmount, "post")} on X`}
-              </Text>
-            )
+            return `Have at least ${pluralize(minAmount, "post")} on X`
           case "TWITTER_LIKE_COUNT":
-            return (
-              <Text as="span">
-                {`Have given at least ${pluralize(minAmount, "like")} on X`}
-              </Text>
-            )
+            return `Have given at least ${pluralize(minAmount, "like")} on X`
           case "TWITTER_ACCOUNT_PROTECTED":
-            return <Text as="span">Have a protected X account</Text>
+            return "Have a protected X account"
           case "TWITTER_ACCOUNT_VERIFIED":
-            return (
-              <Text as="span">
-                {`Have a verified ${
-                  requirement.data?.id !== "any" ? requirement.data.id : ""
-                } X account`}
-              </Text>
-            )
+            return `Have a verified ${
+              requirement.data?.id !== "any" ? requirement.data.id : ""
+            } X account`
           case "TWITTER_FOLLOW":
             return (
               <>
-                {"Follow "}
+                <span>{"Follow "}</span>
                 <TwitterUserLink requirement={requirement} withIntent />
-                {" on X"}
+                <span>{" on X"}</span>
               </>
             )
           case "TWITTER_FOLLOW_V2":
             return (
               <>
-                {"Follow "}
+                <span>{"Follow "}</span>
                 <TwitterIntent type="link" action="follow">
                   @{requirement.data.id}
                 </TwitterIntent>
-                {" on X"}
+                <span>{" on X"}</span>
               </>
             )
           case "TWITTER_FOLLOWED_BY":
             return (
               <>
-                {"Be followed by "}
+                <span>{"Be followed by "}</span>
                 <TwitterUserLink requirement={requirement} />
-                {" on X"}
+                <span>{" on X"}</span>
               </>
             )
           case "TWITTER_LIKE":
             return (
               <>
-                {"Like "}
+                <span>{"Like "}</span>
                 <TwitterTweetLink requirement={requirement} />
               </>
             )
           case "TWITTER_LIKE_V2":
             return (
               <>
-                {"Like "}
+                <span>{"Like "}</span>
                 <TwitterIntent type="link" action="like">
                   this post
-                  <Icon as={ArrowSquareOut} mx="1" />
                 </TwitterIntent>
               </>
             )
           case "TWITTER_RETWEET":
             return (
               <>
-                {"Repost "}
+                <span>{"Repost "}</span>
                 <TwitterTweetLink requirement={requirement} />
-                {" on X"}
+                <span>{" on X"}</span>
               </>
             )
           case "TWITTER_RETWEET_V2":
             return (
               <>
-                {"Repost "}
+                <span>{"Repost "}</span>
                 <TwitterIntent type="link" action="retweet">
                   this post
-                  <Icon as={ArrowSquareOut} mx="1" />
                 </TwitterIntent>
               </>
             )
           case "TWITTER_LIST_MEMBER":
             return (
               <>
-                {"Be a member of "}
+                <span>{"Be a member of "}</span>
                 <TwitterListLink requirement={requirement} />
               </>
             )
@@ -189,14 +171,14 @@ const TwitterRequirement = (props: RequirementProps) => {
             )
             return (
               <>
-                <Text as="span">{"Have an X account older than "}</Text>
+                <span>{"Have an X account older than "}</span>
                 <DataBlock>{formattedAccountAge}</DataBlock>
               </>
             )
           case "TWITTER_ACCOUNT_AGE":
             return (
               <>
-                <Text as="span">{"Have an X account since at least "}</Text>
+                <span>{"Have an X account since at least "}</span>
                 <DataBlockWithDate timestamp={requirement.data.minAmount} />
               </>
             )
@@ -205,4 +187,5 @@ const TwitterRequirement = (props: RequirementProps) => {
     </Requirement>
   )
 }
+
 export default TwitterRequirement

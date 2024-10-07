@@ -54,7 +54,7 @@ const Anchor = forwardRef<HTMLAnchorElement, AnchorProps>(
         {...props}
       >
         {children}
-        {showExternal && <ArrowSquareOut />}
+        {showExternal && <ArrowSquareOut weight="bold" />}
       </Comp>
     )
   }
