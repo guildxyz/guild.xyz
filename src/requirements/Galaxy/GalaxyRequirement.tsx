@@ -1,4 +1,4 @@
-import { Link, Text } from "@chakra-ui/react"
+import { Anchor } from "@/components/ui/Anchor"
 import {
   Requirement,
   RequirementProps,
@@ -8,42 +8,43 @@ import { DataBlock } from "components/common/DataBlock"
 import { useGalaxyCampaign } from "./hooks/useGalaxyCampaigns"
 
 const GalaxyRequirement = (props: RequirementProps): JSX.Element => {
-  const requirement = useRequirementContext()
+  const requirement = useRequirementContext<"GALAXY" | "GALAXY_PARTICIPATION">()
 
-  const { campaign, isLoading } = useGalaxyCampaign(requirement?.data?.galaxyId)
+  const { campaign, isLoading } = useGalaxyCampaign(requirement.data.galaxyId)
 
   return (
     <Requirement image={campaign?.thumbnail} isImageLoading={isLoading} {...props}>
-      <Text as="span">
+      <span>
         {requirement.type === "GALAXY_PARTICIPATION"
           ? "Participate in the "
           : "Hold a(n) "}
-      </Text>
+      </span>
       {!campaign || isLoading ? (
         <DataBlock
           isLoading={isLoading}
           error={
-            !campaign && !isLoading && "API error, please contact Galxe to report."
+            !campaign && !isLoading
+              ? "API error, please contact Galxe to report."
+              : undefined
           }
         >
           {requirement.data.galaxyId}
         </DataBlock>
       ) : (
-        <Link
-          href={`https://app.galxe.com/quest/${campaign.space.alias}/${campaign.id}`}
-          isExternal
-          display="inline"
-          colorScheme="blue"
-          fontWeight="medium"
+        <Anchor
+          href={`https://app.galxe.com/quest/${campaign.space?.alias}/${campaign.id}`}
+          showExternal
+          variant="highlighted"
+          className="break-words"
         >
           {campaign.name}
-        </Link>
+        </Anchor>
       )}
-      <Text as="span">
+      <span>
         {requirement.type === "GALAXY_PARTICIPATION"
           ? " Galxe campaign"
           : " Galxe NFT"}
-      </Text>
+      </span>
     </Requirement>
   )
 }
