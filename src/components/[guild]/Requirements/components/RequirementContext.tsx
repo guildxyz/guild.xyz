@@ -5,7 +5,7 @@ import { Requirement } from "types"
 import { z } from "zod"
 
 // It's safe to use undefine here as the default value, since we'll always have a default value in RequirementProvider
-const RequirementContext = createContext<Requirement>(undefined)
+const RequirementContext = createContext<Requirement>(undefined as never)
 
 type Props = {
   requirement: Requirement
@@ -14,7 +14,7 @@ type Props = {
 const RequirementProvider = ({
   requirement,
   children,
-}: PropsWithChildren<Props>): JSX.Element => {
+}: PropsWithChildren<Props>) => {
   // Added this for safety, but we shouldn't run into this if statement
   if (!requirement) return null
 

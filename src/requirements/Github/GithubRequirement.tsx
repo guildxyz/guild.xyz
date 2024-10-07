@@ -1,6 +1,5 @@
-import { Link } from "@chakra-ui/next-js"
-import { Icon } from "@chakra-ui/react"
-import { GithubLogo } from "@phosphor-icons/react"
+import { Anchor } from "@/components/ui/Anchor"
+import { GithubLogo } from "@phosphor-icons/react/dist/ssr"
 import ConnectRequirementPlatformButton from "components/[guild]/Requirements/components/ConnectRequirementPlatformButton"
 import { DataBlockWithDate } from "components/[guild]/Requirements/components/DataBlockWithDate"
 import { DataBlockWithRelativeDate } from "components/[guild]/Requirements/components/DataBlockWithRelativeDate"
@@ -10,14 +9,16 @@ import {
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import { DataBlock } from "components/common/DataBlock"
+import { RequirementType } from "requirements/types"
 import pluralize from "utils/pluralize"
 
 const GithubRequirement = (props: RequirementProps) => {
-  const requirement = useRequirementContext()
+  const requirement =
+    useRequirementContext<Extract<RequirementType, `GITHUB_${string}`>>()
 
   return (
     <Requirement
-      image={<Icon as={GithubLogo} boxSize={6} />}
+      image={<GithubLogo weight="bold" className="size-6" />}
       footer={<ConnectRequirementPlatformButton />}
       {...props}
     >
@@ -26,37 +27,38 @@ const GithubRequirement = (props: RequirementProps) => {
           case "GITHUB_STARRING":
             return (
               <>
-                {"Give a star to the "}
-                <Link
+                <span>{"Give a star to the "}</span>
+                <Anchor
                   href={requirement.data.id ?? ""}
-                  isExternal
-                  colorScheme="blue"
-                  fontWeight="medium"
+                  target="_blank"
+                  showExternal
+                  variant="highlighted"
                 >
-                  {requirement.data.id.match(/https:\/\/github\.com\/(.+)$/i)[1]}
-                </Link>
-                {" repository"}
+                  {requirement.data.id.match(/https:\/\/github\.com\/(.+)$/i)?.[1] ??
+                    "unknown"}
+                </Anchor>
+                <span>{" repository"}</span>
               </>
             )
           case "GITHUB_ACCOUNT_AGE":
             return (
               <>
-                {"Have a GitHub account"}
+                <span>{"Have a GitHub account"}</span>
                 {requirement.data.maxAmount && requirement.data.minAmount ? (
                   <>
-                    {" which was created between "}
+                    <span>{" which was created between "}</span>
                     <DataBlockWithDate timestamp={requirement.data.minAmount} />
-                    {" and "}
+                    <span>{" and "}</span>
                     <DataBlockWithDate timestamp={requirement.data.maxAmount} />
                   </>
                 ) : requirement.data.minAmount ? (
                   <>
-                    {" which was created after "}
+                    <span>{" which was created after "}</span>
                     <DataBlockWithDate timestamp={requirement.data.minAmount} />
                   </>
                 ) : requirement.data.maxAmount ? (
                   <>
-                    {" which was created before "}
+                    <span>{" which was created before "}</span>
                     <DataBlockWithDate timestamp={requirement.data.maxAmount} />
                   </>
                 ) : null}
@@ -65,28 +67,28 @@ const GithubRequirement = (props: RequirementProps) => {
           case "GITHUB_ACCOUNT_AGE_RELATIVE":
             return (
               <>
-                {"Have a GitHub account "}
+                <span>{"Have a GitHub account"}</span>
                 {requirement.data.maxAmount && requirement.data.minAmount ? (
                   <>
-                    {" which was created in the last "}
+                    <span>{" which was created in the last "}</span>
                     <DataBlockWithRelativeDate
                       timestamp={requirement.data.minAmount}
                     />
-                    {" - "}
+                    <span>{" - "}</span>
                     <DataBlockWithRelativeDate
                       timestamp={requirement.data.maxAmount}
                     />
                   </>
                 ) : requirement.data.minAmount ? (
                   <>
-                    {"older than "}
+                    <span>{"older than "}</span>
                     <DataBlockWithRelativeDate
                       timestamp={requirement.data.minAmount}
                     />
                   </>
                 ) : requirement.data.maxAmount ? (
                   <>
-                    {"no older than "}
+                    <span>{"no older than "}</span>
                     <DataBlockWithRelativeDate
                       timestamp={requirement.data.maxAmount}
                     />
@@ -97,23 +99,23 @@ const GithubRequirement = (props: RequirementProps) => {
           case "GITHUB_COMMIT_COUNT":
             return (
               <>
-                {`Have at least `}
+                <span>{"Have at least "}</span>
                 <DataBlock>{pluralize(requirement.data.id, "commit")}</DataBlock>
                 {requirement.data.maxAmount && requirement.data.minAmount ? (
                   <>
-                    {" between "}
+                    <span>{" between "}</span>
                     <DataBlockWithDate timestamp={requirement.data.minAmount} />
-                    {" and "}
+                    <span>{" and "}</span>
                     <DataBlockWithDate timestamp={requirement.data.maxAmount} />
                   </>
                 ) : requirement.data.minAmount ? (
                   <>
-                    {" after "}
+                    <span>{" after "}</span>
                     <DataBlockWithDate timestamp={requirement.data.minAmount} />
                   </>
                 ) : requirement.data.maxAmount ? (
                   <>
-                    {" before "}
+                    <span>{" before "}</span>
                     <DataBlockWithDate timestamp={requirement.data.maxAmount} />
                   </>
                 ) : null}
@@ -122,29 +124,29 @@ const GithubRequirement = (props: RequirementProps) => {
           case "GITHUB_COMMIT_COUNT_RELATIVE":
             return (
               <>
-                {`Have at least `}
+                <span>{"Have at least "}</span>
                 <DataBlock>{pluralize(requirement.data.id, "commit")}</DataBlock>
                 {requirement.data.maxAmount && requirement.data.minAmount ? (
                   <>
-                    {" in the last "}
+                    <span>{" in the last "}</span>
                     <DataBlockWithRelativeDate
                       timestamp={requirement.data.minAmount}
                     />
-                    {" - "}
+                    <span>{" - "}</span>
                     <DataBlockWithRelativeDate
                       timestamp={requirement.data.maxAmount}
                     />
                   </>
                 ) : requirement.data.minAmount ? (
                   <>
-                    {" during the last "}
+                    <span>{" during the last "}</span>
                     <DataBlockWithRelativeDate
                       timestamp={requirement.data.minAmount}
                     />
                   </>
                 ) : requirement.data.maxAmount ? (
                   <>
-                    {" before the last "}
+                    <span>{" before the last "}</span>
                     <DataBlockWithRelativeDate
                       timestamp={requirement.data.maxAmount}
                     />
