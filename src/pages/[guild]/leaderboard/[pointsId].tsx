@@ -42,11 +42,12 @@ const BATCH_SIZE = 25
 const Leaderboard = () => {
   const router = useRouter()
   const { id: userId, addresses } = useUser()
-  const { name, imageUrl, description, socialLinks, tags } = useGuild()
+  const { name, imageUrl, description, socialLinks, tags, id: guildId } = useGuild()
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
   const [renderedUsersCount, setRenderedUsersCount] = useState(BATCH_SIZE)
 
-  const relatedTokenRewards = useTokenRewards(false, Number(router.query.pointsId))
+  const pointsId = Number(router.query.pointsId)
+  const relatedTokenRewards = useTokenRewards(false, pointsId)
 
   const { data, error } = usePointsLeaderboard()
 

@@ -16,44 +16,44 @@ const UsersGuildPins = () => {
     <>
       <AccountSectionTitle title="Guild Pins" />
 
-      {error && (
+      {error ? (
         <Alert variant="info" className="mb-3">
-          <Info weight="bold" className="size-6" />
-          <AlertDescription>
+          <Info weight="fill" className="size-6" />
+          <AlertDescription className="-top-1 relative">
             There was an error while fetching your pins, some may not be visible.
           </AlertDescription>
         </Alert>
-      )}
-
-      <div
-        className="-mx-4 invisible-scrollbar min-h-20 w-full overflow-x-scroll"
-        style={{
-          maskImage:
-            "linear-gradient(to right, transparent 0px, black 16px, black calc(100% - 16px), transparent)",
-        }}
-      >
-        <div className="flex min-w-full px-4">
-          {isValidating ? (
-            [...Array(3)].map((_, i) => <GuildPinSkeleton key={i} />)
-          ) : data?.length ? (
-            data.map((pin) => (
-              <GuildPin
-                key={pin.tokenId}
-                image={pin.image}
-                name={pin.name}
-                guild={pin.attributes
-                  .find((attribute) => attribute.trait_type === "guildId")
-                  .value.toString()}
-                rank={pin.attributes
-                  .find((attribute) => attribute.trait_type === "rank")
-                  .value.toString()}
-              />
-            ))
-          ) : (
-            <p className="text-sm">You haven't minted any Guild Pins yet</p>
-          )}
+      ) : (
+        <div
+          className="-mx-4 invisible-scrollbar min-h-20 w-full overflow-x-scroll"
+          style={{
+            maskImage:
+              "linear-gradient(to right, transparent 0px, black 16px, black calc(100% - 16px), transparent)",
+          }}
+        >
+          <div className="flex min-w-full px-4">
+            {isValidating ? (
+              [...Array(3)].map((_, i) => <GuildPinSkeleton key={i} />)
+            ) : data?.length ? (
+              data.map((pin) => (
+                <GuildPin
+                  key={pin.tokenId}
+                  image={pin.image}
+                  name={pin.name}
+                  guild={pin.attributes
+                    .find((attribute) => attribute.trait_type === "guildId")
+                    .value.toString()}
+                  rank={pin.attributes
+                    .find((attribute) => attribute.trait_type === "rank")
+                    .value.toString()}
+                />
+              ))
+            ) : (
+              <p className="text-sm">You haven't minted any Guild Pins yet</p>
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </>
   )
 }

@@ -6,7 +6,7 @@ import Button from "components/common/Button"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { AddRewardPanelProps } from "rewards"
 import { PlatformGuildData, PlatformType } from "types"
-import DefaultAddRewardPanelWrapper from "../../DefaultAddRewardPanelWrapper"
+import { DefaultAddRewardPanelWrapper } from "../../DefaultAddRewardPanelWrapper"
 import AddNewPointsType from "./components/AddNewPointsType"
 import ExistingPointsTypeSelect, {
   CREATE_NEW_OPTION,

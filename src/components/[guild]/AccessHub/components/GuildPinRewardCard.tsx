@@ -1,6 +1,5 @@
 import { Avatar, AvatarImage } from "@/components/ui/Avatar"
 import { Card } from "@/components/ui/Card"
-import { useColorModeValue } from "@chakra-ui/react"
 import { useMintGuildPinContext } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
@@ -18,8 +17,6 @@ const DynamicMintFuelGuildPin = dynamic(
 )
 
 const GuildPinRewardCard = () => {
-  const bgFile = useColorModeValue("bg_light.svg", "bg.svg")
-
   const { isAdmin } = useGuildPermission()
   const { guildPin } = useGuild()
 
@@ -60,4 +57,5 @@ const GuildPinRewardCard = () => {
   )
 }
 
+// biome-ignore lint/style/noDefaultExport: we only load this component dynamically, so it's much more convenient to use a default export here
 export default GuildPinRewardCard

@@ -13,7 +13,7 @@ import Card from "components/common/Card"
 import ClientOnly from "components/common/ClientOnly"
 import { PropsWithChildren } from "react"
 import { useOpenJoinModal } from "../JoinModal/JoinModalProvider"
-import RecheckAccessesButton from "../RecheckAccessesButton"
+import { RecheckAccessesButton } from "../RecheckAccessesButton"
 
 const FormNoAccess = ({
   isMember,

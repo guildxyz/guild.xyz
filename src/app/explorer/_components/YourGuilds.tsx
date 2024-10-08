@@ -51,9 +51,9 @@ export const YourGuilds = () => {
           <Button
             onClick={() => setIsWalletSelectorModalOpen(true)}
             colorScheme="primary"
+            leftIcon={<SignIn weight="bold" />}
           >
-            <SignIn weight="bold" />
-            <span>Sign in</span>
+            Sign in
           </Button>
         )}
       </Card>
@@ -69,5 +69,3 @@ export const YourGuilds = () => {
     </section>
   )
 }
-
-export { useYourGuilds }

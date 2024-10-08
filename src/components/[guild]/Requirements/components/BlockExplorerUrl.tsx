@@ -1,5 +1,5 @@
 import { useColorMode } from "@chakra-ui/react"
-import { RequirementLinkButton } from "components/[guild]/Requirements/components/RequirementButton"
+import { RequirementLink } from "components/[guild]/Requirements/components/RequirementButton"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { CHAIN_CONFIG, Chain } from "wagmiConfig/chains"
 import { useRequirementContext } from "./RequirementContext"
@@ -9,6 +9,7 @@ type Props = {
   address?: string
   label?: string
   path?: string
+  className?: string
 }
 
 const BlockExplorerUrl = ({
@@ -16,6 +17,7 @@ const BlockExplorerUrl = ({
   address: addressProp,
   label,
   path: pathProp,
+  className,
 }: Props): JSX.Element => {
   const { colorMode } = useColorMode()
   const { chain, type, address, data } = useRequirementContext()
@@ -35,12 +37,12 @@ const BlockExplorerUrl = ({
       : `${blockExplorerUrl}/${path}/${addressProp ?? address}`
 
   return (
-    <RequirementLinkButton
+    <RequirementLink
       href={url}
       imageUrl={CHAIN_CONFIG[chainProp ?? chain].blockExplorerIconUrl[colorMode]}
-    >
-      {label ?? "View on explorer"}
-    </RequirementLinkButton>
+      label={label ?? "View on explorer"}
+      className={className}
+    />
   )
 }
 

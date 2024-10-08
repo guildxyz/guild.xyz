@@ -12,6 +12,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/Dialog"
+import { IconButton } from "@/components/ui/IconButton"
 import { Label } from "@/components/ui/Label"
 import {
   Select,
@@ -54,15 +55,14 @@ const EditContributionCard = ({
   return (
     <CardWithGuildLabel guild={guild}>
       <div className="relative flex flex-col gap-2 p-6">
-        <Button
-          size="icon"
+        <IconButton
+          aria-label="Remove contribution"
+          icon={<X weight="bold" />}
           variant="ghost"
           onClick={deleteContribution.onSubmit}
           isLoading={deleteContribution.isLoading}
-          className="absolute top-2 right-2 size-7"
-        >
-          <X />
-        </Button>
+          className="absolute top-2 right-2 size-7 rounded-full"
+        />
         <Label className="font-extrabold text-muted-foreground text-xs uppercase">
           TOP ROLE
         </Label>
@@ -104,9 +104,13 @@ export const EditContributions = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="solid" size="icon-sm" className="rounded-full">
-          <PencilSimple weight="bold" />
-        </Button>
+        <IconButton
+          aria-label="Edit contribution"
+          icon={<PencilSimple weight="bold" />}
+          variant="solid"
+          size="sm"
+          className="rounded-full"
+        />
       </DialogTrigger>
       <DialogContent size="lg" className="bg-background">
         <DialogHeader>

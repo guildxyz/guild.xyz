@@ -1,11 +1,11 @@
+import { useConfetti } from "@/components/Confetti"
 import { usePostHogContext } from "@/components/Providers/PostHogProvider"
+import { useErrorToast } from "@/components/ui/hooks/useErrorToast"
 import { useToast } from "@/components/ui/hooks/useToast"
 import { useYourGuilds } from "@/hooks/useYourGuilds"
 import { Schemas } from "@guildxyz/types"
-import processConnectorError from "components/[guild]/JoinModal/utils/processConnectorError"
-import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
+import { processConnectorError } from "components/[guild]/JoinModal/utils/processConnectorError"
 import useMatchMutate from "hooks/useMatchMutate"
-import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import { useRouter } from "next/navigation"
 import { Guild, GuildBase } from "types"
@@ -27,8 +27,8 @@ const useCreateGuild = ({
   const matchMutate = useMatchMutate()
 
   const { toast } = useToast()
-  const showErrorToast = useShowErrorToast()
-  const triggerConfetti = useJsConfetti() // TODO: use the new confetti?
+  const errorToast = useErrorToast()
+  const { confettiPlayer } = useConfetti()
   const router = useRouter()
 
   const fetchData = async (signedValidation: SignedValidation): Promise<Guild> =>
@@ -36,14 +36,14 @@ const useCreateGuild = ({
 
   const useSubmitResponse = useSubmitWithSign<Guild>(fetchData, {
     onError: (error_) => {
-      showErrorToast({
+      errorToast({
         error: processConnectorError(error_.error) ?? error_.error,
         correlationId: error_.correlationId,
       })
       onError?.(error_)
     },
     onSuccess: (response_) => {
-      triggerConfetti()
+      confettiPlayer.current("Confetti from left and right")
 
       captureEvent("Created guild", {
         $set: {

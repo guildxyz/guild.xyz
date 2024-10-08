@@ -4,7 +4,7 @@ import TelegramGroup from "components/create-guild/TelegramGroup"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { AddRewardPanelProps } from "rewards"
 import { PlatformType } from "types"
-import DefaultAddRewardPanelWrapper from "../DefaultAddRewardPanelWrapper"
+import { DefaultAddRewardPanelWrapper } from "../DefaultAddRewardPanelWrapper"
 
 const AddTelegramPanel = ({ onAdd }: AddRewardPanelProps) => {
   const methods = useForm({

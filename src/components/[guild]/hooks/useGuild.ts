@@ -34,47 +34,49 @@ const useGuild = (guildId?: string | number) => {
   const publicSWRKey = `/v2/guilds/guild-page/${id}`
   const mutateOptionalAuthSWRKey = useMutateOptionalAuthSWRKey()
 
-  const { data, mutate, isLoading, error, isSigned } = useSWRWithOptionalAuth<Guild>(
-    id ? publicSWRKey : null,
-    {
-      // If we fetch guild by id, we populate the urlName cache too and vice versa
-      onSuccess: (newData: Guild, key: string) => {
-        const swrKeyWithId = `/v2/guilds/guild-page/${newData.id}`
-        const swrKeyWithUrlName = `/v2/guilds/guild-page/${newData.urlName}`
+  const { data, mutate, isLoading, isValidating, error, isSigned } =
+    useSWRWithOptionalAuth<Guild>(
+      id ? publicSWRKey : null,
+      {
+        // If we fetch guild by id, we populate the urlName cache too and vice versa
+        onSuccess: (newData: Guild, key: string) => {
+          const swrKeyWithId = `/v2/guilds/guild-page/${newData.id}`
+          const swrKeyWithUrlName = `/v2/guilds/guild-page/${newData.urlName}`
 
-        if (typeof id === "string") {
-          if (key === publicSWRKey) {
-            swrMutate(swrKeyWithId, newData, {
-              revalidate: false,
-            })
-          } else {
-            mutateOptionalAuthSWRKey(swrKeyWithId, () => newData, {
-              revalidate: false,
-            })
+          if (typeof id === "string") {
+            if (key === publicSWRKey) {
+              swrMutate(swrKeyWithId, newData, {
+                revalidate: false,
+              })
+            } else {
+              mutateOptionalAuthSWRKey(swrKeyWithId, () => newData, {
+                revalidate: false,
+              })
+            }
           }
-        }
 
-        if (typeof id === "number") {
-          if (key === publicSWRKey) {
-            swrMutate(swrKeyWithUrlName, newData, {
-              revalidate: false,
-            })
-          } else {
-            mutateOptionalAuthSWRKey(swrKeyWithUrlName, () => newData, {
-              revalidate: false,
-            })
+          if (typeof id === "number") {
+            if (key === publicSWRKey) {
+              swrMutate(swrKeyWithUrlName, newData, {
+                revalidate: false,
+              })
+            } else {
+              mutateOptionalAuthSWRKey(swrKeyWithUrlName, () => newData, {
+                revalidate: false,
+              })
+            }
           }
-        }
+        },
       },
-    },
-    undefined,
-    false
-  )
+      undefined,
+      false
+    )
 
   return {
     ...data,
     isDetailed: isSigned,
     isLoading,
+    isValidating,
     error,
     mutateGuild: mutate,
   }

@@ -23,6 +23,12 @@ const config = {
         display: ["var(--font-dystopian,sans-serif)"],
       },
       colors: {
+        gray: "hsl(var(--gray))",
+        blackAlpha: {
+          DEFAULT: "var(--blackAlpha-medium)",
+          soft: "var(--blackAlpha-soft)",
+          hard: "var(--blackAlpha-hard)",
+        },
         banner: {
           DEFAULT: "var(--banner)",
           dark: "var(--banner-dark)",
@@ -84,6 +90,14 @@ const config = {
           foreground: "hsl(var(--success-foreground))",
           subtle: "hsl(var(--success-subtle))",
           "subtle-foreground": "hsl(var(--success-subtle-foreground))",
+        },
+        warning: {
+          DEFAULT: "hsl(var(--warning))",
+          hover: "hsl(var(--warning-hover))",
+          active: "hsl(var(--warning-active))",
+          foreground: "hsl(var(--warning-foreground))",
+          subtle: "hsl(var(--warning-subtle))",
+          "subtle-foreground": "hsl(var(--warning-subtle-foreground))",
         },
         muted: {
           DEFAULT: "hsl(var(--muted))",
@@ -161,15 +175,15 @@ const config = {
           hover: "hsl(var(--worldid-hover))",
           active: "hsl(var(--worldid-active))",
         },
-        polygonid: {
-          DEFAULT: "hsl(var(--polygonid))",
-          hover: "hsl(var(--polygonid-hover))",
-          active: "hsl(var(--polygonid-active))",
-        },
         farcaster: {
           DEFAULT: "hsl(var(--farcaster))",
           hover: "hsl(var(--farcaster-hover))",
           active: "hsl(var(--farcaster-active))",
+        },
+        uniswap: {
+          DEFAULT: "hsl(var(--uniswap))",
+          hover: "hsl(var(--uniswap-hover))",
+          active: "hsl(var(--uniswap-active))",
         },
       },
       opacity: {
@@ -200,6 +214,10 @@ const config = {
           from: { height: "var(--radix-collapsible-content-height)", opacity: "1" },
           to: { height: "0", opacity: "0" },
         },
+        float: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-10px)' },
+        },
       },
       animation: {
         wiggle: 'wiggle 1s ease-in-out infinite',
@@ -208,6 +226,7 @@ const config = {
         "caret-blink": "caret-blink 1.25s ease-out infinite",
         "collapse-open": "collapse-open 200ms ease-out",
         "collapse-closed": "collapse-closed 200ms ease-out",
+        float: 'float 3s ease-in-out infinite',
       },
       zIndex: {
         // Using these from Chakra UI until we use both design systems at the same time

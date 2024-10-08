@@ -1,40 +1,43 @@
-import { usePostHogContext } from "@/components/Providers/PostHogProvider"
-import { Checkbox, Icon, Link, Text } from "@chakra-ui/react"
-import { ArrowSquareOut } from "@phosphor-icons/react"
+import { Anchor } from "@/components/ui/Anchor"
+import { Checkbox } from "@/components/ui/Checkbox"
+import { FormControl, FormField, FormItem, FormLabel } from "@/components/ui/Form"
 import { useFormContext } from "react-hook-form"
+import { JoinForm } from "../types"
 
 const ShareSocialsCheckbox = (): JSX.Element => {
-  const { setValue, watch } = useFormContext()
-  const { captureEvent } = usePostHogContext()
-
-  const shareSocials = watch("shareSocials")
+  const { control } = useFormContext<JoinForm>()
 
   return (
-    <Checkbox
-      alignItems="start"
-      pb={4}
-      isChecked={shareSocials}
-      onChange={(e) => {
-        setValue("shareSocials", e.target.checked)
-        captureEvent("shareSocialsCheckbox change", { checked: e.target.checked })
-      }}
-      size="sm"
-    >
-      <Text colorScheme="gray" mt="-5px">
-        {`I agree to share my profile with the guild, so they can potentially
+    <FormField
+      control={control}
+      name="shareSocials"
+      render={({ field: { value, onChange, ...field } }) => (
+        <FormItem className="flex flex-row items-start gap-1">
+          <FormControl>
+            <Checkbox
+              checked={value ?? false}
+              onCheckedChange={onChange}
+              {...field}
+              className="size-3"
+            />
+          </FormControl>
+
+          <FormLabel className="-top-1 relative text-muted-foreground text-sm">
+            {`I agree to share my profile with the guild, so they can potentially
         reward me for my engagement in the community. `}
-        <Link
-          href="https://help.guild.xyz/en/articles/8489031-privacy-for-members"
-          isExternal
-          fontWeight={"semibold"}
-          onClick={(e) => e.stopPropagation()}
-        >
-          Learn more
-          <Icon as={ArrowSquareOut} ml="0.5" />
-        </Link>
-      </Text>
-    </Checkbox>
+            <Anchor
+              href="https://help.guild.xyz/en/articles/8489031-privacy-for-members"
+              showExternal
+              target="_blank"
+              variant="muted"
+            >
+              Learn more
+            </Anchor>
+          </FormLabel>
+        </FormItem>
+      )}
+    />
   )
 }
 
-export default ShareSocialsCheckbox
+export { ShareSocialsCheckbox }

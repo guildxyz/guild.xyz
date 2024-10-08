@@ -1,6 +1,6 @@
 import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import { ButtonProps } from "@chakra-ui/react"
-import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
+import { useMembershipUpdate } from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useGuildFee from "components/[guild]/collect/hooks/useGuildFee"
 import useGuildRewardNftBalanceByUserId from "components/[guild]/collect/hooks/useGuildRewardNftBalanceByUserId"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
@@ -85,7 +85,7 @@ const CollectNftButton = ({
 
   return (
     <Button
-      data-test="collect-nft-button"
+      data-testid="collect-nft-button"
       size="lg"
       isLoading={isLoading}
       loadingText={loadingText}

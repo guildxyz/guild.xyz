@@ -10,11 +10,11 @@ import {
 } from "@/components/Layout"
 import { Anchor } from "@/components/ui/Anchor"
 import { Center, Heading, Spinner } from "@chakra-ui/react"
-import AccessHub from "components/[guild]/AccessHub"
+import { AccessHub } from "components/[guild]/AccessHub"
 import { GuildPageBanner } from "components/[guild]/GuildPageBanner"
 import { GuildPageImageAndName } from "components/[guild]/GuildPageImageAndName"
 import { JoinButton } from "components/[guild]/JoinButton"
-import JoinModalProvider from "components/[guild]/JoinModal/JoinModalProvider"
+import { JoinModalProvider } from "components/[guild]/JoinModal/JoinModalProvider"
 import { MintGuildPinProvider } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import Roles from "components/[guild]/Roles"
 import SocialIcon from "components/[guild]/SocialIcon"
@@ -22,7 +22,6 @@ import useStayConnectedToast from "components/[guild]/StayConnectedToast"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
-import InfoBanner from "components/_app/InfoBanner"
 import { BackToExplorerButton } from "components/common/Layout/components/BackToExplorerButton"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
@@ -32,7 +31,6 @@ import dynamic from "next/dynamic"
 import Head from "next/head"
 import ErrorPage from "pages/_error"
 import { useEffect } from "react"
-import { MintPolygonIDProofProvider } from "rewards/PolygonID/components/MintPolygonIDProofProvider"
 import { SWRConfig } from "swr"
 import { Guild, SocialLinkKey } from "types"
 import fetcher from "utils/fetcher"
@@ -98,16 +96,6 @@ const GuildPage = (): JSX.Element => {
       {featureFlags?.includes("ONGOING_ISSUES") && <DynamicOngoingIssuesBanner />}
 
       <Layout>
-        {/* temporary */}
-        {urlName === "base" && (
-          <InfoBanner>
-            <b>Important Notice: Discord Role Distribution Delay</b> We are currently
-            experiencing a delay in Discord role distribution due to Discord's API
-            rate limit and the high volume of new members. While this process may
-            take longer than usual, we kindly ask for your patience and
-            understanding.
-          </InfoBanner>
-        )}
         <LayoutHero className="pb-24">
           <LayoutBanner>
             <GuildPageBanner />
@@ -231,11 +219,9 @@ const GuildPageWrapper = ({ fallback }: Props): JSX.Element => {
       <SWRConfig value={fallback && { fallback }}>
         <ThemeProvider>
           <MintGuildPinProvider>
-            <MintPolygonIDProofProvider>
-              <JoinModalProvider>
-                <GuildPage />
-              </JoinModalProvider>
-            </MintPolygonIDProofProvider>
+            <JoinModalProvider>
+              <GuildPage />
+            </JoinModalProvider>
           </MintGuildPinProvider>
         </ThemeProvider>
       </SWRConfig>

@@ -1,7 +1,11 @@
 import { useBoolean } from "usehooks-ts"
 
-export function useDisclosure() {
-  const { value, setTrue, setFalse, toggle, setValue } = useBoolean()
+export function useDisclosure(config?: {
+  defaultIsOpen?: boolean
+}) {
+  const { value, setTrue, setFalse, toggle, setValue } = useBoolean(
+    config?.defaultIsOpen
+  )
 
   return {
     isOpen: value,

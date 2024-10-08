@@ -220,12 +220,6 @@ export const REQUIREMENT_DISPLAY_COMPONENTS = {
   UNISWAP_V3_POSITIONS: dynamic<RequirementProps>(
     () => import("requirements/Uniswap/UniswapRequirement")
   ),
-  POLYGON_ID_BASIC: dynamic<RequirementProps>(
-    () => import("requirements/PolygonID/PolygonIDRequirement")
-  ),
-  POLYGON_ID_QUERY: dynamic<RequirementProps>(
-    () => import("requirements/PolygonID/PolygonIDRequirement")
-  ),
   GITCOIN_PASS: dynamic<RequirementProps>(
     () => import("requirements/GitcoinPassport/GitcoinPassportRequirement")
   ),
@@ -332,9 +326,6 @@ export const REQUIREMENT_DISPLAY_COMPONENTS = {
   SNAPSHOT_MAJORITY_VOTES: dynamic<RequirementProps>(
     () => import("requirements/Snapshot/SnapshotRequirement")
   ),
-  MIRROR_COLLECT: dynamic<RequirementProps>(
-    () => import("requirements/Mirror/MirrorRequirement")
-  ),
   SOUND_ARTIST_BACKED: dynamic<RequirementProps>(
     () => import("requirements/Sound/SoundRequirement")
   ),
@@ -350,14 +341,8 @@ export const REQUIREMENT_DISPLAY_COMPONENTS = {
   SOUND_NFTS: dynamic<RequirementProps>(
     () => import("requirements/Sound/SoundRequirement")
   ),
-  DISCO: dynamic<RequirementProps>(
-    () => import("requirements/Disco/DiscoRequirement")
-  ),
   UNLOCK: dynamic<RequirementProps>(
     () => import("requirements/Unlock/UnlockRequirement")
-  ),
-  JUICEBOX: dynamic<RequirementProps>(
-    () => import("requirements/Juicebox/JuiceboxRequirement")
   ),
   FUEL_BALANCE: dynamic<RequirementProps>(
     () => import("requirements/Fuel/FuelRequirement")
@@ -367,14 +352,4 @@ export const REQUIREMENT_DISPLAY_COMPONENTS = {
   ),
   NOOX: dynamic<RequirementProps>(() => import("requirements/Noox/NooxRequirement")),
   YUP: dynamic<RequirementProps>(() => import("requirements/Yup/YupRequirement")),
-  REP3: dynamic<RequirementProps>(() => import("requirements/Rep3/Rep3Requirement")),
-  PARALLEL_ID: dynamic<RequirementProps>(
-    () => import("requirements/Parallel/ParallelRequirement")
-  ),
-  PARALLEL_SANCTIONS_SAFE: dynamic<RequirementProps>(
-    () => import("requirements/Parallel/ParallelRequirement")
-  ),
-  PARALLEL_TRAIT: dynamic<RequirementProps>(
-    () => import("requirements/Parallel/ParallelRequirement")
-  ),
 } as const satisfies Record<RequirementType, ComponentType<RequirementProps>>

@@ -1,60 +1,45 @@
-import { Flex, HStack, Text, useColorModeValue } from "@chakra-ui/react"
+import { cn } from "@/lib/utils"
 import { PropsWithChildren } from "react"
 
 const RoleRequirementsSection = ({
   isOpen = true,
   children,
-}: PropsWithChildren<any>) => {
-  const requirementsSectionBgColor = useColorModeValue("gray.50", "blackAlpha.300")
-  const requirementsSectionBorderColor = useColorModeValue("gray.200", "gray.600")
-
+}: PropsWithChildren<{ isOpen?: boolean }>) => {
   return (
-    <Flex
-      direction="column"
-      bgColor={isOpen && requirementsSectionBgColor}
-      borderLeftWidth={{ base: 0, md: 1 }}
-      borderLeftColor={isOpen ? requirementsSectionBorderColor : "transparent"}
-      transition="background .2s"
-      // Card's `overflow: clip` isn't enough in Safari
-      borderTopRightRadius={{ md: "2xl" }}
-      borderBottomRightRadius={{ md: "2xl" }}
-      pos="relative"
+    <div
+      className={cn("flex flex-col border-transparent transition-colors", {
+        "border-border border-t bg-card-secondary md:border-t-0 md:border-l": isOpen,
+      })}
     >
       {children}
-    </Flex>
+    </div>
   )
 }
 
 const RoleRequirementsSectionHeader = ({
   isOpen = true,
   children,
-}: PropsWithChildren<any>) => (
-  <HStack
-    w="full"
-    p={5}
-    pb={0}
-    mb={{ base: 4, md: 6 }}
-    transform={!isOpen && "translateY(10px)"}
-    transition="transform .2s"
+}: PropsWithChildren<{ isOpen?: boolean }>) => (
+  <div
+    className={cn(
+      "mb-4 flex items-center justify-between p-5 pb-0 transition-transform md:mb-6",
+      {
+        "translate-y-2": !isOpen,
+      }
+    )}
   >
-    <Text
-      as="span"
-      mt="1"
-      mr="2"
-      fontSize="xs"
-      fontWeight="bold"
-      color="gray"
-      textTransform="uppercase"
-      noOfLines={1}
-      opacity={isOpen ? 1 : 0}
-      pointerEvents={!isOpen ? "none" : "auto"}
-      transition="opacity .2s"
+    <span
+      className={cn(
+        "pointer-events-none mt-1 mr-2 text-ellipsis font-bold text-muted-foreground text-xs uppercase opacity-0 transition-opacity",
+        {
+          "pointer-events-auto opacity-100": isOpen,
+        }
+      )}
     >
       Unlock rewards
-    </Text>
+    </span>
     {children}
-  </HStack>
+  </div>
 )
 
-export default RoleRequirementsSection
-export { RoleRequirementsSectionHeader }
+export { RoleRequirementsSection, RoleRequirementsSectionHeader }

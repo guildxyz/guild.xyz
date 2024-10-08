@@ -1,10 +1,10 @@
-import { Img, Text } from "@chakra-ui/react"
-import Requirement, {
+import {
+  Requirement,
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import CountryFlagAndName from "requirements/CoinbaseEAS/components/CountryFlagAndName"
-import EthereumAttestationRequirementFooter from "requirements/EthereumAttestation/components/EthereumAttestationRequirementFooter"
+import { EthereumAttestationRequirementFooter } from "requirements/EthereumAttestation/components/EthereumAttestationRequirementFooter"
 import { EAS_CB_VERIFIED_ACCOUNT_SCHEMA_ID } from "./CoinbaseEASForm"
 
 const CoinbaseEASRequirement = (props: RequirementProps): JSX.Element => {
@@ -12,15 +12,15 @@ const CoinbaseEASRequirement = (props: RequirementProps): JSX.Element => {
 
   return (
     <Requirement
-      image={<Img src="/requirementLogos/coinbase.png" />}
+      image={<img src="/requirementLogos/coinbase.png" />}
       footer={<EthereumAttestationRequirementFooter />}
       {...props}
     >
       {data.schemaId === EAS_CB_VERIFIED_ACCOUNT_SCHEMA_ID ? (
-        <Text as="span">Verify your account</Text>
+        "Verify your account"
       ) : (
         <>
-          <Text as="span">Verify your country</Text>
+          <span>Verify your country</span>
           {data.val && <CountryFlagAndName code={data.val} />}
         </>
       )}

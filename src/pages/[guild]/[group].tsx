@@ -8,11 +8,11 @@ import {
   LayoutMain,
 } from "@/components/Layout"
 import { Center, Heading, Spinner } from "@chakra-ui/react"
-import AccessHub from "components/[guild]/AccessHub"
+import { AccessHub } from "components/[guild]/AccessHub"
 import { GroupPageImageAndName } from "components/[guild]/GroupPageImageAndName"
 import { GuildPageBanner } from "components/[guild]/GuildPageBanner"
 import { JoinButton } from "components/[guild]/JoinButton"
-import JoinModalProvider from "components/[guild]/JoinModal/JoinModalProvider"
+import { JoinModalProvider } from "components/[guild]/JoinModal/JoinModalProvider"
 import Roles from "components/[guild]/Roles"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import GuildImageAndName from "components/[guild]/collect/components/GuildImageAndName"
@@ -25,7 +25,6 @@ import useMembership from "components/explorer/hooks/useMembership"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
 import Head from "next/head"
-import { MintPolygonIDProofProvider } from "rewards/PolygonID/components/MintPolygonIDProofProvider"
 import { SWRConfig } from "swr"
 import { Guild } from "types"
 import fetcher from "utils/fetcher"
@@ -150,11 +149,9 @@ const GroupPageWrapper = ({ fallback }: Props): JSX.Element => {
       </Head>
       <SWRConfig value={fallback && { fallback }}>
         <ThemeProvider>
-          <MintPolygonIDProofProvider>
-            <JoinModalProvider>
-              <GroupPage />
-            </JoinModalProvider>
-          </MintPolygonIDProofProvider>
+          <JoinModalProvider>
+            <GroupPage />
+          </JoinModalProvider>
         </ThemeProvider>
       </SWRConfig>
     </>

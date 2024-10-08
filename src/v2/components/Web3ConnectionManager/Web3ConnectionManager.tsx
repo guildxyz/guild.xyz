@@ -4,7 +4,7 @@ import { walletSelectorModalAtom } from "../Providers/atoms"
 import { PlatformMergeErrorAlert } from "./PlatformMergeErrorAlert"
 import WalletLinkHelperModal from "./WalletLinkHelperModal"
 import WalletSelectorModal from "./WalletSelectorModal"
-import useConnectFromLocalStorage from "./hooks/useConnectFromLocalStorage"
+import { useConnectFromLocalStorage } from "./hooks/useConnectFromLocalStorage"
 import { useTriggerWalletSelectorModal } from "./hooks/useTriggerWalletSelectorModal"
 
 export function Web3ConnectionManagerBase() {

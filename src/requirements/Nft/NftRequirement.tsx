@@ -3,13 +3,14 @@ import { consts } from "@guildxyz/types"
 import { ImageData } from "@nouns/assets"
 import { ArrowSquareOut } from "@phosphor-icons/react"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
-import Requirement, {
+import {
+  Requirement,
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
-import DataBlock from "components/common/DataBlock"
+import { DataBlock } from "components/common/DataBlock"
 import { env } from "env"
 import { Fragment } from "react"
 import SearchableVirtualListModal from "requirements/common/SearchableVirtualListModal"
@@ -106,18 +107,7 @@ const NftRequirement = (props: RequirementProps) => {
         )
       }
       isImageLoading={nftDataLoading}
-      footer={
-        // This feature is temporarily disabled
-        // <HStack spacing={4}>
-        //   <GuildCheckoutProvider>
-        //     <DynamicPurchaseRequirement />
-        //     <PurchaseTransactionStatusModal />
-        //   </GuildCheckoutProvider>
-
-        //   <BlockExplorerUrl />
-        // </HStack>
-        <BlockExplorerUrl />
-      }
+      footer={<BlockExplorerUrl />}
       {...props}
     >
       {"Own "}

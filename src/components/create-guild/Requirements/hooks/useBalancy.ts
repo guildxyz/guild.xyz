@@ -275,5 +275,4 @@ const useBalancy = (
   }
 }
 
-export { BALANCY_SUPPORTED_CHAINS }
 export default useBalancy

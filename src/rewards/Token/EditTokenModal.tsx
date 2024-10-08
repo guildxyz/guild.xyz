@@ -20,7 +20,7 @@ import {
 } from "@chakra-ui/react"
 import { Star } from "@phosphor-icons/react"
 import useEditRolePlatform from "components/[guild]/AccessHub/hooks/useEditRolePlatform"
-import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
+import { useMembershipUpdate } from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import ConversionInput from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/components/ConversionInput"
 import { AddTokenFormType } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/types"
 import useGuild from "components/[guild]/hooks/useGuild"

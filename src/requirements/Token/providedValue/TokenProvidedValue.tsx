@@ -1,5 +1,5 @@
-import { HStack, Text, useColorModeValue } from "@chakra-ui/react"
-import RequirementChainIndicator from "components/[guild]/Requirements/components/RequirementChainIndicator"
+import { HStack, Text } from "@chakra-ui/react"
+import { RequirementChainIndicator } from "components/[guild]/Requirements/components/RequirementChainIndicator"
 import useTokenData from "hooks/useTokenData"
 import type { ProvidedValueDisplayProps } from "requirements/requirementProvidedValues"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
@@ -14,12 +14,10 @@ const TokenProvidedValue = ({ requirement }: ProvidedValueDisplayProps) => {
     data: { symbol },
   } = useTokenData(requirementChain, requirementAddress ?? NULL_ADDRESS)
 
-  const tagBg = useColorModeValue("blackAlpha.100", "blackAlpha.300")
-
   return (
     <HStack wrap={"wrap"} gap={1}>
       <Text>{symbol ?? "Token"} balance</Text>
-      <RequirementChainIndicator bg={tagBg} chain={requirement?.chain} />
+      <RequirementChainIndicator chain={requirement?.chain} />
     </HStack>
   )
 }

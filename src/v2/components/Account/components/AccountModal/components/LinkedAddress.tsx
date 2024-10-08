@@ -20,6 +20,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/DropdownMenu"
+import { IconButton } from "@/components/ui/IconButton"
 import { Skeleton } from "@/components/ui/Skeleton"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip"
 import { useDisclosure } from "@/hooks/useDisclosure"
@@ -102,13 +103,13 @@ const LinkedAddress = ({ addressData }: Props) => {
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button
-              className="ml-auto size-8 rounded-full px-0"
+            <IconButton
+              className="ml-auto rounded-full"
               variant="ghost"
+              size="sm"
               aria-label="Disconnect account"
-            >
-              <DotsThree weight="bold" />
-            </Button>
+              icon={<DotsThree weight="bold" />}
+            />
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             {!isPrimary && (

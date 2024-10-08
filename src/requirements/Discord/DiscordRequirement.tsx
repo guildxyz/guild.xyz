@@ -1,12 +1,12 @@
-import { Icon, Text } from "@chakra-ui/react"
-import { DiscordLogo } from "@phosphor-icons/react"
+import { DiscordLogo } from "@phosphor-icons/react/dist/ssr"
 import ConnectRequirementPlatformButton from "components/[guild]/Requirements/components/ConnectRequirementPlatformButton"
-import DataBlockWithDate from "components/[guild]/Requirements/components/DataBlockWithDate"
-import Requirement, {
+import { DataBlockWithDate } from "components/[guild]/Requirements/components/DataBlockWithDate"
+import {
+  Requirement,
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import DataBlock from "components/common/DataBlock"
+import { DataBlock } from "components/common/DataBlock"
 import useServerData from "hooks/useServerData"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 
@@ -14,11 +14,10 @@ const DiscordRequirement = (props: RequirementProps) => {
   const requirement = useRequirementContext()
 
   // TODO for later: I think we don't even need to call this hook here, serverName/roleName should be always set I think (see DiscordForm for more details)
-  const {
-    data: { serverName, serverIcon, roles, isAdmin },
-  } = useServerData(
+  const { data: serverData } = useServerData(
     !requirement.data?.serverName ? requirement.data?.serverId : null
   )
+  const { serverName, serverIcon, roles, isAdmin } = serverData ?? {}
 
   const displayedServerName =
     serverName || requirement.data?.serverName || requirement.data?.serverId
@@ -32,7 +31,7 @@ const DiscordRequirement = (props: RequirementProps) => {
 
   return (
     <Requirement
-      image={serverIcon ?? <Icon as={DiscordLogo} boxSize={6} />}
+      image={serverIcon ?? <DiscordLogo weight="bold" className="size-6" />}
       footer={<ConnectRequirementPlatformButton />}
       {...props}
     >
@@ -41,11 +40,11 @@ const DiscordRequirement = (props: RequirementProps) => {
           case "DISCORD_ROLE":
             return (
               <>
-                <Text as="span">{`Have the `}</Text>
+                <span>{`Have the `}</span>
                 <DataBlock>{displayedRoleName}</DataBlock>
-                <Text as="span">{` role in the `}</Text>
+                <span>{` role in the `}</span>
                 <DataBlock>{displayedServerName}</DataBlock>
-                <Text as="span">{` server`}</Text>
+                <span>{` server`}</span>
               </>
             )
 
@@ -53,15 +52,19 @@ const DiscordRequirement = (props: RequirementProps) => {
           case "DISCORD_JOIN":
             return requirement.type === "DISCORD_MEMBER_SINCE" ? (
               <>
-                <Text as="span">{`Be member of the `}</Text>
+                <span>{`Be member of the `}</span>
                 <DataBlock>{displayedServerName}</DataBlock>
-                <Text as="span">{` server since at least `}</Text>
-                <DataBlockWithDate timestamp={requirement.data?.memberSince} />
+                {!!requirement.data?.memberSince && (
+                  <>
+                    <span>{` server since at least `}</span>
+                    <DataBlockWithDate timestamp={requirement.data.memberSince} />
+                  </>
+                )}
               </>
             ) : (
               <>
-                <Text as="span">{`Be a Discord user since at least `}</Text>
-                <DataBlockWithDate timestamp={requirement.data?.memberSince} />
+                <span>{`Be a Discord user since at least `}</span>
+                <DataBlockWithDate timestamp={requirement.data.memberSince} />
               </>
             )
 
@@ -72,7 +75,7 @@ const DiscordRequirement = (props: RequirementProps) => {
 
             return (
               <>
-                <Text as="span">{`Have a Discord account older than `}</Text>
+                <span>{`Have a Discord account older than `}</span>
                 <DataBlock>{formattedMemberSince}</DataBlock>
               </>
             )

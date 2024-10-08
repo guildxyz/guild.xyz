@@ -59,7 +59,7 @@ export enum ContractCallFunction {
   SIMPLE_CLAIM = "function claim(uint256 amount, address receiver, uint256 userId, uint256 signedAt, bytes calldata signature) payable",
 }
 
-export const CONTRACT_CALL_ARGS_TO_SIGN: Record<ContractCallFunction, string[]> = {
+const CONTRACT_CALL_ARGS_TO_SIGN: Record<ContractCallFunction, string[]> = {
   [ContractCallFunction.DEPRECATED_SIMPLE_CLAIM]: [],
   [ContractCallFunction.SIMPLE_CLAIM]: ["uint256"],
 }

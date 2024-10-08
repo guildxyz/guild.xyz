@@ -1,14 +1,16 @@
 import { Icon, Text } from "@chakra-ui/react"
-import { Coins, Warning } from "@phosphor-icons/react"
+import { Coins } from "@phosphor-icons/react"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
 import BuyPass from "components/[guild]/Requirements/components/GuildCheckout/BuyPass"
 import { GuildCheckoutProvider } from "components/[guild]/Requirements/components/GuildCheckout/components/GuildCheckoutContext"
-import Requirement, {
+import {
+  Requirement,
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
+import { RequirementWarningIcon } from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
-import DataBlock from "components/common/DataBlock"
+import { DataBlock } from "components/common/DataBlock"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import useToken from "hooks/useToken"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
@@ -115,7 +117,7 @@ const OriginalPaymentRequirement = (props: RequirementProps): JSX.Element => {
 const PaymentRequirement = (props: RequirementProps) => {
   const { type } = useRequirementContext()
   return (
-    <Requirement image={<Icon as={Warning} boxSize={5} color="orange.300" />}>
+    <Requirement image={<RequirementWarningIcon />}>
       {`Unsupported requirement type: `}
       <DataBlock>{type}</DataBlock>
     </Requirement>

@@ -1,5 +1,5 @@
-import { Circle, Img, SkeletonCircle, useColorModeValue } from "@chakra-ui/react"
-import { PropsWithChildren } from "react"
+import { Skeleton } from "@/components/ui/Skeleton"
+import { PropsWithChildren, ReactNode } from "react"
 
 type Props = {
   isImageLoading?: boolean
@@ -8,49 +8,21 @@ type Props = {
 const RequirementImageCircle = ({
   isImageLoading,
   children,
-}: PropsWithChildren<Props>) => {
-  const imageBgColor = useColorModeValue("blackAlpha.100", "blackAlpha.300")
-
-  return (
-    <SkeletonCircle
-      minW={"var(--chakra-space-11)"}
-      boxSize={"var(--chakra-space-11)"}
-      isLoaded={!isImageLoading}
-    >
-      <Circle
-        size={"var(--chakra-space-11)"}
-        backgroundColor={imageBgColor}
-        alignItems="center"
-        justifyContent="center"
-        overflow={"hidden"}
-      >
-        {children}
-      </Circle>
-    </SkeletonCircle>
+}: PropsWithChildren<Props>) =>
+  isImageLoading ? (
+    <Skeleton className="size-11 shrink-0 rounded-full" />
+  ) : (
+    <div className="flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-blackAlpha-soft dark:bg-blackAlpha">
+      {children}
+    </div>
   )
-}
 
-const RequirementImage = ({ image }) => {
+const RequirementImage = ({ image }: { image: ReactNode | string }) => {
   if (typeof image !== "string") return image
 
   if (image.endsWith(".mp4"))
-    return (
-      <video
-        src={image}
-        width={"var(--chakra-space-11)"}
-        height={"var(--chakra-space-11)"}
-        muted
-        autoPlay
-        loop
-      />
-    )
-  return (
-    <Img
-      src={image}
-      maxWidth={"var(--chakra-space-11)"}
-      maxHeight={"var(--chakra-space-11)"}
-    />
-  )
+    return <video src={image} className="size-11" muted autoPlay loop />
+  return <img src={image} className="max-h-11 max-w-11" />
 }
 
 export { RequirementImage, RequirementImageCircle }

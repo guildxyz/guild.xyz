@@ -1,27 +1,24 @@
-import { Button } from "@chakra-ui/react"
+import { Button } from "@/components/ui/Button"
+import { Schemas } from "@guildxyz/types"
 import useEditRequirement from "components/create-guild/Requirements/hooks/useEditRequirement"
 import { useFormContext, useWatch } from "react-hook-form"
 import { Requirement } from "types"
 import { useRequirementContext } from "./RequirementContext"
 
+type Props = { requirement: Requirement }
+
 export const getDefaultVisitLinkCustomName = (
   requirementData: Requirement["data"]
 ) => `Visit link: [${requirementData.id}]`
 
-const ResetNewRequirementButton = ({ requirement }) => {
-  const { control, setValue } = useFormContext()
+const ResetNewRequirementButton = ({ requirement }: Props) => {
+  const { control, setValue } = useFormContext<Schemas["RoleCreationPayload"]>()
   const requirements = useWatch({ name: "requirements", control })
-  /**
-   * We don't get formFieldId from requirements (and useFieldArray would give a new
-   * formFieldId), so we get the actual requirement's index by comparing object
-   * value. It works until there're two requirements that are exactly identical,
-   * which is not a usecase
-   */
-  const index = requirements?.findIndex((req) => {
-    const reqWithoutFormFieldId = structuredClone(requirement)
-    delete reqWithoutFormFieldId.formFieldId
-    return JSON.stringify(req) === JSON.stringify(reqWithoutFormFieldId)
-  })
+
+  // The ID field doesn't exist in the schema, but react-hook-form will generate a uuid for each field, so it's safe to use it here
+  const index = requirements?.findIndex(
+    (req) => "id" in req && req.id === requirement.id
+  )
 
   const onReset = () => {
     setValue(`requirements.${index}.data.customName`, "")
@@ -29,13 +26,13 @@ const ResetNewRequirementButton = ({ requirement }) => {
   }
 
   return (
-    <Button size={"sm"} onClick={onReset} flexShrink={0}>
+    <Button size="sm" onClick={onReset}>
       Reset to original
     </Button>
   )
 }
 
-const ResetExistingRequirementButton = ({ requirement }) => {
+const ResetExistingRequirementButton = ({ requirement }: Props) => {
   const { onSubmit, isLoading } = useEditRequirement(requirement.roleId)
 
   const resetCustomName =
@@ -45,7 +42,7 @@ const ResetExistingRequirementButton = ({ requirement }) => {
 
   return (
     <Button
-      size={"sm"}
+      size="sm"
       isLoading={isLoading}
       onClick={() =>
         onSubmit({
@@ -57,7 +54,6 @@ const ResetExistingRequirementButton = ({ requirement }) => {
           },
         })
       }
-      flexShrink={0}
     >
       Reset to original
     </Button>
@@ -66,9 +62,10 @@ const ResetExistingRequirementButton = ({ requirement }) => {
 
 const ResetRequirementButton = () => {
   const requirement = useRequirementContext()
-  if (requirement.id) return <ResetExistingRequirementButton {...{ requirement }} />
+  if (typeof requirement.id === "number")
+    return <ResetExistingRequirementButton {...{ requirement }} />
 
   return <ResetNewRequirementButton {...{ requirement }} />
 }
 
-export default ResetRequirementButton
+export { ResetRequirementButton }

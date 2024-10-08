@@ -18,15 +18,16 @@ const LinkDelegateVaultButton = ({
       }}
       isLoading={linkDelegations.isLoading}
       loadingText="Check your wallet"
+      leftIcon={
+        <Image
+          width={15}
+          height={15}
+          alt="Delegate.cash logo"
+          src="/walletLogos/delegatecash.png"
+        />
+      }
     >
-      <Image
-        width={15}
-        height={15}
-        alt="Delegate.cash logo"
-        src="/walletLogos/delegatecash.png"
-      />
-      Link {vaults.length > 1 ? vaults.length : ""} vault
-      {vaults.length > 1 ? "s" : ""}
+      {`Link ${vaults.length > 1 ? vaults.length : ""} vault${vaults.length > 1 ? "s" : ""}`}
     </Button>
   )
 }

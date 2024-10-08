@@ -119,7 +119,7 @@ export const CrmSkeletonRow = ({ columns }) => (
   </Tr>
 )
 
-export const CrmTd = ({ children, ...rest }) => {
+const CrmTd = ({ children, ...rest }) => {
   const tdBg = useColorModeValue(`gray.50`, "#3A3A40") // dark color is from blackAlpha.200, but without opacity so it can overlay when sticky
 
   return (
@@ -129,7 +129,7 @@ export const CrmTd = ({ children, ...rest }) => {
   )
 }
 
-export const CrmInteractiveTd = ({ children, ...rest }) => {
+const CrmInteractiveTd = ({ children, ...rest }) => {
   const tdHoverBg = useColorModeValue(`blackAlpha.50`, "whiteAlpha.50")
 
   return (

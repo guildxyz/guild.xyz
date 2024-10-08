@@ -13,7 +13,7 @@ import { CaretDown, ListNumbers, Plus } from "@phosphor-icons/react"
 import Button from "components/common/Button"
 import useIsStuck from "hooks/useIsStuck"
 import { useEffect, useRef } from "react"
-import RecheckAccessesButton from "../RecheckAccessesButton"
+import { RecheckAccessesButton } from "../RecheckAccessesButton"
 import useGuild from "../hooks/useGuild"
 import AddRoleDrawer from "./components/AddRoleDrawer"
 import OrderRolesModal from "./components/OrderRolesModal"
@@ -56,8 +56,9 @@ const AddAndOrderRoles = ({ setIsStuck = null }): JSX.Element => {
         <Divider orientation="vertical" h="8" />
         <RecheckAccessesButton
           tooltipLabel="Re-check all of my accesses"
-          borderTopLeftRadius="0"
-          borderBottomLeftRadius="0"
+          size="sm"
+          variant="ghost"
+          className="rounded-none"
         />
         <Divider orientation="vertical" h="8" />
         <Menu placement="bottom-end">

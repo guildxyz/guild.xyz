@@ -10,7 +10,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import { CaretDown } from "@phosphor-icons/react"
-import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
+import { RequirementDisplayComponent } from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import Card from "components/common/Card"
 import { Requirement } from "types"
 import { ACTION, ActivityLogAction as Action } from "../constants"

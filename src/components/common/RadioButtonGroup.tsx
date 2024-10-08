@@ -77,7 +77,7 @@ type RadioButtonProps = {
 } & RadioButtonOptionProps &
   UseRadioProps
 
-export const RadioButton = (props: RadioButtonProps & { isDisabled?: boolean }) => {
+const RadioButton = (props: RadioButtonProps & { isDisabled?: boolean }) => {
   const { getInputProps, getCheckboxProps } = useRadio(props)
 
   const input = getInputProps()

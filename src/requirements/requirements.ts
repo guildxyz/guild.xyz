@@ -4,12 +4,11 @@ import {
   ImageSquare,
   Link,
   ListChecks,
-  LockOpen,
   Parachute,
   Robot,
-  Wallet,
   Wrench,
 } from "@phosphor-icons/react"
+import { LockOpen, Wallet } from "@phosphor-icons/react/dist/ssr"
 import { VISIT_LINK_REGEX } from "requirements/VisitLink/VisitLinkRequirement"
 import { emailData } from "rewards/Email/data"
 import { formData } from "rewards/Forms/data"
@@ -190,12 +189,6 @@ export const REQUIREMENTS_DATA = [
     isNegatable: true,
   },
   {
-    icon: "/requirementLogos/polygonId.svg",
-    name: "PolygonID",
-    types: ["POLYGON_ID_QUERY", "POLYGON_ID_BASIC"],
-    isNegatable: true,
-  },
-  {
     icon: "/requirementLogos/gitcoin-passport.svg",
     name: "Gitcoin Passport",
     types: ["GITCOIN_PASS", "GITCOIN_STAMP", "GITCOIN_SCORE"],
@@ -278,12 +271,6 @@ export const REQUIREMENTS_DATA = [
     isNegatable: true,
   },
   {
-    icon: "/requirementLogos/mirror.svg",
-    name: "Mirror",
-    types: ["MIRROR_COLLECT"],
-    isNegatable: true,
-  },
-  {
     icon: "/requirementLogos/sound.png",
     name: "Sound",
     types: [
@@ -296,22 +283,9 @@ export const REQUIREMENTS_DATA = [
     isNegatable: true,
   },
   {
-    icon: "/requirementLogos/disco.png",
-    name: "Disco",
-
-    types: ["DISCO"],
-    isNegatable: true,
-  },
-  {
     icon: "/requirementLogos/unlock.png",
     name: "Unlock",
     types: ["UNLOCK"],
-    isNegatable: true,
-  },
-  {
-    icon: "/requirementLogos/juicebox.png",
-    name: "Juicebox",
-    types: ["JUICEBOX"],
     isNegatable: true,
   },
   {
@@ -332,18 +306,4 @@ export const REQUIREMENTS_DATA = [
     types: ["YUP"],
     isNegatable: true,
   },
-  {
-    icon: "/requirementLogos/rep3.png",
-    name: "Rep3",
-    types: ["REP3"],
-    isNegatable: true,
-  },
-  {
-    icon: "/requirementLogos/parallel.png",
-    name: "Parallel",
-    types: ["PARALLEL_ID", "PARALLEL_SANCTIONS_SAFE", "PARALLEL_TRAIT"],
-    isNegatable: true,
-  },
 ] as const satisfies RequirementData[]
-
-export default REQUIREMENTS_DATA

@@ -56,8 +56,8 @@ const useActiveStatusUpdates = (roleId?: number, onSuccess?: () => void) => {
     status:
       dataToReturn?.length > 0
         ? dataToReturn.every((job) => job.done)
-          ? "DONE"
-          : "STARTED"
+          ? ("DONE" as const)
+          : ("STARTED" as const)
         : null,
     isValidating,
     mutate,

@@ -210,12 +210,6 @@ export const REQUIREMENT_FORM_COMPONENTS = {
   UNISWAP_V3_POSITIONS: dynamic<RequirementFormProps>(
     () => import("requirements/Uniswap/UniswapForm")
   ),
-  POLYGON_ID_BASIC: dynamic<RequirementFormProps>(
-    () => import("requirements/PolygonID/PolygonIDForm")
-  ),
-  POLYGON_ID_QUERY: dynamic<RequirementFormProps>(
-    () => import("requirements/PolygonID/PolygonIDForm")
-  ),
   GITCOIN_PASS: dynamic<RequirementFormProps>(
     () => import("requirements/GitcoinPassport/GitcoinPassportForm")
   ),
@@ -322,9 +316,6 @@ export const REQUIREMENT_FORM_COMPONENTS = {
   SNAPSHOT_MAJORITY_VOTES: dynamic<RequirementFormProps>(
     () => import("requirements/Snapshot/SnapshotForm")
   ),
-  MIRROR_COLLECT: dynamic<RequirementFormProps>(
-    () => import("requirements/Mirror/MirrorForm")
-  ),
   SOUND_ARTIST_BACKED: dynamic<RequirementFormProps>(
     () => import("requirements/Sound/SoundForm")
   ),
@@ -340,12 +331,8 @@ export const REQUIREMENT_FORM_COMPONENTS = {
   SOUND_NFTS: dynamic<RequirementFormProps>(
     () => import("requirements/Sound/SoundForm")
   ),
-  DISCO: dynamic<RequirementFormProps>(() => import("requirements/Disco/DiscoForm")),
   UNLOCK: dynamic<RequirementFormProps>(
     () => import("requirements/Unlock/UnlockForm")
-  ),
-  JUICEBOX: dynamic<RequirementFormProps>(
-    () => import("requirements/Juicebox/JuiceboxForm")
   ),
   FUEL_BALANCE: dynamic<RequirementFormProps>(
     () => import("requirements/Fuel/FuelForm")
@@ -355,16 +342,6 @@ export const REQUIREMENT_FORM_COMPONENTS = {
   ),
   NOOX: dynamic<RequirementFormProps>(() => import("requirements/Noox/NooxForm")),
   YUP: dynamic<RequirementFormProps>(() => import("requirements/Yup/YupForm")),
-  REP3: dynamic<RequirementFormProps>(() => import("requirements/Rep3/Rep3Form")),
-  PARALLEL_ID: dynamic<RequirementFormProps>(
-    () => import("requirements/Parallel/ParallelForm")
-  ),
-  PARALLEL_SANCTIONS_SAFE: dynamic<RequirementFormProps>(
-    () => import("requirements/Parallel/ParallelForm")
-  ),
-  PARALLEL_TRAIT: dynamic<RequirementFormProps>(
-    () => import("requirements/Parallel/ParallelForm")
-  ),
 } as const satisfies Record<
   RequirementType,
   ReturnType<typeof dynamic<RequirementFormProps>> | null

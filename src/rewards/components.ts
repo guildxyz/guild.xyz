@@ -6,7 +6,6 @@ import githubComponents from "rewards/Github/components"
 import googleComponents from "rewards/Google/components"
 import poapComponents from "rewards/Poap/components"
 import pointsComponents from "rewards/Points/components"
-import polygonIdComponents from "rewards/PolygonID/components"
 import textComponents from "rewards/SecretText/components"
 import telegramComponents from "rewards/Telegram/components"
 import tokenComponents from "rewards/Token/components"
@@ -19,7 +18,6 @@ export default {
   GATHER_TOWN: gatherTownComponents,
   FORM: formComponents,
   POINTS: pointsComponents,
-  POLYGON_ID: polygonIdComponents,
   UNIQUE_TEXT: uniqueTextComponents,
   TEXT: textComponents,
   CONTRACT_CALL: contractCallComponents,

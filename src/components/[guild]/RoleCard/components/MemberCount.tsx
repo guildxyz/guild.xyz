@@ -1,63 +1,45 @@
+import { Badge, BadgeProps } from "@/components/ui/Badge"
+import { ProgressIndicator, ProgressRoot } from "@/components/ui/Progress"
 import {
-  HStack,
-  Popover,
-  PopoverArrow,
-  PopoverBody,
-  PopoverContent,
-  PopoverFooter,
-  PopoverHeader,
-  PopoverTrigger,
-  Portal,
-  Progress,
-  Spinner,
-  Tag,
-  TagLabel,
-  TagLeftIcon,
-  TagProps,
-  TagRightIcon,
-  Text,
-} from "@chakra-ui/react"
-import { Users } from "@phosphor-icons/react"
-import { POPOVER_HEADER_STYLES } from "components/[guild]/Requirements/components/RequirementAccessIndicator"
+  Tooltip,
+  TooltipContent,
+  TooltipPortal,
+  TooltipTrigger,
+} from "@/components/ui/Tooltip"
+import { cn } from "@/lib/utils"
+import { CircleNotch, Users } from "@phosphor-icons/react/dist/ssr"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useUser from "components/[guild]/hooks/useUser"
 import useActiveStatusUpdates from "hooks/useActiveStatusUpdates"
 import { PropsWithChildren } from "react"
-import MemberCountLastSyncTooltip, {
+import {
+  MemberCountLastSyncTooltip,
   SyncRoleButton,
 } from "./MemberCountLastSyncTooltip"
 
 type Props = {
   memberCount: number
   size?: "sm" | "md"
-} & TagProps
+} & BadgeProps
 
 const MemberCount = ({
   memberCount,
   size = "md",
   children,
-  ...rest
+  className,
+  ...badgeProps
 }: PropsWithChildren<Props>) => {
-  const iconSize = size === "sm" ? "14px" : "16px"
-
   return (
-    <Tag
-      bg="unset"
-      color="gray"
-      mt="3px !important"
-      flexShrink={0}
-      size={size}
-      {...rest}
-    >
-      <TagLeftIcon as={Users} boxSize={iconSize} mr="1.5" />
-      <TagLabel mb="-1px">
+    <Badge className={cn("group mt-1 shrink-0", className)} {...badgeProps}>
+      <Users weight="bold" />
+      <span>
         {new Intl.NumberFormat("en", { notation: "compact" }).format(
           memberCount ?? 0
         )}
-      </TagLabel>
+      </span>
       {children}
-    </Tag>
+    </Badge>
   )
 }
 
@@ -65,7 +47,7 @@ type WithSyncProps = Props & {
   roleId?: number
 }
 
-export const MemberCountWithSyncIndicator = ({
+const MemberCountWithSyncIndicator = ({
   roleId,
   ...rest
 }: PropsWithChildren<WithSyncProps>) => {
@@ -73,52 +55,49 @@ export const MemberCountWithSyncIndicator = ({
 
   if (status === "STARTED")
     return (
-      <Popover trigger="hover" placement="bottom" isLazy>
-        <PopoverTrigger>
-          <MemberCount colorScheme="blue" mt="2px !important" {...rest}>
-            <TagRightIcon as={Spinner} />
+      <Tooltip>
+        <TooltipTrigger>
+          <MemberCount {...rest}>
+            <CircleNotch weight="bold" className="animate-spin" />
           </MemberCount>
-        </PopoverTrigger>
-        <Portal>
-          <PopoverContent>
-            <PopoverArrow />
-            <PopoverHeader {...POPOVER_HEADER_STYLES} pb="0">
-              Syncing members
-            </PopoverHeader>
-            <PopoverBody pt="1">
-              Updating all member accesses. This can take a few hours, feel free to
-              come back later!
-              <StatusProgress {...{ data, status }} />
-            </PopoverBody>
-          </PopoverContent>
-        </Portal>
-      </Popover>
+        </TooltipTrigger>
+        <TooltipPortal>
+          <TooltipContent variant="popover" side="bottom" className="text-left">
+            <div className="mb-1 font-semibold">Syncing members</div>
+            <div>
+              <p>
+                Updating all member accesses. This can take a few hours, feel free to
+                come back later!
+              </p>
+              <StatusProgress data={data} status={status} />
+            </div>
+          </TooltipContent>
+        </TooltipPortal>
+      </Tooltip>
     )
 
-  return <MemberCount mt="3px !important" {...rest} />
+  return <MemberCount {...rest} />
 }
 
-const StatusProgress = ({ data, status }) => {
-  const percentage = (data.doneChunks / data.totalChunks) * 100
+const StatusProgress = ({
+  data,
+  status,
+}: Pick<ReturnType<typeof useActiveStatusUpdates>, "data" | "status">) => {
+  const percentage = !!data ? data.doneChunks / data.totalChunks : 0
 
   return (
-    <HStack mt="3" mb="1">
-      <Progress
-        value={status === null ? 100 : percentage || 1}
-        colorScheme="blue"
-        size="sm"
-        borderRadius={"full"}
-        flex={1}
-        transition="width .3s"
-      />
-      <Text colorScheme="gray" fontSize="sm" fontWeight={"bold"} flexShrink={0}>
+    <div className="mt-3 mb-1 flex items-center gap-1">
+      <ProgressRoot>
+        <ProgressIndicator value={status === null ? 1 : percentage || 0.01} />
+      </ProgressRoot>
+      <span className="shrink-0 font-bold text-muted-foreground text-sm">
         {percentage.toFixed(0)}%
-      </Text>
-    </HStack>
+      </span>
+    </div>
   )
 }
 
-export const RoleCardMemberCount = ({
+const RoleCardMemberCount = ({
   memberCount,
   roleId,
   lastSyncedAt,
@@ -128,21 +107,19 @@ export const RoleCardMemberCount = ({
   const { isSuperAdmin } = useUser()
 
   return (
-    <MemberCountWithSyncIndicator memberCount={memberCount} roleId={roleId}>
+    <MemberCountWithSyncIndicator
+      memberCount={memberCount}
+      roleId={roleId}
+      className="!bg-transparent text-muted-foreground"
+    >
       {isSuperAdmin ? (
         <MemberCountLastSyncTooltip lastSyncedAt={lastSyncedAt}>
-          <PopoverFooter
-            pt={0.5}
-            pb={3}
-            display="flex"
-            justifyContent={"flex-end"}
-            border={0}
-          >
+          <div className="mt-2 flex justify-end">
             <SyncRoleButton roleId={roleId} />
-          </PopoverFooter>
+          </div>
         </MemberCountLastSyncTooltip>
       ) : isAdmin &&
-        featureFlags.includes("PERIODIC_SYNC") &&
+        featureFlags?.includes("PERIODIC_SYNC") &&
         /* temporarily only showing for superAdmins when lastSyncedAt is null, until we know what to communicate to admins in this case */
         lastSyncedAt ? (
         <MemberCountLastSyncTooltip lastSyncedAt={lastSyncedAt} />
@@ -151,4 +128,4 @@ export const RoleCardMemberCount = ({
   )
 }
 
-export default MemberCount
+export { MemberCount, MemberCountWithSyncIndicator, RoleCardMemberCount }

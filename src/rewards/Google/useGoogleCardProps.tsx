@@ -1,7 +1,7 @@
 import { Circle, Img, useColorModeValue } from "@chakra-ui/react"
 import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
 import { CardPropsHook } from "rewards/types"
-import { GuildPlatformWithOptionalId, PlatformName } from "types"
+import { GuildPlatformWithOptionalId } from "types"
 import { googleData } from "./data"
 
 const fileTypeNames = {
@@ -46,7 +46,7 @@ const useGoogleCardProps: CardPropsHook = (
     : ""
 
   return {
-    type: "GOOGLE" as PlatformName,
+    type: "GOOGLE",
     image: guildPlatform.platformGuildData?.iconLink ? (
       <Circle size={10} bgColor={imageBgColor}>
         <Img

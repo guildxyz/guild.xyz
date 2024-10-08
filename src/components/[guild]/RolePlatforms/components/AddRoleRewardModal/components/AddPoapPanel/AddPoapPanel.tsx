@@ -23,7 +23,7 @@ import { FormProvider, useController, useForm, useWatch } from "react-hook-form"
 import usePoapById from "requirements/Poap/hooks/usePoapById"
 import rewards, { AddRewardPanelProps } from "rewards"
 import { PlatformGuildData, PlatformType } from "types"
-import DefaultAddRewardPanelWrapper from "../../DefaultAddRewardPanelWrapper"
+import { DefaultAddRewardPanelWrapper } from "../../DefaultAddRewardPanelWrapper"
 import UploadMintLinks from "./components/UploadMintLinks"
 
 export type ImportPoapForm = {

@@ -4,7 +4,7 @@ import {
 } from "@/components/Providers/PostHogProvider"
 import useUsersGuildPins from "@/hooks/useUsersGuildPins"
 import { consts } from "@guildxyz/types"
-import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
+import { useMembershipUpdate } from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { env } from "env"
 import useShowErrorToast from "hooks/useShowErrorToast"

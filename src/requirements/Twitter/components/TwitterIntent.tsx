@@ -1,9 +1,11 @@
-import { Icon, Link } from "@chakra-ui/react"
-import { Heart, type IconProps, Share, UserPlus } from "@phosphor-icons/react"
-import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
+import { PLATFORM_COLORS } from "@/components/Account/components/AccountModal/components/SocialAccount"
+import { Anchor } from "@/components/ui/Anchor"
+import { Icon } from "@phosphor-icons/react/dist/lib/types"
+import { Heart, Share, UserPlus } from "@phosphor-icons/react/dist/ssr"
+import { useMembershipUpdate } from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
+import { RequirementButton } from "components/[guild]/Requirements/components/RequirementButton"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import useUser from "components/[guild]/hooks/useUser"
-import Button from "components/common/Button"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import useIsIOS from "hooks/useIsIOS"
 import usePopupWindow from "hooks/usePopupWindow"
@@ -26,10 +28,7 @@ const label: Record<TwitterIntentAction, string> = {
   retweet: "Repost",
 }
 
-const buttonIcon: Record<
-  TwitterIntentAction,
-  React.ForwardRefExoticComponent<IconProps & React.RefAttributes<SVGSVGElement>>
-> = {
+const buttonIcon: Record<TwitterIntentAction, Icon> = {
   follow: UserPlus,
   like: Heart,
   retweet: Share,
@@ -119,29 +118,30 @@ const TwitterIntent = ({
 
   if (type === "link")
     return (
-      <Link
-        href={url}
+      <Anchor
+        href={url ?? ""}
+        target="_blank"
         onClick={onClick}
-        isExternal
-        colorScheme="blue"
-        fontWeight="medium"
+        showExternal
+        variant="highlighted"
       >
         {children}
-      </Link>
+      </Anchor>
     )
 
   if (hasAccess) return null
 
+  const IconComponent = buttonIcon[action]
+
   return (
-    <Button
-      colorScheme="black"
-      leftIcon={<Icon as={buttonIcon[action]} />}
-      iconSpacing={1}
-      size="xs"
+    <RequirementButton
+      variant="solid"
+      leftIcon={<IconComponent weight="bold" />}
       onClick={onClick}
+      className={PLATFORM_COLORS.TWITTER}
     >
       {label[action]}
-    </Button>
+    </RequirementButton>
   )
 }
 

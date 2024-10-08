@@ -1,18 +1,18 @@
-import { Icon } from "@chakra-ui/react"
-import { EnvelopeSimple } from "@phosphor-icons/react"
+import { EnvelopeSimple } from "@phosphor-icons/react/dist/ssr"
 import RequirementConnectButton from "components/[guild]/Requirements/components/ConnectRequirementPlatformButton"
-import Requirement, {
+import {
+  Requirement,
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import DataBlock from "components/common/DataBlock"
+import { DataBlock } from "components/common/DataBlock"
 
 const EmailRequirement = (props: RequirementProps) => {
   const { data, type } = useRequirementContext()
 
   return (
     <Requirement
-      image={<Icon as={EnvelopeSimple} boxSize={6} />}
+      image={<EnvelopeSimple weight="bold" className="size-6" />}
       footer={<RequirementConnectButton />}
       {...props}
     >
@@ -20,7 +20,8 @@ const EmailRequirement = (props: RequirementProps) => {
         "Have a verified email address"
       ) : (
         <>
-          Have a verified email with domain <DataBlock>{data?.domain}</DataBlock>
+          <span>{"Have a verified email with domain "}</span>
+          <DataBlock>{data?.domain}</DataBlock>
         </>
       )}
     </Requirement>

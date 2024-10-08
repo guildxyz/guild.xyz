@@ -1,5 +1,6 @@
-import { Icon, Skeleton, Text, Tooltip, useColorModeValue } from "@chakra-ui/react"
-import { Warning } from "@phosphor-icons/react"
+import { Skeleton } from "@/components/ui/Skeleton"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip"
+import { Warning } from "@phosphor-icons/react/dist/ssr"
 import { PropsWithChildren } from "react"
 
 type Props = {
@@ -12,36 +13,26 @@ const DataBlock = ({
   error,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
-  const bg = useColorModeValue("blackAlpha.100", "blackAlpha.300")
-
-  if (isLoading) return <Skeleton as="span">Loading...</Skeleton>
+  if (isLoading) return <Skeleton className="inline w-24" />
 
   return (
-    <Tooltip hasArrow placement="top" label={error} isDisabled={!error}>
-      <Text
-        as="span"
-        px={1.5}
-        py={0.5}
-        bgColor={bg}
-        borderRadius="sm"
-        fontSize="sm"
-        wordBreak="break-word"
-      >
-        {error && (
-          <Icon
-            as={Warning}
-            position="relative"
-            top={0.5}
-            mr={1}
-            color="orange.200"
-          />
-        )}
-        <Text as="span" fontFamily="SFMono-Regular,Menlo,Monaco,Consolas,monospace">
-          {children}
-        </Text>
-      </Text>
+    <Tooltip open={error ? undefined : false}>
+      <TooltipTrigger asChild>
+        <span className="break-words rounded-md bg-blackAlpha-soft px-1.5 py-0.5 text-sm dark:bg-blackAlpha">
+          {error && (
+            <Warning
+              weight="bold"
+              className="relative top-0.5 mr-1 text-warning-subtle-foreground"
+            />
+          )}
+          <span className="font-mono">{children}</span>
+        </span>
+      </TooltipTrigger>
+      <TooltipContent side="top">
+        <p>{error}</p>
+      </TooltipContent>
     </Tooltip>
   )
 }
 
-export default DataBlock
+export { DataBlock }

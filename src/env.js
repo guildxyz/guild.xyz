@@ -7,20 +7,6 @@ export const env = createEnv({
     GUILD_API_KEY: z.string(),
     BALANCY_TOKEN: z.string(),
 
-    // Vercel
-    LEADERBOARD_REVALIDATION_SECRET: z.string(),
-    KV_REST_API_READ_ONLY_TOKEN: z.string(),
-    KV_REST_API_TOKEN: z.string(),
-    KV_REST_API_URL: z.string(),
-    KV_URL: z.string(),
-    POSTGRES_DATABASE: z.string(),
-    POSTGRES_HOST: z.string(),
-    POSTGRES_PASSWORD: z.string(),
-    POSTGRES_PRISMA_URL: z.string(),
-    POSTGRES_URL: z.string(),
-    POSTGRES_URL_NON_POOLING: z.string(),
-    POSTGRES_USER: z.string(),
-
     // Alchemy
     MAINNET_ALCHEMY_KEY: z.string(),
     POLYGON_ALCHEMY_KEY: z.string(),
@@ -39,16 +25,11 @@ export const env = createEnv({
     OPENSEA_API_KEY: z.string(),
     SOUND_API_KEY: z.string(),
     ZEROX_API_KEY: z.string(),
-
-    // NPM
-    WAAS_VIEM_URL: z.string(),
-    WAAS_WEB_URL: z.string(),
   },
   client: {
     // Guild APIs
     NEXT_PUBLIC_API: z.string(),
     NEXT_PUBLIC_BALANCY_API: z.string(),
-    NEXT_PUBLIC_POLYGONID_API: z.string(),
 
     // Captcha
     NEXT_PUBLIC_RECAPTCHA_SITE_KEY: z.string(),
@@ -61,10 +42,6 @@ export const env = createEnv({
     NEXT_PUBLIC_IPFS_GATEWAY: z.string(),
     NEXT_PUBLIC_PINATA_API: z.string(),
 
-    // Vercel
-    NEXT_PUBLIC_EDGE_CONFIG_ID: z.string(),
-    NEXT_PUBLIC_EDGE_CONFIG_READ_ACCESS_TOKEN: z.string(),
-
     // Third-party
     NEXT_PUBLIC_DISCORD_CLIENT_ID: z.string(),
     NEXT_PUBLIC_TG_BOT_USERNAME: z.string(),
@@ -75,7 +52,6 @@ export const env = createEnv({
   runtimeEnv: {
     NEXT_PUBLIC_API: process.env.NEXT_PUBLIC_API,
     NEXT_PUBLIC_BALANCY_API: process.env.NEXT_PUBLIC_BALANCY_API,
-    NEXT_PUBLIC_POLYGONID_API: process.env.NEXT_PUBLIC_POLYGONID_API,
 
     NEXT_PUBLIC_RECAPTCHA_SITE_KEY: process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY,
 
@@ -84,10 +60,6 @@ export const env = createEnv({
 
     NEXT_PUBLIC_IPFS_GATEWAY: process.env.NEXT_PUBLIC_IPFS_GATEWAY,
     NEXT_PUBLIC_PINATA_API: process.env.NEXT_PUBLIC_PINATA_API,
-
-    NEXT_PUBLIC_EDGE_CONFIG_ID: process.env.NEXT_PUBLIC_EDGE_CONFIG_ID,
-    NEXT_PUBLIC_EDGE_CONFIG_READ_ACCESS_TOKEN:
-      process.env.NEXT_PUBLIC_EDGE_CONFIG_READ_ACCESS_TOKEN,
 
     NEXT_PUBLIC_DISCORD_CLIENT_ID: process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID,
     NEXT_PUBLIC_TG_BOT_USERNAME: process.env.NEXT_PUBLIC_TG_BOT_USERNAME,
@@ -99,19 +71,6 @@ export const env = createEnv({
 
     GUILD_API_KEY: process.env.GUILD_API_KEY,
     BALANCY_TOKEN: process.env.BALANCY_TOKEN,
-
-    LEADERBOARD_REVALIDATION_SECRET: process.env.LEADERBOARD_REVALIDATION_SECRET,
-    KV_REST_API_READ_ONLY_TOKEN: process.env.KV_REST_API_READ_ONLY_TOKEN,
-    KV_REST_API_TOKEN: process.env.KV_REST_API_TOKEN,
-    KV_REST_API_URL: process.env.KV_REST_API_URL,
-    KV_URL: process.env.KV_URL,
-    POSTGRES_DATABASE: process.env.POSTGRES_DATABASE,
-    POSTGRES_HOST: process.env.POSTGRES_HOST,
-    POSTGRES_PASSWORD: process.env.POSTGRES_PASSWORD,
-    POSTGRES_PRISMA_URL: process.env.POSTGRES_PRISMA_URL,
-    POSTGRES_URL: process.env.POSTGRES_URL,
-    POSTGRES_URL_NON_POOLING: process.env.POSTGRES_URL_NON_POOLING,
-    POSTGRES_USER: process.env.POSTGRES_USER,
 
     MAINNET_ALCHEMY_KEY: process.env.MAINNET_ALCHEMY_KEY,
     POLYGON_ALCHEMY_KEY: process.env.POLYGON_ALCHEMY_KEY,
@@ -128,8 +87,5 @@ export const env = createEnv({
     OPENSEA_API_KEY: process.env.OPENSEA_API_KEY,
     SOUND_API_KEY: process.env.SOUND_API_KEY,
     ZEROX_API_KEY: process.env.ZEROX_API_KEY,
-
-    WAAS_VIEM_URL: process.env.WAAS_VIEM_URL,
-    WAAS_WEB_URL: process.env.WAAS_WEB_URL,
   },
 })

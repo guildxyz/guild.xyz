@@ -11,7 +11,6 @@ import { ArrowSquareOut, LockSimple } from "@phosphor-icons/react"
 import usePlatformAccessButton from "components/[guild]/AccessHub/components/usePlatformAccessButton"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import { ApiRequirementHandlerProvider } from "components/[guild]/RequirementHandlerContext"
-import Visibility from "components/[guild]/Visibility"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import useMembership, {
@@ -20,7 +19,7 @@ import useMembership, {
 import { useMemo, useState } from "react"
 import rewards from "rewards"
 import rewardComponents from "rewards/components"
-import { PlatformType, RolePlatform } from "types"
+import { PlatformName, PlatformType, RolePlatform } from "types"
 import capitalize from "utils/capitalize"
 import { RewardDisplay } from "./RewardDisplay"
 import { RewardIconProps, RewardProps } from "./types"
@@ -119,12 +118,6 @@ const Reward = ({ role, platform, withLink, isLinkColorful }: RewardProps) => {
           )}
         </>
       }
-      rightElement={
-        <Visibility
-          visibilityRoleId={platform.visibilityRoleId}
-          entityVisibility={platform.visibility}
-        />
-      }
     />
   )
 }
@@ -135,10 +128,12 @@ const RewardIcon = ({
   transition,
 }: RewardIconProps) => {
   const [doIconFallback, setDoIconFallback] = useState(false)
+
+  const rewardConfig =
+    rewards[PlatformType[guildPlatform.platformId] as PlatformName]
+
   const props = {
-    src:
-      guildPlatform.platformGuildData?.imageUrl ??
-      rewards[PlatformType[guildPlatform.platformId]].imageUrl,
+    src: guildPlatform.platformGuildData?.imageUrl ?? rewardConfig?.imageUrl,
     alt: guildPlatform.platformGuildName,
     boxSize: 6,
     rounded: "full",
@@ -146,6 +141,8 @@ const RewardIcon = ({
       setDoIconFallback(true)
     },
   }
+
+  if (!rewardConfig) return null
 
   const circleBgColor = useColorModeValue("gray.700", "gray.600")
   const circleProps = {
@@ -156,11 +153,7 @@ const RewardIcon = ({
   if (doIconFallback || !props.src) {
     return (
       <Circle {...circleProps}>
-        <Icon
-          as={rewards[PlatformType[guildPlatform.platformId]].icon}
-          color="white"
-          boxSize={3}
-        />
+        <Icon as={rewardConfig.icon} color="white" boxSize={3} />
       </Circle>
     )
   }
@@ -195,5 +188,5 @@ const RewardWrapper = ({ platform, ...props }: RewardProps) => {
   )
 }
 
-export { Reward, RewardIcon, getRewardLabel }
+export { RewardIcon }
 export default RewardWrapper

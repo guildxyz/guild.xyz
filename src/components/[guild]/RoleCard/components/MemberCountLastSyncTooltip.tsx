@@ -1,17 +1,14 @@
+import { Button } from "@/components/ui/Button"
 import {
-  Popover,
-  PopoverArrow,
-  PopoverContent,
-  PopoverHeader,
-  PopoverTrigger,
-  Portal,
-  TagRightIcon,
-} from "@chakra-ui/react"
-import { Info, UserSwitch } from "@phosphor-icons/react"
-import Button from "components/common/Button"
-import useShowErrorToast from "hooks/useShowErrorToast"
+  Tooltip,
+  TooltipContent,
+  TooltipPortal,
+  TooltipTrigger,
+} from "@/components/ui/Tooltip"
+import { useErrorToast } from "@/components/ui/hooks/useErrorToast"
+import { useToast } from "@/components/ui/hooks/useToast"
+import { Info, UserSwitch } from "@phosphor-icons/react/dist/ssr"
 import useSubmit from "hooks/useSubmit"
-import useToast from "hooks/useToast"
 import { PropsWithChildren, useMemo } from "react"
 import fetcher from "utils/fetcher"
 import formatRelativeTimeFromNow, {
@@ -44,35 +41,30 @@ const MemberCountLastSyncTooltip = ({
   }, [lastSyncedAt])
 
   return (
-    <Popover trigger="hover" placement="bottom" isLazy>
-      <PopoverTrigger>
-        <TagRightIcon
-          as={Info}
-          opacity={0}
-          _groupHover={{ opacity: 1 }}
-          transition={"opacity .2s"}
-          mt="1px"
+    <Tooltip>
+      <TooltipTrigger className="group/trigger">
+        <Info
+          weight="bold"
+          className="opacity-0 transition-opacity group-hover:opacity-100 group-[&:not([data-state=closed])]/trigger:opacity-100"
         />
-      </PopoverTrigger>
-      <Portal>
-        <PopoverContent minW="max-content">
-          <PopoverArrow />
-          <PopoverHeader
-            border="0"
-            px={3}
-            fontSize={"sm"}
-            fontWeight={"medium"}
-          >{`Last updated all member accesses ${readableDate} ago`}</PopoverHeader>
+      </TooltipTrigger>
+      <TooltipPortal>
+        <TooltipContent
+          variant="popover"
+          side="bottom"
+          className="min-w-max text-left"
+        >
+          <p className="font-medium text-sm">{`Last updated all member accesses ${readableDate} ago`}</p>
           {children}
-        </PopoverContent>
-      </Portal>
-    </Popover>
+        </TooltipContent>
+      </TooltipPortal>
+    </Tooltip>
   )
 }
 
 export const SyncRoleButton = ({ roleId }) => {
-  const toast = useToast()
-  const showErrorToast = useShowErrorToast()
+  const { toast } = useToast()
+  const errorToast = useErrorToast()
 
   const submit = () =>
     // TODO: use fetcherWithSign (with params in array) when the BE will add auth back
@@ -81,22 +73,18 @@ export const SyncRoleButton = ({ roleId }) => {
   const { onSubmit, isLoading } = useSubmit(submit, {
     onSuccess: () => {
       toast({
-        status: "success",
+        variant: "success",
         title: "Successfully moved job to the start of the queue",
       })
     },
-    onError: (err) => {
-      showErrorToast(err)
-    },
+    onError: (err) => errorToast(err),
   })
 
   return (
     <Button
       size="sm"
       variant="outline"
-      leftIcon={<UserSwitch />}
-      borderRadius="lg"
-      borderWidth="1.5px"
+      leftIcon={<UserSwitch weight="bold" />}
       onClick={onSubmit}
       isLoading={isLoading}
     >
@@ -105,4 +93,4 @@ export const SyncRoleButton = ({ roleId }) => {
   )
 }
 
-export default MemberCountLastSyncTooltip
+export { MemberCountLastSyncTooltip }

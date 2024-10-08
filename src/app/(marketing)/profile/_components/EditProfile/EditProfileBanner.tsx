@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/Button"
 import { FormField, FormItem } from "@/components/ui/Form"
+import { IconButton } from "@/components/ui/IconButton"
 import { Separator } from "@/components/ui/Separator"
 import { Eyedropper, Image as ImageIcon } from "@phosphor-icons/react"
 import { Uploader } from "hooks/usePinata/usePinata"
@@ -39,24 +39,21 @@ export const EditProfileBanner = ({
           <div className="relative flex items-center gap-3">
             <ProfileBackgroundImageUploader
               uploader={backgroundUploader}
-              size="icon"
               variant="ghost"
+              icon={<ImageIcon weight="bold" />}
               tooltipLabel={isImage ? "Change image" : "Upload image"}
               className="text-white"
-            >
-              <ImageIcon weight="bold" size={24} />
-            </ProfileBackgroundImageUploader>
+            />
 
             <Separator orientation="vertical" className="h-6 w-0.5 bg-white/50" />
             <ProfileColorPicker>
-              <Button
+              <IconButton
+                aria-label="Pick color"
                 type="button"
-                size="icon"
+                icon={<Eyedropper weight="bold" />}
                 variant="ghost"
                 className="text-white"
-              >
-                <Eyedropper weight="bold" size={24} />
-              </Button>
+              />
             </ProfileColorPicker>
           </div>
         </FormItem>

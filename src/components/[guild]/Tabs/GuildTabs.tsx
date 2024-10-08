@@ -5,14 +5,7 @@ import Tabs, { TabsProps } from "./Tabs"
 import TabButton from "./components/TabButton"
 
 type Props = {
-  activeTab:
-    | "SETTINGS"
-    | "EVENTS"
-    | "LEADERBOARD"
-    | "MEMBERS"
-    | "ACTIVITY"
-    | "ANALYTICS"
-    | "MESSAGES"
+  activeTab: "SETTINGS" | "LEADERBOARD" | "MEMBERS" | "ACTIVITY"
 } & TabsProps
 
 const GuildTabs = ({ activeTab, ...rest }: Props): JSX.Element => {
@@ -50,19 +43,6 @@ const GuildTabs = ({ activeTab, ...rest }: Props): JSX.Element => {
       {isAdmin && (
         <TabButton href={`/${urlName}/activity`} isActive={activeTab === "ACTIVITY"}>
           Activity log
-        </TabButton>
-      )}
-      {isAdmin && (
-        <TabButton
-          href={`/${urlName}/analytics`}
-          isActive={activeTab === "ANALYTICS"}
-        >
-          Analytics
-        </TabButton>
-      )}
-      {isAdmin && (
-        <TabButton href={`/${urlName}/messages`} isActive={activeTab === "MESSAGES"}>
-          Messages
         </TabButton>
       )}
     </Tabs>

@@ -1,29 +1,27 @@
 import { accountModalAtom } from "@/components/Providers/atoms"
+import { Button, ButtonProps } from "@/components/ui/Button"
 import {
-  ButtonGroup,
-  Icon,
-  PopoverBody,
-  PopoverFooter,
-  PopoverHeader,
-  Text,
-} from "@chakra-ui/react"
-import { ArrowSquareIn, Check, LockSimple, Warning, X } from "@phosphor-icons/react"
-import RecheckAccessesButton from "components/[guild]/RecheckAccessesButton"
-import Button from "components/common/Button"
+  ArrowSquareIn,
+  ArrowsClockwise,
+  Check,
+  LockSimple,
+  Warning,
+  X,
+} from "@phosphor-icons/react/dist/ssr"
+import { useMembershipUpdate } from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import { useSetAtom } from "jotai"
 import dynamic from "next/dynamic"
-import RequirementAccessIndicatorUI from "./RequirementAccessIndicatorUI"
+import { RequirementAccessIndicatorUI } from "./RequirementAccessIndicatorUI"
 import { useRequirementContext } from "./RequirementContext"
 
-const DynamicConnectPolygonID = dynamic(
-  () => import("requirements/PolygonID/components/ConnectPolygonID")
-)
 const DynamicCompleteCaptcha = dynamic(
   () => import("requirements/Captcha/components/CompleteCaptcha")
 )
-const DynamicSetupPassport = dynamic(
-  () => import("requirements/GitcoinPassport/components/SetupPassport")
+const DynamicSetupPassport = dynamic(() =>
+  import("requirements/GitcoinPassport/components/SetupPassport").then(
+    (module) => module.SetupPassport
+  )
 )
 const DynamicConnectRequirementPlatformButton = dynamic(
   () => import("./ConnectRequirementPlatformButton")
@@ -46,17 +44,8 @@ const RequirementAccessIndicator = () => {
 
   if (reqAccessData?.access)
     return (
-      <RequirementAccessIndicatorUI
-        colorScheme={"green"}
-        circleBgSwatch={{ light: 400, dark: 300 }}
-        icon={Check}
-      >
-        <PopoverHeader {...POPOVER_HEADER_STYLES}>
-          <Text as="span" mr="2">
-            🎉
-          </Text>
-          Requirement satisfied
-        </PopoverHeader>
+      <RequirementAccessIndicatorUI colorScheme="green" icon={Check}>
+        <p className="font-semibold">🎉 Requirement satisfied</p>
       </RequirementAccessIndicatorUI>
     )
 
@@ -67,67 +56,57 @@ const RequirementAccessIndicator = () => {
   )
     return (
       <RequirementAccessIndicatorUI
-        colorScheme={"blue"}
-        circleBgSwatch={{ light: 300, dark: 300 }}
+        colorScheme="blue"
         icon={LockSimple}
         isAlwaysOpen={!hasRoleAccess}
       >
-        <PopoverHeader {...POPOVER_HEADER_STYLES}>
+        <p className="font-semibold">
           {type === "CAPTCHA"
             ? "Complete CAPTCHA to check access"
             : type.startsWith("GITCOIN_")
               ? "Setup GitCoin Passport to check access"
               : "Connect account to check access"}
-        </PopoverHeader>
-        <PopoverFooter {...POPOVER_FOOTER_STYLES}>
-          {type === "POLYGON_ID_QUERY" || type === "POLYGON_ID_BASIC" ? (
-            <DynamicConnectPolygonID size="sm" iconSpacing={2} />
-          ) : type === "CAPTCHA" ? (
+        </p>
+        <div className="mt-2 flex justify-end">
+          {type === "CAPTCHA" ? (
             <DynamicCompleteCaptcha size="sm" iconSpacing={2} />
           ) : type.startsWith("GITCOIN_") ? (
             <DynamicSetupPassport size="sm" />
           ) : (
             <DynamicConnectRequirementPlatformButton className="gap-2" size="sm" />
           )}
-        </PopoverFooter>
+        </div>
       </RequirementAccessIndicatorUI>
     )
 
   if (reqAccessData?.access === null) {
     return (
       <RequirementAccessIndicatorUI
-        colorScheme={"orange"}
-        circleBgSwatch={{ light: 300, dark: 300 }}
+        colorScheme="orange"
         icon={Warning}
         isAlwaysOpen={!hasRoleAccess}
       >
-        <PopoverHeader {...POPOVER_HEADER_STYLES}>
+        <p className="font-semibold">
           {reqAccessData?.errorMsg
             ? `Error: ${reqAccessData.errorMsg}`
             : `Couldn't check access`}
-          <RecheckAccessesButton
-            roleId={roleId}
-            size="sm"
-            ml="2"
-            variant={"outline"}
-          />
-        </PopoverHeader>
+          <RecheckAccessButton className="ml-2" />
+        </p>
       </RequirementAccessIndicatorUI>
     )
   }
 
   return (
     <RequirementAccessIndicatorUI
-      colorScheme={"gray"}
-      circleBgSwatch={{ light: 300, dark: 500 }}
+      colorScheme="gray"
       icon={X}
       isAlwaysOpen={!hasRoleAccess}
     >
-      <PopoverHeader {...POPOVER_HEADER_STYLES}>
+      <p className="font-semibold">
         {`Requirement not satisfied with your connected accounts`}
-      </PopoverHeader>
+      </p>
       {reqAccessData?.amount !== null && !!data?.minAmount && (
-        <PopoverBody pt="0">
+        <p>
           {isNegated
             ? `Expected max amount is ${data.minAmount}${
                 data.maxAmount ? `-${data.maxAmount}` : ""
@@ -137,35 +116,45 @@ const RequirementAccessIndicator = () => {
               } but you ${data.maxAmount ? "" : "only"} have ${
                 reqAccessData?.amount
               }`}
-        </PopoverBody>
+        </p>
       )}
-      <PopoverFooter {...POPOVER_FOOTER_STYLES}>
-        <ButtonGroup size="sm">
-          <Button
-            rightIcon={<Icon as={ArrowSquareIn} />}
-            onClick={() => setIsAccountModalOpen(true)}
-            variant="outline"
-          >
-            View connections
-          </Button>
-          <RecheckAccessesButton roleId={roleId} />
-        </ButtonGroup>
-      </PopoverFooter>
+      <div className="mt-2 flex flex-wrap justify-end gap-2">
+        <Button
+          size="sm"
+          variant="outline"
+          rightIcon={<ArrowSquareIn weight="bold" />}
+          onClick={() => setIsAccountModalOpen(true)}
+          className="w-full sm:w-max"
+        >
+          View connections
+        </Button>
+        <RecheckAccessButton className="w-full sm:w-max" />
+      </div>
     </RequirementAccessIndicatorUI>
   )
 }
 
-export const POPOVER_HEADER_STYLES = {
-  fontWeight: "semibold",
-  border: "0",
-  px: "3",
+const RecheckAccessButton = (props: ButtonProps) => {
+  const { roleId } = useRequirementContext()
+  const { isLoading, triggerMembershipUpdate } = useMembershipUpdate()
+
+  return (
+    <Button
+      size="sm"
+      variant="outline"
+      leftIcon={<ArrowsClockwise weight="bold" />}
+      isLoading={isLoading}
+      onClick={() =>
+        triggerMembershipUpdate({
+          roleIds: [roleId],
+        })
+      }
+      loadingText="Checking access"
+      {...props}
+    >
+      Re-check access
+    </Button>
+  )
 }
 
-export const POPOVER_FOOTER_STYLES = {
-  display: "flex",
-  justifyContent: "flex-end",
-  border: "0",
-  pt: "2",
-}
-
-export default RequirementAccessIndicator
+export { RequirementAccessIndicator }

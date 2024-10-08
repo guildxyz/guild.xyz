@@ -1,4 +1,5 @@
 import { PlatformName } from "@guildxyz/types"
+import { OneOf } from "types"
 
 export type OAuthResponse = {
   error_description?: string
@@ -13,3 +14,8 @@ export type OAuthLocalStorageInfo = {
   redirect_url: string
   scope: string
 }
+
+export type Message = OneOf<
+  { type: "OAUTH_ERROR"; data: { error: string; errorDescription: string } },
+  { type: "OAUTH_SUCCESS"; data: any }
+>

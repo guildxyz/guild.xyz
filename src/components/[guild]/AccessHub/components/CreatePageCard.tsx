@@ -21,9 +21,8 @@ const CreatePageCard = () => {
           </span>
         </div>
       </div>
-      <Button variant="outline" onClick={onOpen}>
-        <Plus weight="bold" />
-        <span>Create page</span>
+      <Button variant="outline" onClick={onOpen} leftIcon={<Plus weight="bold" />}>
+        Create page
       </Button>
       <CreateCampaignModal isOpen={isOpen} onClose={onClose} />
     </Card>

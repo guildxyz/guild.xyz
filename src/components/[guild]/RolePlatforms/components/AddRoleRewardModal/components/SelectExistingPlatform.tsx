@@ -1,14 +1,20 @@
 import { SimpleGrid, Text, useDisclosure } from "@chakra-ui/react"
 import { useAddRewardContext } from "components/[guild]/AddRewardContext"
-import LogicDivider from "components/[guild]/LogicDivider"
+import { LogicDivider } from "components/[guild]/LogicDivider"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { DISPLAY_CARD_INTERACTIVITY_STYLES } from "components/common/DisplayCard"
 import { useState } from "react"
-import { useFormContext, useWatch } from "react-hook-form"
+import { useWatch } from "react-hook-form"
 import rewards, { PlatformAsRewardRestrictions } from "rewards"
 import { cardSettings } from "rewards/CardSettings"
 import { cardPropsHooks } from "rewards/cardPropsHooks"
-import { PlatformType, Requirement, RoleFormType, RolePlatform } from "types"
+import {
+  PlatformName,
+  PlatformType,
+  Requirement,
+  RoleFormType,
+  RolePlatform,
+} from "types"
 import EditRolePlatformModal from "../../EditRolePlatformModal"
 import PlatformCard from "../../PlatformCard"
 
@@ -35,14 +41,18 @@ const SelectExistingPlatform = ({ onClose, onSelect }: Props) => {
   const roleId = useWatch<RoleFormType, "id">({
     name: "id",
   })
-  const { getValues } = useFormContext()
 
   const roleVisibility = useWatch<RoleFormType, "visibility">({ name: "visibility" })
 
   const filteredPlatforms = guildPlatforms
     ? guildPlatforms.filter((guildPlatform) => {
+        // If there's no platform config, just filter it out
+        const platformConfig =
+          rewards[PlatformType[guildPlatform.platformId] as PlatformName]
+        if (!platformConfig) return false
+
         const canBeUsedInMultipleRoles =
-          rewards[PlatformType[guildPlatform.platformId]].asRewardRestriction ===
+          platformConfig.asRewardRestriction ===
           PlatformAsRewardRestrictions.MULTIPLE_ROLES
         const alreadyUsedInCurrentRole = roleId
           ? !!roles
@@ -138,7 +148,7 @@ const SelectExistingPlatform = ({ onClose, onSelect }: Props) => {
         />
       )}
 
-      <LogicDivider logic="OR" px="0" my="5" />
+      <LogicDivider logic="OR" className="my-5 px-0" />
     </>
   )
 }

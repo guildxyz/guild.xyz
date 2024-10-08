@@ -1,12 +1,13 @@
 import { Icon, Link, Skeleton, Text } from "@chakra-ui/react"
 import { ArrowSquareOut } from "@phosphor-icons/react"
 import RequirementConnectButton from "components/[guild]/Requirements/components/ConnectRequirementPlatformButton"
-import Requirement, {
+import {
+  Requirement,
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import useUser from "components/[guild]/hooks/useUser"
-import DataBlockWithCopy from "components/common/DataBlockWithCopy"
+import { DataBlockWithCopy } from "components/common/DataBlockWithCopy"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import REQUIREMENTS from "requirements"
 import FarcasterAction from "./components/FarcasterAction"

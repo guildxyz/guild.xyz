@@ -16,18 +16,16 @@ import rewards from "rewards"
 import useSWR from "swr"
 import { PlatformName, PlatformType } from "types"
 import fetcher from "utils/fetcher"
-import useFetchUserEmail from "./useFetchUserEmail"
+import { useFetchUserEmail } from "./useFetchUserEmail"
 
 type AuthLevel = "membership" | "creation"
 
-const parseConnectError = (
-  error: string
-):
+function parseConnectError(error: string):
   | string
   | {
       params: Record<string, string>
       errors: { msg: string }[]
-    } => {
+    } {
   const regex = /^"(\d+)".*params: ({.*}), error: (\[.*\])/
 
   try {
@@ -386,5 +384,4 @@ const useConnectEmail = ({
   }
 }
 
-export default useConnectPlatform
-export { useConnect, useConnectEmail }
+export { useConnectPlatform, useConnect, useConnectEmail }

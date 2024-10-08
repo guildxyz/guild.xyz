@@ -1,12 +1,19 @@
-import { Link } from "@chakra-ui/next-js"
-import { Icon, Skeleton, Text, Tooltip } from "@chakra-ui/react"
-import Requirement, {
+import { Anchor, anchorVariants } from "@/components/ui/Anchor"
+import { Skeleton } from "@/components/ui/Skeleton"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipPortal,
+  TooltipTrigger,
+} from "@/components/ui/Tooltip"
+import { PencilSimpleLine } from "@phosphor-icons/react/dist/ssr"
+import {
+  Requirement,
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useGuildForm } from "components/[guild]/hooks/useGuildForms"
-import rewards from "rewards"
 import { useUserFormSubmission } from "rewards/Forms/hooks/useFormSubmissions"
 
 const FormRequirement = (props: RequirementProps) => {
@@ -16,33 +23,40 @@ const FormRequirement = (props: RequirementProps) => {
   const { userSubmission } = useUserFormSubmission(form)
 
   return (
-    <Requirement image={<Icon as={rewards.FORM.icon} boxSize={6} />} {...props}>
-      <Text as="span">{"Fill the "}</Text>
-      <Tooltip
-        label="Respone already submitted"
-        isDisabled={!userSubmission}
-        hasArrow
-        placement="top"
-      >
-        <Skeleton display="inline" isLoaded={!!form}>
-          <Link
-            {...(!!userSubmission
-              ? {
-                  opacity: 0.6,
-                  cursor: "not-allowed",
-                  href: "#",
-                }
-              : { href: `/${urlName}/forms/${form?.id}` })}
-            prefetch={false}
-            colorScheme="blue"
-          >
-            {form?.name ?? "Loading form..."}
-          </Link>
-        </Skeleton>
-      </Tooltip>
-      <Text as="span">{` form ${
-        data.answers?.length ? "with specified answers" : ""
-      }`}</Text>
+    <Requirement image={<PencilSimpleLine className="size-6" />} {...props}>
+      <span>{"Fill the "}</span>
+
+      {!form ? (
+        <Skeleton className="inline h-4 w-40" />
+      ) : !!userSubmission ? (
+        <Tooltip open={!userSubmission ? false : undefined}>
+          <TooltipTrigger asChild>
+            <span
+              className={anchorVariants({
+                variant: "highlighted",
+                className: "cursor-not-allowed opacity-60 hover:no-underline",
+              })}
+            >
+              {form.name}
+            </span>
+          </TooltipTrigger>
+
+          <TooltipPortal>
+            <TooltipContent side="top">
+              <p>Response already submitted</p>
+            </TooltipContent>
+          </TooltipPortal>
+        </Tooltip>
+      ) : (
+        <Anchor
+          href={`/${urlName}/forms/${form?.id}`}
+          prefetch={false}
+          variant="highlighted"
+        >
+          {form.name}
+        </Anchor>
+      )}
+      <span>{` form ${data.answers?.length ? "with specified answers" : ""}`}</span>
     </Requirement>
   )
 }

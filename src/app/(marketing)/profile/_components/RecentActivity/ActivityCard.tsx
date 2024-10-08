@@ -1,5 +1,6 @@
 "use client"
 
+import { Anchor } from "@/components/ui/Anchor"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
 import { Badge } from "@/components/ui/Badge"
 import { Card } from "@/components/ui/Card"
@@ -50,14 +51,16 @@ export const ActivityCard = ({ activity }: { activity: ActivityLogAction }) => {
               />
               <AvatarFallback />
             </Avatar>
-            <span
+            <Anchor
               className={cn(
                 "max-w-14 truncate font-bold font-display text-sm",
                 color && (color.isDark() ? "text-white" : "text-black")
               )}
+              href={`/${guild.urlName}`}
+              target="_blank"
             >
               {guild.name}
-            </span>
+            </Anchor>
           </div>
         </div>
       )}
@@ -81,7 +84,7 @@ export const ActivityCard = ({ activity }: { activity: ActivityLogAction }) => {
           </div>
         </div>
         {activity.xpAmount && (
-          <Badge colorScheme="yellow" className="align-text-top font-bold">
+          <Badge colorScheme="gold" className="align-text-top font-bold">
             +{activity.xpAmount} XP
           </Badge>
         )}

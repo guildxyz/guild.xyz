@@ -8,5 +8,3 @@ export function parseFuelAddress(bech32?: string): `0x${string}` | undefined {
     return undefined
   }
 }
-
-export default parseFuelAddress

@@ -1,12 +1,12 @@
-import { useDisclosure } from "@chakra-ui/react"
+import { useDisclosure } from "@/hooks/useDisclosure"
 import useMembership from "components/explorer/hooks/useMembership"
 import useClearUrlQuery from "hooks/useClearUrlQuery"
 import { PropsWithChildren, createContext, useContext, useEffect } from "react"
-import JoinModal from "./JoinModal"
+import { JoinModal } from "./JoinModal"
 
-const JoinModalContext = createContext<() => void>(null)
+const JoinModalContext = createContext<() => void>(() => {})
 
-const JoinModalProvider = ({ children }: PropsWithChildren<any>): JSX.Element => {
+const JoinModalProvider = ({ children }: PropsWithChildren): JSX.Element => {
   const query = useClearUrlQuery()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { isMember } = useMembership()
@@ -23,12 +23,11 @@ const JoinModalProvider = ({ children }: PropsWithChildren<any>): JSX.Element =>
   return (
     <JoinModalContext.Provider value={onOpen}>
       {children}
-      <JoinModal {...{ isOpen, onClose }} />
+      <JoinModal isOpen={isOpen} onClose={onClose} />
     </JoinModalContext.Provider>
   )
 }
 
 const useOpenJoinModal = () => useContext(JoinModalContext)
 
-export default JoinModalProvider
-export { useOpenJoinModal }
+export { JoinModalProvider, useOpenJoinModal }

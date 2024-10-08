@@ -1,5 +1,5 @@
 import { Box, FormLabel, Stack, Text } from "@chakra-ui/react"
-import LogicDivider from "components/[guild]/LogicDivider"
+import { LogicDivider } from "components/[guild]/LogicDivider"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import AddRequirement from "components/create-guild/Requirements/components/AddRequirement"
 import LogicFormControl from "components/create-guild/Requirements/components/LogicFormControl"

@@ -3,8 +3,8 @@ import { useToast } from "@/components/ui/hooks/useToast"
 import { useDisclosure } from "@/hooks/useDisclosure"
 import { cn } from "@/lib/utils"
 import { Warning } from "@phosphor-icons/react/dist/ssr"
-import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
-import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
+import { useConnectPlatform } from "components/[guild]/JoinModal/hooks/useConnectPlatform"
+import { useMembershipUpdate } from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useUser from "components/[guild]/hooks/useUser"
 import useMembership from "components/explorer/hooks/useMembership"
 import { motion } from "framer-motion"
@@ -116,8 +116,6 @@ const PLATFORM_COLORS = {
     "bg-twitter hover:bg-twitter-hover active:bg-twitter-active text-white",
   TWITTER: "bg-twitter hover:bg-twitter-hover active:bg-twitter-active text-white",
   GITHUB: "bg-github hover:bg-github-hover active:bg-github-active text-white",
-  POLYGON_ID:
-    "bg-polygonid hover:bg-polygonid-hover active:bg-polygonid-active text-white",
   FARCASTER:
     "bg-farcaster hover:bg-farcaster-hover active:bg-farcaster-active text-white",
   WORLD_ID: "bg-worldid hover:bg-worldid-hover active:bg-worldid-active text-white",
@@ -142,7 +140,7 @@ const ConnectPlatformButton = ({
   }
 
   const { isLoading, response, onConnect } = useConnectPlatform(
-    type as PlatformName,
+    type,
     onSuccess,
     isReconnect
   )
@@ -155,10 +153,12 @@ const ConnectPlatformButton = ({
       colorScheme={isReconnect ? "secondary" : "primary"}
       size="sm"
       className={cn("ml-auto", PLATFORM_COLORS[type])}
+      leftIcon={
+        isReconnect && (
+          <Warning weight="bold" className="text-orange-400 dark:text-orange-200" />
+        )
+      }
     >
-      {isReconnect && (
-        <Warning weight="bold" className="text-orange-400 dark:text-orange-200" />
-      )}
       {isReconnect ? "Reconnect" : "Connect"}
     </Button>
   )

@@ -1,17 +1,16 @@
-import { StackProps } from "@chakra-ui/react"
-import { ReactNode, useMemo } from "react"
+import { HTMLAttributes, ReactNode, useMemo } from "react"
 import { JoinState } from "../../utils/mapAccessJobState"
-import ProgressJoinStep from "./components/ProgressJoinStep"
+import { ProgressJoinStep } from "./components/ProgressJoinStep"
 
 const SatisfyRequirementsJoinStep = ({
   joinState,
   fallbackText,
-  ...stackProps
+  ...props
 }: {
   joinState: JoinState
   fallbackText?: JSX.Element
   RightComponent?: ReactNode
-} & StackProps) => {
+} & HTMLAttributes<HTMLDivElement>) => {
   const status = useMemo(() => {
     switch (joinState?.state) {
       case "NO_ACCESS":
@@ -51,10 +50,9 @@ const SatisfyRequirementsJoinStep = ({
           ? "Requirements not satisfied"
           : "Preparing access check")
       }
-      {...stackProps}
+      {...props}
     />
   )
 }
 
-export { ProgressJoinStep }
-export default SatisfyRequirementsJoinStep
+export { ProgressJoinStep, SatisfyRequirementsJoinStep }

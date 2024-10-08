@@ -1,5 +1,5 @@
 import { Checkbox, CheckboxProps, HStack, Heading } from "@chakra-ui/react"
-import MemberCount from "components/[guild]/RoleCard/components/MemberCount"
+import { MemberCount } from "components/[guild]/RoleCard/components/MemberCount"
 import Card from "components/common/Card"
 import GuildLogo from "components/common/GuildLogo"
 import { forwardRef } from "react"
@@ -36,7 +36,10 @@ const RoleOptionCard = forwardRef(
           >
             {role.name}
           </Heading>
-          <MemberCount memberCount={role.members?.length ?? role.memberCount} />
+          <MemberCount
+            memberCount={role.members?.length ?? role.memberCount}
+            className="!bg-transparent text-muted-foreground"
+          />
         </HStack>
       </Checkbox>
     </Card>

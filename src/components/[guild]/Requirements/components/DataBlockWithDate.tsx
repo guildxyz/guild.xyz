@@ -1,4 +1,4 @@
-import DataBlock from "components/common/DataBlock"
+import { DataBlock } from "components/common/DataBlock"
 
 type Props = {
   timestamp: number
@@ -23,7 +23,7 @@ export const BeforeAfterDates = ({
   if (maxTs && minTs === undefined)
     return (
       <>
-        {` before `}
+        <span>{` before `}</span>
         <DataBlockWithDate timestamp={maxTs} />
       </>
     )
@@ -31,7 +31,7 @@ export const BeforeAfterDates = ({
   if (maxTs === undefined && minTs)
     return (
       <>
-        {` after `}
+        <span>{` after `}</span>
         <DataBlockWithDate timestamp={minTs} />
       </>
     )
@@ -39,9 +39,9 @@ export const BeforeAfterDates = ({
   if (maxTs && minTs)
     return (
       <>
-        {` between `}
+        <span>{` between `}</span>
         <DataBlockWithDate timestamp={minTs} />
-        {` and `}
+        <span>{` and `}</span>
         <DataBlockWithDate timestamp={maxTs} />
       </>
     )
@@ -49,4 +49,4 @@ export const BeforeAfterDates = ({
   return null
 }
 
-export default DataBlockWithDate
+export { DataBlockWithDate }

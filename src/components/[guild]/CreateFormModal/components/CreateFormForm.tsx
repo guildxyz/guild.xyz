@@ -1,5 +1,6 @@
 import {
   Box,
+  Divider,
   FormControl,
   FormLabel,
   Input,
@@ -10,6 +11,7 @@ import {
 import { CreateForm } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddFormPanel"
 import AddCard from "components/common/AddCard"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import Switch from "components/common/Switch"
 import { LayoutGroup, Reorder, motion } from "framer-motion"
 import { useFieldArray, useFormContext } from "react-hook-form"
 import getFieldIndexesToSwap from "utils/getFieldsToSwap"
@@ -86,6 +88,12 @@ const CreateFormForm = () => {
         </LayoutGroup>
         <FormErrorMessage>{errors.fields?.message}</FormErrorMessage>
       </Box>
+      <Divider mt="3" />
+      <Switch
+        title="Allow editing answers"
+        description="If allowed, members can edit their responses after they've submitted the form"
+        {...register("isEditable")}
+      />
     </Stack>
   )
 }

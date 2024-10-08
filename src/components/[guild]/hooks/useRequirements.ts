@@ -2,7 +2,7 @@ import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import { Requirement } from "types"
 import useGuild from "./useGuild"
 
-const useRequirements = (roleId: number) => {
+const useRequirements = (roleId: number | undefined) => {
   const { id: guildId } = useGuild()
 
   return useSWRWithOptionalAuth<Requirement[]>(

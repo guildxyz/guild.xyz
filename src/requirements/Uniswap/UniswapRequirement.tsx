@@ -1,11 +1,12 @@
 import { HStack, Skeleton } from "@chakra-ui/react"
-import Requirement, {
+import {
+  Requirement,
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
-import { RequirementLinkButton } from "components/[guild]/Requirements/components/RequirementButton"
-import RequirementChainIndicator from "components/[guild]/Requirements/components/RequirementChainIndicator"
+import { RequirementLink } from "components/[guild]/Requirements/components/RequirementButton"
+import { RequirementChainIndicator } from "components/[guild]/Requirements/components/RequirementChainIndicator"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import DataBlock from "components/common/DataBlock"
+import { DataBlock } from "components/common/DataBlock"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import REQUIREMENTS from "requirements"
 import { Chains } from "wagmiConfig/chains"
@@ -61,19 +62,15 @@ const UniswapRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
           <RequirementChainIndicator />
           {/* The Uniswap app didn't seem able to handle testnets in the query param */}
           {!hasAccess && !UNISWAP_TESTNETS.has(chain) && (
-            <RequirementLinkButton
+            <RequirementLink
               href={`https://app.uniswap.org/add/${token0}/${token1}${
                 defaultFee ? `/${defaultFee}` : ""
               }?chain=${chainQueryParam}`}
               imageUrl={REQUIREMENTS.UNISWAP_V3_POSITIONS.icon.toString()}
-              leftIcon={null}
-              rightIcon={null}
-              colorScheme={"UNISWAP"}
-              color={"white"}
-              variant={"solid"}
-            >
-              Add Liquidity
-            </RequirementLinkButton>
+              variant="solid"
+              className="bg-uniswap text-white hover:bg-uniswap-hover active:bg-uniswap-active"
+              label="Add Liquidity"
+            />
           )}
         </HStack>
       }

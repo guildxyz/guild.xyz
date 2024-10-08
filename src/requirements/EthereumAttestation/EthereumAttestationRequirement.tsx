@@ -1,13 +1,13 @@
-import { Img } from "@chakra-ui/react"
-import Requirement, {
+import {
+  Requirement,
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import DataBlock from "components/common/DataBlock"
-import DataBlockWithCopy from "components/common/DataBlockWithCopy"
+import { DataBlock } from "components/common/DataBlock"
+import { DataBlockWithCopy } from "components/common/DataBlockWithCopy"
 import useResolveAddress from "hooks/useResolveAddress"
 import shortenHex from "utils/shortenHex"
-import EthereumAttestationRequirementFooter from "./components/EthereumAttestationRequirementFooter"
+import { EthereumAttestationRequirementFooter } from "./components/EthereumAttestationRequirementFooter"
 
 const EthereumAttestationRequirement = (props: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext()
@@ -17,31 +17,25 @@ const EthereumAttestationRequirement = (props: RequirementProps): JSX.Element =>
 
   return (
     <Requirement
-      image={
-        <Img
-          src={"/requirementLogos/eas.png"}
-          maxWidth={"var(--chakra-space-8)"}
-          maxHeight={"var(--chakra-space-8)"}
-        />
-      }
+      image={<img src={"/requirementLogos/eas.png"} className="max-h-8 max-w-8" />}
       footer={<EthereumAttestationRequirementFooter />}
       {...props}
     >
       {requirement.type === "EAS_ATTEST" ? (
         <>
-          Attest{" "}
+          <span>{"Attest "}</span>
           <DataBlockWithCopy text={requirement.data?.recipient}>
             {recipientDomain ?? shortenHex(requirement.data?.recipient ?? "", 3)}
-          </DataBlockWithCopy>{" "}
-          according to schema{" "}
+          </DataBlockWithCopy>
+          <span>{" according to schema "}</span>
         </>
       ) : (
         <>
-          Be attested by{" "}
+          <span>{"Be attested by "}</span>
           <DataBlockWithCopy text={requirement.data?.attester}>
             {attesterDomain ?? shortenHex(requirement.data?.attester ?? "", 3)}
-          </DataBlockWithCopy>{" "}
-          according to schema{" "}
+          </DataBlockWithCopy>
+          <span>{" according to schema "}</span>
         </>
       )}
       <DataBlockWithCopy text={requirement.data.schemaId}>
@@ -49,16 +43,16 @@ const EthereumAttestationRequirement = (props: RequirementProps): JSX.Element =>
       </DataBlockWithCopy>
       {requirement.data.key && (
         <>
-          {" with key "}
+          <span>{" with key "}</span>
           <DataBlock>{requirement.data.key}</DataBlock>
           {requirement.data.val && (
             <>
-              {" and value "}
+              <span>{" and value "}</span>
               <DataBlock>{requirement.data.val}</DataBlock>
             </>
           )}
         </>
-      )}{" "}
+      )}
     </Requirement>
   )
 }

@@ -1,10 +1,18 @@
 import useSWRImmutable from "swr/immutable"
-import { CoingeckoToken } from "types"
 import fetcher from "utils/fetcher"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { CHAIN_CONFIG, Chain, Chains } from "wagmiConfig/chains"
 
-export const TokenApiURLs: Record<Chain, string[]> = {
+type CoingeckoToken = {
+  chainId: number
+  address: string
+  name: string
+  symbol: string
+  decimals: number
+  logoURI: string
+}
+
+const TokenApiURLs: Record<Chain, string[]> = {
   ETHEREUM: ["https://tokens.coingecko.com/uniswap/all.json"],
   BSC: ["https://tokens.coingecko.com/binance-smart-chain/all.json"],
   GNOSIS: [

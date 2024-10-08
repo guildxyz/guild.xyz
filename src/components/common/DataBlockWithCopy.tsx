@@ -1,7 +1,13 @@
-import { HStack, Icon, Text, Tooltip, useClipboard } from "@chakra-ui/react"
-import { Check } from "@phosphor-icons/react"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipPortal,
+  TooltipTrigger,
+} from "@/components/ui/Tooltip"
+import { useCopyToClipboard } from "@/hooks/useCopyToClipboard"
+import { Check } from "@phosphor-icons/react/dist/ssr"
 import { PropsWithChildren } from "react"
-import DataBlock from "./DataBlock"
+import { DataBlock } from "./DataBlock"
 
 type Props = {
   text: string
@@ -11,28 +17,24 @@ const DataBlockWithCopy = ({
   text,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
-  const { onCopy, hasCopied } = useClipboard(text)
+  const { copyToClipboard, hasCopied } = useCopyToClipboard()
 
   return (
-    <Tooltip
-      hasArrow
-      closeOnClick={false}
-      label={
-        <HStack spacing={0.5}>
-          {hasCopied && <Icon as={Check} />}
-          <Text as="span">{hasCopied ? "Copied" : "Click to copy"}</Text>
-        </HStack>
-      }
-      placement="top"
-      shouldWrapChildren
-    >
-      <DataBlock>
-        <Text as="span" cursor="pointer" onClick={onCopy}>
-          {children ?? text}
-        </Text>
-      </DataBlock>
+    <Tooltip open={hasCopied || undefined}>
+      <TooltipTrigger onClick={() => copyToClipboard(text)} className="rounded-md">
+        <DataBlock>
+          <span>{children ?? text}</span>
+        </DataBlock>
+      </TooltipTrigger>
+
+      <TooltipPortal>
+        <TooltipContent side="top" className="flex items-center gap-1.5">
+          {hasCopied && <Check weight="bold" className="text-success" />}
+          <span>{hasCopied ? "Copied" : "Click to copy"}</span>
+        </TooltipContent>
+      </TooltipPortal>
     </Tooltip>
   )
 }
 
-export default DataBlockWithCopy
+export { DataBlockWithCopy }
