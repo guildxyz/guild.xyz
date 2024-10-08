@@ -1,6 +1,8 @@
+import { useFarcasterAPI } from "@/hooks/useFarcasterAPI"
 import { FarcasterProfile } from "@guildxyz/types"
 import type { NeynarAPIClient } from "@neynar/nodejs-sdk"
 import useUser from "components/[guild]/hooks/useUser"
+import { KeyedMutator } from "swr"
 import useSWRImmutable from "swr/immutable"
 
 export type BulkUsersResponse = Awaited<
@@ -18,12 +20,14 @@ export const useFarcasterProfile = (guildUserId?: number) => {
   ).data?.at(0)
 
   // API reference: https://docs.neynar.com/reference/user-bulk
-  const { data, ...rest } = useSWRImmutable<BulkUsersResponse>(
-    linkedFcProfile
-      ? `https://api.neynar.com/v2/farcaster/user/bulk?api_key=NEYNAR_API_DOCS&fids=${linkedFcProfile.fid}`
-      : null
+  const { data, mutate, ...rest } = useFarcasterAPI<BulkUsersResponse>(
+    linkedFcProfile ? `/user/bulk?fids=${linkedFcProfile.fid}` : null
   )
-  return { farcasterProfile: data?.users.at(0), ...rest }
+  return {
+    farcasterProfile: data?.users.at(0),
+    mutate: mutate as unknown as KeyedMutator<BulkUsersResponse["users"][number]>,
+    ...rest,
+  }
 }
 
 export const useRelevantFarcasterFollowers = (farcasterId?: number) => {
@@ -31,15 +35,18 @@ export const useRelevantFarcasterFollowers = (farcasterId?: number) => {
   const currentUserFcProfile = currentUser.farcasterProfiles?.at(0)
 
   // API reference: https://docs.neynar.com/reference/relevant-followers
-  const { data, ...rest } = useSWRImmutable<RelevantFollowersResponse>(
+  const { data, mutate, ...rest } = useFarcasterAPI<RelevantFollowersResponse>(
     farcasterId && currentUserFcProfile
-      ? `https://api.neynar.com/v2/farcaster/followers/relevant?api_key=NEYNAR_API_DOCS&target_fid=${farcasterId}&viewer_fid=${currentUserFcProfile.fid}`
+      ? `/followers/relevant?api_key=NEYNAR_API_DOCS&target_fid=${farcasterId}&viewer_fid=${currentUserFcProfile.fid}`
       : null
   )
   return {
     relevantFollowers: data?.top_relevant_followers_hydrated?.map(
       ({ user }) => user
     ),
+    mutate: mutate as unknown as KeyedMutator<
+      RelevantFollowersResponse["top_relevant_followers_hydrated"][number]["user"][]
+    >,
     ...rest,
   }
 }

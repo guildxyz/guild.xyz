@@ -7,6 +7,10 @@ import {
   LayoutMain,
 } from "@/components/Layout"
 import { SWRProvider } from "@/components/SWRProvider"
+import {
+  NEYNAR_BASE_URL,
+  NEYNAR_DEFAULT_HEADERS,
+} from "@/hooks/useFarcasterAPI/constants"
 import { FarcasterProfile, Guild, Role, Schemas } from "@guildxyz/types"
 import { env } from "env"
 import { Metadata } from "next"
@@ -77,13 +81,11 @@ const fetchPublicProfileData = async ({
   )
   const fcProfile = farcasterProfiles.at(0)
   const neynarRequest =
-    fcProfile &&
-    new URL(
-      `https://api.neynar.com/v2/farcaster/user/bulk?api_key=NEYNAR_API_DOCS&fids=${fcProfile.fid}`
-    )
+    fcProfile && new URL(`${NEYNAR_BASE_URL}/user/bulk?fids=${fcProfile.fid}`)
   const fcFollowers =
     neynarRequest &&
     (await ssrFetcher(neynarRequest, {
+      headers: NEYNAR_DEFAULT_HEADERS,
       next: {
         revalidate: 12 * 3600,
       },

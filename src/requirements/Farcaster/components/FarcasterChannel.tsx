@@ -11,8 +11,9 @@ import useDebouncedState from "hooks/useDebouncedState"
 import { useState } from "react"
 import { useFormState, useWatch } from "react-hook-form"
 import parseFromObject from "utils/parseFromObject"
-import useFarcasterChannels, {
+import {
   useFarcasterChannel,
+  useFarcasterChannels,
 } from "../hooks/useFarcasterChannels"
 
 type Props = {

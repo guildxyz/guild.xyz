@@ -4,7 +4,7 @@ import useDebouncedState from "hooks/useDebouncedState"
 import { useEffect } from "react"
 import { useController, useForm } from "react-hook-form"
 import { ADDRESS_REGEX } from "utils/guildCheckout/constants"
-import useFarcasterCast from "../hooks/useFarcasterCast"
+import { useFarcasterCast } from "../hooks/useFarcasterCast"
 import FarcasterCast from "./FarcasterCast"
 
 type Props = {
@@ -45,12 +45,12 @@ const FarcasterCastHash = ({ baseFieldPath }: Props) => {
 
   const debouncedUrlOrHash = useDebouncedState(urlOrHashField.field.value)
 
-  const { data, isLoading, error } = useFarcasterCast(debouncedUrlOrHash)
+  const { data: cast, isLoading, error } = useFarcasterCast(debouncedUrlOrHash)
 
   useEffect(() => {
-    if (hash === data?.hash) return
-    onHashChange(data?.hash)
-  }, [hash, onHashChange, data?.hash])
+    if (hash === cast?.hash) return
+    onHashChange(cast?.hash)
+  }, [hash, onHashChange, cast?.hash])
 
   return (
     <>
@@ -64,8 +64,8 @@ const FarcasterCastHash = ({ baseFieldPath }: Props) => {
         </FormErrorMessage>
       </FormControl>
 
-      <Collapse in={data || isLoading || error} style={{ width: "100%" }}>
-        <FarcasterCast cast={data} loading={isLoading} error={!!error} />
+      <Collapse in={!!cast || isLoading || error} style={{ width: "100%" }}>
+        <FarcasterCast cast={cast} loading={isLoading} error={!!error} />
       </Collapse>
     </>
   )

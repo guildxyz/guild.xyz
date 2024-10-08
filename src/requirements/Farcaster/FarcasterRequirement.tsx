@@ -12,7 +12,7 @@ import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import REQUIREMENTS from "requirements"
 import FarcasterAction from "./components/FarcasterAction"
 import FarcasterCast from "./components/FarcasterCast"
-import useFarcasterCast from "./hooks/useFarcasterCast"
+import { useFarcasterCast } from "./hooks/useFarcasterCast"
 import { useFarcasterChannel } from "./hooks/useFarcasterChannels"
 import { useFarcasterUser } from "./hooks/useFarcasterUsers"
 
@@ -34,12 +34,7 @@ const FarcasterFollowUser = (props: RequirementProps) => {
     "FARCASTER_FOLLOW" | "FARCASTER_FOLLOWED_BY"
   >()
 
-  const { data: farcasterUser } = useFarcasterUser(
-    // TODO: Why is this check needed? Can't we just pass data.id?
-    ["FARCASTER_FOLLOW", "FARCASTER_FOLLOWED_BY"].includes(type)
-      ? data?.id
-      : undefined
-  )
+  const { data: farcasterUser } = useFarcasterUser(data.id)
 
   const { reqAccesses } = useRoleMembership(roleId)
 
@@ -67,7 +62,7 @@ const FarcasterFollowUser = (props: RequirementProps) => {
           colorScheme="blue"
           fontWeight="medium"
         >
-          {farcasterUser?.display_name ?? "Loading..."}
+          {farcasterUser?.display_name ?? farcasterUser?.username ?? "Loading..."}
         </Link>
       </Skeleton>
       {" on Farcaster"}
@@ -124,7 +119,7 @@ const FarcasterLikeRecast = (props: RequirementProps) => {
         <Skeleton isLoaded={!!cast} display="inline">
           <FarcasterCast
             size="sm"
-            cast={cast!}
+            cast={cast}
             loading={isCastLoading}
             error={castError}
           />
