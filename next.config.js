@@ -209,6 +209,10 @@ const nextConfig = {
           source: "/api/bugsnag/sessions",
           destination: "https://sessions.bugsnag.com",
         },
+        {
+          source: "/api/neynar/:path*",
+          destination: "https://api.neynar.com/v2/farcaster/:path*"
+        }
       ],
       fallback: [],
     }
