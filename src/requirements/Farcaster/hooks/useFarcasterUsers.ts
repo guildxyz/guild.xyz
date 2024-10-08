@@ -1,7 +1,7 @@
 import { useFarcasterAPI } from "@/hooks/useFarcasterAPI"
 import { NEYNAR_BASE_URL } from "@/hooks/useFarcasterAPI/constants"
 import type { NeynarAPIClient } from "@neynar/nodejs-sdk"
-import { KeyedMutator, useSWRConfig } from "swr"
+import { useSWRConfig } from "swr"
 
 type SearchUserResponse = Awaited<ReturnType<NeynarAPIClient["searchUser"]>>
 
@@ -26,7 +26,7 @@ const useFarcasterUsers = (search?: string) => {
   return {
     ...swrResponse,
     data: data?.result.users,
-    mutate: mutate as unknown as KeyedMutator<SearchUserResponse["result"]["users"]>,
+    mutate: undefined as never,
   }
 }
 
@@ -38,7 +38,7 @@ const useFarcasterUser = (fid?: number) => {
   return {
     ...swrResponse,
     data: data?.users[0],
-    mutate: mutate as unknown as KeyedMutator<SearchUserResponse["result"]["users"]>,
+    mutate: undefined as never,
   }
 }
 

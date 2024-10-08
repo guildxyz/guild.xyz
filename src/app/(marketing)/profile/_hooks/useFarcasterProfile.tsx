@@ -2,7 +2,6 @@ import { useFarcasterAPI } from "@/hooks/useFarcasterAPI"
 import { FarcasterProfile } from "@guildxyz/types"
 import type { NeynarAPIClient } from "@neynar/nodejs-sdk"
 import useUser from "components/[guild]/hooks/useUser"
-import { KeyedMutator } from "swr"
 import useSWRImmutable from "swr/immutable"
 
 export type BulkUsersResponse = Awaited<
@@ -20,13 +19,13 @@ export const useFarcasterProfile = (guildUserId?: number) => {
   ).data?.at(0)
 
   // API reference: https://docs.neynar.com/reference/user-bulk
-  const { data, mutate, ...rest } = useFarcasterAPI<BulkUsersResponse>(
+  const { data, ...rest } = useFarcasterAPI<BulkUsersResponse>(
     linkedFcProfile ? `/user/bulk?fids=${linkedFcProfile.fid}` : null
   )
   return {
     farcasterProfile: data?.users.at(0),
-    mutate: mutate as unknown as KeyedMutator<BulkUsersResponse["users"][number]>,
     ...rest,
+    mutate: undefined as never,
   }
 }
 
@@ -35,7 +34,7 @@ export const useRelevantFarcasterFollowers = (farcasterId?: number) => {
   const currentUserFcProfile = currentUser.farcasterProfiles?.at(0)
 
   // API reference: https://docs.neynar.com/reference/relevant-followers
-  const { data, mutate, ...rest } = useFarcasterAPI<RelevantFollowersResponse>(
+  const { data, ...rest } = useFarcasterAPI<RelevantFollowersResponse>(
     farcasterId && currentUserFcProfile
       ? `/followers/relevant?api_key=NEYNAR_API_DOCS&target_fid=${farcasterId}&viewer_fid=${currentUserFcProfile.fid}`
       : null
@@ -44,9 +43,7 @@ export const useRelevantFarcasterFollowers = (farcasterId?: number) => {
     relevantFollowers: data?.top_relevant_followers_hydrated?.map(
       ({ user }) => user
     ),
-    mutate: mutate as unknown as KeyedMutator<
-      RelevantFollowersResponse["top_relevant_followers_hydrated"][number]["user"][]
-    >,
     ...rest,
+    mutate: undefined as never,
   }
 }
