@@ -1,18 +1,18 @@
 import { Flex, HStack, Image, Link, Skeleton, Text } from "@chakra-ui/react"
 import { Chat, Heart, ShareNetwork, WarningCircle } from "@phosphor-icons/react"
 import { DataBlock } from "components/common/DataBlock"
-import { FarcasterCastData } from "../types"
+import { useFarcasterCast } from "../hooks/useFarcasterCast"
 
 const FarcasterCastSmall = ({
   cast,
   loading,
   error,
 }: {
-  cast: FarcasterCastData
+  cast: ReturnType<typeof useFarcasterCast>["data"]
   loading: boolean
   error: boolean
 }) => {
-  const url = `https://warpcast.com/${cast?.username}/${cast?.hash}`
+  const url = `https://warpcast.com/${cast?.author.username}/${cast?.hash}`
 
   if (loading) return <Skeleton w={32} h={5} />
   if (error)
@@ -24,7 +24,7 @@ const FarcasterCastSmall = ({
       </DataBlock>
     )
 
-  if (cast && !loading && !error)
+  if (!!cast && !loading && !error)
     return (
       <>
         <Link
@@ -42,11 +42,11 @@ const FarcasterCastSmall = ({
                   height={3}
                   objectFit={"cover"}
                   rounded={"full"}
-                  src={cast.profile_pic}
+                  src={cast.author.pfp_url}
                   alt={"Profile picture"}
                 />
                 <Text fontWeight={"bold"} fontSize={"xs"} m={0}>
-                  {cast.display_name}
+                  {cast.author.display_name ?? cast.author.username}
                 </Text>
               </HStack>
 
@@ -55,21 +55,21 @@ const FarcasterCastSmall = ({
                   {" "}
                   <Heart weight="fill" size={10} />
                   <Text fontSize={"xs"} fontWeight={"bold"}>
-                    {cast.likes}
+                    {cast.reactions.likes_count}
                   </Text>{" "}
                 </HStack>
                 <HStack gap={0.5}>
                   {" "}
                   <ShareNetwork weight="fill" size={10} />
                   <Text fontSize={"xs"} fontWeight={"bold"}>
-                    {cast.recasts}
+                    {cast.reactions.recasts_count}
                   </Text>{" "}
                 </HStack>
                 <HStack gap={0.5}>
                   {" "}
                   <Chat weight="fill" size={10} />
                   <Text fontSize={"xs"} fontWeight={"bold"}>
-                    {cast.replies}
+                    {cast.replies.count}
                   </Text>{" "}
                 </HStack>
               </HStack>

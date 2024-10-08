@@ -1,49 +1,45 @@
-import { SWRResponse, useSWRConfig } from "swr"
-import useSWRImmutable from "swr/immutable"
-import fetcher from "utils/fetcher"
+import { useFarcasterAPI } from "@/hooks/useFarcasterAPI"
+import { NEYNAR_BASE_URL } from "@/hooks/useFarcasterAPI/constants"
+import type { NeynarAPIClient } from "@neynar/nodejs-sdk"
+import { useSWRConfig } from "swr"
 
-// partial type, contains just the fields which we're using on the frontend
-type FarcasterUser = {
-  fid: number
-  username: string
-  display_name: string
-  pfp_url?: string
-}
+type SearchUserResponse = Awaited<ReturnType<NeynarAPIClient["searchUser"]>>
 
-const BASE_URL =
-  "https://api.neynar.com/v2/farcaster/user/search?viewer_fid=1&limit=10&q="
-const SINGLE_USER_BASE_URL =
-  "https://api.neynar.com/v2/farcaster/user/bulk?viewer_fid=1&fids="
-
-const fetchUsers = (endpoint) =>
-  fetcher(endpoint, {
-    headers: {
-      api_key: "NEYNAR_API_DOCS",
-    },
-  }).then((res) => res.result?.users)
-const fetchUser = (endpoint) =>
-  fetcher(endpoint, {
-    headers: {
-      api_key: "NEYNAR_API_DOCS",
-    },
-  }).then((res) => res?.users?.[0])
 const useFarcasterUsers = (search?: string) => {
-  const { mutate } = useSWRConfig()
-  return useSWRImmutable<FarcasterUser[]>(
-    search ? `${BASE_URL}${search}` : null,
-    fetchUsers,
+  const { mutate: globalSWRMutate } = useSWRConfig()
+
+  const { data, mutate, ...swrResponse } = useFarcasterAPI<SearchUserResponse>(
+    search ? `/user/search?viewer_fid=1&limit=10&q=${search}` : null,
     {
-      onSuccess: (data, _key, _config) => {
-        data.forEach((user) =>
-          mutate(`${SINGLE_USER_BASE_URL}${user.fid}`, user, { revalidate: false })
+      onSuccess: (data) => {
+        data.result.users.forEach((user) =>
+          globalSWRMutate(
+            `${NEYNAR_BASE_URL}/user/bulk?viewer_fid=1&fids=${user.fid}`,
+            user,
+            { revalidate: false }
+          )
         )
       },
     }
   )
+
+  return {
+    ...swrResponse,
+    data: data?.result.users,
+    mutate: undefined as never,
+  }
 }
 
-const useFarcasterUser = (fid?: number): SWRResponse<FarcasterUser> =>
-  useSWRImmutable(fid ? `${SINGLE_USER_BASE_URL}${fid}` : null, fetchUser)
+const useFarcasterUser = (fid?: number) => {
+  const { data, mutate, ...swrResponse } = useFarcasterAPI<
+    SearchUserResponse["result"]
+  >(fid ? `/user/bulk?viewer_fid=1&fids=${fid}` : null)
 
-export default useFarcasterUsers
-export { useFarcasterUser }
+  return {
+    ...swrResponse,
+    data: data?.users[0],
+    mutate: undefined as never,
+  }
+}
+
+export { useFarcasterUsers, useFarcasterUser }

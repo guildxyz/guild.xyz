@@ -12,7 +12,7 @@ import { useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
-import useFarcasterUsers, { useFarcasterUser } from "../hooks/useFarcasterUsers"
+import { useFarcasterUser, useFarcasterUsers } from "../hooks/useFarcasterUsers"
 
 type Props = {
   baseFieldPath: string
@@ -27,12 +27,13 @@ const FarcasterUser = ({ baseFieldPath }: Props) => {
   const debounceSearch = useDebouncedState(search)
 
   const { data: farcasterUsers, isValidating } = useFarcasterUsers(debounceSearch)
-  const options: SelectOption<number>[] = farcasterUsers?.map((user) => ({
-    label: user.display_name,
-    details: user.username,
-    value: user.fid,
-    img: user.pfp_url,
-  }))
+  const options: SelectOption<number>[] =
+    farcasterUsers?.map((user) => ({
+      label: user.display_name ?? user.username,
+      details: user.username,
+      value: user.fid,
+      img: user.pfp_url,
+    })) ?? []
 
   const fid = useWatch({ name: `${baseFieldPath}.data.id` })
   const { data: farcasterUser } = useFarcasterUser(fid)
@@ -49,7 +50,7 @@ const FarcasterUser = ({ baseFieldPath }: Props) => {
           <InputLeftElement>
             <OptionImage
               img={farcasterUser.pfp_url}
-              alt={farcasterUser.display_name}
+              alt={farcasterUser.display_name ?? farcasterUser.username}
             />
           </InputLeftElement>
         )}
@@ -71,7 +72,7 @@ const FarcasterUser = ({ baseFieldPath }: Props) => {
           }}
           fallbackValue={
             farcasterUser && {
-              label: farcasterUser.display_name,
+              label: farcasterUser.display_name ?? farcasterUser.username,
               value: farcasterUser.fid,
               img: farcasterUser.pfp_url,
             }

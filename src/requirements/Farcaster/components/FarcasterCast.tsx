@@ -18,7 +18,7 @@ import {
   WarningCircle,
 } from "@phosphor-icons/react"
 import { PropsWithChildren } from "react"
-import { FarcasterCastData } from "../types"
+import { useFarcasterCast } from "../hooks/useFarcasterCast"
 import FarcasterCastSmall from "./FarcasterCastSmall"
 
 const FarcasterCast = ({
@@ -27,14 +27,14 @@ const FarcasterCast = ({
   error,
   size = "md",
 }: {
-  cast: FarcasterCastData
+  cast: ReturnType<typeof useFarcasterCast>["data"]
   loading: boolean
   error: boolean
   size?: string
 }) => {
   const bgHover = useColorModeValue("gray.100", "blackAlpha.300")
 
-  const url = `https://warpcast.com/${cast?.username}/${cast?.hash}`
+  const url = `https://warpcast.com/${cast?.author.username}/${cast?.hash}`
   const prettyDate =
     cast?.timestamp &&
     new Intl.DateTimeFormat("en-US", {
@@ -90,21 +90,21 @@ const FarcasterCast = ({
         height={7}
         objectFit="cover"
         rounded="full"
-        src={cast.profile_pic}
+        src={cast.author.pfp_url}
         alt="Profile picture"
       />
       <Stack spacing={0}>
         <Text fontWeight="bold" fontSize="sm" noOfLines={1}>
-          {cast.display_name}
+          {cast.author.display_name ?? cast.author.username}
         </Text>
         <Text fontSize="xs" opacity={0.6}>
           {prettyDate}
         </Text>
       </Stack>
       <HStack spacing={3} ml="auto">
-        <Stat icon={Heart} value={cast.likes} />
-        <Stat icon={ShareNetwork} value={cast.recasts} />
-        <Stat icon={Chat} value={cast.replies} />
+        <Stat icon={Heart} value={cast.reactions.likes_count} />
+        <Stat icon={ShareNetwork} value={cast.reactions.recasts_count} />
+        <Stat icon={Chat} value={cast.replies.count} />
       </HStack>
       <Icon as={ArrowSquareOut} />
     </CastWrapper>
