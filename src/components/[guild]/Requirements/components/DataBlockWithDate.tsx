@@ -1,7 +1,7 @@
 import { DataBlock } from "components/common/DataBlock"
 
 type Props = {
-  timestamp: number
+  timestamp: number | string // ISO string
 }
 
 const DataBlockWithDate = ({ timestamp }: Props): JSX.Element => {
