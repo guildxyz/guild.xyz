@@ -7,10 +7,10 @@ import {
   LayoutMain,
 } from "@/components/Layout"
 import { SWRProvider } from "@/components/SWRProvider"
-import {
-  NEYNAR_BASE_URL,
-  NEYNAR_DEFAULT_HEADERS,
-} from "@/hooks/useFarcasterAPI/constants"
+//import {
+//  NEYNAR_BASE_URL,
+//  NEYNAR_DEFAULT_HEADERS,
+//} from "@/hooks/useFarcasterAPI/constants"
 import { FarcasterProfile, Guild, Role, Schemas } from "@guildxyz/types"
 import { env } from "env"
 import { Metadata } from "next"
@@ -80,16 +80,16 @@ const fetchPublicProfileData = async ({
     }
   )
   const fcProfile = farcasterProfiles.at(0)
-  const neynarRequest =
-    fcProfile && new URL(`${NEYNAR_BASE_URL}/user/bulk?fids=${fcProfile.fid}`)
-  const fcFollowers =
-    neynarRequest &&
-    (await ssrFetcher(neynarRequest, {
-      headers: NEYNAR_DEFAULT_HEADERS,
-      next: {
-        revalidate: 12 * 3600,
-      },
-    }))
+  //const neynarRequest =
+  //  fcProfile && new URL(`${NEYNAR_BASE_URL}/user/bulk?fids=${fcProfile.fid}`, api)
+  //const fcFollowers =
+  //  neynarRequest &&
+  //  (await ssrFetcher(neynarRequest, {
+  //    headers: NEYNAR_DEFAULT_HEADERS,
+  //    next: {
+  //      revalidate: 12 * 3600,
+  //    },
+  //  }))
 
   const referredUsersRequest = new URL(
     `/v2/profiles/${username}/referred-users`,
@@ -202,7 +202,7 @@ const fetchPublicProfileData = async ({
         [profileRequest.pathname, profile],
         [contributionsRequest.pathname, contributions],
         [farcasterProfilesRequest.pathname, farcasterProfiles],
-        [neynarRequest?.href, fcFollowers],
+        //[neynarRequest?.href, fcFollowers],
         [referredUsersRequest.pathname, referredUsers],
         [experiencesRequest.pathname, experiences],
         [
