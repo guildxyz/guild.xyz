@@ -1,6 +1,7 @@
-import { Link } from "@chakra-ui/next-js"
-import { Icon, Img, Skeleton, Text } from "@chakra-ui/react"
-import { Detective } from "@phosphor-icons/react"
+import { Anchor } from "@/components/ui/Anchor"
+import { Avatar, AvatarImage } from "@/components/ui/Avatar"
+import { Skeleton } from "@/components/ui/Skeleton"
+import { Detective } from "@phosphor-icons/react/dist/ssr"
 import { DataBlockWithDate } from "components/[guild]/Requirements/components/DataBlockWithDate"
 import {
   Requirement,
@@ -9,13 +10,21 @@ import {
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import { useSimpleGuild } from "components/[guild]/hooks/useGuild"
 import useRole from "components/[guild]/hooks/useRole"
+import { ComponentType } from "react"
+import { RequirementType } from "requirements/types"
 import useSWRImmutable from "swr/immutable"
 import { Group } from "types"
 import pluralize from "utils/pluralize"
 import formatRelativeTimeFromNow from "../../utils/formatRelativeTimeFromNow"
 
+type GuildRequirementTypes = Exclude<
+  Extract<RequirementType, `GUILD_${string}`>,
+  "GUILD_SNAPSHOT"
+>
+
 const HaveRole = (props: RequirementProps): JSX.Element => {
-  const requirement = useRequirementContext()
+  const requirement =
+    useRequirementContext<Extract<RequirementType, `GUILD_ROLE${string}`>>()
 
   const { id } = useSimpleGuild()
   const {
@@ -34,37 +43,57 @@ const HaveRole = (props: RequirementProps): JSX.Element => {
   const { data: group, isLoading: isGroupLoading } = useSWRImmutable<Group>(
     groupId ? `/v2/guilds/${id}/groups/${groupId}` : null
   )
-  const maxAmount = new Date(requirement.data.maxAmount)
+
+  const minAmount = requirement.data.minAmount
+    ? new Date(requirement.data.minAmount)
+    : undefined
+  const maxAmount = requirement.data.maxAmount
+    ? new Date(requirement.data.maxAmount)
+    : undefined
+
+  const prettyMinAmount = minAmount
+    ? minAmount.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })
+    : undefined
+
+  const prettyMaxAmount = maxAmount
+    ? maxAmount.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })
+    : undefined
+
   const filterLabel =
     requirement.type === "GUILD_ROLE_RELATIVE"
       ? ` for ${formatRelativeTimeFromNow(requirement.data.maxAmount)}`
-      : requirement.data.maxAmount &&
-        ` since ${maxAmount.toLocaleDateString("en-US", {
-          ...(maxAmount.getFullYear() !== new Date().getFullYear() && {
-            year: "numeric",
-          }),
-          month: "short",
-          day: "numeric",
-        })}`
+      : minAmount && maxAmount
+        ? ` between ${prettyMinAmount} and ${prettyMaxAmount}`
+        : minAmount
+          ? ` before ${prettyMinAmount}`
+          : maxAmount
+            ? ` since ${prettyMaxAmount}`
+            : null
 
   return (
     <Requirement
       image={
         !roleId ? (
-          <Icon as={Detective} boxSize={6} />
+          <Detective weight="bold" className="size-6" />
         ) : (
-          roleImageUrl &&
-          (roleImageUrl.match("guildLogos") ? (
-            <Img src={roleImageUrl} alt="Role image" boxSize="40%" />
-          ) : (
-            <Img
-              src={roleImageUrl}
-              alt="Role image"
-              w="full"
-              h="full"
-              objectFit="cover"
-            />
-          ))
+          roleImageUrl && (
+            <Avatar className="row-span-2 size-12">
+              <AvatarImage
+                src={roleImageUrl}
+                alt={`${roleName} logo`}
+                width={24}
+                height={24}
+              />
+            </Avatar>
+          )
         )
       }
       isImageLoading={isRoleLoading}
@@ -74,25 +103,27 @@ const HaveRole = (props: RequirementProps): JSX.Element => {
         "The required guild role is invisible"
       ) : (
         <>
-          <Text as="span">{"Have the "}</Text>
-          <Skeleton
-            display="inline"
-            isLoaded={!isGuildLoading && !isRoleLoading && !isGroupLoading}
-          >
-            <Link
-              href={`/${urlName ?? requirement.data.guildId}${
-                group ? `/${group.urlName}` : ""
-              }#role-${roleId}`}
-              colorScheme="blue"
-              isExternal={requirement.data.guildId !== id}
-              wordBreak="break-word"
-            >
-              {`${roleName ?? "unknown"} role`}
-              {id !== requirement.data.guildId &&
-                ` in the ${name ?? `#${requirement.data.guildId}`} guild`}
-            </Link>
-            {filterLabel}
-          </Skeleton>
+          <span>{"Have the "}</span>
+
+          {isGuildLoading || isRoleLoading || isGroupLoading ? (
+            <Skeleton className="inline h-4 w-40" />
+          ) : (
+            <>
+              <Anchor
+                href={`/${urlName ?? requirement.data.guildId}${
+                  group ? `/${group.urlName}` : ""
+                }#role-${roleId}`}
+                variant="highlighted"
+                showExternal={requirement.data.guildId !== id}
+                target={requirement.data.guildId !== id ? "_blank" : undefined}
+              >
+                {`${roleName ?? "unknown"} role`}
+                {id !== requirement.data.guildId &&
+                  ` in the ${name ?? `#${requirement.data.guildId}`} guild`}
+              </Anchor>
+              <span>{filterLabel}</span>
+            </>
+          )}
         </>
       )}
     </Requirement>
@@ -100,18 +131,18 @@ const HaveRole = (props: RequirementProps): JSX.Element => {
 }
 
 const UserSince = (props: RequirementProps): JSX.Element => {
-  const requirement = useRequirementContext()
+  const requirement = useRequirementContext<"GUILD_USER_SINCE">()
 
   return (
     <Requirement image="/requirementLogos/guild.png" {...props}>
-      <Text as="span">{"Be a Guild.xyz user since at least "}</Text>
-      <DataBlockWithDate timestamp={requirement.data.creationDate} />
+      <span>{"Be a Guild.xyz user since at least "}</span>
+      <DataBlockWithDate timestamp={requirement.data.creationDate.toString()} />
     </Requirement>
   )
 }
 
 const MinGuilds = (props: RequirementProps): JSX.Element => {
-  const requirement = useRequirementContext()
+  const requirement = useRequirementContext<"GUILD_MINGUILDS">()
 
   return (
     <Requirement image="/requirementLogos/guild.png" {...props}>
@@ -121,7 +152,7 @@ const MinGuilds = (props: RequirementProps): JSX.Element => {
 }
 
 const Admin = (props: RequirementProps): JSX.Element => {
-  const requirement = useRequirementContext()
+  const requirement = useRequirementContext<"GUILD_ADMIN">()
 
   return (
     <Requirement image="/requirementLogos/guild.png" {...props}>
@@ -135,7 +166,7 @@ const Admin = (props: RequirementProps): JSX.Element => {
 }
 
 const GuildMember = (props: RequirementProps): JSX.Element => {
-  const requirement = useRequirementContext()
+  const requirement = useRequirementContext<"GUILD_MEMBER">()
   const { id } = useSimpleGuild()
   const { name, urlName, imageUrl, isLoading } = useSimpleGuild(
     requirement.data.guildId
@@ -143,16 +174,19 @@ const GuildMember = (props: RequirementProps): JSX.Element => {
 
   return (
     <Requirement image={imageUrl} isImageLoading={isLoading} {...props}>
-      <Text as="span">{"Be a member of the "}</Text>
-      <Skeleton display="inline-block" isLoaded={!isLoading}>
-        <Link
+      <span>{"Be a member of the "}</span>
+      {isLoading ? (
+        <Skeleton className="inline h-4 w-40" />
+      ) : (
+        <Anchor
           href={`/${urlName ?? requirement.data.guildId}`}
-          colorScheme="blue"
-          isExternal={requirement.data.guildId !== id}
+          variant="highlighted"
+          showExternal={requirement.data.guildId !== id}
+          target={requirement.data.guildId !== id ? "_blank" : undefined}
         >
           {` ${name ?? `#${requirement.data.guildId}`} guild`}
-        </Link>
-      </Skeleton>
+        </Anchor>
+      )}
     </Requirement>
   )
 }
@@ -164,10 +198,10 @@ const types = {
   GUILD_MINGUILDS: MinGuilds,
   GUILD_USER_SINCE: UserSince,
   GUILD_MEMBER: GuildMember,
-}
+} satisfies Record<GuildRequirementTypes, ComponentType<RequirementProps>>
 
 const GuildRequirement = (props: RequirementProps) => {
-  const { type } = useRequirementContext()
+  const { type } = useRequirementContext<GuildRequirementTypes>()
   const Component = types[type]
   return <Component {...props} />
 }
