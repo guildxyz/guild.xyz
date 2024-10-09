@@ -84,7 +84,7 @@ const fetchPublicProfileData = async ({
     fcProfile &&
     new URL(
       `${NEYNAR_BASE_URL}/user/bulk?fids=${fcProfile.fid}`,
-      env.NEXT_PUBLIC_DOMAIN
+      env.NEXT_PUBLIC_URL
     )
   const fcFollowers =
     neynarRequest &&
