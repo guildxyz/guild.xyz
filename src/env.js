@@ -30,6 +30,7 @@ export const env = createEnv({
     // Guild APIs
     NEXT_PUBLIC_API: z.string(),
     NEXT_PUBLIC_BALANCY_API: z.string(),
+    NEXT_PUBLIC_URL: z.string(),
 
     // Captcha
     NEXT_PUBLIC_RECAPTCHA_SITE_KEY: z.string(),
@@ -51,6 +52,10 @@ export const env = createEnv({
   },
   runtimeEnv: {
     NEXT_PUBLIC_API: process.env.NEXT_PUBLIC_API,
+    NEXT_PUBLIC_URL:
+      process.env.NODE_ENV === "production"
+        ? process.env.NEXT_PUBLIC_URL
+        : "http://127.0.0.1:3000",
     NEXT_PUBLIC_BALANCY_API: process.env.NEXT_PUBLIC_BALANCY_API,
 
     NEXT_PUBLIC_RECAPTCHA_SITE_KEY: process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY,

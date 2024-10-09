@@ -81,7 +81,11 @@ const fetchPublicProfileData = async ({
   )
   const fcProfile = farcasterProfiles.at(0)
   const neynarRequest =
-    fcProfile && new URL(`${NEYNAR_BASE_URL}/user/bulk?fids=${fcProfile.fid}`)
+    fcProfile &&
+    new URL(
+      `${NEYNAR_BASE_URL}/user/bulk?fids=${fcProfile.fid}`,
+      env.NEXT_PUBLIC_URL
+    )
   const fcFollowers =
     neynarRequest &&
     (await ssrFetcher(neynarRequest, {
@@ -202,7 +206,7 @@ const fetchPublicProfileData = async ({
         [profileRequest.pathname, profile],
         [contributionsRequest.pathname, contributions],
         [farcasterProfilesRequest.pathname, farcasterProfiles],
-        [neynarRequest?.href, fcFollowers],
+        [neynarRequest?.pathname, fcFollowers],
         [referredUsersRequest.pathname, referredUsers],
         [experiencesRequest.pathname, experiences],
         [
