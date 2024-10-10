@@ -1,27 +1,18 @@
-import {
-  HStack,
-  Icon,
-  Image,
-  Link,
-  MergeWithAs,
-  Spinner,
-  Stack,
-  StackProps,
-  Text,
-  useColorModeValue,
-} from "@chakra-ui/react"
+import { cn } from "@/lib/utils"
+import { Icon } from "@phosphor-icons/react/dist/lib/types"
 import {
   ArrowSquareOut,
   Chat,
+  CircleNotch,
   Heart,
   ShareNetwork,
   WarningCircle,
-} from "@phosphor-icons/react"
-import { PropsWithChildren } from "react"
+} from "@phosphor-icons/react/dist/ssr"
+import { HTMLAttributes, PropsWithChildren } from "react"
 import { useFarcasterCast } from "../hooks/useFarcasterCast"
-import FarcasterCastSmall from "./FarcasterCastSmall"
+import { FarcasterCastSmall } from "./FarcasterCastSmall"
 
-const FarcasterCast = ({
+export const FarcasterCast = ({
   cast,
   loading,
   error,
@@ -32,8 +23,6 @@ const FarcasterCast = ({
   error: boolean
   size?: string
 }) => {
-  const bgHover = useColorModeValue("gray.100", "blackAlpha.300")
-
   const url = `https://warpcast.com/${cast?.author.username}/${cast?.hash}`
   const prettyDate =
     cast?.timestamp &&
@@ -48,20 +37,18 @@ const FarcasterCast = ({
 
   if (loading) {
     return (
-      <CastWrapper>
-        <Spinner mr={2} size="sm" />
-        <Text fontSize="sm">Loading cast...</Text>
+      <CastWrapper className="gap-2">
+        <CircleNotch weight="bold" className="size-6 animate-spin duration-1000" />
+        <p className="text-sm">Loading cast...</p>
       </CastWrapper>
     )
   }
 
   if (error) {
     return (
-      <CastWrapper>
-        <Icon as={WarningCircle} />
-        <Text fontSize="sm" textAlign="center">
-          Failed to load cast!
-        </Text>
+      <CastWrapper className="gap-2">
+        <WarningCircle weight="bold" className="text-warning-subtle-foreground" />
+        <p className="text-sm">Failed to load cast!</p>
       </CastWrapper>
     )
   }
@@ -69,81 +56,65 @@ const FarcasterCast = ({
   if (!cast) {
     return (
       <CastWrapper>
-        <Text fontSize="sm" textAlign="center" opacity={0.6}>
-          No cast found
-        </Text>
+        <p className="text-muted-foreground text-sm">No cast found</p>
       </CastWrapper>
     )
   }
 
   return (
-    <CastWrapper
-      as={Link}
-      href={url}
-      isExternal
-      _hover={{ bg: bgHover, cursor: "pointer", textDecoration: "none" }}
-      justifyContent="start"
-      spacing={4}
-    >
-      <Image
-        width={7}
-        height={7}
-        objectFit="cover"
-        rounded="full"
-        src={cast.author.pfp_url}
-        alt="Profile picture"
-      />
-      <Stack spacing={0}>
-        <Text fontWeight="bold" fontSize="sm" noOfLines={1}>
-          {cast.author.display_name ?? cast.author.username}
-        </Text>
-        <Text fontSize="xs" opacity={0.6}>
-          {prettyDate}
-        </Text>
-      </Stack>
-      <HStack spacing={3} ml="auto">
-        <Stat icon={Heart} value={cast.reactions.likes_count} />
-        <Stat icon={ShareNetwork} value={cast.reactions.recasts_count} />
-        <Stat icon={Chat} value={cast.replies.count} />
-      </HStack>
-      <Icon as={ArrowSquareOut} />
-    </CastWrapper>
+    <a href={url} target="_blank">
+      <CastWrapper className="gap-4">
+        <div className="flex items-center gap-2">
+          {cast.author.pfp_url && (
+            <img
+              className="size-7 rounded-full object-cover"
+              src={cast.author.pfp_url}
+              alt="Profile picture"
+            />
+          )}
+          <div className="flex flex-col">
+            <span className="text-ellipsis font-bold text-sm">
+              {cast.author.display_name ?? cast.author.username}
+            </span>
+            <span className="text-muted-foreground text-xs">{prettyDate}</span>
+          </div>
+        </div>
+
+        <div className="ml-auto flex items-center gap-3">
+          <Stat icon={Heart} value={cast.reactions.likes_count} />
+          <Stat icon={ShareNetwork} value={cast.reactions.recasts_count} />
+          <Stat icon={Chat} value={cast.replies.count} />
+        </div>
+
+        <ArrowSquareOut weight="bold" />
+      </CastWrapper>
+    </a>
   )
 }
 
-const Stat = ({ icon, value }) => (
-  <HStack gap={0.5}>
-    <Icon as={icon} weight="fill" />
-    <Text fontSize="xs" fontWeight="bold">
-      {value}
-    </Text>
-  </HStack>
+const Stat = ({
+  icon: Icon,
+  value,
+}: {
+  icon: Icon
+  value: number
+}) => (
+  <div className="flex items-center gap-0.5">
+    <Icon weight="fill" />
+    <span className="font-bold text-xs">{value}</span>
+  </div>
 )
 
 const CastWrapper = ({
+  className,
   children,
-  ...props
-}: PropsWithChildren<MergeWithAs<StackProps, any>>) => {
-  const bg = useColorModeValue("gray.50", "blackAlpha.200")
-
-  return (
-    <HStack
-      bg={bg}
-      w="full"
-      minH="65px"
-      borderWidth="1px"
-      borderRadius="xl"
-      px="4"
-      position="relative"
-      overflow="hidden"
-      justifyContent="center"
-      py="3.5"
-      display="flex"
-      {...props}
-    >
-      {children}
-    </HStack>
-  )
-}
-
-export default FarcasterCast
+}: PropsWithChildren<HTMLAttributes<HTMLDivElement>>) => (
+  <div
+    className={cn(
+      "relative flex min-h-16 w-full items-center justify-center overflow-hidden rounded-xl border bg-blackAlpha-soft px-4 py-3.5 dark:bg-blackAlpha",
+      className
+    )}
+  >
+    {children}
+  </div>
+)

@@ -1,5 +1,5 @@
-import { Icon, Link, Skeleton, Text } from "@chakra-ui/react"
-import { ArrowSquareOut } from "@phosphor-icons/react"
+import { Anchor } from "@/components/ui/Anchor"
+import { Skeleton } from "@/components/ui/Skeleton"
 import RequirementConnectButton from "components/[guild]/Requirements/components/ConnectRequirementPlatformButton"
 import {
   Requirement,
@@ -10,8 +10,8 @@ import useUser from "components/[guild]/hooks/useUser"
 import { DataBlockWithCopy } from "components/common/DataBlockWithCopy"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import REQUIREMENTS from "requirements"
-import FarcasterAction from "./components/FarcasterAction"
-import FarcasterCast from "./components/FarcasterCast"
+import { FarcasterAction } from "./components/FarcasterAction"
+import { FarcasterCast } from "./components/FarcasterCast"
 import { useFarcasterCast } from "./hooks/useFarcasterCast"
 import { useFarcasterChannel } from "./hooks/useFarcasterChannels"
 import { useFarcasterUser } from "./hooks/useFarcasterUsers"
@@ -55,23 +55,25 @@ const FarcasterFollowUser = (props: RequirementProps) => {
       {...props}
     >
       {type === "FARCASTER_FOLLOW" ? "Follow " : "Be followed by "}
-      <Skeleton isLoaded={!!farcasterUser} display={"inline"}>
-        <Link
+      {!farcasterUser ? (
+        <Skeleton className="inline-block h-5 w-40" />
+      ) : (
+        <Anchor
           href={`https://warpcast.com/${farcasterUser?.username}`}
-          isExternal
-          colorScheme="blue"
-          fontWeight="medium"
+          target="_blank"
+          showExternal
+          variant="highlighted"
         >
           {farcasterUser?.display_name ?? farcasterUser?.username ?? "Loading..."}
-        </Link>
-      </Skeleton>
-      {" on Farcaster"}
+        </Anchor>
+      )}
+      <span>{" on Farcaster"}</span>
     </Requirement>
   )
 }
 
 const FarcasterTotalFollowers = (props: RequirementProps) => {
-  const { data } = useRequirementContext()
+  const { data } = useRequirementContext<"FARCASTER_TOTAL_FOLLOWERS">()
 
   return (
     <Requirement
@@ -87,13 +89,15 @@ const FarcasterTotalFollowers = (props: RequirementProps) => {
 const FarcasterLikeRecast = (props: RequirementProps) => {
   const { farcasterProfiles } = useUser()
   const isFarcasterConnected = !!farcasterProfiles?.[0]?.fid
-  const { data, type, roleId, id } = useRequirementContext()
+  const { data, type, roleId, id } = useRequirementContext<
+    "FARCASTER_LIKE" | "FARCASTER_RECAST"
+  >()
 
   const {
     data: cast,
     isLoading: isCastLoading,
     error: castError,
-  } = useFarcasterCast(data?.hash)
+  } = useFarcasterCast(data?.url ?? data?.hash)
 
   const { reqAccesses } = useRoleMembership(roleId)
 
@@ -115,23 +119,27 @@ const FarcasterLikeRecast = (props: RequirementProps) => {
     >
       {type === "FARCASTER_LIKE" ? "Like" : "Recast"}
       <>
-        {" this cast: "}
-        <Skeleton isLoaded={!!cast} display="inline">
+        <span>{" this cast: "}</span>
+        {!cast ? (
+          <Skeleton className="inline-block h-5 w-40" />
+        ) : (
           <FarcasterCast
             size="sm"
             cast={cast}
             loading={isCastLoading}
             error={castError}
           />
-        </Skeleton>
+        )}
       </>
     </Requirement>
   )
 }
 
 const FarcasterFollowChannel = (props: RequirementProps) => {
-  const { data } = useRequirementContext()
-  const { data: farcasterChannel } = useFarcasterChannel(data?.id)
+  const { data } = useRequirementContext<
+    "FARCASTER_FOLLOW_CHANNEL" | "FARCASTER_USERNAME" | "FARCASTER_BIO"
+  >()
+  const { data: farcasterChannel } = useFarcasterChannel(data.id)
 
   return (
     <Requirement
@@ -139,19 +147,20 @@ const FarcasterFollowChannel = (props: RequirementProps) => {
       image={REQUIREMENTS.FARCASTER_FOLLOW_CHANNEL.icon.toString()}
       {...props}
     >
-      {"Follow the "}
-      <Skeleton isLoaded={!!farcasterChannel}>
-        <Link
-          href={`https://warpcast.com/~/channel/${data?.id}`}
-          isExternal
-          colorScheme="blue"
-          fontWeight="medium"
+      <span>{"Follow the "}</span>
+      {!farcasterChannel ? (
+        <Skeleton className="inline-block h-5 w-40" />
+      ) : (
+        <Anchor
+          href={`https://warpcast.com/~/channel/${data.id}`}
+          showExternal
+          target="_blank"
+          variant="highlighted"
         >
-          {farcasterChannel?.label ?? data?.id}
-          <Icon as={ArrowSquareOut} mx="1" />
-        </Link>
-      </Skeleton>
-      {" channel on Farcaster"}
+          {farcasterChannel?.label ?? data.id}
+        </Anchor>
+      )}
+      <span>{" channel on Farcaster"}</span>
     </Requirement>
   )
 }
@@ -177,11 +186,11 @@ const FarcasterIncludeText = (props: RequirementProps) => {
       image={REQUIREMENTS.FARCASTER_BIO.icon.toString()}
       {...props}
     >
-      <Text as="span">{"Have "}</Text>
+      <span>{"Have "}</span>
       <DataBlockWithCopy text={data?.id} />
-      <Text as="span">
+      <span>
         {` in your ${REQUIREMENTS.FARCASTER_BIO.name} ${PROFILE_TARGETS[type]}`}
-      </Text>
+      </span>
     </Requirement>
   )
 }

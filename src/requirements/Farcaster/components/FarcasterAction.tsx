@@ -11,7 +11,7 @@ const TYPE_TO_CTA = {
   FARCASTER_RECAST: "Recast",
 }
 
-export default function FarcasterAction() {
+export function FarcasterAction() {
   const { farcasterProfiles } = useUser()
 
   const { data, roleId, type } = useRequirementContext<

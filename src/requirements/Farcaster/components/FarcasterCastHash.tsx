@@ -5,7 +5,7 @@ import { useEffect } from "react"
 import { useController, useForm } from "react-hook-form"
 import { ADDRESS_REGEX } from "utils/guildCheckout/constants"
 import { useFarcasterCast } from "../hooks/useFarcasterCast"
-import FarcasterCast from "./FarcasterCast"
+import { FarcasterCast } from "./FarcasterCast"
 
 type Props = {
   baseFieldPath: string

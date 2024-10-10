@@ -1,9 +1,14 @@
-import { Flex, HStack, Image, Link, Skeleton, Text } from "@chakra-ui/react"
-import { Chat, Heart, ShareNetwork, WarningCircle } from "@phosphor-icons/react"
+import { Skeleton } from "@/components/ui/Skeleton"
+import {
+  Chat,
+  Heart,
+  ShareNetwork,
+  WarningCircle,
+} from "@phosphor-icons/react/dist/ssr"
 import { DataBlock } from "components/common/DataBlock"
 import { useFarcasterCast } from "../hooks/useFarcasterCast"
 
-const FarcasterCastSmall = ({
+export const FarcasterCastSmall = ({
   cast,
   loading,
   error,
@@ -14,72 +19,51 @@ const FarcasterCastSmall = ({
 }) => {
   const url = `https://warpcast.com/${cast?.author.username}/${cast?.hash}`
 
-  if (loading) return <Skeleton w={32} h={5} />
+  if (loading) return <Skeleton className="inline-block h-5 w-32" />
   if (error)
     return (
       <DataBlock>
-        <Flex alignItems={"center"} gap={1}>
-          <WarningCircle /> <Text>Failed to load cast!</Text>
-        </Flex>
+        <div className="inline-flex items-center gap-1">
+          <WarningCircle weight="bold" />
+          <span>Failed to load cast!</span>
+        </div>
       </DataBlock>
     )
 
   if (!!cast && !loading && !error)
     return (
-      <>
-        <Link
-          as={"a"}
-          isExternal
-          href={url}
-          textDecoration={"none"}
-          _hover={{ borderBottom: "1px solid" }}
-        >
-          <DataBlock>
-            <HStack>
-              <HStack>
-                <Image
-                  width={3}
-                  height={3}
-                  objectFit={"cover"}
-                  rounded={"full"}
-                  src={cast.author.pfp_url}
-                  alt={"Profile picture"}
-                />
-                <Text fontWeight={"bold"} fontSize={"xs"} m={0}>
-                  {cast.author.display_name ?? cast.author.username}
-                </Text>
-              </HStack>
+      <a href={url} target="_blank" className="group">
+        <div className="inline-flex items-center gap-2 rounded-md border-border bg-blackAlpha-soft px-1.5 py-0.5 text-sm group-hover:border-b group-focus-visible:border-b dark:bg-blackAlpha">
+          <div className="flex items-center gap-0.5">
+            <img
+              className="size-3 rounded-full object-cover"
+              src={cast.author.pfp_url}
+              alt={"Profile picture"}
+            />
+            <span className="font-bold text-xs">
+              {cast.author.display_name ?? cast.author.username}
+            </span>
+          </div>
 
-              <HStack gap={2} ml={"auto"}>
-                <HStack gap={0.5}>
-                  {" "}
-                  <Heart weight="fill" size={10} />
-                  <Text fontSize={"xs"} fontWeight={"bold"}>
-                    {cast.reactions.likes_count}
-                  </Text>{" "}
-                </HStack>
-                <HStack gap={0.5}>
-                  {" "}
-                  <ShareNetwork weight="fill" size={10} />
-                  <Text fontSize={"xs"} fontWeight={"bold"}>
-                    {cast.reactions.recasts_count}
-                  </Text>{" "}
-                </HStack>
-                <HStack gap={0.5}>
-                  {" "}
-                  <Chat weight="fill" size={10} />
-                  <Text fontSize={"xs"} fontWeight={"bold"}>
-                    {cast.replies.count}
-                  </Text>{" "}
-                </HStack>
-              </HStack>
-            </HStack>
-          </DataBlock>
-        </Link>
-      </>
+          <div className="ml-auto flex items-center gap-2">
+            <div className="flex items-center gap-0.5">
+              <Heart weight="fill" className="size-2.5" />
+              <span className="font-bold text-xs">{cast.reactions.likes_count}</span>
+            </div>
+            <div className="flex items-center gap-0.5">
+              <ShareNetwork weight="fill" className="size-2.5" />
+              <span className="font-bold text-xs">
+                {cast.reactions.recasts_count}
+              </span>
+            </div>
+            <div className="flex items-center gap-0.5">
+              <Chat weight="fill" className="size-2.5" />
+              <span className="font-bold text-xs">{cast.replies.count}</span>
+            </div>
+          </div>
+        </div>
+      </a>
     )
 
-  return <Skeleton w={32} h={5} />
+  return <Skeleton className="h-5 w-32" />
 }
-
-export default FarcasterCastSmall
