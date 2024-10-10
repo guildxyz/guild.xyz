@@ -7,7 +7,7 @@ export type SolutionName = keyof typeof solutions
 type HandlerTypeAndParam = OneOf<
   {
     handlerType: "reward"
-    handlerParam: Exclude<PlatformName, "GUILD_PIN">
+    handlerParam: Exclude<PlatformName, "GUILD_PIN" | "WORLD_ID">
   },
   {
     handlerType: "solution"
