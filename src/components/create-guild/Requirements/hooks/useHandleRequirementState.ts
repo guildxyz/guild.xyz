@@ -27,10 +27,7 @@ const useHandleRequirementState = (methods) => {
   }
 
   const append = (
-    req: Exclude<
-      Schemas["RequirementCreationPayload"],
-      { type: "WORLD_ID_VERIFICATION" }
-    >
+    req: Schemas["RequirementCreationPayload"]
   ): ClientStateRequirementCreateResponse => {
     const reqToAdd: ClientStateRequirementCreateResponse = { id: uuidv7(), ...req }
     if (freeEntry) {

@@ -117,13 +117,15 @@
     --google: 217 91% 60%;
     --google-hover: 221 83% 53%;
     --google-active: 224 76% 48%;
-    /* TODO: proper hover/active colors for Twitter */
-    --twitter: 0 0% 0%;
-    --twitter-hover: 0 0% 0%;
-    --twitter-active: 0 0% 0%;
-    --github: 0 0% 20%;
-    --github-hover: 0 0% 18%;
-    --github-active: 0 0% 15%;
+    --twitter: 240 4% 14%;
+    --twitter-hover: 240 4% 10%;
+    --twitter-active: 240 4% 6%;
+    --github: 240 4% 14%;
+    --github-hover: 240 4% 10%;
+    --github-active: 240 4% 6%;
+    --worldid: 240 4% 14%;
+    --worldid-hover: 240 4% 10%;
+    --worldid-active: 240 4% 6%;
 
     --farcaster: 261 55% 61%;
     --farcaster-hover: 261 55% 49%;
@@ -248,8 +250,6 @@
     --email-active: 212 96% 78%;
     --google-hover: 213 94% 68%;
     --google-active: 212 96% 78%;
-    --github-hover: 0 0% 44%;
-    --github-active: 0 0% 68%;
 
     --farcaster-hover: 261 54% 69%;
     --farcaster-active: 262 54% 77%;

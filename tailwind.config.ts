@@ -170,6 +170,11 @@ const config = {
           hover: "hsl(var(--github-hover))",
           active: "hsl(var(--github-active))",
         },
+        worldid: {
+          DEFAULT: "hsl(var(--worldid))",
+          hover: "hsl(var(--worldid-hover))",
+          active: "hsl(var(--worldid-active))",
+        },
         farcaster: {
           DEFAULT: "hsl(var(--farcaster))",
           hover: "hsl(var(--farcaster-hover))",

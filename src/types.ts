@@ -79,6 +79,7 @@ type PlatformName =
   | "GATHER_TOWN"
   | "ERC20"
   | "FARCASTER"
+  | "WORLD_ID"
 
 type PlatformUserData = {
   acessToken?: string
@@ -462,17 +463,14 @@ type Trait = {
   }
 }
 
-type Requirement = Exclude<
-  z.output<typeof schemas.RequirementSchema>,
-  { type: "WORLD_ID_VERIFICATION" }
->
-type RequirementCreateResponseOutput = Exclude<
-  z.output<typeof schemas.RequirementCreateResponseSchema>,
-  { type: "WORLD_ID_VERIFICATION" }
+type Requirement = z.output<typeof schemas.RequirementSchema>
+
+type RequirementCreateResponseOutput = z.output<
+  typeof schemas.RequirementCreateResponseSchema
 >
 
 type ClientStateRequirementCreateResponse = Omit<
-  Exclude<Schemas["RequirementCreateResponse"], { type: "WORLD_ID_VERIFICATION" }>,
+  Schemas["RequirementCreateResponse"],
   /**
    * These props won't be included in the response when we only store the requirement
    * object on client side, so we omit them from the type & add them back as optional
@@ -642,6 +640,7 @@ export enum PlatformType {
   FORM = 15,
   GATHER_TOWN = 16,
   ERC20 = 17,
+  WORLD_ID = 18,
 }
 
 enum ValidationMethod {
