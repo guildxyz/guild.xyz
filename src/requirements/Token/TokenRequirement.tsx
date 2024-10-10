@@ -1,4 +1,4 @@
-import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
+import { BlockExplorerUrl } from "components/[guild]/Requirements/components/BlockExplorerUrl"
 import {
   Requirement,
   RequirementProps,

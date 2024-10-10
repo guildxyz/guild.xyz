@@ -1,4 +1,4 @@
-import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
+import { BlockExplorerUrl } from "components/[guild]/Requirements/components/BlockExplorerUrl"
 import { RequirementLink } from "components/[guild]/Requirements/components/RequirementButton"
 import { RequirementChainIndicator } from "components/[guild]/Requirements/components/RequirementChainIndicator"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"

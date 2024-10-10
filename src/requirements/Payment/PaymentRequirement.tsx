@@ -1,6 +1,6 @@
 import { Icon, Text } from "@chakra-ui/react"
 import { Coins } from "@phosphor-icons/react"
-import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
+import { BlockExplorerUrl } from "components/[guild]/Requirements/components/BlockExplorerUrl"
 import BuyPass from "components/[guild]/Requirements/components/GuildCheckout/BuyPass"
 import { GuildCheckoutProvider } from "components/[guild]/Requirements/components/GuildCheckout/components/GuildCheckoutContext"
 import {

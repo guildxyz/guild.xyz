@@ -46,4 +46,4 @@ const BlockExplorerUrl = ({
   )
 }
 
-export default BlockExplorerUrl
+export { BlockExplorerUrl }

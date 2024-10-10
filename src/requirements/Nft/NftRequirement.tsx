@@ -2,7 +2,7 @@ import { Text, useDisclosure } from "@chakra-ui/react"
 import { consts } from "@guildxyz/types"
 import { ImageData } from "@nouns/assets"
 import { ArrowSquareOut } from "@phosphor-icons/react"
-import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
+import { BlockExplorerUrl } from "components/[guild]/Requirements/components/BlockExplorerUrl"
 import {
   Requirement,
   RequirementProps,
