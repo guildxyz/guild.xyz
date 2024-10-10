@@ -27,7 +27,7 @@ const FormRequirement = (props: RequirementProps) => {
       <span>{"Fill the "}</span>
 
       {!form ? (
-        <Skeleton className="inline h-4 w-40" />
+        <Skeleton className="inline-block h-5 w-40" />
       ) : !!userSubmission ? (
         <Tooltip open={!userSubmission ? false : undefined}>
           <TooltipTrigger asChild>

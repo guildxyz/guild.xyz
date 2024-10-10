@@ -106,7 +106,7 @@ const HaveRole = (props: RequirementProps): JSX.Element => {
           <span>{"Have the "}</span>
 
           {isGuildLoading || isRoleLoading || isGroupLoading ? (
-            <Skeleton className="inline h-4 w-40" />
+            <Skeleton className="inline-block h-5 w-40" />
           ) : (
             <>
               <Anchor
@@ -176,7 +176,7 @@ const GuildMember = (props: RequirementProps): JSX.Element => {
     <Requirement image={imageUrl} isImageLoading={isLoading} {...props}>
       <span>{"Be a member of the "}</span>
       {isLoading ? (
-        <Skeleton className="inline h-4 w-40" />
+        <Skeleton className="inline-block h-5 w-40" />
       ) : (
         <Anchor
           href={`/${urlName ?? requirement.data.guildId}`}
