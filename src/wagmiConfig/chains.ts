@@ -12,7 +12,6 @@ import {
   palm,
   scrollAlpha,
   taikoKatlaTestnet,
-  world,
   x1,
 } from "static/customChains"
 import {
@@ -716,14 +715,6 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/explorerLogos/cronos.svg",
     },
   },
-  WORLD_CHAIN: {
-    ...generateChainConfig(world, ETH_ICON),
-    iconUrl: "/networkLogos/world.svg",
-    blockExplorerIconUrl: {
-      light: "/networkLogos/world.svg",
-      dark: "/networkLogos/world.svg",
-    },
-  },
 }
 
 enum Chains {
@@ -794,7 +785,6 @@ enum Chains {
   MODE = mode.id,
   LISK = lisk.id,
   CRONOS_ZKEVM = cronoszkEVM.id,
-  WORLD_CHAIN = world.id,
 }
 
 export type Chain = keyof typeof Chains

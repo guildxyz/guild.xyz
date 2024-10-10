@@ -91,7 +91,6 @@ const TokenApiURLs: Record<Chain, string[]> = {
   MODE: [],
   LISK: ["https://static.optimism.io/optimism.tokenlist.json"],
   CRONOS_ZKEVM: [],
-  WORLD_CHAIN: [],
 }
 
 const fetchTokens = async ([_, chain]) =>
