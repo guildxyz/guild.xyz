@@ -1,7 +1,8 @@
-import { Text, useDisclosure } from "@chakra-ui/react"
+import { Button } from "@/components/ui/Button"
+import { useDisclosure } from "@/hooks/useDisclosure"
 import { consts } from "@guildxyz/types"
 import { ImageData } from "@nouns/assets"
-import { ArrowSquareOut } from "@phosphor-icons/react"
+import { ArrowSquareOut } from "@phosphor-icons/react/dist/ssr"
 import { BlockExplorerUrl } from "components/[guild]/Requirements/components/BlockExplorerUrl"
 import {
   Requirement,
@@ -9,7 +10,6 @@ import {
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import useGuild from "components/[guild]/hooks/useGuild"
-import Button from "components/common/Button"
 import { DataBlock } from "components/common/DataBlock"
 import { env } from "env"
 import { Fragment } from "react"
@@ -79,7 +79,7 @@ const NftRequirement = (props: RequirementProps) => {
           <DataBlock>{guildPinGuildName}</DataBlock>
         </>
       )}
-      <Text as="span">{" Guild Pin"}</Text>
+      <span>{" Guild Pin"}</span>
     </>
   ) : (
     metadataWithTraits?.name || metadata?.name
@@ -98,13 +98,7 @@ const NftRequirement = (props: RequirementProps) => {
   return (
     <Requirement
       image={
-        shouldRenderImage ? (
-          nftImage
-        ) : (
-          <Text as="span" fontWeight="bold" fontSize="xs">
-            NFT
-          </Text>
-        )
+        shouldRenderImage ? nftImage : <span className="font-bold text-xs">NFT</span>
       }
       isImageLoading={nftDataLoading}
       footer={<BlockExplorerUrl />}
@@ -176,9 +170,9 @@ const NftRequirement = (props: RequirementProps) => {
         <>
           {` with a `}
           <Button
-            variant="link"
-            rightIcon={<ArrowSquareOut />}
-            iconSpacing={0.5}
+            variant="unstyled"
+            className="p-0 hover:underline"
+            rightIcon={<ArrowSquareOut weight="bold" />}
             onClick={onOpen}
           >
             specific ID
