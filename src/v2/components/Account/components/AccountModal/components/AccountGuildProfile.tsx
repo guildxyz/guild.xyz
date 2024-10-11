@@ -19,9 +19,11 @@ import { LevelBadge } from "@app/(marketing)/profile/_components/LevelBadge"
 import { ArrowRight, DotsThreeVertical } from "@phosphor-icons/react"
 import { File, SignOut } from "@phosphor-icons/react/dist/ssr"
 
+import { purchaseHistoryDrawerAtom } from "@/components/Providers/atoms"
 import useConnectorNameAndIcon from "@/components/Web3ConnectionManager/hooks/useConnectorNameAndIcon"
 import { useExperienceProgression } from "@app/(marketing)/profile/_hooks/useExperienceProgression"
 import useUser from "components/[guild]/hooks/useUser"
+import { useSetAtom } from "jotai"
 import { NetworkIndicator } from "../components/NetworkIndicator"
 
 type AccountGuildProfileProps = {
@@ -36,6 +38,7 @@ export const AccountGuildProfile = ({
   const { guildProfile } = useUser()
   const xp = useExperienceProgression(true)
   const { connectorName } = useConnectorNameAndIcon()
+  const setIsPurchaseHistoryOpen = useSetAtom(purchaseHistoryDrawerAtom)
 
   if (!guildProfile) return null
 
@@ -108,7 +111,10 @@ export const AccountGuildProfile = ({
               />
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuItem className="flex items-center gap-2 px-4 font-semibold">
+              <DropdownMenuItem
+                className="flex items-center gap-2 px-4 font-semibold"
+                onClick={() => setIsPurchaseHistoryOpen(true)}
+              >
                 <File weight="bold" className="size-4" />
                 Purchase history
               </DropdownMenuItem>
