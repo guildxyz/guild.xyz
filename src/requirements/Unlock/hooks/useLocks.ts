@@ -27,7 +27,7 @@ const CHAINS_ENDPOINTS = {
     "https://api.studio.thegraph.com/query/65299/unlock-protocol-linea/version/latest",
   SCROLL:
     "https://api.studio.thegraph.com/query/65299/unlock-protocol-scroll/version/latest",
-} satisfies Partial<Record<Chain, string>>;
+} satisfies Partial<Record<Chain, string>>
 
 type Data = {
   address: string
