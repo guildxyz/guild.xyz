@@ -32,7 +32,7 @@ import Head from "next/head"
 import ErrorPage from "pages/_error"
 import { useEffect } from "react"
 import { SWRConfig } from "swr"
-import { Guild, SocialLinkKey } from "types"
+import { Guild, Requirement, SocialLinkKey } from "types"
 import fetcher from "utils/fetcher"
 import { addIntercomSettings } from "utils/intercom"
 import parseDescription from "utils/parseDescription"
@@ -240,6 +240,12 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
       revalidate: 300,
     }
 
+  const requirementsFallbackData: Record<string, Requirement[]> = {}
+  data.roles.forEach((role) => {
+    requirementsFallbackData[`/v2/guilds/${data.id}/roles/${role.id}/requirements`] =
+      role.requirements
+  })
+
   /**
    * Removing members and requirements, so they're not included in the SSG source
    * code, we only fetch them client side. Temporary until we switch to the new API
@@ -256,6 +262,7 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
     props: {
       fallback: {
         [endpoint]: filteredData,
+        ...requirementsFallbackData,
       },
     },
     revalidate: 300,
