@@ -47,6 +47,11 @@ export async function GET(request: NextRequest) {
         pfp_url,
         follower_count,
       })
-    ) satisfies SearchFarcasterUsersResponse
+    ) satisfies SearchFarcasterUsersResponse,
+    {
+      headers: {
+        "Cache-Control": "s-maxage=3600", // 1 hour
+      },
+    }
   )
 }

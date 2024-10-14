@@ -33,5 +33,12 @@ export async function GET(_: Request, { params }: { params: { id: string } }) {
 
   const { id, name, image_url } = channel.channel
 
-  return Response.json({ id, name, image_url })
+  return Response.json(
+    { id, name, image_url },
+    {
+      headers: {
+        "Cache-Control": "s-maxage=3600", // 1 hour
+      },
+    }
+  )
 }

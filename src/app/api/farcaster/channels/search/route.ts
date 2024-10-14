@@ -43,6 +43,11 @@ export async function GET(request: NextRequest) {
       id,
       name,
       image_url,
-    })) satisfies SearchFarcasterChannelsResponse
+    })) satisfies SearchFarcasterChannelsResponse,
+    {
+      headers: {
+        "Cache-Control": "s-maxage=3600", // 1 hour
+      },
+    }
   )
 }
