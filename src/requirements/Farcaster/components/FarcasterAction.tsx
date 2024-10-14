@@ -65,8 +65,9 @@ export function FarcasterAction() {
       }}
       className={PLATFORM_COLORS.FARCASTER}
     >
-      {type === "FARCASTER_FOLLOW" && farcasterUser?.display_name
-        ? `Follow ${farcasterUser?.display_name}`
+      {type === "FARCASTER_FOLLOW" &&
+      (farcasterUser?.display_name || farcasterUser?.username)
+        ? `Follow ${farcasterUser?.display_name ?? farcasterUser?.username}`
         : TYPE_TO_CTA[type]}
     </RequirementButton>
   )

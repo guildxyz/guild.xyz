@@ -48,17 +48,15 @@ export const FarcasterCastSmall = ({
           <div className="ml-auto flex items-center gap-2">
             <div className="flex items-center gap-0.5">
               <Heart weight="fill" className="size-2.5" />
-              <span className="font-bold text-xs">{cast.reactions.likes_count}</span>
+              <span className="font-bold text-xs">{cast.likes_count}</span>
             </div>
             <div className="flex items-center gap-0.5">
               <ShareNetwork weight="fill" className="size-2.5" />
-              <span className="font-bold text-xs">
-                {cast.reactions.recasts_count}
-              </span>
+              <span className="font-bold text-xs">{cast.recasts_count}</span>
             </div>
             <div className="flex items-center gap-0.5">
               <Chat weight="fill" className="size-2.5" />
-              <span className="font-bold text-xs">{cast.replies.count}</span>
+              <span className="font-bold text-xs">{cast.replies_count}</span>
             </div>
           </div>
         </div>

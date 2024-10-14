@@ -25,6 +25,7 @@ export const env = createEnv({
     OPENSEA_API_KEY: z.string(),
     SOUND_API_KEY: z.string(),
     ZEROX_API_KEY: z.string(),
+    NEYNAR_API_KEY: z.string(),
   },
   client: {
     // Guild APIs
@@ -92,5 +93,6 @@ export const env = createEnv({
     OPENSEA_API_KEY: process.env.OPENSEA_API_KEY,
     SOUND_API_KEY: process.env.SOUND_API_KEY,
     ZEROX_API_KEY: process.env.ZEROX_API_KEY,
+    NEYNAR_API_KEY: process.env.NEYNAR_API_KEY,
   },
 })

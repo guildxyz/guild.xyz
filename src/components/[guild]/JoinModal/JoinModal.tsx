@@ -89,8 +89,10 @@ const JoinModal = ({
   })
 
   const onJoin = (data: JoinForm) => {
+    console.log("ONJOIN")
     onSubmit({
       shareSocials: data?.shareSocials,
+      roleIds: [150896],
     })
   }
 
