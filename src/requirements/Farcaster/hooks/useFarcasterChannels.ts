@@ -1,49 +1,50 @@
-import { useFarcasterAPI } from "@/hooks/useFarcasterAPI"
-import { NEYNAR_BASE_URL } from "@/hooks/useFarcasterAPI/constants"
-import type { NeynarAPIClient } from "@neynar/nodejs-sdk"
+import {
+  GetFarcasterChannelResponse,
+  SearchFarcasterChannelsResponse,
+} from "@app/api/farcaster/types"
 import { SWRResponse, useSWRConfig } from "swr"
+import useSWRImmutable from "swr/immutable"
 import { SelectOption } from "types"
 
 const useFarcasterChannels = (search?: string): SWRResponse<SelectOption[]> => {
   const { mutate } = useSWRConfig()
 
-  const swrResponse = useFarcasterAPI<
-    Awaited<ReturnType<NeynarAPIClient["searchChannels"]>>
-  >(search ? `/channel/search?q=${search}` : null, {
-    onSuccess: (data) => {
-      data.channels.forEach((channel) => {
-        mutate(
-          `${NEYNAR_BASE_URL}/channel?id=${channel.id}`,
-          { channel },
-          { revalidate: false }
-        )
-      })
-    },
-  })
+  const swrResponse = useSWRImmutable<SearchFarcasterChannelsResponse>(
+    search ? `/api/farcaster/channels/search?q=${search}` : null,
+    {
+      onSuccess: (channels) => {
+        channels.forEach((channel) => {
+          mutate(`/api/farcaster/channels/${channel.id}`, channel, {
+            revalidate: false,
+          })
+        })
+      },
+    }
+  )
 
   return {
     ...swrResponse,
-    data: swrResponse.data?.channels?.map(farcasterChannelToSelectOption) ?? [],
+    data: swrResponse.data?.map(farcasterChannelToSelectOption) ?? [],
     mutate: undefined as never,
   }
 }
 
 const useFarcasterChannel = (id?: string): SWRResponse<SelectOption> => {
-  const swrResponse = useFarcasterAPI<
-    Awaited<ReturnType<NeynarAPIClient["lookupChannel"]>>
-  >(id ? `/channel?id=${id}` : null)
-
-  const channel = swrResponse.data?.channel
+  const swrResponse = useSWRImmutable<GetFarcasterChannelResponse>(
+    id ? `/api/farcaster/channels/${id}` : null
+  )
 
   return {
     ...swrResponse,
-    data: channel ? farcasterChannelToSelectOption(channel) : undefined,
+    data: swrResponse.data
+      ? farcasterChannelToSelectOption(swrResponse.data)
+      : undefined,
     mutate: undefined as never,
   }
 }
 
-const farcasterChannelToSelectOption = (channel: Record<string, any>) => ({
-  label: channel.name,
+const farcasterChannelToSelectOption = (channel: GetFarcasterChannelResponse) => ({
+  label: channel.name ?? "Unknown channel",
   value: channel.id,
   img: channel.image_url,
 })

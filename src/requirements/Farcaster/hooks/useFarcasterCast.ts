@@ -1,7 +1,6 @@
-import { useFarcasterAPI } from "@/hooks/useFarcasterAPI"
-import { NEYNAR_BASE_URL } from "@/hooks/useFarcasterAPI/constants"
-import type { NeynarAPIClient } from "@neynar/nodejs-sdk"
+import { GetFarcasterCastResponse } from "@app/api/farcaster/types"
 import { useSWRConfig } from "swr"
+import useSWRImmutable from "swr/immutable"
 import { ADDRESS_REGEX } from "utils/guildCheckout/constants"
 
 const useFarcasterCast = (hashOrUrl: string) => {
@@ -10,27 +9,19 @@ const useFarcasterCast = (hashOrUrl: string) => {
 
   const { cache } = useSWRConfig()
 
-  const { data, isLoading, error } = useFarcasterAPI<
-    Awaited<ReturnType<NeynarAPIClient["lookUpCastByHashOrWarpcastUrl"]>>
-  >(
+  return useSWRImmutable<GetFarcasterCastResponse>(
     isHash || isUrl
-      ? `/cast?identifier=${hashOrUrl}&type=${isHash ? "hash" : "url"}`
+      ? `/api/farcaster/casts?identifier=${hashOrUrl}&type=${isHash ? "hash" : "url"}`
       : null,
     {
-      onSuccess: (data) => {
+      onSuccess: (cast) => {
         if (!isUrl) return
-        cache.set(`${NEYNAR_BASE_URL}/cast?identifier=${data.cast.hash}&type=hash`, {
-          data,
+        cache.set(`/api/farcaster/casts?identifier=${cast.hash}&type=hash`, {
+          data: cast,
         })
       },
     }
   )
-
-  return {
-    isLoading: isLoading,
-    error: error,
-    data: data?.cast,
-  }
 }
 
 export { useFarcasterCast }
