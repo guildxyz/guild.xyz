@@ -7,9 +7,11 @@ import {
   LayoutTitle,
 } from "@/components/Layout"
 import { LayoutHeadline, LayoutMain } from "@/components/Layout"
+import { HStack } from "@chakra-ui/react"
 import { EditGuildFormComponent } from "components/[guild]/EditGuild/EditGuildFormComponent"
 import DeleteGuildButton from "components/[guild]/EditGuild/components/DeleteGuildButton"
 import { GuildPageBanner } from "components/[guild]/GuildPageBanner"
+import LeaveButton from "components/[guild]/LeaveButton"
 import NoPermissionToPageFallback from "components/[guild]/NoPermissionToPageFallback"
 import GuildTabs from "components/[guild]/Tabs/GuildTabs"
 import { ThemeProvider } from "components/[guild]/ThemeContext"
@@ -60,7 +62,10 @@ const DashboardPage = () => {
             {(isOwner || isSuperAdmin) && (
               <Card px={{ base: 5, md: 6 }} py={{ base: 6, md: 7 }}>
                 <Section title="Danger zone">
-                  <DeleteGuildButton />
+                  <HStack spacing={4}>
+                    <LeaveButton />
+                    <DeleteGuildButton />
+                  </HStack>
                 </Section>
               </Card>
             )}
