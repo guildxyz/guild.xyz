@@ -14,6 +14,7 @@ const JoinButton = (): JSX.Element => {
         {...(isMobile ? { size: "xl", variant: "subtle" } : {})}
         className="w-full rounded-none sm:w-auto sm:rounded-2xl"
         onClick={openJoinModal}
+        data-testid="join-button"
       >
         Join Guild
       </Button>

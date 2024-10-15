@@ -37,6 +37,7 @@ const LeaveButton = (props: ButtonProps) => {
         <PopoverTrigger>
           <IconButton
             aria-label="Leave guild"
+            data-testid="leave-button"
             icon={<SignOut />}
             onClick={onOpen}
             {...props}
@@ -74,6 +75,7 @@ const LeaveButton = (props: ButtonProps) => {
               ml={3}
               onClick={() => onSubmit({ guildId })}
               isLoading={isLoading}
+              data-testid="leave-alert-button"
             >
               Leave guild
             </Button>
