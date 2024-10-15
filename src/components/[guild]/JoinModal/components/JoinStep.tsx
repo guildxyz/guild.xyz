@@ -32,7 +32,7 @@ const JoinStep = ({
           {...buttonProps}
           disabled={isDone || buttonProps.disabled}
           className={cn(
-            "max-w-max shrink-0",
+            "min-w-max max-w-max shrink-0",
             {
               "max-w-40": isDone,
             },
