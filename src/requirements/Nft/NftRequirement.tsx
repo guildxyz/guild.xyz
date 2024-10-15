@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/Button"
-import { useDisclosure } from "@/hooks/useDisclosure"
 import { consts } from "@guildxyz/types"
 import { ImageData } from "@nouns/assets"
 import { ArrowSquareOut } from "@phosphor-icons/react/dist/ssr"
@@ -13,7 +12,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import { DataBlock } from "components/common/DataBlock"
 import { env } from "env"
 import { Fragment } from "react"
-import SearchableVirtualListModal from "requirements/common/SearchableVirtualListModal"
+import { SearchableListDialog } from "requirements/common/SearchableListDialog"
 import useSWRImmutable from "swr/immutable"
 import { Trait } from "types"
 import { isGuildPinSupportedChain } from "utils/guildCheckout/utils"
@@ -93,8 +92,6 @@ const NftRequirement = (props: RequirementProps) => {
     (nftName || (requirement.name && requirement.name !== "-")) &&
     (nftDataLoading || nftImage)
 
-  const { isOpen, onOpen, onClose } = useDisclosure()
-
   return (
     <Requirement
       image={
@@ -169,19 +166,18 @@ const NftRequirement = (props: RequirementProps) => {
       ) : requirement.data?.ids?.length > 0 ? (
         <>
           {` with a `}
-          <Button
-            variant="unstyled"
-            className="p-0 hover:underline"
-            rightIcon={<ArrowSquareOut weight="bold" />}
-            onClick={onOpen}
-          >
-            specific ID
-          </Button>
-          <SearchableVirtualListModal
+          <SearchableListDialog
             initialList={requirement.data?.ids}
-            isOpen={isOpen}
-            onClose={onClose}
             title="Token IDs"
+            trigger={
+              <Button
+                variant="unstyled"
+                className="h-auto p-0 underline-offset-2 hover:underline"
+                rightIcon={<ArrowSquareOut weight="bold" />}
+              >
+                specific ID
+              </Button>
+            }
           />
         </>
       ) : null}
