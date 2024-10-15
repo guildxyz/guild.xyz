@@ -1,5 +1,4 @@
-import { Link } from "@chakra-ui/next-js"
-import { Img } from "@chakra-ui/react"
+import { Anchor } from "@/components/ui/Anchor"
 import {
   Requirement,
   RequirementProps,
@@ -30,16 +29,18 @@ const SoundRequirement = (props: RequirementProps) => {
         switch (requirement.type) {
           case "SOUND_ARTIST_BACKED":
           case "SOUND_TOP_COLLECTOR":
-            if (artistData?.image) return <Img src={artistData?.image} />
+            if (artistData?.image)
+              return <img src={artistData?.image} alt={artistData.name} />
 
           case "SOUND_COLLECTED":
             const songImage = songsData?.filter(
               (song) => song.title == requirement.data.title
             )?.[0]?.image
-            if (songImage) return <Img src={songImage} />
+            if (songImage)
+              return <img src={songImage} alt={requirement.data.title} />
 
           default:
-            return <Img src="/requirementLogos/sound.png" />
+            return <img src="/requirementLogos/sound.png" alt="Sound requirement" />
         }
       })()}
       {...props}
@@ -49,69 +50,68 @@ const SoundRequirement = (props: RequirementProps) => {
           case "SOUND_ARTIST":
             return (
               <>
-                {`Be an artist on `}
-                <Link
+                <span>{"Be an artist on "}</span>
+                <Anchor
                   href={`https://www.sound.xyz/`}
-                  isExternal
-                  fontWeight="medium"
-                  colorScheme="blue"
+                  variant="highlighted"
+                  showExternal
+                  target="_blank"
                 >
                   Sound.xyz
-                </Link>
+                </Anchor>
               </>
             )
           case "SOUND_ARTIST_BACKED":
             return (
               <>
-                {`Collect any ${
+                <span>{`Collect any ${
                   requirement.data.tierNumber === 1 ? "limited edition" : ""
-                } song from `}
+                } song from `}</span>
                 <ArtistLink {...{ artistData, requirement }} />
-                {` on Sound.xyz`}
+                <span>{" on Sound.xyz"}</span>
               </>
             )
           case "SOUND_COLLECTED":
             return (
               <>
-                {`Collect the `}
-                <Link
+                <span>{"Collect the "}</span>
+                <Anchor
                   href={`https://www.sound.xyz/${requirement.data.id}/${slugify(
                     requirement.data.title
                   )}`}
-                  isExternal
-                  fontWeight="medium"
-                  colorScheme="blue"
+                  variant="highlighted"
+                  showExternal
+                  target="_blank"
                 >
                   {requirement.data.title}
-                </Link>
-                {`${
+                </Anchor>
+                <span>{`${
                   requirement.data.tierNumber === 1 ? " limited edition" : ""
-                } song from `}
+                } song from `}</span>
                 <ArtistLink {...{ artistData, requirement }} />
-                {` on Sound.xyz`}
+                <span>{" on Sound.xyz"}</span>
               </>
             )
           case "SOUND_TOP_COLLECTOR":
             return (
               <>
-                {`Be in the top ${requirement.data.topAmount} collectors of `}
+                <span>{`Be in the top ${requirement.data.topAmount} collectors of `}</span>
                 <ArtistLink {...{ artistData, requirement }} />
-                {` on Sound.xyz`}
+                <span>{" on Sound.xyz"}</span>
               </>
             )
           case "SOUND_NFTS":
             return (
               <>
-                {`Own at least ${requirement.data.minAmount}`}
-                {` songs on `}
-                <Link
-                  href={`https://www.sound.xyz/`}
-                  isExternal
-                  fontWeight="medium"
-                  colorScheme="blue"
+                <span>{`Own at least ${requirement.data.minAmount} songs on `}</span>
+                <Anchor
+                  href="https://www.sound.xyz"
+                  variant="highlighted"
+                  showExternal
+                  target="_blank"
                 >
                   Sound.xyz
-                </Link>
+                </Anchor>
               </>
             )
         }
@@ -121,14 +121,14 @@ const SoundRequirement = (props: RequirementProps) => {
 }
 
 export const ArtistLink = ({ artistData, requirement }) => (
-  <Link
+  <Anchor
     href={`https://www.sound.xyz/${requirement.data.id}`}
-    isExternal
-    fontWeight="medium"
-    colorScheme="blue"
+    variant="highlighted"
+    showExternal
+    target="_blank"
   >
     {artistData?.name ?? requirement.data.id}
-  </Link>
+  </Anchor>
 )
 
 export default SoundRequirement
