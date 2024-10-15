@@ -4,6 +4,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogOverlay,
+  ButtonProps,
   useDisclosure,
 } from "@chakra-ui/react"
 import useLeaveGuild from "components/[guild]/LeaveButton/hooks/useLeaveGuild"
@@ -14,8 +15,8 @@ import useMembership from "components/explorer/hooks/useMembership"
 import { useRouter } from "next/navigation"
 import { useRef } from "react"
 
-const LeaveGuildButton = () => {
-  const { isOpen, onClose } = useDisclosure()
+const LeaveGuildButton = (props: ButtonProps) => {
+  const { isOpen, onOpen, onClose } = useDisclosure()
   const cancelRef = useRef()
   const router = useRouter()
 
@@ -27,6 +28,15 @@ const LeaveGuildButton = () => {
 
   return (
     <>
+      <Button
+        aria-label="Leave guild"
+        data-testid="leave-button"
+        onClick={onOpen}
+        {...props}
+      >
+        Leave guild
+      </Button>
+
       <Alert leastDestructiveRef={cancelRef} onClose={onClose} isOpen={isOpen}>
         <AlertDialogOverlay />
 
