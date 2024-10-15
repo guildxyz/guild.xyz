@@ -1,5 +1,5 @@
-import { Icon, Img, Tag, TagLabel, Text, useColorModeValue } from "@chakra-ui/react"
-import { ArrowsLeftRight } from "@phosphor-icons/react"
+import { Badge } from "@/components/ui/Badge"
+import { ArrowsLeftRight } from "@phosphor-icons/react/dist/ssr"
 import {
   Requirement,
   RequirementProps,
@@ -18,24 +18,20 @@ const FuelRequirement = (props: RequirementProps) => {
   const requirementAddress = address as `0x${string}`
   const requirementDataSymbol = data.symbol
 
-  const tagBg = useColorModeValue("white", "blackAlpha.300")
-
   return (
     <Requirement
       image={
         type === "FUEL_BALANCE" ? (
-          <Text as="span" fontWeight="bold" fontSize="xx-small">
-            TOKEN
-          </Text>
+          <span className="font-bold text-[xx-small]">TOKEN</span>
         ) : (
-          <Icon as={ArrowsLeftRight} boxSize={6} />
+          <ArrowsLeftRight weight="bold" className="size-6" />
         )
       }
       footer={
-        <Tag size="sm" bg={tagBg}>
-          <Img src="/walletLogos/fuel.svg" alt="Fuel" boxSize={3} mr={1} />
-          <TagLabel>Fuel</TagLabel>
-        </Tag>
+        <Badge size="sm">
+          <img src="/walletLogos/fuel.svg" alt="Fuel" className="size-3" />
+          <span>Fuel</span>
+        </Badge>
       }
       {...props}
     >
@@ -54,7 +50,7 @@ const FuelRequirement = (props: RequirementProps) => {
                 {address === NULL_FUEL_ADDRESS ? (
                   "ETH"
                 ) : requirementDataSymbol ? (
-                  <Text as="span">{requirementDataSymbol}</Text>
+                  <span>{requirementDataSymbol}</span>
                 ) : (
                   <DataBlockWithCopy text={requirementAddress}>
                     {shortenHex(requirementAddress)}
@@ -63,18 +59,19 @@ const FuelRequirement = (props: RequirementProps) => {
               </>
             )
           case "FUEL_TRANSACTIONS":
+            const minAmountGTOne = (data.minAmount ?? 0) > 1
             return (typeof data.minAmount === "number" && !data.maxAmount) ||
               (!data.minAmount && !data.maxAmount)
-              ? `Have ${data.minAmount > 1 ? data.minAmount : "a"}${
+              ? `Have ${minAmountGTOne ? data.minAmount : "a"}${
                   !!data.id ? ` ${data.id}` : ""
-                } transaction${data.minAmount > 1 ? "s" : ""}`
+                } transaction${minAmountGTOne ? "s" : ""}`
               : typeof data.maxAmount === "number" && !data.minAmount
                 ? `Have at most ${data.maxAmount}${
                     !!data.id ? ` ${data.id}` : ""
-                  } transaction${data.minAmount > 1 ? "s" : ""}`
+                  } transaction${minAmountGTOne ? "s" : ""}`
                 : `Have ${data.minAmount} - ${data.maxAmount}${
                     !!data.id ? ` ${data.id}` : ""
-                  } transaction${data.minAmount > 1 ? "s" : ""}`
+                  } transaction${minAmountGTOne ? "s" : ""}`
         }
       })()}
     </Requirement>
