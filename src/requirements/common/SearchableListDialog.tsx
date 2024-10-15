@@ -3,12 +3,13 @@ import {
   DialogBody,
   DialogCloseButton,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/Dialog"
 import { Input } from "@/components/ui/Input"
-import { MagnifyingGlass } from "@phosphor-icons/react/dist/ssr"
+import { CircleNotch, MagnifyingGlass } from "@phosphor-icons/react/dist/ssr"
 import { ReactNode } from "react"
 import { useDebounceValue } from "usehooks-ts"
 
@@ -16,9 +17,19 @@ type Props = {
   trigger: ReactNode
   title: string
   initialList: string[]
+  isLoading?: boolean
+  footer?: ReactNode
+  onSearchChange?: (newValue: string) => void
 }
 
-const SearchableListDialog = ({ trigger, title, initialList }: Props) => {
+const SearchableListDialog = ({
+  trigger,
+  title,
+  initialList,
+  isLoading,
+  footer,
+  onSearchChange,
+}: Props) => {
   const [search, setSearch] = useDebounceValue("", 300)
 
   const filteredList =
@@ -29,11 +40,18 @@ const SearchableListDialog = ({ trigger, title, initialList }: Props) => {
   return (
     <Dialog>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent scrollBody>
+      <DialogContent size="lg" scrollBody>
         <DialogHeader className="gap-4">
           <DialogTitle>{title}</DialogTitle>
           <div className="relative">
-            <Input onChange={(e) => setSearch(e.target.value)} className="pr-8" />
+            <Input
+              onChange={(e) => {
+                setSearch(e.target.value)
+                onSearchChange?.(e.target.value)
+              }}
+              className="pr-8"
+              placeholder="Search..."
+            />
             <MagnifyingGlass
               weight="bold"
               className="absolute top-3 right-3 size-4 text-muted-foreground"
@@ -43,9 +61,11 @@ const SearchableListDialog = ({ trigger, title, initialList }: Props) => {
 
         <DialogBody
           scroll
-          className="scroll-shadow [--scroll-shadow-bg:hsl(var(--card))]"
+          className="scroll-shadow min-h-40 [--scroll-shadow-bg:hsl(var(--card))]"
         >
-          {filteredList?.length > 0 ? (
+          {isLoading ? (
+            <CircleNotch className="mx-auto size-8 animate-spin" />
+          ) : filteredList?.length > 0 ? (
             <ul>
               {filteredList.map((item) => (
                 <li>{item}</li>
@@ -55,6 +75,8 @@ const SearchableListDialog = ({ trigger, title, initialList }: Props) => {
             <p className="text-muted-foreground">No results</p>
           )}
         </DialogBody>
+
+        {footer && <DialogFooter>{footer}</DialogFooter>}
 
         <DialogCloseButton />
       </DialogContent>
