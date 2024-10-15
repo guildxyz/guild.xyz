@@ -33,8 +33,7 @@ const LeaveGuildButton = () => {
         <AlertDialogContent>
           <AlertDialogHeader pb="5">Leave guild</AlertDialogHeader>
           <AlertDialogBody>
-            Are you sure? You'll lose all your roles and can only get them back if
-            you still meet all the requirements.
+            Are you sure? You'll lose all your roles and your admin status.
           </AlertDialogBody>
           <AlertDialogFooter>
             <Button ref={cancelRef} onClick={onClose}>
