@@ -4,12 +4,6 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogOverlay,
-  ButtonProps,
-  Popover,
-  PopoverArrow,
-  PopoverBody,
-  PopoverContent,
-  PopoverTrigger,
   useDisclosure,
 } from "@chakra-ui/react"
 import useLeaveGuild from "components/[guild]/LeaveButton/hooks/useLeaveGuild"
@@ -20,8 +14,8 @@ import useMembership from "components/explorer/hooks/useMembership"
 import { useRouter } from "next/navigation"
 import { useRef } from "react"
 
-const LeaveButton = (props: ButtonProps) => {
-  const { isOpen, onOpen, onClose } = useDisclosure()
+const LeaveGuildButton = () => {
+  const { isOpen, onClose } = useDisclosure()
   const cancelRef = useRef()
   const router = useRouter()
 
@@ -33,31 +27,6 @@ const LeaveButton = (props: ButtonProps) => {
 
   return (
     <>
-      <Popover trigger="hover" placement="bottom">
-        <PopoverTrigger>
-          <Button
-            aria-label="Leave guild"
-            data-testid="leave-button"
-            onClick={onOpen}
-            {...props}
-          >
-            Leave guild
-          </Button>
-        </PopoverTrigger>
-
-        <PopoverContent w="max-content">
-          <PopoverArrow />
-          <PopoverBody
-            fontWeight="medium"
-            fontSize="sm"
-            py={1.5}
-            px={3}
-            w="max-content"
-          >
-            Leave guild
-          </PopoverBody>
-        </PopoverContent>
-      </Popover>
       <Alert leastDestructiveRef={cancelRef} onClose={onClose} isOpen={isOpen}>
         <AlertDialogOverlay />
 
@@ -87,4 +56,4 @@ const LeaveButton = (props: ButtonProps) => {
   )
 }
 
-export default LeaveButton
+export default LeaveGuildButton
