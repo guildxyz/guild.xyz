@@ -11,7 +11,7 @@ import {
 import { HStack } from "@chakra-ui/react"
 import { EditGuildFormComponent } from "components/[guild]/EditGuild/EditGuildFormComponent"
 import DeleteGuildButton from "components/[guild]/EditGuild/components/DeleteGuildButton"
-import LeaveGuildButton from "components/[guild]/EditGuild/components/LeaveGuildButton/LeaveGuildButton"
+import LeaveGuildButton from "components/[guild]/EditGuild/components/LeaveGuildButton"
 import { GuildPageBanner } from "components/[guild]/GuildPageBanner"
 import NoPermissionToPageFallback from "components/[guild]/NoPermissionToPageFallback"
 import GuildTabs from "components/[guild]/Tabs/GuildTabs"
