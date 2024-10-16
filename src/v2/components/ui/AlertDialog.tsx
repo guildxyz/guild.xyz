@@ -100,6 +100,17 @@ const AlertDialogDescription = forwardRef<
 ))
 AlertDialogDescription.displayName = AlertDialogPrimitive.Description.displayName
 
+const AlertDialogBody = ({
+  className,
+  ...props
+}: HTMLAttributes<HTMLDivElement>) => (
+  <div
+    className={cn("flex flex-col overflow-visible pb-10 has-[~div]:pb-0", className)}
+    {...props}
+  />
+)
+AlertDialogBody.displayName = "AlertDialogBody"
+
 const AlertDialogAction = forwardRef<
   ElementRef<typeof AlertDialogPrimitive.Action>,
   ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Action>
@@ -130,6 +141,7 @@ export {
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
+  AlertDialogBody,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
