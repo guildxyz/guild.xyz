@@ -7,6 +7,7 @@ import { Modal } from "components/common/Modal"
 import { useState } from "react"
 import { useWatch } from "react-hook-form"
 import { AddRewardPanelProps, modalSizeForPlatform } from "rewards"
+import { cardSettings } from "rewards/CardSettings"
 import rewardComponents from "rewards/components"
 import { RoleFormType } from "types"
 import EditRolePlatformModal from "../EditRolePlatformModal"
@@ -60,7 +61,20 @@ const AddRoleRewardModal = ({ onAdd }: Props) => {
     if (existingGuildPlatform) {
       rolePlatformWithVisibility.guildPlatformId = existingGuildPlatform.id
       setSelectedExistingRolePlatform(rolePlatformWithVisibility)
-      onEditRolePlatformModalOpen()
+
+      /**
+       * TODO
+       * We don't validate properly if the TG group was already added to the guild when pasting the ID, so we added this extra check to avoid opening this modal with undefined edit reward components
+       *
+       * We should properly validate the add reward form later (maybe even with the Zod schemas...)!
+       */
+
+      if (
+        data.guildPlatform?.platformName &&
+        data.guildPlatform.platformName in cardSettings
+      ) {
+        onEditRolePlatformModalOpen()
+      }
     } else {
       onAdd(rolePlatformWithVisibility)
     }
