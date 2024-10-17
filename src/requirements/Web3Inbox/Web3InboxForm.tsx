@@ -10,32 +10,13 @@ import OptionImage from "components/common/StyledSelect/components/CustomSelectO
 import { useFormState, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements/types"
 import parseFromObject from "utils/parseFromObject"
-
-const WEB3INBOX_APPS = ["GUILD", "WEB3INBOX", "SHEFI"] as const
-export const APP_DETAILS: Record<
-  (typeof WEB3INBOX_APPS)[number],
-  {
-    name: string
-    image: string
-  }
-> = {
-  GUILD: {
-    name: "Guild.xyz",
-    image: "/requirementLogos/guild.png",
-  },
-  WEB3INBOX: {
-    name: "Web3Inbox",
-    image: "/requirementLogos/web3inbox.png",
-  },
-  SHEFI: {
-    name: "SheFi Summit",
-    image: "/requirementLogos/shefi.jpg",
-  },
-}
+import { APP_DETAILS, WEB3INBOX_APPS } from "./constants"
 
 const Web3InboxForm = ({ baseFieldPath }: RequirementFormProps) => {
   const { errors } = useFormState()
-  const app = useWatch({ name: `${baseFieldPath}.data.app` })
+  const app: (typeof WEB3INBOX_APPS)[number] = useWatch({
+    name: `${baseFieldPath}.data.app`,
+  })
 
   return (
     <FormControl

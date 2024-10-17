@@ -135,6 +135,10 @@
     --uniswap-hover: 332 100% 35%;
     --uniswap-active: 331 100% 25%;
 
+    --web3inbox: 179 99% 32%;
+    --web3inbox-hover: 179 99% 29%;
+    --web3inbox-active: 179 98% 25%;
+
     /**
      * Missing reward colors to work with the current Chakra driven solution.
      * Should find a better solution when we ditch Chakra and won't need to be backward compatible
@@ -257,6 +261,8 @@
     --uniswap-hover: 331 100% 55%;
     --uniswap-active: 331 100% 65%;
 
+    --web3inbox-hover: 179 99% 38%;
+    --web3inbox-active: 179 99% 44%;
   }
 }
 
