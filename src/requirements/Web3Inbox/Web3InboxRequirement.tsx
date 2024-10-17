@@ -18,7 +18,7 @@ const Web3InboxRequirement = (props: RequirementProps) => {
       image={APP_DETAILS[data.app]?.image}
       footer={
         !isValidating &&
-        !!hasAccess && (
+        !hasAccess && (
           <a
             href="https://app.web3inbox.com"
             className={buttonVariants({
