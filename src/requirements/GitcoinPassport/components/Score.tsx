@@ -13,10 +13,7 @@ import { useController, useFormContext } from "react-hook-form"
 import { RequirementFormProps } from "requirements/types"
 import { SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
-
-export const scorers: Record<number, string> = {
-  1351: "Unique Humanity Score",
-}
+import { scorers } from "../constants"
 
 const scorerOptions: SelectOption[] = Object.entries(scorers).map(
   ([scorerId, scorerName]) => ({
