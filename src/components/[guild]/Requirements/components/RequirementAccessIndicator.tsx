@@ -69,7 +69,7 @@ const RequirementAccessIndicator = () => {
         </p>
         <div className="mt-2 flex justify-end">
           {type === "CAPTCHA" ? (
-            <DynamicCompleteCaptcha size="sm" iconSpacing={2} />
+            <DynamicCompleteCaptcha size="sm" />
           ) : type.startsWith("GITCOIN_") ? (
             <DynamicSetupPassport size="sm" />
           ) : (
