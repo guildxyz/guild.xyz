@@ -1,19 +1,9 @@
 import {
-  Icon,
   Popover,
-  PopoverArrow,
-  PopoverBody,
   PopoverContent,
-  PopoverHeader,
+  PopoverPortal,
   PopoverTrigger,
-  Portal,
-  Stack,
-  Table,
-  Tbody,
-  Td,
-  Tr,
-  useColorModeValue,
-} from "@chakra-ui/react"
+} from "@/components/ui/Popover"
 import { CaretDown, Function } from "@phosphor-icons/react/dist/ssr"
 import { BlockExplorerUrl } from "components/[guild]/Requirements/components/BlockExplorerUrl"
 import {
@@ -27,76 +17,67 @@ import shortenHex from "utils/shortenHex"
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
+type MappedParam = { value: string }
+const isMappedParam = (param: any): param is MappedParam =>
+  typeof param === "object" && "value" in param
+
 const ContractStateRequirement = (props: RequirementProps) => {
-  const requirement = useRequirementContext()
-  const tableBgColor = useColorModeValue("white", "blackAlpha.300")
+  const requirement = useRequirementContext<"CONTRACT">()
 
   return (
     <Requirement
-      image={<Icon as={Function} boxSize={6} />}
+      image={<Function weight="bold" className="size-6" />}
       footer={
-        <Stack direction={["column", "row"]} spacing={2} alignItems="start">
+        <>
           <BlockExplorerUrl path="address" />
 
-          <Popover placement="bottom">
-            <PopoverTrigger>
+          <Popover>
+            <PopoverTrigger asChild>
               <RequirementButton rightIcon={<CaretDown weight="bold" />}>
                 View query
               </RequirementButton>
             </PopoverTrigger>
 
-            <Portal>
-              <PopoverContent>
-                <PopoverArrow />
-                <PopoverHeader
-                  fontSize="xs"
-                  fontWeight="bold"
-                  textTransform="uppercase"
-                >
+            <PopoverPortal>
+              <PopoverContent side="bottom" className="p-0">
+                <div className="border-border border-b p-1.5 font-bold text-xs uppercase">
                   Query
-                </PopoverHeader>
-                <PopoverBody p={0}>
-                  <Table
-                    variant="simple"
-                    w="full"
-                    sx={{ tableLayout: "fixed", borderCollapse: "unset" }}
-                    size="sm"
-                    bg={tableBgColor}
-                    borderWidth={0}
-                    borderBottomRadius="xl"
-                  >
-                    <Tbody fontWeight="normal" fontSize="xs">
-                      {requirement.data.params?.map((param, i) => (
-                        <Tr key={i}>
-                          <Td>{`${i + 1}. input param`}</Td>
-                          <Td>{param.value}</Td>
-                        </Tr>
-                      ))}
-                      <Tr fontWeight={"semibold"}>
-                        <Td>{`Expected ${
-                          requirement.data.resultIndex !== undefined
-                            ? `${requirement.data.resultIndex + 1}. `
-                            : ""
-                        }output`}</Td>
-                        <Td>
-                          {`${requirement.data.resultMatch} ${
-                            ADDRESS_REGEX.test(requirement.data.expected)
-                              ? shortenHex(requirement.data.expected, 3)
-                              : requirement.data.expected
-                          }`}
-                        </Td>
-                      </Tr>
-                    </Tbody>
-                  </Table>
-                </PopoverBody>
+                </div>
+
+                <table className="w-full table-fixed rounded-b-xl bg-card dark:bg-blackAlpha">
+                  <tbody className="text-xs">
+                    {requirement.data.params?.map((param, i) => (
+                      <tr key={i} className="border-border border-b [&>td]:p-1.5">
+                        <td>{`${i + 1}. input param`}</td>
+                        <td>
+                          {isMappedParam(param) ? param.value.toString() : param}
+                        </td>
+                      </tr>
+                    ))}
+                    <tr className="font-semibold [&>td]:p-1.5">
+                      <td>{`Expected ${
+                        requirement.data.resultIndex !== undefined
+                          ? `${requirement.data.resultIndex + 1}. `
+                          : ""
+                      }output`}</td>
+                      <td>
+                        {`${requirement.data.resultMatch} ${
+                          ADDRESS_REGEX.test(requirement.data.expected)
+                            ? shortenHex(requirement.data.expected, 3)
+                            : requirement.data.expected
+                        }`}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </PopoverContent>
-            </Portal>
+            </PopoverPortal>
           </Popover>
-        </Stack>
+        </>
       }
       {...props}
     >
-      Satisfy custom query of{" "}
+      <span>{"Satisfy custom query of "}</span>
       <DataBlock>{requirement.data.id.split("(")[0]}</DataBlock> on the{" "}
       <DataBlock>{shortenHex(requirement.address, 3)}</DataBlock> contract
     </Requirement>
