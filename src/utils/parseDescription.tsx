@@ -22,7 +22,7 @@ const parseDescription = (description?: string) => {
             key={linkMatches[i][0]}
             href={linkMatches[i][0]}
             // TODO: generate custom (non-Chakra) variables in the theme context
-            className="text-[var(--chakra-colors-primary-500)]"
+            className="break-all text-[var(--chakra-colors-primary-500)]"
             onClick={(e) => e.stopPropagation()}
           >
             {linkMatches[i][0]}
