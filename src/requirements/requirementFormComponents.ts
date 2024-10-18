@@ -342,6 +342,9 @@ export const REQUIREMENT_FORM_COMPONENTS = {
   ),
   NOOX: dynamic<RequirementFormProps>(() => import("requirements/Noox/NooxForm")),
   YUP: dynamic<RequirementFormProps>(() => import("requirements/Yup/YupForm")),
+  LINEA_POH: dynamic<RequirementFormProps>(
+    () => import("requirements/LineaPOH/LineaPOHForm")
+  ),
 } as const satisfies Record<
   RequirementType,
   ReturnType<typeof dynamic<RequirementFormProps>> | null
