@@ -1,17 +1,25 @@
 import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import { useAccount, useProvider, useWallet } from "@fuels/react"
 import useGuild from "components/[guild]/hooks/useGuild"
+import { Contract } from "fuels"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import { useToastWithShareButtons } from "hooks/useToastWithShareButtons"
 import { useState } from "react"
 import fetcher from "utils/fetcher"
-import { parseFuelAddress } from "utils/parseFuelAddress"
 import { useMintGuildPinContext } from "../../../MintGuildPinContext"
-import type { ClaimParametersInput, GuildActionInput } from "../GuildPinContractAbi"
-import { GuildPinContractAbi__factory } from "../GuildPinContractAbi_factory"
+import { ClaimParametersInput, GuildActionInput, abi } from "../GuildPinContract"
 import { FUEL_FAKE_CHAIN_ID, FUEL_GUILD_PIN_CONTRACT_ID_0X } from "./constants"
 import useFuelGuildPinFee from "./useFuelGuildPinFee"
+
+const signatureToBits = (signature: string) => {
+  // Remove the leading "0x"
+  const str = signature.slice(2)
+  // Then split the signature in 2 equal length strings
+  const first = str.slice(0, str.length / 2)
+  const second = str.slice(str.length / 2)
+  return [`0x${first}`, `0x${second}`]
+}
 
 type FuelMintData = {
   userAddress: string
@@ -43,7 +51,6 @@ const useMintFuelGuildPin = () => {
   const { provider } = useProvider()
   const { wallet } = useWallet()
   const { account } = useAccount()
-  const address = parseFuelAddress(account)
 
   const [loadingText, setLoadingText] = useState("")
 
@@ -65,7 +72,7 @@ const useMintFuelGuildPin = () => {
       signature,
     }: FuelMintData = await fetcher(`/v2/guilds/${id}/pin`, {
       body: {
-        userAddress: address,
+        userAddress: account,
         guildId: id,
         guildAction: pinType,
         chainId: FUEL_FAKE_CHAIN_ID,
@@ -80,11 +87,7 @@ const useMintFuelGuildPin = () => {
     if (!wallet) throw new Error("Couldn't find Fuel wallet")
     if (typeof fee === "undefined") throw new Error("Couldn't fetch fee")
 
-    const contract = GuildPinContractAbi__factory.connect(
-      FUEL_GUILD_PIN_CONTRACT_ID_0X,
-      wallet
-    )
-
+    const contract = new Contract(FUEL_GUILD_PIN_CONTRACT_ID_0X, abi, wallet)
     const contractCallParams = {
       recipient: {
         bits: userAddress,
@@ -108,35 +111,12 @@ const useMintFuelGuildPin = () => {
       },
     } as const satisfies ClaimParametersInput
 
-    await contract.functions
-      .claim(contractCallParams, signature)
+    const { waitForResult } = await contract.functions
+      .claim(contractCallParams, { bits: signatureToBits(signature) })
       .callParams({ forward: [fee.toNumber(), provider.getBaseAssetId()] })
       .call()
 
-    // We can't fetch users Fuel Pins, since there isn't a method for it in the contract yet
-    // const mintedPinId: BN = contractCallRes.logs[0].pin_id
-    // const { value: rawMetadata } = await contract.functions
-    //   .metadata(mintedPinId)
-    //   .simulate()
-    //   .catch(() => null)
-
-    // if (rawMetadata) {
-    //   try {
-    //     const metadata: GuildPinMetadata = JSON.parse(rawMetadata)
-    //     mutate((prevData) => [
-    //       ...(prevData ?? []),
-    //       {
-    //         chainId: FUEL_FAKE_CHAIN_ID,
-    //         tokenId: mintedPinId.toNumber(),
-    //         ...metadata,
-    //         image: metadata.image.replace(
-    //           "ipfs://",
-    //           env.NEXT_PUBLIC_IPFS_GATEWAY
-    //         ),
-    //       },
-    //     ])
-    //   } catch {}
-    // }
+    await waitForResult()
 
     captureEvent("Minted Fuel Guild Pin (GuildCheckout)", postHogOptions)
 

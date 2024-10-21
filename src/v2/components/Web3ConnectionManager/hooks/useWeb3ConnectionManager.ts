@@ -7,7 +7,6 @@ import {
 import { UserProfile } from "@guildxyz/types"
 import { atom, useAtom } from "jotai"
 import { useEffect } from "react"
-import { parseFuelAddress } from "utils/parseFuelAddress"
 import { useAccount, useDisconnect, useSignMessage, useWalletClient } from "wagmi"
 
 const safeContextAtom = atom(false)
@@ -36,12 +35,11 @@ export function useWeb3ConnectionManager(): {
     setIsInSafeContext(true)
   }, [isEvmConnected, evmConnector, setIsInSafeContext])
 
-  const { account: fuelAccount } = useFuelAccount()
-  const fuelAddress = parseFuelAddress(fuelAccount)
+  const { account: fuelAddress } = useFuelAccount()
   const { isConnected: isFuelConnected } = useIsConnected()
 
   const isWeb3Connected = isEvmConnected || isFuelConnected
-  const address = evmAddress || fuelAddress
+  const address = (evmAddress || fuelAddress) as `0x${string}` | undefined
 
   let type: "EVM" | "FUEL" | null = null
   if (isEvmConnected) {
@@ -72,7 +70,7 @@ export function useWeb3ConnectionManager(): {
   return {
     isInSafeContext,
     isWeb3Connected,
-    address: address,
+    address,
     type,
     disconnect,
     signMessage,
