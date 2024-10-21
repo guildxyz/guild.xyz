@@ -7,7 +7,7 @@ import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements/types"
 import { SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
-import useProposals from "../hooks/useProposals"
+import { useProposals } from "../hooks/useProposals"
 
 type Props = RequirementFormProps & {
   onChange?: (newValue: SelectOption) => void

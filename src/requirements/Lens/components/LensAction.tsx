@@ -1,67 +1,8 @@
 import { FormControl, FormLabel } from "@chakra-ui/react"
 import ControlledSelect from "components/common/ControlledSelect"
 import { RequirementFormProps } from "requirements/types"
-import { SelectOption } from "types"
+import { actionOptions, lensPlatformOptions } from "../constants"
 import LensPostInput from "./LensPostInput"
-
-export type LensActionType = "MIRROR" | "COMMENT" | "QUOTE"
-const reactionOptions: SelectOption<LensActionType>[] = [
-  {
-    label: "Comment",
-    value: "COMMENT",
-  },
-  {
-    label: "Quote",
-    value: "QUOTE",
-  },
-  {
-    label: "Mirror",
-    value: "MIRROR",
-  },
-]
-
-export const lensPlatformOptions: SelectOption[] = [
-  {
-    label: "Hey",
-    value: "hey",
-  },
-  {
-    label: "Orb",
-    value: "orb",
-  },
-  {
-    label: "Phaver",
-    value: "phaver",
-  },
-  {
-    label: "Tape",
-    value: "tape",
-  },
-  {
-    label: "Buttrfly",
-    value: "buttrfly",
-  },
-  {
-    label: "BloomersTV",
-    value: "bloomers.tv",
-  },
-  {
-    label: "Kaira",
-    value: "kaira",
-  },
-  {
-    label: "Yup",
-    value: "yup",
-  },
-  {
-    label: "Orna",
-    value: "orna.art",
-  },
-  {
-    label: "Firefly",
-    value: "firefly",
-  },
-]
 
 const LensAction = ({ baseFieldPath, field }: RequirementFormProps) => (
   <>
@@ -71,7 +12,7 @@ const LensAction = ({ baseFieldPath, field }: RequirementFormProps) => (
       <FormLabel>Action:</FormLabel>
       <ControlledSelect
         name={`${baseFieldPath}.data.action`}
-        options={reactionOptions}
+        options={actionOptions}
       />
     </FormControl>
 

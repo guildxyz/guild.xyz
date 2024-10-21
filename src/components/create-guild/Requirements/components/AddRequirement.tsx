@@ -304,7 +304,13 @@ const AddRequirementForm = forwardRef(
               <Button
                 colorScheme="green"
                 onClick={onSubmit}
-                isDisabled={!methods.formState.isDirty}
+                /**
+                 * These requirements can be submitted without any modifications, so the button should be enabled by default. We won't need this workaround once we move inside this component.
+                 */
+                isDisabled={
+                  !methods.formState.isDirty &&
+                  !["CAPTCHA", "LINEA_POH"].includes(formType ?? selectedType)
+                }
                 isLoading={isCreateRequirementLoading}
                 loadingText={isCreateRequirementLoading ? "Creating" : undefined}
                 ml="auto"

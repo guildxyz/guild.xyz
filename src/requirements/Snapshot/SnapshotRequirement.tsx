@@ -1,11 +1,9 @@
 import {
   Popover,
-  PopoverArrow,
-  PopoverBody,
   PopoverContent,
+  PopoverPortal,
   PopoverTrigger,
-  Portal,
-} from "@chakra-ui/react"
+} from "@/components/ui/Popover"
 import { CaretDown } from "@phosphor-icons/react/dist/ssr"
 import { DataBlockWithDate } from "components/[guild]/Requirements/components/DataBlockWithDate"
 import {
@@ -17,9 +15,9 @@ import { useRequirementContext } from "components/[guild]/Requirements/component
 import { DataBlock } from "components/common/DataBlock"
 import useSWRImmutable from "swr/immutable"
 import pluralize from "utils/pluralize"
-import SnapshotSpaceLink from "./components/SnapshotSpaceLink"
-import StrategyParamsTable from "./components/StrategyParamsTable"
-import { Proposal } from "./hooks/useProposals"
+import { SnapshotSpaceLink } from "./components/SnapshotSpaceLink"
+import { StrategyParamsTable } from "./components/StrategyParamsTable"
+import { Proposal } from "./types"
 
 const SnapshotRequirement = (props: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext()
@@ -38,23 +36,20 @@ const SnapshotRequirement = (props: RequirementProps): JSX.Element => {
       footer={
         requirement.type === "SNAPSHOT_STRATEGY" &&
         Object.keys(requirement.data.strategies[0].params ?? {}).length && (
-          <Popover placement="bottom">
-            <PopoverTrigger>
+          <Popover>
+            <PopoverTrigger asChild>
               <RequirementButton rightIcon={<CaretDown weight="bold" />}>
                 View parameters
               </RequirementButton>
             </PopoverTrigger>
 
-            <Portal>
-              <PopoverContent>
-                <PopoverArrow />
-                <PopoverBody p={0}>
-                  <StrategyParamsTable
-                    params={requirement.data.strategies[0].params}
-                  />
-                </PopoverBody>
+            <PopoverPortal>
+              <PopoverContent side="bottom" className="p-0">
+                <StrategyParamsTable
+                  params={requirement.data.strategies[0].params}
+                />
               </PopoverContent>
-            </Portal>
+            </PopoverPortal>
           </Popover>
         )
       }
@@ -65,12 +60,12 @@ const SnapshotRequirement = (props: RequirementProps): JSX.Element => {
           case "SNAPSHOT_STRATEGY":
             return (
               <>
-                {"Satisfy the "}
+                <span>{"Satisfy the "}</span>
                 <DataBlock>{strategies[0].name}</DataBlock>
                 {` Snapshot Strategy`}
                 {requirement.data.space && (
                   <>
-                    {` in the `}
+                    <span>{" in the "}</span>
                     <SnapshotSpaceLink requirement={requirement} />
                   </>
                 )}
@@ -79,14 +74,14 @@ const SnapshotRequirement = (props: RequirementProps): JSX.Element => {
           case "SNAPSHOT_SPACE_ADMIN":
             return (
               <>
-                {`Be an admin of the `}
+                <span>{"Be an admin of the "}</span>
                 <SnapshotSpaceLink requirement={requirement} />
               </>
             )
           case "SNAPSHOT_SPACE_AUTHOR":
             return (
               <>
-                {`Be an author in the `}
+                <span>{"Be an author in the "}</span>
                 <SnapshotSpaceLink requirement={requirement} />
               </>
             )
@@ -94,11 +89,11 @@ const SnapshotRequirement = (props: RequirementProps): JSX.Element => {
           case "SNAPSHOT_FOLLOW_SINCE":
             return (
               <>
-                {`Follow the `}
+                <span>{"Follow the "}</span>
                 <SnapshotSpaceLink requirement={requirement} />
                 {requirement.type === "SNAPSHOT_FOLLOW_SINCE" && (
                   <>
-                    {` since at least `}
+                    <span>{" since at least "}</span>
                     <DataBlockWithDate timestamp={requirement.data.since} />
                   </>
                 )}
@@ -107,23 +102,23 @@ const SnapshotRequirement = (props: RequirementProps): JSX.Element => {
           case "SNAPSHOT_USER_SINCE":
             return (
               <>
-                {`Be a Snapshot user since at least `}
+                <span>{"Be a Snapshot user since at least "}</span>
                 <DataBlockWithDate timestamp={requirement.data.since} />
               </>
             )
           case "SNAPSHOT_VOTES":
             return (
               <>
-                {`Vote ${pluralize(requirement.data.minAmount, "time")}`}
+                <span>{`Vote ${pluralize(requirement.data.minAmount, "time")}`}</span>
                 {requirement.data.space && (
                   <>
-                    {` in the `}
+                    <span>{" in the "}</span>
                     <SnapshotSpaceLink requirement={requirement} />
                   </>
                 )}
                 {requirement.data.proposal && (
                   <>
-                    {` on proposal `}
+                    <span>{" on proposal "}</span>
                     <DataBlock>
                       {proposal?.title ?? requirement.data.proposal}
                     </DataBlock>
@@ -134,18 +129,18 @@ const SnapshotRequirement = (props: RequirementProps): JSX.Element => {
           case "SNAPSHOT_PROPOSALS":
             return (
               <>
-                {`Make at least ${requirement.data.minAmount}${
+                <span>{`Make at least ${requirement.data.minAmount}${
                   requirement.data.successfulOnly ? " successful" : ""
-                } proposal${requirement.data.minAmount > 1 ? "s" : ""}`}
+                } proposal${requirement.data.minAmount > 1 ? "s" : ""}`}</span>
                 {requirement.data.space && (
                   <>
-                    {` in the `}
+                    <span>{" in the "}</span>
                     <SnapshotSpaceLink requirement={requirement} />
                   </>
                 )}
                 {requirement.data.state && (
                   <>
-                    {` that ${requirement.data.minAmount > 1 ? "are" : "is"} `}
+                    <span>{` that ${requirement.data.minAmount > 1 ? "are" : "is"} `}</span>
                     <DataBlock>{requirement.data.state}</DataBlock>
                   </>
                 )}

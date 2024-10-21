@@ -1,5 +1,4 @@
-import { Icon } from "@chakra-ui/react"
-import { Robot } from "@phosphor-icons/react"
+import { Robot } from "@phosphor-icons/react/dist/ssr"
 import {
   Requirement,
   RequirementProps,
@@ -17,16 +16,16 @@ const CaptchaRequirement = (props: RequirementProps): JSX.Element => {
 
   return (
     <Requirement
-      image={<Icon as={Robot} boxSize={6} />}
+      image={<Robot weight="bold" className="size-6" />}
       footer={<CompleteCaptcha />}
       {...props}
     >
-      {"Complete a CAPTCHA"}
+      <span>Complete a CAPTCHA</span>
       {captchaAge && (
         <>
-          {` (valid until `}
+          <span>{" (valid until "}</span>
           <DataBlock>{captchaAge}</DataBlock>
-          {`)`}
+          <span>{")"}</span>
         </>
       )}
     </Requirement>

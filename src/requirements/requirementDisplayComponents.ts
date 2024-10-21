@@ -352,4 +352,7 @@ export const REQUIREMENT_DISPLAY_COMPONENTS = {
   ),
   NOOX: dynamic<RequirementProps>(() => import("requirements/Noox/NooxRequirement")),
   YUP: dynamic<RequirementProps>(() => import("requirements/Yup/YupRequirement")),
+  LINEA_POH: dynamic<RequirementProps>(
+    () => import("requirements/LineaPOH/LineaPOHRequirement")
+  ),
 } as const satisfies Record<RequirementType, ComponentType<RequirementProps>>

@@ -81,9 +81,9 @@ export const FarcasterCast = ({
         </div>
 
         <div className="ml-auto flex items-center gap-3">
-          <Stat icon={Heart} value={cast.reactions.likes_count} />
-          <Stat icon={ShareNetwork} value={cast.reactions.recasts_count} />
-          <Stat icon={Chat} value={cast.replies.count} />
+          <Stat icon={Heart} value={cast.likes_count} />
+          <Stat icon={ShareNetwork} value={cast.recasts_count} />
+          <Stat icon={Chat} value={cast.replies_count} />
         </div>
 
         <ArrowSquareOut weight="bold" />

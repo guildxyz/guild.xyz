@@ -1,4 +1,4 @@
-import { Link, Text } from "@chakra-ui/react"
+import { Anchor } from "@/components/ui/Anchor"
 import {
   Requirement,
   RequirementProps,
@@ -14,7 +14,7 @@ const PoapRequirement = (props: RequirementProps) => {
 
   return (
     <Requirement image={poap?.image_url} isImageLoading={isLoading} {...props}>
-      <Text as="span">{"Own the "}</Text>
+      <span>{"Own the "}</span>
       {!poap || isLoading || error ? (
         <DataBlock
           isLoading={isLoading}
@@ -23,17 +23,16 @@ const PoapRequirement = (props: RequirementProps) => {
           {requirement.data.id}
         </DataBlock>
       ) : (
-        <Link
+        <Anchor
           href={`https://poap.gallery/event/${poap.id}`}
-          isExternal
-          display="inline"
-          colorScheme="blue"
-          fontWeight="medium"
+          variant="highlighted"
+          showExternal
+          target="_blank"
         >
           {poap.name}
-        </Link>
+        </Anchor>
       )}
-      <Text as="span">{" POAP"}</Text>
+      <span>{" POAP"}</span>
     </Requirement>
   )
 }

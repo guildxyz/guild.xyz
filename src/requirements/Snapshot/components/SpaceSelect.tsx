@@ -8,6 +8,7 @@ import { RequirementFormProps } from "requirements/types"
 import useSWRImmutable from "swr/immutable"
 import { SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
+import { Space } from "../types"
 
 type Props = RequirementFormProps & {
   isDisabled?: boolean
@@ -16,11 +17,6 @@ type Props = RequirementFormProps & {
 }
 
 const SPACE_ID_REGEX = /.+\.[a-z]*/
-
-export type Space = {
-  id: string
-  name: string
-}
 
 const customFilterOption = (candidate, input) =>
   candidate.label.toLowerCase().includes(input?.toLowerCase()) ||

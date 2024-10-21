@@ -1,6 +1,6 @@
-import { Fade, HStack, Icon, Text, useDisclosure } from "@chakra-ui/react"
+import { Button } from "@/components/ui/Button"
 import { Schemas } from "@guildxyz/types"
-import { ArrowSquareIn, ListPlus } from "@phosphor-icons/react"
+import { ArrowSquareOut, ListPlus } from "@phosphor-icons/react/dist/ssr"
 import RequirementConnectButton from "components/[guild]/Requirements/components/ConnectRequirementPlatformButton"
 import {
   Requirement,
@@ -8,18 +8,16 @@ import {
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import useRequirement from "components/[guild]/hooks/useRequirement"
-import Button from "components/common/Button"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
-import useDebouncedState from "hooks/useDebouncedState"
-import { useState } from "react"
-import SearchableVirtualListModal from "requirements/common/SearchableVirtualListModal"
+import { SearchableListDialog } from "requirements/common/SearchableListDialog"
+import { useDebounceValue } from "usehooks-ts"
 import { isAddress } from "viem"
 
 function HiddenAllowlistText({ isEmail }: { isEmail: boolean }) {
   return (
-    <Text color="gray" fontSize="xs" fontWeight="normal">
+    <span className="font-normal text-xs">
       {`Allowlisted ${isEmail ? " email" : ""} addresses are hidden`}
-    </Text>
+    </span>
   )
 }
 
@@ -36,8 +34,7 @@ const AllowlistRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
     }
   }
 
-  const [search, setSearch] = useState("")
-  const debouncedSearch = useDebouncedState(search)
+  const [search, setSearch] = useDebounceValue("", 500)
 
   const {
     addresses: initialAddresses,
@@ -46,21 +43,13 @@ const AllowlistRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
     fileId,
   } = castedRequirement.data
 
-  const willSearchAddresses = search !== debouncedSearch
   const { data: req, isValidating: isSearchingAddresses } = useRequirement(
     castedRequirement?.roleId,
     castedRequirement?.id,
-    debouncedSearch
+    search
   )
 
   const addresses = req?.data?.addresses ?? initialAddresses
-
-  // Needed for a smooth fade, if we used 'addresses', it changes during the fade out
-  const delayedAddresses = useDebouncedState(addresses, 200)
-  const addressCountToShow =
-    search.length <= 0 ? addresses.length : delayedAddresses.length
-
-  const { isOpen, onOpen, onClose } = useDisclosure()
 
   const isEmail = castedRequirement.type === "ALLOWLIST_EMAIL"
 
@@ -78,13 +67,13 @@ const AllowlistRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
 
   return (
     <Requirement
-      image={<Icon as={ListPlus} boxSize={6} />}
+      image={<ListPlus weight="bold" className="size-6" />}
       footer={
         isEmail ? (
-          <HStack>
+          <>
             {!hasAccess && <RequirementConnectButton />}
             {hideAllowlist && <HiddenAllowlistText isEmail={isEmail} />}
-          </HStack>
+          </>
         ) : (
           hideAllowlist && <HiddenAllowlistText isEmail={isEmail} />
         )
@@ -95,35 +84,32 @@ const AllowlistRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
       {hideAllowlist ? (
         `${isEmail ? "email " : ""}allowlist`
       ) : (
-        <Button variant="link" rightIcon={<ArrowSquareIn />} onClick={onOpen}>
-          {`${isEmail ? "email " : ""}allowlist`}
-        </Button>
+        <SearchableListDialog
+          trigger={
+            <Button
+              variant="unstyled"
+              className="h-auto p-0 underline-offset-2 hover:underline"
+              rightIcon={<ArrowSquareOut weight="bold" />}
+            >
+              {`${isEmail ? "email " : ""}allowlist`}
+            </Button>
+          }
+          initialList={addresses}
+          title={isEmail ? "Email allowlist" : "Allowlist"}
+          isLoading={isSearchingAddresses}
+          footer={
+            shouldShowSearchHints && (
+              <p className="text-muted-foreground">
+                Showing <strong>{addresses.length}</strong>{" "}
+                {isEmail ? "email " : " "}
+                addresses from <strong>{addressCount}</strong>. Search to see if an
+                address is included.
+              </p>
+            )
+          }
+          onSearchChange={setSearch}
+        />
       )}
-      <SearchableVirtualListModal
-        aboveList={
-          <Fade in={shouldShowSearchHints}>
-            <Text>
-              Showing <strong>{addressCountToShow}</strong>{" "}
-              {isEmail ? "email " : " "}
-              addresses from <strong>{addressCount}</strong>
-            </Text>
-          </Fade>
-        }
-        belowList={
-          <Fade in={shouldShowSearchHints}>
-            <Text fontSize={"sm"} textAlign={"center"} color="gray" mt={2}>
-              {addressCount - addressCountToShow} more addresses. Search to see if an
-              address is included
-            </Text>
-          </Fade>
-        }
-        initialList={addresses}
-        isOpen={isOpen}
-        onClose={onClose}
-        title={isEmail ? "Email allowlist" : "Allowlist"}
-        onSearch={setSearch}
-        isSearching={isSearchingAddresses || willSearchAddresses}
-      />
     </Requirement>
   )
 }

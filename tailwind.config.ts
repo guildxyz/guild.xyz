@@ -185,6 +185,11 @@ const config = {
           hover: "hsl(var(--uniswap-hover))",
           active: "hsl(var(--uniswap-active))",
         },
+        web3inbox: {
+          DEFAULT: "hsl(var(--web3inbox))",
+          hover: "hsl(var(--web3inbox-hover))",
+          active: "hsl(var(--web3inbox-active))",
+        },
       },
       opacity: {
         banner: "var(--banner-opacity)"

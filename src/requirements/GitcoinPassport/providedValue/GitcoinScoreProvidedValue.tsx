@@ -1,5 +1,5 @@
 import type { ProvidedValueDisplayProps } from "requirements/requirementProvidedValues"
-import { scorers } from "../components/Score"
+import { scorers } from "../constants"
 
 const GitcoinScoreProvidedValue = ({ requirement }: ProvidedValueDisplayProps) =>
   scorers[requirement.data?.id] ?? "Score in scorer"

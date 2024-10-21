@@ -10,12 +10,12 @@ const YupRequirement = (props: RequirementProps): JSX.Element => {
 
   return (
     <Requirement image="/requirementLogos/yup.svg" {...props}>
-      {`Have a Yup Score of at least ${requirement.data.minAmount} `}
+      <span>{`Have a Yup Score of at least ${requirement.data.minAmount} `}</span>
       {requirement.data.adapter && (
         <>
-          {" from the "}
+          <span>{" from the "}</span>
           <DataBlock>{requirement.data.adapter}</DataBlock>
-          {" adapter"}
+          <span>{" adapter"}</span>
         </>
       )}
     </Requirement>

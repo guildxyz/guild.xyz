@@ -1,7 +1,7 @@
-import { Text, useDisclosure } from "@chakra-ui/react"
+import { Button } from "@/components/ui/Button"
 import { consts } from "@guildxyz/types"
 import { ImageData } from "@nouns/assets"
-import { ArrowSquareOut } from "@phosphor-icons/react"
+import { ArrowSquareOut } from "@phosphor-icons/react/dist/ssr"
 import { BlockExplorerUrl } from "components/[guild]/Requirements/components/BlockExplorerUrl"
 import {
   Requirement,
@@ -9,11 +9,10 @@ import {
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import useGuild from "components/[guild]/hooks/useGuild"
-import Button from "components/common/Button"
 import { DataBlock } from "components/common/DataBlock"
 import { env } from "env"
 import { Fragment } from "react"
-import SearchableVirtualListModal from "requirements/common/SearchableVirtualListModal"
+import { SearchableListDialog } from "requirements/common/SearchableListDialog"
 import useSWRImmutable from "swr/immutable"
 import { Trait } from "types"
 import { isGuildPinSupportedChain } from "utils/guildCheckout/utils"
@@ -79,7 +78,7 @@ const NftRequirement = (props: RequirementProps) => {
           <DataBlock>{guildPinGuildName}</DataBlock>
         </>
       )}
-      <Text as="span">{" Guild Pin"}</Text>
+      <span>{" Guild Pin"}</span>
     </>
   ) : (
     metadataWithTraits?.name || metadata?.name
@@ -93,18 +92,10 @@ const NftRequirement = (props: RequirementProps) => {
     (nftName || (requirement.name && requirement.name !== "-")) &&
     (nftDataLoading || nftImage)
 
-  const { isOpen, onOpen, onClose } = useDisclosure()
-
   return (
     <Requirement
       image={
-        shouldRenderImage ? (
-          nftImage
-        ) : (
-          <Text as="span" fontWeight="bold" fontSize="xs">
-            NFT
-          </Text>
-        )
+        shouldRenderImage ? nftImage : <span className="font-bold text-xs">NFT</span>
       }
       isImageLoading={nftDataLoading}
       footer={<BlockExplorerUrl />}
@@ -175,19 +166,18 @@ const NftRequirement = (props: RequirementProps) => {
       ) : requirement.data?.ids?.length > 0 ? (
         <>
           {` with a `}
-          <Button
-            variant="link"
-            rightIcon={<ArrowSquareOut />}
-            iconSpacing={0.5}
-            onClick={onOpen}
-          >
-            specific ID
-          </Button>
-          <SearchableVirtualListModal
+          <SearchableListDialog
             initialList={requirement.data?.ids}
-            isOpen={isOpen}
-            onClose={onClose}
             title="Token IDs"
+            trigger={
+              <Button
+                variant="unstyled"
+                className="h-auto p-0 underline-offset-2 hover:underline"
+                rightIcon={<ArrowSquareOut weight="bold" />}
+              >
+                specific ID
+              </Button>
+            }
           />
         </>
       ) : null}

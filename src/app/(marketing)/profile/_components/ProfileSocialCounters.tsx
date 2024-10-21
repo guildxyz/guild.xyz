@@ -20,10 +20,8 @@ import { cn } from "@/lib/utils"
 import { REFERRER_USER_SEARCH_PARAM_KEY } from "@app/(marketing)/create-profile/(onboarding)/constants"
 import { AvatarImage } from "@radix-ui/react-avatar"
 import { PropsWithChildren } from "react"
-import { RequiredFields } from "types"
 import pluralize from "utils/pluralize"
 import {
-  User,
   useFarcasterProfile,
   useRelevantFarcasterFollowers,
 } from "../_hooks/useFarcasterProfile"
@@ -31,16 +29,14 @@ import { useProfile } from "../_hooks/useProfile"
 import { useReferredUsers } from "../_hooks/useReferredUsers"
 import { ProfileOwnerGuard } from "./ProfileOwnerGuard"
 
-type DisplayableUser = RequiredFields<User, "pfp_url" | "display_name">
-
 export const ProfileSocialCounters = ({ className }: any) => {
   const { data: referredUsers } = useReferredUsers()
   const { data: profile } = useProfile()
-  const { farcasterProfile } = useFarcasterProfile(profile?.userId)
-  const { relevantFollowers } = useRelevantFarcasterFollowers(farcasterProfile?.fid)
-  const relevantFollowersFiltered = relevantFollowers?.filter(
-    (user) => user && user.pfp_url && user.display_name
-  ) as undefined | DisplayableUser[]
+  const { data: farcasterProfile } = useFarcasterProfile(profile?.userId)
+  const { data: relevantFollowers } = useRelevantFarcasterFollowers(
+    farcasterProfile?.fid
+  )
+
   const inviteLink =
     profile &&
     `https://guild.xyz/create-profile/prompt-referrer?${REFERRER_USER_SEARCH_PARAM_KEY}=${profile.username}`
@@ -134,13 +130,13 @@ export const ProfileSocialCounters = ({ className }: any) => {
             Followers
           </SocialCountTile>
 
-          {relevantFollowersFiltered && relevantFollowersFiltered.length >= 1 && (
+          {!!relevantFollowers && relevantFollowers?.length >= 1 && (
             <>
               <Separator
                 orientation="vertical"
                 className="h-10 max-sm:hidden md:h-12"
               />
-              <RelevantFollowers relevantFollowers={relevantFollowersFiltered} />
+              <RelevantFollowers relevantFollowers={relevantFollowers} />
             </>
           )}
         </>
@@ -162,9 +158,9 @@ const SocialCountTile = ({
 const RelevantFollowers = ({
   relevantFollowers,
 }: {
-  relevantFollowers: DisplayableUser[]
+  relevantFollowers: ReturnType<typeof useRelevantFarcasterFollowers>["data"]
 }) => {
-  if (!relevantFollowers.length) {
+  if (!relevantFollowers || !relevantFollowers.length) {
     throw new Error(
       "Relevant followers must have at least one farcaster profile to display"
     )

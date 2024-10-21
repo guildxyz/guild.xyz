@@ -9,7 +9,7 @@ const JoinStepIndicator = (props: JoinStepIndicatorProps) => {
   switch (props.status) {
     case "DONE": {
       return (
-        <div className="flex size-5 items-center justify-center rounded-full bg-green-500">
+        <div className="flex size-5 shrink-0 items-center justify-center rounded-full bg-green-500">
           <Check weight="bold" color="white" className="size-3" />
         </div>
       )
@@ -17,7 +17,7 @@ const JoinStepIndicator = (props: JoinStepIndicatorProps) => {
 
     case "NO_ACCESS": {
       return (
-        <div className="flex size-5 items-center justify-center rounded-full bg-gray">
+        <div className="flex size-5 shrink-0 items-center justify-center rounded-full bg-gray">
           <X weight="bold" color="white" className="size-3" />
         </div>
       )
@@ -25,13 +25,13 @@ const JoinStepIndicator = (props: JoinStepIndicatorProps) => {
 
     case "INACTIVE": {
       return (
-        <div className="flex size-5 items-center justify-center rounded-full border border-border-muted bg-card-secondary" />
+        <div className="flex size-5 shrink-0 items-center justify-center rounded-full border border-border-muted bg-card-secondary" />
       )
     }
 
     case "LOADING": {
       return (
-        <div className="flex size-5 items-center justify-center">
+        <div className="flex size-5 shrink-0 items-center justify-center">
           <CircleNotch
             weight="bold"
             className="size-5 animate-spin opacity-60 duration-500 [scale:1.1]"
@@ -46,7 +46,7 @@ const JoinStepIndicator = (props: JoinStepIndicatorProps) => {
           progress={props.progress / 100}
           strokeWidth={15}
           color="hsl(var(--info))"
-          className="size-5"
+          className="size-5 shrink-0"
         />
       )
     }

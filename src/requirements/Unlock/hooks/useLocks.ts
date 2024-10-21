@@ -12,11 +12,21 @@ const CHAINS_ENDPOINTS = {
     "https://api.studio.thegraph.com/query/65299/unlock-protocol-gnosis/version/latest",
   POLYGON:
     "https://api.studio.thegraph.com/query/65299/unlock-protocol-polygon/version/latest",
+  ZKSYNC_ERA:
+    "https://api.studio.thegraph.com/query/65299/unlock-protocol-zksync/version/latest",
+  POLYGON_ZKEVM:
+    "https://api.studio.thegraph.com/query/65299/unlock-protocol-zkevm/version/latest",
+  BASE_MAINNET:
+    "https://api.studio.thegraph.com/query/65299/unlock-protocol-base/version/latest",
   ARBITRUM:
     "https://api.studio.thegraph.com/query/65299/unlock-protocol-arbitrum/version/latest",
   CELO: "https://api.studio.thegraph.com/query/65299/unlock-protocol-celo/version/latest",
   AVALANCHE:
     "https://api.studio.thegraph.com/query/65299/unlock-protocol-avalanche/version/latest",
+  LINEA:
+    "https://api.studio.thegraph.com/query/65299/unlock-protocol-linea/version/latest",
+  SCROLL:
+    "https://api.studio.thegraph.com/query/65299/unlock-protocol-scroll/version/latest",
 } satisfies Partial<Record<Chain, string>>
 
 type Data = {

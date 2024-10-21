@@ -1,4 +1,4 @@
-import { HStack, Skeleton } from "@chakra-ui/react"
+import { Skeleton } from "@/components/ui/Skeleton"
 import {
   Requirement,
   RequirementProps,
@@ -21,6 +21,10 @@ const UniswapQueryChainNames = {
   BSC: "bnb",
   BLAST_MAINNET: "blast",
 } as const satisfies Partial<Record<UniswapChains, string>>
+
+const isUniswapQueryChainName = (
+  chain: UniswapChains
+): chain is keyof typeof UniswapQueryChainNames => chain in UniswapQueryChainNames
 
 const UniswapRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
   const {
@@ -46,7 +50,9 @@ const UniswapRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
 
   const baseSymbol = baseCurrency === "token0" ? symbol0 : symbol1
 
-  const chainQueryParam = UniswapQueryChainNames[chain] ?? chain.toLowerCase()
+  const chainQueryParam = isUniswapQueryChainName(chain)
+    ? UniswapQueryChainNames[chain]
+    : chain.toLowerCase()
 
   const { reqAccesses } = useRoleMembership(roleId)
 
@@ -58,7 +64,7 @@ const UniswapRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
     <Requirement
       image={REQUIREMENTS.UNISWAP_V3_POSITIONS.icon.toString()}
       footer={
-        <HStack>
+        <>
           <RequirementChainIndicator />
           {/* The Uniswap app didn't seem able to handle testnets in the query param */}
           {!hasAccess && !UNISWAP_TESTNETS.has(chain) && (
@@ -72,28 +78,35 @@ const UniswapRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
               label="Add Liquidity"
             />
           )}
-        </HStack>
+        </>
       }
       {...rest}
     >
-      Hold{" "}
-      {maxAmount
-        ? `${minAmount} - ${maxAmount}`
-        : minAmount > 0
-          ? `at least ${minAmount}`
-          : "any amount of"}{" "}
-      <Skeleton isLoaded={!!baseSymbol} display={"inline"}>
-        <DataBlock>{baseSymbol ?? "___"}</DataBlock>
-      </Skeleton>{" "}
-      value of{" "}
-      <Skeleton isLoaded={!!symbol0 && !!symbol1} display={"inline"}>
+      <span>
+        {`Hold ${
+          maxAmount
+            ? `${minAmount} - ${maxAmount}`
+            : (minAmount ?? 0) > 0
+              ? `at least ${minAmount}`
+              : "any amount of"
+        } `}
+      </span>
+      {!baseSymbol ? (
+        <Skeleton className="inline-block h-5 w-40" />
+      ) : (
+        <DataBlock>{baseSymbol}</DataBlock>
+      )}
+      {" value of "}
+      {!symbol0 || !symbol1 ? (
+        <Skeleton className="inline-block h-5 w-40" />
+      ) : (
         <DataBlock>
-          {symbol0 ?? "___"}/{symbol1 ?? "___"}
+          {symbol0}/{symbol1}
         </DataBlock>
-      </Skeleton>{" "}
-      {countedPositions === "IN_RANGE" ? "in-range " : ""}
-      {countedPositions === "FULL_RANGE" ? "full-range " : ""}
-      positions on Uniswap v3
+      )}{" "}
+      {countedPositions === "IN_RANGE" ? <span>{"in-range "}</span> : null}
+      {countedPositions === "FULL_RANGE" ? <span>{"full-range "}</span> : null}
+      <span>positions on Uniswap v3</span>
     </Requirement>
   )
 }

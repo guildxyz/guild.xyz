@@ -1,25 +1,36 @@
-import { Link } from "@chakra-ui/react"
+import { Anchor } from "@/components/ui/Anchor"
 import useSWRImmutable from "swr/immutable"
-import { Space } from "./SpaceSelect"
+import { Requirement } from "types"
+import { Space } from "../types"
 
-const SnapshotSpaceLink = ({ requirement }) => {
+type SnapshotRequirementsWithDataSpace =
+  | "SNAPSHOT_FOLLOW"
+  | "SNAPSHOT_SPACE_ADMIN"
+  | "SNAPSHOT_SPACE_AUTHOR"
+  | "SNAPSHOT_FOLLOW_SINCE"
+  | "SNAPSHOT_VOTES"
+  | "SNAPSHOT_PROPOSALS"
+  | "SNAPSHOT_STRATEGY"
+
+export type SnapshotSpaceLinkProps = {
+  requirement: Extract<Requirement, { type: SnapshotRequirementsWithDataSpace }>
+}
+
+const SnapshotSpaceLink = ({ requirement }: SnapshotSpaceLinkProps) => {
   const { data: space } = useSWRImmutable<Space>(
-    requirement?.data?.space
-      ? `/v2/third-party/snapshot/spaces/${requirement.data.space}`
-      : null
+    `/v2/third-party/snapshot/spaces/${requirement.data.space}`
   )
 
   return (
-    <Link
-      href={`https://snapshot.org/#/${requirement.data?.space}`}
-      isExternal
-      colorScheme="blue"
-      fontWeight="medium"
-      display={"inline"}
+    <Anchor
+      href={`https://snapshot.org/#/${requirement.data.space}`}
+      variant="highlighted"
+      showExternal
+      target="_blank"
     >
-      {`${space?.name ?? requirement.data?.space} Snapshot space`}
-    </Link>
+      {`${space?.name ?? requirement.data.space} Snapshot space`}
+    </Anchor>
   )
 }
 
-export default SnapshotSpaceLink
+export { SnapshotSpaceLink }

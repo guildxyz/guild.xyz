@@ -244,6 +244,12 @@ export const REQUIREMENTS_DATA = [
     isNegatable: true,
   },
   {
+    icon: "/networkLogos/linea.png",
+    name: "Linea POH",
+    types: ["LINEA_POH"],
+    isNegatable: true,
+  },
+  {
     icon: "/requirementLogos/web3inbox.png",
     name: "Web3Inbox",
     types: ["WEB3INBOX_SUBSCRIBERS"],

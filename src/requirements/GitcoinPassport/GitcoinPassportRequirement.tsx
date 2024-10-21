@@ -1,18 +1,10 @@
 import {
   Popover,
-  PopoverArrow,
-  PopoverBody,
   PopoverContent,
-  PopoverHeader,
+  PopoverPortal,
   PopoverTrigger,
-  Portal,
-  Table,
-  Tbody,
-  Td,
-  Text,
-  Tr,
-  useColorModeValue,
-} from "@chakra-ui/react"
+} from "@/components/ui/Popover"
+import { cn } from "@/lib/utils"
 import { CaretDown } from "@phosphor-icons/react/dist/ssr"
 import {
   Requirement,
@@ -22,11 +14,11 @@ import { RequirementButton } from "components/[guild]/Requirements/components/Re
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import { DataBlock } from "components/common/DataBlock"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
-import { scorers } from "./components/Score"
 import { SetupPassport } from "./components/SetupPassport"
+import { scorers } from "./constants"
 
-type Keys = "stamp" | "issuer" | "credType" | "minAmount" | "maxAmount"
-const nameByKey: Record<Keys, string> = {
+type Key = "stamp" | "issuer" | "credType" | "minAmount" | "maxAmount"
+const nameByKey: Record<Key, string> = {
   stamp: "Stamp",
   issuer: "Issuer",
   credType: "Type",
@@ -34,9 +26,14 @@ const nameByKey: Record<Keys, string> = {
   maxAmount: "Issued before",
 }
 
+const isValidKey = (key: string): key is Key => key in nameByKey
+const isValidScorer = (scorer: string | number): scorer is keyof typeof scorers =>
+  scorer in scorers
+
 const GitcoinPassportRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
-  const requirement = useRequirementContext()
-  const tableBgColor = useColorModeValue("white", "blackAlpha.300")
+  const requirement = useRequirementContext<
+    "GITCOIN_PASS" | "GITCOIN_STAMP" | "GITCOIN_SCORE"
+  >()
 
   const { reqAccesses } = useRoleMembership(requirement.roleId)
   const showCreatePassportButton = reqAccesses?.some(
@@ -54,61 +51,48 @@ const GitcoinPassportRequirement = ({ ...rest }: RequirementProps): JSX.Element 
           {showCreatePassportButton && <SetupPassport />}
           {requirement.type === "GITCOIN_STAMP" &&
             Object.keys(requirement.data ?? {}).length > 0 && (
-              <Popover placement="bottom">
-                <PopoverTrigger>
+              <Popover>
+                <PopoverTrigger asChild>
                   <RequirementButton rightIcon={<CaretDown weight="bold" />}>
                     View parameters
                   </RequirementButton>
                 </PopoverTrigger>
 
-                <Portal>
-                  <PopoverContent w="auto">
-                    <PopoverArrow />
-                    <PopoverHeader
-                      fontSize="xs"
-                      fontWeight="bold"
-                      textTransform="uppercase"
-                    >
-                      Parameters
-                    </PopoverHeader>
-                    <PopoverBody p={0}>
-                      <Table
-                        variant="simple"
-                        w="full"
-                        sx={{ tableLayout: "", borderCollapse: "unset" }}
-                        size="sm"
-                        bg={tableBgColor}
-                        borderWidth={0}
-                        borderBottomRadius="xl"
-                      >
-                        <Tbody fontWeight="normal" fontSize="xs">
-                          {Object.entries(requirement.data)?.map(
-                            ([key, value]: [string, any]) => (
-                              <Tr key={key}>
-                                <Td>{nameByKey[key]}</Td>
-                                <Td>
-                                  <Text
-                                    as="span"
-                                    maxW={key === "issuer" ? 36 : undefined}
-                                    noOfLines={1}
-                                  >
-                                    {key === "minAmount" || key === "maxAmount"
-                                      ? new Date(value).toLocaleString("en-US", {
-                                          year: "numeric",
-                                          month: "long",
-                                          day: "numeric",
-                                        })
-                                      : value}
-                                  </Text>
-                                </Td>
-                              </Tr>
-                            )
-                          )}
-                        </Tbody>
-                      </Table>
-                    </PopoverBody>
+                <PopoverPortal>
+                  <PopoverContent className="p-0">
+                    <table className="w-full table-fixed rounded-b-xl bg-card dark:bg-blackAlpha">
+                      <tbody className="text-xs">
+                        {Object.entries(requirement.data)?.map(
+                          ([key, value]: [string, any]) => (
+                            <tr
+                              key={key}
+                              className="border-border border-b [&>td]:p-1.5"
+                            >
+                              <td>
+                                {isValidKey(key) ? nameByKey[key] : "Unknown key"}
+                              </td>
+                              <td>
+                                <span
+                                  className={cn("text-ellipsis", {
+                                    "max-w-36": key === "issuer",
+                                  })}
+                                >
+                                  {key === "minAmount" || key === "maxAmount"
+                                    ? new Date(value).toLocaleString("en-US", {
+                                        year: "numeric",
+                                        month: "long",
+                                        day: "numeric",
+                                      })
+                                    : value}
+                                </span>
+                              </td>
+                            </tr>
+                          )
+                        )}
+                      </tbody>
+                    </table>
                   </PopoverContent>
-                </Portal>
+                </PopoverPortal>
               </Popover>
             )}
         </>
@@ -119,19 +103,21 @@ const GitcoinPassportRequirement = ({ ...rest }: RequirementProps): JSX.Element 
           case "GITCOIN_STAMP":
             return (
               <>
-                {"Have a Gitcoin Passport with the "}
+                <span>{"Have a Gitcoin Passport with the "}</span>
                 <DataBlock>{requirement.data.stamp}</DataBlock>
-                {" stamp"}
+                <span>{" stamp"}</span>
               </>
             )
           case "GITCOIN_SCORE":
             return (
               <>
-                {"Have a Gitcoin Passport with "}
+                <span>{"Have a Gitcoin Passport with "}</span>
                 <DataBlock>{requirement.data.score}</DataBlock>
-                {" score in "}
+                <span>{" score in "}</span>
                 <DataBlock>{`${
-                  scorers[requirement.data.id] ?? "unknown scorer"
+                  isValidScorer(requirement.data.id)
+                    ? scorers[requirement.data.id]
+                    : "unknown scorer"
                 }`}</DataBlock>
               </>
             )

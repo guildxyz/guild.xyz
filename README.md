@@ -6,7 +6,7 @@ Open source interface for Guild.xyz -- a tool for platformless membership manage
 
 - Website: [guild.xyz](https://guild.xyz)
 - Docs: [docs.guild.xyz](https://docs.guild.xyz/)
-- Twitter: [@Guildxyz](https://twitter.com/guildxyz)
+- X (formerly Twitter): [@Guildxyz](https://x.com/guildxyz)
 - Discord: [Guild.xyz](https://discord.gg/KUkghUdk2G)
 
 ## Key dependencies overview

@@ -199,6 +199,7 @@ const JoinModal = ({
               }
               disabled={!isWeb3Connected}
               className="mt-2"
+              data-testid="check-access-to-join-button"
             >
               {hasNoAccess ? "Recheck access" : "Check access to join"}
             </Button>

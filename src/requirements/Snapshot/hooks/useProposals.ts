@@ -1,16 +1,10 @@
 import useSWRImmutable from "swr/immutable"
-
-export type Proposal = {
-  id: string
-  title: string
-  state: "active" | "pending" | "closed"
-  space: { id: string; name: string }
-}
+import { Proposal } from "../types"
 
 const useProposals = (
   search: string,
   spaceId?: string
-): { proposals: Proposal[]; isProposalsLoading: boolean } => {
+): { proposals?: Proposal[]; isProposalsLoading: boolean } => {
   const { data, isValidating } = useSWRImmutable<Proposal[]>(
     `/v2/third-party/snapshot/proposals?search=${search ?? ""}`
   )
@@ -32,4 +26,4 @@ const useProposals = (
   }
 }
 
-export default useProposals
+export { useProposals }

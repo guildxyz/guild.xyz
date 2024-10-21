@@ -1,4 +1,4 @@
-import { Link, Text } from "@chakra-ui/react"
+import { Anchor } from "@/components/ui/Anchor"
 import {
   Requirement,
   RequirementProps,
@@ -21,27 +21,26 @@ const NooxRequirement = (props: RequirementProps) => {
       isImageLoading={isLoading}
       {...props}
     >
-      <Text as="span">{`Have the `}</Text>
+      <span>{"Have the "}</span>
       {!badgeMetaData || isLoading || isError ? (
         <DataBlock
           isLoading={isLoading}
-          error={isError && "Couldn't fetch Noox badge data"}
+          error={isError ? "Couldn't fetch Noox badge data" : undefined}
         >
           {`#${requirement.data.id}`}
         </DataBlock>
       ) : (
-        <Link
+        <Anchor
           href={`https://noox.world/badge/${requirement.data.id}`}
-          isExternal
-          display="inline"
-          colorScheme="blue"
-          fontWeight="medium"
+          variant="highlighted"
+          showExternal
+          target="_blank"
         >
           {badgeMetaData.name}
-        </Link>
+        </Anchor>
       )}
 
-      <Text as="span">{` Noox badge`}</Text>
+      <span>{" Noox badge"}</span>
     </Requirement>
   )
 }

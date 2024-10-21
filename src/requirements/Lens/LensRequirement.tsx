@@ -1,14 +1,14 @@
-import { Link } from "@chakra-ui/next-js"
-import { Skeleton } from "@chakra-ui/react"
+import { Anchor } from "@/components/ui/Anchor"
+import { Skeleton } from "@/components/ui/Skeleton"
 import {
   Requirement,
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import REQUIREMENTS from "requirements"
-import { LensActionType, lensPlatformOptions } from "./components/LensAction"
-import { LensReaction } from "./components/LensReact"
+import { lensPlatformOptions } from "./constants"
 import useLensProfile from "./hooks/useLensProfile"
+import { LensActionType, LensReaction } from "./types"
 
 const getReactionLabel = (lensReaction: LensReaction) => {
   switch (lensReaction) {
@@ -58,35 +58,31 @@ const LensRequirement = (props: RequirementProps) => {
           case "LENS_REACT":
             return (
               <>
-                {`${getReactionLabel(requirement.data.reaction)} the `}
+                <span>{`${getReactionLabel(requirement.data.reaction)} the `}</span>
                 <LensPostLink />
-                {` post on Lens Protocol`}
+                <span>{" post on Lens Protocol"}</span>
               </>
             )
           case "LENS_ACTION":
             return (
               <>
-                {`${getActionLabel(requirement.data.action)} the `}
+                <span>{`${getActionLabel(requirement.data.action)} the `}</span>
                 <LensPostLink />
-                {` post on ${getActionPlatform(requirement.data.publishedOn)}`}
+                <span>{` post on ${getActionPlatform(requirement.data.publishedOn)}`}</span>
               </>
             )
           case "LENS_COLLECT":
             return (
               <>
-                {`Collect the `}
+                <span>{"Collect the "}</span>
                 <LensPostLink />
-                {` post on Lens Protocol`}
+                <span>{" post on Lens Protocol"}</span>
               </>
             )
           case "LENS_TOTAL_FOLLOWERS":
-            return (
-              <>{`Have at least ${requirement.data.min} followers on Lens Protocol`}</>
-            )
+            return `Have at least ${requirement.data.min} followers on Lens Protocol`
           case "LENS_TOTAL_POSTS":
-            return (
-              <>{`Have at least ${requirement.data.min} posts on Lens Protocol`}</>
-            )
+            return `Have at least ${requirement.data.min} posts on Lens Protocol`
           default:
             return "Have a Lens Protocol profile"
         }
@@ -106,17 +102,19 @@ const LensFollowRequirement = (props: RequirementProps) => {
       {...props}
     >
       {type === "LENS_FOLLOW" ? "Follow " : "Be followed by "}
-      <Skeleton isLoaded={!isLoading} display="inline">
-        <Link
+      {isLoading ? (
+        <Skeleton className="inline-block h-5 w-40" />
+      ) : (
+        <Anchor
           href={`https://lensfrens.xyz/${lensProfile?.label?.replace(".lens", "")}`}
-          isExternal
-          colorScheme="blue"
-          fontWeight="medium"
+          variant="highlighted"
+          showExternal
+          target="_blank"
         >
           {lensProfile?.label ?? "Loading..."}
-        </Link>
-      </Skeleton>
-      {" on Lens protocol"}
+        </Anchor>
+      )}
+      <span>{" on Lens protocol"}</span>
     </Requirement>
   )
 }
@@ -125,15 +123,14 @@ const LensPostLink = () => {
   const { data } = useRequirementContext()
 
   return (
-    <Link
+    <Anchor
       href={`${getPlatformBaseUrl(data.publishedOn)}${data.id}`}
-      isExternal
-      display="inline"
-      colorScheme="blue"
-      fontWeight="medium"
+      variant="highlighted"
+      showExternal
+      target="_blank"
     >
       {data.id}
-    </Link>
+    </Anchor>
   )
 }
 
