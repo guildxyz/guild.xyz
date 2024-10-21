@@ -8,6 +8,7 @@ const nextConfig = {
   typescript: {
     tsconfigPath: process.env.TS_CONFIG_PATH,
   },
+  transpilePackages: ['@fuels/connectors', '@fuels/react'],
   webpack(config, options) {
     config.module.rules.push({
       test: /\.svg$/,
@@ -48,7 +49,6 @@ const nextConfig = {
     return config
   },
   productionBrowserSourceMaps: true,
-
   images: {
     dangerouslyAllowSVG: true,
     remotePatterns: [
