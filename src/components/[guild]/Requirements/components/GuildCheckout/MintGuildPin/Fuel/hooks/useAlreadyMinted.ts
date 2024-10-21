@@ -1,9 +1,9 @@
 import { useWallet } from "@fuels/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
+import { Contract } from "fuels"
 import useSWRImmutable from "swr/immutable"
-import type { GuildActionInput } from "../GuildPinContractAbi"
-import { GuildPinContractAbi__factory } from "../GuildPinContractAbi_factory"
+import { GuildActionInput, abi } from "../GuildPinContract"
 import { FUEL_GUILD_PIN_CONTRACT_ID_0X } from "./constants"
 
 const useAlreadyMinted = () => {
@@ -16,15 +16,13 @@ const useAlreadyMinted = () => {
     if (!guildId) throw new Error("Invalid guild ID")
     if (!wallet) throw new Error("Couldn't find Fuel wallet")
 
-    const contract = GuildPinContractAbi__factory.connect(
-      FUEL_GUILD_PIN_CONTRACT_ID_0X,
-      wallet
-    )
-    const { value } = await contract.functions
-      .pin_id_by_user_id(userId, guildId, "Joined" as GuildActionInput)
-      .simulate()
+    const contractInstance = new Contract(FUEL_GUILD_PIN_CONTRACT_ID_0X, abi, wallet)
 
-    return value?.gt(0)
+    const { value } = await contractInstance.functions
+      .pin_id_by_user_id(userId, guildId, GuildActionInput.Joined)
+      .get()
+
+    return value !== "None"
   }
 
   return useSWRImmutable(
