@@ -6,23 +6,14 @@ import useDropzone from "hooks/useDropzone"
 import { useFormContext, useWatch } from "react-hook-form"
 import { ImportPoapForm } from "../AddPoapPanel"
 
-const LEGACY_POAP_MINT_LINK_BASE = "http://poap.xyz/claim/"
-const POAP_MINT_LINK_BASE = "http://poap.xyz/mint/"
+const poapUrlPattern =
+  /^https?:\/\/(?:collectors\.)?poap\.xyz\/(?:claim|mint)\/[a-zA-Z0-9]+$/
 
 const validatePoapLinks = (links: string[]) =>
   links
     .filter(Boolean)
     .map((link) => link.toLowerCase())
-    .every(
-      (link) =>
-        (link.startsWith(LEGACY_POAP_MINT_LINK_BASE) ||
-          link.startsWith(POAP_MINT_LINK_BASE)) &&
-        /^[A-Za-z0-9]*$/i.test(
-          link
-            .replace(LEGACY_POAP_MINT_LINK_BASE, "")
-            .replace(POAP_MINT_LINK_BASE, "")
-        )
-    )
+    .every((link) => poapUrlPattern.test(link))
 
 const INVALID_LINKS_ERROR = {
   type: "validate",
