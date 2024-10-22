@@ -64,6 +64,7 @@ import {
   sepolia,
   shimmer,
   taiko,
+  worldchain,
   x1Testnet,
   zetachain,
   zetachainAthensTestnet,
@@ -715,6 +716,14 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/explorerLogos/cronos.svg",
     },
   },
+  WORLD_CHAIN: {
+    ...generateChainConfig(worldchain, ETH_ICON),
+    iconUrl: "/networkLogos/world.svg",
+    blockExplorerIconUrl: {
+      light: "/networkLogos/world.svg",
+      dark: "/networkLogos/world.svg",
+    },
+  },
 }
 
 enum Chains {
@@ -785,6 +794,7 @@ enum Chains {
   MODE = mode.id,
   LISK = lisk.id,
   CRONOS_ZKEVM = cronoszkEVM.id,
+  WORLD_CHAIN = worldchain.id,
 }
 
 export type Chain = keyof typeof Chains

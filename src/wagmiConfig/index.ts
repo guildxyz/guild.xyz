@@ -70,6 +70,7 @@ import {
   sepolia,
   shimmer,
   taiko,
+  worldchain,
   x1Testnet,
   zetachain,
   zetachainAthensTestnet,
@@ -190,6 +191,7 @@ export const wagmiConfig = IS_TEST
         mode,
         lisk as Chain,
         cronoszkEVM,
+        worldchain,
       ],
       transports: {
         [mainnet.id]: http(),
@@ -255,6 +257,7 @@ export const wagmiConfig = IS_TEST
         [mode.id]: http(),
         [lisk.id]: http(),
         [cronoszkEVM.id]: http(),
+        [worldchain.id]: http(),
       },
       ssr: true,
       connectors: [
