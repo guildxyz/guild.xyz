@@ -14,7 +14,6 @@ import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
 import { Reorder } from "framer-motion"
-import { useMemo } from "react"
 import { useController, useForm } from "react-hook-form"
 import useReorderRoles from "../hooks/useReorderRoles"
 import DraggableRoleCard from "./DraggableRoleCard"
@@ -27,8 +26,8 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
   const { roles } = useGuild()
   const group = useRoleGroup()
   const relevantRoles = group
-    ? roles.filter((role) => role.groupId === group.id)
-    : roles.filter((role) => !role.groupId)
+    ? roles?.filter((role) => role.groupId === group.id)
+    : roles?.filter((role) => !role.groupId)
 
   const {
     isOpen: isAlertOpen,
@@ -36,25 +35,7 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
     onClose: onAlertClose,
   } = useDisclosure()
 
-  // temporary, will order roles already in the SQL query in the future
-  const sortedRoles = useMemo(() => {
-    if (relevantRoles?.every((role) => role.position === null)) {
-      const byMembers = relevantRoles?.sort(
-        (role1, role2) => role2.memberCount - role1.memberCount
-      )
-      return byMembers
-    }
-
-    return (
-      relevantRoles?.sort((role1, role2) => {
-        if (role1.position === null) return 1
-        if (role2.position === null) return -1
-        return role1.position - role2.position
-      }) ?? []
-    )
-  }, [relevantRoles])
-
-  const publicAndSecretRoles = sortedRoles.filter(
+  const publicAndSecretRoles = relevantRoles?.filter(
     (role) => role.visibility !== "HIDDEN"
   )
 
