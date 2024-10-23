@@ -32,10 +32,15 @@ const useReorderRoles = (onClose) => {
           ...oldData,
           // requirements, and rolePlatforms are not returned, so we need to spread older data too
           // Plus, we don't update all the roles, only the ones that changed, so this also retains those that weren't updated
-          roles: (oldData?.roles ?? []).map((prevRole) => ({
-            ...prevRole,
-            ...(newRoles ?? []).find((newRole) => newRole.id === prevRole.id),
-          })),
+          roles: (oldData?.roles ?? [])
+            .map((prevRole) => ({
+              ...prevRole,
+              ...(newRoles ?? []).find((newRole) => newRole.id === prevRole.id),
+            }))
+            .sort(
+              (role1, role2) =>
+                (role1.position ?? Infinity) - (role2.position ?? Infinity)
+            ),
         }),
         {
           revalidate: false,
