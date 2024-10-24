@@ -146,7 +146,7 @@ const CreateSnapshotModal = ({ onClose, isOpen, onSuccess }: Props) => {
                 </Text>
                 <SnapshotTable
                   snapshotData={leaderboardToSnapshot}
-                  chakraProps={{ mt: 0 }}
+                  className="mt-0"
                 />
               </Box>
             </Stack>
