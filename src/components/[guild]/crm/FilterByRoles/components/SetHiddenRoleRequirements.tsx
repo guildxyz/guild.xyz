@@ -58,7 +58,6 @@ const SetHiddenRoleRequirements = (): JSX.Element => {
                   index={i}
                   removeRequirement={removeReq}
                   updateRequirement={update}
-                  isEditDisabled={type === "PAYMENT"}
                 />
                 <LogicDivider logic={logic} />
               </CardMotionWrapper>

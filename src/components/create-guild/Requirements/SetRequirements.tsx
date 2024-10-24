@@ -86,7 +86,7 @@ const SetRequirements = ({ titleSize = undefined }: Props): JSX.Element => {
                       remove(idx)
                     }}
                     updateRequirement={update}
-                    isEditDisabled={type === "PAYMENT" || type === "GUILD_SNAPSHOT"}
+                    isEditDisabled={type === "GUILD_SNAPSHOT"}
                   />
                   <LogicDivider logic={logic ?? "AND"} />
                 </CardMotionWrapper>

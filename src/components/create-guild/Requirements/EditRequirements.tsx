@@ -44,10 +44,7 @@ const EditRequirements = ({ roleId }: Props) => {
               <CardMotionWrapper key={requirement.id}>
                 <ExistingRequirementEditableCard
                   requirement={requirement}
-                  isEditDisabled={
-                    requirement.type === "PAYMENT" ||
-                    requirement.type === "GUILD_SNAPSHOT"
-                  }
+                  isEditDisabled={requirement.type === "GUILD_SNAPSHOT"}
                 />
                 <LogicDivider logic={logic ?? "AND"} />
               </CardMotionWrapper>

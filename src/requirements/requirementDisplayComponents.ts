@@ -25,9 +25,6 @@ export const REQUIREMENT_DISPLAY_COMPONENTS = {
   GUILD_SNAPSHOT: dynamic<RequirementProps>(
     () => import("requirements/Airdrop/AirdropRequirement")
   ),
-  PAYMENT: dynamic<RequirementProps>(
-    () => import("requirements/Payment/PaymentRequirement")
-  ),
   CONTRACT: dynamic<RequirementProps>(
     () => import("requirements/ContractState/ContractStateRequirement")
   ),

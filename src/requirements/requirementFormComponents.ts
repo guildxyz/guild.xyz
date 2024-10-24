@@ -15,9 +15,6 @@ export const REQUIREMENT_FORM_COMPONENTS = {
     () => import("requirements/Allowlist/AllowlistForm")
   ),
   GUILD_SNAPSHOT: null,
-  PAYMENT: dynamic<RequirementFormProps>(
-    () => import("requirements/Payment/PaymentForm")
-  ),
   CONTRACT: dynamic<RequirementFormProps>(
     () => import("requirements/ContractState/ContractStateForm")
   ),
