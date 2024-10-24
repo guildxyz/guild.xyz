@@ -48,7 +48,9 @@ const SatisfyRequirementsJoinStep = ({
         fallbackText ||
         (status === "NO_ACCESS"
           ? "Requirements not satisfied"
-          : "Preparing access check")
+          : joinState?.waitingPosition > 10
+            ? `Oops! ${joinState?.waitingPosition} users ahead of you. Please wait patiently.`
+            : "Preparing access check")
       }
       {...props}
     />
