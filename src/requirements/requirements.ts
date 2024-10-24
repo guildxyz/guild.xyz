@@ -1,5 +1,4 @@
 import {
-  Coins,
   CurrencyCircleDollar,
   ImageSquare,
   Link,
@@ -45,11 +44,6 @@ export const REQUIREMENTS_DATA = [
     name: "Airdrop",
     types: ["GUILD_SNAPSHOT"],
     isNegatable: true,
-  },
-  {
-    icon: Coins,
-    name: "Payment",
-    types: ["PAYMENT"],
   },
   {
     icon: Wrench,

@@ -22,16 +22,6 @@ export const ERC20_SUPPORTED_CHAINS = Object.keys(
   ERC20_CONTRACTS
 ) as (keyof typeof ERC20_CONTRACTS)[]
 
-export const FEE_COLLECTOR_CONTRACT = {
-  ETHEREUM: "0xe4b4c6a7c6b6396032096c12adf46b7f14a70f4d",
-  OPTIMISM: "0xf7c2baa81feb6dd7bda0b3a03afbc1e13f955da5",
-  POLYGON: "0xe4b4c6a7c6b6396032096c12adf46b7f14a70f4d",
-  SEPOLIA: "0xc3563655d35397b77228c07a7f5301b0e0fa417d",
-} as const satisfies Partial<Record<Chain, `0x${string}`>>
-export const paymentSupportedChains = Object.keys(
-  FEE_COLLECTOR_CONTRACT
-) as (keyof typeof FEE_COLLECTOR_CONTRACT)[]
-
 export type GuildPinsSupportedChain = keyof typeof consts.PinContractAddresses
 
 export const openseaBaseUrl: Partial<Record<Chain, string>> = {

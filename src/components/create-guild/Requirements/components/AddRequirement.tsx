@@ -298,34 +298,33 @@ const AddRequirementForm = forwardRef(
               </>
             )}
           </ModalBody>
-          {selectedType !== "PAYMENT" && (
-            <ModalFooter gap="3">
-              <BalancyFooter baseFieldPath={null} />
-              <Button
-                colorScheme="green"
-                onClick={onSubmit}
-                /**
-                 * These requirements can be submitted without any modifications, so the button should be enabled by default. We won't need this workaround once we move inside this component.
-                 */
-                isDisabled={
-                  !methods.formState.isDirty &&
-                  !["CAPTCHA", "LINEA_POH"].includes(formType ?? selectedType)
-                }
-                isLoading={isCreateRequirementLoading}
-                loadingText={isCreateRequirementLoading ? "Creating" : undefined}
-                ml="auto"
-              >
-                Add requirement
-              </Button>
-            </ModalFooter>
-          )}
+
+          <ModalFooter gap="3">
+            <BalancyFooter baseFieldPath={null} />
+            <Button
+              colorScheme="green"
+              onClick={onSubmit}
+              /**
+               * These requirements can be submitted without any modifications, so the button should be enabled by default. We won't need this workaround once we move inside this component.
+               */
+              isDisabled={
+                !methods.formState.isDirty &&
+                !["CAPTCHA", "LINEA_POH"].includes(formType ?? selectedType)
+              }
+              isLoading={isCreateRequirementLoading}
+              loadingText={isCreateRequirementLoading ? "Creating" : undefined}
+              ml="auto"
+            >
+              Add requirement
+            </Button>
+          </ModalFooter>
         </FormProvider>
       </Box>
     )
   }
 )
 
-const DISABLED_REQUIREMENTS: RequirementType[] = ["GUILD_SNAPSHOT", "PAYMENT"]
+const DISABLED_REQUIREMENTS: RequirementType[] = ["GUILD_SNAPSHOT"]
 const AddRequirementHome = forwardRef(
   ({ setSelectedType, providerTypesOnly }: any, ref: any) => {
     const { featureFlags } = useGuild()
