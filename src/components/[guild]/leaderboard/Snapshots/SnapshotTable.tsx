@@ -1,34 +1,17 @@
-import {
-  Box,
-  BoxProps,
-  CloseButton,
-  Icon,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  InputRightElement,
-  Stack,
-  Table,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr,
-  useColorModeValue,
-} from "@chakra-ui/react"
-import { MagnifyingGlass } from "@phosphor-icons/react"
+import { CopyableAddress } from "@/components/CopyableAddress"
+import { IconButton } from "@/components/ui/IconButton"
+import { Input } from "@/components/ui/Input"
+import { MagnifyingGlass, X } from "@phosphor-icons/react/dist/ssr"
 import { useVirtualizer } from "@tanstack/react-virtual"
-import CopyableAddress from "components/common/CopyableAddress"
-import useDebouncedState from "hooks/useDebouncedState"
-import { useMemo, useRef, useState } from "react"
+import { HTMLAttributes, useMemo, useRef, useState } from "react"
+import { useDebounceValue } from "usehooks-ts"
 
-type Props = {
+interface Props extends HTMLAttributes<HTMLDivElement> {
   snapshotData: {
     rank: number
     points: number
     address: string
   }[]
-  chakraProps?: BoxProps
 }
 
 /**
@@ -38,13 +21,9 @@ type Props = {
  * https://github.com/chakra-ui/chakra-ui/issues/5257
  */
 
-const SnapshotTable = ({ snapshotData, chakraProps }: Props) => {
+const SnapshotTable = ({ snapshotData, ...props }: Props) => {
   const [search, setSearch] = useState("")
-  const debouncedSearch = useDebouncedState(search)
-
-  const borderColor = useColorModeValue("gray.200", "gray.600")
-  const borderRightColor = useColorModeValue("blackAlpha.200", "whiteAlpha.200")
-  const bgColor = useColorModeValue("gray.200", "gray.700")
+  const [debouncedSearch] = useDebounceValue(search, 500)
 
   const searchResults = useMemo(() => {
     if (!debouncedSearch) return snapshotData
@@ -63,106 +42,85 @@ const SnapshotTable = ({ snapshotData, chakraProps }: Props) => {
   })
 
   return (
-    <Stack gap={2}>
-      <InputGroup>
-        <InputLeftElement>
-          <Icon boxSize={4} as={MagnifyingGlass} />
-        </InputLeftElement>
+    <div className="grid gap-2">
+      <div className="relative">
         <Input
-          placeholder={"Search addresses"}
-          noOfLines={1}
-          color="var(--chakra-colors-chakra-body-text)"
+          className="px-8"
+          placeholder="Search addresses"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-        {search && (
-          <InputRightElement>
-            <CloseButton size="sm" rounded="full" onClick={() => setSearch("")} />
-          </InputRightElement>
+        <MagnifyingGlass
+          weight="bold"
+          className="absolute top-3 left-3 size-4 text-muted-foreground"
+        />
+        {!!search && (
+          <IconButton
+            aria-label="Clear search input"
+            icon={<X weight="bold" />}
+            size="xs"
+            variant="ghost"
+            className="absolute top-2 right-2 rounded-full"
+            onClick={() => setSearch("")}
+          />
         )}
-      </InputGroup>
-      <Box
-        ref={parentRef}
-        position={"relative"}
-        minH={"80px"}
-        height={"fit-content"}
-        maxH={"400px"}
-        overflowY={"auto"}
-        border={"1px"}
-        borderColor={borderColor}
-        rounded={"md"}
-        mt={4}
-        {...chakraProps}
-      >
-        <Box height={`${rowVirtualizer.getTotalSize()}px`}>
-          <Table
-            size={"sm"}
-            variant="simple"
-            style={{ borderCollapse: "separate", borderSpacing: "0" }}
-          >
-            <Thead
-              height={10}
-              style={{
-                position: "sticky",
-                top: 0,
-                zIndex: 1,
-              }}
-            >
-              <Tr>
-                <Th
-                  borderRightColor={borderRightColor}
-                  background={bgColor}
-                  zIndex={2}
-                >
-                  #
-                </Th>
-                <Th
-                  borderRightColor={borderRightColor}
-                  background={bgColor}
-                  zIndex={2}
-                >
-                  Address
-                </Th>
-                <Th
-                  borderRightColor={borderRightColor}
-                  background={bgColor}
-                  zIndex={2}
-                >
-                  Points
-                </Th>
-              </Tr>
-            </Thead>
+      </div>
 
-            <Tbody>
+      <div
+        ref={parentRef}
+        className="custom-scrollbar relative mt-4 h-fit max-h-96 min-h-20 overflow-y-auto rounded-md border border-border"
+        {...props}
+      >
+        <div
+          style={{
+            height: `${rowVirtualizer.getTotalSize()}px`,
+          }}
+        >
+          <table className="w-full border-separate border-spacing-0">
+            <thead className="sticky top-0 z-[1] h-10 border-border border-b bg-card shadow-sm">
+              <tr className="text-left text-muted-foreground text-xs uppercase">
+                <th className="z-[2] border-border border-r border-b px-4">#</th>
+                <th className="z-[2] border-border border-r border-b px-4">
+                  Address
+                </th>
+                <th className="z-[2] border-border border-b px-4">Points</th>
+              </tr>
+            </thead>
+
+            <tbody>
               {rowVirtualizer.getVirtualItems().map((virtualRow, index) => {
                 const row = searchResults[virtualRow.index]
                 return (
-                  <Tr
+                  <tr
                     key={row.rank}
-                    height={`${virtualRow.size}px`}
                     style={{
+                      height: `${virtualRow.size}px`,
                       transform: `translateY(${
                         virtualRow.start - index * virtualRow.size
                       }px)`,
                     }}
                   >
-                    <Td>{row.rank}</Td>
-                    <Td>
+                    <td className="border-border border-r border-b px-4">
+                      {row.rank}
+                    </td>
+                    <td className="border-border border-r border-b px-4">
                       <CopyableAddress
                         address={row.address}
                         decimals={5}
-                        fontSize="sm"
+                        className="text-sm"
                       />
-                    </Td>
-                    <Td>{row.points}</Td>
-                  </Tr>
+                    </td>
+                    <td className="border-border border-r border-b px-4">
+                      {row.points}
+                    </td>
+                  </tr>
                 )
               })}
-            </Tbody>
-          </Table>
-        </Box>
-      </Box>
-    </Stack>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   )
 }
 

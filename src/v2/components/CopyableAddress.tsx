@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils"
 import { ButtonHTMLAttributes, useRef } from "react"
 import shortenHex from "utils/shortenHex"
 import { Button } from "./ui/Button"
-import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/Tooltip"
+import { Tooltip, TooltipContent, TooltipPortal, TooltipTrigger } from "./ui/Tooltip"
 
 interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   address: string
@@ -34,9 +34,12 @@ const CopyableAddress = ({
           {domain || shortenHex(address, decimals)}
         </Button>
       </TooltipTrigger>
-      <TooltipContent>
-        <span>{hasCopied ? "Copied" : "Click to copy address"}</span>
-      </TooltipContent>
+
+      <TooltipPortal>
+        <TooltipContent>
+          <span>{hasCopied ? "Copied" : "Click to copy address"}</span>
+        </TooltipContent>
+      </TooltipPortal>
     </Tooltip>
   )
 }

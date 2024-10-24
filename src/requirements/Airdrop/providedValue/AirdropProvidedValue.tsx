@@ -1,31 +1,28 @@
-import { HStack, Text, useDisclosure } from "@chakra-ui/react"
-import { ArrowSquareIn } from "@phosphor-icons/react"
+import { Button } from "@/components/ui/Button"
+import { ArrowSquareIn } from "@phosphor-icons/react/dist/ssr"
 import SnapshotModal from "components/[guild]/leaderboard/Snapshots/SnapshotModal"
-import Button from "components/common/Button"
 import type { ProvidedValueDisplayProps } from "requirements/requirementProvidedValues"
+import { Requirement } from "types"
 
-const AirdropProvidedValue = ({ requirement }: ProvidedValueDisplayProps) => {
-  const { isOpen, onOpen, onClose } = useDisclosure()
+const AirdropProvidedValue = ({ requirement }: ProvidedValueDisplayProps) => (
+  <div className="flex items-center gap-1">
+    <span>Points in</span>
 
-  return (
-    <HStack gap={1}>
-      <Text>Points in</Text>
-      <Button
-        variant="link"
-        rightIcon={<ArrowSquareIn />}
-        iconSpacing={0.5}
-        onClick={onOpen}
-      >
-        {"snapshot"}
-      </Button>
-
-      <SnapshotModal
-        onClose={onClose}
-        isOpen={isOpen}
-        snapshotRequirement={requirement}
-      />
-    </HStack>
-  )
-}
+    <SnapshotModal
+      snapshotRequirement={
+        requirement as Extract<Requirement, { type: "GUILD_SNAPSHOT" }>
+      }
+      trigger={
+        <Button
+          variant="unstyled"
+          className="h-auto gap-0.5 p-0 underline-offset-2 hover:underline"
+          rightIcon={<ArrowSquareIn weight="bold" />}
+        >
+          {"snapshot"}
+        </Button>
+      }
+    />
+  </div>
+)
 
 export default AirdropProvidedValue

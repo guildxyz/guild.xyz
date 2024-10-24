@@ -1,4 +1,5 @@
 import { usePostHogContext } from "@/components/Providers/PostHogProvider"
+import { Button } from "@/components/ui/Button"
 import {
   Accordion,
   AccordionButton,
@@ -16,7 +17,6 @@ import {
   ModalOverlay,
   Stack,
   Text,
-  useDisclosure,
 } from "@chakra-ui/react"
 import { Star } from "@phosphor-icons/react"
 import useEditRolePlatform from "components/[guild]/AccessHub/hooks/useEditRolePlatform"
@@ -27,7 +27,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPlatform from "components/[guild]/hooks/useGuildPlatform"
 import useRequirements from "components/[guild]/hooks/useRequirements"
 import SnapshotModal from "components/[guild]/leaderboard/Snapshots/SnapshotModal"
-import Button from "components/common/Button"
+import ChakraButton from "components/common/Button"
 import { SectionTitle } from "components/common/Section"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import useCreateRequirement from "components/create-guild/Requirements/hooks/useCreateRequirement"
@@ -37,6 +37,7 @@ import { ReactNode, useMemo, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { useTokenRewardContext } from "rewards/Token/TokenRewardContext"
 import Token from "static/icons/token.svg"
+import { Requirement } from "types"
 import DynamicTypeForm from "./DynamicTypeForm"
 import useRolePlatformsOfReward from "./hooks/useRolePlatformsOfReward"
 
@@ -95,12 +96,6 @@ const EditTokenModal = ({
     const rp: any = rolePlatforms?.[0]
     return rp ? rp.dynamicAmount.operation.params.multiplier : 1.0
   }, [rolePlatforms])
-
-  const {
-    isOpen: snapshotIsOpen,
-    onOpen: snapshotOnOpen,
-    onClose: snapshotOnClose,
-  } = useDisclosure()
 
   const toast = useToast()
 
@@ -208,9 +203,17 @@ const EditTokenModal = ({
                     Change the snapshot that the reward amount is based on.
                   </Text>
                   {snapshotRequirement && (
-                    <Button variant="outline" onClick={snapshotOnOpen}>
-                      View current snapshot
-                    </Button>
+                    <SnapshotModal
+                      snapshotRequirement={
+                        snapshotRequirement as Extract<
+                          Requirement,
+                          { type: "GUILD_SNAPSHOT" }
+                        >
+                      }
+                      trigger={
+                        <Button variant="outline">View current snapshot</Button>
+                      }
+                    />
                   )}
 
                   <Accordion
@@ -220,7 +223,7 @@ const EditTokenModal = ({
                   >
                     <AccordionItem border={"none"}>
                       <AccordionButton p={0}>
-                        <Button
+                        <ChakraButton
                           w="full"
                           colorScheme={changeSnapshot ? "indigo" : "gray"}
                           rightIcon={<AccordionIcon />}
@@ -230,7 +233,7 @@ const EditTokenModal = ({
                               {snapshotRequirement ? "Change" : "Set"} snapshot
                             </Text>
                           </HStack>
-                        </Button>
+                        </ChakraButton>
                       </AccordionButton>
 
                       <AccordionPanel p={0} mt={2}>
@@ -256,7 +259,7 @@ const EditTokenModal = ({
                   />
                 </Stack>
 
-                <Button
+                <ChakraButton
                   isLoading={rpIsLoading || reqIsLoading}
                   loadingText={
                     rpIsLoading
@@ -271,20 +274,12 @@ const EditTokenModal = ({
                   onClick={methods.handleSubmit(onEditSubmit)}
                 >
                   Save
-                </Button>
+                </ChakraButton>
               </Stack>
             </FormProvider>
           </ModalBody>
         </ModalContent>
       </Modal>
-
-      {snapshotRequirement && (
-        <SnapshotModal
-          onClose={snapshotOnClose}
-          isOpen={snapshotIsOpen}
-          snapshotRequirement={snapshotRequirement}
-        />
-      )}
     </>
   )
 }

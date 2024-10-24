@@ -1,52 +1,50 @@
-import { Icon, Text, useDisclosure } from "@chakra-ui/react"
-import { ArrowSquareIn } from "@phosphor-icons/react"
+import { Button } from "@/components/ui/Button"
+import { Icon } from "@phosphor-icons/react/dist/lib/types"
+import { ArrowSquareIn } from "@phosphor-icons/react/dist/ssr"
 import {
   Requirement,
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import SnapshotModal from "components/[guild]/leaderboard/Snapshots/SnapshotModal"
-import Button from "components/common/Button"
 import REQUIREMENTS from "requirements"
+
+const RequirementIcon = REQUIREMENTS.GUILD_SNAPSHOT.icon as Icon
 
 const AirdropRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext<"GUILD_SNAPSHOT">()
 
   const { isHidden } = requirement?.data
 
-  const { isOpen, onOpen, onClose } = useDisclosure()
-
   return (
     <Requirement
-      image={<Icon as={REQUIREMENTS.GUILD_SNAPSHOT.icon as any} boxSize={6} />}
+      image={<RequirementIcon weight="bold" className="size-6" />}
       footer={
         isHidden && (
-          <Text color="gray" fontSize="xs" fontWeight="normal">
-            {`Snapshot is hidden`}
-          </Text>
+          <span className="font-normal text-muted-foreground text-xs">
+            Snapshot is hidden
+          </span>
         )
       }
       {...rest}
     >
-      {"Be included in "}
+      <span>{"Be included in "}</span>
       {isHidden ? (
-        "this snapshot"
+        <span>snapshot</span>
       ) : (
-        <Button
-          variant="link"
-          rightIcon={<ArrowSquareIn />}
-          iconSpacing={0.5}
-          onClick={onOpen}
-        >
-          {"snapshot"}
-        </Button>
+        <SnapshotModal
+          trigger={
+            <Button
+              variant="unstyled"
+              className="h-auto p-0 underline-offset-2 hover:underline"
+              rightIcon={<ArrowSquareIn weight="bold" />}
+            >
+              this snapshot
+            </Button>
+          }
+          snapshotRequirement={requirement}
+        />
       )}
-
-      <SnapshotModal
-        onClose={onClose}
-        isOpen={isOpen}
-        snapshotRequirement={requirement}
-      />
     </Requirement>
   )
 }
