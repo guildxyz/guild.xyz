@@ -1,10 +1,8 @@
 import {
-  FarcasterProfile,
   Guild as GuildFromTypesPackage,
   Logic,
   Schemas,
   SocialLinks,
-  UserProfile,
   Visibility,
   schemas,
 } from "@guildxyz/types"
@@ -99,31 +97,13 @@ type PlatformAccountDetails = {
   username?: string
 }
 
-type UserAddress = {
+// For some reason we haven't used `0x${string}` in our schema, but we can use that stricter type on our frontend, that's why it's overwritten here
+type UserAddress = Omit<Schemas["User"]["addresses"][number], "address"> & {
   address: `0x${string}`
-  userId: number
-  isPrimary: boolean
-  isDelegated: boolean
-  createdAt: string
-  walletType: "EVM" | "FUEL"
 }
 
-type User = {
-  id: number
+type User = Omit<Schemas["User"], "addresses"> & {
   addresses: UserAddress[]
-  platformUsers: PlatformAccountDetails[]
-  sharedSocials: UserProfile["sharedSocials"]
-  publicKey?: string
-  isSuperAdmin: boolean
-  captchaVerifiedSince: Date
-  tosAccepted?: string
-  guildProfile: Schemas["Profile"] | null
-  emails: {
-    emailAddress: string
-    pending: boolean
-    createdAt: Date
-  }
-  farcasterProfiles: FarcasterProfile[]
 }
 
 type GuildBase = {
