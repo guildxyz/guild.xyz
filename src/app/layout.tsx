@@ -3,6 +3,7 @@ import { PostHogPageViews } from "@/components/Providers/PostHogPageViews"
 import { dystopian, inter } from "fonts"
 import { type ReactNode, Suspense } from "react"
 import "./globals.css"
+import { TermsOfUseUpdateDialog } from "@/components/TermsOfUseUpdateDialog"
 import { cn } from "@/lib/utils"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import type { Metadata, Viewport } from "next"
@@ -40,6 +41,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <Providers>
           {children}
 
+          <TermsOfUseUpdateDialog />
           <Suspense>
             <PostHogPageViews />
           </Suspense>

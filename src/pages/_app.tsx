@@ -21,6 +21,7 @@ import "../app/globals.css"
 import { AccountModal } from "@/components/Account/components/AccountModal"
 import AppErrorBoundary from "@/components/AppErrorBoundary"
 import { IntercomProvider } from "@/components/Providers/IntercomProvider"
+import { TermsOfUseUpdateDialog } from "@/components/TermsOfUseUpdateDialog"
 import { Toaster } from "@/components/ui/Toaster"
 import { TooltipProvider } from "@/components/ui/Tooltip"
 import { LegacyPostHogProvider } from "components/_app/LegacyPostHogProvider"
@@ -87,6 +88,7 @@ const App = ({
                       </IntercomProvider>
 
                       <LegacyWeb3ConnectionManager />
+                      <TermsOfUseUpdateDialog />
                     </LegacyPostHogProvider>
                   </FuelProvider>
                 </QueryClientProvider>
