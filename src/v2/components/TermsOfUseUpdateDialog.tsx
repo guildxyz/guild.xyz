@@ -3,6 +3,7 @@
 import { useDisclosure } from "@/hooks/useDisclosure"
 import useUser from "components/[guild]/hooks/useUser"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
+import { usePathname } from "next/navigation"
 import { useEffect } from "react"
 import fetcher from "utils/fetcher"
 import { Anchor } from "./ui/Anchor"
@@ -20,10 +21,12 @@ const TermsOfUseUpdateDialog = () => {
   const { id, tosAccepted, mutate } = useUser()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
+  const pathname = usePathname()
+
   useEffect(() => {
-    if (!id) return
+    if (!id || pathname?.includes("terms-of-use")) return
     if (!tosAccepted && !isOpen) onOpen()
-  }, [id, tosAccepted, isOpen, onOpen])
+  }, [id, pathname, tosAccepted, isOpen, onOpen])
 
   const { onSubmit, isLoading } = useSubmitWithSign(
     (signedValidation: SignedValidation) =>
