@@ -116,6 +116,7 @@ type User = {
   publicKey?: string
   isSuperAdmin: boolean
   captchaVerifiedSince: Date
+  tosAccepted?: string
   guildProfile: Schemas["Profile"] | null
   emails: {
     emailAddress: string
