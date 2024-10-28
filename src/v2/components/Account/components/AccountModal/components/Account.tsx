@@ -1,5 +1,6 @@
 import { CopyableAddress } from "@/components/CopyableAddress"
 import { GuildAvatar } from "@/components/GuildAvatar"
+import { purchaseHistoryDrawerAtom } from "@/components/Providers/atoms"
 import useConnectorNameAndIcon from "@/components/Web3ConnectionManager/hooks/useConnectorNameAndIcon"
 import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import {
@@ -11,6 +12,7 @@ import {
 import { IconButton } from "@/components/ui/IconButton"
 import { DotsThreeVertical, File, SignOut } from "@phosphor-icons/react"
 import useResolveAddress from "hooks/useResolveAddress"
+import { useSetAtom } from "jotai"
 import { useAccount } from "wagmi"
 import { NetworkIndicator } from "./NetworkIndicator"
 
@@ -24,6 +26,8 @@ export const Account = ({ handleLogout }: AccountProps) => {
 
   const { address: evmAddress } = useAccount()
   const domain = useResolveAddress(evmAddress ?? "")
+
+  const setIsPurchaseHistoryOpen = useSetAtom(purchaseHistoryDrawerAtom)
 
   if (!address) return null
 
@@ -59,7 +63,10 @@ export const Account = ({ handleLogout }: AccountProps) => {
           />
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem className="flex items-center gap-2 px-4 font-semibold">
+          <DropdownMenuItem
+            className="flex items-center gap-2 px-4 font-semibold"
+            onClick={() => setIsPurchaseHistoryOpen(true)}
+          >
             <File weight="bold" className="size-4" />
             Purchase history
           </DropdownMenuItem>

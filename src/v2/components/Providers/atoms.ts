@@ -12,3 +12,4 @@ export const walletLinkHelperModalAtom = atom(false)
 export const platformMergeAlertAtom = atom<
   false | { addressOrDomain: string; platformName: PlatformName }
 >(false)
+export const purchaseHistoryDrawerAtom = atom(false)
