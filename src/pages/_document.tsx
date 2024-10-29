@@ -1,4 +1,5 @@
 import Document, { Head, Html, Main, NextScript } from "next/document"
+import Script from "next/script"
 
 class MyDocument extends Document {
   render(): JSX.Element {
@@ -15,6 +16,11 @@ class MyDocument extends Document {
                 data-domain="guild.xyz"
                 integrity="sha512-HVRUd9pld7dyE4GD9bua0YojsAokMtFExYGvwJhJ5zq37EEX7yEOeYEsh0yh/CypC832F1VkewDepCdoDlPwEw=="
                 data-exclude="/oauth**"
+              />
+              <Script
+                async
+                defer
+                src="https://js.jam.dev/support/d00eb75d-44cf-48af-a274-ae7c828bb08e"
               />
             </>
           )}

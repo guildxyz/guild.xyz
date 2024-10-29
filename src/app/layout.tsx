@@ -7,6 +7,7 @@ import { TermsOfUseUpdateDialog } from "@/components/TermsOfUseUpdateDialog"
 import { cn } from "@/lib/utils"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import type { Metadata, Viewport } from "next"
+import Script from "next/script"
 import NextTopLoader from "nextjs-toploader"
 
 interface RootLayoutProps {
@@ -34,7 +35,15 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head />
+      <head>
+        {process.env.NODE_ENV === "production" && (
+          <Script
+            async
+            defer
+            src="https://js.jam.dev/support/d00eb75d-44cf-48af-a274-ae7c828bb08e"
+          />
+        )}
+      </head>
       <body className={cn(dystopian.variable, inter.variable)}>
         <NextTopLoader showSpinner={false} color="#eff6ff" height={3} />
 
