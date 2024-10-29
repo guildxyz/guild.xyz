@@ -1,7 +1,4 @@
-// Mainnet
+// Both mainnet and testnet
 export const FUEL_GUILD_PIN_CONTRACT_ID_0X =
-  "0x2304168b6bb5de10ff10a04199ed6eafa612d433967ddebe72d3496f268d35ea"
-// Sepolia Testnet
-// export const FUEL_GUILD_PIN_CONTRACT_ID_0X =
-//   "0x5b7fa31ecb87bd78b7f44488bf6982d45acee91a0ff5594ca7453017800e1953"
-export const FUEL_FAKE_CHAIN_ID = 123456789
+  "0xe8fc73fefb671d41c863224fcbd899e111ea710d5da3b4008d6bf23c57267f81";
+export const FUEL_FAKE_CHAIN_ID = 123456789;
