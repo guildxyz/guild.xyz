@@ -40,7 +40,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           <Script
             async
             defer
-            src="https://js.jam.dev/support/d00eb75d-44cf-48af-a274-ae7c828bb08e"
+            src="https://js.jam.dev/support/d00eb75d-44cf-48af-a274-ae7c828bb08e.js"
           />
         )}
       </head>
