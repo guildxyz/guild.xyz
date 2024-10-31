@@ -1,3 +1,4 @@
+import { CopyableAddress } from "@/components/CopyableAddress"
 import { purchaseHistoryDrawerAtom } from "@/components/Providers/atoms"
 import { Button } from "@/components/ui/Button"
 import {
@@ -21,7 +22,6 @@ import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useAtom } from "jotai"
 import { useEffect } from "react"
-import shortenHex from "utils/shortenHex"
 import { useAccount } from "wagmi"
 
 export const PurchaseHistoryDrawer = () => {
@@ -111,7 +111,9 @@ export const PurchaseHistoryDrawer = () => {
                     <TableCell>
                       {new Date(receipt.createdAt).toLocaleDateString()}
                     </TableCell>
-                    <TableCell>{shortenHex(receipt.paymentAddress)}</TableCell>
+                    <TableCell>
+                      <CopyableAddress address={receipt.paymentAddress} />
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
