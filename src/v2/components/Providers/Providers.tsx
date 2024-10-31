@@ -14,6 +14,7 @@ import { shouldUseReCAPTCHAAtom } from "utils/recaptcha"
 import { WagmiProvider } from "wagmi"
 import { wagmiConfig } from "wagmiConfig"
 import { AccountModal } from "../Account/components/AccountModal"
+import { PurchaseHistoryDrawer } from "../Account/components/PurchaseHistoryDrawer/PurchaseHistoryDrawer"
 import { Web3ConnectionManager } from "../Web3ConnectionManager"
 import { Toaster } from "../ui/Toaster"
 import { TooltipProvider } from "../ui/Tooltip"
@@ -45,6 +46,7 @@ export function Providers({ children }: { children: ReactNode }) {
                     <IntercomProvider>
                       {children}
                       <AccountModal />
+                      <PurchaseHistoryDrawer />
                       <Suspense>
                         <Web3ConnectionManager />
                       </Suspense>

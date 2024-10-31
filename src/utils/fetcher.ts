@@ -59,9 +59,15 @@ const fetcher = async (
 
   return fetch(endpoint, options).then(async (response: Response) => {
     const contentType = response.headers.get("content-type")
-    const res = contentType.includes("json")
-      ? await response.json?.()
-      : await response.text()
+
+    let res
+    if (contentType?.includes("json")) {
+      res = await response.json?.()
+    } else if (contentType?.includes("pdf")) {
+      return response.blob()
+    } else {
+      res = await response.text()
+    }
 
     if (!response.ok) {
       if (

@@ -19,6 +19,7 @@ import { WagmiProvider } from "wagmi"
 import { wagmiConfig } from "wagmiConfig"
 import "../app/globals.css"
 import { AccountModal } from "@/components/Account/components/AccountModal"
+import { PurchaseHistoryDrawer } from "@/components/Account/components/PurchaseHistoryDrawer/PurchaseHistoryDrawer"
 import AppErrorBoundary from "@/components/AppErrorBoundary"
 import { IntercomProvider } from "@/components/Providers/IntercomProvider"
 import { TermsOfUseUpdateDialog } from "@/components/TermsOfUseUpdateDialog"
@@ -84,6 +85,7 @@ const App = ({
 
                         <ClientOnly>
                           <AccountModal />
+                          <PurchaseHistoryDrawer />
                         </ClientOnly>
                       </IntercomProvider>
 
