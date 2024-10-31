@@ -33,20 +33,22 @@ const requirementIcons: Record<
   COVALENT_TX_VALUE_RELATIVE: Coins,
 }
 
-const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
-  const requirement = useRequirementContext<
-    | "COVALENT_FIRST_TX"
-    | "COVALENT_FIRST_TX_RELATIVE"
-    | "COVALENT_CONTRACT_DEPLOY"
-    | "COVALENT_CONTRACT_DEPLOY_RELATIVE"
-    | "COVALENT_TX_COUNT"
-    | "COVALENT_TX_COUNT_RELATIVE"
-    | "COVALENT_TX_VALUE"
-    | "COVALENT_TX_VALUE_RELATIVE"
-  >()
+type CovalentRequirementType =
+  | "COVALENT_FIRST_TX"
+  | "COVALENT_FIRST_TX_RELATIVE"
+  | "COVALENT_CONTRACT_DEPLOY"
+  | "COVALENT_CONTRACT_DEPLOY_RELATIVE"
+  | "COVALENT_TX_COUNT"
+  | "COVALENT_TX_COUNT_RELATIVE"
+  | "COVALENT_TX_VALUE"
+  | "COVALENT_TX_VALUE_RELATIVE"
 
-  const maxAmount = requirement.data?.timestamps?.maxAmount
-  const minAmount = requirement.data?.timestamps?.minAmount
+const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
+  const requirement = useRequirementContext<CovalentRequirementType>()
+  const reqData = requirement.data as any // Important note: we needed a hotfix for the requirement icon, but we should find a proper solution for this.
+
+  const maxAmount = reqData?.timestamps?.maxAmount
+  const minAmount = reqData?.timestamps?.minAmount
 
   const getFirstTxRelativeContent = () => {
     const formattedMin = formatRelativeTimeFromNow(minAmount)
@@ -84,7 +86,12 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
     return "Have at least one transaction"
   }
 
-  const IconComponent = requirementIcons[requirement.type]
+  const reqType = requirement.type.replace(
+    "ALCHEMY",
+    "COVALENT"
+  ) as CovalentRequirementType
+
+  const IconComponent = requirementIcons[reqType]
 
   return (
     <Requirement
@@ -93,7 +100,7 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
       {...props}
     >
       {(() => {
-        switch (requirement.type) {
+        switch (reqType) {
           case "COVALENT_FIRST_TX":
             if (!minAmount && !maxAmount) return "Have at least one transaction"
             return (
@@ -109,27 +116,27 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
               <>
                 <span>
                   {`Deployed ${
-                    requirement.data.txCount > 1 ? requirement.data.txCount : "a"
-                  } ${pluralize(requirement.data.txCount, "contract", false)}`}
+                    reqData.txCount > 1 ? reqData.txCount : "a"
+                  } ${pluralize(reqData.txCount, "contract", false)}`}
                 </span>
                 <BeforeAfterDates minTs={minAmount} maxTs={maxAmount} />
               </>
             )
           case "COVALENT_CONTRACT_DEPLOY_RELATIVE": {
             const formattedMinAmount = formatRelativeTimeFromNow(
-              requirement.data.timestamps.minAmount
+              reqData.timestamps.minAmount
             )
 
             const formattedMaxAmount = formatRelativeTimeFromNow(
-              requirement.data.timestamps.maxAmount
+              reqData.timestamps.maxAmount
             )
 
             return (
               <>
                 <span>
                   {`Deployed ${
-                    requirement.data.txCount > 1 ? requirement.data.txCount : "a"
-                  } contract${requirement.data.txCount > 1 ? "s" : ""}`}
+                    reqData.txCount > 1 ? reqData.txCount : "a"
+                  } contract${reqData.txCount > 1 ? "s" : ""}`}
                 </span>
                 {formattedMaxAmount && formattedMinAmount ? (
                   <>
@@ -152,8 +159,8 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
               <>
                 <span>
                   {`Have ${
-                    requirement.data.txCount > 1 ? requirement.data.txCount : "a"
-                  } transaction${requirement.data.txCount > 1 ? "s" : ""}`}
+                    reqData.txCount > 1 ? reqData.txCount : "a"
+                  } transaction${reqData.txCount > 1 ? "s" : ""}`}
                 </span>
 
                 {requirement.address && (
@@ -170,19 +177,19 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
             )
           case "COVALENT_TX_COUNT_RELATIVE": {
             const formattedMinAmount = formatRelativeTimeFromNow(
-              requirement.data.timestamps.minAmount
+              reqData.timestamps.minAmount
             )
 
             const formattedMaxAmount = formatRelativeTimeFromNow(
-              requirement.data.timestamps.maxAmount
+              reqData.timestamps.maxAmount
             )
 
             return (
               <>
                 <span>
                   {`Have ${
-                    requirement.data.txCount > 1 ? requirement.data.txCount : "a"
-                  } transaction${requirement.data.txCount > 1 ? "s" : ""}`}
+                    reqData.txCount > 1 ? reqData.txCount : "a"
+                  } transaction${reqData.txCount > 1 ? "s" : ""}`}
                 </span>
                 {formattedMaxAmount && formattedMinAmount ? (
                   <>
