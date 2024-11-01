@@ -416,8 +416,8 @@ export const inkSepolia = {
   },
   blockExplorers: {
     default: {
-      name: "Blockscout",
-      url: "https://explorer-sepolia.inkonchain.com",
+      name: "Etherscan",
+      url: "https://sepolia.etherscan.io/",
     },
   },
   contracts: {
