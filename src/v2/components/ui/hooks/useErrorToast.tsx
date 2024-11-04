@@ -1,5 +1,5 @@
+import { CopyableCorrelationId } from "@/components/CopyableCorrelationId"
 import { useCallback } from "react"
-import { useCopyToClipboard } from "usehooks-ts"
 import { useToast } from "./useToast"
 
 type ErrorWithCorrelationId = {
@@ -12,7 +12,6 @@ const isErrorWithCorrelationId = (error: any): error is ErrorWithCorrelationId =
 
 const useErrorToast = () => {
   const { toast } = useToast()
-  const [, copyToClipboard] = useCopyToClipboard()
 
   const errorToast = useCallback(
     (message?: string, correlationId?: string) =>
@@ -22,16 +21,13 @@ const useErrorToast = () => {
         description: correlationId ? (
           <div className="flex flex-col gap-2">
             {message && <p>{message}</p>}
-            <pre
-              className="cursor-pointer text-xs opacity-60"
-              onClick={() => copyToClipboard(correlationId)}
-            >{`ID: ${correlationId}`}</pre>
+            <CopyableCorrelationId correlationId={correlationId} />
           </div>
         ) : (
           message
         ),
       }),
-    [toast, copyToClipboard]
+    [toast]
   )
 
   return useCallback(
