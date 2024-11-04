@@ -13,7 +13,7 @@ export const CopyableCorrelationId = ({
     >
       {`ID: ${correlationId}`}
       {hasCopied ? (
-        <Check size={14} className="text-success" />
+        <Check size={14} weight="bold" className="text-success" />
       ) : (
         <Copy
           size={14}
