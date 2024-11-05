@@ -38,8 +38,6 @@ export async function GET(req: NextRequest) {
       throw new Error(JSON.stringify(jsonData))
     }
 
-    console.log("/api/leaderboard - jsonData", jsonData)
-
     const csvData = convertLeaderboardToCsv(jsonData)
 
     return new Response(csvData, {
