@@ -29,11 +29,17 @@ export async function GET(req: NextRequest) {
       env.NEXT_PUBLIC_API
     )
 
-    const jsonResponse = await fetch(leaderboardRequest)
+    const jsonResponse = await fetch(leaderboardRequest, {
+      cache: "no-store",
+      next: { revalidate: 0 },
+    })
     const jsonData = await jsonResponse.json()
     if (!jsonResponse.ok) {
       throw new Error(JSON.stringify(jsonData))
     }
+
+    console.log("/api/leaderboard - jsonData", jsonData)
+
     const csvData = convertLeaderboardToCsv(jsonData)
 
     return new Response(csvData, {
