@@ -95,7 +95,9 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
 
     const rolePlatformPart = {
       dynamicAmount: dynamicAmount,
-      platformRoleData: { pointGuildPlatformId: _data.data.guildPlatformId },
+      platformRoleData: {
+        pointGuildPlatformId: _data.data.guildPlatformId ?? undefined,
+      }, // The API won't accept null here, so we added a fixed fallback
       isNew: true,
     }
 
