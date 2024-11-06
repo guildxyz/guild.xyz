@@ -15,11 +15,11 @@ const FuelBalance = ({ baseFieldPath, field }: RequirementFormProps) => {
   return (
     <>
       <FormControl isInvalid={!!parseFromObject(errors, baseFieldPath)?.address}>
-        <FormLabel>Token address</FormLabel>
+        <FormLabel>Asset id</FormLabel>
         <Input
           {...register(`${baseFieldPath}.address`, {
             validate: (value) =>
-              FUEL_ADDRESS_REGEX.test(value) || "Invalid Fuel address",
+              FUEL_ADDRESS_REGEX.test(value) || "Invalid Fuel asset id",
           })}
           placeholder="0x..."
         />
