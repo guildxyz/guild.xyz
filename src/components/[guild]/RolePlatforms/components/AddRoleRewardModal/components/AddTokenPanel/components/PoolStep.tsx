@@ -55,7 +55,7 @@ const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
   })
 
   const formattedAmount =
-    !!amount && decimals ? parseUnits(amount, decimals) : BigInt(1)
+    !!amount && decimals ? parseUnits(amount.toString(), decimals) : BigInt(1)
 
   const { isLoading, onSubmitTransaction: submitRegisterPool } = useRegisterPool(
     userAddress,

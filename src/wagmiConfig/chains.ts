@@ -4,6 +4,7 @@ import {
   bobaAvax,
   exosama,
   formTestnet,
+  inkSepolia,
   metisSepolia,
   mint,
   neonEVM,
@@ -724,6 +725,14 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/networkLogos/world.svg",
     },
   },
+  INK_SEPOLIA: {
+    ...generateChainConfig(inkSepolia, ETH_ICON),
+    iconUrl: "/networkLogos/inkSepolia.png",
+    blockExplorerIconUrl: {
+      light: "/networkLogos/inkSepolia.png",
+      dark: "/networkLogos/inkSepolia.png",
+    },
+  },
 }
 
 enum Chains {
@@ -795,6 +804,7 @@ enum Chains {
   LISK = lisk.id,
   CRONOS_ZKEVM = cronoszkEVM.id,
   WORLD_CHAIN = worldchain.id,
+  INK_SEPOLIA = inkSepolia.id,
 }
 
 export type Chain = keyof typeof Chains

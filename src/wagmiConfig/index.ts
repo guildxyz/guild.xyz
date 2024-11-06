@@ -4,6 +4,7 @@ import {
   bitfinityTestnet,
   exosama,
   formTestnet,
+  inkSepolia,
   metisSepolia,
   mint,
   neonEVM,
@@ -192,6 +193,7 @@ export const wagmiConfig = IS_TEST
         lisk as Chain,
         cronoszkEVM,
         worldchain,
+        inkSepolia,
       ],
       transports: {
         [mainnet.id]: http(),
@@ -258,6 +260,7 @@ export const wagmiConfig = IS_TEST
         [lisk.id]: http(),
         [cronoszkEVM.id]: http(),
         [worldchain.id]: http(),
+        [inkSepolia.id]: http(),
       },
       ssr: true,
       connectors: [

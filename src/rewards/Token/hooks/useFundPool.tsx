@@ -22,7 +22,7 @@ const useFundPool = (
     isLoading,
   } = useTokenData(chain, tokenAddress)
   const formattedAmount =
-    !!amount && decimals ? parseUnits(amount, decimals) : BigInt(1)
+    !!amount && decimals ? parseUnits(amount.toString(), decimals) : BigInt(1)
 
   const { captureEvent } = usePostHogContext()
   const postHogOptions = {

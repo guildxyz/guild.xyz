@@ -2,14 +2,20 @@ import {
   Checkbox,
   Collapse,
   FormControl,
+  FormHelperText,
   FormLabel,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverContent,
+  PopoverTrigger,
   Stack,
   Tag,
   Text,
   Textarea,
   Tooltip,
 } from "@chakra-ui/react"
-import { ArrowCounterClockwise, Check, File } from "@phosphor-icons/react"
+import { ArrowCounterClockwise, Check, File, Question } from "@phosphor-icons/react"
 import { isValidAddress } from "components/[guild]/EditGuild/components/Admins/Admins"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
@@ -119,8 +125,8 @@ export default function AllowlistFormInputs({
     <Stack spacing={4} alignItems="start" {...getRootProps()}>
       <FormControl isInvalid={!!fileRejections?.[0]} textAlign="left">
         <FormLabel display={"flex"} gap={2}>
-          Upload from file
-          {addressCount && (
+          <Text as="span">Upload from file</Text>
+          {addressCount > 0 && (
             <Tooltip
               label={`Currently an allowlist with ${addressCount} addresses is uploaded. Uploading a new file overwrites these addresses`}
             >
@@ -179,6 +185,29 @@ export default function AllowlistFormInputs({
           </Button>
         </Tooltip>
 
+        <FormHelperText>
+          <Popover offset={[48, 8]}>
+            <PopoverTrigger>
+              <Button
+                variant="link"
+                leftIcon={<Question />}
+                iconSpacing={1}
+                fontWeight="medium"
+                fontSize="sm"
+              >
+                Accepted file format
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent>
+              <PopoverArrow />
+              <PopoverBody>
+                You should upload a .csv file with all addresses on a new line,
+                without duplicates.
+              </PopoverBody>
+            </PopoverContent>
+          </Popover>
+        </FormHelperText>
+
         <FormErrorMessage>
           {fileRejections?.[0]?.errors?.[0]?.message}
         </FormErrorMessage>
@@ -225,7 +254,7 @@ export default function AllowlistFormInputs({
                 ref={ref}
                 resize="vertical"
                 p={2}
-                minH={64}
+                minH={48}
                 className="custom-scrollbar"
                 cols={42}
                 wrap="off"
