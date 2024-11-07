@@ -1,5 +1,5 @@
-import { useDisclosure } from "@chakra-ui/react"
-import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
+import { useConfetti } from "@/components/Confetti"
+import { useDisclosure } from "@/hooks/useDisclosure"
 import {
   Dispatch,
   PropsWithChildren,
@@ -35,11 +35,11 @@ const TransactionStatusProvider = ({
   const [txError, setTxError] = useState(false)
   const [txSuccess, setTxSuccess] = useState(false)
 
-  const triggerConfetti = useJsConfetti()
+  const { confettiPlayer } = useConfetti()
 
   useEffect(() => {
     if (!txSuccess) return
-    triggerConfetti()
+    confettiPlayer.current("Confetti from left and right")
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [txSuccess])
 
