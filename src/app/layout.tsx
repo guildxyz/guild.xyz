@@ -5,7 +5,6 @@ import { type ReactNode, Suspense } from "react"
 import "./globals.css"
 import { TermsOfUseUpdateDialog } from "@/components/TermsOfUseUpdateDialog"
 import { cn } from "@/lib/utils"
-import { SpeedInsights } from "@vercel/speed-insights/next"
 import type { Metadata, Viewport } from "next"
 import Script from "next/script"
 import NextTopLoader from "nextjs-toploader"
@@ -68,8 +67,6 @@ export default function RootLayout({ children }: RootLayoutProps) {
             pointerEvents: "none",
           }}
         />
-
-        <SpeedInsights />
       </body>
     </html>
   )

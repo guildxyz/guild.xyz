@@ -1,7 +1,6 @@
 import { FuelProvider } from "@fuels/react"
 import { IconContext } from "@phosphor-icons/react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
-import { SpeedInsights } from "@vercel/speed-insights/next"
 import { bugsnagStart } from "bugsnag"
 import Chakra from "components/_app/Chakra"
 import ClientOnly from "components/common/ClientOnly"
@@ -99,8 +98,6 @@ const App = ({
           </IconContext.Provider>
         </TooltipProvider>
       </Chakra>
-
-      <SpeedInsights />
     </>
   )
 }
