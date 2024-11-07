@@ -1,10 +1,18 @@
+import { useCopyToClipboard } from "@/hooks/useCopyToClipboard"
 import {
   MenuDivider,
   MenuItem,
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
-import { Coin, Pencil, TrashSimple, Wallet } from "@phosphor-icons/react"
+import {
+  Check,
+  Coin,
+  Copy,
+  Pencil,
+  TrashSimple,
+  Wallet,
+} from "@phosphor-icons/react"
 import EditRewardAvailabilityMenuItem from "components/[guild]/AccessHub/components/EditRewardAvailabilityMenuItem"
 import PlatformCardMenu from "components/[guild]/RolePlatforms/components/PlatformCard/components/PlatformCardMenu"
 import useToast from "hooks/useToast"
@@ -37,6 +45,8 @@ const TokenRewardCardEditMenu = ({
     onClose: editOnClose,
   } = useDisclosure()
 
+  const { copyToClipboard, hasCopied } = useCopyToClipboard()
+
   const {
     isOpen: deleteIsOpen,
     onOpen: deleteOnOpen,
@@ -62,6 +72,16 @@ const TokenRewardCardEditMenu = ({
         </MenuItem>
         <MenuItem icon={<Wallet />} onClick={withdrawOnOpen}>
           Withdraw from pool
+        </MenuItem>
+        <MenuItem
+          icon={hasCopied ? <Check /> : <Copy />}
+          onClick={() =>
+            copyToClipboard(
+              guildPlatform.platformGuildData?.poolId?.toString() ?? "Unknown pool"
+            )
+          }
+        >
+          Copy pool ID
         </MenuItem>
         <MenuDivider />
         <MenuItem icon={<TrashSimple />} onClick={deleteOnOpen} color={removeColor}>
