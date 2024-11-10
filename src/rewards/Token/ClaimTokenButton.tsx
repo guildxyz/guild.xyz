@@ -1,5 +1,4 @@
 import { ButtonProps, Tooltip, useDisclosure } from "@chakra-ui/react"
-import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
 import dynamic from "next/dynamic"
 import { claimTextButtonTooltipLabel } from "rewards/SecretText/TextCardButton"
 import { RewardCardButton } from "rewards/components/RewardCardButton"
@@ -12,17 +11,22 @@ import {
   GeogatedCountryPopover,
   useIsFromGeogatedCountry,
 } from "./GeogatedCountryAlert"
-import { TokenRewardProvider } from "./TokenRewardContext"
+import { TokenRewardProvider, useTokenRewardContext } from "./TokenRewardContext"
 
 type Props = {
   isDisabled?: boolean
-  rolePlatform: RolePlatform
+  rolePlatform: RolePlatform // TODO: decide if it should be a prop or we should get it from context!
 } & ButtonProps
 
 const DynamicClaimTokenModal = dynamic(() => import("./ClaimTokenModal"))
 
-const ClaimTokenButton = ({ isDisabled, children, ...rest }: Props) => {
-  const rolePlatform = useRolePlatform()
+const ClaimTokenButton = ({
+  isDisabled,
+  rolePlatform,
+  children,
+  ...rest
+}: Props) => {
+  const { guildPlatform } = useTokenRewardContext()
 
   const { isOpen, onOpen, onClose } = useDisclosure()
   const isFromGeogatedCountry = useIsFromGeogatedCountry()
@@ -30,7 +34,7 @@ const ClaimTokenButton = ({ isDisabled, children, ...rest }: Props) => {
   const { isAvailable } = getRolePlatformTimeframeInfo(rolePlatform)
 
   return (
-    <TokenRewardProvider guildPlatform={rolePlatform.guildPlatform}>
+    <TokenRewardProvider guildPlatform={guildPlatform}>
       <GeogatedCountryPopover isDisabled={!isFromGeogatedCountry}>
         <Tooltip
           isDisabled={!isAvailable}
