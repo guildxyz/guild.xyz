@@ -170,8 +170,8 @@ const EditTokenModal = ({
     if (!!snapshotRequirement && changeSnapshot) {
       await submitEditRequirement({
         ...snapshotRequirement,
+        ...data.snapshotRequirement,
         id: snapshotRequirement?.id!, // just to make TS happy...
-        data: data?.data?.guildPlatformId ? data.data : snapshotRequirement?.data,
       })
     }
 
