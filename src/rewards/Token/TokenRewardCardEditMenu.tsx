@@ -1,11 +1,9 @@
-import { useCopyToClipboard } from "@/hooks/useCopyToClipboard"
 import { useDisclosure } from "@/hooks/useDisclosure"
 import { MenuDivider, MenuItem, useColorModeValue } from "@chakra-ui/react"
 import {
+  ArrowSquareOut,
   ArrowsLeftRight,
-  Check,
   Coin,
-  Copy,
   Pencil,
   TrashSimple,
   Wallet,
@@ -20,6 +18,7 @@ import { ERC20_SUPPORTED_CHAINS } from "utils/guildCheckout/constants"
 import { useAccount } from "wagmi"
 import EditTokenModal from "./EditTokenModal"
 import FundPoolModal from "./FundPoolModal"
+import { PoolDetailsDialog } from "./PoolDetailsDialog"
 import RemoveTokenRewardConfirmation from "./RemoveTokenRewardConfirmation"
 import WithdrawPoolModal from "./WithdrawPoolModal"
 import usePool from "./hooks/usePool"
@@ -59,7 +58,11 @@ const TokenRewardCardEditMenu = ({
     setValue: transferOwnershipSetValue,
   } = useDisclosure()
 
-  const { copyToClipboard, hasCopied } = useCopyToClipboard()
+  const {
+    onOpen: poolDetailsOnOpen,
+    isOpen: poolDetailsIsOpen,
+    setValue: poolDetailsSetValue,
+  } = useDisclosure()
 
   const {
     isOpen: deleteIsOpen,
@@ -104,15 +107,8 @@ const TokenRewardCardEditMenu = ({
             Transfer pool ownership
           </MenuItem>
         )}
-        <MenuItem
-          icon={hasCopied ? <Check /> : <Copy />}
-          onClick={() =>
-            copyToClipboard(
-              guildPlatform.platformGuildData?.poolId?.toString() ?? "Unknown pool"
-            )
-          }
-        >
-          Copy pool ID
+        <MenuItem icon={<ArrowSquareOut />} onClick={poolDetailsOnOpen}>
+          View pool details
         </MenuItem>
         <MenuDivider />
         <MenuItem icon={<TrashSimple />} onClick={deleteOnOpen} color={removeColor}>
@@ -157,6 +153,11 @@ const TokenRewardCardEditMenu = ({
           onSuccess={() => setShouldHideTransferButton(true)}
         />
       )}
+
+      <PoolDetailsDialog
+        open={poolDetailsIsOpen}
+        onOpenChange={poolDetailsSetValue}
+      />
     </>
   )
 }
