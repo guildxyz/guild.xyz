@@ -1,3 +1,3 @@
-import TransactionStatusModal from "./TransactionStatusModal"
+import { TransactionStatusModal } from "./TransactionStatusModal"
 
-export default TransactionStatusModal
+export { TransactionStatusModal }

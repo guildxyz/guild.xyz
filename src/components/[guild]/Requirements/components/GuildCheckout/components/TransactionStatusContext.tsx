@@ -39,7 +39,7 @@ const TransactionStatusProvider = ({
 
   useEffect(() => {
     if (!txSuccess) return
-    confettiPlayer.current("Confetti from left and right")
+    confettiPlayer.current?.("Confetti from left and right")
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [txSuccess])
 

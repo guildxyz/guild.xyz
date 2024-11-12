@@ -1,33 +1,22 @@
-import { Center, Flex, Icon, ModalBody, ModalFooter } from "@chakra-ui/react"
-import { XCircle } from "@phosphor-icons/react"
+import { DialogBody, DialogFooter } from "@/components/ui/Dialog"
+import { XCircle } from "@phosphor-icons/react/dist/ssr"
 import { PropsWithChildren } from "react"
-import TransactionModalCloseButton from "./TransactionModalCloseButton"
+import { TransactionModalCloseButton } from "./TransactionModalCloseButton"
 
 const TxError = ({ children }: PropsWithChildren<unknown>): JSX.Element => (
   <>
-    <ModalBody pb={0}>
-      <Flex direction="column">
-        <Center mb={10}>
-          <Icon
-            as={XCircle}
-            boxSize={36}
-            color="red.500"
-            sx={{
-              "> *": {
-                strokeWidth: "8px",
-              },
-            }}
-          />
-        </Center>
-      </Flex>
+    <DialogBody>
+      <div className="mb-10 flex items-center justify-center">
+        <XCircle className="size-36 text-destructive [&>*]:stroke-[6px]" />
+      </div>
 
       {children}
-    </ModalBody>
+    </DialogBody>
 
-    <ModalFooter>
+    <DialogFooter>
       <TransactionModalCloseButton />
-    </ModalFooter>
+    </DialogFooter>
   </>
 )
 
-export default TxError
+export { TxError }

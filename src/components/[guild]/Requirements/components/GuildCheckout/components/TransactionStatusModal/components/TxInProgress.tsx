@@ -1,44 +1,36 @@
-import {
-  Center,
-  Divider,
-  Flex,
-  ModalBody,
-  ModalFooter,
-  Spinner,
-  Text,
-} from "@chakra-ui/react"
+import { DialogBody, DialogFooter } from "@/components/ui/Dialog"
+import { Separator } from "@/components/ui/Separator"
+import { CircleNotch } from "@phosphor-icons/react/dist/ssr"
 import { PropsWithChildren } from "react"
-import TransactionLink from "./TransactionLink"
-import TransactionModalCloseButton from "./TransactionModalCloseButton"
+import { TransactionLink } from "./TransactionLink"
+import { TransactionModalCloseButton } from "./TransactionModalCloseButton"
 
 const TxInProgress = ({ children }: PropsWithChildren<unknown>): JSX.Element => (
   <>
-    <ModalBody>
-      <Flex direction="column">
-        <Center mb={10}>
-          <Spinner thickness="10px" speed="0.8s" color="blue.500" size="2xl" />
-        </Center>
-      </Flex>
+    <DialogBody>
+      <div className="mb-10 flex items-center justify-center">
+        <CircleNotch className="size-36 animate-spin text-info [&>*]:stroke-[6px]" />
+      </div>
 
-      <Text mb={2}>
+      <p className="mb-2">
         The blockchain is working its magic... Your transaction should be confirmed
         shortly
-      </Text>
+      </p>
 
       <TransactionLink />
 
       {children && (
         <>
-          <Divider mb="6" />
+          <Separator className="mb-6" />
           {children}
         </>
       )}
-    </ModalBody>
+    </DialogBody>
 
-    <ModalFooter>
+    <DialogFooter>
       <TransactionModalCloseButton />
-    </ModalFooter>
+    </DialogFooter>
   </>
 )
 
-export default TxInProgress
+export { TxInProgress }
