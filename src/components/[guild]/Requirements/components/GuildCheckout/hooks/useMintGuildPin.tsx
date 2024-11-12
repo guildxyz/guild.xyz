@@ -71,7 +71,7 @@ const useMintGuildPin = () => {
   const { triggerMembershipUpdate } = useMembershipUpdate()
 
   const mintGuildPin = async () => {
-    setTxError?.(false)
+    setTxError?.(null)
     setTxSuccess?.(false)
 
     setLoadingText("Uploading metadata")
@@ -205,7 +205,7 @@ const useMintGuildPin = () => {
     ...useSubmit(mintGuildPin, {
       onError: (error) => {
         setLoadingText("")
-        setTxError?.(true)
+        setTxError?.(error)
 
         const prettyError = error.correlationId
           ? error

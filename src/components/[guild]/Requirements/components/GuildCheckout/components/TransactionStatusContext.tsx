@@ -1,5 +1,5 @@
-import { useDisclosure } from "@chakra-ui/react"
-import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
+import { useConfetti } from "@/components/Confetti"
+import { useDisclosure } from "@/hooks/useDisclosure"
 import {
   Dispatch,
   PropsWithChildren,
@@ -10,17 +10,21 @@ import {
   useState,
 } from "react"
 
-const TransactionStatusContext = createContext<{
+type TransactionStatusContextType = {
   isTxModalOpen: boolean
   onTxModalOpen: () => void
   onTxModalClose: () => void
   txHash: string
   setTxHash: Dispatch<SetStateAction<string>>
-  txError: boolean
-  setTxError: Dispatch<SetStateAction<boolean>>
+  txError: Error | null
+  setTxError: Dispatch<SetStateAction<Error | null>>
   txSuccess: boolean
   setTxSuccess: Dispatch<SetStateAction<boolean>>
-}>(undefined)
+}
+
+const TransactionStatusContext = createContext<TransactionStatusContextType>(
+  undefined as unknown as TransactionStatusContextType
+)
 
 const TransactionStatusProvider = ({
   children,
@@ -32,14 +36,14 @@ const TransactionStatusProvider = ({
   } = useDisclosure()
 
   const [txHash, setTxHash] = useState("")
-  const [txError, setTxError] = useState(false)
+  const [txError, setTxError] = useState<Error | null>(null)
   const [txSuccess, setTxSuccess] = useState(false)
 
-  const triggerConfetti = useJsConfetti()
+  const { confettiPlayer } = useConfetti()
 
   useEffect(() => {
     if (!txSuccess) return
-    triggerConfetti()
+    confettiPlayer.current?.("Confetti from left and right")
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [txSuccess])
 

@@ -6,7 +6,7 @@ import {
   TransactionStatusProvider,
   useTransactionStatusContext,
 } from "components/[guild]/Requirements/components/GuildCheckout/components/TransactionStatusContext"
-import TransactionStatusModal from "components/[guild]/Requirements/components/GuildCheckout/components/TransactionStatusModal"
+import { TransactionStatusModal } from "components/[guild]/Requirements/components/GuildCheckout/components/TransactionStatusModal"
 import { RewardIcon } from "components/[guild]/RoleCard/components/Reward"
 import { RewardDisplay } from "components/[guild]/RoleCard/components/RewardDisplay"
 import { ContractCallFunction } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
