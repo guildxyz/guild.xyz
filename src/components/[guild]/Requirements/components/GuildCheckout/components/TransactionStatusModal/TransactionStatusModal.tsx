@@ -5,6 +5,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/Dialog"
+import { WaitForTransactionReceiptTimeoutError } from "viem"
 import { useTransactionStatusContext } from "../TransactionStatusContext"
 import { TxError } from "./components/TxError"
 import { TxInProgress } from "./components/TxInProgress"
@@ -55,13 +56,15 @@ const TransactionStatusModal = ({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            {txError
-              ? "Transaction failed"
-              : txSuccess
-                ? (successTitle ?? "Successful payment")
-                : txHash
-                  ? "Transaction is processing..."
-                  : title}
+            {txError instanceof WaitForTransactionReceiptTimeoutError
+              ? "Timeout"
+              : txError
+                ? "Transaction failed"
+                : txSuccess
+                  ? (successTitle ?? "Successful payment")
+                  : txHash
+                    ? "Transaction is processing..."
+                    : title}
           </DialogTitle>
         </DialogHeader>
 

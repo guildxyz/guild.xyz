@@ -5,8 +5,8 @@ import { Anchor } from "@/components/ui/Anchor"
 import { FuelProvider } from "@fuels/react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { fuelConfig } from "fuelConfig"
-import { ThemeProvider } from "next-themes"
 import { useEffect } from "react"
+import { WaitForTransactionReceiptTimeoutError } from "viem"
 import { WagmiProvider } from "wagmi"
 import { wagmiConfig } from "wagmiConfig"
 import {
@@ -17,6 +17,8 @@ import { TransactionStatusModal } from "./TransactionStatusModal"
 
 const queryClient = new QueryClient()
 
+const HASH = "0xbb2da2efbfc465f63c100036d25c626ac96a1167d48f80646e91be3361179160"
+
 const TransactionStatusDialogStory = () => (
   <>
     <TransactionStatusModal
@@ -25,7 +27,7 @@ const TransactionStatusDialogStory = () => (
       successText={"This is the success text!"}
       successLinkComponent={
         <Anchor
-          href="https://sepolia.etherscan.io/tx/0xbb2da2efbfc465f63c100036d25c626ac96a1167d48f80646e91be3361179160"
+          href={`https://sepolia.etherscan.io/tx/${HASH}`}
           target="_blank"
           showExternal
           variant="muted"
@@ -55,19 +57,17 @@ const meta: Meta<typeof TransactionStatusDialogStory> = {
   component: TransactionStatusDialogStory,
   decorators: [
     (Story) => (
-      <ThemeProvider>
-        <WagmiProvider config={wagmiConfig}>
-          <QueryClientProvider client={queryClient}>
-            <FuelProvider ui={false} fuelConfig={fuelConfig}>
-              <TransactionStatusProvider>
-                <ConfettiProvider>
-                  <Story />
-                </ConfettiProvider>
-              </TransactionStatusProvider>
-            </FuelProvider>
-          </QueryClientProvider>
-        </WagmiProvider>
-      </ThemeProvider>
+      <WagmiProvider config={wagmiConfig}>
+        <QueryClientProvider client={queryClient}>
+          <FuelProvider ui={false} fuelConfig={fuelConfig}>
+            <TransactionStatusProvider>
+              <ConfettiProvider>
+                <Story />
+              </ConfettiProvider>
+            </TransactionStatusProvider>
+          </FuelProvider>
+        </QueryClientProvider>
+      </WagmiProvider>
     ),
   ],
 }
@@ -82,9 +82,7 @@ export const Progress: Story = {
       const { onTxModalOpen, setTxHash } = useTransactionStatusContext()
 
       useEffect(() => {
-        setTxHash(
-          "0xbb2da2efbfc465f63c100036d25c626ac96a1167d48f80646e91be3361179160"
-        )
+        setTxHash(HASH)
         onTxModalOpen()
       }, [])
 
@@ -93,13 +91,29 @@ export const Progress: Story = {
   ],
 }
 
-export const Error: Story = {
+export const Error_: Story = {
+  name: "Error",
   decorators: [
     (Story) => {
       const { onTxModalOpen, setTxError } = useTransactionStatusContext()
 
       useEffect(() => {
-        setTxError(true)
+        setTxError(new Error("TX ERROR"))
+        onTxModalOpen()
+      }, [])
+
+      return <Story />
+    },
+  ],
+}
+
+export const Timeout: Story = {
+  decorators: [
+    (Story) => {
+      const { onTxModalOpen, setTxError } = useTransactionStatusContext()
+
+      useEffect(() => {
+        setTxError(new WaitForTransactionReceiptTimeoutError({ hash: HASH }))
         onTxModalOpen()
       }, [])
 
