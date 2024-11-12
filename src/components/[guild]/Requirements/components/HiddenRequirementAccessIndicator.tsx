@@ -259,7 +259,7 @@ const CountAccessIndicatorUI = ({
 
             <CaretDown
               weight="bold"
-              className="group-[[data-state=open]]:-rotate-180 transfrom duration-200"
+              className="group-[[data-state=open]]:-rotate-180 transform duration-200"
             />
           </CollapsibleTrigger>
           <CollapsibleContent>

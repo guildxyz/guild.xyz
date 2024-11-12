@@ -73,7 +73,7 @@ const CampaignCards = () => {
                     <TooltipContent side="bottom">
                       <p>
                         Members don't see this, they can only access this page by
-                        visiting it's link directly
+                        visiting its link directly
                       </p>
                     </TooltipContent>
                   </Tooltip>
