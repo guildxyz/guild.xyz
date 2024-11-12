@@ -43,7 +43,7 @@ Open source interface for Guild.xyz -- a tool for platformless membership manage
 
 1. `npm i`
 2. `npm run dev`
-3. If you don't have the secret environment variables, copy the `.env.examples` as `.env.local`.
+3. If you don't have the secret environment variables, copy the `.env.example` as `.env.local`.
 
 Open [http://localhost:3000](http://localhost:3000) in your browser to see the result.
 

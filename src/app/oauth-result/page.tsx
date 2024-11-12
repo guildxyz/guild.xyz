@@ -54,7 +54,7 @@ const OauthResultPage = ({ searchParams }: { searchParams: OAuthResultParams }) 
     <div className="flex h-[90vh] flex-col justify-center p-10 text-center">
       <h1 className="mb-3 font-bold text-2xl">
         {searchParams.status === "success"
-          ? `${rewardConfig?.name} successfully conneted!`
+          ? `${rewardConfig?.name} successfully connected!`
           : searchParams.platform
             ? `${rewardConfig?.name} connection failed`
             : "Connection unsuccessful"}
