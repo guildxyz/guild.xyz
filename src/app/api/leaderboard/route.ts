@@ -25,7 +25,7 @@ export async function GET(req: NextRequest) {
       Object.fromEntries(req.nextUrl.searchParams)
     )
     const leaderboardRequest = new URL(
-      `/v2/guilds/${guildId}/points/${pointsId}/leaderboard?forceRecalculate=true`,
+      `/v2/guilds/${guildId}/points/${pointsId}/leaderboard?forceRecalculate=true&isAllUser=true`,
       env.NEXT_PUBLIC_API
     )
 
