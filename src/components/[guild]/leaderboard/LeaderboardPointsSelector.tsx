@@ -52,7 +52,7 @@ const LeaderboardPointsSelector = () => {
           <>
             <RecalculateLeaderboardButton size="ICON" />
             <Divider orientation="vertical" h={8} />
-            <Tooltip label="Loading might take a while, depeding on member count">
+            <Tooltip label="Loading might take a while depending on member count">
               <a
                 download
                 href={`/api/leaderboard?guildId=${guildId}&pointsId=${router.query.pointsId}`}
