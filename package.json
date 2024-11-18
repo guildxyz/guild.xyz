@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "prepare": "husky install",
+    "prepare": "husky",
     "dev": "next dev",
     "dev:turbo": "next dev --turbo",
     "build": "next build",
