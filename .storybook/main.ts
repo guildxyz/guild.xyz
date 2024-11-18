@@ -15,10 +15,5 @@ const config: StorybookConfig = {
     options: {},
   },
   staticDirs: ["../public", { from: "../public/fonts", to: "/public/fonts" }],
-  refs: {
-    "@chakra-ui/react": {
-      disable: true,
-    },
-  },
 };
 export default config;

@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -24,21 +28,19 @@
     ],
     "strictNullChecks": true,
     "paths": {
-      "@/*": ["./v2/*"],
-      "@public/*": ["../public/*"],
-      "@app/*": ["./app/*"]
+      "@/*": ["./src/*"]
     }
   },
   "include": [
-    "next-env.d.ts",
     "./src/**/*.ts",
     "./src/**/*.tsx",
-    "api/**/*.ts",
-    ".next/types/**/*.ts",
+    "next-env.d.ts",
     "tailwind.config.ts",
-    "scripts/detectCircularDependencies.ts",
-    "playwright.config.ts",
-    "playwright/**/*.ts"
+    ".next/types/**/*.ts"
   ],
-  "exclude": ["node_modules", ".next", "out"]
+  "exclude": [
+    "node_modules",
+    ".next",
+    "out"
+  ]
 }
