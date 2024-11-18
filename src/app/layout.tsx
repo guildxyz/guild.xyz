@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { dystopian, inter } from "fonts";
-import { cn } from "lib/cn";
+import { cn } from "lib/css-utils";
 
 export const metadata: Metadata = {
   title: "Guildhall",
