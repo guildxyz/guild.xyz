@@ -65,42 +65,51 @@ html {
   --gray-800: #27272a;
   --gray-900: #18181b;
 
+  --white: #fff;
+
+  --blackAlpha: rgba(0, 0, 0, 0.06);
+  --blackAlpha-medium: rgba(0, 0, 0, 0.08);
+  --blackAlpha-hard: rgba(0, 0, 0, 0.16);
+  --whiteAlpha: rgba(255, 255, 255, 0.06);
+  --whiteAlpha-medium: rgba(255, 255, 255, 0.08);
+  --whiteAlpha-hard: rgba(255, 255, 255, 0.16);
+
   /* Semantic colors */
   --background: var(--gray-100);
   --foreground: var(--gray-800);
-  --card: #fff;
+  --card: var(--white);
   --image: var(--gray-700);
   --skeleton: var(--gray-300);
 
   --button-primary: var(--indigo-500);
   --button-primary-hover: var(--indigo-600);
   --button-primary-active: var(--indigo-700);
-  --button-primary-foreground: #fff;
+  --button-primary-foreground: var(--white);
   --button-primary-subtle: var(--indigo-300);
   --button-primary-subtle-foreground: var(--indigo-500);
 
-  --button-secondary: rgba(0, 0, 0, 0.06);
-  --button-secondary-hover: rgba(0, 0, 0, 0.08);
-  --button-secondary-active: rgba(0, 0, 0, 0.16);
+  --button-secondary: var(--blackAlpha);
+  --button-secondary-hover: var(--blackAlpha-medium);
+  --button-secondary-active: var(--blackAlpha-hard);
   --button-secondary-foreground: var(--foreground);
-  --button-secondary-subtle: #a1a1aa;
+  --button-secondary-subtle: var(--gray-400);
   --button-secondary-subtle-foreground: var(--foreground);
 
   --button-destructive: var(--red-500);
   --button-destructive-hover: var(--red-600);
   --button-destructive-active: var(--red-700);
-  --button-destructive-foreground: #fff;
+  --button-destructive-foreground: var(--white);
   --button-destructive-subtle: var(--red-300);
   --button-destructive-subtle-foreground: var(--red-500);
 
   --button-success: var(--green-500);
   --button-success-hover: var(--green-600);
   --button-success-active: var(--green-700);
-  --button-success-foreground: #fff;
+  --button-success-foreground: var(--white);
   --button-success-subtle: var(--green-300);
   --button-success-subtle-foreground: var(--green-500);
 
-  --badge-background: rgba(0, 0, 0, 0.06);
+  --badge-background: var(--blackAlpha);
   --badge-foreground: var(--foreground);
 }
 
@@ -114,32 +123,32 @@ html {
   --button-primary: var(--indigo-500);
   --button-primary-hover: var(--indigo-400);
   --button-primary-active: var(--indigo-300);
-  --button-primary-foreground: #fff;
+  --button-primary-foreground: var(--white);
   --button-primary-subtle: var(--indigo-300);
   --button-primary-subtle-foreground: var(--indigo-500);
 
-  --button-secondary: rgba(255, 255, 255, 0.06);
-  --button-secondary-hover: rgba(255, 255, 255, 0.08);
-  --button-secondary-active: rgba(255, 255, 255, 0.16);
+  --button-secondary: var(--blackAlpha);
+  --button-secondary-hover: var(--blackAlpha-medium);
+  --button-secondary-active: var(--blackAlpha-hard);
   --button-secondary-foreground: var(--foreground);
-  --button-secondary-subtle: #a1a1aa;
+  --button-secondary-subtle: var(--gray-400);
   --button-secondary-subtle-foreground: var(--foreground);
 
   --button-destructive: var(--red-500);
   --button-destructive-hover: var(--red-400);
   --button-destructive-active: var(--red-300);
-  --button-destructive-foreground: #fff;
+  --button-destructive-foreground: var(--white);
   --button-destructive-subtle: var(--red-300);
   --button-destructive-subtle-foreground: var(--red-500);
 
   --button-success: var(--green-500);
   --button-success-hover: var(--green-400);
   --button-success-active: var(--green-300);
-  --button-success-foreground: #fff;
+  --button-success-foreground: var(--white);
   --button-success-subtle: var(--green-300);
   --button-success-subtle-foreground: var(--green-500);
 
-  --badge-background: rgba(255, 255, 255, 0.06);
+  --badge-background: var(--blackAlpha);
   --badge-foreground: var(--foreground);
 }
 
