@@ -24,6 +24,6 @@ jobs:
         with:
           node-version: 20
       - name: Install dependencies
-        run: npm install --force
+        run: npm install
       - name: Run TypeScript compiler
         run: npm run type-check

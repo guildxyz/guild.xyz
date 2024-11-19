@@ -1,7 +1,7 @@
 import { CircleNotch } from "@phosphor-icons/react/dist/ssr";
 import { Slot } from "@radix-ui/react-slot";
 import { type VariantProps, cva } from "class-variance-authority";
-import { cn } from "lib/cn";
+import { cn } from "lib/css-utils";
 import { type ButtonHTMLAttributes, type ReactNode, forwardRef } from "react";
 
 const buttonVariants = cva(
