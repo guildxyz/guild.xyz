@@ -16,7 +16,6 @@ const config = {
       display: ["var(--font-dystopian,sans-serif)"],
     },
     extend: {
-
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
@@ -26,7 +25,9 @@ const config = {
         badge: {
           background: "var(--badge-background)",
           foreground: "var(--badge-foreground)"
-        }
+        },
+        "drawer-handle": "var(--drawer-handle)",
+        "scroll-thumb": "var(--scroll-thumb)"
       },
     },
   },

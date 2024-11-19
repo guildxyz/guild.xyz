@@ -21,13 +21,7 @@ const RootLayout = ({
 }>) => {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={cn(
-          dystopian.variable,
-          inter.variable,
-          "bg-background text-foreground antialiased",
-        )}
-      >
+      <body className={cn(dystopian.variable, inter.variable)}>
         <CsrProviders>{children}</CsrProviders>
       </body>
     </html>
