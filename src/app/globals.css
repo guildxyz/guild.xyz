@@ -130,9 +130,9 @@ html {
   --button-primary-subtle: var(--indigo-300);
   --button-primary-subtle-foreground: var(--indigo-500);
 
-  --button-secondary: var(--blackAlpha);
-  --button-secondary-hover: var(--blackAlpha-medium);
-  --button-secondary-active: var(--blackAlpha-hard);
+  --button-secondary: var(--whiteAlpha);
+  --button-secondary-hover: var(--whiteAlpha-medium);
+  --button-secondary-active: var(--whiteAlpha-hard);
   --button-secondary-foreground: var(--foreground);
   --button-secondary-subtle: var(--gray-400);
   --button-secondary-subtle-foreground: var(--foreground);
@@ -151,7 +151,7 @@ html {
   --button-success-subtle: var(--green-300);
   --button-success-subtle-foreground: var(--green-500);
 
-  --badge-background: var(--blackAlpha);
+  --badge-background: var(--whiteAlpha);
   --badge-foreground: var(--foreground);
 
   --drawer-handle: var(--whiteAlpha);

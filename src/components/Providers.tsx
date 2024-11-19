@@ -1,9 +1,14 @@
 "use client";
 
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { wagmiConfig } from "app/config/wagmi";
 import { ThemeProvider } from "next-themes";
 import type { FunctionComponent, PropsWithChildren } from "react";
+import { WagmiProvider } from "wagmi";
 
-export const CsrProviders: FunctionComponent<PropsWithChildren> = ({
+const queryClient = new QueryClient();
+
+export const Providers: FunctionComponent<PropsWithChildren> = ({
   children,
 }) => {
   return (
@@ -13,7 +18,11 @@ export const CsrProviders: FunctionComponent<PropsWithChildren> = ({
       enableSystem
       disableTransitionOnChange
     >
-      {children}
+      <WagmiProvider config={wagmiConfig}>
+        <QueryClientProvider client={queryClient}>
+          {children}
+        </QueryClientProvider>
+      </WagmiProvider>
     </ThemeProvider>
   );
 };

@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { CsrProviders } from "components/Providers";
+import { Providers } from "components/Providers";
 import { dystopian, inter } from "fonts";
 import { cn } from "lib/cssUtils";
+import { Header } from "./components/Header";
+import { SignInDialog } from "./components/SignInDialog";
 
 export const metadata: Metadata = {
   title: "Guildhall",
@@ -22,7 +24,13 @@ const RootLayout = ({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={cn(dystopian.variable, inter.variable)}>
-        <CsrProviders>{children}</CsrProviders>
+        <Providers>
+          <Header />
+          {children}
+
+          {/* TODO: maybe load this dynamically? */}
+          <SignInDialog />
+        </Providers>
       </body>
     </html>
   );
