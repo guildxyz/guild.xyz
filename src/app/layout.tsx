@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { CsrProviders } from "components/csr-providers";
+import { CsrProviders } from "components/Providers";
 import { dystopian, inter } from "fonts";
-import { cn } from "lib/css-utils";
+import { cn } from "lib/cssUtils";
 
 export const metadata: Metadata = {
   title: "Guildhall",
