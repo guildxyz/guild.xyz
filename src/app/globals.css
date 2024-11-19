@@ -140,5 +140,8 @@
     --button-success-foreground: #fff;
     --button-success-subtle: var(--green-300);
     --button-success-subtle-foreground: var(--green-500);
+
+    --badge-background: rgba(255, 255, 255, 0.06);
+    --badge-foreground: var(--foreground);
   }
 }
