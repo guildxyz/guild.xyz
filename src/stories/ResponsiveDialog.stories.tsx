@@ -25,30 +25,32 @@ const ResponsiveDialogExample = ({
   showHeader?: boolean;
   showFooter?: boolean;
 }) => (
-  <ResponsiveDialog>
-    <ResponsiveDialogTrigger>Open responsive dialog</ResponsiveDialogTrigger>
-    <ResponsiveDialogContent size={size}>
-      {showHeader && (
-        <ResponsiveDialogHeader>
-          <ResponsiveDialogTitle>Responsive dialog</ResponsiveDialogTitle>
-        </ResponsiveDialogHeader>
-      )}
+  <div data-vaul-drawer-wrapper="">
+    <ResponsiveDialog>
+      <ResponsiveDialogTrigger>Open responsive dialog</ResponsiveDialogTrigger>
+      <ResponsiveDialogContent size={size}>
+        {showHeader && (
+          <ResponsiveDialogHeader>
+            <ResponsiveDialogTitle>Responsive dialog</ResponsiveDialogTitle>
+          </ResponsiveDialogHeader>
+        )}
 
-      <ResponsiveDialogBody>
-        <DynamicDialogContent longContent={longContent} />
-      </ResponsiveDialogBody>
+        <ResponsiveDialogBody>
+          <DynamicDialogContent longContent={longContent} />
+        </ResponsiveDialogBody>
 
-      {showFooter && (
-        <ResponsiveDialogFooter>Sneaky footer</ResponsiveDialogFooter>
-      )}
+        {showFooter && (
+          <ResponsiveDialogFooter>Sneaky footer</ResponsiveDialogFooter>
+        )}
 
-      <ResponsiveDialogCloseButton asChild>
-        <Button variant="subtle" className="m-4">
-          Close
-        </Button>
-      </ResponsiveDialogCloseButton>
-    </ResponsiveDialogContent>
-  </ResponsiveDialog>
+        <ResponsiveDialogCloseButton asChild>
+          <Button variant="subtle" className="m-4">
+            Close
+          </Button>
+        </ResponsiveDialogCloseButton>
+      </ResponsiveDialogContent>
+    </ResponsiveDialog>
+  </div>
 );
 
 const meta: Meta<typeof ResponsiveDialogExample> = {

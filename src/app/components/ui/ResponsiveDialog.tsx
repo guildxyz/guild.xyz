@@ -44,7 +44,15 @@ export const ResponsiveDialog = ({
   const isMobile = useIsMobile();
 
   if (isMobile)
-    return <Drawer {...props} open={open} onOpenChange={onOpenChange} />;
+    return (
+      <Drawer
+        {...props}
+        open={open}
+        onOpenChange={onOpenChange}
+        shouldScaleBackground={true}
+        setBackgroundColorOnScale={false}
+      />
+    );
 
   return <Dialog {...props} open={open} onOpenChange={onOpenChange} />;
 };
