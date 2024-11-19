@@ -23,6 +23,10 @@ const config = {
         card: "var(--card)",
         image: "var(--image)",
         skeleton: "var(--skeleton)",
+        badge: {
+          background: "var(--badge-background)",
+          foreground: "var(--badge-foreground)"
+        }
       },
     },
   },
