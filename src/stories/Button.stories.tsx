@@ -11,7 +11,6 @@ const ButtonExample = (props: ButtonExampleProps) => (
     {...props}
     leftIcon={props.leftIcon ? <CircleDashed weight="bold" /> : undefined}
     rightIcon={props.rightIcon ? <CircleDashed weight="bold" /> : undefined}
-    className="font-display"
   />
 );
 
