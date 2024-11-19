@@ -2,146 +2,151 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  html {
-    scroll-behavior: smooth;
-  }
+html {
+  scroll-behavior: smooth;
+}
 
-  :root {
-    /* Raw colors */
-    --indigo-50: #eef2ff;
-    --indigo-100: #e0e7ff;
-    --indigo-200: #c7d2fe;
-    --indigo-300: #a5b4fc;
-    --indigo-400: #818cf8;
-    --indigo-500: #6366f1;
-    --indigo-600: #4f46e5;
-    --indigo-700: #4338ca;
-    --indigo-800: #3730a3;
-    --indigo-900: #312e81;
+:root {
+  /* Raw colors */
+  --indigo-50: #eef2ff;
+  --indigo-100: #e0e7ff;
+  --indigo-200: #c7d2fe;
+  --indigo-300: #a5b4fc;
+  --indigo-400: #818cf8;
+  --indigo-500: #6366f1;
+  --indigo-600: #4f46e5;
+  --indigo-700: #4338ca;
+  --indigo-800: #3730a3;
+  --indigo-900: #312e81;
 
-    --green-50: #f0fdf4;
-    --green-100: #dcfce7;
-    --green-200: #bbf7d0;
-    --green-300: #86efac;
-    --green-400: #4ade80;
-    --green-500: #22c55e;
-    --green-600: #16a34a;
-    --green-700: #15803d;
-    --green-800: #166534;
-    --green-900: #14532d;
+  --green-50: #f0fdf4;
+  --green-100: #dcfce7;
+  --green-200: #bbf7d0;
+  --green-300: #86efac;
+  --green-400: #4ade80;
+  --green-500: #22c55e;
+  --green-600: #16a34a;
+  --green-700: #15803d;
+  --green-800: #166534;
+  --green-900: #14532d;
 
-    --blue-50: #eff6ff;
-    --blue-100: #dbeafe;
-    --blue-200: #bfdbfe;
-    --blue-300: #93c5fd;
-    --blue-400: #60a5fa;
-    --blue-500: #3b82f6;
-    --blue-600: #2563eb;
-    --blue-700: #1d4ed8;
-    --blue-800: #1e40af;
-    --blue-900: #1e3a8a;
+  --blue-50: #eff6ff;
+  --blue-100: #dbeafe;
+  --blue-200: #bfdbfe;
+  --blue-300: #93c5fd;
+  --blue-400: #60a5fa;
+  --blue-500: #3b82f6;
+  --blue-600: #2563eb;
+  --blue-700: #1d4ed8;
+  --blue-800: #1e40af;
+  --blue-900: #1e3a8a;
 
-    --red-50: #fef2f2;
-    --red-100: #fee2e2;
-    --red-200: #fecaca;
-    --red-300: #fca5a5;
-    --red-400: #f87171;
-    --red-500: #ef4444;
-    --red-600: #dc2626;
-    --red-700: #b91c1c;
-    --red-800: #991b1b;
-    --red-900: #7f1d1d;
+  --red-50: #fef2f2;
+  --red-100: #fee2e2;
+  --red-200: #fecaca;
+  --red-300: #fca5a5;
+  --red-400: #f87171;
+  --red-500: #ef4444;
+  --red-600: #dc2626;
+  --red-700: #b91c1c;
+  --red-800: #991b1b;
+  --red-900: #7f1d1d;
 
-    --gray-50: #fafafa;
-    --gray-100: #f4f4f5;
-    --gray-200: #e4e4e7;
-    --gray-300: #d4d4d8;
-    --gray-350: #b0b0b9;
-    --gray-400: #a1a1aa;
-    --gray-450: #8a8a96;
-    --gray-500: #71717a;
-    --gray-600: #52525b;
-    --gray-700: #3f3f46;
-    --gray-800: #27272a;
-    --gray-900: #18181b;
+  --gray-50: #fafafa;
+  --gray-100: #f4f4f5;
+  --gray-200: #e4e4e7;
+  --gray-300: #d4d4d8;
+  --gray-350: #b0b0b9;
+  --gray-400: #a1a1aa;
+  --gray-450: #8a8a96;
+  --gray-500: #71717a;
+  --gray-600: #52525b;
+  --gray-700: #3f3f46;
+  --gray-800: #27272a;
+  --gray-900: #18181b;
 
-    /* Semantic colors */
-    --background: var(--gray-100);
-    --foreground: var(--gray-800);
-    --card: #fff;
-    --image: var(--gray-700);
-    --skeleton: var(--gray-300);
+  /* Semantic colors */
+  --background: var(--gray-100);
+  --foreground: var(--gray-800);
+  --card: #fff;
+  --image: var(--gray-700);
+  --skeleton: var(--gray-300);
 
-    --button-primary: var(--indigo-500);
-    --button-primary-hover: var(--indigo-600);
-    --button-primary-active: var(--indigo-700);
-    --button-primary-foreground: #fff;
-    --button-primary-subtle: var(--indigo-300);
-    --button-primary-subtle-foreground: var(--indigo-500);
+  --button-primary: var(--indigo-500);
+  --button-primary-hover: var(--indigo-600);
+  --button-primary-active: var(--indigo-700);
+  --button-primary-foreground: #fff;
+  --button-primary-subtle: var(--indigo-300);
+  --button-primary-subtle-foreground: var(--indigo-500);
 
-    --button-secondary: rgba(0, 0, 0, 0.06);
-    --button-secondary-hover: rgba(0, 0, 0, 0.08);
-    --button-secondary-active: rgba(0, 0, 0, 0.16);
-    --button-secondary-foreground: var(--foreground);
-    --button-secondary-subtle: #a1a1aa;
-    --button-secondary-subtle-foreground: var(--foreground);
+  --button-secondary: rgba(0, 0, 0, 0.06);
+  --button-secondary-hover: rgba(0, 0, 0, 0.08);
+  --button-secondary-active: rgba(0, 0, 0, 0.16);
+  --button-secondary-foreground: var(--foreground);
+  --button-secondary-subtle: #a1a1aa;
+  --button-secondary-subtle-foreground: var(--foreground);
 
-    --button-destructive: var(--red-500);
-    --button-destructive-hover: var(--red-600);
-    --button-destructive-active: var(--red-700);
-    --button-destructive-foreground: #fff;
-    --button-destructive-subtle: var(--red-300);
-    --button-destructive-subtle-foreground: var(--red-500);
+  --button-destructive: var(--red-500);
+  --button-destructive-hover: var(--red-600);
+  --button-destructive-active: var(--red-700);
+  --button-destructive-foreground: #fff;
+  --button-destructive-subtle: var(--red-300);
+  --button-destructive-subtle-foreground: var(--red-500);
 
-    --button-success: var(--green-500);
-    --button-success-hover: var(--green-600);
-    --button-success-active: var(--green-700);
-    --button-success-foreground: #fff;
-    --button-success-subtle: var(--green-300);
-    --button-success-subtle-foreground: var(--green-500);
+  --button-success: var(--green-500);
+  --button-success-hover: var(--green-600);
+  --button-success-active: var(--green-700);
+  --button-success-foreground: #fff;
+  --button-success-subtle: var(--green-300);
+  --button-success-subtle-foreground: var(--green-500);
 
-    --badge-background: rgba(0, 0, 0, 0.06);
-    --badge-foreground: var(--foreground);
-  }
+  --badge-background: rgba(0, 0, 0, 0.06);
+  --badge-foreground: var(--foreground);
+}
 
-  :root[data-theme="dark"],
-  [data-theme="dark"] {
-    --background: var(--gray-800);
-    --foreground: var(--gray-100);
-    --card: var(--gray-700);
-    --image: var(--gray-600);
-    --skeleton: var(--gray-600);
+.dark {
+  --background: var(--gray-800);
+  --foreground: var(--gray-100);
+  --card: var(--gray-700);
+  --image: var(--gray-600);
+  --skeleton: var(--gray-600);
 
-    --button-primary: var(--indigo-500);
-    --button-primary-hover: var(--indigo-400);
-    --button-primary-active: var(--indigo-300);
-    --button-primary-foreground: #fff;
-    --button-primary-subtle: var(--indigo-300);
-    --button-primary-subtle-foreground: var(--indigo-500);
+  --button-primary: var(--indigo-500);
+  --button-primary-hover: var(--indigo-400);
+  --button-primary-active: var(--indigo-300);
+  --button-primary-foreground: #fff;
+  --button-primary-subtle: var(--indigo-300);
+  --button-primary-subtle-foreground: var(--indigo-500);
 
-    --button-secondary: rgba(255, 255, 255, 0.06);
-    --button-secondary-hover: rgba(255, 255, 255, 0.08);
-    --button-secondary-active: rgba(255, 255, 255, 0.16);
-    --button-secondary-foreground: var(--foreground);
-    --button-secondary-subtle: #a1a1aa;
-    --button-secondary-subtle-foreground: var(--foreground);
+  --button-secondary: rgba(255, 255, 255, 0.06);
+  --button-secondary-hover: rgba(255, 255, 255, 0.08);
+  --button-secondary-active: rgba(255, 255, 255, 0.16);
+  --button-secondary-foreground: var(--foreground);
+  --button-secondary-subtle: #a1a1aa;
+  --button-secondary-subtle-foreground: var(--foreground);
 
-    --button-destructive: var(--red-500);
-    --button-destructive-hover: var(--red-400);
-    --button-destructive-active: var(--red-300);
-    --button-destructive-foreground: #fff;
-    --button-destructive-subtle: var(--red-300);
-    --button-destructive-subtle-foreground: var(--red-500);
+  --button-destructive: var(--red-500);
+  --button-destructive-hover: var(--red-400);
+  --button-destructive-active: var(--red-300);
+  --button-destructive-foreground: #fff;
+  --button-destructive-subtle: var(--red-300);
+  --button-destructive-subtle-foreground: var(--red-500);
 
-    --button-success: var(--green-500);
-    --button-success-hover: var(--green-400);
-    --button-success-active: var(--green-300);
-    --button-success-foreground: #fff;
-    --button-success-subtle: var(--green-300);
-    --button-success-subtle-foreground: var(--green-500);
+  --button-success: var(--green-500);
+  --button-success-hover: var(--green-400);
+  --button-success-active: var(--green-300);
+  --button-success-foreground: #fff;
+  --button-success-subtle: var(--green-300);
+  --button-success-subtle-foreground: var(--green-500);
 
-    --badge-background: rgba(255, 255, 255, 0.06);
-    --badge-foreground: var(--foreground);
-  }
+  --badge-background: rgba(255, 255, 255, 0.06);
+  --badge-foreground: var(--foreground);
+}
+
+.dark video,
+.dark img {
+  @apply brightness-90 contrast-125;
+}
+body {
+  @apply bg-background text-foreground font-sans min-h-screen antialiased selection:bg-foreground selection:text-background;
 }

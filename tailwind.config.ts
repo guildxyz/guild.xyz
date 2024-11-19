@@ -2,7 +2,7 @@ import type { Config } from "tailwindcss"
 import animatePlugin from "tailwindcss-animate";
 
 const config = {
-  darkMode: ["selector", "[data-theme='dark']"],
+  darkMode: ["class"],
   content: [
     "./pages/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",
@@ -16,7 +16,7 @@ const config = {
       display: ["var(--font-dystopian,sans-serif)"],
     },
     extend: {
-      
+
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
