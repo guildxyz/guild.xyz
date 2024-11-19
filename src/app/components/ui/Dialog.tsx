@@ -4,7 +4,7 @@ import { X } from "@phosphor-icons/react/dist/ssr";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { FocusScope, type FocusScopeProps } from "@radix-ui/react-focus-scope";
 import { type VariantProps, cva } from "class-variance-authority";
-import { cn } from "lib/cn";
+import { cn } from "lib/cssUtils";
 import {
   type ComponentPropsWithoutRef,
   type ElementRef,

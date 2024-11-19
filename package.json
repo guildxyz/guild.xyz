@@ -28,6 +28,7 @@
     "react-dom": "19.0.0-rc-66855b96-20241106",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7",
+    "vaul": "^1.1.1",
     "viem": "^2.21.45",
     "wagmi": "^2.12.32",
     "zod": "^3.23.8"

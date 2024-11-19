@@ -111,6 +111,8 @@ html {
 
   --badge-background: var(--blackAlpha);
   --badge-foreground: var(--foreground);
+
+  --drawer-handle: var(--blackAlpha)
 }
 
 .dark {
@@ -150,6 +152,8 @@ html {
 
   --badge-background: var(--blackAlpha);
   --badge-foreground: var(--foreground);
+
+  --drawer-handle: var(--whiteAlpha)
 }
 
 .dark video,
