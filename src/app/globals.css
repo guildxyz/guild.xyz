@@ -99,6 +99,9 @@ html {
   --button-success-foreground: #fff;
   --button-success-subtle: var(--green-300);
   --button-success-subtle-foreground: var(--green-500);
+
+  --badge-background: rgba(0, 0, 0, 0.06);
+  --badge-foreground: var(--foreground);
 }
 
 .dark {
@@ -135,13 +138,15 @@ html {
   --button-success-foreground: #fff;
   --button-success-subtle: var(--green-300);
   --button-success-subtle-foreground: var(--green-500);
+
+  --badge-background: rgba(255, 255, 255, 0.06);
+  --badge-foreground: var(--foreground);
 }
 
 .dark video,
 .dark img {
   @apply brightness-90 contrast-125;
 }
-
 body {
   @apply bg-background text-foreground font-sans min-h-screen antialiased selection:bg-foreground selection:text-background;
 }
