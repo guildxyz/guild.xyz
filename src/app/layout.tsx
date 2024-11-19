@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { CsrProviders } from "components/Providers";
 import { dystopian, inter } from "fonts";
-import { cn } from "lib/cn";
+import { cn } from "lib/cssUtils";
 
 export const metadata: Metadata = {
   title: "Guildhall",
@@ -19,7 +20,7 @@ const RootLayout = ({
   children: React.ReactNode;
 }>) => {
   return (
-    <html lang="en" data-theme="dark">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
           dystopian.variable,
@@ -27,7 +28,7 @@ const RootLayout = ({
           "bg-background text-foreground antialiased",
         )}
       >
-        {children}
+        <CsrProviders>{children}</CsrProviders>
       </body>
     </html>
   );
