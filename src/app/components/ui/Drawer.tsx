@@ -44,7 +44,7 @@ const DrawerContent = forwardRef<
     <DrawerPrimitive.Content
       ref={ref}
       className={cn(
-        "fixed inset-x-0 bottom-0 z-50 mt-24 flex h-auto flex-col rounded-t-xl bg-background",
+        "fixed inset-x-0 bottom-0 z-50 mt-24 flex h-auto max-h-[calc(100vh-theme(space.16))] flex-col rounded-t-xl bg-background",
         className,
       )}
       {...props}
@@ -67,17 +67,6 @@ const DrawerHeader = ({
 );
 DrawerHeader.displayName = "DrawerHeader";
 
-const DrawerFooter = ({
-  className,
-  ...props
-}: HTMLAttributes<HTMLDivElement>) => (
-  <div
-    className={cn("mt-auto flex flex-col gap-2 p-4", className)}
-    {...props}
-  />
-);
-DrawerFooter.displayName = "DrawerFooter";
-
 const DrawerTitle = forwardRef<
   ElementRef<typeof DrawerPrimitive.Title>,
   ComponentPropsWithoutRef<typeof DrawerPrimitive.Title>
@@ -92,6 +81,17 @@ const DrawerTitle = forwardRef<
   />
 ));
 DrawerTitle.displayName = DrawerPrimitive.Title.displayName;
+
+const DrawerFooter = ({
+  className,
+  ...props
+}: HTMLAttributes<HTMLDivElement>) => (
+  <div
+    className={cn("mt-auto flex flex-col gap-2 p-4", className)}
+    {...props}
+  />
+);
+DrawerFooter.displayName = "DrawerFooter";
 
 export {
   Drawer,

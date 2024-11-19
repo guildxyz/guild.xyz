@@ -16,26 +16,25 @@ import type { ComponentProps } from "react";
 const DialogExample = ({
   size,
   longContent,
-  scrollBody,
+
   showHeader = true,
   showFooter,
 }: {
   size?: DialogContentProps["size"];
   longContent?: ComponentProps<typeof DynamicDialogContent>["longContent"];
-  scrollBody?: boolean;
   showHeader?: boolean;
   showFooter?: boolean;
 }) => (
   <Dialog defaultOpen>
     <DialogTrigger>Open dialog</DialogTrigger>
-    <DialogContent size={size} scrollBody={scrollBody}>
+    <DialogContent size={size}>
       {showHeader && (
         <DialogHeader>
           <DialogTitle>Awesome dialog</DialogTitle>
         </DialogHeader>
       )}
 
-      <DialogBody scroll={scrollBody}>
+      <DialogBody>
         <DynamicDialogContent longContent={longContent} />
       </DialogBody>
 
@@ -59,7 +58,6 @@ export const Default: Story = {
   args: {
     longContent: false,
     size: "md",
-    scrollBody: false,
     showHeader: true,
     showFooter: false,
   },

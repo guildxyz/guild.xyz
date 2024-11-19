@@ -17,26 +17,24 @@ import type { ComponentProps } from "react";
 const ResponsiveDialogExample = ({
   size,
   longContent,
-  scrollBody,
   showHeader = true,
   showFooter,
 }: {
   size?: DialogContentProps["size"];
   longContent?: ComponentProps<typeof DynamicDialogContent>["longContent"];
-  scrollBody?: boolean;
   showHeader?: boolean;
   showFooter?: boolean;
 }) => (
   <ResponsiveDialog>
     <ResponsiveDialogTrigger>Open responsive dialog</ResponsiveDialogTrigger>
-    <ResponsiveDialogContent size={size} scrollBody={scrollBody}>
+    <ResponsiveDialogContent size={size}>
       {showHeader && (
         <ResponsiveDialogHeader>
           <ResponsiveDialogTitle>Responsive dialog</ResponsiveDialogTitle>
         </ResponsiveDialogHeader>
       )}
 
-      <ResponsiveDialogBody scroll={scrollBody}>
+      <ResponsiveDialogBody>
         <DynamicDialogContent longContent={longContent} />
       </ResponsiveDialogBody>
 
@@ -45,7 +43,7 @@ const ResponsiveDialogExample = ({
       )}
 
       <ResponsiveDialogCloseButton asChild>
-        <Button variant="subtle" className="mx-4 mb-4">
+        <Button variant="subtle" className="m-4">
           Close
         </Button>
       </ResponsiveDialogCloseButton>
@@ -66,7 +64,6 @@ export const Default: Story = {
   args: {
     longContent: false,
     size: "md",
-    scrollBody: false,
     showHeader: true,
     showFooter: false,
   },

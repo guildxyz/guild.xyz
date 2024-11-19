@@ -11,6 +11,7 @@ import {
   type HTMLAttributes,
   forwardRef,
 } from "react";
+import { ScrollArea } from "./ScrollArea";
 
 const Dialog = DialogPrimitive.Root;
 
@@ -56,35 +57,30 @@ export const dialogContentVariants = cva(
 export interface DialogContentProps
   extends ComponentPropsWithoutRef<typeof DialogPrimitive.Content>,
     VariantProps<typeof dialogContentVariants> {
-  scrollBody?: boolean;
   trapFocus?: FocusScopeProps["trapped"];
 }
 
 const DialogContent = forwardRef<
   ElementRef<typeof DialogPrimitive.Content>,
   DialogContentProps
->(
-  (
-    { size, trapFocus = true, className, scrollBody, children, ...props },
-    ref,
-  ) => (
-    <DialogPortal>
-      <DialogOverlay>
-        <FocusScope trapped={trapFocus} loop>
-          <DialogPrimitive.Content
-            ref={ref}
-            className={cn(dialogContentVariants({ size, className }), {
-              "max-h-[calc(100vh-2*theme(space.16))]": scrollBody,
-            })}
-            {...props}
-          >
-            {children}
-          </DialogPrimitive.Content>
-        </FocusScope>
-      </DialogOverlay>
-    </DialogPortal>
-  ),
-);
+>(({ size, trapFocus = true, className, children, ...props }, ref) => (
+  <DialogPortal>
+    <DialogOverlay>
+      <FocusScope trapped={trapFocus} loop>
+        <DialogPrimitive.Content
+          ref={ref}
+          className={cn(
+            dialogContentVariants({ size, className }),
+            "max-h-[calc(100vh-2*theme(space.16))]",
+          )}
+          {...props}
+        >
+          {children}
+        </DialogPrimitive.Content>
+      </FocusScope>
+    </DialogOverlay>
+  </DialogPortal>
+));
 DialogContent.displayName = DialogPrimitive.Content.displayName;
 
 const DialogCloseButton = forwardRef<
@@ -116,20 +112,16 @@ const DialogHeader = ({
 );
 DialogHeader.displayName = "DialogHeader";
 
-interface DialogBodyProps extends HTMLAttributes<HTMLDivElement> {
-  scroll?: boolean;
-}
-const DialogBody = ({ className, scroll, ...props }: DialogBodyProps) => (
-  <div
-    className={cn(
-      "flex flex-col overflow-visible px-6 pb-10 has-[~div]:pb-0 sm:px-10",
-      {
-        "custom-scrollbar flex-shrink-1 flex-grow-1 overflow-y-auto": scroll,
-      },
-      className,
-    )}
-    {...props}
-  />
+const DialogBody = ({
+  className,
+  ...props
+}: HTMLAttributes<HTMLDivElement>) => (
+  <ScrollArea className="flex max-h-full flex-col">
+    <div
+      className={cn("flex flex-col px-6 pb-10 sm:px-10", className)}
+      {...props}
+    />
+  </ScrollArea>
 );
 DialogBody.displayName = "DialogBody";
 

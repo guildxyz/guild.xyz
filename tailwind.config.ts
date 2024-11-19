@@ -26,7 +26,8 @@ const config = {
           background: "var(--badge-background)",
           foreground: "var(--badge-foreground)"
         },
-        "drawer-handle": "var(--drawer-handle)"
+        "drawer-handle": "var(--drawer-handle)",
+        "scroll-thumb": "var(--scroll-thumb)"
       },
     },
   },
