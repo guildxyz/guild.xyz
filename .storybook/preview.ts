@@ -1,10 +1,7 @@
-import type { Preview } from "@storybook/react"
-import "../src/app/globals.css"
-import { dystopian, inter } from "../src/fonts"
+import type { Preview } from "@storybook/react";
+import "../src/app/globals.css";
 
-import { withThemeByDataAttribute } from "@storybook/addon-themes"
-
-document?.querySelector("body")?.classList.add(inter.variable, dystopian.variable)
+import { withThemeByClassName } from "@storybook/addon-themes";
 
 const preview: Preview = {
   parameters: {
@@ -15,17 +12,15 @@ const preview: Preview = {
       },
     },
   },
-
   decorators: [
-    withThemeByDataAttribute({
+    withThemeByClassName({
       themes: {
         light: "",
         dark: "dark",
       },
-      defaultTheme: "dark",
-      attributeName: "data-theme",
+      defaultTheme: "light",
     }),
   ],
-}
+};
 
-export default preview
+export default preview;
