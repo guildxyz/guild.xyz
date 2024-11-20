@@ -4,6 +4,7 @@ import { signIn } from "@/actions/auth";
 import { signInDialogOpenAtom } from "@/config/atoms";
 import { env } from "@/lib/env";
 import { SignIn, User, Wallet } from "@phosphor-icons/react/dist/ssr";
+import { DialogDescription } from "@radix-ui/react-dialog";
 import { useMutation } from "@tanstack/react-query";
 import { useAtom, useSetAtom } from "jotai";
 import { shortenHex } from "lib/shortenHex";
@@ -29,6 +30,7 @@ export const SignInDialog = () => {
         <ResponsiveDialogHeader>
           <ResponsiveDialogTitle>Sign in</ResponsiveDialogTitle>
         </ResponsiveDialogHeader>
+        <DialogDescription />
 
         <ResponsiveDialogBody>
           {isConnected ? <SignInWithEthereum /> : <WalletList />}
