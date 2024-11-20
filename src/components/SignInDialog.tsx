@@ -2,6 +2,7 @@
 
 import { signIn } from "@/actions/auth";
 import { signInDialogOpenAtom } from "@/config/atoms";
+import { env } from "@/lib/env";
 import { SignIn, User, Wallet } from "@phosphor-icons/react/dist/ssr";
 import { useMutation } from "@tanstack/react-query";
 import { useAtom, useSetAtom } from "jotai";
@@ -83,9 +84,7 @@ const SignInWithEthereum = () => {
   const { mutate: signInWithEthereum, isPending } = useMutation({
     mutationKey: ["SIWE"],
     mutationFn: async () => {
-      const { nonce } = await fetch(
-        `${process.env.NEXT_PUBLIC_API}/auth/siwe/nonce`,
-      )
+      const { nonce } = await fetch(`${env.NEXT_PUBLIC_API}/auth/siwe/nonce`)
         .then((res) => res.json())
         .then((data) => z.object({ nonce: z.string() }).parse(data));
 

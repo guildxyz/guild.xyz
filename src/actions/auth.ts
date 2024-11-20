@@ -1,6 +1,7 @@
 "use server";
 
 import { GUILD_AUTH_COOKIE_NAME } from "@/config/constants";
+import { env } from "@/lib/env";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
@@ -33,13 +34,13 @@ export const signIn = async ({
   } satisfies RequestInit;
 
   const signInRes = await fetch(
-    `${process.env.NEXT_PUBLIC_API}/auth/siwe/login`,
+    `${env.NEXT_PUBLIC_API}/auth/siwe/login`,
     requestInit,
   );
 
   if (signInRes.status === 401) {
     const registerRes = await fetch(
-      `${process.env.NEXT_PUBLIC_API}/auth/siwe/register`,
+      `${env.NEXT_PUBLIC_API}/auth/siwe/register`,
       requestInit,
     );
     const json = await registerRes.json();
