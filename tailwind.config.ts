@@ -24,6 +24,14 @@ const config = {
         image: "var(--image)",
         skeleton: "var(--skeleton)",
         border: "var(--border)",
+        input: {
+          background: "var(--input-background)",
+          border: {
+            DEFAULT: "var(--input-border)",
+            accent: "var(--input-border-accent)",
+            invalid: "var(--input-border-invalid)"
+          },
+        },
         badge: {
           background: "var(--badge-background)",
           foreground: "var(--badge-foreground)"
