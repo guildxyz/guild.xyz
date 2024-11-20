@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
-import "./globals.css";
-import { dystopian, inter } from "fonts";
-import { cn } from "lib/cn";
+import "@/styles/globals.css";
+import { Header } from "@/components/Header";
+import { Providers } from "@/components/Providers";
+import { SignInDialog } from "@/components/SignInDialog";
+import { dystopian, inter } from "@/lib/fonts";
+import { cn } from "lib/cssUtils";
 
 export const metadata: Metadata = {
   title: "Guildhall",
@@ -19,15 +22,15 @@ const RootLayout = ({
   children: React.ReactNode;
 }>) => {
   return (
-    <html lang="en" data-theme="dark">
-      <body
-        className={cn(
-          dystopian.variable,
-          inter.variable,
-          "bg-background text-foreground antialiased",
-        )}
-      >
-        {children}
+    <html lang="en" suppressHydrationWarning>
+      <body className={cn(dystopian.variable, inter.variable)}>
+        <Providers>
+          <Header />
+          {children}
+
+          {/* TODO: maybe load this dynamically? */}
+          <SignInDialog />
+        </Providers>
       </body>
     </html>
   );

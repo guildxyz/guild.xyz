@@ -28,7 +28,7 @@
     }
   },
   "files": {
-    "include": ["src"],
+    "include": ["src", ".storybook"],
     "ignore": [
       "node_modules",
       ".next",
