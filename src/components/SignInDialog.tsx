@@ -87,13 +87,14 @@ const SignInWithEthereum = () => {
       const { nonce } = await fetch(`${env.NEXT_PUBLIC_API}/auth/siwe/nonce`)
         .then((res) => res.json())
         .then((data) => z.object({ nonce: z.string() }).parse(data));
-
+      const urlHostname = `${new URL(env.NEXT_PUBLIC_URL).hostname}:${window.location.port}`;
+      console.log(urlHostname);
       const message = createSiweMessage({
         address: address!,
         chainId: 1,
-        domain: "localhost:3000",
+        domain: urlHostname,
         nonce,
-        uri: "localhost:3000",
+        uri: urlHostname,
         version: "1",
       });
 
