@@ -77,9 +77,17 @@ html {
   /* Semantic colors */
   --background: var(--gray-100);
   --foreground: var(--gray-800);
+  --foreground-secondary: var(--gray-500);
+  --primary: var(--indigo-500);
   --card: var(--white);
   --image: var(--gray-700);
   --skeleton: var(--gray-300);
+  --border: var(--gray-300);
+  
+  --input-border: var(--gray-200);
+  --input-border-accent: var(--gray-300);
+  --input-border-invalid: var(--red-500);
+  --input-background: var(--white);
 
   --button-primary: var(--indigo-500);
   --button-primary-hover: var(--indigo-600);
@@ -122,6 +130,12 @@ html {
   --card: var(--gray-700);
   --image: var(--gray-600);
   --skeleton: var(--gray-600);
+  --border: var(--gray-600);
+
+  --input-border: var(--whiteAlpha-medium);
+  --input-border-accent: var(--whiteAlpha-hard);
+  --input-border-invalid: var(--red-300);
+  --input-background: var(--blackAlpha-hard);
 
   --button-primary: var(--indigo-500);
   --button-primary-hover: var(--indigo-400);

@@ -90,7 +90,7 @@ const DialogCloseButton = forwardRef<
   <DialogPrimitive.Close
     ref={ref}
     className={cn(
-      "absolute top-8 right-8 rounded-full opacity-70 transition-opacity hover:opacity-100 focus:outline-none focus:ring-ring focus-visible:ring-4 disabled:pointer-events-none data-[state=open]:text-foreground/50 md:right-10",
+      "absolute top-8 right-8 rounded-full opacity-70 transition-opacity hover:opacity-100 focus:outline-none focus:ring-ring focus-visible:ring-4 disabled:pointer-events-none data-[state=open]:text-foreground-secondary md:right-10",
       className,
     )}
     {...props}
