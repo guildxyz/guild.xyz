@@ -19,9 +19,11 @@ const config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        primary: "var(--primary)",
         card: "var(--card)",
         image: "var(--image)",
         skeleton: "var(--skeleton)",
+        border: "var(--border)",
         badge: {
           background: "var(--badge-background)",
           foreground: "var(--badge-foreground)"

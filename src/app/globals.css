@@ -77,9 +77,11 @@ html {
   /* Semantic colors */
   --background: var(--gray-100);
   --foreground: var(--gray-800);
+  --primary: var(--indigo-500);
   --card: var(--white);
   --image: var(--gray-700);
   --skeleton: var(--gray-300);
+  --border: var(--gray-300);
 
   --button-primary: var(--indigo-500);
   --button-primary-hover: var(--indigo-600);
@@ -122,6 +124,7 @@ html {
   --card: var(--gray-700);
   --image: var(--gray-600);
   --skeleton: var(--gray-600);
+  --border: var(--gray-600);
 
   --button-primary: var(--indigo-500);
   --button-primary-hover: var(--indigo-400);
