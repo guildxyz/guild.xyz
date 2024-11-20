@@ -3,9 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "prepare": "husky install",
-    "dev": "next dev",
-    "dev:turbo": "next dev --turbo",
+    "prepare": "husky",
+    "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start",
     "type-check": "tsc --pretty --noEmit --incremental false",
