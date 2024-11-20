@@ -38,7 +38,8 @@
     "./src/**/*.tsx",
     "next-env.d.ts",
     "tailwind.config.ts",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "guild.d.ts"
   ],
   "exclude": [
     "node_modules",
