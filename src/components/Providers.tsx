@@ -1,7 +1,7 @@
 "use client";
 
+import { wagmiConfig } from "@/config/wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { wagmiConfig } from "app/config/wagmi";
 import { ThemeProvider } from "next-themes";
 import type { FunctionComponent, PropsWithChildren } from "react";
 import { WagmiProvider } from "wagmi";

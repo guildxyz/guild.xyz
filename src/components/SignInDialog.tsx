@@ -1,9 +1,11 @@
 "use client";
 
+import { signIn } from "@/actions/auth";
+import { signInDialogOpenAtom } from "@/config/atoms";
+import { env } from "@/lib/env";
 import { SignIn, User, Wallet } from "@phosphor-icons/react/dist/ssr";
+import { DialogDescription } from "@radix-ui/react-dialog";
 import { useMutation } from "@tanstack/react-query";
-import { signIn } from "app/actions/auth";
-import { signInDialogOpenAtom } from "app/config/atoms";
 import { useAtom, useSetAtom } from "jotai";
 import { shortenHex } from "lib/shortenHex";
 import { createSiweMessage } from "viem/siwe";
@@ -28,6 +30,7 @@ export const SignInDialog = () => {
         <ResponsiveDialogHeader>
           <ResponsiveDialogTitle>Sign in</ResponsiveDialogTitle>
         </ResponsiveDialogHeader>
+        <DialogDescription />
 
         <ResponsiveDialogBody>
           {isConnected ? <SignInWithEthereum /> : <WalletList />}
@@ -83,18 +86,22 @@ const SignInWithEthereum = () => {
   const { mutate: signInWithEthereum, isPending } = useMutation({
     mutationKey: ["SIWE"],
     mutationFn: async () => {
-      const { nonce } = await fetch(
-        `${process.env.NEXT_PUBLIC_API}/auth/siwe/nonce`,
-      )
+      const { nonce } = await fetch(`${env.NEXT_PUBLIC_API}/auth/siwe/nonce`)
         .then((res) => res.json())
         .then((data) => z.object({ nonce: z.string() }).parse(data));
+      const urlHostname = [
+        new URL(env.NEXT_PUBLIC_URL).hostname,
+        window.location.port,
+      ]
+        .filter(Boolean)
+        .join(":");
 
       const message = createSiweMessage({
         address: address!,
         chainId: 1,
-        domain: "localhost:3000",
+        domain: urlHostname,
         nonce,
-        uri: "localhost:3000",
+        uri: urlHostname,
         version: "1",
       });
 

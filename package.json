@@ -19,6 +19,7 @@
     "@radix-ui/react-focus-scope": "^1.1.0",
     "@radix-ui/react-scroll-area": "^1.2.1",
     "@radix-ui/react-slot": "^1.1.0",
+    "@t3-oss/env-nextjs": "^0.11.1",
     "@tanstack/react-query": "^5.60.2",
     "autoprefixer": "^10.4.20",
     "class-variance-authority": "^0.7.0",

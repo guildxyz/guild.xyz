@@ -1,7 +1,7 @@
 "use client";
 
+import { signOut } from "@/actions/auth";
 import { SignOut } from "@phosphor-icons/react/dist/ssr";
-import { signOut } from "app/actions/auth";
 import { usePathname } from "next/navigation";
 import { Button } from "./ui/Button";
 

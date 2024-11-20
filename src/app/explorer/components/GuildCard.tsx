@@ -1,6 +1,6 @@
+import { Badge } from "@/components/ui/Badge";
+import { Card } from "@/components/ui/Card";
 import { ImageSquare, Users } from "@phosphor-icons/react/dist/ssr";
-import { Badge } from "app/components/ui/Badge";
-import { Card } from "app/components/ui/Card";
 import Link from "next/link";
 
 export const GuildCard = () => {
