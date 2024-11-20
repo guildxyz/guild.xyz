@@ -1,5 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { Button } from "app/components/ui/Button";
+import { Button } from "@/components/ui/Button";
 import {
   Drawer,
   DrawerClose,
@@ -8,7 +7,8 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from "app/components/ui/Drawer";
+} from "@/components/ui/Drawer";
+import type { Meta, StoryObj } from "@storybook/react";
 
 const DrawerExample = () => (
   <Drawer>

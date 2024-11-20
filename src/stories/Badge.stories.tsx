@@ -1,5 +1,5 @@
+import { Badge, type BadgeProps } from "@/components/ui/Badge";
 import type { Meta, StoryObj } from "@storybook/react";
-import { Badge, type BadgeProps } from "app/components/ui/Badge";
 
 const meta: Meta<typeof Badge> = {
   title: "Design system/Badge",

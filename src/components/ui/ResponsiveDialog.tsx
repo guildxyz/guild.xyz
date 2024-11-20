@@ -1,5 +1,5 @@
 import { useMediaQuery } from "foxact/use-media-query";
-import { type ComponentProps, useCallback, useState } from "react";
+import type { ComponentProps } from "react";
 import {
   Dialog,
   DialogBody,
@@ -27,26 +27,13 @@ import {
 const useIsMobile = () => useMediaQuery("(max-width: 640px)", false);
 
 export const ResponsiveDialog = ({
-  open: openProp,
-  onOpenChange: onOpenChangeProp,
   ...props
 }: ComponentProps<typeof Dialog> & ComponentProps<typeof Drawer>) => {
-  const [open, setOpen] = useState(openProp);
-
-  const onOpenChange = useCallback(
-    (newOpen: boolean) => {
-      setOpen(newOpen);
-      if (typeof onOpenChangeProp === "function") onOpenChangeProp(newOpen);
-    },
-    [onOpenChangeProp],
-  );
-
   const isMobile = useIsMobile();
 
-  if (isMobile)
-    return <Drawer {...props} open={open} onOpenChange={onOpenChange} />;
+  if (isMobile) return <Drawer {...props} />;
 
-  return <Dialog {...props} open={open} onOpenChange={onOpenChange} />;
+  return <Dialog {...props} />;
 };
 ResponsiveDialog.displayName = "ResponsiveDialog";
 
