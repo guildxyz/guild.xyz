@@ -1,16 +1,34 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.8.3/schema.json",
+  "$schema": "https://biomejs.dev/schemas/1.8.1/schema.json",
+  "organizeImports": {
+    "enabled": true
+  },
   "formatter": {
+    "indentStyle": "space"
+  },
+  "linter": {
     "enabled": true,
-    "formatWithErrors": false,
-    "indentStyle": "space",
-    "indentWidth": 2,
-    "lineEnding": "lf",
-    "lineWidth": 85,
-    "attributePosition": "auto"
+    "rules": {
+      "recommended": true,
+      "nursery": {
+        "useSortedClasses": "info"
+      },
+      "style": {
+        "noNonNullAssertion": "warn"
+      },
+      "suspicious": {
+        "noArrayIndexKey": "info"
+      },
+      "complexity": { "noForEach": "warn" },
+      "correctness": {
+        "noUnusedVariables": "info",
+        "useExhaustiveDependencies": "warn",
+        "noUnusedImports": "info"
+      }
+    }
   },
   "files": {
-    "include": ["src", "playwright", "playwright.config.ts"],
+    "include": ["src", ".storybook"],
     "ignore": [
       "node_modules",
       ".next",
@@ -20,82 +38,9 @@
       "*.css"
     ]
   },
-  "organizeImports": {
-    "enabled": true
-  },
-  "linter": {
-    "enabled": true,
-    "rules": {
-      "recommended": false,
-      "a11y": { "useValidAnchor": "warn" },
-      "complexity": {
-        "noBannedTypes": "error",
-        "noUselessConstructor": "error",
-        "noUselessTypeConstraint": "error",
-        "useLiteralKeys": "error"
-      },
-      "correctness": {
-        "noInvalidUseBeforeDeclaration": "off",
-        "noPrecisionLoss": "error",
-        "useArrayLiterals": "off",
-        "noConstAssign": "off",
-        "noGlobalObjectCalls": "off",
-        "noInvalidConstructorSuper": "off",
-        "noNewSymbol": "off",
-        "noSetterReturn": "off",
-        "noUndeclaredVariables": "off",
-        "noUnreachable": "off",
-        "noUnreachableSuper": "off",
-        "noUnusedImports": "error",
-        "useExhaustiveDependencies": "warn"
-      },
-      "style": {
-        "noInferrableTypes": "error",
-        "noNamespace": "error",
-        "noNonNullAssertion": "warn",
-        "useAsConstAssertion": "error",
-        "useBlockStatements": "off",
-        "useDefaultParameterLast": "error",
-        "noArguments": "error",
-        "noVar": "error",
-        "useConst": "error",
-        "noDefaultExport": "info"
-      },
-      "suspicious": {
-        "noExplicitAny": "info",
-        "noDuplicateClassMembers": "error",
-        "noEmptyBlockStatements": "warn",
-        "noExplicitAny": "off",
-        "noExtraNonNullAssertion": "error",
-        "noMisleadingInstantiator": "error",
-        "noRedeclare": "error",
-        "useAwait": "off",
-        "useNamespaceKeyword": "error",
-        "noDuplicateObjectKeys": "off",
-        "noDuplicateParameters": "off",
-        "noFunctionAssign": "off",
-        "noImportAssign": "off",
-        "noUnsafeNegation": "off",
-        "useGetterReturn": "off",
-        "useValidTypeof": "off"
-      },
-      "nursery": {
-        "useSortedClasses": "info"
-      },
-      "performance": { "noBarrelFile": "warn" }
-    }
-  },
   "javascript": {
     "formatter": {
-      "jsxQuoteStyle": "double",
-      "quoteProperties": "asNeeded",
-      "trailingCommas": "es5",
-      "semicolons": "asNeeded",
-      "arrowParentheses": "always",
-      "bracketSpacing": true,
-      "bracketSameLine": false,
-      "quoteStyle": "double",
-      "attributePosition": "auto"
+      "trailingCommas": "all"
     }
   }
 }

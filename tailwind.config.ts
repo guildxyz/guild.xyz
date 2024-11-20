@@ -1,7 +1,8 @@
 import type { Config } from "tailwindcss"
+import animatePlugin from "tailwindcss-animate";
 
 const config = {
-  darkMode: ["selector", "[data-theme='dark']"],
+  darkMode: ["class"],
   content: [
     "./pages/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",
@@ -10,207 +11,38 @@ const config = {
   ],
   prefix: "",
   theme: {
-    container: {
-      center: true,
-      padding: "2rem",
-      screens: {
-        "2xl": "1400px",
-      },
+    fontFamily: {
+      sans: ["var(--font-inter,sans-serif)"],
+      display: ["var(--font-dystopian,sans-serif)"],
     },
     extend: {
-      fontFamily: {
-        sans: ["var(--font-inter,sans-serif)"],
-        display: ["var(--font-dystopian,sans-serif)"],
-      },
       colors: {
-        gray: "hsl(var(--gray))",
-        blackAlpha: {
-          DEFAULT: "var(--blackAlpha-medium)",
-          soft: "var(--blackAlpha-soft)",
-          hard: "var(--blackAlpha-hard)",
+        background: "var(--background)",
+        foreground: {
+          DEFAULT: "var(--foreground)",
+          secondary: "var(--foreground-secondary)"
         },
-        banner: {
-          DEFAULT: "var(--banner)",
-          dark: "var(--banner-dark)",
-          foreground: "var(--banner-foreground)"
-        },
-        border: {
-          DEFAULT: "hsl(var(--border))",
-          muted: "hsl(var(--border-muted))"
-        },
+        primary: "var(--primary)",
+        card: "var(--card)",
+        image: "var(--image)",
+        skeleton: "var(--skeleton)",
+        border: "var(--border)",
         input: {
-          background: "hsla(var(--input-background))",
+          background: "var(--input-background)",
           border: {
-            DEFAULT: "hsla(var(--input-border))",
-            accent: "hsla(var(--input-border-accent))",
-            invalid: "hsl(var(--input-border-invalid))"
+            DEFAULT: "var(--input-border)",
+            accent: "var(--input-border-accent)",
+            invalid: "var(--input-border-invalid)"
           },
         },
-        ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
-        skeleton: "hsl(var(--skeleton))",
-        "anchor-foreground": "hsl(var(--anchor-foreground))",
-        primary: {
-          DEFAULT: "hsl(var(--primary))",
-          hover: "hsl(var(--primary-hover))",
-          active: "hsl(var(--primary-active))",
-          foreground: "hsl(var(--primary-foreground))",
-          subtle: "hsl(var(--primary-subtle))",
-          "subtle-foreground": "hsl(var(--primary-subtle-foreground))",
+        badge: {
+          background: "var(--badge-background)",
+          foreground: "var(--badge-foreground)"
         },
-        secondary: {
-          DEFAULT: "hsla(var(--secondary))",
-          hover: "hsla(var(--secondary-hover))",
-          active: "hsla(var(--secondary-active))",
-          foreground: "hsl(var(--secondary-foreground))",
-          subtle: "hsl(var(--secondary-subtle))",
-          "subtle-foreground": "hsl(var(--secondary-subtle-foreground))",
-        },
-        info: {
-          DEFAULT: "hsl(var(--info))",
-          hover: "hsl(var(--info-hover))",
-          active: "hsl(var(--info-active))",
-          foreground: "hsl(var(--info-foreground))",
-          subtle: "hsl(var(--info-subtle))",
-          "subtle-foreground": "hsl(var(--info-subtle-foreground))",
-        },
-        destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          hover: "hsl(var(--destructive-hover))",
-          active: "hsl(var(--destructive-active))",
-          foreground: "hsl(var(--destructive-foreground))",
-          subtle: "hsl(var(--destructive-subtle))",
-          "subtle-foreground": "hsl(var(--destructive-subtle-foreground))",
-        },
-        success: {
-          DEFAULT: "hsl(var(--success))",
-          hover: "hsl(var(--success-hover))",
-          active: "hsl(var(--success-active))",
-          foreground: "hsl(var(--success-foreground))",
-          subtle: "hsl(var(--success-subtle))",
-          "subtle-foreground": "hsl(var(--success-subtle-foreground))",
-        },
-        warning: {
-          DEFAULT: "hsl(var(--warning))",
-          hover: "hsl(var(--warning-hover))",
-          active: "hsl(var(--warning-active))",
-          foreground: "hsl(var(--warning-foreground))",
-          subtle: "hsl(var(--warning-subtle))",
-          "subtle-foreground": "hsl(var(--warning-subtle-foreground))",
-        },
-        muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
-        },
-        accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
-        },
-        popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
-        },
-        tooltip: {
-          DEFAULT: "hsl(var(--tooltip))",
-          foreground: "hsl(var(--tooltip-foreground))",
-        },
-        card: {
-          DEFAULT: "hsl(var(--card))",
-          secondary: "hsl(var(--card-secondary))",
-          foreground: "hsl(var(--card-foreground))",
-        },
-        image: "hsl(var(--image))",
-        alert: {
-          success: {
-            DEFAULT: "hsla(var(--alert-success))",
-            icon: "hsl(var(--alert-success-icon))",
-          },
-          info: {
-            DEFAULT: "hsla(var(--alert-info))",
-            icon: "hsl(var(--alert-info-icon))",
-          },
-          warning: {
-            DEFAULT: "hsla(var(--alert-warning))",
-            icon: "hsl(var(--alert-warning-icon))",
-          },
-          error: {
-            DEFAULT: "hsla(var(--alert-error))",
-            icon: "hsl(var(--alert-error-icon))",
-          },
-        },
-        // Platforms
-        discord: {
-          DEFAULT: "hsl(var(--discord))",
-          hover: "hsl(var(--discord-hover))",
-          active: "hsl(var(--discord-active))",
-        },
-        telegram: {
-          DEFAULT: "hsl(var(--telegram))",
-          hover: "hsl(var(--telegram-hover))",
-          active: "hsl(var(--telegram-active))",
-        },
-        email: {
-          DEFAULT: "hsl(var(--email))",
-          hover: "hsl(var(--email-hover))",
-          active: "hsl(var(--email-active))",
-        },
-        google: {
-          DEFAULT: "hsl(var(--google))",
-          hover: "hsl(var(--google-hover))",
-          active: "hsl(var(--google-active))",
-        },
-        twitter: {
-          DEFAULT: "hsl(var(--twitter))",
-          hover: "hsl(var(--twitter-hover))",
-          active: "hsl(var(--twitter-active))",
-        },
-        github: {
-          DEFAULT: "hsl(var(--github))",
-          hover: "hsl(var(--github-hover))",
-          active: "hsl(var(--github-active))",
-        },
-        worldid: {
-          DEFAULT: "hsl(var(--worldid))",
-          hover: "hsl(var(--worldid-hover))",
-          active: "hsl(var(--worldid-active))",
-        },
-        farcaster: {
-          DEFAULT: "hsl(var(--farcaster))",
-          hover: "hsl(var(--farcaster-hover))",
-          active: "hsl(var(--farcaster-active))",
-        },
-        uniswap: {
-          DEFAULT: "hsl(var(--uniswap))",
-          hover: "hsl(var(--uniswap-hover))",
-          active: "hsl(var(--uniswap-active))",
-        },
-        web3inbox: {
-          DEFAULT: "hsl(var(--web3inbox))",
-          hover: "hsl(var(--web3inbox-hover))",
-          active: "hsl(var(--web3inbox-active))",
-        },
-      },
-      opacity: {
-        banner: "var(--banner-opacity)"
+        "drawer-handle": "var(--drawer-handle)",
+        "scroll-thumb": "var(--scroll-thumb)"
       },
       keyframes: {
-        wiggle: {
-          '0%, 100%': { transform: 'rotate(-3deg)' },
-          '50%': { transform: 'rotate(3deg)' },
-        },
-        "accordion-down": {
-          from: { height: "0" },
-          to: { height: "var(--radix-accordion-content-height)" },
-        },
-        "accordion-up": {
-          from: { height: "var(--radix-accordion-content-height)" },
-          to: { height: "0" },
-        },
-        "caret-blink": {
-          "0%,70%,100%": { opacity: "1" },
-          "20%,50%": { opacity: "0" },
-        },
         "collapse-open": {
           from: { height: "0", opacity: "0" },
           to: { height: "var(--radix-collapsible-content-height)", opacity: "1" },
@@ -219,34 +51,14 @@ const config = {
           from: { height: "var(--radix-collapsible-content-height)", opacity: "1" },
           to: { height: "0", opacity: "0" },
         },
-        float: {
-          '0%, 100%': { transform: 'translateY(0)' },
-          '50%': { transform: 'translateY(-10px)' },
-        },
       },
       animation: {
-        wiggle: 'wiggle 1s ease-in-out infinite',
-        "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
-        "caret-blink": "caret-blink 1.25s ease-out infinite",
         "collapse-open": "collapse-open 200ms ease-out",
         "collapse-closed": "collapse-closed 200ms ease-out",
-        float: 'float 3s ease-in-out infinite',
       },
-      zIndex: {
-        // Using these from Chakra UI until we use both design systems at the same time
-        overlay: "1300",
-        modal: "1400",
-        popover: "1500",
-        toast: "1700",
-        tooltip: "1800",
-      }
     },
   },
-  plugins: [
-    require("tailwindcss-animate"),
-    require('@tailwindcss/typography')
-  ],
+  plugins: [animatePlugin],
 } satisfies Config
 
 export default config

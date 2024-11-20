@@ -12,13 +12,13 @@ Open source interface for Guild.xyz -- a tool for platformless membership manage
 ## Key dependencies overview
 
 - Framework
-  - React with Next.js
+  - Next.js
 - Styling:
-  - Chakra UI (migration to Tailwind CSS and Radix UI in progress)
+  - Tailwind CSS
+  - Radix UI
   - Phosphor icons
   - Framer motion
 - State management:
-  - SWR for fetching and caching
   - React Hook Form for form state
   - jotai for custom, simple global state
 - Testing:
@@ -27,15 +27,10 @@ Open source interface for Guild.xyz -- a tool for platformless membership manage
 - Web3 related:
   - viem
   - wagmi for connection management
-- Data visualization, graphics:
-  - visx
-  - threejs
 - Deployment:
   - Vercel
 - Product analytics:
   - PostHog
-- Error monitoring:
-  - BugSnag
 
 ## Development
 
@@ -46,19 +41,6 @@ Open source interface for Guild.xyz -- a tool for platformless membership manage
 3. If you don't have the secret environment variables, copy the `.env.example` as `.env.local`.
 
 Open [http://localhost:3000](http://localhost:3000) in your browser to see the result.
-
-> [!WARNING]
-> We've recently turned on `strict` and `strictNullChecks` tsconfig options, and decided to gradually fix the related TypeScript issues. The pre-commit hook will ignore these, but it is expected that you'll see different issues during local development. Feel free to open a PR if you fix some of them. :wink:
-
-#### For Windows users
-
-If you encounter the error `ERR_OSSL_EVP_UNSUPPORTED` you can do :
-
-```bash
-export NODE_OPTIONS=--openssl-legacy-provider
-npm i --force
-npm run dev
-```
 
 ### Getting secret environment variables (for core team members):
 
