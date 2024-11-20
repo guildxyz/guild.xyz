@@ -1,6 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { Button } from "app/components/ui/Button";
-import type { DialogContentProps } from "app/components/ui/Dialog";
+import { Button } from "@/components/ui/Button";
+import type { DialogContentProps } from "@/components/ui/Dialog";
 import {
   ResponsiveDialog,
   ResponsiveDialogBody,
@@ -10,7 +9,8 @@ import {
   ResponsiveDialogHeader,
   ResponsiveDialogTitle,
   ResponsiveDialogTrigger,
-} from "app/components/ui/ResponsiveDialog";
+} from "@/components/ui/ResponsiveDialog";
+import type { Meta, StoryObj } from "@storybook/react";
 
 import type { ComponentProps } from "react";
 

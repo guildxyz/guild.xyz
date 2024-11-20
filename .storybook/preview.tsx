@@ -1,7 +1,7 @@
 import type { Preview } from "@storybook/react";
-import { dystopian, inter } from "../src/fonts";
-import "../src/app/globals.css";
+import "../src/styles/globals.css";
 
+import { dystopian, inter } from "@/lib/fonts";
 import { withThemeByClassName } from "@storybook/addon-themes";
 import { useEffect } from "react";
 

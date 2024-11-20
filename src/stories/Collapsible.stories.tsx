@@ -1,9 +1,9 @@
-import type { Meta, StoryObj } from "@storybook/react";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "app/components/ui/Collapsible";
+} from "@/components/ui/Collapsible";
+import type { Meta, StoryObj } from "@storybook/react";
 
 const CollapsibleExample = () => (
   <Collapsible>

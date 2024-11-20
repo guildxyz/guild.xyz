@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
-import "./globals.css";
-import { CsrProviders } from "components/Providers";
-import { dystopian, inter } from "fonts";
+import "@/styles/globals.css";
+import { Header } from "@/components/Header";
+import { Providers } from "@/components/Providers";
+import { SignInDialog } from "@/components/SignInDialog";
+import { dystopian, inter } from "@/lib/fonts";
 import { cn } from "lib/cssUtils";
 
 export const metadata: Metadata = {
@@ -22,7 +24,13 @@ const RootLayout = ({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={cn(dystopian.variable, inter.variable)}>
-        <CsrProviders>{children}</CsrProviders>
+        <Providers>
+          <Header />
+          {children}
+
+          {/* TODO: maybe load this dynamically? */}
+          <SignInDialog />
+        </Providers>
       </body>
     </html>
   );

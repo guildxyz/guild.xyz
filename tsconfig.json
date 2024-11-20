@@ -28,10 +28,12 @@
     ],
     "strictNullChecks": true,
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./*"]
     }
   },
   "include": [
+    ".storybook/*.ts",
+    ".storybook/*.tsx",
     "./src/**/*.ts",
     "./src/**/*.tsx",
     "next-env.d.ts",

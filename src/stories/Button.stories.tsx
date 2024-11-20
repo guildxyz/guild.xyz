@@ -1,6 +1,6 @@
+import { Button, type ButtonProps } from "@/components/ui/Button";
 import { CircleDashed } from "@phosphor-icons/react/dist/ssr";
 import type { Meta, StoryObj } from "@storybook/react";
-import { Button, type ButtonProps } from "app/components/ui/Button";
 
 type ButtonExampleProps = Omit<ButtonProps, "leftIcon" | "rightIcon"> & {
   leftIcon?: boolean;

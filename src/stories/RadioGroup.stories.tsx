@@ -1,10 +1,10 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { Label } from "app/components/ui/Label";
+import { Label } from "@/components/ui/Label";
 import {
   RadioGroup,
   RadioGroupItem,
   type RadioGroupProps,
-} from "app/components/ui/RadioGroup";
+} from "@/components/ui/RadioGroup";
+import type { Meta, StoryObj } from "@storybook/react";
 
 const RadioGroupExample = (props: RadioGroupProps) => (
   <RadioGroup {...props} defaultValue="option-one">

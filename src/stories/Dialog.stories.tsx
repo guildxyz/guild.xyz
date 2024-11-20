@@ -1,4 +1,3 @@
-import type { Meta, StoryObj } from "@storybook/react";
 import {
   Dialog,
   DialogBody,
@@ -9,7 +8,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "app/components/ui/Dialog";
+} from "@/components/ui/Dialog";
+import type { Meta, StoryObj } from "@storybook/react";
 
 import type { ComponentProps } from "react";
 

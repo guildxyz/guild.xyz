@@ -165,7 +165,7 @@ html {
   --button-success-subtle: var(--green-300);
   --button-success-subtle-foreground: var(--green-500);
 
-  --badge-background: var(--blackAlpha);
+  --badge-background: var(--whiteAlpha);
   --badge-foreground: var(--foreground);
 
   --drawer-handle: var(--whiteAlpha);

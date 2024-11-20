@@ -1,5 +1,5 @@
+import { Input, type InputProps } from "@/components/ui/Input";
 import type { Meta, StoryObj } from "@storybook/react";
-import { Input, type InputProps } from "app/components/ui/Input";
 
 const meta: Meta<typeof Input> = {
   title: "Design system/Input",

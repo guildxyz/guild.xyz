@@ -1,6 +1,6 @@
+import { Checkbox, type CheckboxProps } from "@/components/ui/Checkbox";
+import { Label } from "@/components/ui/Label";
 import type { Meta, StoryObj } from "@storybook/react";
-import { Checkbox, type CheckboxProps } from "app/components/ui/Checkbox";
-import { Label } from "app/components/ui/Label";
 
 const CheckboxExample = (props: CheckboxProps) => {
   return (

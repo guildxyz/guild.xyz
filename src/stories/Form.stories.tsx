@@ -1,6 +1,4 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import type { Meta, StoryObj } from "@storybook/react";
-import { Button } from "app/components/ui/Button";
+import { Button } from "@/components/ui/Button";
 import {
   FormControl,
   FormDescription,
@@ -8,8 +6,10 @@ import {
   FormField,
   FormItem,
   FormLabel,
-} from "app/components/ui/Form";
-import { Input } from "app/components/ui/Input";
+} from "@/components/ui/Form";
+import { Input } from "@/components/ui/Input";
+import { zodResolver } from "@hookform/resolvers/zod";
+import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";

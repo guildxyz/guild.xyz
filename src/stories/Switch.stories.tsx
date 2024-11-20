@@ -1,6 +1,6 @@
+import { Label } from "@/components/ui/Label";
+import { Switch, type SwitchProps } from "@/components/ui/Switch";
 import type { Meta, StoryObj } from "@storybook/react";
-import { Label } from "app/components/ui/Label";
-import { Switch, type SwitchProps } from "app/components/ui/Switch";
 
 const SwitchExample = (props: SwitchProps) => (
   <div className="flex items-center space-x-2">
