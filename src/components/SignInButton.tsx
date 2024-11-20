@@ -1,7 +1,7 @@
 "use client";
 
+import { signInDialogOpenAtom } from "@/config/atoms";
 import { SignIn } from "@phosphor-icons/react/dist/ssr";
-import { signInDialogOpenAtom } from "app/config/atoms";
 import { useSetAtom } from "jotai";
 import { Button } from "./ui/Button";
 import { Card } from "./ui/Card";

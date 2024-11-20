@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import "./globals.css";
-import { Providers } from "components/Providers";
-import { dystopian, inter } from "fonts";
+import "@/styles/globals.css";
+import { Header } from "@/components/Header";
+import { Providers } from "@/components/Providers";
+import { SignInDialog } from "@/components/SignInDialog";
+import { dystopian, inter } from "@/lib/fonts";
 import { cn } from "lib/cssUtils";
-import { Header } from "./components/Header";
-import { SignInDialog } from "./components/SignInDialog";
 
 export const metadata: Metadata = {
   title: "Guildhall",

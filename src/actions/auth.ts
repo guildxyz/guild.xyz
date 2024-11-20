@@ -1,6 +1,6 @@
 "use server";
 
-import { GUILD_AUTH_COOKIE_NAME } from "app/config/constants";
+import { GUILD_AUTH_COOKIE_NAME } from "@/config/constants";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";

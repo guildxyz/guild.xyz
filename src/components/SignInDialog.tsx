@@ -1,9 +1,9 @@
 "use client";
 
+import { signIn } from "@/actions/auth";
+import { signInDialogOpenAtom } from "@/config/atoms";
 import { SignIn, User, Wallet } from "@phosphor-icons/react/dist/ssr";
 import { useMutation } from "@tanstack/react-query";
-import { signIn } from "app/actions/auth";
-import { signInDialogOpenAtom } from "app/config/atoms";
 import { useAtom, useSetAtom } from "jotai";
 import { shortenHex } from "lib/shortenHex";
 import { createSiweMessage } from "viem/siwe";
