@@ -77,6 +77,7 @@ html {
   /* Semantic colors */
   --background: var(--gray-100);
   --foreground: var(--gray-800);
+  --foreground-secondary: var(--gray-500);
   --primary: var(--indigo-500);
   --card: var(--white);
   --image: var(--gray-700);
@@ -143,9 +144,9 @@ html {
   --button-primary-subtle: var(--indigo-300);
   --button-primary-subtle-foreground: var(--indigo-500);
 
-  --button-secondary: var(--blackAlpha);
-  --button-secondary-hover: var(--blackAlpha-medium);
-  --button-secondary-active: var(--blackAlpha-hard);
+  --button-secondary: var(--whiteAlpha);
+  --button-secondary-hover: var(--whiteAlpha-medium);
+  --button-secondary-active: var(--whiteAlpha-hard);
   --button-secondary-foreground: var(--foreground);
   --button-secondary-subtle: var(--gray-400);
   --button-secondary-subtle-foreground: var(--foreground);
