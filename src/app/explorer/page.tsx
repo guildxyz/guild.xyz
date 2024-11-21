@@ -1,9 +1,8 @@
 import { AuthBoundary } from "@/components/AuthBoundary";
 import { GuildCardSkeleton } from "@/components/GuildCard";
 import { GuildCard } from "@/components/GuildCard";
-import { Button } from "@/components/ui/Button";
+import { SignInButton } from "@/components/SignInButton";
 import { env } from "@/lib/env";
-import { SignIn } from "@phosphor-icons/react/dist/ssr";
 import {
   HydrationBoundary,
   QueryClient,
@@ -79,13 +78,7 @@ async function YourGuildsSection() {
               Sign in to view your guilds or create new ones
             </p>
 
-            <Button
-              colorScheme="primary"
-              leftIcon={<SignIn weight="bold" />}
-              className="ml-auto h-10"
-            >
-              Sign in
-            </Button>
+            <SignInButton className="ml-auto" />
           </div>
         }
       >
