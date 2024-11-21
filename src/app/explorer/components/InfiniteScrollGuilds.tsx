@@ -19,6 +19,7 @@ export const InfiniteScrollGuilds = () => {
       queryKey: ["guilds", search || ""],
       queryFn: getGuildSearch(search),
       initialPageParam: 1,
+      staleTime: Number.POSITIVE_INFINITY,
       enabled: search !== undefined,
       getNextPageParam: (lastPage) =>
         lastPage.total / lastPage.pageSize <= lastPage.page
@@ -57,9 +58,12 @@ export const InfiniteScrollGuilds = () => {
           : guilds.map((guild) => <GuildCard key={guild.id} guild={guild} />)}
       </div>
       <div
-        ref={useCallback((element: HTMLDivElement | null) => {
-          setIntersection(element);
-        }, [])}
+        ref={useCallback(
+          (element: HTMLDivElement | null) => {
+            setIntersection(element);
+          },
+          [setIntersection],
+        )}
         aria-hidden
       />
       {guilds.length === 0 &&
