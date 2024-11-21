@@ -1,7 +1,6 @@
 import { AuthBoundary } from "@/components/AuthBoundary";
+import { GuildCardSkeleton } from "@/components/GuildCardSkeleton";
 import { Button } from "@/components/ui/Button";
-import { Card } from "@/components/ui/Card";
-import { Skeleton } from "@/components/ui/Skeleton";
 import { env } from "@/lib/env";
 import { Plus, SignIn } from "@phosphor-icons/react/dist/ssr";
 import {
@@ -22,14 +21,6 @@ const getAssociatedGuilds = async () => {
   ).json()) as PaginatedResponse<Guild>;
 
   return guilds;
-};
-
-const GuildCardSkeleton = () => {
-  return (
-    <Card>
-      <Skeleton className="size-full" />
-    </Card>
-  );
 };
 
 export default async function Explorer() {

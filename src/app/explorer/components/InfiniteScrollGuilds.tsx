@@ -1,8 +1,7 @@
 "use client";
 
+import { GuildCardSkeleton } from "@/components/GuildCardSkeleton";
 import { Button } from "@/components/ui/Button";
-import { Card } from "@/components/ui/Card";
-import { Skeleton } from "@/components/ui/Skeleton";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useIntersection } from "foxact/use-intersection";
 import { useAtomValue } from "jotai";
@@ -51,9 +50,7 @@ export const InfiniteScrollGuilds = () => {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {isLoading
           ? Array.from({ length: PAGE_SIZE }, (_, i) => (
-              <Card key={i}>
-                <Skeleton className="size-full h-[114px]" />
-              </Card>
+              <GuildCardSkeleton key={i} />
             ))
           : guilds.map((guild) => <GuildCard key={guild.id} guild={guild} />)}
       </div>
