@@ -3,7 +3,7 @@ import { GuildCardSkeleton } from "@/components/GuildCard";
 import { GuildCard } from "@/components/GuildCard";
 import { Button } from "@/components/ui/Button";
 import { env } from "@/lib/env";
-import { Plus, SignIn } from "@phosphor-icons/react/dist/ssr";
+import { SignIn } from "@phosphor-icons/react/dist/ssr";
 import {
   HydrationBoundary,
   QueryClient,
@@ -12,7 +12,8 @@ import {
 import { Suspense } from "react";
 import { HeaderBackground } from "./_components/HeaderBackground";
 import { InfiniteScrollGuilds } from "./_components/InfiniteScrollGuilds";
-import { Search } from "./_components/Search";
+import { StickySearch } from "./_components/Search";
+import { CreateGuildLink, StickyBar } from "./_components/StickyBar";
 import { ACTIVE_SECTION } from "./constants";
 import { getGuildSearch } from "./fetchers";
 
@@ -46,11 +47,17 @@ export default async function Explorer() {
           </h1>
         </section>
 
+        <StickyBar>
+          <AuthBoundary fallback={null}>
+            <CreateGuildLink />
+          </AuthBoundary>
+        </StickyBar>
         <YourGuildsSection />
 
-        <section>
-          <Search />
-        </section>
+        <h2 className="mt-12 font-bold text-lg tracking-tight">
+          Explore verified guilds
+        </h2>
+        <StickySearch />
 
         <HydrationBoundary state={dehydrate(queryClient)}>
           <InfiniteScrollGuilds />
@@ -63,8 +70,6 @@ export default async function Explorer() {
 async function YourGuildsSection() {
   return (
     <section className="grid gap-2">
-      <h2 className="font-bold text-lg">Your guilds</h2>
-
       <AuthBoundary
         fallback={
           <div className="flex items-center gap-4 rounded-2xl bg-card px-5 py-6">
@@ -110,9 +115,7 @@ async function YourGuilds() {
         or create your own!
       </p>
 
-      <Button leftIcon={<Plus weight="bold" />} className="ml-auto h-10">
-        Create guild
-      </Button>
+      <CreateGuildLink />
     </div>
   );
 }

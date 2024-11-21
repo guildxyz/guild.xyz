@@ -1,14 +1,15 @@
 "use client";
 
 import { Input } from "@/components/ui/Input";
+import useIsStuck from "@/hooks/useIsStuck";
 import { MagnifyingGlass } from "@phosphor-icons/react/dist/ssr";
 import { useDebouncedValue } from "foxact/use-debounced-value";
 import { useSetAtom } from "jotai";
 import { usePathname, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import { searchAtom } from "../atoms";
+import { Suspense, useEffect, useState } from "react";
+import { isSearchStuckAtom, searchAtom } from "../atoms";
 
-export const Search = () => {
+const Search = () => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const [value, setValue] = useState(
@@ -45,6 +46,19 @@ export const Search = () => {
       <div className="absolute left-4 flex h-12 items-center justify-center">
         <MagnifyingGlass className="text-foreground-secondary" />
       </div>
+    </div>
+  );
+};
+
+export const StickySearch = () => {
+  const setIsSearchStuck = useSetAtom(isSearchStuckAtom);
+  const { ref: searchRef } = useIsStuck(setIsSearchStuck);
+
+  return (
+    <div className="sticky top-12 z-10" ref={searchRef}>
+      <Suspense>
+        <Search />
+      </Suspense>
     </div>
   );
 };

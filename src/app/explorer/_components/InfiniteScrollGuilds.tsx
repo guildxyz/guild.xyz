@@ -70,9 +70,7 @@ export const InfiniteScrollGuilds = () => {
         <p className="mt-6 text-center text-foreground-secondary">
           {isFetchingNextPage
             ? "Loading more..."
-            : hasNextPage
-              ? "Load More"
-              : "No More Data"}
+            : hasNextPage || "No More Data"}
         </p>
       )}
     </section>

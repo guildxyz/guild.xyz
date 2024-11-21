@@ -1,7 +1,4 @@
 "use client";
-
-import { AuthBoundary } from "@/components/AuthBoundary";
-//import { useWeb3ConnectionManager } from "@/components/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { buttonVariants } from "@/components/ui/Button";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/ToggleGroup";
 import useIsStuck from "@/hooks/useIsStuck";
@@ -10,7 +7,7 @@ import { cn } from "@/lib/cssUtils";
 import { Plus } from "@phosphor-icons/react";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import Link from "next/link";
-import { useEffect } from "react";
+import { type PropsWithChildren, useEffect } from "react";
 import { activeSectionAtom, isNavStuckAtom, isSearchStuckAtom } from "../atoms";
 import { ACTIVE_SECTION } from "../constants";
 
@@ -73,7 +70,7 @@ const Nav = () => {
   );
 };
 
-const CreateGuildLink = () => {
+export const CreateGuildLink = () => {
   const isNavStuck = useAtomValue(isNavStuckAtom);
   return (
     <Link
@@ -98,8 +95,7 @@ const CreateGuildLink = () => {
   );
 };
 
-export const StickyBar = () => {
-  //const { isWeb3Connected } = useWeb3ConnectionManager()
+export const StickyBar = ({ children }: PropsWithChildren) => {
   const setIsNavStuck = useSetAtom(isNavStuckAtom);
   const isSearchStuck = useAtomValue(isSearchStuckAtom);
   const { ref: navToggleRef } = useIsStuck(setIsNavStuck);
@@ -116,9 +112,7 @@ export const StickyBar = () => {
     >
       <div className="relative flex w-full items-center justify-between">
         <Nav />
-        <AuthBoundary fallback={null}>
-          <CreateGuildLink />
-        </AuthBoundary>
+        {children}
       </div>
     </div>
   );
