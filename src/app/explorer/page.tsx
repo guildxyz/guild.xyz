@@ -1,14 +1,15 @@
-"use client";
-
+import { AuthBoundary } from "@/components/AuthBoundary";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Input } from "@/components/ui/Input";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { env } from "@/lib/env";
-import { Plus } from "@phosphor-icons/react/dist/ssr";
+import { Plus, SignIn } from "@phosphor-icons/react/dist/ssr";
+import { Suspense } from "react";
 import { GuildCard } from "./components/GuildCard";
+import { InfiniteScrollGuilds } from "./components/InfiniteScrollGuilds";
 
-const getGuilds = async () => {
+const _getGuilds = async () => {
   const request = `${env.NEXT_PUBLIC_API}/guild/search?page=1&pageSize=24&sortBy=name&reverse=false&search=`;
   const guilds = (await (
     await fetch(request)
@@ -34,8 +35,8 @@ const GuildCardSkeleton = () => {
   );
 };
 
-export default async function Explorer() {
-  const { items: guilds } = await getGuilds();
+export default function Explorer() {
+  //const { items: guilds } = await getGuilds();
 
   return (
     <main className="container mx-auto grid max-w-screen-lg gap-8 px-4 py-8">
@@ -49,7 +50,8 @@ export default async function Explorer() {
         <Input placeholder="Search guild.xyz" />
       </section>
 
-      <section className="grid gap-2">
+      <InfiniteScrollGuilds />
+      {/*<section className="grid gap-2">
         <h2 className="font-bold text-lg">Explore guilds</h2>
         {guilds.length > 0 ? (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -60,7 +62,7 @@ export default async function Explorer() {
         ) : (
           <p>Couldn&apos;t fetch guilds</p>
         )}
-      </section>
+      </section>*/}
     </main>
   );
 }
@@ -70,9 +72,9 @@ async function YourGuildsSection() {
     <section className="grid gap-2">
       <h2 className="font-bold text-lg">Your guilds</h2>
 
-      {/*<AuthBoundary
+      <AuthBoundary
         fallback={
-          <div className="bg-card rounded-2xl px-5 py-6 flex gap-4 items-center">
+          <div className="flex items-center gap-4 rounded-2xl bg-card px-5 py-6">
             <img src="/icons/robot.svg" alt="Guild Robot" className="size-8" />
 
             <p className="font-semibold">
@@ -92,7 +94,7 @@ async function YourGuildsSection() {
         <Suspense fallback={<YourGuildsSkeleton />}>
           <YourGuilds />
         </Suspense>
-      </AuthBoundary>*/}
+      </AuthBoundary>
     </section>
   );
 }
