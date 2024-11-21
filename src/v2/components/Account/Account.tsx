@@ -44,8 +44,8 @@ export const Account = () => {
           onClick={() => setIsWalletSelectorModalOpen(true)}
           data-testid="sign-in-button"
           className="rounded-2xl"
+          leftIcon={<SignIn weight="bold" />}
         >
-          <SignIn weight="bold" />
           Sign in
         </Button>
       </Card>
