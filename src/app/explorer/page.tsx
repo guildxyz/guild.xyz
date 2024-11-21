@@ -1,5 +1,6 @@
 import { AuthBoundary } from "@/components/AuthBoundary";
-import { GuildCardSkeleton } from "@/components/GuildCardSkeleton";
+import { GuildCardSkeleton } from "@/components/GuildCard";
+import { GuildCard } from "@/components/GuildCard";
 import { Button } from "@/components/ui/Button";
 import { env } from "@/lib/env";
 import { Plus, SignIn } from "@phosphor-icons/react/dist/ssr";
@@ -9,7 +10,6 @@ import {
   dehydrate,
 } from "@tanstack/react-query";
 import { Suspense } from "react";
-import { GuildCard } from "./components/GuildCard";
 import { InfiniteScrollGuilds } from "./components/InfiniteScrollGuilds";
 import { Search } from "./components/Search";
 import { getGuildSearch } from "./fetchers";
