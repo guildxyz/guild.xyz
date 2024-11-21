@@ -3,32 +3,20 @@
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Skeleton } from "@/components/ui/Skeleton";
-import { env } from "@/lib/env";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useIntersection } from "foxact/use-intersection";
 import { useAtomValue } from "jotai";
 import { useCallback, useEffect } from "react";
 import { searchAtom } from "../atoms";
+import { getGuildSearch } from "../fetchers";
 import { GuildCard } from "./GuildCard";
-
-const pageSize = 24;
 
 export const InfiniteScrollGuilds = () => {
   const search = useAtomValue(searchAtom);
-  const fetchGuilds = useCallback(
-    async ({ pageParam }: { pageParam: number }) =>
-      (
-        await fetch(
-          `${env.NEXT_PUBLIC_API}/guild/search?page=${pageParam}&pageSize=${pageSize}&search=${search}`,
-        )
-      ).json() as Promise<PaginatedResponse<Guild>>,
-    [search],
-  );
-
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useInfiniteQuery({
       queryKey: ["guilds", search || ""],
-      queryFn: fetchGuilds,
+      queryFn: getGuildSearch(search),
       initialPageParam: 1,
       enabled: search !== undefined,
       getNextPageParam: (lastPage) =>

@@ -13,6 +13,7 @@ import { Suspense } from "react";
 import { GuildCard } from "./components/GuildCard";
 import { InfiniteScrollGuilds } from "./components/InfiniteScrollGuilds";
 import { Search } from "./components/Search";
+import { getGuildSearch } from "./fetchers";
 
 const getAssociatedGuilds = async () => {
   const request = `${env.NEXT_PUBLIC_API}/guild/search?page=1&pageSize=24&sortBy=name&reverse=false&search=`;
@@ -36,12 +37,7 @@ export default async function Explorer() {
   await queryClient.prefetchInfiniteQuery({
     queryKey: ["guilds", ""],
     initialPageParam: 1,
-    queryFn: async ({ pageParam }: { pageParam: number }) =>
-      (
-        await fetch(
-          `${env.NEXT_PUBLIC_API}/guild/search?page=${pageParam}&pageSize=${24}&search=`,
-        )
-      ).json(),
+    queryFn: getGuildSearch(""),
   });
 
   return (
