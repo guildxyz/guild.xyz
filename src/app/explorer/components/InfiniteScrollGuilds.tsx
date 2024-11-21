@@ -42,14 +42,20 @@ export const InfiniteScrollGuilds = () => {
   });
 
   useEffect(() => {
-    if (isFetchingNextPage) return;
+    if (!isFetchingNextPage) {
+      resetIsIntersected();
+    }
+  }, [resetIsIntersected, isFetchingNextPage]);
+
+  useEffect(() => {
+    if (isFetchingNextPage || isLoading) return;
     if (isIntersected && hasNextPage) {
       fetchNextPage();
     }
-    resetIsIntersected();
+    console.log("what", { isLoading, isFetchingNextPage });
   }, [isIntersected, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  const guilds = data?.pages.flatMap((page) => page.items);
+  const guilds = data?.pages.flatMap((page) => page.items) || [];
 
   return (
     <section className="grid gap-2">
@@ -60,15 +66,18 @@ export const InfiniteScrollGuilds = () => {
                 <Skeleton className="size-full h-[114px]" />
               </Card>
             ))
-          : guilds?.map((guild) => <GuildCard key={guild.id} guild={guild} />)}
+          : guilds.map((guild) => <GuildCard key={guild.id} guild={guild} />)}
       </div>
-
       <div
-        ref={(element: HTMLDivElement | null) => {
+        ref={useCallback((element: HTMLDivElement | null) => {
           setIntersection(element);
-        }}
+        }, [])}
         aria-hidden
       />
+      {guilds.length === 0 &&
+        !isLoading &&
+        search &&
+        `No results for "${search}"`}
       <Button
         className="mt-8"
         onClick={() => fetchNextPage()}
