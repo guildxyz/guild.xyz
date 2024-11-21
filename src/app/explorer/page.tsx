@@ -9,10 +9,11 @@ import {
   dehydrate,
 } from "@tanstack/react-query";
 import { Suspense } from "react";
+import { CreateGuildLink } from "./_components/CreateGuildLink";
 import { HeaderBackground } from "./_components/HeaderBackground";
 import { InfiniteScrollGuilds } from "./_components/InfiniteScrollGuilds";
 import { StickySearch } from "./_components/Search";
-import { CreateGuildLink, StickyBar } from "./_components/StickyBar";
+import { StickyBar } from "./_components/StickyBar";
 import { ACTIVE_SECTION } from "./constants";
 import { getGuildSearch } from "./fetchers";
 
@@ -36,7 +37,7 @@ export default async function Explorer() {
   return (
     <>
       <HeaderBackground />
-      <main className="container mx-auto grid max-w-screen-lg gap-8 px-4 py-8">
+      <main className="container mx-auto grid max-w-screen-lg gap-4 px-4 py-8">
         <section className="pt-6 pb-8">
           <h1
             className="font-black font-display text-5xl tracking-tight"
@@ -53,7 +54,10 @@ export default async function Explorer() {
         </StickyBar>
         <YourGuildsSection />
 
-        <h2 className="mt-12 font-bold text-lg tracking-tight">
+        <h2
+          className="mt-12 font-bold text-lg tracking-tight"
+          id={ACTIVE_SECTION.exploreGuilds}
+        >
           Explore verified guilds
         </h2>
         <StickySearch />

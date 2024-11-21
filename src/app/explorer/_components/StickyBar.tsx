@@ -1,12 +1,9 @@
 "use client";
-import { buttonVariants } from "@/components/ui/Button";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/ToggleGroup";
 import useIsStuck from "@/hooks/useIsStuck";
 import useScrollspy from "@/hooks/useScrollSpy";
 import { cn } from "@/lib/cssUtils";
-import { Plus } from "@phosphor-icons/react";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
-import Link from "next/link";
 import { type PropsWithChildren, useEffect } from "react";
 import { activeSectionAtom, isNavStuckAtom, isSearchStuckAtom } from "../atoms";
 import { ACTIVE_SECTION } from "../constants";
@@ -67,31 +64,6 @@ const Nav = () => {
         Explore guilds
       </ToggleGroupItem>
     </ToggleGroup>
-  );
-};
-
-export const CreateGuildLink = () => {
-  const isNavStuck = useAtomValue(isNavStuckAtom);
-  return (
-    <Link
-      href="/create-guild"
-      aria-label="Create guild"
-      prefetch={false}
-      className={buttonVariants({
-        variant: "ghost",
-        size: "sm",
-        className: [
-          // Temporarily, until we don't migrate the scrollable Tabs component
-          "min-h-11 w-11 gap-1.5 px-0 sm:min-h-0 sm:w-auto sm:px-3",
-          {
-            "text-white": !isNavStuck,
-          },
-        ],
-      })}
-    >
-      <Plus />
-      <span className="hidden sm:inline-block">Create guild</span>
-    </Link>
   );
 };
 
