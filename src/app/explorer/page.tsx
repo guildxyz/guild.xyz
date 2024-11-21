@@ -4,6 +4,11 @@ import { Card } from "@/components/ui/Card";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { env } from "@/lib/env";
 import { Plus, SignIn } from "@phosphor-icons/react/dist/ssr";
+import {
+  HydrationBoundary,
+  QueryClient,
+  dehydrate,
+} from "@tanstack/react-query";
 import { Suspense } from "react";
 import { GuildCard } from "./components/GuildCard";
 import { InfiniteScrollGuilds } from "./components/InfiniteScrollGuilds";
@@ -26,7 +31,19 @@ const GuildCardSkeleton = () => {
   );
 };
 
-export default function Explorer() {
+export default async function Explorer() {
+  const queryClient = new QueryClient();
+  await queryClient.prefetchInfiniteQuery({
+    queryKey: ["guilds", ""],
+    initialPageParam: 1,
+    queryFn: async ({ pageParam }: { pageParam: number }) =>
+      (
+        await fetch(
+          `${env.NEXT_PUBLIC_API}/guild/search?page=${pageParam}&pageSize=${24}&search=`,
+        )
+      ).json(),
+  });
+
   return (
     <main className="container mx-auto grid max-w-screen-lg gap-8 px-4 py-8">
       <section className="pt-6 pb-8">
@@ -39,7 +56,9 @@ export default function Explorer() {
         <Search />
       </section>
 
-      <InfiniteScrollGuilds />
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <InfiniteScrollGuilds />
+      </HydrationBoundary>
     </main>
   );
 }

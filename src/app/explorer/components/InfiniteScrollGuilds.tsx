@@ -27,7 +27,7 @@ export const InfiniteScrollGuilds = () => {
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useInfiniteQuery({
-      queryKey: ["guilds", search],
+      queryKey: ["guilds", search || ""],
       queryFn: fetchGuilds,
       initialPageParam: 1,
       enabled: search !== undefined,
