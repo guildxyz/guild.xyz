@@ -4,29 +4,31 @@ import { Button } from "@/components/ui/Button";
 import { env } from "@/lib/env";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useIntersection } from "foxact/use-intersection";
-import { useSearchParams } from "next/navigation";
+import { useAtomValue } from "jotai";
 import { useCallback, useEffect } from "react";
+import { searchAtom } from "../atoms";
 import { GuildCard } from "./GuildCard";
 
 const pageSize = 24;
 
 export const InfiniteScrollGuilds = () => {
-  const searchParams = useSearchParams();
+  const search = useAtomValue(searchAtom);
   const fetchGuilds = useCallback(
     async ({ pageParam }: { pageParam: number }) =>
       (
         await fetch(
-          `${env.NEXT_PUBLIC_API}/guild/search?page=${pageParam}&pageSize=${pageSize}&search=${searchParams?.get("search") || ""}`,
+          `${env.NEXT_PUBLIC_API}/guild/search?page=${pageParam}&pageSize=${pageSize}&search=${search}`,
         )
       ).json() as Promise<PaginatedResponse<Guild>>,
-    [searchParams],
+    [search],
   );
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
-      queryKey: ["guilds", searchParams.toString()],
+      queryKey: ["guilds", search],
       queryFn: fetchGuilds,
       initialPageParam: 1,
+      enabled: search !== undefined,
       getNextPageParam: (lastPage) =>
         lastPage.total / lastPage.pageSize <= lastPage.page
           ? undefined
