@@ -10,8 +10,10 @@ import {
   dehydrate,
 } from "@tanstack/react-query";
 import { Suspense } from "react";
-import { InfiniteScrollGuilds } from "./components/InfiniteScrollGuilds";
-import { Search } from "./components/Search";
+import { HeaderBackground } from "./_components/HeaderBackground";
+import { InfiniteScrollGuilds } from "./_components/InfiniteScrollGuilds";
+import { Search } from "./_components/Search";
+import { ACTIVE_SECTION } from "./constants";
 import { getGuildSearch } from "./fetchers";
 
 const getAssociatedGuilds = async () => {
@@ -32,21 +34,29 @@ export default async function Explorer() {
   });
 
   return (
-    <main className="container mx-auto grid max-w-screen-lg gap-8 px-4 py-8">
-      <section className="pt-6 pb-8">
-        <h1 className="font-black text-5xl">Guildhall</h1>
-      </section>
+    <>
+      <HeaderBackground />
+      <main className="container mx-auto grid max-w-screen-lg gap-8 px-4 py-8">
+        <section className="pt-6 pb-8">
+          <h1
+            className="font-black font-display text-5xl tracking-tight"
+            id={ACTIVE_SECTION.yourGuilds}
+          >
+            Guildhall
+          </h1>
+        </section>
 
-      <YourGuildsSection />
+        <YourGuildsSection />
 
-      <section>
-        <Search />
-      </section>
+        <section>
+          <Search />
+        </section>
 
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        <InfiniteScrollGuilds />
-      </HydrationBoundary>
-    </main>
+        <HydrationBoundary state={dehydrate(queryClient)}>
+          <InfiniteScrollGuilds />
+        </HydrationBoundary>
+      </main>
+    </>
   );
 }
 
@@ -58,7 +68,7 @@ async function YourGuildsSection() {
       <AuthBoundary
         fallback={
           <div className="flex items-center gap-4 rounded-2xl bg-card px-5 py-6">
-            <img src="/icons/robot.svg" alt="Guild Robot" className="size-8" />
+            <img src="/images/robot.svg" alt="Guild Robot" className="size-8" />
 
             <p className="font-semibold">
               Sign in to view your guilds or create new ones
@@ -93,7 +103,7 @@ async function YourGuilds() {
     </div>
   ) : (
     <div className="flex items-center gap-4 rounded-2xl bg-card px-5 py-6">
-      <img src="/icons/robot.svg" alt="Guild Robot" className="size-8" />
+      <img src="/images/robot.svg" alt="Guild Robot" className="size-8" />
 
       <p className="font-semibold">
         You&apos;re not a member of any guilds yet. Explore and join some below,

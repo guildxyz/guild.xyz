@@ -7,7 +7,7 @@ import { useIntersection } from "foxact/use-intersection";
 import { useAtomValue } from "jotai";
 import { useCallback, useEffect } from "react";
 import { searchAtom } from "../atoms";
-import { PAGE_SIZE } from "../constants";
+import { ACTIVE_SECTION, PAGE_SIZE } from "../constants";
 import { getGuildSearch } from "../fetchers";
 
 export const InfiniteScrollGuilds = () => {
@@ -45,7 +45,7 @@ export const InfiniteScrollGuilds = () => {
   const guilds = data?.pages.flatMap((page) => page.items) || [];
 
   return (
-    <section className="grid gap-2">
+    <section className="grid gap-2" id={ACTIVE_SECTION.exploreGuilds}>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {isLoading
           ? Array.from({ length: PAGE_SIZE }, (_, i) => (

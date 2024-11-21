@@ -29,7 +29,7 @@ export const Search = () => {
     window.history.replaceState(
       null,
       "",
-      `${pathname}?${newSearchParams.toString()}`,
+      [pathname, newSearchParams.toString()].filter(Boolean).join("?"),
     );
   }, [value, pathname]);
 
