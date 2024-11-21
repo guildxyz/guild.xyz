@@ -39,7 +39,7 @@ export default function Explorer() {
         <Search />
       </section>
 
-      <InfiniteScrollGuilds search="haho" />
+      <InfiniteScrollGuilds />
     </main>
   );
 }

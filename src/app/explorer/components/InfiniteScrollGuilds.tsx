@@ -1,6 +1,8 @@
 "use client";
 
 import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
+import { Skeleton } from "@/components/ui/Skeleton";
 import { env } from "@/lib/env";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useIntersection } from "foxact/use-intersection";
@@ -23,7 +25,7 @@ export const InfiniteScrollGuilds = () => {
     [search],
   );
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useInfiniteQuery({
       queryKey: ["guilds", search],
       queryFn: fetchGuilds,
@@ -51,16 +53,15 @@ export const InfiniteScrollGuilds = () => {
 
   return (
     <section className="grid gap-2">
-      <h2 className="font-bold text-lg">Explore guilds</h2>
-      {guilds && guilds.length > 0 ? (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {guilds.map((guild) => (
-            <GuildCard key={guild.id} guild={guild} />
-          ))}
-        </div>
-      ) : (
-        <p>Couldn&apos;t fetch guilds</p>
-      )}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {isLoading
+          ? Array.from({ length: 33 }, (_, i) => (
+              <Card key={i}>
+                <Skeleton className="size-full h-[114px]" />
+              </Card>
+            ))
+          : guilds?.map((guild) => <GuildCard key={guild.id} guild={guild} />)}
+      </div>
 
       <div
         ref={(element: HTMLDivElement | null) => {

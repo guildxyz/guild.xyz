@@ -3,12 +3,11 @@
 import { Input } from "@/components/ui/Input";
 import { useDebouncedValue } from "foxact/use-debounced-value";
 import { useSetAtom } from "jotai";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { searchAtom } from "../atoms";
 
 export const Search = () => {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const [value, setValue] = useState(
@@ -17,6 +16,7 @@ export const Search = () => {
 
   const debouncedValue = useDebouncedValue(value, 200);
   const setSearch = useSetAtom(searchAtom);
+
   useEffect(() => {
     setSearch(debouncedValue);
   }, [debouncedValue]);
@@ -25,10 +25,11 @@ export const Search = () => {
     const newSearchParams = new URLSearchParams(
       Object.entries({ search: value }).filter(([_, value]) => value),
     );
-
-    router.replace(`${pathname}?${newSearchParams.toString()}`, {
-      scroll: false,
-    });
+    window.history.replaceState(
+      null,
+      "",
+      `${pathname}?${newSearchParams.toString()}`,
+    );
   }, [value]);
 
   return (
