@@ -8,6 +8,7 @@ import { useIntersection } from "foxact/use-intersection";
 import { useAtomValue } from "jotai";
 import { useCallback, useEffect } from "react";
 import { searchAtom } from "../atoms";
+import { PAGE_SIZE } from "../constants";
 import { getGuildSearch } from "../fetchers";
 import { GuildCard } from "./GuildCard";
 
@@ -48,7 +49,7 @@ export const InfiniteScrollGuilds = () => {
     <section className="grid gap-2">
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {isLoading
-          ? Array.from({ length: 33 }, (_, i) => (
+          ? Array.from({ length: PAGE_SIZE }, (_, i) => (
               <Card key={i}>
                 <Skeleton className="size-full h-[114px]" />
               </Card>
