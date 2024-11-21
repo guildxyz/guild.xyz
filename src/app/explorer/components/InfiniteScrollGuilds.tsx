@@ -4,22 +4,27 @@ import { Button } from "@/components/ui/Button";
 import { env } from "@/lib/env";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useIntersection } from "foxact/use-intersection";
-import { useEffect } from "react";
+import { useSearchParams } from "next/navigation";
+import { useCallback, useEffect } from "react";
 import { GuildCard } from "./GuildCard";
 
 const pageSize = 24;
 
-export const InfiniteScrollGuilds = ({ search = "" }: { search?: string }) => {
-  const fetchGuilds = async ({ pageParam }: { pageParam: number }) =>
-    (
-      await fetch(
-        `${env.NEXT_PUBLIC_API}/guild/search?page=${pageParam}&pageSize=${pageSize}&sortBy=name&reverse=false&search=${search}`,
-      )
-    ).json() as Promise<PaginatedResponse<Guild>>;
+export const InfiniteScrollGuilds = () => {
+  const searchParams = useSearchParams();
+  const fetchGuilds = useCallback(
+    async ({ pageParam }: { pageParam: number }) =>
+      (
+        await fetch(
+          `${env.NEXT_PUBLIC_API}/guild/search?page=${pageParam}&pageSize=${pageSize}&search=${searchParams?.get("search") || ""}`,
+        )
+      ).json() as Promise<PaginatedResponse<Guild>>,
+    [searchParams],
+  );
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
-      queryKey: ["guilds"],
+      queryKey: ["guilds", searchParams.toString()],
       queryFn: fetchGuilds,
       initialPageParam: 1,
       getNextPageParam: (lastPage) =>

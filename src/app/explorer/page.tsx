@@ -1,13 +1,13 @@
 import { AuthBoundary } from "@/components/AuthBoundary";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
-import { Input } from "@/components/ui/Input";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { env } from "@/lib/env";
 import { Plus, SignIn } from "@phosphor-icons/react/dist/ssr";
 import { Suspense } from "react";
 import { GuildCard } from "./components/GuildCard";
 import { InfiniteScrollGuilds } from "./components/InfiniteScrollGuilds";
+import { Search } from "./components/Search";
 
 const getAssociatedGuilds = async () => {
   const request = `${env.NEXT_PUBLIC_API}/guild/search?page=1&pageSize=24&sortBy=name&reverse=false&search=`;
@@ -35,8 +35,8 @@ export default function Explorer() {
 
       <YourGuildsSection />
 
-      <section className="">
-        <Input placeholder="Search guild.xyz" />
+      <section>
+        <Search />
       </section>
 
       <InfiniteScrollGuilds search="haho" />
