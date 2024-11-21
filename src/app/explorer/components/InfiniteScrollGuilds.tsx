@@ -48,11 +48,10 @@ export const InfiniteScrollGuilds = () => {
   }, [resetIsIntersected, isFetchingNextPage]);
 
   useEffect(() => {
-    if (isFetchingNextPage || isLoading) return;
+    if (isFetchingNextPage) return;
     if (isIntersected && hasNextPage) {
       fetchNextPage();
     }
-    console.log("what", { isLoading, isFetchingNextPage });
   }, [isIntersected, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const guilds = data?.pages.flatMap((page) => page.items) || [];
