@@ -1,7 +1,6 @@
 "use client";
 
 import { GuildCard, GuildCardSkeleton } from "@/components/GuildCard";
-import { Button } from "@/components/ui/Button";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useIntersection } from "foxact/use-intersection";
 import { useAtomValue } from "jotai";
@@ -62,21 +61,20 @@ export const InfiniteScrollGuilds = () => {
         )}
         aria-hidden
       />
-      {guilds.length === 0 &&
-        !isLoading &&
-        search &&
-        `No results for "${search}"`}
-      <Button
-        className="mt-8"
-        onClick={() => fetchNextPage()}
-        disabled={!hasNextPage || isFetchingNextPage}
-      >
-        {isFetchingNextPage
-          ? "Loading more..."
-          : hasNextPage
-            ? "Load More"
-            : "No More Data"}
-      </Button>
+
+      {guilds.length === 0 && !isLoading && search ? (
+        <p className="mt-6 text-center text-foreground-secondary">
+          `No results for "${search}"`
+        </p>
+      ) : (
+        <p className="mt-6 text-center text-foreground-secondary">
+          {isFetchingNextPage
+            ? "Loading more..."
+            : hasNextPage
+              ? "Load More"
+              : "No More Data"}
+        </p>
+      )}
     </section>
   );
 };
