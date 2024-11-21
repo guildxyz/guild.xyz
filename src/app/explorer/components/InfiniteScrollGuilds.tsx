@@ -3,13 +3,17 @@
 import { Button } from "@/components/ui/Button";
 import { env } from "@/lib/env";
 import { useInfiniteQuery } from "@tanstack/react-query";
+import { useIntersection } from "foxact/use-intersection";
+import { useEffect } from "react";
 import { GuildCard } from "./GuildCard";
 
-export const InfiniteScrollGuilds = () => {
+const pageSize = 24;
+
+export const InfiniteScrollGuilds = ({ search = "" }: { search?: string }) => {
   const fetchGuilds = async ({ pageParam }: { pageParam: number }) =>
     (
       await fetch(
-        `${env.NEXT_PUBLIC_API}/guild/search?page=${pageParam}&pageSize=24&sortBy=name&reverse=false&search=`,
+        `${env.NEXT_PUBLIC_API}/guild/search?page=${pageParam}&pageSize=${pageSize}&sortBy=name&reverse=false&search=${search}`,
       )
     ).json() as Promise<PaginatedResponse<Guild>>;
 
@@ -18,8 +22,23 @@ export const InfiniteScrollGuilds = () => {
       queryKey: ["guilds"],
       queryFn: fetchGuilds,
       initialPageParam: 1,
-      getNextPageParam: (lastPage) => lastPage.page + 1,
+      getNextPageParam: (lastPage) =>
+        lastPage.total / lastPage.pageSize <= lastPage.page
+          ? undefined
+          : lastPage.page + 1,
     });
+
+  const [setIntersection, isIntersected, resetIsIntersected] = useIntersection({
+    rootMargin: "700px",
+  });
+
+  useEffect(() => {
+    if (isFetchingNextPage) return;
+    if (isIntersected && hasNextPage) {
+      fetchNextPage();
+    }
+    resetIsIntersected();
+  }, [isIntersected, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const guilds = data?.pages.flatMap((page) => page.items);
 
@@ -36,6 +55,12 @@ export const InfiniteScrollGuilds = () => {
         <p>Couldn&apos;t fetch guilds</p>
       )}
 
+      <div
+        ref={(element: HTMLDivElement | null) => {
+          setIntersection(element);
+        }}
+        aria-hidden
+      />
       <Button
         className="mt-8"
         onClick={() => fetchNextPage()}

@@ -9,15 +9,6 @@ import { Suspense } from "react";
 import { GuildCard } from "./components/GuildCard";
 import { InfiniteScrollGuilds } from "./components/InfiniteScrollGuilds";
 
-const _getGuilds = async () => {
-  const request = `${env.NEXT_PUBLIC_API}/guild/search?page=1&pageSize=24&sortBy=name&reverse=false&search=`;
-  const guilds = (await (
-    await fetch(request)
-  ).json()) as PaginatedResponse<Guild>;
-
-  return guilds;
-};
-
 const getAssociatedGuilds = async () => {
   const request = `${env.NEXT_PUBLIC_API}/guild/search?page=1&pageSize=24&sortBy=name&reverse=false&search=`;
   const guilds = (await (
@@ -36,8 +27,6 @@ const GuildCardSkeleton = () => {
 };
 
 export default function Explorer() {
-  //const { items: guilds } = await getGuilds();
-
   return (
     <main className="container mx-auto grid max-w-screen-lg gap-8 px-4 py-8">
       <section className="pt-6 pb-8">
@@ -50,19 +39,7 @@ export default function Explorer() {
         <Input placeholder="Search guild.xyz" />
       </section>
 
-      <InfiniteScrollGuilds />
-      {/*<section className="grid gap-2">
-        <h2 className="font-bold text-lg">Explore guilds</h2>
-        {guilds.length > 0 ? (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {guilds.map((guild) => (
-              <GuildCard key={guild.id} guild={guild} />
-            ))}
-          </div>
-        ) : (
-          <p>Couldn&apos;t fetch guilds</p>
-        )}
-      </section>*/}
+      <InfiniteScrollGuilds search="haho" />
     </main>
   );
 }
@@ -102,7 +79,7 @@ async function YourGuildsSection() {
 async function YourGuilds() {
   const { items: myGuilds } = await getAssociatedGuilds();
 
-  return myGuilds.length > 0 ? (
+  return myGuilds && myGuilds.length > 0 ? (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {myGuilds.map((guild) => (
         <GuildCard key={guild.id} guild={guild} />
