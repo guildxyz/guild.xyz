@@ -67,7 +67,7 @@ const Nav = () => {
   );
 };
 
-export const StickyBar = ({ children }: PropsWithChildren) => {
+export const StickyNavbar = ({ children }: PropsWithChildren) => {
   const setIsNavStuck = useSetAtom(isNavStuckAtom);
   const isSearchStuck = useAtomValue(isSearchStuckAtom);
   const { ref: navToggleRef } = useIsStuck(setIsNavStuck);

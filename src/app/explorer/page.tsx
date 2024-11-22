@@ -12,8 +12,8 @@ import { Suspense } from "react";
 import { CreateGuildLink } from "./_components/CreateGuildLink";
 import { HeaderBackground } from "./_components/HeaderBackground";
 import { InfiniteScrollGuilds } from "./_components/InfiniteScrollGuilds";
-import { StickySearch } from "./_components/Search";
-import { StickyBar } from "./_components/StickyBar";
+import { StickyNavbar } from "./_components/StickyNavbar";
+import { StickySearch } from "./_components/StickySearch";
 import { ACTIVE_SECTION } from "./constants";
 import { getGuildSearch } from "./fetchers";
 
@@ -36,7 +36,6 @@ export default async function Explorer() {
 
   return (
     <>
-      <HeaderBackground />
       <main className="container mx-auto grid max-w-screen-lg gap-4 px-4 py-8">
         <section className="pt-6 pb-8">
           <h1
@@ -47,11 +46,13 @@ export default async function Explorer() {
           </h1>
         </section>
 
-        <StickyBar>
+        <HeaderBackground />
+        <StickyNavbar>
           <AuthBoundary fallback={null}>
             <CreateGuildLink />
           </AuthBoundary>
-        </StickyBar>
+        </StickyNavbar>
+
         <YourGuildsSection />
 
         <h2
