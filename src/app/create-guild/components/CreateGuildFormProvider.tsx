@@ -1,6 +1,6 @@
 "use client";
 
-import { type CreateGuildForm, GuildSchema } from "@/lib/schemas/guild";
+import { type CreateGuildForm, CreateGuildSchema } from "@/lib/schemas/guild";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { PropsWithChildren } from "react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -15,7 +15,7 @@ const defaultValues = {
 const CreateGuildFormProvider = ({ children }: PropsWithChildren) => {
   const methods = useForm<CreateGuildForm>({
     mode: "all",
-    resolver: zodResolver(GuildSchema),
+    resolver: zodResolver(CreateGuildSchema),
     defaultValues,
   });
 
