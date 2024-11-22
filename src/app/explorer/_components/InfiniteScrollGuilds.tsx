@@ -21,8 +21,7 @@ export const InfiniteScrollGuilds = () => {
       getNextPageParam: (lastPage) =>
         lastPage.total / lastPage.pageSize <= lastPage.page
           ? undefined
-          : // lastPage.page is typed as number, but it is actually a string, so we need to convert it to a number here...
-            +lastPage.page + 1,
+          : lastPage.page + 1,
     });
 
   const [setIntersection, isIntersected, resetIsIntersected] = useIntersection({
