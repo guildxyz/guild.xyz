@@ -1,6 +1,8 @@
 import { AuthBoundary } from "@/components/AuthBoundary";
 import { SignInButton } from "@/components/SignInButton";
 import { env } from "@/lib/env";
+import type { Guild } from "@/lib/schemas/guild";
+import type { PaginatedResponse } from "@/lib/types";
 import {
   HydrationBoundary,
   QueryClient,

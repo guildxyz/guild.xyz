@@ -1,4 +1,6 @@
 import { env } from "@/lib/env";
+import type { Guild } from "@/lib/schemas/guild";
+import type { PaginatedResponse } from "@/lib/types";
 import { PAGE_SIZE } from "./constants";
 
 export const getGuildSearch =
