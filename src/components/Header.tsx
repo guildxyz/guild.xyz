@@ -8,8 +8,10 @@ export const Header = () => (
     {/* TODO: NavMenu component */}
     <Card className="h-10 w-24 rounded-xl" />
 
-    <AuthBoundary fallback={<SignInButton />}>
-      <SignOutButton />
-    </AuthBoundary>
+    <Card className="rounded-xl">
+      <AuthBoundary fallback={<SignInButton variant="ghost" />}>
+        <SignOutButton />
+      </AuthBoundary>
+    </Card>
   </header>
 );

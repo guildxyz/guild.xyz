@@ -89,7 +89,7 @@ async function YourGuildsSection() {
               </p>
             </div>
 
-            <SignInButton />
+            <SignInButton colorScheme="primary" />
           </div>
         }
       >

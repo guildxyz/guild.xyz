@@ -17,7 +17,6 @@ export const SignInButton = ({
     <Button
       className={cn("h-10", className)}
       variant="solid"
-      colorScheme="primary"
       {...props}
       leftIcon={<SignIn weight="bold" />}
       onClick={() => setSignInDialogOpen(true)}
