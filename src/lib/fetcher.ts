@@ -2,7 +2,11 @@ import { env } from "./env";
 
 export const fetcher = async <Data = unknown, Error = unknown>(
   resource: string,
-  { body, ...init }: RequestInit = {},
+  {
+    body,
+    ...init
+    // biome-ignore lint: -
+  }: Omit<RequestInit, "body"> & { body?: Record<string, any> } = {},
 ) => {
   const options = {
     ...(body

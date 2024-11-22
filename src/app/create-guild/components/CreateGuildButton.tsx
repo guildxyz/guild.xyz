@@ -41,14 +41,13 @@ const CreateGuildButton = () => {
         headers: {
           "X-Auth-Token": token,
         },
-        body: JSON.stringify(guild),
+        body: guild,
       });
     },
     onError: (error) => console.error(error),
     onSuccess: (res) => {
       confetti.current();
       router.push(`/${res.urlName}`);
-      console.log(res);
     },
   });
 
