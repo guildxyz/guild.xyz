@@ -19,7 +19,6 @@ const Nav = () => {
       spyActiveSection as (typeof ACTIVE_SECTION)[keyof typeof ACTIVE_SECTION],
     );
   }, [spyActiveSection, setActiveSection]);
-  console.log(activeSection);
 
   return (
     <ToggleGroup
