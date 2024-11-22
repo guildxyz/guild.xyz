@@ -15,7 +15,11 @@ export const GuildCard: FunctionComponent<{ guild: Guild }> = ({ guild }) => {
       <Card className="relative grid grid-cols-[theme(space.12)_1fr] grid-rows-2 items-center gap-x-4 gap-y-0.5 overflow-hidden rounded-2xl px-6 py-7 shadow-md before:absolute before:inset-0 before:bg-black/5 before:opacity-0 before:transition-opacity before:duration-200 before:content-[''] hover:before:opacity-55 active:before:opacity-85 dark:before:bg-white/5">
         <Avatar className="row-span-2 grid size-12 place-items-center overflow-hidden rounded-full bg-image text-white">
           <AvatarImage
-            src={guild.imageUrl}
+            src={
+              !!guild.imageUrl && !guild.imageUrl.startsWith("/guildLogos")
+                ? guild.imageUrl
+                : undefined
+            }
             className="size-full"
             alt="guild avatar"
           />
