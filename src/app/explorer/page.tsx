@@ -76,14 +76,20 @@ async function YourGuildsSection() {
     <section className="grid gap-2">
       <AuthBoundary
         fallback={
-          <div className="flex items-center gap-4 rounded-2xl bg-card px-5 py-6">
-            <img src="/images/robot.svg" alt="Guild Robot" className="size-8" />
+          <div className="flex flex-col items-stretch gap-4 rounded-2xl bg-card px-5 py-6 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center gap-4">
+              <img
+                src="/images/robot.svg"
+                alt="Guild Robot"
+                className="size-8"
+              />
 
-            <p className="font-semibold">
-              Sign in to view your guilds or create new ones
-            </p>
+              <p className="font-semibold">
+                Sign in to view your guilds or create new ones
+              </p>
+            </div>
 
-            <SignInButton className="ml-auto" />
+            <SignInButton />
           </div>
         }
       >
