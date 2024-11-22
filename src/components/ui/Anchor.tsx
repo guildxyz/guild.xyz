@@ -11,7 +11,7 @@ const anchorVariants = cva(
     variants: {
       variant: {
         default: "text-foreground hover:underline",
-        highlighted: "text-anchor-foreground hover:underline",
+        highlighted: "text-primary hover:underline",
         muted: "text-muted-foreground hover:underline",
         unstyled: "",
       },
