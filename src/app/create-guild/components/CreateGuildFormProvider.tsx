@@ -14,7 +14,7 @@ const defaultValues = {
 
 const CreateGuildFormProvider = ({ children }: PropsWithChildren) => {
   const methods = useForm<CreateGuildForm>({
-    mode: "all",
+    mode: "onTouched",
     resolver: zodResolver(CreateGuildSchema),
     defaultValues,
   });
