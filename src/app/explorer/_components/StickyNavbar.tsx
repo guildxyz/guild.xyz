@@ -8,28 +8,18 @@ import { type PropsWithChildren, useEffect } from "react";
 import { activeSectionAtom, isNavStuckAtom, isSearchStuckAtom } from "../atoms";
 import { ACTIVE_SECTION } from "../constants";
 
-export const smoothScrollTo = (id: string) => {
-  const target = document.getElementById(id);
-
-  if (!target) return;
-
-  window.scrollTo({
-    behavior: "smooth",
-    top: target.offsetTop,
-  });
-};
-
 const Nav = () => {
   const isNavStuck = useAtomValue(isNavStuckAtom);
   const isSearchStuck = useAtomValue(isSearchStuckAtom);
   const [activeSection, setActiveSection] = useAtom(activeSectionAtom);
-  const spyActiveSection = useScrollspy(Object.values(ACTIVE_SECTION), 100);
+  const spyActiveSection = useScrollspy(Object.values(ACTIVE_SECTION), 0);
   useEffect(() => {
     if (!spyActiveSection) return;
     setActiveSection(
       spyActiveSection as (typeof ACTIVE_SECTION)[keyof typeof ACTIVE_SECTION],
     );
   }, [spyActiveSection, setActiveSection]);
+  console.log(activeSection);
 
   return (
     <ToggleGroup
@@ -50,18 +40,18 @@ const Nav = () => {
         className={cn("rounded-xl transition-all", {
           "rounded-lg": isSearchStuck,
         })}
-        onClick={() => smoothScrollTo(ACTIVE_SECTION.yourGuilds)}
+        asChild
       >
-        Your guilds
+        <a href={`#${ACTIVE_SECTION.yourGuilds}`}>Your guilds</a>
       </ToggleGroupItem>
       <ToggleGroupItem
         value={ACTIVE_SECTION.exploreGuilds}
         className={cn("rounded-xl transition-all", {
           "rounded-lg": isSearchStuck,
         })}
-        onClick={() => smoothScrollTo(ACTIVE_SECTION.exploreGuilds)}
+        asChild
       >
-        Explore guilds
+        <a href={`#${ACTIVE_SECTION.exploreGuilds}`}>Explore guilds</a>
       </ToggleGroupItem>
     </ToggleGroup>
   );
