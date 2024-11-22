@@ -43,6 +43,15 @@ export const InfiniteScrollGuilds = () => {
 
   const guilds = data?.pages.flatMap((page) => page.items) || [];
 
+  let statusResponse: string | undefined;
+  if (isFetchingNextPage) {
+    statusResponse = "Loading more...";
+  } else if (!hasNextPage && guilds.length) {
+    statusResponse = "No More Data";
+  } else if (search && !isLoading) {
+    statusResponse = `No results for "${search}"`;
+  }
+
   return (
     <section className="grid gap-2">
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -61,18 +70,9 @@ export const InfiniteScrollGuilds = () => {
         )}
         aria-hidden
       />
-
-      {guilds.length === 0 && !isLoading && search ? (
-        <p className="mt-6 text-center text-foreground-secondary">
-          `No results for "${search}"`
-        </p>
-      ) : (
-        <p className="mt-6 text-center text-foreground-secondary">
-          {isFetchingNextPage
-            ? "Loading more..."
-            : hasNextPage || "No More Data"}
-        </p>
-      )}
+      <p className="mt-6 text-center text-foreground-secondary">
+        {statusResponse}
+      </p>
     </section>
   );
 };
