@@ -1,6 +1,4 @@
 import { AuthBoundary } from "@/components/AuthBoundary";
-import { GuildCardSkeleton } from "@/components/GuildCard";
-import { GuildCard } from "@/components/GuildCard";
 import { SignInButton } from "@/components/SignInButton";
 import { env } from "@/lib/env";
 import {
@@ -10,6 +8,7 @@ import {
 } from "@tanstack/react-query";
 import { Suspense } from "react";
 import { CreateGuildLink } from "./components/CreateGuildLink";
+import { GuildCard, GuildCardSkeleton } from "./components/GuildCard";
 import { HeaderBackground } from "./components/HeaderBackground";
 import { InfiniteScrollGuilds } from "./components/InfiniteScrollGuilds";
 import { StickyNavbar } from "./components/StickyNavbar";

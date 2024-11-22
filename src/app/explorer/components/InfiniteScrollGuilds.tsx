@@ -1,6 +1,5 @@
 "use client";
 
-import { GuildCard, GuildCardSkeleton } from "@/components/GuildCard";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useIntersection } from "foxact/use-intersection";
 import { useAtomValue } from "jotai";
@@ -8,6 +7,7 @@ import { useCallback, useEffect } from "react";
 import { searchAtom } from "../atoms";
 import { PAGE_SIZE } from "../constants";
 import { getGuildSearch } from "../fetchers";
+import { GuildCard, GuildCardSkeleton } from "./GuildCard";
 
 export const InfiniteScrollGuilds = () => {
   const search = useAtomValue(searchAtom);

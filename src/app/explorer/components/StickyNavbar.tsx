@@ -9,7 +9,6 @@ import { activeSectionAtom, isNavStuckAtom, isSearchStuckAtom } from "../atoms";
 import { ACTIVE_SECTION } from "../constants";
 
 const Nav = () => {
-  const _isNavStuck = useAtomValue(isNavStuckAtom);
   const isSearchStuck = useAtomValue(isSearchStuckAtom);
   const [activeSection, setActiveSection] = useAtom(activeSectionAtom);
   const spyActiveSection = useScrollspy(Object.values(ACTIVE_SECTION), 0);
