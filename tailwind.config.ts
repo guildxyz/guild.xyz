@@ -35,6 +35,21 @@ const config = {
             invalid: "var(--input-border-invalid)"
           },
         },
+        // Using these in our Toggle component
+        button: {
+          primary: {
+            background: "var(--button-primary)",
+            foreground: "var(--button-primary-foreground)"
+          },
+          secondary: {
+            background: {
+              DEFAULT: "var(--button-secondary)",
+              hover: "var(--button-secondary-hover)",
+              active: "var(--button-secondary-active)",
+            },
+            foreground: "var(--button-secondary-foreground)"
+          }
+        },
         badge: {
           background: "var(--badge-background)",
           foreground: "var(--badge-foreground)"

@@ -9,7 +9,7 @@ import { activeSectionAtom, isNavStuckAtom, isSearchStuckAtom } from "../atoms";
 import { ACTIVE_SECTION } from "../constants";
 
 const Nav = () => {
-  const isNavStuck = useAtomValue(isNavStuckAtom);
+  const _isNavStuck = useAtomValue(isNavStuckAtom);
   const isSearchStuck = useAtomValue(isSearchStuckAtom);
   const [activeSection, setActiveSection] = useAtom(activeSectionAtom);
   const spyActiveSection = useScrollspy(Object.values(ACTIVE_SECTION), 0);
@@ -25,7 +25,7 @@ const Nav = () => {
       type="single"
       className="gap-2"
       size={isSearchStuck ? "sm" : "lg"}
-      variant={isNavStuck ? "secondary" : "mono"}
+      variant="secondary"
       onValueChange={(value) =>
         value &&
         setActiveSection(
