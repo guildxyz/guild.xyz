@@ -50,6 +50,8 @@ export const InfiniteScrollGuilds = () => {
     statusResponse = "No More Data";
   } else if (search && !isLoading) {
     statusResponse = `No results for "${search}"`;
+  } else {
+    statusResponse = "Couldn't load guilds";
   }
 
   return (
