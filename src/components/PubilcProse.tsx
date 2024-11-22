@@ -23,7 +23,7 @@ export const PublicProse = async ({ fileName }: { fileName: string }) => {
     <main className="prose prose-neutral dark:prose-invert mx-auto max-w-prose py-16 prose-headings:font-display">
       <Markdown
         components={{
-          a: ({ ...props }) => (
+          a: ({ node, ...props }) => (
             <Anchor href={props.href || ""} variant="highlighted" {...props} />
           ),
         }}
