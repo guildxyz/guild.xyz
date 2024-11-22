@@ -26,7 +26,7 @@ const DialogOverlay = forwardRef<
   <DialogPrimitive.Overlay
     ref={ref}
     className={cn(
-      "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-modal grid items-end justify-center overflow-y-auto bg-black/50 backdrop-blur-sm duration-200 data-[state=closed]:animate-out data-[state=open]:animate-in sm:items-center",
+      "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-20 grid items-end justify-center overflow-y-auto bg-black/50 backdrop-blur-sm duration-200 data-[state=closed]:animate-out data-[state=open]:animate-in sm:items-center",
       className,
     )}
     {...props}
@@ -35,7 +35,7 @@ const DialogOverlay = forwardRef<
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
 export const dialogContentVariants = cva(
-  "flex flex-col mt-4 md:my-16 relative rounded-xl max-sm:rounded-b-none bg-card shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 focus-visible:outline-none ring-ring focus-visible:ring-4 ring-offset-0",
+  "flex flex-col mt-4 md:my-16 relative rounded-xl max-sm:rounded-b-none bg-card shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 focus-visible:outline-none ring-ring focus-visible:ring-4 ring-offset-0 z-20",
   {
     variants: {
       size: {

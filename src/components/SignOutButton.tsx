@@ -10,6 +10,7 @@ export const SignOutButton = () => {
   return (
     <Button
       className="h-10"
+      variant="ghost"
       leftIcon={<SignOut weight="bold" />}
       onClick={() => signOut(pathname)}
     >
