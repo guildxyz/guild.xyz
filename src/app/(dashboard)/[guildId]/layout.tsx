@@ -30,16 +30,18 @@ const GuildPage = async ({
     <DashboardContainer>
       <main className="py-16">
         <div className="flex flex-col items-stretch md:flex-row md:justify-between">
-          <div className="space-y-4">
-            <div className="flex max-w-prose items-center gap-4">
-              <img
-                src={guild.imageUrl}
-                className="size-20 rounded-full border"
-                alt="avatar"
-              />
-              <h1 className="text-pretty font-bold font-display text-5xl tracking-tight">
-                {guild.name}
-              </h1>
+          <div className="w-full space-y-4">
+            <div className="flex w-full flex-col items-stretch justify-between gap-8 md:flex-row md:items-center">
+              <div className="flex max-w-prose items-center gap-4">
+                <img
+                  src={guild.imageUrl}
+                  className="size-20 rounded-full border"
+                  alt="avatar"
+                />
+                <h1 className="text-pretty font-bold font-display text-3xl tracking-tight sm:text-4xl lg:text-5xl">
+                  {guild.name}
+                </h1>
+              </div>
               <Button colorScheme="success" size="lg">
                 Join Guild
               </Button>
