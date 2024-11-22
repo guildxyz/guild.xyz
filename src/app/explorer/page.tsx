@@ -9,11 +9,11 @@ import {
   dehydrate,
 } from "@tanstack/react-query";
 import { Suspense } from "react";
-import { CreateGuildLink } from "./_components/CreateGuildLink";
-import { HeaderBackground } from "./_components/HeaderBackground";
-import { InfiniteScrollGuilds } from "./_components/InfiniteScrollGuilds";
-import { StickyNavbar } from "./_components/StickyNavbar";
-import { StickySearch } from "./_components/StickySearch";
+import { CreateGuildLink } from "./components/CreateGuildLink";
+import { HeaderBackground } from "./components/HeaderBackground";
+import { InfiniteScrollGuilds } from "./components/InfiniteScrollGuilds";
+import { StickyNavbar } from "./components/StickyNavbar";
+import { StickySearch } from "./components/StickySearch";
 import { ACTIVE_SECTION } from "./constants";
 import { getGuildSearch } from "./fetchers";
 
