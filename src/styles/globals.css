@@ -83,7 +83,7 @@ html {
   --image: var(--gray-700);
   --skeleton: var(--gray-300);
   --border: var(--gray-300);
-  
+
   --input-border: var(--gray-200);
   --input-border-accent: var(--gray-300);
   --input-border-invalid: var(--red-500);
@@ -178,4 +178,8 @@ html {
 }
 body {
   @apply bg-background text-foreground font-sans min-h-screen antialiased selection:bg-foreground selection:text-background;
+}
+
+* {
+  border-color: var(--border);
 }

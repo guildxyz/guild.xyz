@@ -21,7 +21,7 @@ const GuildPage = async ({
   ).json()) as Guild;
   const paginatedRoleGroup = (await (
     await fetch(
-      `${env.NEXT_PUBLIC_API}/role-group/search?custumQuery=@guildId:{${guildIdParam}}`,
+      `${env.NEXT_PUBLIC_API}/role-group/search?customQuery=@guildId:{${guild.id}}`,
     )
   ).json()) as PaginatedResponse<RoleGroup>;
   const roleGroups = paginatedRoleGroup.items;
@@ -46,7 +46,7 @@ const GuildPage = async ({
                 Join Guild
               </Button>
             </div>
-            <p className="text-balance text-lg leading-relaxed">
+            <p className="line-clamp-3 max-w-prose text-balance text-lg leading-relaxed">
               {guild.description}
             </p>
           </div>
