@@ -125,11 +125,11 @@ const nextConfig = {
   },
   async redirects() {
     return [
-      // {
-      //   source: "/",
-      //   destination: "/explorer",
-      //   permanent: false,
-      // },
+      {
+        source: "/",
+        destination: "/explorer",
+        permanent: false,
+      },
       {
         source: "/buildonbase/:path*",
         destination: "/base/:path*",
