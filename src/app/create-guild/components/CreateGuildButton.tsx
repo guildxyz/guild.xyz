@@ -38,7 +38,7 @@ const CreateGuildButton = () => {
         }),
       };
 
-      return fetcher<Guild>(`${env.NEXT_PUBLIC_API}/guilddsd`, {
+      return fetcher<Guild>(`${env.NEXT_PUBLIC_API}/guild`, {
         method: "POST",
         headers: {
           "X-Auth-Token": token,

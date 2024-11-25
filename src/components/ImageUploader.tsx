@@ -3,15 +3,14 @@
 import { getPinataKey } from "@/actions/getPinataKey";
 import { pinata } from "@/config/pinata.client";
 import { cn } from "@/lib/cssUtils";
-import { CircleNotch, UploadSimple } from "@phosphor-icons/react/dist/ssr";
+import {
+  CircleNotch,
+  UploadSimple,
+  XCircle,
+} from "@phosphor-icons/react/dist/ssr";
 import { useMutation } from "@tanstack/react-query";
 import { type InputHTMLAttributes, useCallback, useRef, useState } from "react";
-import {
-  type FieldValues,
-  type Path,
-  useController,
-  useFormContext,
-} from "react-hook-form";
+import { toast } from "sonner";
 import { Button, type ButtonProps } from "./ui/Button";
 
 type Props = Omit<ButtonProps, "variant" | "onClick" | "onError"> & {
@@ -49,6 +48,11 @@ export const ImageUploader = ({
       }
     },
     onError: (error) => {
+      toast("Upload error", {
+        description: error.message,
+        icon: <XCircle weight="fill" className="text-icon-error" />,
+      });
+
       if (typeof onError === "function") {
         onError(error.message);
       }
@@ -109,43 +113,5 @@ export const ImageUploader = ({
         }}
       />
     </Button>
-  );
-};
-
-type ControlledProps<TFieldValues extends FieldValues, _TContext> = Omit<
-  Props,
-  "onSuccess" | "onError" | "onFileInputChange"
-> & {
-  fieldName: Path<TFieldValues>;
-};
-
-export const ControlledImageUploader = <
-  TFieldValues extends FieldValues,
-  TContext,
->({
-  fieldName,
-  ...imageUploaderProps
-}: ControlledProps<TFieldValues, TContext>) => {
-  const { control, setError, clearErrors } = useFormContext<TFieldValues>();
-
-  const {
-    field: { onChange },
-  } = useController<TFieldValues>({
-    control,
-    name: fieldName,
-  });
-
-  return (
-    <ImageUploader
-      {...imageUploaderProps}
-      onSuccess={(imageUrl) => onChange(imageUrl)}
-      onError={(errorMessage) =>
-        setError(fieldName, {
-          type: "custom",
-          message: errorMessage,
-        })
-      }
-      onFileInputChange={() => clearErrors(fieldName)}
-    />
   );
 };
