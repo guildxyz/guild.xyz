@@ -1,3 +1,4 @@
+import { DashboardContainer } from "@/components/DashboardContainer";
 import { Header } from "@/components/Header";
 import type { PropsWithChildren } from "react";
 
@@ -5,7 +6,7 @@ const Dashboard = ({ children }: PropsWithChildren) => {
   return (
     <>
       <Header />
-      {children}
+      <DashboardContainer>{children}</DashboardContainer>
     </>
   );
 };
