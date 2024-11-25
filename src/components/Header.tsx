@@ -6,9 +6,9 @@ import { Card } from "./ui/Card";
 export const Header = () => (
   <header className="flex h-14 items-center justify-between gap-4 p-2">
     {/* TODO: NavMenu component */}
-    <Card className="h-11 w-24 rounded-xl" />
+    <Card className="h-11 w-24" />
 
-    <Card className="rounded-xl">
+    <Card>
       <AuthBoundary fallback={<SignInButton variant="ghost" />}>
         <SignOutButton />
       </AuthBoundary>
