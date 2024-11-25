@@ -1,7 +1,7 @@
 import type { Preview } from "@storybook/react";
 import "../src/styles/globals.css";
 
-import { dystopian, inter } from "@/lib/fonts";
+import { dystopian } from "@/lib/fonts";
 import { withThemeByClassName } from "@storybook/addon-themes";
 import { useEffect } from "react";
 
@@ -20,14 +20,12 @@ const preview: Preview = {
         light: "",
         dark: "dark",
       },
-      defaultTheme: "light",
+      defaultTheme: "dark",
     }),
     (storyFn) => {
       useEffect(() => {
         if (typeof document === "undefined") return;
-        document
-          ?.querySelector("body")
-          ?.classList.add(inter.variable, dystopian.variable);
+        document?.querySelector("body")?.classList.add(dystopian.variable);
       }, []);
 
       return storyFn();
