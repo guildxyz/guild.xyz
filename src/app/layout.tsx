@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "@/styles/globals.css";
-import { Header } from "@/components/Header";
 import { PreloadResources } from "@/components/PreloadResources";
 import { Providers } from "@/components/Providers";
 import { SignInDialog } from "@/components/SignInDialog";
@@ -28,7 +27,6 @@ const RootLayout = ({
       <body className={cn(dystopian.variable)}>
         <PreloadResources />
         <Providers>
-          <Header />
           {children}
 
           {/* TODO: maybe load this dynamically? */}
