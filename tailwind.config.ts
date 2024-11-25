@@ -21,7 +21,8 @@ const config = {
         background: "var(--background)",
         foreground: {
           DEFAULT: "var(--foreground)",
-          secondary: "var(--foreground-secondary)"
+          dimmed: "var(--foreground-dimmed)",
+          secondary: "var(--foreground-secondary)",
         },
         primary: "var(--primary)",
         card: "var(--card)",

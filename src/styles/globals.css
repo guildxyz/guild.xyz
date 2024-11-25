@@ -99,6 +99,7 @@ html {
   /* Semantic colors */
   --background: var(--gray-100);
   --foreground: var(--gray-800);
+  --foreground-dimmed: var(--gray-700);
   --foreground-secondary: var(--gray-500);
   --primary: var(--indigo-500);
   --card: var(--white);
@@ -152,6 +153,8 @@ html {
 .dark {
   --background: var(--gray-800);
   --foreground: var(--gray-100);
+  --foreground-dimmed: var(--gray-300);
+  --foreground-secondary: var(--gray-500);
   --card: var(--gray-700);
   --image: var(--gray-600);
   --skeleton: var(--gray-600);
