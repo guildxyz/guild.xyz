@@ -15,7 +15,7 @@ export const env = createEnv({
     NEXT_PUBLIC_SIWE_URL:
       process.env.NODE_ENV === "production"
         ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
-        : "localhost:3000",
+        : "http://localhost:3000",
     PINATA_ADMIN_JWT: process.env.PINATA_ADMIN_JWT,
     NEXT_PUBLIC_PINATA_GATEWAY_URL: process.env.NEXT_PUBLIC_PINATA_GATEWAY_URL,
   },

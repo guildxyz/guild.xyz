@@ -94,7 +94,7 @@ const SignInWithEthereum = () => {
       const message = createSiweMessage({
         address: address!,
         chainId: 1,
-        domain: env.NEXT_PUBLIC_SIWE_URL,
+        domain: new URL(env.NEXT_PUBLIC_SIWE_URL).hostname,
         nonce,
         uri: env.NEXT_PUBLIC_SIWE_URL,
         version: "1",
