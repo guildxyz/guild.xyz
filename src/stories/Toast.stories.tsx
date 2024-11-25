@@ -22,7 +22,7 @@ const ToastExample = ({
           toast(title, {
             description,
             action: action ? (
-              <Button size="xs" className="ml-auto">
+              <Button size="xs" className="ml-auto min-w-max">
                 Action
               </Button>
             ) : undefined,
