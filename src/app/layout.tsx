@@ -3,6 +3,7 @@ import "@/styles/globals.css";
 import { Header } from "@/components/Header";
 import { Providers } from "@/components/Providers";
 import { SignInDialog } from "@/components/SignInDialog";
+import { Toaster } from "@/components/ui/Toaster";
 import { dystopian, inter } from "@/lib/fonts";
 import { cn } from "lib/cssUtils";
 
@@ -30,6 +31,7 @@ const RootLayout = ({
 
           {/* TODO: maybe load this dynamically? */}
           <SignInDialog />
+          <Toaster />
         </Providers>
       </body>
     </html>
