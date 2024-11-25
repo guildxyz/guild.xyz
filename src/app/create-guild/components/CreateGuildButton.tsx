@@ -7,10 +7,12 @@ import { env } from "@/lib/env";
 import { fetcher } from "@/lib/fetcher";
 import { getCookie } from "@/lib/getCookie";
 import type { CreateGuildForm, Guild } from "@/lib/schemas/guild";
+import { CheckCircle, XCircle } from "@phosphor-icons/react/dist/ssr";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useFormContext } from "react-hook-form";
 import slugify from "slugify";
+import { toast } from "sonner";
 
 const CreateGuildButton = () => {
   const { handleSubmit } = useFormContext<CreateGuildForm>();
@@ -36,7 +38,7 @@ const CreateGuildButton = () => {
         }),
       };
 
-      return fetcher<Guild>(`${env.NEXT_PUBLIC_API}/guild`, {
+      return fetcher<Guild>(`${env.NEXT_PUBLIC_API}/guilddsd`, {
         method: "POST",
         headers: {
           "X-Auth-Token": token,
@@ -45,9 +47,19 @@ const CreateGuildButton = () => {
         body: JSON.stringify(guild),
       });
     },
-    onError: (error) => console.error(error),
+    onError: (error) => {
+      // TODO: parse the error and display it in a user-friendly way
+      toast("An error occurred", {
+        icon: <XCircle weight="fill" className="text-icon-error" />,
+      });
+      console.error(error);
+    },
     onSuccess: (res) => {
       confetti.current();
+      toast("Guild successfully created", {
+        description: "You're being redirected to its page",
+        icon: <CheckCircle weight="fill" className="text-icon-success" />,
+      });
       router.push(`/${res.urlName}`);
     },
   });
