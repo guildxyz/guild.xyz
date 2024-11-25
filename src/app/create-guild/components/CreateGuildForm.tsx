@@ -38,7 +38,7 @@ export const CreateGuildForm = () => {
         name="name"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Guild name</FormLabel>
+            <FormLabel aria-required>Guild name</FormLabel>
             <FormControl>
               <Input size="lg" {...field} />
             </FormControl>
@@ -53,7 +53,7 @@ export const CreateGuildForm = () => {
         name="contact"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>E-mail address</FormLabel>
+            <FormLabel aria-required>E-mail address</FormLabel>
             <FormControl>
               <Input size="lg" {...field} />
             </FormControl>
