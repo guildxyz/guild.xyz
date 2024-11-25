@@ -56,7 +56,11 @@ const config = {
           foreground: "var(--badge-foreground)"
         },
         "drawer-handle": "var(--drawer-handle)",
-        "scroll-thumb": "var(--scroll-thumb)"
+        "scroll-thumb": "var(--scroll-thumb)",
+        icon: {
+          success: "var(--icon-success)",
+          error: "var(--icon-error)"
+        }
       },
       keyframes: {
         "collapse-open": {

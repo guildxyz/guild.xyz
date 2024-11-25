@@ -144,6 +144,9 @@ html {
 
   --drawer-handle: var(--blackAlpha);
   --scroll-thumb: var(--blackAlpha-medium);
+
+  --icon-success: var(--green-500);
+  --icon-error: var(--red-500);
 }
 
 .dark {
@@ -192,6 +195,9 @@ html {
 
   --drawer-handle: var(--whiteAlpha);
   --scroll-thumb: var(--whiteAlpha-medium);
+
+  --icon-success: var(--green-400);
+  --icon-error: var(--red-400);
 }
 
 .dark video,
