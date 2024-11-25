@@ -50,16 +50,18 @@ export const InfiniteScrollGuilds = () => {
     statusResponse = "No More Data";
   } else if (search && !isLoading) {
     statusResponse = `No results for "${search}"`;
+  } else {
+    statusResponse = "Couldn't load guilds";
   }
 
   return (
     <section className="grid gap-2">
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {isLoading
-          ? Array.from({ length: PAGE_SIZE }, (_, i) => (
-              <GuildCardSkeleton key={i} />
-            ))
-          : guilds.map((guild) => <GuildCard key={guild.id} guild={guild} />)}
+          ? Array(PAGE_SIZE).fill(<GuildCardSkeleton />)
+          : guilds.map((guild, _i) => (
+              <GuildCard key={guild.urlName} guild={guild} />
+            ))}
       </div>
       <div
         ref={useCallback(
