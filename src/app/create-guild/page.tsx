@@ -20,13 +20,13 @@ const CreateGuild = () => (
             Begin your guild
           </h2>
 
-          {/* TODO: <CreateGuildImageUploader /> */}
-
           <div className="mb-8 flex flex-col gap-4">
             <CreateGuildForm />
           </div>
 
-          <AuthBoundary fallback={<SignInButton size="xl" />}>
+          <AuthBoundary
+            fallback={<SignInButton size="xl" colorScheme="primary" />}
+          >
             <CreateGuildButton />
           </AuthBoundary>
         </Card>

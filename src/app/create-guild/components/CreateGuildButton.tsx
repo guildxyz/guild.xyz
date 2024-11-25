@@ -40,8 +40,9 @@ const CreateGuildButton = () => {
         method: "POST",
         headers: {
           "X-Auth-Token": token,
+          "Content-Type": "application/json",
         },
-        body: guild,
+        body: JSON.stringify(guild),
       });
     },
     onError: (error) => console.error(error),
