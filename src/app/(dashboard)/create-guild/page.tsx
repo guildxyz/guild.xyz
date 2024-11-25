@@ -12,7 +12,7 @@ export const metadata = {
 };
 
 const CreateGuild = () => (
-  <main className="container mx-auto grid max-w-lg gap-8 px-4 py-16">
+  <main className="container mx-auto grid max-w-lg gap-8 py-16">
     <div
       className="-z-10 absolute inset-0 opacity-40 dark:opacity-60"
       style={{
