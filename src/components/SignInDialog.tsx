@@ -3,11 +3,12 @@
 import { signIn } from "@/actions/auth";
 import { signInDialogOpenAtom } from "@/config/atoms";
 import { env } from "@/lib/env";
-import { SignIn, User, Wallet } from "@phosphor-icons/react/dist/ssr";
+import { SignIn, User, Wallet, XCircle } from "@phosphor-icons/react/dist/ssr";
 import { DialogDescription } from "@radix-ui/react-dialog";
 import { useMutation } from "@tanstack/react-query";
 import { useAtom, useSetAtom } from "jotai";
 import { shortenHex } from "lib/shortenHex";
+import { toast } from "sonner";
 import { createSiweMessage } from "viem/siwe";
 import { useAccount, useConnect, useSignMessage } from "wagmi";
 import { z } from "zod";
@@ -89,19 +90,13 @@ const SignInWithEthereum = () => {
       const { nonce } = await fetch(`${env.NEXT_PUBLIC_API}/auth/siwe/nonce`)
         .then((res) => res.json())
         .then((data) => z.object({ nonce: z.string() }).parse(data));
-      const urlHostname = [
-        new URL(env.NEXT_PUBLIC_URL).hostname,
-        window.location.port,
-      ]
-        .filter(Boolean)
-        .join(":");
 
       const message = createSiweMessage({
         address: address!,
         chainId: 1,
-        domain: urlHostname,
+        domain: new URL(env.NEXT_PUBLIC_SIWE_URL).hostname,
         nonce,
-        uri: urlHostname,
+        uri: env.NEXT_PUBLIC_SIWE_URL,
         version: "1",
       });
 
@@ -110,6 +105,13 @@ const SignInWithEthereum = () => {
       return signIn({ message, signature });
     },
     onSuccess: () => setSignInDialogOpen(false),
+    onError: (error) => {
+      toast("Sign in error", {
+        description: error.message,
+        icon: <XCircle weight="fill" className="text-icon-error" />,
+      });
+      console.error(error);
+    },
   });
 
   return (
