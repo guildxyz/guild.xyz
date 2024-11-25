@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/Button";
 import { Toaster } from "@/components/ui/Toaster";
+import { BookOpen } from "@phosphor-icons/react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { toast } from "sonner";
 
@@ -8,18 +9,24 @@ type ToastExampleProps = {
   description?: string;
   action?: boolean;
   closeButton?: boolean;
+  withIcon?: boolean;
+  durationMs?: number;
 };
 const ToastExample = ({
   title = "Toast example",
   description,
   action,
   closeButton,
+  withIcon,
+  durationMs: duration,
 }: ToastExampleProps) => {
   return (
     <>
       <Button
         onClick={() =>
           toast(title, {
+            duration,
+            icon: withIcon && <BookOpen weight="fill" />,
             description,
             action: action ? (
               <Button size="xs" className="ml-auto min-w-max">
@@ -52,5 +59,7 @@ export const Default: Story = {
     description: "",
     action: false,
     closeButton: false,
+    withIcon: false,
+    durationMs: 4000,
   },
 };
