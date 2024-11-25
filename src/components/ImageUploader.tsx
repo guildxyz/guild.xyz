@@ -5,7 +5,7 @@ import { pinata } from "@/config/pinata.client";
 import { cn } from "@/lib/cssUtils";
 import { CircleNotch, UploadSimple } from "@phosphor-icons/react/dist/ssr";
 import { useMutation } from "@tanstack/react-query";
-import { useCallback, useRef, useState } from "react";
+import { type InputHTMLAttributes, useCallback, useRef, useState } from "react";
 import {
   type FieldValues,
   type Path,
@@ -18,6 +18,7 @@ type Props = Omit<ButtonProps, "variant" | "onClick" | "onError"> & {
   maxSizeMB?: number;
   onSuccess?: (imageUrl: string) => void;
   onError?: (error: string) => void;
+  onFileInputChange?: InputHTMLAttributes<HTMLInputElement>["onChange"];
 };
 
 const mbToBytes = (mb: number) => mb * 10 ** 6;
@@ -27,6 +28,7 @@ export const ImageUploader = ({
   maxSizeMB = 5,
   onSuccess,
   onError,
+  onFileInputChange,
   ...props
 }: Props) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -99,7 +101,12 @@ export const ImageUploader = ({
         type="file"
         className="hidden"
         accept="image/png, image/gif, image/jpeg"
-        onChange={(e) => validateFiles(e.target.files)}
+        onChange={(e) => {
+          validateFiles(e.target.files);
+          if (typeof onFileInputChange === "function") {
+            onFileInputChange(e);
+          }
+        }}
       />
     </Button>
   );
@@ -107,7 +114,7 @@ export const ImageUploader = ({
 
 type ControlledProps<TFieldValues extends FieldValues, _TContext> = Omit<
   Props,
-  "onSuccess" | "onError"
+  "onSuccess" | "onError" | "onFileInputChange"
 > & {
   fieldName: Path<TFieldValues>;
 };
@@ -119,7 +126,7 @@ export const ControlledImageUploader = <
   fieldName,
   ...imageUploaderProps
 }: ControlledProps<TFieldValues, TContext>) => {
-  const { control, setError } = useFormContext<TFieldValues>();
+  const { control, setError, clearErrors } = useFormContext<TFieldValues>();
 
   const {
     field: { onChange },
@@ -138,6 +145,7 @@ export const ControlledImageUploader = <
           message: errorMessage,
         })
       }
+      onFileInputChange={() => clearErrors(fieldName)}
     />
   );
 };
