@@ -3,7 +3,7 @@ import { z } from "zod";
 
 export const env = createEnv({
   server: {
-    PINATA_JWT: z.string(),
+    PINATA_ADMIN_JWT: z.string(),
   },
   client: {
     NEXT_PUBLIC_API: z.string(),
@@ -11,12 +11,12 @@ export const env = createEnv({
     NEXT_PUBLIC_PINATA_GATEWAY_URL: z.string(),
   },
   runtimeEnv: {
-    NEXT_PUBLIC_API: process.env.NEXT_PUBLIC_API,
+    NEXT_PUBLIC_API: process.env.NEXT_PUBLIC_API_V3,
     NEXT_PUBLIC_URL:
       process.env.NODE_ENV === "production"
-        ? process.env.NEXT_PUBLIC_URL
+        ? process.env.NEXT_PUBLIC_VERCEL_URL
         : "http://localhost",
-    PINATA_JWT: process.env.PINATA_JWT,
+    PINATA_ADMIN_JWT: process.env.PINATA_ADMIN_JWT,
     NEXT_PUBLIC_PINATA_GATEWAY_URL: process.env.NEXT_PUBLIC_PINATA_GATEWAY_URL,
   },
 });
