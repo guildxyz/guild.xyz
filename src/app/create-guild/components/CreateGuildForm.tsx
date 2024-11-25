@@ -2,7 +2,7 @@
 
 import { useFormContext } from "react-hook-form";
 
-import { ControlledImageUploader } from "@/components/ImageUploader";
+import { ImageUploader } from "@/components/ImageUploader";
 import {
   FormControl,
   FormErrorMessage,
@@ -14,24 +14,20 @@ import { Input } from "@/components/ui/Input";
 import type { CreateGuildForm as CreateGuildFormType } from "@/lib/schemas/guild";
 
 export const CreateGuildForm = () => {
-  const { control } = useFormContext<CreateGuildFormType>();
+  const { control, setValue } = useFormContext<CreateGuildFormType>();
 
   return (
     <>
-      <FormField
-        name="imageUrl"
-        render={() => (
-          <FormItem>
-            <div className="mx-auto size-32 rounded-full bg-input-background">
-              <ControlledImageUploader
-                fieldName="imageUrl"
-                className="size-32"
-              />
-            </div>
-            <FormErrorMessage useToast />
-          </FormItem>
-        )}
-      />
+      <div className="mx-auto size-32 rounded-full bg-input-background">
+        <ImageUploader
+          onSuccess={(imageUrl) =>
+            setValue("imageUrl", imageUrl, {
+              shouldDirty: true,
+            })
+          }
+          className="size-32"
+        />
+      </div>
 
       <FormField
         control={control}
