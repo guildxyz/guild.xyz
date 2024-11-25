@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import "@/styles/globals.css";
 import { Header } from "@/components/Header";
+import { PreloadResources } from "@/components/PreloadResources";
 import { Providers } from "@/components/Providers";
 import { SignInDialog } from "@/components/SignInDialog";
-import { dystopian, inter } from "@/lib/fonts";
+import { Toaster } from "@/components/ui/Toaster";
+import { dystopian } from "@/lib/fonts";
 import { cn } from "lib/cssUtils";
 
 export const metadata: Metadata = {
@@ -23,13 +25,15 @@ const RootLayout = ({
 }>) => {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={cn(dystopian.variable, inter.variable)}>
+      <body className={cn(dystopian.variable)}>
+        <PreloadResources />
         <Providers>
           <Header />
           {children}
 
           {/* TODO: maybe load this dynamically? */}
           <SignInDialog />
+          <Toaster />
         </Providers>
       </body>
     </html>

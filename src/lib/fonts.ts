@@ -1,12 +1,4 @@
-import { Inter } from "next/font/google";
 import localFont from "next/font/local";
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  fallback: ["sans-serif"],
-  weight: "variable",
-});
 
 const dystopian = localFont({
   src: [
@@ -33,4 +25,4 @@ const dystopian = localFont({
   variable: "--font-dystopian",
 });
 
-export { dystopian, inter };
+export { dystopian };
