@@ -9,7 +9,6 @@ export const PreloadResources = () => {
       as: "font",
       crossOrigin: "",
       type: "font/woff2",
-      fetchPriority: "high",
     },
   );
   ReactDOM.preload(
