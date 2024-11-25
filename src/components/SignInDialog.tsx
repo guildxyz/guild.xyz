@@ -90,6 +90,7 @@ const SignInWithEthereum = () => {
       const { nonce } = await fetch(`${env.NEXT_PUBLIC_API}/auth/siwe/nonce`)
         .then((res) => res.json())
         .then((data) => z.object({ nonce: z.string() }).parse(data));
+      console.log("NEXT_PUBLIC_URL", env.NEXT_PUBLIC_URL);
       const urlHostname = [
         new URL(env.NEXT_PUBLIC_URL).hostname,
         window.location.port,
