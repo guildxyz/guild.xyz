@@ -1,3 +1,4 @@
+import { XCircle } from "@phosphor-icons/react/dist/ssr";
 import type * as LabelPrimitive from "@radix-ui/react-label";
 import { Slot } from "@radix-ui/react-slot";
 import { useDebouncedState } from "foxact/use-debounced-state";
@@ -18,6 +19,7 @@ import {
   type FieldValues,
   useFormContext,
 } from "react-hook-form";
+import { toast } from "sonner";
 import { Collapsible, CollapsibleContent } from "./Collapsible";
 import { Label } from "./Label";
 
@@ -154,11 +156,19 @@ FormDescription.displayName = "FormDescription";
 
 const FormErrorMessage = forwardRef<
   HTMLParagraphElement,
-  HTMLAttributes<HTMLParagraphElement>
->(({ className, children, ...props }, ref) => {
+  HTMLAttributes<HTMLParagraphElement> & { useToast?: boolean }
+>(({ useToast, className, children, ...props }, ref) => {
   const { error, formMessageId } = useFormField();
   const body = error ? String(error?.message) : children;
   const [debouncedBody] = useDebouncedState(body, 200);
+
+  if (useToast && body) {
+    toast("An error occurred", {
+      icon: <XCircle weight="fill" className="text-icon-error" />,
+      description: body ?? debouncedBody,
+    });
+    return null;
+  }
 
   return (
     <Collapsible open={!!body}>

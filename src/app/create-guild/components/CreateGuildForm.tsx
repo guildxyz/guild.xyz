@@ -28,7 +28,7 @@ export const CreateGuildForm = () => {
                 className="size-32"
               />
             </div>
-            <FormErrorMessage />
+            <FormErrorMessage useToast />
           </FormItem>
         )}
       />
