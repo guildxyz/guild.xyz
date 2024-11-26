@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { createSiweMessage } from "viem/siwe";
 import { useAccount, useConnect, useSignMessage } from "wagmi";
 import { z } from "zod";
+import { Anchor } from "./ui/Anchor";
 import { Button } from "./ui/Button";
 import {
   ResponsiveDialog,
@@ -43,37 +44,73 @@ export const SignInDialog = () => {
 
 const WalletList = () => {
   const { connectors, connect, isPending, variables } = useConnect();
+  const setOpen = useSetAtom(signInDialogOpenAtom);
 
   return (
-    <div className="grid gap-2">
-      {connectors.map((connector) => (
-        <Button
-          key={connector.uid}
-          onClick={() => connect({ connector })}
-          leftIcon={
-            connector.icon ? (
-              <img
-                src={connector.icon}
-                alt={`${connector.name} icon`}
-                className="size-6"
-              />
-            ) : (
-              <Wallet weight="bold" className="size-6" />
-            )
-          }
-          size="xl"
-          isLoading={
-            !!variables?.connector &&
-            "id" in variables.connector &&
-            variables.connector.id === connector.id &&
-            isPending
-          }
-          loadingText="Check your wallet"
-          className="justify-start"
-        >
-          {connector.name}
-        </Button>
-      ))}
+    <div className="grid gap-8">
+      <div className="grid gap-2">
+        {connectors.map((connector) => (
+          <Button
+            key={connector.uid}
+            onClick={() => connect({ connector })}
+            leftIcon={
+              connector.icon ? (
+                <img
+                  src={connector.icon}
+                  alt={`${connector.name} icon`}
+                  className="size-6"
+                />
+              ) : (
+                <Wallet weight="bold" className="size-6" />
+              )
+            }
+            size="xl"
+            isLoading={
+              !!variables?.connector &&
+              "id" in variables.connector &&
+              variables.connector.id === connector.id &&
+              isPending
+            }
+            loadingText="Check your wallet"
+            className="justify-start"
+          >
+            {connector.name}
+          </Button>
+        ))}
+      </div>
+
+      <div className="grid gap-2 text-center text-foreground-secondary text-sm">
+        <p>
+          <span>{"New to Ethereum wallets? "}</span>
+          <Anchor
+            href="https://ethereum.org/en/wallets"
+            variant="highlighted"
+            target="_blank"
+            showExternal
+          >
+            Learn more
+          </Anchor>
+        </p>
+
+        <p>
+          <span>{"By continuing, you agree to our "}</span>
+          <Anchor
+            href="/privacy-policy"
+            variant="muted"
+            onClick={() => setOpen(false)}
+          >
+            Privacy Policy
+          </Anchor>
+          <span>{" and "}</span>
+          <Anchor
+            href="/terms-of-use"
+            variant="muted"
+            onClick={() => setOpen(false)}
+          >
+            Terms of use
+          </Anchor>
+        </p>
+      </div>
     </div>
   );
 };
