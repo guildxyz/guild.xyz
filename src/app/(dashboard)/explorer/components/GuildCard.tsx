@@ -38,11 +38,11 @@ export const GuildCard: FunctionComponent<{ guild: Guild }> = ({ guild }) => {
             <span>
               {new Intl.NumberFormat("en", {
                 notation: "compact",
-              }).format(12345)}
+              }).format(guild.memberCount)}
             </span>
           </Badge>
 
-          <Badge>5 groups</Badge>
+          <Badge>{`${guild.roleCount} roles`}</Badge>
         </div>
       </Card>
     </Link>
