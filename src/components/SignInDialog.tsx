@@ -91,12 +91,14 @@ const SignInWithEthereum = () => {
         .then((res) => res.json())
         .then((data) => z.object({ nonce: z.string() }).parse(data));
 
+      const url = new URL(window.location.href);
+
       const message = createSiweMessage({
         address: address!,
         chainId: 1,
-        domain: new URL(env.NEXT_PUBLIC_SIWE_URL).hostname,
+        domain: url.hostname,
         nonce,
-        uri: env.NEXT_PUBLIC_SIWE_URL,
+        uri: url.origin,
         version: "1",
       });
 
