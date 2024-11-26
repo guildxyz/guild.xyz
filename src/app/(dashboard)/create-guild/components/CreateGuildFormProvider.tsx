@@ -10,6 +10,7 @@ const defaultValues = {
   imageUrl: "",
   urlName: "test",
   contact: "",
+  description: "",
 } satisfies CreateGuildForm;
 
 const CreateGuildFormProvider = ({ children }: PropsWithChildren) => {

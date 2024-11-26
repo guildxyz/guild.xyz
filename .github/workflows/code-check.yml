@@ -19,11 +19,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
       - name: Install dependencies
-        run: npm install
+        run: bun install
       - name: Run TypeScript compiler
-        run: npm run type-check
+        run: bun run type-check
