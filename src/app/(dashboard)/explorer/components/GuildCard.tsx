@@ -34,7 +34,7 @@ export const GuildCard: FunctionComponent<{ guild: Guild }> = ({ guild }) => {
             </span>
           </Badge>
 
-          <Badge>{`${guild.roleCount} roles`}</Badge>
+          <Badge>{`${guild.roleCount} role${guild.roleCount > 1 ? "s" : ""}`}</Badge>
         </div>
       </Card>
     </Link>
