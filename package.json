@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "type-check": "tsc --pretty --noEmit --incremental false",
-    "write-check": "npx @biomejs/biome check --write --unsafe .",
+    "write-check": "bunx @biomejs/biome check --write --unsafe .",
     "storybook": "storybook dev -p 6006 --no-open",
     "build-storybook": "storybook build"
   },
