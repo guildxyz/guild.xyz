@@ -2,8 +2,7 @@ name: Build and Publish storybook to GitHub Pages
 
 on:
   push:
-    branches:
-      - "main"
+    branches: ["main", "v3-main"]
 
 permissions:
   contents: read
@@ -18,3 +17,5 @@ jobs:
       uses: bitovi/github-actions-storybook-to-github-pages@v1.0.3
       with:
         path: storybook-static
+        install_command: bun install
+        build_command: bun build-storybook
