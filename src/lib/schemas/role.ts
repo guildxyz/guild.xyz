@@ -3,19 +3,19 @@ import { DateLike, ImageUrlSchema, LogicSchema, NameSchema } from "./common";
 
 export const CreateRoleSchema = z.object({
   name: NameSchema.min(1, "You must specify a name for the role"),
-  description: z.string().optional().nullable(),
-  imageUrl: ImageUrlSchema.optional().nullable(),
+  description: z.string().nullish(),
+  imageUrl: ImageUrlSchema.nullish(),
   settings: z
     .object({
       logic: LogicSchema,
-      position: z.number().positive().optional().nullable(),
+      position: z.number().positive().nullish(),
       anyOfNum: z.number().positive().optional(),
     })
     .default({
       logic: "AND",
       anyOfNum: 1,
     }),
-  groupId: z.number().optional().nullable(),
+  groupId: z.number().nullish(),
 });
 
 export type CreateRoleForm = z.infer<typeof CreateRoleSchema>;

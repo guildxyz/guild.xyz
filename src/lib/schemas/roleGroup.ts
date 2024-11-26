@@ -3,8 +3,8 @@ import { DateLike, ImageUrlSchema, NameSchema } from "./common";
 
 const CreateRoleGroupSchema = z.object({
   name: NameSchema.min(1, "You must specify a name for the role group"),
-  description: z.string().optional().nullable(),
-  imageUrl: ImageUrlSchema.optional().nullable(),
+  description: z.string().nullish(),
+  imageUrl: ImageUrlSchema.nullish(),
 });
 
 export type CreateRoleGroupForm = z.infer<typeof CreateRoleGroupSchema>;
