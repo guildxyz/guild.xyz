@@ -25,7 +25,10 @@ const config = {
           secondary: "var(--foreground-secondary)",
         },
         primary: "var(--primary)",
-        card: "var(--card)",
+        card: {
+          DEFAULT: "var(--card)",
+          secondary: "var(--card-secondary)"
+        },
         image: "var(--image)",
         skeleton: "var(--skeleton)",
         border: "var(--border)",

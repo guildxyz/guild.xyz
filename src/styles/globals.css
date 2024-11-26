@@ -103,6 +103,7 @@ html {
   --foreground-secondary: var(--gray-500);
   --primary: var(--indigo-500);
   --card: var(--white);
+  --card-secondary: color-mix(in srgb, var(--gray-100), var(--white));
   --image: var(--gray-700);
   --skeleton: var(--gray-300);
   --border: var(--gray-300);
@@ -156,6 +157,7 @@ html {
   --foreground-dimmed: var(--gray-300);
   --foreground-secondary: var(--gray-500);
   --card: var(--gray-700);
+  --card-secondary: color-mix(in srgb, var(--gray-800), var(--gray-700));
   --image: var(--gray-600);
   --skeleton: var(--gray-600);
   --border: var(--gray-600);
