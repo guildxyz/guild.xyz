@@ -1,10 +1,7 @@
 import { env } from "@/lib/env";
-import type {
-  DynamicRoute,
-  Guild,
-  PaginatedResponse,
-  RoleGroup,
-} from "@/lib/types";
+import type { Guild } from "@/lib/schemas/guild";
+import type { RoleGroup } from "@/lib/schemas/roleGroup";
+import type { DynamicRoute, PaginatedResponse } from "@/lib/types";
 import { redirect } from "next/navigation";
 
 const DefaultGuildPage = async ({

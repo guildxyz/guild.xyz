@@ -1,13 +1,10 @@
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { env } from "@/lib/env";
-import type {
-  DynamicRoute,
-  Guild,
-  PaginatedResponse,
-  Role,
-  RoleGroup,
-} from "@/lib/types";
+import type { Guild } from "@/lib/schemas/guild";
+import type { Role } from "@/lib/schemas/role";
+import type { RoleGroup } from "@/lib/schemas/roleGroup";
+import type { DynamicRoute, PaginatedResponse } from "@/lib/types";
 import { Lock } from "@phosphor-icons/react/dist/ssr";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { Fragment } from "react";
@@ -44,7 +41,7 @@ const RoleGroupPage = async ({
             <div className="flex items-center gap-3">
               <img
                 className="size-14 rounded-full border"
-                src={role.imageUrl}
+                src={role.imageUrl ?? ""} // TODO: fallback image
                 alt="role avatar"
               />
               <h3 className="font-bold text-xl tracking-tight">{role.name}</h3>

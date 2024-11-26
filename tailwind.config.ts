@@ -1,5 +1,6 @@
 import type { Config } from "tailwindcss"
 import animatePlugin from "tailwindcss-animate";
+import typography from "@tailwindcss/typography"
 
 const config = {
   darkMode: ["class"],
@@ -20,10 +21,14 @@ const config = {
         background: "var(--background)",
         foreground: {
           DEFAULT: "var(--foreground)",
-          secondary: "var(--foreground-secondary)"
+          dimmed: "var(--foreground-dimmed)",
+          secondary: "var(--foreground-secondary)",
         },
         primary: "var(--primary)",
-        card: "var(--card)",
+        card: {
+          DEFAULT: "var(--card)",
+          secondary: "var(--card-secondary)"
+        },
         image: "var(--image)",
         skeleton: "var(--skeleton)",
         border: "var(--border)",
@@ -55,7 +60,11 @@ const config = {
           foreground: "var(--badge-foreground)"
         },
         "drawer-handle": "var(--drawer-handle)",
-        "scroll-thumb": "var(--scroll-thumb)"
+        "scroll-thumb": "var(--scroll-thumb)",
+        icon: {
+          success: "var(--icon-success)",
+          error: "var(--icon-error)"
+        }
       },
       keyframes: {
         "collapse-open": {
@@ -73,7 +82,7 @@ const config = {
       },
     },
   },
-  plugins: [animatePlugin],
+  plugins: [animatePlugin, typography],
 } satisfies Config
 
 export default config

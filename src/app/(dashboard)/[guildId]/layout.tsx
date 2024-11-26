@@ -2,12 +2,9 @@ import { DashboardContainer } from "@/components/DashboardContainer";
 import { Button } from "@/components/ui/Button";
 import { ScrollArea, ScrollBar } from "@/components/ui/ScrollArea";
 import { env } from "@/lib/env";
-import type {
-  DynamicRoute,
-  Guild,
-  PaginatedResponse,
-  RoleGroup,
-} from "@/lib/types";
+import type { Guild } from "@/lib/schemas/guild";
+import type { RoleGroup } from "@/lib/schemas/roleGroup";
+import type { DynamicRoute, PaginatedResponse } from "@/lib/types";
 import type { PropsWithChildren } from "react";
 import { RoleGroupNavLink } from "./_components/RoleGroupNavLink";
 
