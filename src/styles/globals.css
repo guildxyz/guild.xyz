@@ -155,7 +155,7 @@ html {
   --background: var(--gray-800);
   --foreground: var(--gray-100);
   --foreground-dimmed: var(--gray-300);
-  --foreground-secondary: var(--gray-500);
+  --foreground-secondary: var(--gray-400);
   --card: var(--gray-700);
   --card-secondary: color-mix(in srgb, var(--gray-800), var(--gray-700));
   --image: var(--gray-600);

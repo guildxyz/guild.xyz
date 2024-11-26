@@ -121,7 +121,7 @@ const NavGroup = ({
   children,
 }: { title: string; children: ReactNode }) => (
   <div className="flex min-w-36 max-w-max flex-col gap-[2px]">
-    <span className="my-1 pl-4 font-bold text-muted-foreground text-sm">
+    <span className="my-1 pl-4 font-bold text-foreground-secondary text-sm">
       {title}
     </span>
     {children}
