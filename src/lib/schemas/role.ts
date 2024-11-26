@@ -15,7 +15,7 @@ export const CreateRoleSchema = z.object({
       logic: "AND",
       anyOfNum: 1,
     }),
-  groupId: z.number().nullish(),
+  groupId: z.string().uuid(),
 });
 
 export type CreateRoleForm = z.infer<typeof CreateRoleSchema>;
