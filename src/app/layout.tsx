@@ -29,7 +29,6 @@ const RootLayout = ({
         <Providers>
           {children}
 
-          {/* TODO: maybe load this dynamically? */}
           <SignInDialog />
           <Toaster />
         </Providers>
