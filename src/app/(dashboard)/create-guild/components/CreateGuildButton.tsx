@@ -11,7 +11,6 @@ import { CheckCircle, XCircle } from "@phosphor-icons/react/dist/ssr";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useFormContext } from "react-hook-form";
-import slugify from "slugify";
 import { toast } from "sonner";
 
 const CreateGuildButton = () => {
@@ -30,12 +29,7 @@ const CreateGuildButton = () => {
       const guild = {
         ...data,
         contact: undefined,
-        // TODO: I think we should do it on the backend
-        urlName: slugify(data.name, {
-          replacement: "-",
-          lower: true,
-          strict: true,
-        }),
+        urlName: data.name,
       };
 
       return fetcher<Guild>(`${env.NEXT_PUBLIC_API}/guild`, {
