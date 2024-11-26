@@ -15,8 +15,8 @@ const GuildSchema = CreateGuildSchema.extend({
   id: z.string().uuid(),
   createdAt: DateLike,
   updatedAt: DateLike,
-  roleCount: z.number().positive(),
-  memberCount: z.number().positive(),
+  roleCount: z.number().nonnegative(),
+  memberCount: z.number().nonnegative(),
 });
 
 export type Guild = z.infer<typeof GuildSchema>;

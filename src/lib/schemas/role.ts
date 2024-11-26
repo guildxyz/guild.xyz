@@ -24,7 +24,7 @@ const RoleSchema = CreateRoleSchema.extend({
   id: z.string().uuid(),
   createdAt: DateLike,
   updatedAt: DateLike,
-  memberCount: z.number().positive(),
+  memberCount: z.number().nonnegative(),
 });
 
 export type Role = z.infer<typeof RoleSchema>;
