@@ -13,7 +13,9 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    - id: build-publish
+    - name: Set up Bun
+      uses: oven-sh/setup-bun@v2
+    - name: build-publish
       uses: bitovi/github-actions-storybook-to-github-pages@v1.0.3
       with:
         path: storybook-static
