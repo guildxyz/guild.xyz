@@ -36,8 +36,8 @@ Open source interface for Guild.xyz -- a tool for platformless membership manage
 
 ### Running the interface locally
 
-1. `npm i`
-2. `npm run dev`
+1. `bun i`
+2. `bun run dev`
 3. If you don't have the secret environment variables, copy the `.env.example` as `.env.local`.
 
 Open [http://localhost:3000](http://localhost:3000) in your browser to see the result.
@@ -45,7 +45,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to see the r
 ### Getting secret environment variables (for core team members):
 
 1. Get added to the team on Vercel
-1. `npm i vercel@latest -g`
+1. `bun i vercel@latest -g`
 1. `vercel link`
 1. `vercel env pull .env.local`
 
