@@ -2,7 +2,8 @@ name: Build and Publish storybook to GitHub Pages
 
 on:
   push:
-    branches: ["main", "v3-main"]
+    branches:
+      - "main"
 
 permissions:
   contents: read
