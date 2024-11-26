@@ -94,6 +94,7 @@ const SignInWithEthereum = () => {
       const url = new URL(window.location.href);
 
       const message = createSiweMessage({
+        // biome-ignore lint: address is defined at this point, since we only render this component if `isConnected` is `true`
         address: address!,
         chainId: 1,
         domain: url.hostname,
@@ -124,6 +125,7 @@ const SignInWithEthereum = () => {
         className="justify-start"
         disabled
       >
+        {/* biome-ignore lint: address is defined at this point, since we only render this component if `isConnected` is `true` */}
         {shortenHex(address!)}
       </Button>
       <Button
