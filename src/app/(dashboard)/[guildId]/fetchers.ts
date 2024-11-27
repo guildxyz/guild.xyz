@@ -19,6 +19,7 @@ export const getRoleGroups = async (guildId: string) => {
     {
       next: {
         tags: [`role-groups-${guildId}`],
+        revalidate: 3600,
       },
     },
   );
