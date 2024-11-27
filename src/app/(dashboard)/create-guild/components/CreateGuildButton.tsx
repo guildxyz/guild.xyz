@@ -59,6 +59,7 @@ const CreateGuildButton = () => {
       toast("Guild successfully created", {
         description: "You're being redirected to its page",
         icon: <CheckCircle weight="fill" className="text-icon-success" />,
+        duration: 5_000,
       });
       router.push(`/${res.urlName}`);
     },
