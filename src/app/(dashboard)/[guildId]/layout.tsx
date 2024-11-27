@@ -1,28 +1,16 @@
 import { GuildImage } from "@/components/GuildImage";
 import { Button } from "@/components/ui/Button";
-import { ScrollArea, ScrollBar } from "@/components/ui/ScrollArea";
-import { env } from "@/lib/env";
-import type { Guild } from "@/lib/schemas/guild";
-import type { RoleGroup } from "@/lib/schemas/roleGroup";
-import type { DynamicRoute, PaginatedResponse } from "@/lib/types";
-import type { PropsWithChildren } from "react";
-import { CreateRoleGroup } from "./components/CreateRoleGroup";
-import { RoleGroupNavLink } from "./components/RoleGroupNavLink";
+import type { DynamicRoute } from "@/lib/types";
+import { type PropsWithChildren, Suspense } from "react";
+import { GuildTabs, GuildTabsSkeleton } from "./components/GuildTabs";
+import { getGuild } from "./fetchers";
 
 const GuildPage = async ({
   params,
   children,
 }: PropsWithChildren<DynamicRoute<{ guildId: string }>>) => {
-  const { guildId: guildIdParam } = await params;
-  const guild = (await (
-    await fetch(`${env.NEXT_PUBLIC_API}/guild/urlName/${guildIdParam}`)
-  ).json()) as Guild;
-  const paginatedRoleGroup = (await (
-    await fetch(
-      `${env.NEXT_PUBLIC_API}/role-group/search?customQuery=@guildId:{${guild.id}}`,
-    )
-  ).json()) as PaginatedResponse<RoleGroup>;
-  const roleGroups = paginatedRoleGroup.items;
+  const { guildId: urlName } = await params;
+  const guild = await getGuild(urlName);
 
   return (
     <main className="py-16">
@@ -49,27 +37,10 @@ const GuildPage = async ({
         </div>
       </div>
 
-      <ScrollArea
-        className="-ml-8 w-[calc(100%+theme(space.8))]"
-        style={{
-          maskImage:
-            "linear-gradient(to right, transparent 0%, black 32px, black calc(100% - 32px), transparent 100%)",
-        }}
-      >
-        <div className="my-4 flex gap-3 px-8">
-          <RoleGroupNavLink href={`/${guildIdParam}`}>Home</RoleGroupNavLink>
-          {roleGroups.map((rg) => (
-            <RoleGroupNavLink
-              key={rg.id}
-              href={`/${guildIdParam}/${rg.urlName}`}
-            >
-              {rg.name}
-            </RoleGroupNavLink>
-          ))}
-          <CreateRoleGroup guildId={guild.id} />
-        </div>
-        <ScrollBar orientation="horizontal" className="hidden" />
-      </ScrollArea>
+      <Suspense fallback={<GuildTabsSkeleton />}>
+        <GuildTabs guild={guild} />
+      </Suspense>
+
       {children}
     </main>
   );
