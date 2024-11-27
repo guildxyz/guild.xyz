@@ -1,9 +1,5 @@
 import { useLayoutEffect, useState } from "react";
 
-// Restrict value to be between the range [0, value]
-const clamp = (value: number) => Math.max(0, value);
-
-// Check if number is between two values
 const isBetween = (value: number, floor: number, ceil: number) =>
   value >= floor && value <= ceil;
 
@@ -21,8 +17,8 @@ const useScrollspy = (ids: string[], offset = 0) => {
           if (!element) return { id, top: -1, bottom: -1 };
 
           const rect = element.getBoundingClientRect();
-          const top = clamp(rect.top + scroll - offset);
-          const bottom = clamp(rect.bottom + scroll - offset);
+          const top = Math.max(0, rect.top + scroll - offset);
+          const bottom = Math.max(0, rect.bottom + scroll - offset);
 
           return { id, top, bottom };
         })
@@ -45,4 +41,4 @@ const useScrollspy = (ids: string[], offset = 0) => {
   return activeId;
 };
 
-export default useScrollspy;
+export { useScrollspy };

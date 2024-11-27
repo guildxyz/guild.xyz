@@ -40,9 +40,9 @@ const useIsStuck = (
     );
     observer.observe(cachedRef);
     return () => observer.unobserve(cachedRef);
-  }, [ref]);
+  }, [setIsStuckActive]);
 
   return { ref, isStuck: setIsStuck ? undefined : isStuck };
 };
 
-export default useIsStuck;
+export { useIsStuck };

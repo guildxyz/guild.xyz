@@ -8,7 +8,6 @@ import { FormProvider, useForm } from "react-hook-form";
 const defaultValues = {
   name: "",
   imageUrl: "",
-  urlName: "test",
   contact: "",
   description: "",
 } satisfies CreateGuildForm;
@@ -16,7 +15,7 @@ const defaultValues = {
 const CreateGuildFormProvider = ({ children }: PropsWithChildren) => {
   const methods = useForm<CreateGuildForm>({
     mode: "onTouched",
-    resolver: zodResolver(CreateGuildSchema),
+    resolver: zodResolver(CreateGuildSchema.omit({ urlName: true })),
     defaultValues,
   });
 
