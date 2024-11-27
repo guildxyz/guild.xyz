@@ -28,6 +28,7 @@ const CreateGuildButton = () => {
 
       const guild = {
         ...data,
+        contact: undefined,
       };
 
       return fetcher<Guild>(`${env.NEXT_PUBLIC_API}/guild`, {
