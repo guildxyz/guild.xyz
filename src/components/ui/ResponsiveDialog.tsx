@@ -1,3 +1,5 @@
+"use client";
+
 import { useMediaQuery } from "foxact/use-media-query";
 import type { ComponentProps } from "react";
 import {
@@ -73,15 +75,19 @@ export const ResponsiveDialogOverlay = (
 };
 ResponsiveDialogOverlay.displayName = "ResponsiveDialogOverlay";
 
+/**
+ * We don't use the DialogDescription & DrawerDescription components, that's why we apply the `aria-describedby={undefined}` attribute here.
+ */
 export const ResponsiveDialogContent = (
   props: ComponentProps<typeof DialogContent> &
     ComponentProps<typeof DrawerContent>,
 ) => {
   const isMobile = useIsMobile();
 
-  if (isMobile) return <DrawerContent {...props} />;
+  if (isMobile)
+    return <DrawerContent aria-describedby={undefined} {...props} />;
 
-  return <DialogContent {...props} />;
+  return <DialogContent aria-describedby={undefined} {...props} />;
 };
 ResponsiveDialogContent.displayName = "ResponsiveDialogContent";
 

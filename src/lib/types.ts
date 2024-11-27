@@ -8,3 +8,7 @@ export type PaginatedResponse<Item = unknown> = {
   items: Item[];
   total: number;
 };
+
+export type DynamicRoute<T extends Record<string, string>> = {
+  params: T;
+};
