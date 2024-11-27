@@ -169,10 +169,7 @@ const CreateRoleGroupDialogForm = ({
       <ResponsiveDialogFooter>
         <Button
           colorScheme="success"
-          onClick={form.handleSubmit(
-            (data) => onSubmit(data),
-            (error) => console.log(error),
-          )}
+          onClick={form.handleSubmit((data) => onSubmit(data))}
           isLoading={isPending}
           loadingText="Creating page"
         >
