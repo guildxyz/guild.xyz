@@ -1,7 +1,8 @@
 import { z } from "zod";
 import { DateLike, ImageUrlSchema, NameSchema } from "./common";
 
-const CreateRoleGroupSchema = z.object({
+export const CreateRoleGroupSchema = z.object({
+  guildId: z.string().uuid(),
   name: NameSchema.min(1, "You must specify a name for the role group"),
   urlName: z.string().max(255).optional(),
   description: z.string().nullish(),

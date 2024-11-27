@@ -5,12 +5,9 @@ import { env } from "@/lib/env";
 import type { Guild } from "@/lib/schemas/guild";
 import type { RoleGroup } from "@/lib/schemas/roleGroup";
 import type { DynamicRoute, PaginatedResponse } from "@/lib/types";
-import { Plus } from "@phosphor-icons/react/dist/ssr";
 import type { PropsWithChildren } from "react";
-import {
-  RoleGroupNavButton,
-  RoleGroupNavLink,
-} from "./components/RoleGroupNavLink";
+import { CreateRoleGroup } from "./components/CreateRoleGroup";
+import { RoleGroupNavLink } from "./components/RoleGroupNavLink";
 
 const GuildPage = async ({
   params,
@@ -69,9 +66,7 @@ const GuildPage = async ({
               {rg.name}
             </RoleGroupNavLink>
           ))}
-          <RoleGroupNavButton leftIcon={<Plus weight="bold" />}>
-            Create page
-          </RoleGroupNavButton>
+          <CreateRoleGroup guildId={guild.id} />
         </div>
         <ScrollBar orientation="horizontal" className="hidden" />
       </ScrollArea>

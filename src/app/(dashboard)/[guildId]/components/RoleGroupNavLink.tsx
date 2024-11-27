@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  Button,
-  type ButtonProps,
-  buttonVariants,
-} from "@/components/ui/Button";
+import { buttonVariants } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -25,7 +21,7 @@ export const RoleGroupNavLink = ({
           variant: "ghost",
           className: [
             "focus-visible:bg-[var(--button-bg-hover)]",
-            { "bg-[var(--button-bg-active)]": isActive },
+            { "bg-[var(--button-bg-hover)]": isActive },
           ],
         })}
       >
@@ -34,15 +30,3 @@ export const RoleGroupNavLink = ({
     </Card>
   );
 };
-
-export const RoleGroupNavButton = ({
-  children,
-  leftIcon,
-  className,
-}: PropsWithChildren<Pick<ButtonProps, "leftIcon" | "className">>) => (
-  <Card className="bg-card-secondary">
-    <Button variant="ghost" leftIcon={leftIcon} className={className}>
-      {children}
-    </Button>
-  </Card>
-);
