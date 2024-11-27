@@ -34,34 +34,50 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckCircle, Plus, XCircle } from "@phosphor-icons/react/dist/ssr";
 import { useMutation } from "@tanstack/react-query";
+import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { revalidateRoleGroups } from "../actions";
 
 type Props = {
   guildId: string;
 };
 
-export const CreateRoleGroup = ({ guildId }: Props) => (
-  <ResponsiveDialog>
-    <Card className="bg-card-secondary">
-      <ResponsiveDialogTrigger asChild>
-        <Button variant="ghost" leftIcon={<Plus weight="bold" />}>
-          Create page
-        </Button>
-      </ResponsiveDialogTrigger>
-    </Card>
+export const CreateRoleGroup = ({ guildId }: Props) => {
+  const [open, onOpenChange] = useState(false);
 
-    <ResponsiveDialogContent size="lg">
-      <ResponsiveDialogHeader>
-        <ResponsiveDialogTitle>Create page</ResponsiveDialogTitle>
-      </ResponsiveDialogHeader>
+  return (
+    <ResponsiveDialog open={open} onOpenChange={onOpenChange}>
+      <Card className="bg-card-secondary">
+        <ResponsiveDialogTrigger asChild>
+          <Button variant="ghost" leftIcon={<Plus weight="bold" />}>
+            Create page
+          </Button>
+        </ResponsiveDialogTrigger>
+      </Card>
 
-      <CreateRoleGroupDialogForm guildId={guildId} />
-    </ResponsiveDialogContent>
-  </ResponsiveDialog>
-);
+      <ResponsiveDialogContent size="lg">
+        <ResponsiveDialogHeader>
+          <ResponsiveDialogTitle>Create page</ResponsiveDialogTitle>
+        </ResponsiveDialogHeader>
 
-const CreateRoleGroupDialogForm = ({ guildId }: Props) => {
+        <CreateRoleGroupDialogForm
+          guildId={guildId}
+          onSuccess={() => onOpenChange(false)}
+        />
+      </ResponsiveDialogContent>
+    </ResponsiveDialog>
+  );
+};
+
+const CreateRoleGroupDialogForm = ({
+  guildId,
+  onSuccess,
+}: {
+  guildId: Props["guildId"];
+  onSuccess: () => void;
+}) => {
   const form = useForm<CreateRoleGroupForm>({
     mode: "onTouched",
     resolver: zodResolver(CreateRoleGroupSchema),
@@ -72,6 +88,9 @@ const CreateRoleGroupDialogForm = ({ guildId }: Props) => {
       description: "",
     },
   });
+
+  const router = useRouter();
+  const { guildId: guildIdRouteParam } = useParams();
 
   const { mutate: onSubmit, isPending } = useMutation({
     mutationFn: async (data: CreateRoleGroupForm) => {
@@ -96,16 +115,15 @@ const CreateRoleGroupDialogForm = ({ guildId }: Props) => {
       console.error(error);
     },
     onSuccess: (res) => {
-      console.log("RESPONSE", res);
+      revalidateRoleGroups(res.guildId);
+      onSuccess();
       toast("Page successfully created", {
         description: "You're being redirected to it",
         icon: <CheckCircle weight="fill" className="text-icon-success" />,
       });
-      // router.push(`/${res.urlName}`);
+      router.push(`/${guildIdRouteParam}/${res.urlName}`);
     },
   });
-
-  console.log(form);
 
   return (
     <FormProvider {...form}>

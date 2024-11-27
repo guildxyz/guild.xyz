@@ -2,23 +2,13 @@ import { Card } from "@/components/ui/Card";
 import { ScrollArea, ScrollBar } from "@/components/ui/ScrollArea";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { cn } from "@/lib/cssUtils";
-import { env } from "@/lib/env";
 import type { Guild } from "@/lib/schemas/guild";
-import type { RoleGroup } from "@/lib/schemas/roleGroup";
-import type { PaginatedResponse } from "@/lib/types";
+import { getRoleGroups } from "../fetchers";
 import { CreateRoleGroup } from "./CreateRoleGroup";
 import { RoleGroupNavLink } from "./RoleGroupNavLink";
 
 type Props = {
   guild: Guild;
-};
-
-const getRoleGroups = async (guildId: string) => {
-  const res = await fetch(
-    `${env.NEXT_PUBLIC_API}/role-group/search?customQuery=@guildId:{${guildId}}`,
-  );
-  const data: PaginatedResponse<RoleGroup> = await res.json();
-  return data.items;
 };
 
 export const GuildTabs = async ({ guild }: Props) => {

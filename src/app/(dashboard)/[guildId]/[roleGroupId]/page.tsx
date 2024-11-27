@@ -23,9 +23,6 @@ const RoleGroupPage = async ({
   ).json()) as PaginatedResponse<RoleGroup>;
   const roleGroups = paginatedRoleGroup.items;
   const roleGroup = roleGroups.find((rg) => rg.urlName === roleGroupIdParam)!;
-  console.log(
-    `${env.NEXT_PUBLIC_API}/role/search?customQuery=@guildId:{${guild.id}}&pageSize=${Number.MAX_SAFE_INTEGER}`,
-  );
   const paginatedRole = (await (
     await fetch(
       `${env.NEXT_PUBLIC_API}/role/search?customQuery=@guildId:{${guild.id}}&pageSize=${Number.MAX_SAFE_INTEGER}`,
