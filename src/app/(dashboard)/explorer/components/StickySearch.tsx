@@ -1,7 +1,7 @@
 "use client";
 
 import { Input } from "@/components/ui/Input";
-import useIsStuck from "@/hooks/useIsStuck";
+import { useIsStuck } from "@/hooks/useIsStuck";
 import { MagnifyingGlass } from "@phosphor-icons/react/dist/ssr";
 import { useDebouncedValue } from "foxact/use-debounced-value";
 import { useSetAtom } from "jotai";

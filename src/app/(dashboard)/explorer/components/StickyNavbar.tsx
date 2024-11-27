@@ -1,7 +1,7 @@
 "use client";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/ToggleGroup";
-import useIsStuck from "@/hooks/useIsStuck";
-import useScrollspy from "@/hooks/useScrollSpy";
+import { useIsStuck } from "@/hooks/useIsStuck";
+import { useScrollspy } from "@/hooks/useScrollSpy";
 import { cn } from "@/lib/cssUtils";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { type PropsWithChildren, useEffect } from "react";
