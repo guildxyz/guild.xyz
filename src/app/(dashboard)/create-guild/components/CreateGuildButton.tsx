@@ -28,7 +28,6 @@ const CreateGuildButton = () => {
 
       const guild = {
         ...data,
-        contact: undefined,
       };
 
       return fetcher<Guild>(`${env.NEXT_PUBLIC_API}/guild`, {
@@ -45,7 +44,7 @@ const CreateGuildButton = () => {
       toast("An error occurred", {
         icon: <XCircle weight="fill" className="text-icon-error" />,
       });
-      console.error(error);
+      console.warn(error);
     },
     onSuccess: (res) => {
       confetti.current();
