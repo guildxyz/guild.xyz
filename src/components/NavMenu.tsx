@@ -21,11 +21,11 @@ import {
 } from "@phosphor-icons/react/dist/ssr";
 import { useIsClient } from "foxact/use-is-client";
 import { useTheme } from "next-themes";
-import Link, { type LinkProps } from "next/link";
 import { usePathname } from "next/navigation";
-import type { AnchorHTMLAttributes, ReactNode } from "react";
+import type { ComponentProps, ReactNode } from "react";
 import GuildLogo from "static/logo.svg";
-import { Button } from "./ui/Button";
+import { Anchor } from "./ui/Anchor";
+import { Button, buttonVariants } from "./ui/Button";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/Popover";
 import { ToggleGroup, ToggleGroupItem } from "./ui/ToggleGroup";
 
@@ -131,37 +131,32 @@ const NavGroup = ({
 const NavButton = ({
   href,
   children,
-}: { href: string; children: ReactNode }) => {
+  ...props
+}: ComponentProps<typeof Anchor>) => {
   const pathname = usePathname();
-
-  const isExternal = href.startsWith("http");
-  const wrapperProps = {
-    href,
-    ...(isExternal
-      ? ({
-          target: "_blank",
-          rel: "noopener",
-        } satisfies AnchorHTMLAttributes<HTMLAnchorElement>)
-      : ({
-          passHref: true,
-          legacyBehavior: true,
-        } satisfies Partial<LinkProps>)),
-  };
-
-  const Wrapper = isExternal ? "a" : Link;
+  const externalProps = href.toString().startsWith("/")
+    ? {}
+    : {
+        target: "_blank",
+        rel: "noopener noreferrer",
+      };
 
   return (
-    <Wrapper {...wrapperProps}>
-      <Button
-        variant={pathname === href ? "solid" : "ghost"}
-        className={cn(
+    <Anchor
+      {...props}
+      {...externalProps}
+      href={href}
+      variant="unstyled"
+      className={buttonVariants({
+        variant: pathname === href ? "solid" : "ghost",
+        className: cn(
           "h-10 w-full justify-start gap-2",
           pathname === href ? "font-semibold" : "font-normal",
-        )}
-      >
-        {children}
-      </Button>
-    </Wrapper>
+        ),
+      })}
+    >
+      {children}
+    </Anchor>
   );
 };
 
