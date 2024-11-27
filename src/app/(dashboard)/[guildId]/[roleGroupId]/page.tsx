@@ -38,11 +38,13 @@ const RoleGroupPage = async ({
         <Card className="flex border" key={role.id}>
           <div className="w-1/2 border-r-2 p-6">
             <div className="flex items-center gap-3">
-              <img
-                className="size-14 rounded-full border"
-                src={role.imageUrl ?? ""} // TODO: fallback image
-                alt="role avatar"
-              />
+              {role.imageUrl && (
+                <img
+                  className="size-14 rounded-full border"
+                  src={role.imageUrl} // TODO: fallback image
+                  alt="role avatar"
+                />
+              )}
               <h3 className="font-bold text-xl tracking-tight">{role.name}</h3>
             </div>
             <p className="mt-4 leading-relaxed">{role.description}</p>

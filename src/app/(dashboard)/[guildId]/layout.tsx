@@ -1,16 +1,20 @@
 import { GuildImage } from "@/components/GuildImage";
 import { Button } from "@/components/ui/Button";
+import { env } from "@/lib/env";
+import { fetcher } from "@/lib/fetcher";
+import type { Guild } from "@/lib/schemas/guild";
 import type { DynamicRoute } from "@/lib/types";
 import { type PropsWithChildren, Suspense } from "react";
 import { GuildTabs, GuildTabsSkeleton } from "./components/GuildTabs";
-import { getGuild } from "./fetchers";
 
 const GuildPage = async ({
   params,
   children,
 }: PropsWithChildren<DynamicRoute<{ guildId: string }>>) => {
-  const { guildId: urlName } = await params;
-  const guild = await getGuild(urlName);
+  const { guildId: guildIdParam } = await params;
+  const guild = await fetcher<Guild>(
+    `${env.NEXT_PUBLIC_API}/guild/urlName/${guildIdParam}`,
+  );
 
   return (
     <main className="py-16">
