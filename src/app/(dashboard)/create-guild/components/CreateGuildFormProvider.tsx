@@ -6,9 +6,9 @@ import type { PropsWithChildren } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
 const defaultValues = {
-  name: "hellohmmioojojoj",
-  imageUrl: "https://lorem.picsum/256/256",
-  contact: "contact982j938fj@guild.xyz",
+  name: "",
+  imageUrl: "",
+  contact: "",
   description: "",
 } satisfies CreateGuildForm;
 
