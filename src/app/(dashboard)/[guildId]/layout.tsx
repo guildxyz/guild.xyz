@@ -5,8 +5,12 @@ import { env } from "@/lib/env";
 import type { Guild } from "@/lib/schemas/guild";
 import type { RoleGroup } from "@/lib/schemas/roleGroup";
 import type { DynamicRoute, PaginatedResponse } from "@/lib/types";
+import { Plus } from "@phosphor-icons/react/dist/ssr";
 import type { PropsWithChildren } from "react";
-import { RoleGroupNavLink } from "./components/RoleGroupNavLink";
+import {
+  RoleGroupNavButton,
+  RoleGroupNavLink,
+} from "./components/RoleGroupNavLink";
 
 const GuildPage = async ({
   params,
@@ -25,7 +29,7 @@ const GuildPage = async ({
 
   return (
     <main className="py-16">
-      <div className="flex flex-col items-stretch md:flex-row md:justify-between">
+      <div className="flex flex-col items-stretch pb-4 md:flex-row md:justify-between">
         <div className="w-full space-y-4">
           <div className="flex w-full flex-col items-stretch justify-between gap-8 md:flex-row md:items-center">
             <div className="flex max-w-prose items-center gap-4">
@@ -38,7 +42,9 @@ const GuildPage = async ({
                 {guild.name}
               </h1>
             </div>
-            <Button colorScheme="success">Join Guild</Button>
+            <Button colorScheme="success" className="rounded-2xl">
+              Join Guild
+            </Button>
           </div>
           <p className="line-clamp-3 max-w-prose text-balance text-lg leading-relaxed">
             {guild.description}
@@ -46,20 +52,28 @@ const GuildPage = async ({
         </div>
       </div>
 
-      <ScrollArea>
-        <div className="mt-32 mb-3 flex gap-3">
+      <ScrollArea
+        className="-ml-8 w-[calc(100%+theme(space.8))]"
+        style={{
+          maskImage:
+            "linear-gradient(to right, transparent 0%, black 32px, black calc(100% - 32px), transparent 100%)",
+        }}
+      >
+        <div className="my-4 flex gap-3 px-8">
+          <RoleGroupNavLink href={`/${guildIdParam}`}>Home</RoleGroupNavLink>
           {roleGroups.map((rg) => (
             <RoleGroupNavLink
               key={rg.id}
-              tab={{
-                path: `/${guildIdParam}/${rg.urlName}`,
-                segment: rg.urlName,
-                label: rg.name,
-              }}
-            />
+              href={`/${guildIdParam}/${rg.urlName}`}
+            >
+              {rg.name}
+            </RoleGroupNavLink>
           ))}
+          <RoleGroupNavButton leftIcon={<Plus weight="bold" />}>
+            Create page
+          </RoleGroupNavButton>
         </div>
-        <ScrollBar orientation="horizontal" />
+        <ScrollBar orientation="horizontal" className="hidden" />
       </ScrollArea>
       {children}
     </main>

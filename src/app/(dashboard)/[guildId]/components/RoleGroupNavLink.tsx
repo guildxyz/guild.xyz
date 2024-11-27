@@ -1,25 +1,48 @@
 "use client";
 
-import { buttonVariants } from "@/components/ui/Button";
+import {
+  Button,
+  type ButtonProps,
+  buttonVariants,
+} from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
 import Link from "next/link";
-import { useSelectedLayoutSegment } from "next/navigation";
+import { usePathname } from "next/navigation";
+import type { PropsWithChildren } from "react";
 
 export const RoleGroupNavLink = ({
-  tab,
-}: { tab: { label: string; path: string; segment: string } }) => {
-  const layoutSegment = useSelectedLayoutSegment();
-  const isActive = tab.segment === layoutSegment;
+  href,
+  children,
+}: PropsWithChildren<{ href: string }>) => {
+  const pathname = usePathname();
+  const isActive = pathname === href;
 
   return (
-    <Link
-      key={tab.label + tab.path}
-      className={buttonVariants({
-        variant: "subtle",
-        colorScheme: isActive ? "primary" : "secondary",
-      })}
-      href={tab.path}
-    >
-      {tab.label}
-    </Link>
+    <Card className="bg-card-secondary">
+      <Link
+        href={href}
+        className={buttonVariants({
+          variant: "ghost",
+          className: [
+            "focus-visible:bg-[var(--button-bg-hover)]",
+            { "bg-[var(--button-bg-active)]": isActive },
+          ],
+        })}
+      >
+        {children}
+      </Link>
+    </Card>
   );
 };
+
+export const RoleGroupNavButton = ({
+  children,
+  leftIcon,
+  className,
+}: PropsWithChildren<Pick<ButtonProps, "leftIcon" | "className">>) => (
+  <Card className="bg-card-secondary">
+    <Button variant="ghost" leftIcon={leftIcon} className={className}>
+      {children}
+    </Button>
+  </Card>
+);
