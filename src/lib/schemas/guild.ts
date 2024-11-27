@@ -6,7 +6,7 @@ export const CreateGuildSchema = z.object({
   urlName: z.string().max(255).optional(),
   imageUrl: ImageUrlSchema.optional(),
   description: z.string().optional(),
-  contact: z.string().email(),
+  contact: z.string().min(1, "You must specify a contact for your guild"),
 });
 
 export type CreateGuildForm = z.infer<typeof CreateGuildSchema>;
