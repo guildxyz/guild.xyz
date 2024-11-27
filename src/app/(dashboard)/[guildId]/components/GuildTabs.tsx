@@ -4,7 +4,6 @@ import { Skeleton } from "@/components/ui/Skeleton";
 import { cn } from "@/lib/cssUtils";
 import type { Guild } from "@/lib/schemas/guild";
 import { getRoleGroups } from "../fetchers";
-import { CreateRoleGroup } from "./CreateRoleGroup";
 import { RoleGroupNavLink } from "./RoleGroupNavLink";
 
 type Props = {
@@ -23,16 +22,17 @@ export const GuildTabs = async ({ guild }: Props) => {
       }}
     >
       <div className="my-4 flex gap-3 px-8">
-        <RoleGroupNavLink href={`/${guild.urlName}`}>Home</RoleGroupNavLink>
         {roleGroups.map((rg) => (
           <RoleGroupNavLink
             key={rg.id}
-            href={`/${guild.urlName}/${rg.urlName}`}
+            href={[guild.urlName, rg.urlName]
+              .filter(Boolean)
+              .map((s) => `/${s}`)
+              .join()}
           >
             {rg.name}
           </RoleGroupNavLink>
         ))}
-        <CreateRoleGroup guildId={guild.id} />
       </div>
       <ScrollBar orientation="horizontal" className="hidden" />
     </ScrollArea>
@@ -44,8 +44,7 @@ export const GuildTabsSkeleton = () => (
   <div className="my-4 flex gap-3">
     {[...Array(3)].map((_, i) => (
       <Card
-        // biome-ignore lint: it's safe to use index as key in this case
-        key={i}
+        key={`${SKELETON_SIZES[i]}${i}`}
         className={cn("flex h-11 items-center px-4", SKELETON_SIZES[i])}
       >
         <Skeleton className="h-4 w-full" />

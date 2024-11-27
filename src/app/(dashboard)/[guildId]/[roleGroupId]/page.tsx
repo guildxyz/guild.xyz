@@ -7,7 +7,6 @@ import type { RoleGroup } from "@/lib/schemas/roleGroup";
 import type { DynamicRoute, PaginatedResponse } from "@/lib/types";
 import { Lock } from "@phosphor-icons/react/dist/ssr";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
-import { Fragment } from "react";
 
 const RoleGroupPage = async ({
   params,
@@ -22,7 +21,10 @@ const RoleGroupPage = async ({
     )
   ).json()) as PaginatedResponse<RoleGroup>;
   const roleGroups = paginatedRoleGroup.items;
-  const roleGroup = roleGroups.find((rg) => rg.urlName === roleGroupIdParam)!;
+  const roleGroup = roleGroups.find(
+    // @ts-expect-error
+    (rg) => rg.urlName === roleGroupIdParam || rg.id === guild.homeRoleGroupId,
+  )!;
   const paginatedRole = (await (
     await fetch(
       `${env.NEXT_PUBLIC_API}/role/search?customQuery=@guildId:{${guild.id}}&pageSize=${Number.MAX_SAFE_INTEGER}`,
@@ -57,7 +59,7 @@ const RoleGroupPage = async ({
             </div>
             <ScrollArea className="mt-6 h-32">
               <div className="flex flex-col gap-6">
-                {Array.from({ length: 16 }, (_, i) => (
+                {/*Array.from({ length: 16 }, (_, i) => (
                   <Fragment key={i}>
                     {i > 0 && <div className="h-px w-full bg-border" />}
                     <div className="flex items-center gap-3">
@@ -70,7 +72,7 @@ const RoleGroupPage = async ({
                       </div>
                     </div>
                   </Fragment>
-                ))}
+                ))*/}
               </div>
             </ScrollArea>
           </div>

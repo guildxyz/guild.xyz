@@ -15,7 +15,7 @@ export const getGuild = async (urlName: string) => {
 
 export const getRoleGroups = async (guildId: string) => {
   const res = await fetch(
-    `${env.NEXT_PUBLIC_API}/role-group/search?customQuery=@guildId:{${guildId}}`,
+    `${env.NEXT_PUBLIC_API}/role-group/search?customQuery=@guildId:{${guildId}}&pageSize=${Number.MAX_SAFE_INTEGER}`,
     {
       next: {
         tags: [`role-groups-${guildId}`],

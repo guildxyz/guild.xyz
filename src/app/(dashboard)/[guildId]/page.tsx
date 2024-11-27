@@ -1,22 +1,13 @@
 import type { DynamicRoute } from "@/lib/types";
-import { getGuild } from "./fetchers";
+import GuildPage from "./[roleGroupId]/page";
 
 const DefaultGuildPage = async ({
   params,
 }: DynamicRoute<{ guildId: string }>) => {
   const { guildId: urlName } = await params;
-  const guild = await getGuild(urlName);
-  // const paginatedRoleGroup = (await (
-  //   await fetch(
-  //     `${env.NEXT_PUBLIC_API}/role-group/search?customQuery=@guildId:{${guild.id}}`,
-  //   )
-  // ).json()) as PaginatedResponse<RoleGroup>;
-  // const roleGroups = paginatedRoleGroup.items;
-  // const roleGroup = roleGroups.at(0);
-  // if (roleGroup) {
-  //   redirect(`/${guildIdParam}/${roleGroup.urlName}`);
-  // }
-  return `Default guild page - ${guild.name}`;
+  //const guild = await getGuild(urlName);
+  //return `Default guild page - ${guild.name}`;
+  return <GuildPage params={{ guildId: urlName, roleGroupId: "" }} />;
 };
 
 export default DefaultGuildPage;
