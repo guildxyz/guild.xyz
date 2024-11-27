@@ -37,7 +37,7 @@ export default async function Explorer() {
 
   return (
     <>
-      <main className="container grid gap-4 py-16">
+      <main className="container mx-auto grid gap-4 py-16">
         <section className="pt-6 pb-8">
           <h1
             className="font-black font-display text-5xl tracking-tight"
