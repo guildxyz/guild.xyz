@@ -6,7 +6,7 @@ import type { Guild } from "@/lib/schemas/guild";
 import type { RoleGroup } from "@/lib/schemas/roleGroup";
 import type { DynamicRoute, PaginatedResponse } from "@/lib/types";
 import type { PropsWithChildren } from "react";
-import { RoleGroupNavLink } from "./_components/RoleGroupNavLink";
+import { RoleGroupNavLink } from "./components/RoleGroupNavLink";
 
 const GuildPage = async ({
   params,
