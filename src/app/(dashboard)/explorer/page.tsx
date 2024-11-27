@@ -1,6 +1,8 @@
+import { getAuthCookie as getTokenFromCookie } from "@/actions/auth";
 import { AuthBoundary } from "@/components/AuthBoundary";
 import { SignInButton } from "@/components/SignInButton";
 import { env } from "@/lib/env";
+import { fetcher } from "@/lib/fetcher";
 import type { Guild } from "@/lib/schemas/guild";
 import type { PaginatedResponse } from "@/lib/types";
 import {
@@ -18,13 +20,10 @@ import { StickySearch } from "./components/StickySearch";
 import { ACTIVE_SECTION } from "./constants";
 import { getGuildSearch } from "./fetchers";
 
-const getAssociatedGuilds = async () => {
-  const request = `${env.NEXT_PUBLIC_API}/guild/search?page=1&pageSize=24&sortBy=name&reverse=false&search=`;
-  const guilds = (await (
-    await fetch(request)
-  ).json()) as PaginatedResponse<Guild>;
-
-  return guilds;
+const getAssociatedGuilds = async ({ userId }: { userId: string }) => {
+  const request = `${env.NEXT_PUBLIC_API}/guild/search?page=1&pageSize=${Number.MAX_SAFE_INTEGER}&sortBy=name&reverse=false&customQuery=@owner:{${userId}}`;
+  console.log(request);
+  return fetcher<PaginatedResponse<Guild>>(request);
 };
 
 export default async function Explorer() {
@@ -103,7 +102,12 @@ async function YourGuildsSection() {
 }
 
 async function YourGuilds() {
-  const { items: myGuilds } = await getAssociatedGuilds();
+  const auth = await getTokenFromCookie();
+  if (!auth) return;
+
+  const { items: myGuilds } = await getAssociatedGuilds({
+    userId: auth.userId,
+  });
 
   return myGuilds && myGuilds.length > 0 ? (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
