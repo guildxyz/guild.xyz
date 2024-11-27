@@ -69,3 +69,9 @@ export const signOut = async (redirectTo?: string) => {
   cookieStore.delete(GUILD_AUTH_COOKIE_NAME);
   redirect(redirectTo ?? "/explorer");
 };
+
+export const getAuthCookie = async () => {
+  const cookieStore = await cookies();
+  const authCookie = cookieStore.get(GUILD_AUTH_COOKIE_NAME);
+  return authCookie && tokenSchema.parse(jwtDecode(authCookie.value));
+};
