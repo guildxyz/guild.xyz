@@ -13,6 +13,7 @@ export type CreateGuildForm = z.infer<typeof CreateGuildSchema>;
 
 const GuildSchema = CreateGuildSchema.extend({
   id: z.string().uuid(),
+  urlName: z.string().max(255),
   createdAt: DateLike,
   updatedAt: DateLike,
   roleCount: z.number().nonnegative(),

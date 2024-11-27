@@ -205,10 +205,10 @@ html {
   --icon-error: var(--red-400);
 }
 
-.dark video,
-.dark img {
-  @apply brightness-90 contrast-125;
-}
 body {
   @apply bg-background text-foreground font-sans min-h-screen antialiased selection:bg-foreground selection:text-background;
+}
+
+* {
+  border-color: var(--border);
 }

@@ -79,12 +79,12 @@ export const ImageUploader = ({
   return (
     <Button
       className={cn(
-        "size-12 rounded-full border border-input-border",
+        "size-12 rounded-full border border-input-border p-0",
         className,
       )}
       variant="ghost"
       onClick={() => fileInputRef.current?.click()}
-      isLoading={isPending}
+      disabled={isPending}
       style={
         uploadedImage
           ? {
