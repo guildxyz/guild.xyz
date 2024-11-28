@@ -87,6 +87,7 @@ html {
   --gray-800: #27272a;
   --gray-900: #18181b;
 
+  --black: #000;
   --white: #fff;
 
   --blackAlpha: rgba(0, 0, 0, 0.06);
@@ -112,6 +113,12 @@ html {
   --input-border-accent: var(--gray-300);
   --input-border-invalid: var(--red-500);
   --input-background: var(--white);
+
+  --popover: var(--card);
+  --popover-foreground: var(--foreground);
+
+  --tooltip: var(--black);
+  --tooltip-foreground: var(--gray-100);
 
   --button-primary: var(--indigo-500);
   --button-primary-hover: var(--indigo-600);
@@ -166,6 +173,9 @@ html {
   --input-border-accent: var(--whiteAlpha-hard);
   --input-border-invalid: var(--red-300);
   --input-background: var(--blackAlpha-hard);
+
+  --tooltip: var(--gray-300);
+  --tooltip-foreground: var(--gray-800);
 
   --button-primary: var(--indigo-500);
   --button-primary-hover: var(--indigo-400);

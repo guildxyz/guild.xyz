@@ -40,6 +40,14 @@ const config = {
             invalid: "var(--input-border-invalid)"
           },
         },
+        tooltip: {
+          DEFAULT: "var(--tooltip)",
+          foreground: "var(--tooltip-foreground)",
+        },
+        popover: {
+          DEFAULT: "var(--popover)",
+          foreground: "var(--popover-foreground)",
+        },
         // Using these in our Toggle component
         button: {
           primary: {
