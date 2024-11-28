@@ -12,6 +12,7 @@ type Props = {
 
 export const GuildTabs = async ({ guild }: Props) => {
   const roleGroups = await getRoleGroups(guild.id);
+  console.log(roleGroups);
 
   return (
     <ScrollArea
@@ -28,7 +29,7 @@ export const GuildTabs = async ({ guild }: Props) => {
             href={[guild.urlName, rg.urlName]
               .filter(Boolean)
               .map((s) => `/${s}`)
-              .join()}
+              .join("")}
           >
             {rg.name}
           </RoleGroupNavLink>
