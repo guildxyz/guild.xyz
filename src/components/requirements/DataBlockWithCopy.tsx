@@ -49,9 +49,7 @@ export const DataBlockWithCopy = ({
 
       <TooltipPortal>
         <TooltipContent side="top" className="flex items-center gap-1.5">
-          {tooltipInCopiedState && (
-            <Check weight="bold" className="text-icon-success" />
-          )}
+          {tooltipInCopiedState && <Check weight="bold" />}
           <span>{tooltipInCopiedState ? "Copied" : "Click to copy"}</span>
         </TooltipContent>
       </TooltipPortal>
