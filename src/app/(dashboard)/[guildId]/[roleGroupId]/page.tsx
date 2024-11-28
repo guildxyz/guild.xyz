@@ -91,8 +91,8 @@ const RoleCard = async ({ role }: { role: Role }) => {
           {role.description}
         </p>
         {!!rewards.length && (
-          <ScrollArea className="mt-8 h-64 rounded-lg border-2 pr-3">
-            <div className="flex flex-col gap-4">
+          <ScrollArea className="mt-8 h-64 rounded-lg border-2">
+            <div className="flex flex-col">
               {rewards.map((reward) => (
                 <Reward reward={reward} key={reward.id} />
               ))}
@@ -117,7 +117,7 @@ const RoleCard = async ({ role }: { role: Role }) => {
 
 const Reward = ({ reward }: { reward: Reward }) => {
   return (
-    <div className="border-b p-4">
+    <div className="border-b p-6">
       <div className="mb-2 font-medium">{reward.name}</div>
       <div className="text-foreground-dimmed text-sm">{reward.description}</div>
       <pre className="mt-3 text-foreground-secondary text-xs">

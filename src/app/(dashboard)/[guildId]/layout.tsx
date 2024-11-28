@@ -1,11 +1,13 @@
+import { AuthBoundary } from "@/components/AuthBoundary";
 import { GuildImage } from "@/components/GuildImage";
-import { Button } from "@/components/ui/Button";
+import { SignInButton } from "@/components/SignInButton";
 import { env } from "@/lib/env";
 import { fetcher } from "@/lib/fetcher";
 import type { Guild } from "@/lib/schemas/guild";
 import type { DynamicRoute } from "@/lib/types";
 import { type PropsWithChildren, Suspense } from "react";
 import { GuildTabs, GuildTabsSkeleton } from "./components/GuildTabs";
+import { JoinButton } from "./components/JoinButton";
 
 const GuildPage = async ({
   params,
@@ -31,9 +33,9 @@ const GuildPage = async ({
                 {guild.name}
               </h1>
             </div>
-            <Button colorScheme="success" className="rounded-2xl">
-              Join Guild
-            </Button>
+            <AuthBoundary fallback={<SignInButton />}>
+              <JoinButton guild={guild} />
+            </AuthBoundary>
           </div>
           <p className="line-clamp-3 max-w-prose text-balance text-lg leading-relaxed">
             {guild.description}
