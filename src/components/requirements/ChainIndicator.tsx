@@ -1,10 +1,7 @@
 import { Badge } from "@/components/ui/Badge";
-import { CHAINS } from "@/config/chains";
-import type { Register } from "wagmi";
+import { CHAINS, type SupportedChainID } from "@/config/chains";
 
-export const ChainIndicator = ({
-  chain,
-}: { chain: Register["config"]["chains"][number]["id"] }) => (
+export const ChainIndicator = ({ chain }: { chain: SupportedChainID }) => (
   <Badge size="sm">
     <img
       src={CHAINS[chain].icon}

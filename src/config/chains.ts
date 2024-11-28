@@ -11,9 +11,11 @@ export const CHAINS = {
     icon: "/chainLogos/eth.svg",
   },
 } satisfies Record<
-  Register["config"]["chains"][number]["id"],
+  SupportedChainID,
   {
     name: string;
     icon: string;
   }
 >;
+
+export type SupportedChainID = Register["config"]["chains"][number]["id"];
