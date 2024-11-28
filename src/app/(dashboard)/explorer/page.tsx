@@ -22,7 +22,6 @@ import { getGuildSearch } from "./fetchers";
 
 const getAssociatedGuilds = async ({ userId }: { userId: string }) => {
   const request = `${env.NEXT_PUBLIC_API}/guild/search?page=1&pageSize=${Number.MAX_SAFE_INTEGER}&sortBy=name&reverse=false&customQuery=@owner:{${userId}}`;
-  console.log(request);
   return fetcher<PaginatedResponse<Guild>>(request);
 };
 
