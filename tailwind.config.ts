@@ -12,11 +12,11 @@ const config = {
   ],
   prefix: "",
   theme: {
-    fontFamily: {
-      sans: ["var(--font-inter,sans-serif)"],
-      display: ["var(--font-dystopian,sans-serif)"],
-    },
     extend: {
+      fontFamily: {
+        sans: ["var(--font-inter,sans-serif)"],
+        display: ["var(--font-dystopian,sans-serif)"],
+      },
       colors: {
         background: "var(--background)",
         foreground: {
@@ -71,8 +71,19 @@ const config = {
         "scroll-thumb": "var(--scroll-thumb)",
         icon: {
           success: "var(--icon-success)",
-          error: "var(--icon-error)"
-        }
+          error: "var(--icon-error)",
+          warning: "var(--icon-warning)",
+        },
+        blackAlpha: {
+          DEFAULT: "var(--blackAlpha)",
+          medium: "var(--blackAlpha-medium)",
+          hard: "var(--blackAlpha-hard)",
+        },
+        whiteAlpha: {
+          DEFAULT: "var(--whiteAlpha)",
+          medium: "var(--whiteAlpha-medium)",
+          hard: "var(--whiteAlpha-hard)",
+        },
       },
       keyframes: {
         "collapse-open": {
