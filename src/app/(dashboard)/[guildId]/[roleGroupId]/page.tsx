@@ -62,6 +62,7 @@ type Reward = typeof RE;
 
 const RoleCard = async ({ role }: { role: Role }) => {
   const rewards = (await Promise.all(
+    // @ts-ignore
     role.rewards?.map(({ rewardId }) => {
       const req = `${env.NEXT_PUBLIC_API}/reward/id/${rewardId}`;
       try {
@@ -74,8 +75,8 @@ const RoleCard = async ({ role }: { role: Role }) => {
   //console.log(rewards);
 
   return (
-    <Card className="flex border" key={role.id}>
-      <div className="w-1/2 border-r-2 p-6">
+    <Card className="flex flex-col border md:flex-row" key={role.id}>
+      <div className="border-r-2 p-6 md:w-1/2">
         <div className="flex items-center gap-3">
           {role.imageUrl && (
             <img
@@ -99,7 +100,7 @@ const RoleCard = async ({ role }: { role: Role }) => {
           </ScrollArea>
         )}
       </div>
-      <div className="w-1/2 bg-background p-6">
+      <div className="bg-background p-6 md:w-1/2">
         <div className="flex items-center justify-between">
           <span className="font-bold text-foreground-secondary text-xs">
             REQUIREMENTS
