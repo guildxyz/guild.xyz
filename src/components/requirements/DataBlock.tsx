@@ -12,7 +12,7 @@ type Props = {
   error?: string;
 };
 
-const DataBlock = ({
+export const DataBlock = ({
   isLoading,
   error,
   children,
@@ -38,5 +38,3 @@ const DataBlock = ({
     </Tooltip>
   );
 };
-
-export { DataBlock };
