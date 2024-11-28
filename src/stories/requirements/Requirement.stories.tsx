@@ -6,6 +6,7 @@ import {
   RequirementFooter,
   RequirementImage,
 } from "@/components/requirements/Requirement";
+import { RequirementLink } from "@/components/requirements/RequirementLink";
 import { Card } from "@/components/ui/Card";
 import { TooltipProvider } from "@/components/ui/Tooltip";
 import { QuestionMark } from "@phosphor-icons/react/dist/ssr";
@@ -26,6 +27,9 @@ const RequirementExample = () => (
 
         <RequirementFooter className="text-secondary text-sm">
           <ChainIndicator chain={1} />
+          <RequirementLink href="https://polygonscan.com/token/0xff04820c36759c9f5203021fe051239ad2dcca8a">
+            View on explorer
+          </RequirementLink>
         </RequirementFooter>
       </RequirementContent>
     </Requirement>
