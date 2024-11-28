@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Tooltip,
   TooltipContent,
@@ -36,7 +38,7 @@ export const DataBlockWithCopy = ({
 
   return (
     <Tooltip open={copied || undefined}>
-      <TooltipTrigger onClick={() => copy(text)} className="rounded-md">
+      <TooltipTrigger onClick={() => copy(text)} className="rounded-md" asChild>
         <DataBlock>
           <span>{children ?? text}</span>
         </DataBlock>
