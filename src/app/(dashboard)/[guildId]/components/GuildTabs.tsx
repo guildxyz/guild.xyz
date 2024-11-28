@@ -10,9 +10,10 @@ type Props = {
   guild: Guild;
 };
 
+const roleGroupOrder = ["Home", "Admin"].reverse();
+
 export const GuildTabs = async ({ guild }: Props) => {
   const roleGroups = await getRoleGroups(guild.id);
-  console.log(roleGroups);
 
   return (
     <ScrollArea
@@ -23,17 +24,24 @@ export const GuildTabs = async ({ guild }: Props) => {
       }}
     >
       <div className="my-4 flex gap-3 px-8">
-        {roleGroups.map((rg) => (
-          <RoleGroupNavLink
-            key={rg.id}
-            href={[guild.urlName, rg.urlName]
-              .filter(Boolean)
-              .map((s) => `/${s}`)
-              .join("")}
-          >
-            {rg.name}
-          </RoleGroupNavLink>
-        ))}
+        {roleGroups
+          .sort((a, b) => {
+            const [aIndex, bIndex] = [a, b].map((val) =>
+              roleGroupOrder.findIndex((pred) => pred === val.name),
+            );
+            return bIndex - aIndex;
+          })
+          .map((rg) => (
+            <RoleGroupNavLink
+              key={rg.id}
+              href={[guild.urlName, rg.urlName]
+                .filter(Boolean)
+                .map((s) => `/${s}`)
+                .join("")}
+            >
+              {rg.name}
+            </RoleGroupNavLink>
+          ))}
       </div>
       <ScrollBar orientation="horizontal" className="hidden" />
     </ScrollArea>
