@@ -1,5 +1,4 @@
 import { DataBlockWithCopy } from "@/components/requirements/DataBlockWithCopy";
-import { Card } from "@/components/ui/Card";
 import { TooltipProvider } from "@/components/ui/Tooltip";
 import type { Meta, StoryObj } from "@storybook/react";
 
@@ -8,11 +7,7 @@ const meta: Meta<typeof DataBlockWithCopy> = {
   component: DataBlockWithCopy,
   decorators: (Story) => (
     <TooltipProvider>
-      <Card className="p-4">
-        <span>{"This is a "}</span>
-        <Story />
-        <span>{" example"}</span>
-      </Card>
+      <Story />
     </TooltipProvider>
   ),
 };
