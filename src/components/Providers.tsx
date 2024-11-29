@@ -7,6 +7,7 @@ import { Provider as JotaiProvider } from "jotai";
 import { ThemeProvider } from "next-themes";
 import type { FunctionComponent, PropsWithChildren } from "react";
 import { WagmiProvider } from "wagmi";
+import { TooltipProvider } from "./ui/Tooltip";
 
 const queryClient = new QueryClient();
 
@@ -21,12 +22,14 @@ export const Providers: FunctionComponent<PropsWithChildren> = ({
         enableSystem
         disableTransitionOnChange
       >
-        <WagmiProvider config={wagmiConfig}>
-          <QueryClientProvider client={queryClient}>
-            {children}
-            <ReactQueryDevtools initialIsOpen={false} />
-          </QueryClientProvider>
-        </WagmiProvider>
+        <TooltipProvider>
+          <WagmiProvider config={wagmiConfig}>
+            <QueryClientProvider client={queryClient}>
+              {children}
+              <ReactQueryDevtools initialIsOpen={false} />
+            </QueryClientProvider>
+          </WagmiProvider>
+        </TooltipProvider>
       </ThemeProvider>
     </JotaiProvider>
   );

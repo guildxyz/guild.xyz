@@ -35,11 +35,11 @@ export const Default: Story = {
   },
 };
 
-export const Muted: Story = {
+export const Secondary: Story = {
   args: {
     ...Default.args,
-    variant: "muted",
-    children: "Muted",
+    variant: "secondary",
+    children: "Secondary",
   },
   argTypes: {
     ...Default.argTypes,

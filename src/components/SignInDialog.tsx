@@ -96,7 +96,7 @@ const WalletList = () => {
           <span>{"By continuing, you agree to our "}</span>
           <Anchor
             href="/privacy-policy"
-            variant="muted"
+            variant="secondary"
             onClick={() => setOpen(false)}
           >
             Privacy Policy
@@ -104,7 +104,7 @@ const WalletList = () => {
           <span>{" and "}</span>
           <Anchor
             href="/terms-of-use"
-            variant="muted"
+            variant="secondary"
             onClick={() => setOpen(false)}
           >
             Terms of use

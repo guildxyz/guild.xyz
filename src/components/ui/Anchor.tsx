@@ -12,7 +12,7 @@ const anchorVariants = cva(
       variant: {
         default: "text-foreground hover:underline",
         highlighted: "text-blue-500 dark:text-blue-400 hover:underline",
-        muted: "text-muted-foreground hover:underline",
+        secondary: "text-foreground-secondary hover:underline",
         unstyled: "",
       },
     },
