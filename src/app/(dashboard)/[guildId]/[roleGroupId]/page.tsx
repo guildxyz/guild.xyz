@@ -72,11 +72,10 @@ const RoleCard = async ({ role }: { role: Role }) => {
       }
     }) ?? [],
   )) as Reward[];
-  //console.log(rewards);
 
   return (
-    <Card className="flex flex-col border md:flex-row" key={role.id}>
-      <div className="border-r-2 p-6 md:w-1/2">
+    <Card className="flex flex-col md:flex-row" key={role.id}>
+      <div className="border-r p-6 md:w-1/2">
         <div className="flex items-center gap-3">
           {role.imageUrl && (
             <img
@@ -91,8 +90,8 @@ const RoleCard = async ({ role }: { role: Role }) => {
           {role.description}
         </p>
         {!!rewards.length && (
-          <ScrollArea className="mt-8 h-64 rounded-lg border-2">
-            <div className="flex flex-col">
+          <ScrollArea className="mt-8 h-64 rounded-lg border pr-3">
+            <div className="flex flex-col gap-4">
               {rewards.map((reward) => (
                 <Reward reward={reward} key={reward.id} />
               ))}
@@ -100,7 +99,7 @@ const RoleCard = async ({ role }: { role: Role }) => {
           </ScrollArea>
         )}
       </div>
-      <div className="bg-background p-6 md:w-1/2">
+      <div className="bg-card-secondary p-6 md:w-1/2">
         <div className="flex items-center justify-between">
           <span className="font-bold text-foreground-secondary text-xs">
             REQUIREMENTS
@@ -117,7 +116,7 @@ const RoleCard = async ({ role }: { role: Role }) => {
 
 const Reward = ({ reward }: { reward: Reward }) => {
   return (
-    <div className="border-b p-6">
+    <div className="border-b p-4 last:border-b-0">
       <div className="mb-2 font-medium">{reward.name}</div>
       <div className="text-foreground-dimmed text-sm">{reward.description}</div>
       <pre className="mt-3 text-foreground-secondary text-xs">

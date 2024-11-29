@@ -63,6 +63,17 @@ html {
   --blue-800: #1e40af;
   --blue-900: #1e3a8a;
 
+  --orange-50: #fff7ed;
+  --orange-100: #ffedd5;
+  --orange-200: #fed7aa;
+  --orange-300: #fdba74;
+  --orange-400: #fb923c;
+  --orange-500: #f97316;
+  --orange-600: #ea580c;
+  --orange-700: #c2410c;
+  --orange-800: #9a3412;
+  --orange-900: #7c2d12;
+
   --red-50: #fef2f2;
   --red-100: #fee2e2;
   --red-200: #fecaca;
@@ -87,6 +98,7 @@ html {
   --gray-800: #27272a;
   --gray-900: #18181b;
 
+  --black: #000;
   --white: #fff;
 
   --blackAlpha: rgba(0, 0, 0, 0.06);
@@ -112,6 +124,12 @@ html {
   --input-border-accent: var(--gray-300);
   --input-border-invalid: var(--red-500);
   --input-background: var(--white);
+
+  --popover: var(--card);
+  --popover-foreground: var(--foreground);
+
+  --tooltip: var(--black);
+  --tooltip-foreground: var(--gray-100);
 
   --button-primary: var(--indigo-500);
   --button-primary-hover: var(--indigo-600);
@@ -149,6 +167,7 @@ html {
 
   --icon-success: var(--green-500);
   --icon-error: var(--red-500);
+  --icon-warning: var(--orange-500);
 }
 
 .dark {
@@ -166,6 +185,9 @@ html {
   --input-border-accent: var(--whiteAlpha-hard);
   --input-border-invalid: var(--red-300);
   --input-background: var(--blackAlpha-hard);
+
+  --tooltip: var(--gray-300);
+  --tooltip-foreground: var(--gray-800);
 
   --button-primary: var(--indigo-500);
   --button-primary-hover: var(--indigo-400);
@@ -203,6 +225,7 @@ html {
 
   --icon-success: var(--green-400);
   --icon-error: var(--red-400);
+  --icon-warning: var(--orange-300);
 }
 
 body {
