@@ -2,22 +2,10 @@
 
 import { GUILD_AUTH_COOKIE_NAME } from "@/config/constants";
 import { env } from "@/lib/env";
+import { authSchema, tokenSchema } from "@/lib/schemas/user";
 import { jwtDecode } from "jwt-decode";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { z } from "zod";
-
-const authSchema = z.object({
-  message: z.string(),
-  token: z.string(),
-  userId: z.string().uuid(),
-});
-
-const tokenSchema = z.object({
-  userId: z.string().uuid(),
-  exp: z.number().positive().int(),
-  iat: z.number().positive().int(),
-});
 
 export const signIn = async ({
   message,
