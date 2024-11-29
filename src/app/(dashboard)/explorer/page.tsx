@@ -36,7 +36,15 @@ export default async function Explorer() {
 
   return (
     <>
-      <main className="container mx-auto grid gap-4 py-16">
+      <div
+        className="-z-10 absolute top-0 right-0 left-0 h-80 bg-[center_top_0.5rem] bg-[length:theme(screens.lg)_auto] bg-[url('/images/banner-light.svg')] bg-repeat opacity-10 dark:bg-[url('/images/banner.svg')] dark:opacity-5"
+        style={{
+          maskImage:
+            "radial-gradient(ellipse at top, var(--background), transparent 90%)",
+        }}
+      />
+
+      <main className="container relative mx-auto grid gap-4 py-16">
         <section className="pt-6 pb-8">
           <h1
             className="font-black font-display text-5xl tracking-tight"
