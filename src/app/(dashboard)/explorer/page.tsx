@@ -132,7 +132,7 @@ async function YourGuilds() {
         or create your own!
       </p>
 
-      <CreateGuildLink />
+      <CreateGuildLink className="ml-auto" />
     </div>
   );
 }
