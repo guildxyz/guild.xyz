@@ -24,17 +24,6 @@ export const fetchGuildApi = async <Data = object, Error = ErrorLike>(
     throw new Error("`pathName` must not end with slash");
   }
 
-  //if (requestInit.auth) {
-  //  const token = isServer
-  //    ? await getToken()
-  //    : getCookieClientSide(GUILD_AUTH_COOKIE_NAME);
-  //  if (!token) {
-  //    throw new Error(
-  //      "failed to retrieve jwt token on auth request initialization",
-  //    );
-  //  }
-  //}
-
   const token = isServer
     ? await getToken()
     : getCookieClientSide(GUILD_AUTH_COOKIE_NAME);
@@ -46,10 +35,7 @@ export const fetchGuildApi = async <Data = object, Error = ErrorLike>(
 
   const url = new URL(`api/${pathName}`, env.NEXT_PUBLIC_API);
 
-  return fetch(url, {
-    ...requestInit,
-    headers: { ...requestInit?.headers, "X-Auth-Token": token },
-  }).then(async (response: Response) => {
+  return fetch(url, requestInit).then(async (response: Response) => {
     const contentType = response.headers.get("content-type");
     if (!contentType?.includes("application/json")) {
       Promise.reject({ message: "Guild API failed respond with json" });
@@ -59,40 +45,23 @@ export const fetchGuildApi = async <Data = object, Error = ErrorLike>(
     if (!response.ok) {
       return Promise.reject(res as Error);
     }
-    return res as Data;
+    return Promise.resolve(res) as Data;
   });
 };
 
-//const fetchGuildApiAuth = (...[pathName, requestInit = {}]: Parameters<typeof fetchGuildApi>) => {
-//  return fetchGuildApi()
-//};
-
-export const fetcher = async <Data = unknown, Error = unknown>(
-  resource: string,
-  requestInit: RequestInit = {},
-) =>
-  fetch(resource, requestInit).then(async (response: Response) => {
-    const contentType = response.headers.get("content-type");
-    const res = contentType?.includes("json")
-      ? await response.json()
-      : await response.text();
-
-    if (process.env.NODE_ENV === "development") {
-      console.info(
-        `[${new Date().toLocaleTimeString()} - fetcher]: ${resource}`,
-        res,
-      );
-    }
-
-    if (!response.ok) {
-      if (resource.includes(env.NEXT_PUBLIC_API)) {
-        return Promise.reject({
-          error: (res as ErrorLike).error || (res as ErrorLike).message,
-        });
-      }
-
-      return Promise.reject(res as Error);
-    }
-
-    return res as Data;
+export const fetchGuildApiAuth = async (
+  ...[pathName, requestInit = {}]: Parameters<typeof fetchGuildApi>
+) => {
+  const token = isServer
+    ? await getToken()
+    : getCookieClientSide(GUILD_AUTH_COOKIE_NAME);
+  if (!token) {
+    throw new Error(
+      "Failed to retrieve JWT token on auth request initialization.",
+    );
+  }
+  return fetchGuildApi(pathName, {
+    ...requestInit,
+    headers: { ...requestInit?.headers, "X-Auth-Token": token },
   });
+};
