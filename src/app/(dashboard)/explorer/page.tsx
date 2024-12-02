@@ -1,6 +1,7 @@
 import { getToken } from "@/actions/auth";
 import { AuthBoundary } from "@/components/AuthBoundary";
 import { SignInButton } from "@/components/SignInButton";
+import { fetchGuildApiData } from "@/lib/fetchGuildApi";
 import { getQueryClient } from "@/lib/getQueryClient";
 import type { Guild } from "@/lib/schemas/guild";
 import type { PaginatedResponse } from "@/lib/types";
@@ -14,10 +15,9 @@ import { InfiniteScrollGuilds } from "./components/InfiniteScrollGuilds";
 import { StickyNavbar } from "./components/StickyNavbar";
 import { StickySearch } from "./components/StickySearch";
 import { ACTIVE_SECTION } from "./constants";
-import { fetchGuildApi } from "@/lib/fetchGuildApi";
 
 const getAssociatedGuilds = async ({ userId }: { userId: string }) => {
-  return fetchGuildApi<PaginatedResponse<Guild>>(
+  return fetchGuildApiData<PaginatedResponse<Guild>>(
     `guild/search?page=1&pageSize=${Number.MAX_SAFE_INTEGER}&sortBy=name&reverse=false&customQuery=@owner:{${userId}}`,
   );
 };

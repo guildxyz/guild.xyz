@@ -1,8 +1,7 @@
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { ScrollArea } from "@/components/ui/ScrollArea";
-import { env } from "@/lib/env";
-import { fetchGuildApi } from "@/lib/fetchGuildApi";
+import { fetchGuildApiData } from "@/lib/fetchGuildApi";
 import type { DynamicRoute } from "@/lib/types";
 import type { Schemas } from "@guildxyz/types";
 import { Lock } from "@phosphor-icons/react/dist/ssr";
@@ -11,26 +10,20 @@ const GuildPage = async ({
   params,
 }: DynamicRoute<{ pageUrlName: string; guildUrlName: string }>) => {
   const { pageUrlName, guildUrlName } = await params;
-  const guild = await fetchGuildApi<Schemas["GuildFull"]>(
-    `${env.NEXT_PUBLIC_API}/guild/urlName/${guildUrlName}`,
+  const guild = await fetchGuildApiData<Schemas["GuildFull"]>(
+    `guild/urlName/${guildUrlName}`,
   );
-  const pages = await fetchGuildApi<Schemas["PageFull"][]>(
-    `${env.NEXT_PUBLIC_API}/page/batch`,
-    {
-      method: "POST",
-      body: JSON.stringify({ ids: guild.pages?.map((p) => p.pageId!) ?? [] }),
-    },
-  );
+  const pages = await fetchGuildApiData<Schemas["PageFull"][]>("page/batch", {
+    method: "POST",
+    body: JSON.stringify({ ids: guild.pages?.map((p) => p.pageId!) ?? [] }),
+  });
   const page = pages.find((p) => p.urlName === pageUrlName)!;
-  const roles = await fetchGuildApi<Schemas["RoleFull"][]>(
-    `${env.NEXT_PUBLIC_API}/role/batch`,
-    {
-      method: "POST",
-      body: JSON.stringify({
-        ids: page.roles?.map((r) => r.roleId!) ?? [],
-      }),
-    },
-  );
+  const roles = await fetchGuildApiData<Schemas["RoleFull"][]>("role/batch", {
+    method: "POST",
+    body: JSON.stringify({
+      ids: page.roles?.map((r) => r.roleId!) ?? [],
+    }),
+  });
 
   return (
     <div className="my-4 space-y-4">
@@ -42,8 +35,8 @@ const GuildPage = async ({
 };
 
 const RoleCard = async ({ role }: { role: Schemas["RoleFull"] }) => {
-  const rewards = await fetchGuildApi<Schemas["RewardFull"][]>(
-    `${env.NEXT_PUBLIC_API}/reward/batch`,
+  const rewards = await fetchGuildApiData<Schemas["RewardFull"][]>(
+    "reward/batch",
     {
       method: "POST",
       body: JSON.stringify({

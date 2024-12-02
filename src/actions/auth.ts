@@ -1,7 +1,6 @@
 "use server";
 
 import { GUILD_AUTH_COOKIE_NAME } from "@/config/constants";
-import { env } from "@/lib/env";
 import { fetchGuildApi } from "@/lib/fetchGuildApi";
 import { authSchema, tokenSchema } from "@/lib/schemas/user";
 import { jwtDecode } from "jwt-decode";
@@ -26,16 +25,10 @@ export const signIn = async ({
   } satisfies RequestInit;
 
   const signInRes = await fetchGuildApi("auth/siwe/login", requestInit);
-
-  let json: unknown;
-  if (signInRes.status === 401) {
-    const registerRes = await fetch(
-      `${env.NEXT_PUBLIC_API}/auth/siwe/register`,
-      requestInit,
-    );
-    json = await registerRes.json();
-  } else {
-    json = await signInRes.json();
+  let json = signInRes.data;
+  if (signInRes.response.status === 401) {
+    const registerRes = await fetchGuildApi("auth/siwe/register", requestInit);
+    json = registerRes.data;
   }
   const authData = authSchema.parse(json);
   const { exp } = tokenSchema.parse(jwtDecode(authData.token));
