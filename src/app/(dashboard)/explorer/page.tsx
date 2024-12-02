@@ -3,13 +3,10 @@ import { AuthBoundary } from "@/components/AuthBoundary";
 import { SignInButton } from "@/components/SignInButton";
 import { env } from "@/lib/env";
 import { fetcher } from "@/lib/fetcher";
+import { getQueryClient } from "@/lib/getQueryClient";
 import type { Guild } from "@/lib/schemas/guild";
 import type { PaginatedResponse } from "@/lib/types";
-import {
-  HydrationBoundary,
-  QueryClient,
-  dehydrate,
-} from "@tanstack/react-query";
+import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { Suspense } from "react";
 import { CreateGuildLink } from "./components/CreateGuildLink";
 import { GuildCard, GuildCardSkeleton } from "./components/GuildCard";
@@ -26,7 +23,7 @@ const getAssociatedGuilds = async ({ userId }: { userId: string }) => {
 };
 
 export default async function Explorer() {
-  const queryClient = new QueryClient();
+  const queryClient = getQueryClient();
   await queryClient.prefetchInfiniteQuery({
     queryKey: ["guilds", ""],
     initialPageParam: 1,

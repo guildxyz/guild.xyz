@@ -3,6 +3,7 @@
 import { fetcherWithAuth } from "@/actions/auth";
 import { env } from "@/lib/env";
 import { fetcher } from "@/lib/fetcher";
+import type { Schemas } from "@guildxyz/types";
 
 export const joinGuild = async ({ guildId }: { guildId: string }) => {
   // the response type might not be suitable for this fetcher
@@ -17,10 +18,23 @@ export const leaveGuild = async ({ guildId }: { guildId: string }) => {
   });
 };
 
-export const getGuild = async () => {
-  return fetcher(`${env.NEXT_PUBLIC_API}/guild`);
+export const getGuild = async ({ guildId }: { guildId: string }) => {
+  return fetcher<Schemas["GuildFull"]>(
+    `${env.NEXT_PUBLIC_API}/guild/id/${guildId}`,
+  );
 };
 
-export const getUser = async () => {
-  return fetcherWithAuth(`${env.NEXT_PUBLIC_API}/guild`);
+export const getPages = async ({ guildId }: { guildId: string }) => {
+  const guild = await getGuild({ guildId });
+  return fetcher<Schemas["PageFull"][]>(`${env.NEXT_PUBLIC_API}/page/batch`, {
+    method: "POST",
+    body: JSON.stringify({ ids: guild.pages?.map((p) => p.pageId!) ?? [] }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 };
+
+//export const getUser = async () => {
+//  return fetcherWithAuth<Schemas["UserFull"]>(`${env.NEXT_PUBLIC_API}/user`);
+//};
