@@ -8,6 +8,7 @@ import type { Guild } from "@/lib/schemas/guild";
 import type { PaginatedResponse } from "@/lib/types";
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { Suspense } from "react";
+import { getGuildSearch } from "./actions";
 import { CreateGuildLink } from "./components/CreateGuildLink";
 import { GuildCard, GuildCardSkeleton } from "./components/GuildCard";
 import { HeaderBackground } from "./components/HeaderBackground";
@@ -15,7 +16,6 @@ import { InfiniteScrollGuilds } from "./components/InfiniteScrollGuilds";
 import { StickyNavbar } from "./components/StickyNavbar";
 import { StickySearch } from "./components/StickySearch";
 import { ACTIVE_SECTION } from "./constants";
-import { getGuildSearch } from "./fetchers";
 
 const getAssociatedGuilds = async ({ userId }: { userId: string }) => {
   const request = `${env.NEXT_PUBLIC_API}/guild/search?page=1&pageSize=${Number.MAX_SAFE_INTEGER}&sortBy=name&reverse=false&customQuery=@owner:{${userId}}`;
@@ -27,7 +27,7 @@ export default async function Explorer() {
   await queryClient.prefetchInfiniteQuery({
     queryKey: ["guilds", ""],
     initialPageParam: 1,
-    queryFn: getGuildSearch(""),
+    queryFn: () => getGuildSearch({ search: "", pageParam: 1 }),
   });
 
   return (
