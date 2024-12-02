@@ -66,68 +66,61 @@ const GroupPage = (): JSX.Element => {
   const { localThemeColor } = useThemeContext()
 
   return (
-    <>
-      <Head>
-        <meta name="theme-color" content={localThemeColor} />
-      </Head>
+    <Layout>
+      <LayoutHero className="pb-24">
+        <LayoutBanner>
+          <GuildPageBanner />
+        </LayoutBanner>
 
-      <Layout>
-        <LayoutHero className="pb-24">
-          <LayoutBanner>
-            <GuildPageBanner />
-          </LayoutBanner>
+        <Header className="mb-10" />
 
-          <Header className="mb-10" />
+        <LayoutContainer className="-mb-16 mt-6 max-w-screen-xl">
+          <GuildImageAndName />
+        </LayoutContainer>
 
-          <LayoutContainer className="-mb-16 mt-6 max-w-screen-xl">
-            <GuildImageAndName />
+        <LayoutHeadline className="max-w-screen-xl pt-12">
+          <GroupPageImageAndName />
+
+          <div className="ml-auto">
+            {isAdmin && isDetailed ? (
+              <DynamicAddSolutionsAndEditGuildButton />
+            ) : !isMember ? (
+              <JoinButton />
+            ) : (
+              <DynamicRecheckAccessesAndLeaveButton />
+            )}
+          </div>
+        </LayoutHeadline>
+
+        {group?.description && (
+          <LayoutContainer className="mt-6 max-w-screen-xl font-semibold">
+            {parseDescription(group.description)}
           </LayoutContainer>
+        )}
+      </LayoutHero>
 
-          <LayoutHeadline className="max-w-screen-xl pt-12">
-            <GroupPageImageAndName />
+      <LayoutMain className="-top-16 flex max-w-screen-xl flex-col items-start gap-8">
+        <AccessHub />
 
-            <div className="ml-auto">
-              {isAdmin && isDetailed ? (
-                <DynamicAddSolutionsAndEditGuildButton />
-              ) : !isMember ? (
-                <JoinButton />
-              ) : (
-                <DynamicRecheckAccessesAndLeaveButton />
-              )}
-            </div>
-          </LayoutHeadline>
-
-          {group?.description && (
-            <LayoutContainer className="mt-6 max-w-screen-xl font-semibold">
-              {parseDescription(group.description)}
-            </LayoutContainer>
-          )}
-        </LayoutHero>
-
-        <LayoutMain className="-top-16 flex max-w-screen-xl flex-col items-start gap-8">
-          <AccessHub />
-
-          <Section
-            titleRightElement={isAdmin ? <DynamicAddAndOrderRoles /> : undefined}
-          >
-            <Roles />
-          </Section>
-        </LayoutMain>
-      </Layout>
-    </>
+        <Section
+          titleRightElement={isAdmin ? <DynamicAddAndOrderRoles /> : undefined}
+        >
+          <Roles />
+        </Section>
+      </LayoutMain>
+    </Layout>
   )
 }
 
 type Props = {
+  groupUrlName: string
   fallback: { string: Guild }
 }
 
-const GroupPageWrapper = ({ fallback }: Props): JSX.Element => {
+const GroupPageWrapper = ({ groupUrlName, fallback }: Props): JSX.Element => {
   const guild = useGuild()
 
-  const group = useRoleGroup()
-
-  if (!fallback || !guild.id || !group?.id) {
+  if (!fallback && !guild.id) {
     return (
       <Center h="100vh" w="screen">
         <Spinner />
@@ -138,15 +131,21 @@ const GroupPageWrapper = ({ fallback }: Props): JSX.Element => {
     )
   }
 
+  const [fallbackGuild] = Object.values(fallback)
+  const fallbackGroup = fallbackGuild?.groups.find((g) => (g.urlName = groupUrlName))
+
   return (
     <>
-      <LinkPreviewHead
-        path={fallback ? Object.values(fallback)[0].urlName : guild.urlName}
-      />
-      <Head>
-        <title>{group.name}</title>
-        <meta property="og:title" content={group.name} />
-      </Head>
+      {fallbackGuild && fallbackGroup && (
+        <>
+          <LinkPreviewHead path={`${fallbackGuild.urlName}/${groupUrlName}`} />
+          <Head>
+            <title>{fallbackGroup.name}</title>
+            <meta property="og:title" content={fallbackGroup.name} />
+            <meta name="theme-color" content={guild.theme?.color} />
+          </Head>
+        </>
+      )}
       <SWRConfig value={fallback && { fallback }}>
         <ThemeProvider>
           <JoinModalProvider>
@@ -159,7 +158,7 @@ const GroupPageWrapper = ({ fallback }: Props): JSX.Element => {
 }
 
 const getStaticProps: GetStaticProps = async ({ params }) => {
-  const endpoint = `/v2/guilds/guild-page/${params.guild?.toString()}`
+  const endpoint = `/v2/guilds/guild-page/${params?.guild?.toString()}`
 
   const data = await fetcher(endpoint).catch((_) => ({}))
 
@@ -183,6 +182,7 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
 
   return {
     props: {
+      groupUrlName: params?.group?.toString(),
       fallback: {
         [endpoint]: filteredData,
       },

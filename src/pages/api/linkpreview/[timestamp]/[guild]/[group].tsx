@@ -17,27 +17,39 @@ const handler = async (req, _) => {
   const { protocol, host } = req.nextUrl
   const baseUrl = `${protocol}//${host}`
 
-  const [, urlName] =
+  const [, urlName, groupUrlName] =
     req.nextUrl?.pathname
       ?.replace("/api/linkpreview", "")
       ?.split("/")
       ?.filter((param) => !!param) ?? []
 
-  if (!urlName) return new ImageResponse(<></>, { status: 404 })
+  if (!urlName || !groupUrlName) return new ImageResponse(<></>, { status: 404 })
 
-  const [guild, guildRoles]: [Guild, Guild["roles"]] = await Promise.all([
-    fetch(`${env.NEXT_PUBLIC_API.replace("v1", "v2")}/guilds/${urlName}`).then(
-      (res) => res.json()
-    ),
-    fetch(`${env.NEXT_PUBLIC_API.replace("v1", "v2")}/guilds/${urlName}/roles`).then(
-      (res) => res.json()
-    ),
-  ]).catch(() => [null, null])
+  const [guild, groups, guildRoles]: [Guild, Guild["groups"], Guild["roles"]] =
+    await Promise.all([
+      fetch(`${env.NEXT_PUBLIC_API.replace("v1", "v2")}/guilds/${urlName}`).then(
+        (res) => res.json()
+      ),
+      fetch(
+        `${env.NEXT_PUBLIC_API.replace("v1", "v2")}/guilds/${urlName}/groups`
+      ).then((res) => res.json()),
+      fetch(
+        `${env.NEXT_PUBLIC_API.replace("v1", "v2")}/guilds/${urlName}/roles`
+      ).then((res) => res.json()),
+    ]).catch(() => [null, null, null])
 
   if (!guild?.id)
     return new Response(undefined, {
       status: 404,
       statusText: "Guild not found",
+    })
+
+  const group = groups?.find((g) => g.urlName === groupUrlName)
+
+  if (!group)
+    return new Response(undefined, {
+      status: 404,
+      statusText: "Group not found",
     })
 
   try {
@@ -49,7 +61,9 @@ const handler = async (req, _) => {
 
     const roles = guildRoles?.map((role) => role.name)
 
-    const safeGuildDescription = guild.description?.replaceAll("\n", "")
+    const safeGroupDescription = group.description?.replaceAll("\n", "")
+
+    const imageUrl = group.imageUrl ?? guild.imageUrl
 
     return new ImageResponse(
       <div
@@ -127,16 +141,16 @@ const handler = async (req, _) => {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 style={{
-                  width: guild.imageUrl?.match("guildLogos") ? "20px" : "48px",
-                  height: guild.imageUrl?.match("guildLogos") ? "20px" : "48px",
-                  borderRadius: guild.imageUrl?.match("guildLogos") ? 0 : "50%",
+                  width: imageUrl?.match("guildLogos") ? "20px" : "48px",
+                  height: imageUrl?.match("guildLogos") ? "20px" : "48px",
+                  borderRadius: imageUrl?.match("guildLogos") ? 0 : "50%",
                 }}
                 src={
-                  guild.imageUrl?.startsWith("http")
-                    ? `${baseUrl}/_next/image?url=${guild.imageUrl}&w=48&q=75`
-                    : `${baseUrl}${guild.imageUrl}`
+                  imageUrl?.startsWith("http")
+                    ? `${baseUrl}/_next/image?url=${imageUrl}&w=48&q=75`
+                    : `${baseUrl}${imageUrl}`
                 }
-                alt={guild.name}
+                alt={group.name}
               />
             </div>
             <h1
@@ -150,7 +164,7 @@ const handler = async (req, _) => {
                 textOverflow: "ellipsis",
               }}
             >
-              {guild.name}
+              {group.name}
             </h1>
           </div>
 
@@ -200,9 +214,9 @@ const handler = async (req, _) => {
               color: "white",
             }}
           >
-            {guild.description ? (
-              `${safeGuildDescription?.slice(0, 80)}${
-                safeGuildDescription?.length > 80 ? "..." : ""
+            {group.description ? (
+              `${safeGroupDescription?.slice(0, 80)}${
+                (safeGroupDescription?.length ?? 0) > 80 ? "..." : ""
               }`
             ) : (
               <div style={{ display: "flex", flexDirection: "column" }}>
