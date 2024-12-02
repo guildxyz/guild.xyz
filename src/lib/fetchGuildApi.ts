@@ -17,50 +17,71 @@ const logger = {
   },
 };
 
+type FetchResult<Data, Error> =
+  | { status: "error"; data: Error; response: Response }
+  | { status: "success"; data: Data; response: Response };
+
 export const fetchGuildApi = async <Data = object, Error = ErrorLike>(
-  pathName: string,
+  pathname: string,
   requestInit?: RequestInit,
-) => {
-  if (pathName.startsWith("/")) {
-    throw new Error("`pathName` must not start with slash");
+): Promise<FetchResult<Data, Error>> => {
+  if (pathname.startsWith("/")) {
+    throw new Error("`pathname` must not start with slash");
   }
-  if (pathName.endsWith("/")) {
-    throw new Error("`pathName` must not end with slash");
+  if (pathname.endsWith("/")) {
+    throw new Error("`pathname` must not end with slash");
   }
 
-  const url = new URL(`api/${pathName}`, env.NEXT_PUBLIC_API);
-  return fetch(url, {
+  const url = new URL(`api/${pathname}`, env.NEXT_PUBLIC_API);
+  const response = await fetch(url, {
     ...requestInit,
     headers: {
       "Content-Type": "application/json",
       ...requestInit?.headers,
     },
-  }).then(async (response: Response) => {
-    const contentType = response.headers.get("content-type");
-    if (!contentType?.includes("application/json")) {
-      Promise.reject({ message: "Guild API failed respond with json" });
-    }
-    const json = await response.json();
-    logger.info(url.toString(), json);
-    if (!response.ok) {
-      return Promise.reject(json as Error);
-    }
-    return Promise.resolve(json as Data);
   });
+
+  const contentType = response.headers.get("content-type");
+
+  if (!contentType?.includes("application/json")) {
+    throw new Error("Guild API failed respond with json");
+  }
+
+  let json: unknown;
+  try {
+    json = await response.json();
+  } catch {
+    throw new Error("Failed to parse json from response");
+  }
+
+  logger.info(url.toString(), response.status, json);
+
+  if (!response.ok) {
+    return {
+      status: "error",
+      data: json as Error,
+      response,
+    };
+  }
+  return {
+    status: "success",
+    data: json as Data,
+    response,
+  };
 };
 
 export const fetchGuildApiData = async <Data = object, Error = ErrorLike>(
-  pathName: string,
+  pathname: string,
   requestInit?: RequestInit,
 ) => {
-  if (pathName.startsWith("/")) {
-    throw new Error("`pathName` must not start with slash");
+  if (pathname.startsWith("/")) {
+    throw new Error("`pathname` must not start with slash");
   }
-  if (pathName.endsWith("/")) {
-    throw new Error("`pathName` must not end with slash");
+  if (pathname.endsWith("/")) {
+    throw new Error("`pathname` must not end with slash");
   }
 
-  const url = new URL(`api/${pathName}`, env.NEXT_PUBLIC_API);
+  const url = new URL(`api/${pathname}`, env.NEXT_PUBLIC_API);
   return fetch(url, {
     ...requestInit,
     headers: {
@@ -82,7 +103,7 @@ export const fetchGuildApiData = async <Data = object, Error = ErrorLike>(
 };
 
 export const fetchGuildApiAuth = async <Data = object, Error = ErrorLike>(
-  ...[pathName, requestInit = {}]: Parameters<typeof fetchGuildApi>
+  ...[pathname, requestInit = {}]: Parameters<typeof fetchGuildApi>
 ) => {
   const token = isServer
     ? await getToken()
@@ -92,7 +113,7 @@ export const fetchGuildApiAuth = async <Data = object, Error = ErrorLike>(
       "Failed to retrieve JWT token on auth request initialization.",
     );
   }
-  return fetchGuildApi<Data, Error>(pathName, {
+  return fetchGuildApi<Data, Error>(pathname, {
     ...requestInit,
     headers: {
       ...requestInit?.headers,
