@@ -4,7 +4,6 @@ import { GuildImage } from "@/components/GuildImage";
 import { SignInButton } from "@/components/SignInButton";
 import { env } from "@/lib/env";
 import { fetcher } from "@/lib/fetcher";
-import type { Guild } from "@/lib/schemas/guild";
 import type { DynamicRoute } from "@/lib/types";
 import type { Schemas } from "@guildxyz/types";
 import { type PropsWithChildren, Suspense } from "react";
@@ -16,7 +15,7 @@ const GuildPage = async ({
   children,
 }: PropsWithChildren<DynamicRoute<{ guildUrlName: string }>>) => {
   const { guildUrlName } = await params;
-  const guild = await fetcher<Guild>(
+  const guild = await fetcher<Schemas["GuildFull"]>(
     `${env.NEXT_PUBLIC_API}/guild/urlName/${guildUrlName}`,
   );
   const token = await getParsedToken();

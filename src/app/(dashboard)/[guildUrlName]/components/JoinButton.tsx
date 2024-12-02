@@ -1,13 +1,12 @@
 "use client";
 
 import { Button } from "@/components/ui/Button";
-import type { Guild } from "@/lib/schemas/guild";
 import type { Schemas } from "@guildxyz/types";
 import { joinGuild, leaveGuild } from "../actions";
 
 export const JoinButton = ({
   guild,
-}: { guild: Guild; user: Schemas["UserFull"] }) => {
+}: { guild: Schemas["GuildFull"]; user: Schemas["UserFull"] }) => {
   // @ts-ignore
   const isJoined = !!user.data.guilds?.some(
     // @ts-ignore

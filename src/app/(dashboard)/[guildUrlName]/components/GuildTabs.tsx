@@ -2,17 +2,13 @@ import { Card } from "@/components/ui/Card";
 import { ScrollArea, ScrollBar } from "@/components/ui/ScrollArea";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { cn } from "@/lib/cssUtils";
-import type { Guild } from "@/lib/schemas/guild";
+import type { Schemas } from "@guildxyz/types";
 import { getPages } from "../fetchers";
 import { PageNavLink } from "./RoleGroupNavLink";
 
-type Props = {
-  guild: Guild;
-};
-
 const roleGroupOrder = ["Home", "Admin"].reverse();
 
-export const GuildTabs = async ({ guild }: Props) => {
+export const GuildTabs = async ({ guild }: { guild: Schemas["GuildFull"] }) => {
   const roleGroups = await getPages(guild.id);
 
   return (
