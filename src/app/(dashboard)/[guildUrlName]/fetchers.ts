@@ -14,9 +14,9 @@ export const getGuild = async (urlName: string) => {
   );
 };
 
-export const getRoleGroups = async (guildId: string) => {
+export const getPages = async (guildId: string) => {
   return (
-    await fetcher<PaginatedResponse<Schemas["RoleGroupFull"]>>(
+    await fetcher<PaginatedResponse<Schemas["PageFull"]>>(
       `${env.NEXT_PUBLIC_API}/page/search?customQuery=@guildId:{${guildId}}&pageSize=${Number.MAX_SAFE_INTEGER}`,
       {
         next: {

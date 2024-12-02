@@ -3,7 +3,7 @@ import { ScrollArea, ScrollBar } from "@/components/ui/ScrollArea";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { cn } from "@/lib/cssUtils";
 import type { Guild } from "@/lib/schemas/guild";
-import { getRoleGroups } from "../fetchers";
+import { getPages } from "../fetchers";
 import { RoleGroupNavLink } from "./RoleGroupNavLink";
 
 type Props = {
@@ -13,7 +13,7 @@ type Props = {
 const roleGroupOrder = ["Home", "Admin"].reverse();
 
 export const GuildTabs = async ({ guild }: Props) => {
-  const roleGroups = await getRoleGroups(guild.id);
+  const roleGroups = await getPages(guild.id);
 
   return (
     <ScrollArea
