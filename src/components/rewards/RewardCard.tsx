@@ -50,5 +50,5 @@ export const RewardCardButton = ({
   className,
   ...props
 }: Omit<ButtonProps, "size">) => (
-  <Button className={cn(" mt-auto", className)} size="sm" {...props} />
+  <Button className={cn("mt-auto", className)} size="sm" {...props} />
 );
