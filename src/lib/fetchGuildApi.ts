@@ -21,6 +21,36 @@ const logger = {
   },
 };
 
+/**
+ * Fetcher used for creating requests to the v3 backend API.
+ *
+ * This function sends a request to the specified `pathname` of the API and returns
+ * a structured result containing the response, status, and data. It ensures that the API transmission is with valid JSON.
+ *
+ * @template Data - The expected shape of the success response data.
+ * @template Error - The expected shape of the error response data.
+ *
+ * @param pathname - The API endpoint to fetch, without leading or trailing slashes.
+ * @param requestInit - Optional configuration for the fetch request.
+ *
+ * @returns A promise resolving to the fetch result,
+ * containing `status`, `data`, and `response`.
+ *
+ * @example
+ * ```ts
+ * const { data, status, response } = await fetchGuildApi<{ name: string }>('guild');
+ *
+ * if (status === 'error') {
+ *   assert(!response.ok);
+ * } else {
+ *   console.log(data.name);
+ * }
+ * ```
+ *
+ * @throws If `pathname` starts or ends with a slash.
+ * @throws If the API does not respond with JSON.
+ * @throws If the response JSON cannot be parsed.
+ */
 export const fetchGuildApi = async <Data = object, Error = ErrorLike>(
   pathname: string,
   requestInit?: RequestInit,
@@ -70,9 +100,45 @@ export const fetchGuildApi = async <Data = object, Error = ErrorLike>(
   };
 };
 
+/**
+ * Fetcher used for creating authenticated requests to the v3 backend API.
+ *
+ * This function extends `fetchGuildApi` by automatically including an authentication
+ * token in the request headers. The token is retrieved either server-side or client-side
+ * depending on the runtime environment.
+ *
+ * @template Data - The expected shape of the success response data.
+ * @template Error - The expected shape of the error response data.
+ *
+ * @param pathname - The API endpoint to fetch, without leading or trailing slashes.
+ * @param requestInit - Optional configuration for the fetch request.
+ *
+ * @returns A promise resolving to the fetch result,
+ * containing `status`, `data`, and `response`.
+ *
+ * @example
+ * ```ts
+ * const { data, status, response } = await fetchGuildApiAuth<{ user: string }>('user', {
+ *  method: "POST",
+ *  body: JSON.stringify({name: string}),
+ * });
+ *
+ * if (status === 'error') {
+ *   assert(!response.ok);
+ *   console.error(data.message);
+ * } else {
+ *   console.log(data.user);
+ * }
+ * ```
+ *
+ * @throws If `pathname` starts or ends with a slash.
+ * @throws If the API does not respond with JSON.
+ * @throws If the response JSON cannot be parsed.
+ * @throws If the JWT token cannot be retrieved.
+ */
 export const fetchGuildApiAuth = async <Data = object, Error = ErrorLike>(
   ...[pathname, requestInit = {}]: Parameters<typeof fetchGuildApi>
-) => {
+): Promise<FetchResult<Data, Error>> => {
   const token = isServer
     ? await getToken()
     : getCookieClientSide(GUILD_AUTH_COOKIE_NAME);
@@ -90,14 +156,14 @@ export const fetchGuildApiAuth = async <Data = object, Error = ErrorLike>(
   });
 };
 
-export const fetchGuildApiData = async <Data = object, Error = ErrorLike>(
-  ...args: Parameters<typeof fetchGuildApi>
-) => {
-  return (await fetchGuildApi<Data, Error>(...args)).data;
+const unpackFetcher = (fetcher: typeof fetchGuildApi) => {
+  return async <Data = object, Error = ErrorLike>(
+    ...args: Parameters<typeof fetchGuildApi>
+  ) => {
+    const { data, status } = await fetcher<Data, Error>(...args);
+    return status === "error" ? Promise.reject(data) : data;
+  };
 };
 
-export const fetchGuildApiAuthData = async <Data = object, Error = ErrorLike>(
-  ...args: Parameters<typeof fetchGuildApi>
-) => {
-  return (await fetchGuildApiAuth<Data, Error>(...args)).data;
-};
+export const fetchGuildApiData = unpackFetcher(fetchGuildApi);
+export const fetchGuildApiAuthData = unpackFetcher(fetchGuildApiAuth);
