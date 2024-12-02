@@ -9,7 +9,7 @@ export const config = {
 
 const interFont = loadGoogleFont("Inter", "400")
 const dystopianFont = fetch(
-  new URL("../../../../../public/fonts/Dystopian-Black.woff", import.meta.url)
+  new URL("../../../../../../public/fonts/Dystopian-Black.woff", import.meta.url)
 ).then((res) => res.arrayBuffer())
 
 const handler = async (req, _) => {
