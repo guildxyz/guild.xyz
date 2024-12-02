@@ -7,24 +7,25 @@ import type { Guild } from "@/lib/schemas/guild";
 import type { Role } from "@/lib/schemas/role";
 import type { RoleGroup } from "@/lib/schemas/roleGroup";
 import type { DynamicRoute, PaginatedResponse } from "@/lib/types";
+import type { Schemas } from "@guildxyz/types";
 import { Lock } from "@phosphor-icons/react/dist/ssr";
 
 const RoleGroupPage = async ({
   params,
-}: DynamicRoute<{ roleGroupId: string; guildId: string }>) => {
-  const { roleGroupId: roleGroupIdParam, guildId: guildIdParam } = await params;
+}: DynamicRoute<{ roleGroupUrlName: string; guildUrlName: string }>) => {
+  const { roleGroupUrlName, guildUrlName } = await params;
   const guild = (await (
-    await fetch(`${env.NEXT_PUBLIC_API}/guild/urlName/${guildIdParam}`)
+    await fetch(`${env.NEXT_PUBLIC_API}/guild/urlName/${guildUrlName}`)
   ).json()) as Guild;
   const paginatedRoleGroup = (await (
     await fetch(
-      `${env.NEXT_PUBLIC_API}/role-group/search?customQuery=@guildId:{${guild.id}}&pageSize=${Number.MAX_SAFE_INTEGER}`,
+      `${env.NEXT_PUBLIC_API}/page/search?customQuery=@guildId:{${guild.id}}&pageSize=${Number.MAX_SAFE_INTEGER}`,
     )
   ).json()) as PaginatedResponse<RoleGroup>;
   const roleGroups = paginatedRoleGroup.items;
   const roleGroup = roleGroups.find(
     // @ts-expect-error
-    (rg) => rg.urlName === roleGroupIdParam || rg.id === guild.homeRoleGroupId,
+    (rg) => rg.urlName === roleGroupUrlName || rg.id === guild.homeRoleGroupId,
   )!;
   const paginatedRole = await fetcher<PaginatedResponse<Role>>(
     `${env.NEXT_PUBLIC_API}/role/search?customQuery=@guildId:{${guild.id}}&pageSize=${Number.MAX_SAFE_INTEGER}`,
@@ -40,38 +41,18 @@ const RoleGroupPage = async ({
   );
 };
 
-const RE = {
-  id: "aca776be-5a7b-4618-bb7c-1130de066257",
-  createdAt: 1732825819745,
-  updatedAt: 1732825819745,
-  name: "Home - delete",
-  guildId: "2b3330e4-05fa-4949-a80c-2deeb99d100e",
-  urlName: "stars-guild-delete",
-  foreignEntity: "role-group",
-  foreignIdentifier: "1b06e1e7-5bf8-4f55-8e7b-16c5542d10c3",
-  description:
-    'Grants delete access to the "Home" role group in the "Stars Guild" guild',
-  type: "GUILD",
-  permissions: {
-    read: "b62cda4f-27d6-40dc-9625-34a6ce74912a",
-    update: "78ac4c72-cc44-4336-b5cd-e73e93fd86e7",
-    delete: "d713b547-135d-49ab-a9b1-e670ad1871a7",
-  },
-};
-type Reward = typeof RE;
-
 const RoleCard = async ({ role }: { role: Role }) => {
   const rewards = (await Promise.all(
     // @ts-ignore
     role.rewards?.map(({ rewardId }) => {
       const req = `${env.NEXT_PUBLIC_API}/reward/id/${rewardId}`;
       try {
-        return fetcher<Reward>(req);
+        return fetcher<Schemas["RewardFull"]>(req);
       } catch {
         console.error({ rewardId, req });
       }
     }) ?? [],
-  )) as Reward[];
+  )) as Schemas["RewardFull"][];
 
   return (
     <Card className="flex flex-col md:flex-row" key={role.id}>
@@ -114,7 +95,7 @@ const RoleCard = async ({ role }: { role: Role }) => {
   );
 };
 
-const Reward = ({ reward }: { reward: Reward }) => {
+const Reward = ({ reward }: { reward: Schemas["RewardFull"] }) => {
   return (
     <div className="border-b p-4 last:border-b-0">
       <div className="mb-2 font-medium">{reward.name}</div>

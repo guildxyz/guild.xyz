@@ -11,6 +11,13 @@ export const fetcher = async <Data = unknown, Error = unknown>(
       ? await response.json()
       : await response.text();
 
+    if (process.env.NODE_ENV === "development") {
+      console.info(
+        `[${new Date().toLocaleTimeString()} - fetcher]: ${resource}`,
+        res,
+      );
+    }
+
     if (!response.ok) {
       if (resource.includes(env.NEXT_PUBLIC_API)) {
         return Promise.reject({

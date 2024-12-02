@@ -14,18 +14,17 @@ import { JoinButton } from "./components/JoinButton";
 const GuildPage = async ({
   params,
   children,
-}: PropsWithChildren<DynamicRoute<{ guildId: string }>>) => {
-  const { guildId: guildIdParam } = await params;
+}: PropsWithChildren<DynamicRoute<{ guildUrlName: string }>>) => {
+  const { guildUrlName } = await params;
   const guild = await fetcher<Guild>(
-    `${env.NEXT_PUBLIC_API}/guild/urlName/${guildIdParam}`,
+    `${env.NEXT_PUBLIC_API}/guild/urlName/${guildUrlName}`,
   );
   const token = await getParsedToken();
-  if (!token) {
-    throw new Error("Failed to authenticate");
-  }
-  const user = await fetcher<Schemas["UserFull"]>(
-    `${env.NEXT_PUBLIC_API}/user/id/${token.userId}`,
-  );
+  const user =
+    token &&
+    (await fetcher<Schemas["UserFull"]>(
+      `${env.NEXT_PUBLIC_API}/user/id/${token.userId}`,
+    ));
 
   return (
     <main className="py-16">
@@ -43,7 +42,7 @@ const GuildPage = async ({
               </h1>
             </div>
             <AuthBoundary fallback={<SignInButton />}>
-              <JoinButton guild={guild} user={user} />
+              {user && <JoinButton guild={guild} user={user} />}
             </AuthBoundary>
           </div>
           <p className="line-clamp-3 max-w-prose text-balance text-lg leading-relaxed">

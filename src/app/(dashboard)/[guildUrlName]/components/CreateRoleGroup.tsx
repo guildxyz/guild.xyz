@@ -98,7 +98,7 @@ const CreateRoleGroupDialogForm = ({
 
       if (!token) throw new Error("Unauthorized"); // TODO: custom errors?
 
-      return fetcher<RoleGroup>(`${env.NEXT_PUBLIC_API}/role-group`, {
+      return fetcher<RoleGroup>(`${env.NEXT_PUBLIC_API}/page`, {
         method: "POST",
         headers: {
           "X-Auth-Token": token,

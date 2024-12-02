@@ -4,7 +4,7 @@ import { env } from "@/lib/env";
 import { revalidateTag } from "next/cache";
 
 export const revalidateRoleGroups = async (guildId: string) => {
-  revalidateTag(`role-groups-${guildId}`);
+  revalidateTag(`page-${guildId}`);
 };
 
 export const joinGuild = async ({ guildId }: { guildId: string }) => {
