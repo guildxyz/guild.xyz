@@ -1,4 +1,4 @@
-import { getAuthCookie as getTokenFromCookie } from "@/actions/auth";
+import { getToken } from "@/actions/auth";
 import { AuthBoundary } from "@/components/AuthBoundary";
 import { SignInButton } from "@/components/SignInButton";
 import { env } from "@/lib/env";
@@ -109,16 +109,16 @@ async function YourGuildsSection() {
 }
 
 async function YourGuilds() {
-  const auth = await getTokenFromCookie();
+  const auth = await getToken();
   if (!auth) return;
 
-  const { items: myGuilds } = await getAssociatedGuilds({
-    userId: auth.userId,
+  const { items: associatedGuilds } = await getAssociatedGuilds({
+    userId: auth,
   });
 
-  return myGuilds && myGuilds.length > 0 ? (
+  return associatedGuilds.length > 0 ? (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {myGuilds.map((guild) => (
+      {associatedGuilds.map((guild) => (
         <GuildCard key={guild.id} guild={guild} />
       ))}
     </div>

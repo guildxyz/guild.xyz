@@ -1,3 +1,4 @@
+import { getParsedToken } from "@/actions/auth";
 import { AuthBoundary } from "@/components/AuthBoundary";
 import { GuildImage } from "@/components/GuildImage";
 import { SignInButton } from "@/components/SignInButton";
@@ -5,6 +6,7 @@ import { env } from "@/lib/env";
 import { fetcher } from "@/lib/fetcher";
 import type { Guild } from "@/lib/schemas/guild";
 import type { DynamicRoute } from "@/lib/types";
+import type { Schemas } from "@guildxyz/types";
 import { type PropsWithChildren, Suspense } from "react";
 import { GuildTabs, GuildTabsSkeleton } from "./components/GuildTabs";
 import { JoinButton } from "./components/JoinButton";
@@ -16,6 +18,13 @@ const GuildPage = async ({
   const { guildId: guildIdParam } = await params;
   const guild = await fetcher<Guild>(
     `${env.NEXT_PUBLIC_API}/guild/urlName/${guildIdParam}`,
+  );
+  const token = await getParsedToken();
+  if (!token) {
+    throw new Error("Failed to authenticate");
+  }
+  const user = await fetcher<Schemas["UserFull"]>(
+    `${env.NEXT_PUBLIC_API}/user/id/${token.userId}`,
   );
 
   return (
@@ -34,7 +43,7 @@ const GuildPage = async ({
               </h1>
             </div>
             <AuthBoundary fallback={<SignInButton />}>
-              <JoinButton guild={guild} />
+              <JoinButton guild={guild} user={user} />
             </AuthBoundary>
           </div>
           <p className="line-clamp-3 max-w-prose text-balance text-lg leading-relaxed">
