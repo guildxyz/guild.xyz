@@ -85,6 +85,7 @@
     "postcss": "^8",
     "storybook": "^8.4.4",
     "tailwindcss": "^3.4.1",
+    "type-fest": "^4.29.1",
     "typescript": "^5"
   },
   "overrides": {

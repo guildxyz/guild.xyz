@@ -2,7 +2,6 @@
 
 import { GUILD_AUTH_COOKIE_NAME } from "@/config/constants";
 import { env } from "@/lib/env";
-import { fetcher } from "@/lib/fetcher";
 import { authSchema, tokenSchema } from "@/lib/schemas/user";
 import { jwtDecode } from "jwt-decode";
 import { cookies } from "next/headers";
@@ -66,17 +65,4 @@ export const getToken = async () => {
 export const getParsedToken = async () => {
   const token = await getToken();
   return token ? tokenSchema.parse(jwtDecode(token)) : undefined;
-};
-
-export const fetcherWithAuth = async <Data = unknown, Error = unknown>(
-  ...[resource, requestInit]: Parameters<typeof fetcher>
-) => {
-  const token = await getToken();
-  if (!token) {
-    throw new Error("failed to retrieve jwt token");
-  }
-  return fetcher<Data, Error>(resource, {
-    ...requestInit,
-    headers: { ...requestInit?.headers, "X-Auth-Token": token },
-  });
 };
