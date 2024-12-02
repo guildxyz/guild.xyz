@@ -4,7 +4,7 @@ import { Skeleton } from "@/components/ui/Skeleton";
 import { cn } from "@/lib/cssUtils";
 import type { Guild } from "@/lib/schemas/guild";
 import { getPages } from "../fetchers";
-import { RoleGroupNavLink } from "./RoleGroupNavLink";
+import { PageNavLink } from "./RoleGroupNavLink";
 
 type Props = {
   guild: Guild;
@@ -32,7 +32,7 @@ export const GuildTabs = async ({ guild }: Props) => {
             return bIndex - aIndex;
           })
           .map((rg) => (
-            <RoleGroupNavLink
+            <PageNavLink
               key={rg.id}
               href={[guild.urlName, rg.urlName]
                 .filter(Boolean)
@@ -40,7 +40,7 @@ export const GuildTabs = async ({ guild }: Props) => {
                 .join("")}
             >
               {rg.name}
-            </RoleGroupNavLink>
+            </PageNavLink>
           ))}
       </div>
       <ScrollBar orientation="horizontal" className="hidden" />

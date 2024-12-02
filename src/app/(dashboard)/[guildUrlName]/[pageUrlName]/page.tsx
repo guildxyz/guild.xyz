@@ -10,10 +10,10 @@ import type { DynamicRoute, PaginatedResponse } from "@/lib/types";
 import type { Schemas } from "@guildxyz/types";
 import { Lock } from "@phosphor-icons/react/dist/ssr";
 
-const RoleGroupPage = async ({
+const GuildPage = async ({
   params,
-}: DynamicRoute<{ roleGroupUrlName: string; guildUrlName: string }>) => {
-  const { roleGroupUrlName, guildUrlName } = await params;
+}: DynamicRoute<{ pageUrlName: string; guildUrlName: string }>) => {
+  const { pageUrlName, guildUrlName } = await params;
   const guild = (await (
     await fetch(`${env.NEXT_PUBLIC_API}/guild/urlName/${guildUrlName}`)
   ).json()) as Guild;
@@ -25,7 +25,7 @@ const RoleGroupPage = async ({
   const roleGroups = paginatedRoleGroup.items;
   const roleGroup = roleGroups.find(
     // @ts-expect-error
-    (rg) => rg.urlName === roleGroupUrlName || rg.id === guild.homeRoleGroupId,
+    (rg) => rg.urlName === pageUrlName || rg.id === guild.homeRoleGroupId,
   )!;
   const paginatedRole = await fetcher<PaginatedResponse<Role>>(
     `${env.NEXT_PUBLIC_API}/role/search?customQuery=@guildId:{${guild.id}}&pageSize=${Number.MAX_SAFE_INTEGER}`,
@@ -107,4 +107,4 @@ const Reward = ({ reward }: { reward: Schemas["RewardFull"] }) => {
   );
 };
 
-export default RoleGroupPage;
+export default GuildPage;

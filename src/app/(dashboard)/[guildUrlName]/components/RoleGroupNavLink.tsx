@@ -6,7 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { PropsWithChildren } from "react";
 
-export const RoleGroupNavLink = ({
+export const PageNavLink = ({
   href,
   children,
 }: PropsWithChildren<{ href: string }>) => {
