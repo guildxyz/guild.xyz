@@ -39,7 +39,8 @@
     "next-env.d.ts",
     "tailwind.config.ts",
     ".next/types/**/*.ts",
-    "guild.d.ts"
+    "reset.d.ts",
+    "query.d.ts"
   ],
   "exclude": [
     "node_modules",

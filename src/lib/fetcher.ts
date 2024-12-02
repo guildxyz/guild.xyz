@@ -1,4 +1,5 @@
 import { env } from "./env";
+import type { ErrorLike } from "./types";
 
 export const fetcher = async <Data = unknown, Error = unknown>(
   resource: string,
@@ -13,8 +14,8 @@ export const fetcher = async <Data = unknown, Error = unknown>(
     if (!response.ok) {
       if (resource.includes(env.NEXT_PUBLIC_API)) {
         return Promise.reject({
-          error: res.error,
-        } as { error: string });
+          error: (res as ErrorLike).error || (res as ErrorLike).message,
+        });
       }
 
       return Promise.reject(res as Error);
