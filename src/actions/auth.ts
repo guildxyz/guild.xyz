@@ -2,22 +2,11 @@
 
 import { GUILD_AUTH_COOKIE_NAME } from "@/config/constants";
 import { env } from "@/lib/env";
+import { fetcher } from "@/lib/fetcher";
+import { authSchema, tokenSchema } from "@/lib/schemas/user";
 import { jwtDecode } from "jwt-decode";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { z } from "zod";
-
-const authSchema = z.object({
-  message: z.string(),
-  token: z.string(),
-  userId: z.string().uuid(),
-});
-
-const tokenSchema = z.object({
-  userId: z.string().uuid(),
-  exp: z.number().positive().int(),
-  iat: z.number().positive().int(),
-});
 
 export const signIn = async ({
   message,
@@ -70,8 +59,24 @@ export const signOut = async (redirectTo?: string) => {
   redirect(redirectTo ?? "/explorer");
 };
 
-export const getAuthCookie = async () => {
-  const cookieStore = await cookies();
-  const authCookie = cookieStore.get(GUILD_AUTH_COOKIE_NAME);
-  return authCookie && tokenSchema.parse(jwtDecode(authCookie.value));
+export const getToken = async () => {
+  return (await cookies()).get(GUILD_AUTH_COOKIE_NAME)?.value;
+};
+
+export const getParsedToken = async () => {
+  const token = await getToken();
+  return token ? tokenSchema.parse(jwtDecode(token)) : undefined;
+};
+
+export const fetcherWithAuth = async <Data = unknown, Error = unknown>(
+  ...[resource, requestInit]: Parameters<typeof fetcher>
+) => {
+  const token = await getToken();
+  if (!token) {
+    throw new Error("failed to retrieve jwt token");
+  }
+  return fetcher<Data, Error>(resource, {
+    ...requestInit,
+    headers: { ...requestInit?.headers, "X-Auth-Token": token },
+  });
 };

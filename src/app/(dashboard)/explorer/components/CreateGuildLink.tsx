@@ -2,7 +2,7 @@ import { buttonVariants } from "@/components/ui/Button";
 import { Plus } from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
 
-export const CreateGuildLink = () => (
+export const CreateGuildLink = ({ className }: { className?: string }) => (
   <Link
     href="/create-guild"
     aria-label="Create guild"
@@ -10,7 +10,10 @@ export const CreateGuildLink = () => (
     className={buttonVariants({
       variant: "ghost",
       size: "sm",
-      className: "min-h-11 w-11 gap-1.5 px-0 sm:min-h-0 sm:w-auto sm:px-3",
+      className: [
+        "min-h-11 w-11 gap-1.5 px-0 sm:min-h-0 sm:w-auto sm:px-3",
+        className,
+      ],
     })}
   >
     <Plus />

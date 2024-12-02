@@ -1,4 +1,4 @@
-import { getAuthCookie as getTokenFromCookie } from "@/actions/auth";
+import { getToken } from "@/actions/auth";
 import { AuthBoundary } from "@/components/AuthBoundary";
 import { SignInButton } from "@/components/SignInButton";
 import { env } from "@/lib/env";
@@ -22,7 +22,6 @@ import { getGuildSearch } from "./fetchers";
 
 const getAssociatedGuilds = async ({ userId }: { userId: string }) => {
   const request = `${env.NEXT_PUBLIC_API}/guild/search?page=1&pageSize=${Number.MAX_SAFE_INTEGER}&sortBy=name&reverse=false&customQuery=@owner:{${userId}}`;
-  console.log(request);
   return fetcher<PaginatedResponse<Guild>>(request);
 };
 
@@ -36,7 +35,15 @@ export default async function Explorer() {
 
   return (
     <>
-      <main className="container mx-auto grid gap-4 py-16">
+      <div
+        className="-z-10 absolute top-0 right-0 left-0 h-80 bg-[center_top_0.5rem] bg-[length:theme(screens.lg)_auto] bg-[url('/images/banner-light.svg')] bg-repeat opacity-10 dark:bg-[url('/images/banner.svg')] dark:opacity-5"
+        style={{
+          maskImage:
+            "radial-gradient(ellipse at top, var(--background), transparent 90%)",
+        }}
+      />
+
+      <main className="container relative mx-auto grid gap-4 py-16">
         <section className="pt-6 pb-8">
           <h1
             className="font-black font-display text-5xl tracking-tight"
@@ -102,16 +109,16 @@ async function YourGuildsSection() {
 }
 
 async function YourGuilds() {
-  const auth = await getTokenFromCookie();
+  const auth = await getToken();
   if (!auth) return;
 
-  const { items: myGuilds } = await getAssociatedGuilds({
-    userId: auth.userId,
+  const { items: associatedGuilds } = await getAssociatedGuilds({
+    userId: auth,
   });
 
-  return myGuilds && myGuilds.length > 0 ? (
+  return associatedGuilds.length > 0 ? (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {myGuilds.map((guild) => (
+      {associatedGuilds.map((guild) => (
         <GuildCard key={guild.id} guild={guild} />
       ))}
     </div>
@@ -124,7 +131,7 @@ async function YourGuilds() {
         or create your own!
       </p>
 
-      <CreateGuildLink />
+      <CreateGuildLink className="ml-auto" />
     </div>
   );
 }
