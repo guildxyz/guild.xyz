@@ -5,6 +5,10 @@ import { env } from "./env";
 import { getCookieClientSide } from "./getCookieClientSide";
 import type { ErrorLike } from "./types";
 
+type FetchResult<Data, Error> =
+  | { status: "error"; data: Error; response: Response }
+  | { status: "success"; data: Data; response: Response };
+
 // TODO: include a dedicated logger with severity channels
 const logger = {
   info: (...args: Parameters<typeof console.info>) => {
@@ -16,10 +20,6 @@ const logger = {
     }
   },
 };
-
-type FetchResult<Data, Error> =
-  | { status: "error"; data: Error; response: Response }
-  | { status: "success"; data: Data; response: Response };
 
 export const fetchGuildApi = async <Data = object, Error = ErrorLike>(
   pathname: string,
@@ -70,38 +70,6 @@ export const fetchGuildApi = async <Data = object, Error = ErrorLike>(
   };
 };
 
-export const fetchGuildApiData = async <Data = object, Error = ErrorLike>(
-  pathname: string,
-  requestInit?: RequestInit,
-) => {
-  if (pathname.startsWith("/")) {
-    throw new Error("`pathname` must not start with slash");
-  }
-  if (pathname.endsWith("/")) {
-    throw new Error("`pathname` must not end with slash");
-  }
-
-  const url = new URL(`api/${pathname}`, env.NEXT_PUBLIC_API);
-  return fetch(url, {
-    ...requestInit,
-    headers: {
-      "Content-Type": "application/json",
-      ...requestInit?.headers,
-    },
-  }).then(async (response: Response) => {
-    const contentType = response.headers.get("content-type");
-    if (!contentType?.includes("application/json")) {
-      Promise.reject({ message: "Guild API failed respond with json" });
-    }
-    const json = await response.json();
-    logger.info(url.toString(), json);
-    if (!response.ok) {
-      return Promise.reject(json as Error);
-    }
-    return Promise.resolve(json as Data);
-  });
-};
-
 export const fetchGuildApiAuth = async <Data = object, Error = ErrorLike>(
   ...[pathname, requestInit = {}]: Parameters<typeof fetchGuildApi>
 ) => {
@@ -120,4 +88,16 @@ export const fetchGuildApiAuth = async <Data = object, Error = ErrorLike>(
       "X-Auth-Token": token,
     },
   });
+};
+
+export const fetchGuildApiData = async <Data = object, Error = ErrorLike>(
+  ...args: Parameters<typeof fetchGuildApi>
+) => {
+  return (await fetchGuildApi<Data, Error>(...args)).data;
+};
+
+export const fetchGuildApiAuthData = async <Data = object, Error = ErrorLike>(
+  ...args: Parameters<typeof fetchGuildApi>
+) => {
+  return (await fetchGuildApiAuth<Data, Error>(...args)).data;
 };
