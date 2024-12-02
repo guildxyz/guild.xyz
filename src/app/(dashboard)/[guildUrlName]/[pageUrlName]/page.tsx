@@ -17,7 +17,7 @@ const GuildPage = async ({
     method: "POST",
     body: JSON.stringify({ ids: guild.pages?.map((p) => p.pageId!) ?? [] }),
   });
-  const page = pages?.find((p) => p.urlName === pageUrlName)!;
+  const page = pages.find((p) => p.urlName === pageUrlName)!;
   const roles = await fetchGuildApiData<Schemas["RoleFull"][]>("role/batch", {
     method: "POST",
     body: JSON.stringify({
