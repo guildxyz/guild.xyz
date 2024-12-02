@@ -12,7 +12,7 @@ type FetchResult<Data, Error> =
 // TODO: include a dedicated logger with severity channels
 const logger = {
   info: (...args: Parameters<typeof console.info>) => {
-    if (process.env.NODE_ENV === "development" && env.LOGGING) {
+    if (process.env.NODE_ENV === "development" && env.LOGGING > 0) {
       console.info(
         `[${new Date().toLocaleTimeString()} - fetchGuildApi]:`,
         ...args,
