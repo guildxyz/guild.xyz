@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { ScrollArea } from "@/components/ui/ScrollArea";
 import { env } from "@/lib/env";
-import { fetcher } from "@/lib/fetcher";
+import { fetchGuildApi } from "@/lib/fetchGuildApi";
 import type { DynamicRoute } from "@/lib/types";
 import type { Schemas } from "@guildxyz/types";
 import { Lock } from "@phosphor-icons/react/dist/ssr";
@@ -11,30 +11,24 @@ const GuildPage = async ({
   params,
 }: DynamicRoute<{ pageUrlName: string; guildUrlName: string }>) => {
   const { pageUrlName, guildUrlName } = await params;
-  const guild = await fetcher<Schemas["GuildFull"]>(
+  const guild = await fetchGuildApi<Schemas["GuildFull"]>(
     `${env.NEXT_PUBLIC_API}/guild/urlName/${guildUrlName}`,
   );
-  const pages = await fetcher<Schemas["PageFull"][]>(
+  const pages = await fetchGuildApi<Schemas["PageFull"][]>(
     `${env.NEXT_PUBLIC_API}/page/batch`,
     {
       method: "POST",
       body: JSON.stringify({ ids: guild.pages?.map((p) => p.pageId!) ?? [] }),
-      headers: {
-        "Content-Type": "application/json",
-      },
     },
   );
   const page = pages.find((p) => p.urlName === pageUrlName)!;
-  const roles = await fetcher<Schemas["RoleFull"][]>(
+  const roles = await fetchGuildApi<Schemas["RoleFull"][]>(
     `${env.NEXT_PUBLIC_API}/role/batch`,
     {
       method: "POST",
       body: JSON.stringify({
         ids: page.roles?.map((r) => r.roleId!) ?? [],
       }),
-      headers: {
-        "Content-Type": "application/json",
-      },
     },
   );
 
@@ -48,7 +42,7 @@ const GuildPage = async ({
 };
 
 const RoleCard = async ({ role }: { role: Schemas["RoleFull"] }) => {
-  const rewards = await fetcher<Schemas["RewardFull"][]>(
+  const rewards = await fetchGuildApi<Schemas["RewardFull"][]>(
     `${env.NEXT_PUBLIC_API}/reward/batch`,
     {
       method: "POST",

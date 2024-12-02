@@ -3,7 +3,7 @@ import { AuthBoundary } from "@/components/AuthBoundary";
 import { GuildImage } from "@/components/GuildImage";
 import { SignInButton } from "@/components/SignInButton";
 import { env } from "@/lib/env";
-import { fetcher } from "@/lib/fetcher";
+import { fetchGuildApi } from "@/lib/fetchGuildApi";
 import { getQueryClient } from "@/lib/getQueryClient";
 import type { DynamicRoute } from "@/lib/types";
 import type { Schemas } from "@guildxyz/types";
@@ -17,13 +17,13 @@ const GuildLayout = async ({
   children,
 }: PropsWithChildren<DynamicRoute<{ guildUrlName: string }>>) => {
   const { guildUrlName } = await params;
-  const guild = await fetcher<Schemas["GuildFull"]>(
+  const guild = await fetchGuildApi<Schemas["GuildFull"]>(
     `${env.NEXT_PUBLIC_API}/guild/urlName/${guildUrlName}`,
   );
   const token = await getParsedToken();
   const user =
     token &&
-    (await fetcher<Schemas["UserFull"]>(
+    (await fetchGuildApi<Schemas["UserFull"]>(
       `${env.NEXT_PUBLIC_API}/user/id/${token.userId}`,
     ));
 

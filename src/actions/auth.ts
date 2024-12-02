@@ -2,6 +2,7 @@
 
 import { GUILD_AUTH_COOKIE_NAME } from "@/config/constants";
 import { env } from "@/lib/env";
+import { fetchGuildApi } from "@/lib/fetchGuildApi";
 import { authSchema, tokenSchema } from "@/lib/schemas/user";
 import { jwtDecode } from "jwt-decode";
 import { cookies } from "next/headers";
@@ -18,20 +19,13 @@ export const signIn = async ({
 
   const requestInit = {
     method: "POST",
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-    },
     body: JSON.stringify({
       message,
       signature,
     }),
   } satisfies RequestInit;
 
-  const signInRes = await fetch(
-    `${env.NEXT_PUBLIC_API}/auth/siwe/login`,
-    requestInit,
-  );
+  const signInRes = await fetchGuildApi("auth/siwe/login", requestInit);
 
   let json: unknown;
   if (signInRes.status === 401) {

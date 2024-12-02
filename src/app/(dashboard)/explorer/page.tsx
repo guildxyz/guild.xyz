@@ -1,8 +1,6 @@
 import { getToken } from "@/actions/auth";
 import { AuthBoundary } from "@/components/AuthBoundary";
 import { SignInButton } from "@/components/SignInButton";
-import { env } from "@/lib/env";
-import { fetcher } from "@/lib/fetcher";
 import { getQueryClient } from "@/lib/getQueryClient";
 import type { Guild } from "@/lib/schemas/guild";
 import type { PaginatedResponse } from "@/lib/types";
@@ -16,10 +14,12 @@ import { InfiniteScrollGuilds } from "./components/InfiniteScrollGuilds";
 import { StickyNavbar } from "./components/StickyNavbar";
 import { StickySearch } from "./components/StickySearch";
 import { ACTIVE_SECTION } from "./constants";
+import { fetchGuildApi } from "@/lib/fetchGuildApi";
 
 const getAssociatedGuilds = async ({ userId }: { userId: string }) => {
-  const request = `${env.NEXT_PUBLIC_API}/guild/search?page=1&pageSize=${Number.MAX_SAFE_INTEGER}&sortBy=name&reverse=false&customQuery=@owner:{${userId}}`;
-  return fetcher<PaginatedResponse<Guild>>(request);
+  return fetchGuildApi<PaginatedResponse<Guild>>(
+    `guild/search?page=1&pageSize=${Number.MAX_SAFE_INTEGER}&sortBy=name&reverse=false&customQuery=@owner:{${userId}}`,
+  );
 };
 
 export default async function Explorer() {
@@ -136,9 +136,7 @@ async function YourGuilds() {
 function YourGuildsSkeleton() {
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {[...Array(3)].map((_, i) => (
-        <GuildCardSkeleton key={i} />
-      ))}
+      {Array(3).fill(<GuildCardSkeleton />)}
     </div>
   );
 }
