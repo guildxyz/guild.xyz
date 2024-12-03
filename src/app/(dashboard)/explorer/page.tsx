@@ -16,7 +16,9 @@ import { StickyNavbar } from "./components/StickyNavbar";
 import { StickySearch } from "./components/StickySearch";
 import { ACTIVE_SECTION } from "./constants";
 
-const getAssociatedGuilds = async ({ userId }: { userId: string }) => {
+const getAssociatedGuilds = async () => {
+  const { userId } = await tryGetParsedToken();
+
   return fetchGuildApiData<PaginatedResponse<Guild>>(
     `guild/search?page=1&pageSize=${Number.MAX_SAFE_INTEGER}&sortBy=name&reverse=false&customQuery=@owner:{${userId}}`,
   );
@@ -106,11 +108,7 @@ async function AssociatedGuildsSection() {
 }
 
 async function AssociatedGuilds() {
-  const { userId } = await tryGetParsedToken();
-
-  const { items: associatedGuilds } = await getAssociatedGuilds({
-    userId,
-  });
+  const { items: associatedGuilds } = await getAssociatedGuilds();
 
   return associatedGuilds.length > 0 ? (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
