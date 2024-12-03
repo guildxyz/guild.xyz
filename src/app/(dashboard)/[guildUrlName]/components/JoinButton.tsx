@@ -37,7 +37,7 @@ export const JoinButton = () => {
         retryStrategy: "on-error",
         method: "post",
         keepalive: true,
-        maxRetryCount: 1,
+        maxRetryCount: 0,
         headers: {
           "x-auth-token": token,
           "content-type": "application/json",
