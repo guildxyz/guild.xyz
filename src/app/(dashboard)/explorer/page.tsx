@@ -1,4 +1,4 @@
-import { tryGetToken } from "@/actions/auth";
+import { tryGetParsedToken } from "@/actions/token";
 import { AuthBoundary } from "@/components/AuthBoundary";
 import { SignInButton } from "@/components/SignInButton";
 import { fetchGuildApiData } from "@/lib/fetchGuildApi";
@@ -44,7 +44,7 @@ export default async function Explorer() {
         <section className="pt-6 pb-8">
           <h1
             className="font-black font-display text-5xl tracking-tight"
-            id={ACTIVE_SECTION.yourGuilds}
+            id={ACTIVE_SECTION.associatedGuilds}
           >
             Guildhall
           </h1>
@@ -57,7 +57,7 @@ export default async function Explorer() {
           </AuthBoundary>
         </StickyNavbar>
 
-        <YourGuildsSection />
+        <AssociatedGuildsSection />
 
         <h2
           className="mt-12 font-bold text-lg tracking-tight"
@@ -75,7 +75,7 @@ export default async function Explorer() {
   );
 }
 
-async function YourGuildsSection() {
+async function AssociatedGuildsSection() {
   return (
     <section className="grid gap-2">
       <AuthBoundary
@@ -97,20 +97,19 @@ async function YourGuildsSection() {
           </div>
         }
       >
-        <Suspense fallback={<YourGuildsSkeleton />}>
-          <YourGuilds />
+        <Suspense fallback={<AssociatedGuildsSkeleton />}>
+          <AssociatedGuilds />
         </Suspense>
       </AuthBoundary>
     </section>
   );
 }
 
-async function YourGuilds() {
-  const auth = await tryGetToken();
-  if (!auth) return;
+async function AssociatedGuilds() {
+  const { userId } = await tryGetParsedToken();
 
   const { items: associatedGuilds } = await getAssociatedGuilds({
-    userId: auth,
+    userId,
   });
 
   return associatedGuilds.length > 0 ? (
@@ -133,7 +132,7 @@ async function YourGuilds() {
   );
 }
 
-function YourGuildsSkeleton() {
+function AssociatedGuildsSkeleton() {
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {Array.from({ length: 3 }, (_, i) => (

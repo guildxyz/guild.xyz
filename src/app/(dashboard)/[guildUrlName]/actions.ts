@@ -1,5 +1,5 @@
-import { tryGetParsedToken } from "@/actions/auth";
-import { fetchGuildApiAuthData, fetchGuildApiData } from "@/lib/fetchGuildApi";
+import { tryGetParsedToken } from "@/actions/token";
+import { fetchGuildApiData } from "@/lib/fetchGuildApi";
 import type { ErrorLike, WithIdLike } from "@/lib/types";
 import type { Schemas } from "@guildxyz/types";
 import z from "zod";
@@ -10,7 +10,7 @@ const resolveIdLikeRequest = (idLike: string) => {
 };
 
 export const leaveGuild = async ({ guildId }: { guildId: string }) => {
-  return fetchGuildApiAuthData(`guild/${guildId}/leave`, {
+  return fetchGuildApiData(`guild/${guildId}/leave`, {
     method: "POST",
   });
 };
@@ -25,17 +25,13 @@ export const getEntity = async <Data = object, Error = ErrorLike>({
   idLike,
   entity,
   responseInit,
-  auth = false,
 }: {
   entity: string;
   idLike: string;
-  auth?: boolean;
   responseInit?: Parameters<typeof fetch>[1];
 }) => {
   const pathname = `${entity}/${resolveIdLikeRequest(idLike)}`;
-  return auth
-    ? fetchGuildApiAuthData<Data, Error>(pathname, responseInit)
-    : fetchGuildApiData<Data, Error>(pathname, responseInit);
+  return fetchGuildApiData<Data, Error>(pathname, responseInit);
 };
 
 export const getUser = async () => {
@@ -43,7 +39,6 @@ export const getUser = async () => {
   return getEntity<Schemas["UserFull"]>({
     entity: "user",
     idLike: userId,
-    auth: true,
   });
 };
 
