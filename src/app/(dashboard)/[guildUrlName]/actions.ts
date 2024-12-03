@@ -1,10 +1,7 @@
-"use server";
-
 import { tryGetParsedToken } from "@/actions/auth";
 import { fetchGuildApiAuthData, fetchGuildApiData } from "@/lib/fetchGuildApi";
 import type { ErrorLike, WithIdLike } from "@/lib/types";
 import type { Schemas } from "@guildxyz/types";
-import { revalidateTag } from "next/cache";
 import z from "zod";
 
 const resolveIdLikeRequest = (idLike: string) => {
@@ -12,16 +9,14 @@ const resolveIdLikeRequest = (idLike: string) => {
   return `${isId ? "id" : "urlName"}/${idLike}`;
 };
 
-export const joinGuild = async ({ guildId }: { guildId: string }) => {
-  // the response type might not be suitable for this fetcher
-  revalidateTag("user");
-  //return fetchGuildApiAuthData(`guild/${guildId}/join`, {
-  //  method: "POST",
-  //});
-};
+//export const joinGuild = async ({ guildId }: { guildId: string }) => {
+//   // the response type might not be suitable for this fetcher
+//  return fetchGuildApiAuthData(`guild/${guildId}/join`, {
+//    method: "POST",
+//  });
+//};
 
 export const leaveGuild = async ({ guildId }: { guildId: string }) => {
-  revalidateTag("user");
   return fetchGuildApiAuthData(`guild/${guildId}/leave`, {
     method: "POST",
   });
@@ -56,7 +51,6 @@ export const getUser = async () => {
     entity: "user",
     idLike: userId,
     auth: true,
-    responseInit: { next: { tags: ["user"] } },
   });
 };
 

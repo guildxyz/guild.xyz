@@ -6,7 +6,7 @@ import { env } from "@/lib/env";
 import { getCookieClientSide } from "@/lib/getCookieClientSide";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
-import { joinGuild, leaveGuild } from "../actions";
+import { leaveGuild } from "../actions";
 import { guildOptions, userOptions } from "../options";
 
 export const JoinButton = () => {
@@ -25,6 +25,7 @@ export const JoinButton = () => {
 
   const joinMutation = useMutation({
     mutationFn: async () => {
+      // TODO: Handle error here, throw error in funciton if needed
       const token = getCookieClientSide(GUILD_AUTH_COOKIE_NAME)!;
       const url = new URL(
         `api/guild/${guild.data.id}/join`,
@@ -51,17 +52,31 @@ export const JoinButton = () => {
         }
       }
 
-      joinGuild({ guildId: guild.data.id });
+      //joinGuild({ guildId: guild.data.id });
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["user"] });
+    onSuccess: async () => {
+      const prev = queryClient.getQueryData(userOptions().queryKey);
+      if (prev) {
+        queryClient.setQueryData(userOptions().queryKey, {
+          ...prev,
+          guilds: prev?.guilds?.concat({ guildId: guild.data.id }),
+        });
+      }
     },
   });
 
   const leaveMutation = useMutation({
     mutationFn: () => leaveGuild({ guildId: guild.data.id }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["user"] });
+    onSuccess: async () => {
+      const prev = queryClient.getQueryData(userOptions().queryKey);
+      if (prev) {
+        queryClient.setQueryData(userOptions().queryKey, {
+          ...prev,
+          guilds: prev?.guilds?.filter(
+            ({ guildId }) => guildId !== guild.data.id,
+          ),
+        });
+      }
     },
   });
 
