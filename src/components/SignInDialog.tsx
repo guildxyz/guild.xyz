@@ -124,9 +124,10 @@ const SignInWithEthereum = () => {
   const { mutate: signInWithEthereum, isPending } = useMutation({
     mutationKey: ["SIWE"],
     mutationFn: async () => {
-      const { nonce } = await fetchGuildApi("auth/siwe/nonce").then((data) =>
-        z.object({ nonce: z.string() }).parse(data),
-      );
+      const nonceResponse = await fetchGuildApi("auth/siwe/nonce");
+      const { nonce } = z
+        .object({ nonce: z.string() })
+        .parse(nonceResponse.data);
 
       const url = new URL(window.location.href);
 

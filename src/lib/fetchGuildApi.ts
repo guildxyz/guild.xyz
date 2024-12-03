@@ -66,7 +66,7 @@ export const fetchGuildApi = async <Data = object, Error = ErrorLike>(
   const response = await fetch(url, {
     ...requestInit,
     headers: {
-      "Content-Type": "application/json",
+      ...(requestInit?.body && { "Content-Type": "application/json" }),
       ...requestInit?.headers,
     },
   });
@@ -77,6 +77,8 @@ export const fetchGuildApi = async <Data = object, Error = ErrorLike>(
     throw new Error("Guild API failed respond with json");
   }
 
+  logger.info("\n", url.toString(), response.status);
+
   let json: unknown;
   try {
     json = await response.json();
@@ -84,7 +86,7 @@ export const fetchGuildApi = async <Data = object, Error = ErrorLike>(
     throw new Error("Failed to parse json from response");
   }
 
-  logger.info(url.toString(), response.status, json);
+  logger.info(json, "\n");
 
   if (!response.ok) {
     return {
