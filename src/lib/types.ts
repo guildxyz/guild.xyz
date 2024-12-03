@@ -25,3 +25,10 @@ export type ErrorLike = {
   status?: string;
   error?: string;
 };
+
+/**
+ * Loose type for describing either a
+ * - `urlName`: uri safe identifier alias
+ * - `id`: uuid v4 identifier
+ */
+export type WithIdLike<T = unknown> = T & { idLike: string };

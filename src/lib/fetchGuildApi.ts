@@ -1,4 +1,4 @@
-import { getToken } from "@/actions/auth";
+import { tryGetToken } from "@/actions/auth";
 import { GUILD_AUTH_COOKIE_NAME } from "@/config/constants";
 import { isServer } from "@tanstack/react-query";
 import { env } from "./env";
@@ -140,7 +140,7 @@ export const fetchGuildApiAuth = async <Data = object, Error = ErrorLike>(
   ...[pathname, requestInit = {}]: Parameters<typeof fetchGuildApi>
 ): Promise<FetchResult<Data, Error>> => {
   const token = isServer
-    ? await getToken()
+    ? await tryGetToken()
     : getCookieClientSide(GUILD_AUTH_COOKIE_NAME);
   if (!token) {
     throw new Error(

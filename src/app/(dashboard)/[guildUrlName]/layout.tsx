@@ -1,34 +1,39 @@
-import { getParsedToken } from "@/actions/auth";
 import { AuthBoundary } from "@/components/AuthBoundary";
 import { GuildImage } from "@/components/GuildImage";
 import { SignInButton } from "@/components/SignInButton";
-import { fetchGuildApiData } from "@/lib/fetchGuildApi";
 import { getQueryClient } from "@/lib/getQueryClient";
 import type { DynamicRoute } from "@/lib/types";
-import type { Schemas } from "@guildxyz/types";
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { type PropsWithChildren, Suspense } from "react";
 import { GuildTabs, GuildTabsSkeleton } from "./components/GuildTabs";
 import { JoinButton } from "./components/JoinButton";
+import { guildOptions, userOptions } from "./options";
 
 const GuildLayout = async ({
   params,
   children,
 }: PropsWithChildren<DynamicRoute<{ guildUrlName: string }>>) => {
   const { guildUrlName } = await params;
-  const guild = await fetchGuildApiData<Schemas["GuildFull"]>(
-    `guild/urlName/${guildUrlName}`,
-  );
-  const token = await getParsedToken();
-  const user =
-    token &&
-    (await fetchGuildApiData<Schemas["UserFull"]>(`user/id/${token.userId}`));
-
   const queryClient = getQueryClient();
-  void queryClient.prefetchQuery({
-    queryKey: ["catch"],
-    queryFn: () => ({ test: 32 }),
-  });
+
+  await Promise.all([
+    queryClient.prefetchQuery(userOptions()),
+    queryClient.prefetchQuery(
+      guildOptions({
+        idLike: guildUrlName,
+      }),
+    ),
+  ]);
+
+  const guild = queryClient.getQueryData(
+    guildOptions({
+      idLike: guildUrlName,
+    }).queryKey,
+  );
+  if (!guild) {
+    throw new Error("Failed to fetch guild");
+  }
+  const user = queryClient.getQueryState(userOptions().queryKey);
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
@@ -47,7 +52,7 @@ const GuildLayout = async ({
                 </h1>
               </div>
               <AuthBoundary fallback={<SignInButton />}>
-                {user && <JoinButton guild={guild} user={user} />}
+                {user?.data && <JoinButton guild={guild} user={user.data} />}
               </AuthBoundary>
             </div>
             <p className="line-clamp-3 max-w-prose text-balance text-lg leading-relaxed">

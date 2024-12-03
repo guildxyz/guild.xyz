@@ -45,11 +45,13 @@ export const signOut = async (redirectTo?: string) => {
   redirect(redirectTo ?? "/explorer");
 };
 
-export const getToken = async () => {
-  return (await cookies()).get(GUILD_AUTH_COOKIE_NAME)?.value;
+export const tryGetToken = async () => {
+  const token = (await cookies()).get(GUILD_AUTH_COOKIE_NAME)?.value;
+  if (!token) throw new Error("Failed to retrieve token");
+  return token;
 };
 
-export const getParsedToken = async () => {
-  const token = await getToken();
-  return token ? tokenSchema.parse(jwtDecode(token)) : undefined;
+export const tryGetParsedToken = async () => {
+  const token = await tryGetToken();
+  return tokenSchema.parse(jwtDecode(token));
 };

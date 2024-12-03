@@ -1,4 +1,4 @@
-import { getToken } from "@/actions/auth";
+import { tryGetToken } from "@/actions/auth";
 import { AuthBoundary } from "@/components/AuthBoundary";
 import { SignInButton } from "@/components/SignInButton";
 import { fetchGuildApiData } from "@/lib/fetchGuildApi";
@@ -106,7 +106,7 @@ async function YourGuildsSection() {
 }
 
 async function YourGuilds() {
-  const auth = await getToken();
+  const auth = await tryGetToken();
   if (!auth) return;
 
   const { items: associatedGuilds } = await getAssociatedGuilds({
