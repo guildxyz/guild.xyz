@@ -37,6 +37,7 @@
     "autoprefixer": "^10.4.20",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "event-source-plus": "^0.1.8",
     "foxact": "^0.2.41",
     "jotai": "^2.10.2",
     "jwt-decode": "^4.0.0",
