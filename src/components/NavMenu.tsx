@@ -22,99 +22,127 @@ import {
 import { useIsClient } from "foxact/use-is-client";
 import { useTheme } from "next-themes";
 import { usePathname } from "next/navigation";
-import type { ComponentProps, ReactNode } from "react";
+import { type ComponentProps, type ReactNode, useState } from "react";
 import GuildLogo from "static/logo.svg";
 import { Anchor } from "./ui/Anchor";
 import { Button, buttonVariants } from "./ui/Button";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/Popover";
 import { ToggleGroup, ToggleGroupItem } from "./ui/ToggleGroup";
 
-export const NavMenu = () => (
-  <Popover>
-    <PopoverTrigger asChild>
-      <Button variant="ghost" className="rounded-2xl">
-        <GuildLogo className="size-4" />
-        <span className="font-bold font-display text-base">Guild</span>
-        <List weight="bold" className="ml-1" />
-      </Button>
-    </PopoverTrigger>
-    <PopoverContent
-      align="start"
-      className="mt-1 w-auto min-w-[300px] origin-top-left overflow-hidden p-0"
-    >
-      <nav className="flex flex-col gap-2 px-3 py-4 sm:flex-row sm:gap-12">
-        <NavGroup title="Navigation">
-          <NavButton href="/explorer">
-            <House weight="bold" />
-            Explore guilds
-          </NavButton>
+export const NavMenu = () => {
+  const [open, setOpen] = useState(false);
 
-          <NavButton href="/create-guild">
-            <Plus weight="bold" />
-            Create guild
-          </NavButton>
+  return (
+    <Popover onOpenChange={setOpen} open={open}>
+      <PopoverTrigger asChild>
+        <Button variant="ghost" className="rounded-2xl">
+          <GuildLogo className="size-4" />
+          <span className="font-bold font-display text-base">Guild</span>
+          <List weight="bold" className="ml-1" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent
+        align="start"
+        className="mt-1 w-auto min-w-[300px] origin-top-left overflow-hidden p-0"
+      >
+        <nav className="flex flex-col gap-2 px-3 py-4 sm:flex-row sm:gap-12">
+          <NavGroup title="Navigation">
+            <NavButton href="/explorer" onClick={() => setOpen(false)}>
+              <House weight="bold" />
+              Explore guilds
+            </NavButton>
 
-          <NavButton href="https://help.guild.xyz">
-            <Info weight="bold" />
-            Guide
-          </NavButton>
+            <NavButton href="/create-guild" onClick={() => setOpen(false)}>
+              <Plus weight="bold" />
+              Create guild
+            </NavButton>
 
-          <NavButton href="https://help.guild.xyz/en/collections/9537762-case-studies">
-            <Book weight="bold" />
-            Case studies
-          </NavButton>
+            <NavButton
+              href="https://help.guild.xyz"
+              onClick={() => setOpen(false)}
+            >
+              <Info weight="bold" />
+              Guide
+            </NavButton>
 
-          <NavButton href="/privacy-policy">
-            <Shield weight="bold" />
-            Privacy Policy
-          </NavButton>
+            <NavButton
+              href="https://help.guild.xyz/en/collections/9537762-case-studies"
+              onClick={() => setOpen(false)}
+            >
+              <Book weight="bold" />
+              Case studies
+            </NavButton>
 
-          <NavButton href="/terms-of-use">
-            <File weight="bold" />
-            Terms of Use
-          </NavButton>
-        </NavGroup>
+            <NavButton href="/privacy-policy" onClick={() => setOpen(false)}>
+              <Shield weight="bold" />
+              Privacy Policy
+            </NavButton>
 
-        <NavGroup title="Other">
-          <NavButton href="https://discord.gg/KUkghUdk2G">
-            <DiscordLogo weight="bold" />
-            Discord
-          </NavButton>
+            <NavButton href="/terms-of-use" onClick={() => setOpen(false)}>
+              <File weight="bold" />
+              Terms of Use
+            </NavButton>
+          </NavGroup>
 
-          <NavButton href="https://twitter.com/guildxyz">
-            <XLogo weight="bold" />
-            Twitter
-          </NavButton>
+          <NavGroup title="Other">
+            <NavButton
+              href="https://discord.gg/KUkghUdk2G"
+              onClick={() => setOpen(false)}
+            >
+              <DiscordLogo weight="bold" />
+              Discord
+            </NavButton>
 
-          <NavButton href="https://github.com/guildxyz/guild.xyz">
-            <Code weight="bold" />
-            Code
-          </NavButton>
+            <NavButton
+              href="https://twitter.com/guildxyz"
+              onClick={() => setOpen(false)}
+            >
+              <XLogo weight="bold" />
+              Twitter
+            </NavButton>
 
-          <NavButton href="https://github.com/guildxyz/guild-sdk">
-            <Package weight="bold" />
-            Guild SDK
-          </NavButton>
+            <NavButton
+              href="https://github.com/guildxyz/guild.xyz"
+              onClick={() => setOpen(false)}
+            >
+              <Code weight="bold" />
+              Code
+            </NavButton>
 
-          <NavButton href="https://careers.guild.xyz">
-            <UsersThree weight="bold" />
-            Team
-          </NavButton>
+            <NavButton
+              href="https://github.com/guildxyz/guild-sdk"
+              onClick={() => setOpen(false)}
+            >
+              <Package weight="bold" />
+              Guild SDK
+            </NavButton>
 
-          <NavButton href="https://guild.xyz/guild-xyz-brand-kit.zip">
-            <Palette weight="bold" />
-            Brand kit
-          </NavButton>
-        </NavGroup>
-      </nav>
+            <NavButton
+              href="https://careers.guild.xyz"
+              onClick={() => setOpen(false)}
+            >
+              <UsersThree weight="bold" />
+              Team
+            </NavButton>
 
-      <div className="flex items-center justify-between bg-card-secondary px-7 py-4 text-foreground text-sm">
-        <span>Theme:</span>
-        <ThemeToggle />
-      </div>
-    </PopoverContent>
-  </Popover>
-);
+            <NavButton
+              href="https://guild.xyz/guild-xyz-brand-kit.zip"
+              onClick={() => setOpen(false)}
+            >
+              <Palette weight="bold" />
+              Brand kit
+            </NavButton>
+          </NavGroup>
+        </nav>
+
+        <div className="flex items-center justify-between bg-card-secondary px-7 py-4 text-foreground text-sm">
+          <span>Theme:</span>
+          <ThemeToggle />
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+};
 
 const NavGroup = ({
   title,

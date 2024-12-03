@@ -1,20 +1,72 @@
 "use server";
-import { fetcherWithAuth } from "@/actions/auth";
-import { env } from "@/lib/env";
-import { revalidateTag } from "next/cache";
 
-export const revalidateRoleGroups = async (guildId: string) => {
-  revalidateTag(`page-${guildId}`);
+import { tryGetParsedToken } from "@/actions/auth";
+import { fetchGuildApiAuthData, fetchGuildApiData } from "@/lib/fetchGuildApi";
+import type { ErrorLike, WithIdLike } from "@/lib/types";
+import type { Schemas } from "@guildxyz/types";
+import { revalidateTag } from "next/cache";
+import z from "zod";
+
+const resolveIdLikeRequest = (idLike: string) => {
+  const isId = z.string().uuid().safeParse(idLike).success;
+  return `${isId ? "id" : "urlName"}/${idLike}`;
 };
 
 export const joinGuild = async ({ guildId }: { guildId: string }) => {
-  return fetcherWithAuth(`${env.NEXT_PUBLIC_API}/guild/${guildId}/join`, {
+  // the response type might not be suitable for this fetcher
+  revalidateTag("user");
+  //return fetchGuildApiAuthData(`guild/${guildId}/join`, {
+  //  method: "POST",
+  //});
+};
+
+export const leaveGuild = async ({ guildId }: { guildId: string }) => {
+  revalidateTag("user");
+  return fetchGuildApiAuthData(`guild/${guildId}/leave`, {
     method: "POST",
   });
 };
 
-export const leaveGuild = async ({ guildId }: { guildId: string }) => {
-  return fetcherWithAuth(`${env.NEXT_PUBLIC_API}/guild/${guildId}/leave`, {
+export const getGuild = async ({ idLike }: WithIdLike) => {
+  return fetchGuildApiData<Schemas["GuildFull"]>(
+    `guild/${resolveIdLikeRequest(idLike)}`,
+  );
+};
+
+export const getEntity = async <Data = object, Error = ErrorLike>({
+  idLike,
+  entity,
+  responseInit,
+  auth = false,
+}: {
+  entity: string;
+  idLike: string;
+  auth?: boolean;
+  responseInit?: Parameters<typeof fetch>[1];
+}) => {
+  const pathname = `${entity}/${resolveIdLikeRequest(idLike)}`;
+  return auth
+    ? fetchGuildApiAuthData<Data, Error>(pathname, responseInit)
+    : fetchGuildApiData<Data, Error>(pathname, responseInit);
+};
+
+export const getUser = async () => {
+  const { userId } = await tryGetParsedToken();
+  return getEntity<Schemas["UserFull"]>({
+    entity: "user",
+    idLike: userId,
+    auth: true,
+    responseInit: { next: { tags: ["user"] } },
+  });
+};
+
+export const getPages = async ({ guildId }: { guildId: string }) => {
+  const guild = await getGuild({ idLike: guildId });
+  return fetchGuildApiData<Schemas["PageFull"][]>("page/batch", {
     method: "POST",
+    body: JSON.stringify({ ids: guild.pages?.map((p) => p.pageId!) ?? [] }),
+    headers: {
+      "Content-Type": "application/json",
+    },
   });
 };

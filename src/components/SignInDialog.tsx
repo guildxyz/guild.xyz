@@ -2,7 +2,7 @@
 
 import { signIn } from "@/actions/auth";
 import { signInDialogOpenAtom } from "@/config/atoms";
-import { env } from "@/lib/env";
+import { fetchGuildApi } from "@/lib/fetchGuildApi";
 import { SignIn, User, Wallet, XCircle } from "@phosphor-icons/react/dist/ssr";
 import { DialogDescription } from "@radix-ui/react-dialog";
 import { useMutation } from "@tanstack/react-query";
@@ -124,9 +124,10 @@ const SignInWithEthereum = () => {
   const { mutate: signInWithEthereum, isPending } = useMutation({
     mutationKey: ["SIWE"],
     mutationFn: async () => {
-      const { nonce } = await fetch(`${env.NEXT_PUBLIC_API}/auth/siwe/nonce`)
-        .then((res) => res.json())
-        .then((data) => z.object({ nonce: z.string() }).parse(data));
+      const nonceResponse = await fetchGuildApi("auth/siwe/nonce");
+      const { nonce } = z
+        .object({ nonce: z.string() })
+        .parse(nonceResponse.data);
 
       const url = new URL(window.location.href);
 

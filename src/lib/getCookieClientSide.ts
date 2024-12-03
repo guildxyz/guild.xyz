@@ -1,4 +1,6 @@
-export const getCookie = (name: string) => {
+"use client";
+
+export const getCookieClientSide = (name: string) => {
   const decodedCookie = decodeURIComponent(document.cookie);
   const cookiesArray = decodedCookie.split(";");
 

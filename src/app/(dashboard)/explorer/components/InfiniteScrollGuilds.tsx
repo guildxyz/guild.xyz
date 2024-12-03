@@ -4,9 +4,9 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { useIntersection } from "foxact/use-intersection";
 import { useAtomValue } from "jotai";
 import { useCallback, useEffect } from "react";
+import { getGuildSearch } from "../actions";
 import { searchAtom } from "../atoms";
 import { PAGE_SIZE } from "../constants";
-import { getGuildSearch } from "../fetchers";
 import { GuildCard, GuildCardSkeleton } from "./GuildCard";
 
 export const InfiniteScrollGuilds = () => {
@@ -14,7 +14,8 @@ export const InfiniteScrollGuilds = () => {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useInfiniteQuery({
       queryKey: ["guilds", search || ""],
-      queryFn: getGuildSearch(search),
+      queryFn: ({ pageParam }) =>
+        getGuildSearch({ search: search || "", pageParam }),
       initialPageParam: 1,
       staleTime: Number.POSITIVE_INFINITY,
       enabled: search !== undefined,

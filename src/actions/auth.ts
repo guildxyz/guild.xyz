@@ -1,8 +1,7 @@
 "use server";
 
 import { GUILD_AUTH_COOKIE_NAME } from "@/config/constants";
-import { env } from "@/lib/env";
-import { fetcher } from "@/lib/fetcher";
+import { fetchGuildApi } from "@/lib/fetchGuildApi";
 import { authSchema, tokenSchema } from "@/lib/schemas/user";
 import { jwtDecode } from "jwt-decode";
 import { cookies } from "next/headers";
@@ -19,30 +18,17 @@ export const signIn = async ({
 
   const requestInit = {
     method: "POST",
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-    },
     body: JSON.stringify({
       message,
       signature,
     }),
   } satisfies RequestInit;
 
-  const signInRes = await fetch(
-    `${env.NEXT_PUBLIC_API}/auth/siwe/login`,
-    requestInit,
-  );
-
-  let json: unknown;
-  if (signInRes.status === 401) {
-    const registerRes = await fetch(
-      `${env.NEXT_PUBLIC_API}/auth/siwe/register`,
-      requestInit,
-    );
-    json = await registerRes.json();
-  } else {
-    json = await signInRes.json();
+  const signInRes = await fetchGuildApi("auth/siwe/login", requestInit);
+  let json = signInRes.data;
+  if (signInRes.response.status === 401) {
+    const registerRes = await fetchGuildApi("auth/siwe/register", requestInit);
+    json = registerRes.data;
   }
   const authData = authSchema.parse(json);
   const { exp } = tokenSchema.parse(jwtDecode(authData.token));
@@ -59,24 +45,13 @@ export const signOut = async (redirectTo?: string) => {
   redirect(redirectTo ?? "/explorer");
 };
 
-export const getToken = async () => {
-  return (await cookies()).get(GUILD_AUTH_COOKIE_NAME)?.value;
+export const tryGetToken = async () => {
+  const token = (await cookies()).get(GUILD_AUTH_COOKIE_NAME)?.value;
+  if (!token) throw new Error("Failed to retrieve token");
+  return token;
 };
 
-export const getParsedToken = async () => {
-  const token = await getToken();
-  return token ? tokenSchema.parse(jwtDecode(token)) : undefined;
-};
-
-export const fetcherWithAuth = async <Data = unknown, Error = unknown>(
-  ...[resource, requestInit]: Parameters<typeof fetcher>
-) => {
-  const token = await getToken();
-  if (!token) {
-    throw new Error("failed to retrieve jwt token");
-  }
-  return fetcher<Data, Error>(resource, {
-    ...requestInit,
-    headers: { ...requestInit?.headers, "X-Auth-Token": token },
-  });
+export const tryGetParsedToken = async () => {
+  const token = await tryGetToken();
+  return tokenSchema.parse(jwtDecode(token));
 };

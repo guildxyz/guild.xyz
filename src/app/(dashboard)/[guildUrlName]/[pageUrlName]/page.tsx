@@ -1,12 +1,8 @@
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { ScrollArea } from "@/components/ui/ScrollArea";
-import { env } from "@/lib/env";
-import { fetcher } from "@/lib/fetcher";
-import type { Guild } from "@/lib/schemas/guild";
-import type { Role } from "@/lib/schemas/role";
-import type { RoleGroup } from "@/lib/schemas/roleGroup";
-import type { DynamicRoute, PaginatedResponse } from "@/lib/types";
+import { fetchGuildApiData } from "@/lib/fetchGuildApi";
+import type { DynamicRoute } from "@/lib/types";
 import type { Schemas } from "@guildxyz/types";
 import { Lock } from "@phosphor-icons/react/dist/ssr";
 
@@ -14,23 +10,20 @@ const GuildPage = async ({
   params,
 }: DynamicRoute<{ pageUrlName: string; guildUrlName: string }>) => {
   const { pageUrlName, guildUrlName } = await params;
-  const guild = (await (
-    await fetch(`${env.NEXT_PUBLIC_API}/guild/urlName/${guildUrlName}`)
-  ).json()) as Guild;
-  const paginatedRoleGroup = (await (
-    await fetch(
-      `${env.NEXT_PUBLIC_API}/page/search?customQuery=@guildId:{${guild.id}}&pageSize=${Number.MAX_SAFE_INTEGER}`,
-    )
-  ).json()) as PaginatedResponse<RoleGroup>;
-  const roleGroups = paginatedRoleGroup.items;
-  const roleGroup = roleGroups.find(
-    // @ts-expect-error
-    (rg) => rg.urlName === pageUrlName || rg.id === guild.homeRoleGroupId,
-  )!;
-  const paginatedRole = await fetcher<PaginatedResponse<Role>>(
-    `${env.NEXT_PUBLIC_API}/role/search?customQuery=@guildId:{${guild.id}}&pageSize=${Number.MAX_SAFE_INTEGER}`,
+  const guild = await fetchGuildApiData<Schemas["GuildFull"]>(
+    `guild/urlName/${guildUrlName}`,
   );
-  const roles = paginatedRole.items.filter((r) => r.groupId === roleGroup.id);
+  const pages = await fetchGuildApiData<Schemas["PageFull"][]>("page/batch", {
+    method: "POST",
+    body: JSON.stringify({ ids: guild.pages?.map((p) => p.pageId!) ?? [] }),
+  });
+  const page = pages.find((p) => p.urlName === pageUrlName)!;
+  const roles = await fetchGuildApiData<Schemas["RoleFull"][]>("role/batch", {
+    method: "POST",
+    body: JSON.stringify({
+      ids: page.roles?.map((r) => r.roleId!) ?? [],
+    }),
+  });
 
   return (
     <div className="my-4 space-y-4">
@@ -41,18 +34,19 @@ const GuildPage = async ({
   );
 };
 
-const RoleCard = async ({ role }: { role: Role }) => {
-  const rewards = (await Promise.all(
-    // @ts-ignore
-    role.rewards?.map(({ rewardId }) => {
-      const req = `${env.NEXT_PUBLIC_API}/reward/id/${rewardId}`;
-      try {
-        return fetcher<Schemas["RewardFull"]>(req);
-      } catch {
-        console.error({ rewardId, req });
-      }
-    }) ?? [],
-  )) as Schemas["RewardFull"][];
+const RoleCard = async ({ role }: { role: Schemas["RoleFull"] }) => {
+  const rewards = await fetchGuildApiData<Schemas["RewardFull"][]>(
+    "reward/batch",
+    {
+      method: "POST",
+      body: JSON.stringify({
+        ids: role.rewards?.map((r) => r.rewardId!) ?? [],
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    },
+  );
 
   return (
     <Card className="flex flex-col md:flex-row" key={role.id}>
