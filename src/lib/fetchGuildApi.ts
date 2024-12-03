@@ -74,7 +74,9 @@ export const fetchGuildApi = async <Data = object, Error = ErrorLike>(
   if (token) {
     headers.set("X-Auth-Token", token);
   }
-  if (requestInit?.body) {
+  if (requestInit?.body instanceof FormData) {
+    headers.set("Content-Type", "multipart/form-data");
+  } else if (requestInit?.body) {
     headers.set("Content-Type", "application/json");
   }
 
