@@ -33,12 +33,11 @@ export const JoinButton = () => {
         `api/guild/${guild.data.id}/join`,
         env.NEXT_PUBLIC_API,
       );
-      console.log("running mutation");
       const eventSource = new EventSourcePlus(url.toString(), {
         retryStrategy: "on-error",
         method: "post",
         keepalive: true,
-        maxRetryCount: 3,
+        maxRetryCount: 1,
         headers: {
           "x-auth-token": token,
           "content-type": "application/json",
@@ -57,7 +56,7 @@ export const JoinButton = () => {
               richColors: status === "complete",
             });
           } catch (e) {
-            console.log(e);
+            console.log("json parsing failed on join event stream", e);
           }
         },
       });
