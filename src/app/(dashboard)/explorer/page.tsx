@@ -136,7 +136,10 @@ async function YourGuilds() {
 function YourGuildsSkeleton() {
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {Array(3).fill(<GuildCardSkeleton />)}
+      {Array.from({ length: 3 }, (_, i) => (
+        // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+        <GuildCardSkeleton key={i} />
+      ))}
     </div>
   );
 }
