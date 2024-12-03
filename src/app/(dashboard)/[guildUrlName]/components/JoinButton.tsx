@@ -36,7 +36,6 @@ export const JoinButton = () => {
       const eventSource = new EventSourcePlus(url.toString(), {
         retryStrategy: "on-error",
         method: "post",
-        keepalive: true,
         maxRetryCount: 0,
         headers: {
           "x-auth-token": token,

@@ -9,13 +9,6 @@ const resolveIdLikeRequest = (idLike: string) => {
   return `${isId ? "id" : "urlName"}/${idLike}`;
 };
 
-//export const joinGuild = async ({ guildId }: { guildId: string }) => {
-//   // the response type might not be suitable for this fetcher
-//  return fetchGuildApiAuthData(`guild/${guildId}/join`, {
-//    method: "POST",
-//  });
-//};
-
 export const leaveGuild = async ({ guildId }: { guildId: string }) => {
   return fetchGuildApiAuthData(`guild/${guildId}/leave`, {
     method: "POST",
@@ -59,8 +52,5 @@ export const getPages = async ({ guildId }: { guildId: string }) => {
   return fetchGuildApiData<Schemas["PageFull"][]>("page/batch", {
     method: "POST",
     body: JSON.stringify({ ids: guild.pages?.map((p) => p.pageId!) ?? [] }),
-    headers: {
-      "Content-Type": "application/json",
-    },
   });
 };
