@@ -4,6 +4,7 @@ import { tryGetParsedToken } from "@/actions/auth";
 import { fetchGuildApiAuthData, fetchGuildApiData } from "@/lib/fetchGuildApi";
 import type { ErrorLike, WithIdLike } from "@/lib/types";
 import type { Schemas } from "@guildxyz/types";
+import { revalidateTag } from "next/cache";
 import z from "zod";
 
 const resolveIdLikeRequest = (idLike: string) => {
@@ -13,12 +14,14 @@ const resolveIdLikeRequest = (idLike: string) => {
 
 export const joinGuild = async ({ guildId }: { guildId: string }) => {
   // the response type might not be suitable for this fetcher
-  return fetchGuildApiAuthData(`guild/${guildId}/join`, {
-    method: "POST",
-  });
+  revalidateTag("user");
+  //return fetchGuildApiAuthData(`guild/${guildId}/join`, {
+  //  method: "POST",
+  //});
 };
 
 export const leaveGuild = async ({ guildId }: { guildId: string }) => {
+  revalidateTag("user");
   return fetchGuildApiAuthData(`guild/${guildId}/leave`, {
     method: "POST",
   });
@@ -33,12 +36,18 @@ export const getGuild = async ({ idLike }: WithIdLike) => {
 export const getEntity = async <Data = object, Error = ErrorLike>({
   idLike,
   entity,
+  responseInit,
   auth = false,
-}: { entity: string; idLike: string; auth?: boolean }) => {
+}: {
+  entity: string;
+  idLike: string;
+  auth?: boolean;
+  responseInit?: Parameters<typeof fetch>[1];
+}) => {
   const pathname = `${entity}/${resolveIdLikeRequest(idLike)}`;
   return auth
-    ? fetchGuildApiAuthData<Data, Error>(pathname)
-    : fetchGuildApiData<Data, Error>(pathname);
+    ? fetchGuildApiAuthData<Data, Error>(pathname, responseInit)
+    : fetchGuildApiData<Data, Error>(pathname, responseInit);
 };
 
 export const getUser = async () => {
@@ -47,6 +56,7 @@ export const getUser = async () => {
     entity: "user",
     idLike: userId,
     auth: true,
+    responseInit: { next: { tags: ["user"] } },
   });
 };
 

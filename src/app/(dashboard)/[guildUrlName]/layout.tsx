@@ -33,7 +33,7 @@ const GuildLayout = async ({
   if (!guild) {
     throw new Error("Failed to fetch guild");
   }
-  const user = queryClient.getQueryState(userOptions().queryKey);
+  const _user = queryClient.getQueryState(userOptions().queryKey);
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
@@ -52,7 +52,7 @@ const GuildLayout = async ({
                 </h1>
               </div>
               <AuthBoundary fallback={<SignInButton />}>
-                {user?.data && <JoinButton guild={guild} user={user.data} />}
+                <JoinButton />
               </AuthBoundary>
             </div>
             <p className="line-clamp-3 max-w-prose text-balance text-lg leading-relaxed">
