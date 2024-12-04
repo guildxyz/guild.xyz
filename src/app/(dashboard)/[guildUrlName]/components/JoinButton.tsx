@@ -69,6 +69,7 @@ export const JoinButton = () => {
           guilds: prev?.guilds?.concat({ guildId: guild.data.id }),
         });
       }
+      queryClient.invalidateQueries(userOptions());
     },
   });
 
