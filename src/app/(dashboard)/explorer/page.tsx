@@ -1,37 +1,18 @@
 import { AuthBoundary } from "@/components/AuthBoundary";
 import { SignInButton } from "@/components/SignInButton";
-import { fetchGuildApiData } from "@/lib/fetchGuildApi";
-import { getQueryClient } from "@/lib/getQueryClient";
-import { tryGetParsedToken } from "@/lib/token";
-import type { PaginatedResponse } from "@/lib/types";
-import type { Schemas } from "@guildxyz/types";
-import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { Suspense } from "react";
-import { getGuildSearch } from "./actions";
+import {
+  AssociatedGuilds,
+  AssociatedGuildsSkeleton,
+} from "./components/AssociatedGuilds";
 import { CreateGuildLink } from "./components/CreateGuildLink";
-import { GuildCard, GuildCardSkeleton } from "./components/GuildCard";
 import { HeaderBackground } from "./components/HeaderBackground";
 import { InfiniteScrollGuilds } from "./components/InfiniteScrollGuilds";
 import { StickyNavbar } from "./components/StickyNavbar";
 import { StickySearch } from "./components/StickySearch";
 import { ACTIVE_SECTION } from "./constants";
 
-const getAssociatedGuilds = async () => {
-  const { userId } = await tryGetParsedToken();
-
-  return fetchGuildApiData<PaginatedResponse<Schemas["Guild"]>>(
-    `guild/search?page=1&pageSize=${Number.MAX_SAFE_INTEGER}&sortBy=name&reverse=false&customQuery=@owner:{${userId}}`,
-  );
-};
-
-export default async function Explorer() {
-  const queryClient = getQueryClient();
-  await queryClient.prefetchInfiniteQuery({
-    queryKey: ["guilds", ""],
-    initialPageParam: 1,
-    queryFn: () => getGuildSearch({ search: "", pageParam: 1 }),
-  });
-
+const Explorer = async () => {
   return (
     <>
       <div
@@ -69,13 +50,11 @@ export default async function Explorer() {
         </h2>
         <StickySearch />
 
-        <HydrationBoundary state={dehydrate(queryClient)}>
-          <InfiniteScrollGuilds />
-        </HydrationBoundary>
+        <InfiniteScrollGuilds />
       </main>
     </>
   );
-}
+};
 
 async function AssociatedGuildsSection() {
   return (
@@ -107,41 +86,4 @@ async function AssociatedGuildsSection() {
   );
 }
 
-async function AssociatedGuilds() {
-  let associatedGuilds: Schemas["Guild"][];
-  try {
-    associatedGuilds = (await getAssociatedGuilds()).items;
-  } catch {
-    return;
-  }
-
-  return associatedGuilds.length > 0 ? (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {associatedGuilds.map((guild) => (
-        <GuildCard key={guild.id} guild={guild} />
-      ))}
-    </div>
-  ) : (
-    <div className="flex items-center gap-4 rounded-2xl bg-card px-5 py-6">
-      <img src="/images/robot.svg" alt="Guild Robot" className="size-8" />
-
-      <p className="font-semibold">
-        You&apos;re not a member of any guilds yet. Explore and join some below,
-        or create your own!
-      </p>
-
-      <CreateGuildLink className="ml-auto" />
-    </div>
-  );
-}
-
-function AssociatedGuildsSkeleton() {
-  return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {Array.from({ length: 3 }, (_, i) => (
-        // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-        <GuildCardSkeleton key={i} />
-      ))}
-    </div>
-  );
-}
+export default Explorer;

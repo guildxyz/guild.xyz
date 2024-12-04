@@ -4,26 +4,15 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { useIntersection } from "foxact/use-intersection";
 import { useAtomValue } from "jotai";
 import { useCallback, useEffect } from "react";
-import { getGuildSearch } from "../actions";
 import { searchAtom } from "../atoms";
 import { PAGE_SIZE } from "../constants";
+import { guildSearchOptions } from "../options";
 import { GuildCard, GuildCardSkeleton } from "./GuildCard";
 
 export const InfiniteScrollGuilds = () => {
   const search = useAtomValue(searchAtom);
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
-    useInfiniteQuery({
-      queryKey: ["guilds", search || ""],
-      queryFn: ({ pageParam }) =>
-        getGuildSearch({ search: search || "", pageParam }),
-      initialPageParam: 1,
-      staleTime: Number.POSITIVE_INFINITY,
-      enabled: search !== undefined,
-      getNextPageParam: (lastPage) =>
-        lastPage.total / lastPage.pageSize <= lastPage.page
-          ? undefined
-          : lastPage.page + 1,
-    });
+    useInfiniteQuery(guildSearchOptions({ search }));
 
   const [setIntersection, isIntersected, resetIsIntersected] = useIntersection({
     rootMargin: "700px",
