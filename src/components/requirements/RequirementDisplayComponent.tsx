@@ -14,9 +14,7 @@ import { shortenHex } from "@/lib/shortenHex";
 import { Fragment } from "react";
 import { Badge } from "../ui/Badge";
 import { DataBlockWithCopy } from "./DataBlockWithCopy";
-
-const PLACEHOLDER_REGEX = /\{\{([^{}]+)\}\}/g;
-const ADDRESS_REGEX = /^0x[a-f0-9]{40}$/i;
+import { ADDRESS_REGEX, PLACEHOLDER_REGEX } from "./constants";
 
 const convertTemplateText = (templateText: string, requirement: Rule) =>
   templateText.replace(PLACEHOLDER_REGEX, (_match, rawKey) => {
