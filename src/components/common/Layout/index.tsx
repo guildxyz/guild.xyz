@@ -46,7 +46,7 @@ export const Layout = {
    *
    * Intended to be used on an empty page
    *
-   * For specifing `maxWidth` property, use `sizes.container.<size>`
+   * For specifying `maxWidth` property, use `sizes.container.<size>`
    */
   Root,
   Header,
