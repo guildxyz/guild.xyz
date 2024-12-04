@@ -50,7 +50,3 @@ export const signOut = async (redirectTo?: string) => {
   queryClient.removeQueries(userOptions());
   redirect(redirectTo ?? "/explorer");
 };
-
-export const getTokenServerSide = async () => {
-  return (await cookies()).get(GUILD_AUTH_COOKIE_NAME)?.value;
-};
