@@ -2,12 +2,12 @@ import { Card } from "@/components/ui/Card";
 import { ScrollArea, ScrollBar } from "@/components/ui/ScrollArea";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { cn } from "@/lib/cssUtils";
+import { fetchPages } from "@/lib/fetchers";
 import type { Schemas } from "@guildxyz/types";
-import { getPages } from "../actions";
 import { PageNavLink } from "./RoleGroupNavLink";
 
 export const GuildTabs = async ({ guild }: { guild: Schemas["GuildFull"] }) => {
-  const pages = await getPages({ guildId: guild.id });
+  const pages = await fetchPages({ guildId: guild.id });
 
   return (
     <ScrollArea

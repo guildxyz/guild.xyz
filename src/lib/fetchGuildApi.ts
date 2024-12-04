@@ -1,4 +1,4 @@
-import { tryGetToken } from "@/actions/token";
+import { tryGetToken } from "@/lib/token";
 import { env } from "./env";
 import type { ErrorLike } from "./types";
 

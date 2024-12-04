@@ -1,10 +1,10 @@
-import { tryGetParsedToken } from "@/actions/token";
 import { AuthBoundary } from "@/components/AuthBoundary";
 import { SignInButton } from "@/components/SignInButton";
 import { fetchGuildApiData } from "@/lib/fetchGuildApi";
 import { getQueryClient } from "@/lib/getQueryClient";
-import type { Guild } from "@/lib/schemas/guild";
+import { tryGetParsedToken } from "@/lib/token";
 import type { PaginatedResponse } from "@/lib/types";
+import type { Schemas } from "@guildxyz/types";
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { Suspense } from "react";
 import { getGuildSearch } from "./actions";
@@ -19,7 +19,7 @@ import { ACTIVE_SECTION } from "./constants";
 const getAssociatedGuilds = async () => {
   const { userId } = await tryGetParsedToken();
 
-  return fetchGuildApiData<PaginatedResponse<Guild>>(
+  return fetchGuildApiData<PaginatedResponse<Schemas["GuildFull"]>>(
     `guild/search?page=1&pageSize=${Number.MAX_SAFE_INTEGER}&sortBy=name&reverse=false&customQuery=@owner:{${userId}}`,
   );
 };
@@ -108,7 +108,12 @@ async function AssociatedGuildsSection() {
 }
 
 async function AssociatedGuilds() {
-  const { items: associatedGuilds } = await getAssociatedGuilds();
+  let associatedGuilds: Schemas["GuildFull"][];
+  try {
+    associatedGuilds = (await getAssociatedGuilds()).items;
+  } catch {
+    return;
+  }
 
   return associatedGuilds.length > 0 ? (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

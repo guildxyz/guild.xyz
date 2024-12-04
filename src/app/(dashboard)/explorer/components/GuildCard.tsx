@@ -2,13 +2,15 @@ import { GuildImage } from "@/components/GuildImage";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
 import { Skeleton } from "@/components/ui/Skeleton";
-import type { Guild } from "@/lib/schemas/guild";
+import type { Schemas } from "@guildxyz/types";
 import { Users } from "@phosphor-icons/react/dist/ssr";
 
 import Link from "next/link";
 import type { FunctionComponent } from "react";
 
-export const GuildCard: FunctionComponent<{ guild: Guild }> = ({ guild }) => {
+export const GuildCard: FunctionComponent<{ guild: Schemas["GuildFull"] }> = ({
+  guild,
+}) => {
   return (
     <Link
       href={`/${guild.urlName}`}

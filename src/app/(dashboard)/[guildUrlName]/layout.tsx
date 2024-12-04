@@ -2,12 +2,12 @@ import { AuthBoundary } from "@/components/AuthBoundary";
 import { GuildImage } from "@/components/GuildImage";
 import { SignInButton } from "@/components/SignInButton";
 import { getQueryClient } from "@/lib/getQueryClient";
+import { guildOptions, userOptions } from "@/lib/options";
 import type { DynamicRoute } from "@/lib/types";
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { type PropsWithChildren, Suspense } from "react";
 import { GuildTabs, GuildTabsSkeleton } from "./components/GuildTabs";
 import { JoinButton } from "./components/JoinButton";
-import { guildOptions, userOptions } from "./options";
 
 const GuildLayout = async ({
   params,

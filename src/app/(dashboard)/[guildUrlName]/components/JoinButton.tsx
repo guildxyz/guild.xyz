@@ -4,12 +4,12 @@ import { Button } from "@/components/ui/Button";
 import { GUILD_AUTH_COOKIE_NAME } from "@/config/constants";
 import { env } from "@/lib/env";
 import { getCookieClientSide } from "@/lib/getCookieClientSide";
+import { guildOptions, userOptions } from "@/lib/options";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { EventSourcePlus } from "event-source-plus";
 import { useParams } from "next/navigation";
 import { toast } from "sonner";
-import { leaveGuild } from "../actions";
-import { guildOptions, userOptions } from "../options";
+import { fetchGuildLeave } from "../actions";
 
 export const JoinButton = () => {
   const { guildUrlName } = useParams<{ guildUrlName: string }>();
@@ -73,7 +73,7 @@ export const JoinButton = () => {
   });
 
   const leaveMutation = useMutation({
-    mutationFn: () => leaveGuild({ guildId: guild.data.id }),
+    mutationFn: () => fetchGuildLeave({ guildId: guild.data.id }),
     onSuccess: async () => {
       await queryClient.cancelQueries(userOptions());
       const prev = queryClient.getQueryData(userOptions().queryKey);
