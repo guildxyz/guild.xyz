@@ -1,3 +1,4 @@
+import { signOut } from "@/actions/auth";
 import { tryGetToken } from "@/lib/token";
 import { env } from "./env";
 import type { ErrorLike } from "./types";
@@ -84,6 +85,10 @@ export const fetchGuildApi = async <Data = object, Error = ErrorLike>(
     ...requestInit,
     headers,
   });
+
+  if (response.status === 401) {
+    signOut();
+  }
 
   const contentType = response.headers.get("content-type");
   if (!contentType?.includes("application/json")) {
