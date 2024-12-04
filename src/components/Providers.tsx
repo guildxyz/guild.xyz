@@ -10,11 +10,11 @@ import type { FunctionComponent, PropsWithChildren } from "react";
 import { WagmiProvider } from "wagmi";
 import { TooltipProvider } from "./ui/Tooltip";
 
-const queryClient = getQueryClient();
-
 export const Providers: FunctionComponent<PropsWithChildren> = ({
   children,
 }) => {
+  const queryClient = getQueryClient();
+
   return (
     <JotaiProvider>
       <ThemeProvider
