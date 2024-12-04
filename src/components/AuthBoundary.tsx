@@ -1,4 +1,4 @@
-import { getTokenServerSide } from "@/actions/auth";
+import { tryGetToken } from "@/lib/token";
 
 export const AuthBoundary = async ({
   fallback,
@@ -8,7 +8,7 @@ export const AuthBoundary = async ({
   children: React.ReactNode;
 }>) => {
   try {
-    await getTokenServerSide();
+    await tryGetToken();
     return <>{children}</>;
   } catch {
     return <>{fallback}</>;
