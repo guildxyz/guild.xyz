@@ -2,14 +2,12 @@ import { Card } from "@/components/ui/Card";
 import { ScrollArea, ScrollBar } from "@/components/ui/ScrollArea";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { cn } from "@/lib/cssUtils";
+import { fetchPages } from "@/lib/fetchers";
 import type { Schemas } from "@guildxyz/types";
-import { getPages } from "../actions";
 import { PageNavLink } from "./RoleGroupNavLink";
 
-const roleGroupOrder = ["Home", "Admin"].reverse();
-
-export const GuildTabs = async ({ guild }: { guild: Schemas["GuildFull"] }) => {
-  const pages = await getPages({ guildId: guild.id });
+export const GuildTabs = async ({ guild }: { guild: Schemas["Guild"] }) => {
+  const pages = await fetchPages({ guildId: guild.id });
 
   return (
     <ScrollArea
@@ -20,24 +18,17 @@ export const GuildTabs = async ({ guild }: { guild: Schemas["GuildFull"] }) => {
       }}
     >
       <div className="my-4 flex gap-3 px-8">
-        {pages
-          .sort((a, b) => {
-            const [aIndex, bIndex] = [a, b].map((val) =>
-              roleGroupOrder.findIndex((pred) => pred === val.name),
-            );
-            return bIndex - aIndex;
-          })
-          .map((rg) => (
-            <PageNavLink
-              key={rg.id}
-              href={[guild.urlName, rg.urlName]
-                .filter(Boolean)
-                .map((s) => `/${s}`)
-                .join("")}
-            >
-              {rg.name}
-            </PageNavLink>
-          ))}
+        {pages.map((rg) => (
+          <PageNavLink
+            key={rg.id}
+            href={[guild.urlName, rg.urlName]
+              .filter(Boolean)
+              .map((s) => `/${s}`)
+              .join("")}
+          >
+            {rg.name}
+          </PageNavLink>
+        ))}
       </div>
       <ScrollBar orientation="horizontal" className="hidden" />
     </ScrollArea>

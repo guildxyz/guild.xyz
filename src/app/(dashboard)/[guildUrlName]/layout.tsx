@@ -2,12 +2,12 @@ import { AuthBoundary } from "@/components/AuthBoundary";
 import { GuildImage } from "@/components/GuildImage";
 import { SignInButton } from "@/components/SignInButton";
 import { getQueryClient } from "@/lib/getQueryClient";
+import { guildOptions, userOptions } from "@/lib/options";
 import type { DynamicRoute } from "@/lib/types";
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { type PropsWithChildren, Suspense } from "react";
 import { GuildTabs, GuildTabsSkeleton } from "./components/GuildTabs";
 import { JoinButton } from "./components/JoinButton";
-import { guildOptions, userOptions } from "./options";
 
 const GuildLayout = async ({
   params,
@@ -25,15 +25,15 @@ const GuildLayout = async ({
     ),
   ]);
 
-  const guild = queryClient.getQueryData(
+  const guild = queryClient.getQueryState(
     guildOptions({
       idLike: guildUrlName,
     }).queryKey,
   );
-  if (!guild) {
-    throw new Error("Failed to fetch guild");
+
+  if (guild?.error || !guild?.data) {
+    throw new Error(`Failed to fetch guild ${guild?.error?.status || ""}`);
   }
-  const _user = queryClient.getQueryState(userOptions().queryKey);
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
@@ -43,12 +43,12 @@ const GuildLayout = async ({
             <div className="flex w-full flex-col items-stretch justify-between gap-8 md:flex-row md:items-center">
               <div className="flex max-w-prose items-center gap-4">
                 <GuildImage
-                  name={guild.name}
-                  imageUrl={guild.imageUrl}
+                  name={guild.data.name}
+                  imageUrl={guild.data.imageUrl}
                   className="size-20 rounded-full border"
                 />
                 <h1 className="text-pretty font-bold font-display text-3xl tracking-tight sm:text-4xl lg:text-5xl">
-                  {guild.name}
+                  {guild.data.name}
                 </h1>
               </div>
               <AuthBoundary fallback={<SignInButton />}>
@@ -56,13 +56,13 @@ const GuildLayout = async ({
               </AuthBoundary>
             </div>
             <p className="line-clamp-3 max-w-prose text-balance text-lg leading-relaxed">
-              {guild.description}
+              {guild.data.description}
             </p>
           </div>
         </div>
 
         <Suspense fallback={<GuildTabsSkeleton />}>
-          <GuildTabs guild={guild} />
+          <GuildTabs guild={guild.data} />
         </Suspense>
 
         {children}

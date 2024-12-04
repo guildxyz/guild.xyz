@@ -45,13 +45,6 @@ export const signOut = async (redirectTo?: string) => {
   redirect(redirectTo ?? "/explorer");
 };
 
-export const tryGetToken = async () => {
-  const token = (await cookies()).get(GUILD_AUTH_COOKIE_NAME)?.value;
-  if (!token) throw new Error("Failed to retrieve token");
-  return token;
-};
-
-export const tryGetParsedToken = async () => {
-  const token = await tryGetToken();
-  return tokenSchema.parse(jwtDecode(token));
+export const getTokenServerSide = async () => {
+  return (await cookies()).get(GUILD_AUTH_COOKIE_NAME)?.value;
 };

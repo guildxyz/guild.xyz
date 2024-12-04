@@ -34,13 +34,13 @@ const Nav = () => {
       value={activeSection}
     >
       <ToggleGroupItem
-        value={ACTIVE_SECTION.yourGuilds}
+        value={ACTIVE_SECTION.associatedGuilds}
         className={cn("rounded-xl transition-all", {
           "rounded-lg": isSearchStuck,
         })}
         asChild
       >
-        <a href={`#${ACTIVE_SECTION.yourGuilds}`}>Your guilds</a>
+        <a href={`#${ACTIVE_SECTION.associatedGuilds}`}>Your guilds</a>
       </ToggleGroupItem>
       <ToggleGroupItem
         value={ACTIVE_SECTION.exploreGuilds}

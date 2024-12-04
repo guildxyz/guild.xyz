@@ -1,8 +1,6 @@
-import { tryGetToken } from "@/actions/auth";
-import { GUILD_AUTH_COOKIE_NAME } from "@/config/constants";
-import { isServer } from "@tanstack/react-query";
+import { signOut } from "@/actions/auth";
+import { tryGetToken } from "@/lib/token";
 import { env } from "./env";
-import { getCookieClientSide } from "./getCookieClientSide";
 import type { ErrorLike } from "./types";
 
 type FetchResult<Data, Error> =
@@ -26,6 +24,9 @@ const logger = {
  *
  * This function sends a request to the specified `pathname` of the API and returns
  * a structured result containing the response, status, and data. It ensures that the API transmission is with valid JSON.
+ *
+ * Authentication token is retrieved and automatically included in the request headers. The token is retrieved either server-side or client-side
+ * depending on the runtime environment.
  *
  * @template Data - The expected shape of the success response data.
  * @template Error - The expected shape of the error response data.
@@ -61,20 +62,37 @@ export const fetchGuildApi = async <Data = object, Error = ErrorLike>(
   if (pathname.endsWith("/")) {
     throw new Error("`pathname` must not end with slash");
   }
-
   const url = new URL(`api/${pathname}`, env.NEXT_PUBLIC_API);
+
+  let token: string | undefined;
+  try {
+    token = await tryGetToken();
+  } catch (_) {
+    //logger.info(e);
+  }
+
+  const headers = new Headers(requestInit?.headers);
+  if (token) {
+    headers.set("X-Auth-Token", token);
+  }
+  if (requestInit?.body instanceof FormData) {
+    headers.set("Content-Type", "multipart/form-data");
+  } else if (requestInit?.body) {
+    headers.set("Content-Type", "application/json");
+  }
+
   const response = await fetch(url, {
     ...requestInit,
-    headers: {
-      ...(requestInit?.body && { "Content-Type": "application/json" }),
-      ...requestInit?.headers,
-    },
+    headers,
   });
 
-  const contentType = response.headers.get("content-type");
+  if (response.status === 401) {
+    signOut();
+  }
 
+  const contentType = response.headers.get("content-type");
   if (!contentType?.includes("application/json")) {
-    throw new Error("Guild API failed respond with json");
+    throw new Error("Guild API failed to respond with json");
   }
 
   logger.info("\n", url.toString(), response.status);
@@ -102,62 +120,6 @@ export const fetchGuildApi = async <Data = object, Error = ErrorLike>(
   };
 };
 
-/**
- * Fetcher used for creating authenticated requests to the v3 backend API.
- *
- * This function extends `fetchGuildApi` by automatically including an authentication
- * token in the request headers. The token is retrieved either server-side or client-side
- * depending on the runtime environment.
- *
- * @template Data - The expected shape of the success response data.
- * @template Error - The expected shape of the error response data.
- *
- * @param pathname - The API endpoint to fetch, without leading or trailing slashes.
- * @param requestInit - Optional configuration for the fetch request.
- *
- * @returns A promise resolving to the fetch result,
- * containing `status`, `data`, and `response`.
- *
- * @example
- * ```ts
- * const { data, status, response } = await fetchGuildApiAuth<{ user: string }>('user', {
- *  method: "POST",
- *  body: JSON.stringify({name: string}),
- * });
- *
- * if (status === 'error') {
- *   assert(!response.ok);
- *   console.error(data.message);
- * } else {
- *   console.log(data.user);
- * }
- * ```
- *
- * @throws If `pathname` starts or ends with a slash.
- * @throws If the API does not respond with JSON.
- * @throws If the response JSON cannot be parsed.
- * @throws If the JWT token cannot be retrieved.
- */
-export const fetchGuildApiAuth = async <Data = object, Error = ErrorLike>(
-  ...[pathname, requestInit = {}]: Parameters<typeof fetchGuildApi>
-): Promise<FetchResult<Data, Error>> => {
-  const token = isServer
-    ? await tryGetToken()
-    : getCookieClientSide(GUILD_AUTH_COOKIE_NAME);
-  if (!token) {
-    throw new Error(
-      "Failed to retrieve JWT token on auth request initialization.",
-    );
-  }
-  return fetchGuildApi<Data, Error>(pathname, {
-    ...requestInit,
-    headers: {
-      ...requestInit?.headers,
-      "X-Auth-Token": token,
-    },
-  });
-};
-
 const unpackFetcher = (fetcher: typeof fetchGuildApi) => {
   return async <Data = object, Error = ErrorLike>(
     ...args: Parameters<typeof fetchGuildApi>
@@ -168,4 +130,3 @@ const unpackFetcher = (fetcher: typeof fetchGuildApi) => {
 };
 
 export const fetchGuildApiData = unpackFetcher(fetchGuildApi);
-export const fetchGuildApiAuthData = unpackFetcher(fetchGuildApiAuth);

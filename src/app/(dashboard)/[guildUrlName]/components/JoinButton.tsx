@@ -4,10 +4,12 @@ import { Button } from "@/components/ui/Button";
 import { GUILD_AUTH_COOKIE_NAME } from "@/config/constants";
 import { env } from "@/lib/env";
 import { getCookieClientSide } from "@/lib/getCookieClientSide";
+import { guildOptions, userOptions } from "@/lib/options";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { EventSourcePlus } from "event-source-plus";
 import { useParams } from "next/navigation";
-import { joinGuild, leaveGuild } from "../actions";
-import { guildOptions, userOptions } from "../options";
+import { toast } from "sonner";
+import { fetchGuildLeave } from "../actions";
 
 export const JoinButton = () => {
   const { guildUrlName } = useParams<{ guildUrlName: string }>();
@@ -25,43 +27,65 @@ export const JoinButton = () => {
 
   const joinMutation = useMutation({
     mutationFn: async () => {
+      //TODO: Handle error here, throw error in funciton if needed
       const token = getCookieClientSide(GUILD_AUTH_COOKIE_NAME)!;
       const url = new URL(
         `api/guild/${guild.data.id}/join`,
         env.NEXT_PUBLIC_API,
       );
-      const response = await fetch(url, {
-        method: "POST",
+      const eventSource = new EventSourcePlus(url.toString(), {
+        retryStrategy: "on-error",
+        method: "post",
+        maxRetryCount: 0,
         headers: {
           "x-auth-token": token,
-          "Content-Type": "text/event-stream",
+          "content-type": "application/json",
         },
       });
 
-      const reader = response.body
-        ?.pipeThrough(new TextDecoderStream())
-        .getReader();
-
-      if (reader) {
-        while (true) {
-          const res = await reader.read();
-          if (res.done) break;
-          console.log(res.value);
-          //toast(res.value?.status, { description: res.value?.message });
-        }
-      }
-
-      joinGuild({ guildId: guild.data.id });
+      eventSource.listen({
+        onMessage: (sseMessage) => {
+          try {
+            // biome-ignore lint/suspicious/noExplicitAny: TODO: fill missing types
+            const { status, message } = JSON.parse(sseMessage.data) as any;
+            const toastFunction =
+              status === "complete" ? toast.success : toast.info;
+            toastFunction(status, {
+              description: message,
+              richColors: status === "complete",
+            });
+          } catch (e) {
+            console.log("json parsing failed on join event stream", e);
+          }
+        },
+      });
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["user"] });
+    onSuccess: async () => {
+      await queryClient.cancelQueries(userOptions());
+      const prev = queryClient.getQueryData(userOptions().queryKey);
+      if (prev) {
+        queryClient.setQueryData(userOptions().queryKey, {
+          ...prev,
+          guilds: prev?.guilds?.concat({ guildId: guild.data.id }),
+        });
+      }
+      queryClient.invalidateQueries(userOptions());
     },
   });
 
   const leaveMutation = useMutation({
-    mutationFn: () => leaveGuild({ guildId: guild.data.id }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["user"] });
+    mutationFn: () => fetchGuildLeave({ guildId: guild.data.id }),
+    onSuccess: async () => {
+      await queryClient.cancelQueries(userOptions());
+      const prev = queryClient.getQueryData(userOptions().queryKey);
+      if (prev) {
+        queryClient.setQueryData(userOptions().queryKey, {
+          ...prev,
+          guilds: prev?.guilds?.filter(
+            ({ guildId }) => guildId !== guild.data.id,
+          ),
+        });
+      }
     },
   });
 

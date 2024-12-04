@@ -3,7 +3,7 @@
 import { useConfetti } from "@/components/ConfettiProvider";
 import { Button } from "@/components/ui/Button";
 import { GUILD_AUTH_COOKIE_NAME } from "@/config/constants";
-import { fetchGuildApiAuthData } from "@/lib/fetchGuildApi";
+import { fetchGuildApiData } from "@/lib/fetchGuildApi";
 import { getCookieClientSide } from "@/lib/getCookieClientSide";
 import type { CreateGuildForm, Guild } from "@/lib/schemas/guild";
 import { CheckCircle, XCircle } from "@phosphor-icons/react/dist/ssr";
@@ -30,7 +30,7 @@ const CreateGuildButton = () => {
         contact: undefined,
       };
 
-      return fetchGuildApiAuthData<Guild>("guild", {
+      return fetchGuildApiData<Guild>("guild", {
         method: "POST",
         body: JSON.stringify(guild),
       });
