@@ -1,7 +1,7 @@
 import { ChainIndicator } from "@/components/requirements/ChainIndicator";
 import { RequirementLink } from "@/components/requirements/RequirementLink";
 import { CHAINS, type SupportedChainID } from "@/config/chains";
-import { GearSix } from "@phosphor-icons/react/dist/ssr";
+import { GearSix, Warning } from "@phosphor-icons/react/dist/ssr";
 import {
   Requirement,
   RequirementContent,
@@ -12,6 +12,7 @@ import {
 import type { Rule } from "@/lib/schemas/rule";
 import { shortenHex } from "@/lib/shortenHex";
 import { Fragment } from "react";
+import { Badge } from "../ui/Badge";
 import { DataBlockWithCopy } from "./DataBlockWithCopy";
 
 const PLACEHOLDER_REGEX = /\{\{([^{}]+)\}\}/g;
@@ -62,7 +63,12 @@ const RequirementNode = ({
         </RequirementLink>
       );
     default:
-      return null;
+      return (
+        <Badge>
+          <Warning className="text-icon-warning" />
+          <span>Unsupported node</span>
+        </Badge>
+      );
   }
 };
 
