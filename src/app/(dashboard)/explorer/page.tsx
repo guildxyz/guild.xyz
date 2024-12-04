@@ -1,16 +1,13 @@
-import { getAuthCookie as getTokenFromCookie } from "@/actions/auth";
 import { AuthBoundary } from "@/components/AuthBoundary";
 import { SignInButton } from "@/components/SignInButton";
-import { env } from "@/lib/env";
-import { fetcher } from "@/lib/fetcher";
-import type { Guild } from "@/lib/schemas/guild";
+import { fetchGuildApiData } from "@/lib/fetchGuildApi";
+import { getQueryClient } from "@/lib/getQueryClient";
+import { tryGetParsedToken } from "@/lib/token";
 import type { PaginatedResponse } from "@/lib/types";
-import {
-  HydrationBoundary,
-  QueryClient,
-  dehydrate,
-} from "@tanstack/react-query";
+import type { Schemas } from "@guildxyz/types";
+import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { Suspense } from "react";
+import { getGuildSearch } from "./actions";
 import { CreateGuildLink } from "./components/CreateGuildLink";
 import { GuildCard, GuildCardSkeleton } from "./components/GuildCard";
 import { HeaderBackground } from "./components/HeaderBackground";
@@ -18,20 +15,21 @@ import { InfiniteScrollGuilds } from "./components/InfiniteScrollGuilds";
 import { StickyNavbar } from "./components/StickyNavbar";
 import { StickySearch } from "./components/StickySearch";
 import { ACTIVE_SECTION } from "./constants";
-import { getGuildSearch } from "./fetchers";
 
-const getAssociatedGuilds = async ({ userId }: { userId: string }) => {
-  const request = `${env.NEXT_PUBLIC_API}/guild/search?page=1&pageSize=${Number.MAX_SAFE_INTEGER}&sortBy=name&reverse=false&customQuery=@owner:{${userId}}`;
-  console.log(request);
-  return fetcher<PaginatedResponse<Guild>>(request);
+const getAssociatedGuilds = async () => {
+  const { userId } = await tryGetParsedToken();
+
+  return fetchGuildApiData<PaginatedResponse<Schemas["Guild"]>>(
+    `guild/search?page=1&pageSize=${Number.MAX_SAFE_INTEGER}&sortBy=name&reverse=false&customQuery=@owner:{${userId}}`,
+  );
 };
 
 export default async function Explorer() {
-  const queryClient = new QueryClient();
+  const queryClient = getQueryClient();
   await queryClient.prefetchInfiniteQuery({
     queryKey: ["guilds", ""],
     initialPageParam: 1,
-    queryFn: getGuildSearch(""),
+    queryFn: () => getGuildSearch({ search: "", pageParam: 1 }),
   });
 
   return (
@@ -48,7 +46,7 @@ export default async function Explorer() {
         <section className="pt-6 pb-8">
           <h1
             className="font-black font-display text-5xl tracking-tight"
-            id={ACTIVE_SECTION.yourGuilds}
+            id={ACTIVE_SECTION.associatedGuilds}
           >
             Guildhall
           </h1>
@@ -61,7 +59,7 @@ export default async function Explorer() {
           </AuthBoundary>
         </StickyNavbar>
 
-        <YourGuildsSection />
+        <AssociatedGuildsSection />
 
         <h2
           className="mt-12 font-bold text-lg tracking-tight"
@@ -79,7 +77,7 @@ export default async function Explorer() {
   );
 }
 
-async function YourGuildsSection() {
+async function AssociatedGuildsSection() {
   return (
     <section className="grid gap-2">
       <AuthBoundary
@@ -101,25 +99,25 @@ async function YourGuildsSection() {
           </div>
         }
       >
-        <Suspense fallback={<YourGuildsSkeleton />}>
-          <YourGuilds />
+        <Suspense fallback={<AssociatedGuildsSkeleton />}>
+          <AssociatedGuilds />
         </Suspense>
       </AuthBoundary>
     </section>
   );
 }
 
-async function YourGuilds() {
-  const auth = await getTokenFromCookie();
-  if (!auth) return;
+async function AssociatedGuilds() {
+  let associatedGuilds: Schemas["Guild"][];
+  try {
+    associatedGuilds = (await getAssociatedGuilds()).items;
+  } catch {
+    return;
+  }
 
-  const { items: myGuilds } = await getAssociatedGuilds({
-    userId: auth.userId,
-  });
-
-  return myGuilds && myGuilds.length > 0 ? (
+  return associatedGuilds.length > 0 ? (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {myGuilds.map((guild) => (
+      {associatedGuilds.map((guild) => (
         <GuildCard key={guild.id} guild={guild} />
       ))}
     </div>
@@ -137,10 +135,11 @@ async function YourGuilds() {
   );
 }
 
-function YourGuildsSkeleton() {
+function AssociatedGuildsSkeleton() {
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {[...Array(3)].map((_, i) => (
+      {Array.from({ length: 3 }, (_, i) => (
+        // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
         <GuildCardSkeleton key={i} />
       ))}
     </div>
