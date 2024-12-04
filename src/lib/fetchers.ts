@@ -43,9 +43,15 @@ export const fetchRoleBatch = async ({
   pageIdLike,
   guildIdLike,
 }: WithIdLike<"page"> & WithIdLike<"guild">) => {
-  const guild = await fetchEntity({ entity: "guild", idLike: guildIdLike });
   const isHomePageUrl = !pageIdLike;
-  const pageIdLikeWithHome = isHomePageUrl ? guild.homePageId! : pageIdLike;
+  let pageIdLikeWithHome = pageIdLike;
+  if (isHomePageUrl) {
+    const { homePageId } = await fetchEntity({
+      entity: "guild",
+      idLike: guildIdLike,
+    });
+    pageIdLikeWithHome = homePageId!;
+  }
   const page = await fetchEntity({
     entity: "page",
     idLike: pageIdLikeWithHome,
