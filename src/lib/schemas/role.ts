@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { DateLike, ImageUrlSchema, LogicSchema, NameSchema } from "./common";
+import { RuleSchema } from "./rule";
 
 export const CreateRoleSchema = z.object({
   name: NameSchema.min(1, "You must specify a name for the role"),
@@ -25,6 +26,19 @@ const RoleSchema = CreateRoleSchema.extend({
   createdAt: DateLike,
   updatedAt: DateLike,
   memberCount: z.number().nonnegative(),
+
+  topLevelAccessGroupId: z.string().uuid(),
+  accessGroups: z.array(
+    z.object({
+      gate: z.enum(["AND", "OR", "ANY_OF"]),
+      rules: z.array(RuleSchema),
+    }),
+  ),
+  rewards: z.array(
+    z.object({
+      rewardId: z.string().uuid(),
+    }),
+  ),
 });
 
 export type Role = z.infer<typeof RoleSchema>;
