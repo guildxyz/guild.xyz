@@ -13,6 +13,7 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
+    "@guildxyz/types": "^3.0.9",
     "@hookform/resolvers": "^3.9.1",
     "@phosphor-icons/react": "^2.1.7",
     "@radix-ui/react-avatar": "^1.1.1",
@@ -36,6 +37,7 @@
     "autoprefixer": "^10.4.20",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "event-source-plus": "^0.1.8",
     "foxact": "^0.2.41",
     "jotai": "^2.10.2",
     "jwt-decode": "^4.0.0",
@@ -84,6 +86,7 @@
     "postcss": "^8",
     "storybook": "^8.4.4",
     "tailwindcss": "^3.4.1",
+    "type-fest": "^4.29.1",
     "typescript": "^5"
   },
   "overrides": {
