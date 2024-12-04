@@ -1,23 +1,30 @@
-import { fetchEntity, fetchUser } from "@/lib/fetchers";
-import type { ErrorLike } from "@/lib/types";
+import { fetchEntity, fetchPageBatch, fetchUser } from "@/lib/fetchers";
+import type { WithIdLike } from "@/lib/types";
 import type { Schemas } from "@guildxyz/types";
 import { queryOptions } from "@tanstack/react-query";
 
-export const entityOptions = <Data = object, Error = ErrorLike>({
+export const entityOptions = ({
   entity,
   idLike,
   ...rest
 }: Parameters<typeof fetchEntity>[0]) => {
-  return queryOptions<Data, Error>({
+  return queryOptions({
     queryKey: [entity, idLike],
     queryFn: () => fetchEntity({ entity, idLike, ...rest }),
   });
 };
 
-export const guildOptions = ({ idLike }: { idLike: string }) => {
-  return entityOptions<Schemas["Guild"]>({
+export const guildOptions = ({ guildIdLike }: WithIdLike<"guild">) => {
+  return entityOptions({
     entity: "guild",
-    idLike,
+    idLike: guildIdLike,
+  });
+};
+
+export const pageBatchOptions = ({ guildIdLike }: WithIdLike<"guild">) => {
+  return queryOptions({
+    queryKey: ["page", "batch", guildIdLike],
+    queryFn: () => fetchPageBatch({ guildIdLike }),
   });
 };
 

@@ -1,13 +1,22 @@
+"use client";
+
 import { Card } from "@/components/ui/Card";
 import { ScrollArea, ScrollBar } from "@/components/ui/ScrollArea";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { cn } from "@/lib/cssUtils";
-import { fetchPages } from "@/lib/fetchers";
-import type { Schemas } from "@guildxyz/types";
+import { guildOptions, pageBatchOptions } from "@/lib/options";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
 import { PageNavLink } from "./RoleGroupNavLink";
 
-export const GuildTabs = async ({ guild }: { guild: Schemas["Guild"] }) => {
-  const pages = await fetchPages({ guildId: guild.id });
+export const GuildTabs = () => {
+  const { guildUrlName } = useParams<{ guildUrlName: string }>();
+  const { data: guild } = useSuspenseQuery(
+    guildOptions({ guildIdLike: guildUrlName }),
+  );
+  const { data: pages } = useSuspenseQuery(
+    pageBatchOptions({ guildIdLike: guildUrlName }),
+  );
 
   return (
     <ScrollArea

@@ -1,3 +1,5 @@
+import type { Schemas } from "@guildxyz/types";
+
 export type PaginatedResponse<Item = unknown> = {
   page: number;
   pageSize: number;
@@ -31,4 +33,11 @@ export type ErrorLike = {
  * - `urlName`: uri safe identifier alias
  * - `id`: uuid v4 identifier
  */
-export type WithIdLike<T = unknown> = T & { idLike: string };
+export type WithIdLike<E extends Entity> = {
+  [key in `${E}IdLike`]: string;
+};
+
+// TODO: move to @guildxyz/types
+export type Entity = "guild" | "role" | "page" | "user" | "reward";
+
+export type EntitySchema<T extends Entity> = Schemas[Capitalize<T>];

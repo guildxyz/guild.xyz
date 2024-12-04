@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/Button";
 import { GUILD_AUTH_COOKIE_NAME } from "@/config/constants";
 import { env } from "@/lib/env";
+import { fetchGuildLeave } from "@/lib/fetchers";
 import { getCookieClientSide } from "@/lib/getCookieClientSide";
 import { guildOptions, userOptions } from "@/lib/options";
 import type { Schemas } from "@guildxyz/types";
@@ -10,12 +11,11 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { EventSourcePlus } from "event-source-plus";
 import { useParams } from "next/navigation";
 import { toast } from "sonner";
-import { fetchGuildLeave } from "../actions";
 
 export const JoinButton = () => {
   const { guildUrlName } = useParams<{ guildUrlName: string }>();
   const user = useQuery(userOptions());
-  const guild = useQuery(guildOptions({ idLike: guildUrlName }));
+  const guild = useQuery(guildOptions({ guildIdLike: guildUrlName }));
   const queryClient = useQueryClient();
 
   if (!guild.data) {

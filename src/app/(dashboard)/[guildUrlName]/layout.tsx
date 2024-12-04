@@ -2,7 +2,7 @@ import { AuthBoundary } from "@/components/AuthBoundary";
 import { GuildImage } from "@/components/GuildImage";
 import { SignInButton } from "@/components/SignInButton";
 import { getQueryClient } from "@/lib/getQueryClient";
-import { guildOptions, userOptions } from "@/lib/options";
+import { guildOptions, pageBatchOptions, userOptions } from "@/lib/options";
 import type { DynamicRoute } from "@/lib/types";
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { type PropsWithChildren, Suspense } from "react";
@@ -18,16 +18,17 @@ const GuildLayout = async ({
 
   await Promise.all([
     queryClient.prefetchQuery(userOptions()),
+    queryClient.prefetchQuery(pageBatchOptions({ guildIdLike: guildUrlName })),
     queryClient.prefetchQuery(
       guildOptions({
-        idLike: guildUrlName,
+        guildIdLike: guildUrlName,
       }),
     ),
   ]);
 
   const guild = queryClient.getQueryState(
     guildOptions({
-      idLike: guildUrlName,
+      guildIdLike: guildUrlName,
     }).queryKey,
   );
 
@@ -62,7 +63,7 @@ const GuildLayout = async ({
         </div>
 
         <Suspense fallback={<GuildTabsSkeleton />}>
-          <GuildTabs guild={guild.data} />
+          <GuildTabs />
         </Suspense>
 
         {children}
