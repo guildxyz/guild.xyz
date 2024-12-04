@@ -5,6 +5,7 @@ import { GUILD_AUTH_COOKIE_NAME } from "@/config/constants";
 import { env } from "@/lib/env";
 import { getCookieClientSide } from "@/lib/getCookieClientSide";
 import { guildOptions, userOptions } from "@/lib/options";
+import type { Schemas } from "@guildxyz/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { EventSourcePlus } from "event-source-plus";
 import { useParams } from "next/navigation";
@@ -43,11 +44,25 @@ export const JoinButton = () => {
         },
       });
 
+      const { resolve, reject, promise } =
+        Promise.withResolvers<Schemas["User"]>();
       eventSource.listen({
         onMessage: (sseMessage) => {
           try {
-            // biome-ignore lint/suspicious/noExplicitAny: TODO: fill missing types
-            const { status, message } = JSON.parse(sseMessage.data) as any;
+            const { status, message, data } = JSON.parse(
+              sseMessage.data,
+              // biome-ignore lint/suspicious/noExplicitAny: TODO: fill missing types
+            ) as any;
+            if (status === "complete") {
+              if (data === undefined) {
+                throw new Error(
+                  "Server responded with success, but returned no user",
+                );
+              }
+              resolve(data);
+            } else if (status === "error") {
+              reject();
+            }
             const toastFunction =
               status === "complete" ? toast.success : toast.info;
             toastFunction(status, {
@@ -55,20 +70,18 @@ export const JoinButton = () => {
               richColors: status === "complete",
             });
           } catch (e) {
-            console.log("json parsing failed on join event stream", e);
+            console.warn("JSON parsing failed on join event stream", e);
           }
         },
       });
+
+      return promise;
     },
-    onSuccess: async () => {
+    onSuccess: async (user) => {
       await queryClient.cancelQueries(userOptions());
-      const prev = queryClient.getQueryData(userOptions().queryKey);
-      if (prev) {
-        queryClient.setQueryData(userOptions().queryKey, {
-          ...prev,
-          guilds: prev?.guilds?.concat({ guildId: guild.data.id }),
-        });
-      }
+      queryClient.setQueryData(userOptions().queryKey, user);
+    },
+    onSettled: () => {
       queryClient.invalidateQueries(userOptions());
     },
   });
