@@ -11,7 +11,7 @@ export const fetchGuildLeave = async ({ guildId }: { guildId: string }) => {
 };
 
 export const fetchGuild = async ({ idLike }: WithIdLike) => {
-  return fetchGuildApiData<Schemas["GuildFull"]>(
+  return fetchGuildApiData<Schemas["Guild"]>(
     `guild/${resolveIdLikeRequest(idLike)}`,
   );
 };
@@ -31,7 +31,7 @@ export const fetchEntity = async <Data = object, Error = ErrorLike>({
 
 export const fetchUser = async () => {
   const { userId } = await tryGetParsedToken();
-  return fetchEntity<Schemas["UserFull"]>({
+  return fetchEntity<Schemas["User"]>({
     entity: "user",
     idLike: userId,
   });
@@ -39,7 +39,7 @@ export const fetchUser = async () => {
 
 export const fetchPages = async ({ guildId }: { guildId: string }) => {
   const guild = await fetchGuild({ idLike: guildId });
-  return fetchGuildApiData<Schemas["PageFull"][]>("page/batch", {
+  return fetchGuildApiData<Schemas["Page"][]>("page/batch", {
     method: "POST",
     body: JSON.stringify({ ids: guild.pages?.map((p) => p.pageId!) ?? [] }),
   });

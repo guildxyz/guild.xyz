@@ -15,14 +15,14 @@ export const entityOptions = <Data = object, Error = ErrorLike>({
 };
 
 export const guildOptions = ({ idLike }: { idLike: string }) => {
-  return entityOptions<Schemas["GuildFull"]>({
+  return entityOptions<Schemas["Guild"]>({
     entity: "guild",
     idLike,
   });
 };
 
 export const userOptions = () => {
-  return queryOptions<Schemas["UserFull"]>({
+  return queryOptions<Schemas["User"]>({
     queryKey: ["user"],
     queryFn: () => fetchUser(),
   });

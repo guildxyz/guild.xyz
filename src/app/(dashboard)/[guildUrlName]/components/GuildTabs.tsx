@@ -6,7 +6,7 @@ import { fetchPages } from "@/lib/fetchers";
 import type { Schemas } from "@guildxyz/types";
 import { PageNavLink } from "./RoleGroupNavLink";
 
-export const GuildTabs = async ({ guild }: { guild: Schemas["GuildFull"] }) => {
+export const GuildTabs = async ({ guild }: { guild: Schemas["Guild"] }) => {
   const pages = await fetchPages({ guildId: guild.id });
 
   return (

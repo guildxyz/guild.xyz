@@ -7,7 +7,7 @@ export const getGuildSearch = async ({
   pageParam,
   search,
 }: { pageParam: number; search: string }) => {
-  return fetchGuildApiData<PaginatedResponse<Schemas["GuildFull"]>>(
+  return fetchGuildApiData<PaginatedResponse<Schemas["Guild"]>>(
     `guild/search?page=${pageParam}&pageSize=${PAGE_SIZE}&search=${search}`,
   );
 };

@@ -8,7 +8,7 @@ import { Users } from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
 import type { FunctionComponent } from "react";
 
-export const GuildCard: FunctionComponent<{ guild: Schemas["GuildFull"] }> = ({
+export const GuildCard: FunctionComponent<{ guild: Schemas["Guild"] }> = ({
   guild,
 }) => {
   return (

@@ -10,15 +10,15 @@ const GuildPage = async ({
   params,
 }: DynamicRoute<{ pageUrlName: string; guildUrlName: string }>) => {
   const { pageUrlName, guildUrlName } = await params;
-  const guild = await fetchGuildApiData<Schemas["GuildFull"]>(
+  const guild = await fetchGuildApiData<Schemas["Guild"]>(
     `guild/urlName/${guildUrlName}`,
   );
-  const pages = await fetchGuildApiData<Schemas["PageFull"][]>("page/batch", {
+  const pages = await fetchGuildApiData<Schemas["Page"][]>("page/batch", {
     method: "POST",
     body: JSON.stringify({ ids: guild.pages?.map((p) => p.pageId!) ?? [] }),
   });
   const page = pages.find((p) => p.urlName === pageUrlName)!;
-  const roles = await fetchGuildApiData<Schemas["RoleFull"][]>("role/batch", {
+  const roles = await fetchGuildApiData<Schemas["Role"][]>("role/batch", {
     method: "POST",
     body: JSON.stringify({
       ids: page.roles?.map((r) => r.roleId!) ?? [],
@@ -34,19 +34,16 @@ const GuildPage = async ({
   );
 };
 
-const RoleCard = async ({ role }: { role: Schemas["RoleFull"] }) => {
-  const rewards = await fetchGuildApiData<Schemas["RewardFull"][]>(
-    "reward/batch",
-    {
-      method: "POST",
-      body: JSON.stringify({
-        ids: role.rewards?.map((r) => r.rewardId!) ?? [],
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
+const RoleCard = async ({ role }: { role: Schemas["Role"] }) => {
+  const rewards = await fetchGuildApiData<Schemas["Reward"][]>("reward/batch", {
+    method: "POST",
+    body: JSON.stringify({
+      ids: role.rewards?.map((r) => r.rewardId!) ?? [],
+    }),
+    headers: {
+      "Content-Type": "application/json",
     },
-  );
+  });
 
   return (
     <Card className="flex flex-col md:flex-row" key={role.id}>
@@ -89,7 +86,7 @@ const RoleCard = async ({ role }: { role: Schemas["RoleFull"] }) => {
   );
 };
 
-const Reward = ({ reward }: { reward: Schemas["RewardFull"] }) => {
+const Reward = ({ reward }: { reward: Schemas["Reward"] }) => {
   return (
     <div className="border-b p-4 last:border-b-0">
       <div className="mb-2 font-medium">{reward.name}</div>

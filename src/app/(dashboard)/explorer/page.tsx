@@ -19,7 +19,7 @@ import { ACTIVE_SECTION } from "./constants";
 const getAssociatedGuilds = async () => {
   const { userId } = await tryGetParsedToken();
 
-  return fetchGuildApiData<PaginatedResponse<Schemas["GuildFull"]>>(
+  return fetchGuildApiData<PaginatedResponse<Schemas["Guild"]>>(
     `guild/search?page=1&pageSize=${Number.MAX_SAFE_INTEGER}&sortBy=name&reverse=false&customQuery=@owner:{${userId}}`,
   );
 };
@@ -108,7 +108,7 @@ async function AssociatedGuildsSection() {
 }
 
 async function AssociatedGuilds() {
-  let associatedGuilds: Schemas["GuildFull"][];
+  let associatedGuilds: Schemas["Guild"][];
   try {
     associatedGuilds = (await getAssociatedGuilds()).items;
   } catch {
