@@ -64,10 +64,10 @@ export const fetchGuildApi = async <Data = object, Error = ErrorLike>(
   requestInit?: RequestInit,
 ): Promise<FetchResult<Data, Error>> => {
   if (pathname.startsWith("/")) {
-    throw new Error("`pathname` must not start with slash");
+    throw new Error(`"pathname" must not start with slash: ${pathname}`);
   }
   if (pathname.endsWith("/")) {
-    throw new Error("`pathname` must not end with slash");
+    throw new Error(`"pathname" must not end with slash: ${pathname}`);
   }
   const url = new URL(`api/${pathname}`, env.NEXT_PUBLIC_API);
 

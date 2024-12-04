@@ -2,7 +2,12 @@ import { AuthBoundary } from "@/components/AuthBoundary";
 import { GuildImage } from "@/components/GuildImage";
 import { SignInButton } from "@/components/SignInButton";
 import { getQueryClient } from "@/lib/getQueryClient";
-import { guildOptions, pageBatchOptions, userOptions } from "@/lib/options";
+import {
+  guildOptions,
+  pageBatchOptions,
+  roleBatchOptions,
+  userOptions,
+} from "@/lib/options";
 import type { DynamicRoute } from "@/lib/types";
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { type PropsWithChildren, Suspense } from "react";
@@ -12,13 +17,21 @@ import { JoinButton } from "./components/JoinButton";
 const GuildLayout = async ({
   params,
   children,
-}: PropsWithChildren<DynamicRoute<{ guildUrlName: string }>>) => {
-  const { guildUrlName } = await params;
+}: PropsWithChildren<
+  DynamicRoute<{ guildUrlName: string; pageUrlName?: string }>
+>) => {
+  const { guildUrlName, pageUrlName } = await params;
   const queryClient = getQueryClient();
 
   await Promise.all([
     queryClient.prefetchQuery(userOptions()),
     queryClient.prefetchQuery(pageBatchOptions({ guildIdLike: guildUrlName })),
+    queryClient.prefetchQuery(
+      roleBatchOptions({
+        pageIdLike: pageUrlName || "",
+        guildIdLike: guildUrlName,
+      }),
+    ),
     queryClient.prefetchQuery(
       guildOptions({
         guildIdLike: guildUrlName,

@@ -1,50 +1,57 @@
+"use client";
+
 import { RequirementDisplayComponent } from "@/components/requirements/RequirementDisplayComponent";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { ScrollArea } from "@/components/ui/ScrollArea";
+import { Skeleton } from "@/components/ui/Skeleton";
 import { fetchGuildApiData } from "@/lib/fetchGuildApi";
-import type { Role } from "@/lib/schemas/role";
-import type { DynamicRoute } from "@/lib/types";
+import { roleBatchOptions } from "@/lib/options";
 import type { Schemas } from "@guildxyz/types";
 import { Lock } from "@phosphor-icons/react/dist/ssr";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
+import { Suspense } from "react";
 
-const GuildPage = async ({
-  params,
-}: DynamicRoute<{ pageUrlName: string; guildUrlName: string }>) => {
-  const { pageUrlName, guildUrlName } = await params;
-  const guild = await fetchGuildApiData<Schemas["Guild"]>(
-    `guild/urlName/${guildUrlName}`,
-  );
-  const pages = await fetchGuildApiData<Schemas["Page"][]>("page/batch", {
-    method: "POST",
-    body: JSON.stringify({ ids: guild.pages?.map((p) => p.pageId!) ?? [] }),
-  });
-  const page = pages.find((p) => p.urlName === pageUrlName)!;
-  const roles = await fetchGuildApiData<Role[]>("role/batch", {
-    method: "POST",
-    body: JSON.stringify({
-      ids: page.roles?.map((r) => r.roleId!) ?? [],
+const GuildPage = () => {
+  const { pageUrlName, guildUrlName } = useParams<{
+    pageUrlName: string;
+    guildUrlName: string;
+  }>();
+  const { data: roles } = useSuspenseQuery(
+    roleBatchOptions({
+      guildIdLike: guildUrlName,
+      pageIdLike: pageUrlName,
     }),
-  });
+  );
 
   return (
     <div className="my-4 space-y-4">
       {roles.map((role) => (
-        <RoleCard role={role} key={role.id} />
+        <Suspense
+          fallback={<Skeleton className="h-40 w-full rounded-xl" />}
+          key={role.id}
+        >
+          <RoleCard role={role} />
+        </Suspense>
       ))}
     </div>
   );
 };
 
-const RoleCard = async ({ role }: { role: Role }) => {
-  const rewards = await fetchGuildApiData<Schemas["Reward"][]>("reward/batch", {
-    method: "POST",
-    body: JSON.stringify({
-      ids: role.rewards?.map((r) => r.rewardId!) ?? [],
-    }),
-    headers: {
-      "Content-Type": "application/json",
-    },
+const RoleCard = ({ role }: { role: Schemas["Role"] }) => {
+  const { data: rewards } = useSuspenseQuery<Schemas["Reward"][]>({
+    queryKey: ["reward", "batch", role.id],
+    queryFn: () =>
+      fetchGuildApiData("reward/batch", {
+        method: "POST",
+        body: JSON.stringify({
+          ids: role.rewards?.map((r) => r.rewardId!) ?? [],
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
   });
 
   return (
@@ -86,9 +93,10 @@ const RoleCard = async ({ role }: { role: Role }) => {
 
         {/* TODO group rules by access groups */}
         <div className="grid px-5 pb-5">
-          {role.accessGroups[0].rules.map((rule) => (
+          {role.accessGroups[0].rules?.map((rule) => (
             <RequirementDisplayComponent
               key={rule.accessRuleId}
+              // @ts-expect-error: incomplete type
               requirement={rule}
             />
           ))}
