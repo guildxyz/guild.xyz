@@ -1,7 +1,9 @@
+import { RequirementDisplayComponent } from "@/components/requirements/RequirementDisplayComponent";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { ScrollArea } from "@/components/ui/ScrollArea";
 import { fetchGuildApiData } from "@/lib/fetchGuildApi";
+import type { Role } from "@/lib/schemas/role";
 import type { DynamicRoute } from "@/lib/types";
 import type { Schemas } from "@guildxyz/types";
 import { Lock } from "@phosphor-icons/react/dist/ssr";
@@ -18,7 +20,7 @@ const GuildPage = async ({
     body: JSON.stringify({ ids: guild.pages?.map((p) => p.pageId!) ?? [] }),
   });
   const page = pages.find((p) => p.urlName === pageUrlName)!;
-  const roles = await fetchGuildApiData<Schemas["RoleFull"][]>("role/batch", {
+  const roles = await fetchGuildApiData<Role[]>("role/batch", {
     method: "POST",
     body: JSON.stringify({
       ids: page.roles?.map((r) => r.roleId!) ?? [],
@@ -34,7 +36,7 @@ const GuildPage = async ({
   );
 };
 
-const RoleCard = async ({ role }: { role: Schemas["RoleFull"] }) => {
+const RoleCard = async ({ role }: { role: Role }) => {
   const rewards = await fetchGuildApiData<Schemas["RewardFull"][]>(
     "reward/batch",
     {
@@ -74,8 +76,8 @@ const RoleCard = async ({ role }: { role: Schemas["RoleFull"] }) => {
           </ScrollArea>
         )}
       </div>
-      <div className="bg-card-secondary p-6 md:w-1/2">
-        <div className="flex items-center justify-between">
+      <div className="bg-card-secondary md:w-1/2">
+        <div className="flex items-center justify-between p-5">
           <span className="font-bold text-foreground-secondary text-xs">
             REQUIREMENTS
           </span>
@@ -83,6 +85,16 @@ const RoleCard = async ({ role }: { role: Schemas["RoleFull"] }) => {
             <Lock />
             Join Guild to collect rewards
           </Button>
+        </div>
+
+        {/* TODO group rules by access groups */}
+        <div className="grid px-5 pb-5">
+          {role.accessGroups[0].rules.map((rule) => (
+            <RequirementDisplayComponent
+              key={rule.accessRuleId}
+              requirement={rule}
+            />
+          ))}
         </div>
       </div>
     </Card>
