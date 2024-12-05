@@ -7,6 +7,7 @@ import { fetchGuildLeave } from "@/lib/fetchers";
 import { getCookieClientSide } from "@/lib/getCookieClientSide";
 import { guildOptions, userOptions } from "@/lib/options";
 import type { Schemas } from "@guildxyz/types";
+import { CheckCircle } from "@phosphor-icons/react/dist/ssr";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { EventSourcePlus } from "event-source-plus";
 import { useParams } from "next/navigation";
@@ -66,6 +67,10 @@ export const JoinButton = () => {
 
             toast(status, {
               description: message,
+              icon:
+                status === "Completed" ? (
+                  <CheckCircle weight="fill" className="text-icon-success" />
+                ) : undefined,
             });
           } catch (e) {
             console.warn("JSON parsing failed on join event stream", e);
