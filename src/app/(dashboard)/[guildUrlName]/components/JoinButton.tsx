@@ -53,7 +53,7 @@ export const JoinButton = () => {
               sseMessage.data,
               // biome-ignore lint/suspicious/noExplicitAny: TODO: fill missing types
             ) as any;
-            if (status === "complete") {
+            if (status === "Completed") {
               if (data === undefined) {
                 throw new Error(
                   "Server responded with success, but returned no user",
@@ -63,11 +63,9 @@ export const JoinButton = () => {
             } else if (status === "error") {
               reject();
             }
-            const toastFunction =
-              status === "complete" ? toast.success : toast.info;
-            toastFunction(status, {
+
+            toast(status, {
               description: message,
-              richColors: status === "complete",
             });
           } catch (e) {
             console.warn("JSON parsing failed on join event stream", e);
