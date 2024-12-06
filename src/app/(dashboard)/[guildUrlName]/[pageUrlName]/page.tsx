@@ -5,8 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { ScrollArea } from "@/components/ui/ScrollArea";
 import { Skeleton } from "@/components/ui/Skeleton";
-import { fetchGuildApiData } from "@/lib/fetchGuildApi";
-import { roleBatchOptions } from "@/lib/options";
+import { rewardBatchOptions, roleBatchOptions } from "@/lib/options";
 import type { Schemas } from "@guildxyz/types";
 import { Lock } from "@phosphor-icons/react/dist/ssr";
 import { useSuspenseQuery } from "@tanstack/react-query";
@@ -40,19 +39,9 @@ const GuildPage = () => {
 };
 
 const RoleCard = ({ role }: { role: Schemas["Role"] }) => {
-  const { data: rewards } = useSuspenseQuery<Schemas["Reward"][]>({
-    queryKey: ["reward", "batch", role.id],
-    queryFn: () =>
-      fetchGuildApiData("reward/batch", {
-        method: "POST",
-        body: JSON.stringify({
-          ids: role.rewards?.map((r) => r.rewardId!) ?? [],
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }),
-  });
+  const { data: rewards } = useSuspenseQuery(
+    rewardBatchOptions({ roleId: role.id }),
+  );
 
   return (
     <Card className="flex flex-col md:flex-row" key={role.id}>

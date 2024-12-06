@@ -4,6 +4,7 @@ import { getQueryClient } from "@/lib/getQueryClient";
 import {
   guildOptions,
   pageBatchOptions,
+  rewardBatchOptions,
   roleBatchOptions,
   userOptions,
 } from "@/lib/options";
@@ -16,27 +17,47 @@ import { JoinButton } from "./components/JoinButton";
 const GuildLayout = async ({
   params,
   children,
-}: PropsWithChildren<
-  DynamicRoute<{ guildUrlName: string; pageUrlName?: string }>
->) => {
-  const { guildUrlName, pageUrlName } = await params;
+}: PropsWithChildren<DynamicRoute<{ guildUrlName: string }>>) => {
+  const { guildUrlName } = await params;
   const queryClient = getQueryClient();
 
+  // TODO: handle possible request failures
   await Promise.all([
     queryClient.prefetchQuery(userOptions()),
     queryClient.prefetchQuery(pageBatchOptions({ guildIdLike: guildUrlName })),
-    queryClient.prefetchQuery(
-      roleBatchOptions({
-        pageIdLike: pageUrlName || "",
-        guildIdLike: guildUrlName,
-      }),
-    ),
     queryClient.prefetchQuery(
       guildOptions({
         guildIdLike: guildUrlName,
       }),
     ),
   ]);
+
+  const pageBatch = queryClient.getQueryData(
+    pageBatchOptions({ guildIdLike: guildUrlName }).queryKey,
+  );
+  const roleBatchOptionsCollection = pageBatch?.map((page) => {
+    return roleBatchOptions({
+      pageIdLike: page.urlName!,
+      guildIdLike: guildUrlName,
+    });
+  });
+
+  if (roleBatchOptionsCollection) {
+    await Promise.all(
+      roleBatchOptionsCollection.map((c) => queryClient.prefetchQuery(c)),
+    );
+    const rewardBatchOptionsCollection = [];
+    for (const options of roleBatchOptionsCollection) {
+      const roles = queryClient.getQueryData(options.queryKey);
+      if (!roles) continue;
+      for (const { id } of roles) {
+        rewardBatchOptionsCollection.push(rewardBatchOptions({ roleId: id }));
+      }
+    }
+    await Promise.all(
+      rewardBatchOptionsCollection.map((c) => queryClient.prefetchQuery(c)),
+    );
+  }
 
   const guild = queryClient.getQueryState(
     guildOptions({
