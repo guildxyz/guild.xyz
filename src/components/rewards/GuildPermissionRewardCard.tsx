@@ -7,7 +7,8 @@ export const GuildPermissionRewardCard: FunctionComponent<RewardCardProps> = ({
   reward,
 }) => (
   <RewardCard
-    title={reward.guildReward.data.name ?? "Unknown permission"}
+    // biome-ignore lint: name should be inside guildReward.data, waiting for API change
+    title={(reward.guildReward as any).name ?? "Unknown permission"}
     description="Guild permission"
     image={<Wrench className="size-4" />}
   />

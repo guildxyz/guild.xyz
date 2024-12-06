@@ -47,7 +47,7 @@ const TelegramRewardSchema = z.object({
 const PointsRewardSchema = z.object({
   type: z.literal(GuildRewardTypeSchema.enum.POINTS),
   data: NameAndImageSchema.extend({
-    pointsId: z.string().uuid(),
+    pointId: z.string().uuid(),
   }),
 });
 

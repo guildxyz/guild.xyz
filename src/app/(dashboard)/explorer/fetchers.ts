@@ -1,4 +1,5 @@
 import { fetchGuildApiData } from "@/lib/fetchGuildApi";
+import type { Leaderboard } from "@/lib/schemas/leaderboard";
 import { tryGetParsedToken } from "@/lib/token";
 import type { PaginatedResponse } from "@/lib/types";
 import type { Schemas } from "@guildxyz/types";
@@ -18,4 +19,14 @@ export const fetchGuildSearch = async ({
   return fetchGuildApiData<PaginatedResponse<Schemas["Guild"]>>(
     `guild/search?page=${pageParam}&pageSize=${PAGE_SIZE}&search=${search}`,
   );
+};
+
+export const fetchLeaderboard = async ({
+  rewardId,
+  offset = 0,
+}: { rewardId: string; offset?: number }) => {
+  console.log("fetching leaderboard", `reward/${rewardId}/leaderboard`);
+  return fetchGuildApiData<
+    Leaderboard & { total: number; offset: number; limit: number }
+  >(`reward/${rewardId}/leaderboard`); // TODO: use the offset param
 };
