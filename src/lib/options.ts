@@ -36,7 +36,7 @@ export const pageBatchOptions = ({ guildIdLike }: WithIdLike<"guild">) => {
 export const roleBatchOptions = ({
   pageIdLike,
   guildIdLike,
-}: WithIdLike<"page"> & WithIdLike<"guild">) => {
+}: Partial<WithIdLike<"page">> & WithIdLike<"guild">) => {
   return queryOptions({
     queryKey: ["role", "batch", pageIdLike || "home", guildIdLike],
     queryFn: () => fetchRoleBatch({ pageIdLike, guildIdLike }),
