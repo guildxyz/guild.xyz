@@ -3,6 +3,7 @@ import { resolveIdLikeRequest } from "@/lib/resolveIdLikeRequest";
 import { tryGetParsedToken } from "@/lib/token";
 import type { Entity, EntitySchema, ErrorLike, WithIdLike } from "@/lib/types";
 import type { Schemas } from "@guildxyz/types";
+import type { Role } from "./schemas/role";
 
 export const fetchEntity = async <T extends Entity, Error = ErrorLike>({
   idLike,
@@ -51,7 +52,7 @@ export const fetchRoleBatch = async ({
     idLike: pageIdLikeWithHome,
   });
 
-  return fetchGuildApiData<Schemas["Role"][]>("role/batch", {
+  return fetchGuildApiData<Role[]>("role/batch", {
     method: "POST",
     body: JSON.stringify({ ids: page.roles?.map((p) => p.roleId!) ?? [] }),
   });
