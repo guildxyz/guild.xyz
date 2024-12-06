@@ -1,11 +1,12 @@
-import Link from "next/link";
+import "server-only";
+import { ErrorPage } from "@/components/ErrorPage";
 
 export default function NotFound() {
   return (
-    <div>
-      <h1>Not Found</h1>
-      <p>Could not find requested resource</p>
-      <Link href="/">Return Home</Link>
-    </div>
+    <ErrorPage
+      errorCode="404"
+      title="Page not found"
+      description="We couldn't find the page you were looking for"
+    />
   );
 }
