@@ -15,12 +15,13 @@ export const Leaderboard = ({ rewardId }: { rewardId: string }) => {
   return (
     <div className="space-y-6">
       {/* <section className="space-y-4">
-        <h2 className="font-bold">Point name - your position</h2>
+        <h2 className="font-bold">Your position</h2>
         <LeaderboardUserCard user={data.user} />
       </section> */}
 
       <section className="space-y-4">
-        <h2 className="font-bold">Point name leaderboard</h2>
+        {/* TODO: display points' name */}
+        <h2 className="font-bold">Leaderboard</h2>
         {data.leaderboard.map((user, index) => (
           <LeaderboardUserCard
             key={user.userId}

@@ -19,7 +19,8 @@ export const LeaderboardUserCard = ({
       </div>
       <span className="shrink-0">
         <b>{`${user.amount} `}</b>
-        <span>point name</span>
+        {/* TODO: display point' name */}
+        {/* <span>point name</span> */}
       </span>
     </div>
   </Card>
