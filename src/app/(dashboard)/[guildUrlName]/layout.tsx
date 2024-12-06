@@ -1,6 +1,5 @@
 import { AuthBoundary } from "@/components/AuthBoundary";
 import { GuildImage } from "@/components/GuildImage";
-import { SignInButton } from "@/components/SignInButton";
 import { getQueryClient } from "@/lib/getQueryClient";
 import {
   guildOptions,
@@ -65,7 +64,8 @@ const GuildLayout = async ({
                   {guild.data.name}
                 </h1>
               </div>
-              <AuthBoundary fallback={<SignInButton />}>
+              {/* TODO: JoinButton should open a modal where the user can sign in and also connect the required platforms. So we won't need an AuthBoundary here. */}
+              <AuthBoundary fallback={null}>
                 <JoinButton />
               </AuthBoundary>
             </div>

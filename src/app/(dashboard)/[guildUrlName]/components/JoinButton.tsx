@@ -1,12 +1,18 @@
 "use client";
 
 import { Button } from "@/components/ui/Button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/Tooltip";
 import { GUILD_AUTH_COOKIE_NAME } from "@/config/constants";
 import { env } from "@/lib/env";
 import { fetchGuildLeave } from "@/lib/fetchers";
 import { getCookieClientSide } from "@/lib/getCookieClientSide";
 import { guildOptions, userOptions } from "@/lib/options";
 import type { Schemas } from "@guildxyz/types";
+import { CheckCircle, SignOut } from "@phosphor-icons/react/dist/ssr";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { EventSourcePlus } from "event-source-plus";
 import { useParams } from "next/navigation";
@@ -53,7 +59,7 @@ export const JoinButton = () => {
               sseMessage.data,
               // biome-ignore lint/suspicious/noExplicitAny: TODO: fill missing types
             ) as any;
-            if (status === "complete") {
+            if (status === "Completed") {
               if (data === undefined) {
                 throw new Error(
                   "Server responded with success, but returned no user",
@@ -63,11 +69,13 @@ export const JoinButton = () => {
             } else if (status === "error") {
               reject();
             }
-            const toastFunction =
-              status === "complete" ? toast.success : toast.info;
-            toastFunction(status, {
+
+            toast(status, {
               description: message,
-              richColors: status === "complete",
+              icon:
+                status === "Completed" ? (
+                  <CheckCircle weight="fill" className="text-icon-success" />
+                ) : undefined,
             });
           } catch (e) {
             console.warn("JSON parsing failed on join event stream", e);
@@ -103,17 +111,23 @@ export const JoinButton = () => {
   });
 
   return isJoined ? (
-    <Button
-      colorScheme="destructive"
-      className="rounded-2xl"
-      onClick={() => {
-        leaveMutation.mutate();
-      }}
-      isLoading={leaveMutation.isPending}
-      loadingText="Leaving Guild"
-    >
-      Leave Guild
-    </Button>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        {/* TODO: IconButton component */}
+        <Button
+          className="size-11 rounded-full"
+          onClick={() => {
+            leaveMutation.mutate();
+          }}
+          isLoading={leaveMutation.isPending}
+          leftIcon={<SignOut weight="bold" />}
+        />
+      </TooltipTrigger>
+
+      <TooltipContent>
+        <p>Leave guild</p>
+      </TooltipContent>
+    </Tooltip>
   ) : (
     <Button
       colorScheme="success"
