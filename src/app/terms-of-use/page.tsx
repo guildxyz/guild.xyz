@@ -687,9 +687,9 @@ const Page = (): JSX.Element => (
           <li>
             <strong>Guild Member claims</strong>: Customer accessing and/or forming
             part of the Guild (&quot;Guild Member&quot;) may be allowed, by the Guild
-            Admin, to claim Tokens and Rewards subject to the fulfilment of the
+            Admin, to claim Tokens and Rewards subject to the fulfillment of the
             requirements set by the Guild Admin. Guild Members hereby acknowledge and
-            agree that any terms applicable to the fulfilment of requirements in
+            agree that any terms applicable to the fulfillment of requirements in
             order to potentially claim Rewards, as well as any Tokens from the Pool
             are solely set by, and within the discretion of, the Guild Admin. Guild
             Admins are also fully responsible for any distributions of Tokens.
