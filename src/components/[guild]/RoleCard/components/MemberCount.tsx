@@ -45,10 +45,12 @@ const MemberCount = ({
 
 type WithSyncProps = Props & {
   roleId?: number
+  tooltipContent?: string // used only if sync status is not "STARTED"
 }
 
 const MemberCountWithSyncIndicator = ({
   roleId,
+  tooltipContent,
   ...rest
 }: PropsWithChildren<WithSyncProps>) => {
   const { status, data } = useActiveStatusUpdates(roleId)
@@ -73,6 +75,19 @@ const MemberCountWithSyncIndicator = ({
             </div>
           </TooltipContent>
         </TooltipPortal>
+      </Tooltip>
+    )
+
+  if (!!tooltipContent)
+    return (
+      <Tooltip>
+        <TooltipTrigger>
+          <MemberCount {...rest} />
+        </TooltipTrigger>
+
+        <TooltipContent>
+          <p>{tooltipContent}</p>
+        </TooltipContent>
       </Tooltip>
     )
 
@@ -101,7 +116,9 @@ const RoleCardMemberCount = ({
   memberCount,
   roleId,
   lastSyncedAt,
-}: PropsWithChildren<WithSyncProps & { lastSyncedAt: string }>) => {
+}: PropsWithChildren<
+  Omit<WithSyncProps, "tooltipContent"> & { lastSyncedAt: string }
+>) => {
   const { featureFlags } = useGuild()
   const { isAdmin } = useGuildPermission()
   const { isSuperAdmin } = useUser()
@@ -111,6 +128,9 @@ const RoleCardMemberCount = ({
       memberCount={memberCount}
       roleId={roleId}
       className="!bg-transparent text-muted-foreground"
+      tooltipContent={new Intl.NumberFormat("en-US", {
+        notation: "standard",
+      }).format(memberCount)}
     >
       {isSuperAdmin ? (
         <MemberCountLastSyncTooltip lastSyncedAt={lastSyncedAt}>
