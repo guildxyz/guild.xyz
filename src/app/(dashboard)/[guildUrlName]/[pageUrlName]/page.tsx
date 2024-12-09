@@ -34,6 +34,7 @@ const GuildPage = () => {
           key={role.id}
         >
           <ErrorBoundary FallbackComponent={GenericError}>
+            {/* @ts-ignore: intentional error placed for testing */}
             <RoleCard role={role} />
           </ErrorBoundary>
         </Suspense>
