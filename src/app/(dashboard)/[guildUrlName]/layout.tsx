@@ -4,7 +4,6 @@ import { getQueryClient } from "@/lib/getQueryClient";
 import {
   guildOptions,
   pageBatchOptions,
-  rewardBatchOptions,
   roleBatchOptions,
   userOptions,
 } from "@/lib/options";
@@ -45,17 +44,6 @@ const GuildLayout = async ({
   if (roleBatchOptionsCollection) {
     await Promise.all(
       roleBatchOptionsCollection.map((c) => queryClient.prefetchQuery(c)),
-    );
-    const rewardBatchOptionsCollection = [];
-    for (const options of roleBatchOptionsCollection) {
-      const roles = queryClient.getQueryData(options.queryKey);
-      if (!roles) continue;
-      for (const { id } of roles) {
-        rewardBatchOptionsCollection.push(rewardBatchOptions({ roleId: id }));
-      }
-    }
-    await Promise.all(
-      rewardBatchOptionsCollection.map((c) => queryClient.prefetchQuery(c)),
     );
   }
 
