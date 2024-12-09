@@ -22,6 +22,12 @@ import {
   ResponsiveDialogTitle,
 } from "./ui/ResponsiveDialog";
 
+const CUSTOM_CONNECTOR_ICONS = {
+  "com.brave.wallet": "/walletLogos/brave.svg",
+  walletConnect: "/walletLogos/walletconnect.svg",
+  coinbaseWalletSDK: "/walletLogos/coinbasewallet.png",
+} as const;
+
 export const SignInDialog = () => {
   const { isConnected } = useAccount();
   const [open, setOpen] = useAtom(signInDialogOpenAtom);
@@ -49,34 +55,40 @@ const WalletList = () => {
   return (
     <div className="grid gap-8">
       <div className="grid gap-2">
-        {connectors.map((connector) => (
-          <Button
-            key={connector.uid}
-            onClick={() => connect({ connector })}
-            leftIcon={
-              connector.icon ? (
-                <img
-                  src={connector.icon}
-                  alt={`${connector.name} icon`}
-                  className="size-6"
-                />
-              ) : (
-                <Wallet weight="bold" className="size-6" />
-              )
-            }
-            size="xl"
-            isLoading={
-              !!variables?.connector &&
-              "id" in variables.connector &&
-              variables.connector.id === connector.id &&
-              isPending
-            }
-            loadingText="Check your wallet"
-            className="justify-start"
-          >
-            {connector.name}
-          </Button>
-        ))}
+        {connectors.map((connector) => {
+          const connetorIcon =
+            CUSTOM_CONNECTOR_ICONS[
+              connector.id as keyof typeof CUSTOM_CONNECTOR_ICONS
+            ] ?? connector.icon;
+          return (
+            <Button
+              key={connector.uid}
+              onClick={() => connect({ connector })}
+              leftIcon={
+                connetorIcon ? (
+                  <img
+                    src={connetorIcon}
+                    alt={`${connector.name} icon`}
+                    className="size-6"
+                  />
+                ) : (
+                  <Wallet weight="bold" className="size-6" />
+                )
+              }
+              size="xl"
+              isLoading={
+                !!variables?.connector &&
+                "id" in variables.connector &&
+                variables.connector.id === connector.id &&
+                isPending
+              }
+              loadingText="Check your wallet"
+              className="justify-start"
+            >
+              {connector.name}
+            </Button>
+          );
+        })}
       </div>
 
       <div className="grid gap-2 text-center text-foreground-secondary text-sm">
