@@ -1,5 +1,6 @@
 "use client";
 
+import { GenericError } from "@/components/GenericError";
 import { RequirementDisplayComponent } from "@/components/requirements/RequirementDisplayComponent";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -11,6 +12,7 @@ import { Lock } from "@phosphor-icons/react/dist/ssr";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import { Suspense } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 
 const GuildPage = () => {
   const { pageUrlName, guildUrlName } = useParams<{
@@ -26,12 +28,14 @@ const GuildPage = () => {
 
   return (
     <div className="my-4 space-y-4">
-      {roles.map((role) => (
+      {[...roles, { id: "fake" }].map((role) => (
         <Suspense
           fallback={<Skeleton className="h-40 w-full rounded-xl" />}
           key={role.id}
         >
-          <RoleCard role={role} />
+          <ErrorBoundary FallbackComponent={GenericError}>
+            <RoleCard role={role} />
+          </ErrorBoundary>
         </Suspense>
       ))}
     </div>
