@@ -1,32 +1,20 @@
 "use client";
 
-import { useEffect } from "react";
+import { ErrorPage } from "@/components/ErrorPage";
 
 const ErrorBoundary = ({
   error,
-  reset,
 }: {
-  error: Error & { digest?: string };
-  reset: () => void;
+  error: Error & { digest?: string; statusCode?: string };
 }) => {
-  useEffect(() => {
-    // Log the error to an error reporting service
-    console.error(error);
-  }, [error]);
-
+  console.log(error.cause);
   return (
-    <div>
-      <h1>Something went wrong!</h1>
-      <button
-        type="button"
-        onClick={
-          // Attempt to recover by trying to re-render the segment
-          () => reset()
-        }
-      >
-        Try again
-      </button>
-    </div>
+    <ErrorPage
+      title="Something went wrong!"
+      correlationId={crypto.randomUUID()}
+      description={error.message}
+      errorCode={error.statusCode || "ONO"}
+    />
   );
 };
 
