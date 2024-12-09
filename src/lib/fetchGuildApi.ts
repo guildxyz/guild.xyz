@@ -1,6 +1,7 @@
 import { signOut } from "@/actions/auth";
 import { tryGetToken } from "@/lib/token";
 import { env } from "./env";
+import { ValidationError } from "./error";
 import type { ErrorLike } from "./types";
 
 type FetchResult<Data, Error> =
@@ -64,10 +65,14 @@ export const fetchGuildApi = async <Data = object, Error = ErrorLike>(
   requestInit?: RequestInit,
 ): Promise<FetchResult<Data, Error>> => {
   if (pathname.startsWith("/")) {
-    throw new Error(`"pathname" must not start with slash: ${pathname}`);
+    throw new ValidationError(
+      `"pathname" must not start with slash: ${pathname}`,
+    );
   }
   if (pathname.endsWith("/")) {
-    throw new Error(`"pathname" must not end with slash: ${pathname}`);
+    throw new ValidationError(
+      `"pathname" must not end with slash: ${pathname}`,
+    );
   }
   const url = new URL(`api/${pathname}`, env.NEXT_PUBLIC_API);
 
