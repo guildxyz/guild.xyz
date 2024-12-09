@@ -9,8 +9,15 @@ type FetchResult<Data, Error> =
 
 // TODO: include a dedicated logger with severity channels
 const logger = {
-  info: (...args: Parameters<typeof console.info>) => {
-    if (process.env.NODE_ENV === "development" && env.LOGGING > 0) {
+  info: (
+    { response }: { response: Response },
+    ...args: Parameters<typeof console.info>
+  ) => {
+    if (
+      process.env.NODE_ENV === "development" &&
+      env.LOGGING > 0 &&
+      !response.ok
+    ) {
       console.info(
         `[${new Date().toLocaleTimeString()} - fetchGuildApi]:`,
         ...args,
@@ -57,19 +64,17 @@ export const fetchGuildApi = async <Data = object, Error = ErrorLike>(
   requestInit?: RequestInit,
 ): Promise<FetchResult<Data, Error>> => {
   if (pathname.startsWith("/")) {
-    throw new Error("`pathname` must not start with slash");
+    throw new Error(`"pathname" must not start with slash: ${pathname}`);
   }
   if (pathname.endsWith("/")) {
-    throw new Error("`pathname` must not end with slash");
+    throw new Error(`"pathname" must not end with slash: ${pathname}`);
   }
   const url = new URL(`api/${pathname}`, env.NEXT_PUBLIC_API);
 
   let token: string | undefined;
   try {
     token = await tryGetToken();
-  } catch (_) {
-    //logger.info(e);
-  }
+  } catch (_) {}
 
   const headers = new Headers(requestInit?.headers);
   if (token) {
@@ -95,7 +100,7 @@ export const fetchGuildApi = async <Data = object, Error = ErrorLike>(
     throw new Error("Guild API failed to respond with json");
   }
 
-  logger.info("\n", url.toString(), response.status);
+  logger.info({ response }, "\n", url.toString(), response.status);
 
   let json: unknown;
   try {
@@ -104,7 +109,7 @@ export const fetchGuildApi = async <Data = object, Error = ErrorLike>(
     throw new Error("Failed to parse json from response");
   }
 
-  logger.info(json, "\n");
+  logger.info({ response }, json, "\n");
 
   if (!response.ok) {
     return {
