@@ -1,17 +1,36 @@
 "use client";
 
-import { signOut } from "@/actions/auth";
+import { associatedGuildsOption } from "@/app/(dashboard)/explorer/options";
+import { fetchGuildApi } from "@/lib/fetchGuildApi";
+import { userOptions } from "@/lib/options";
 import { SignOut } from "@phosphor-icons/react/dist/ssr";
-import { usePathname } from "next/navigation";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "./ui/Button";
 
 export const SignOutButton = () => {
-  const pathname = usePathname();
+  const queryClient = useQueryClient();
+
+  const { mutate: signOut, isPending } = useMutation({
+    mutationFn: () =>
+      fetchGuildApi("auth/logout", {
+        method: "POST",
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [userOptions().queryKey],
+      });
+      queryClient.invalidateQueries({
+        queryKey: associatedGuildsOption().queryKey,
+      });
+    },
+  });
+
   return (
     <Button
       variant="ghost"
       leftIcon={<SignOut weight="bold" />}
-      onClick={() => signOut(pathname)}
+      onClick={() => signOut()}
+      isLoading={isPending}
     >
       Sign out
     </Button>

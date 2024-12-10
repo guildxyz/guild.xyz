@@ -43,3 +43,5 @@ bun.lockb
 /playwright/.cache/
 /playwright/.auth/
 /playwright/results
+
+certificates

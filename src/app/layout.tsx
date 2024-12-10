@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "@/styles/globals.css";
+import { PrefetchUserBoundary } from "@/components/PrefetchUserBoundary";
 import { PreloadResources } from "@/components/PreloadResources";
 import { Providers } from "@/components/Providers";
 import { SignInDialog } from "@/components/SignInDialog";
@@ -27,7 +28,7 @@ const RootLayout = ({
       <body className={cn(dystopian.variable)}>
         <PreloadResources />
         <Providers>
-          {children}
+          <PrefetchUserBoundary>{children}</PrefetchUserBoundary>
 
           <SignInDialog />
           <Toaster />

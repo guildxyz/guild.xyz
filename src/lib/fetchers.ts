@@ -1,6 +1,5 @@
 import { fetchGuildApiData } from "@/lib/fetchGuildApi";
 import { resolveIdLikeRequest } from "@/lib/resolveIdLikeRequest";
-import { tryGetParsedToken } from "@/lib/token";
 import type {
   Entity,
   EntitySchema,
@@ -26,11 +25,7 @@ export const fetchEntity = async <T extends Entity, Error = ErrorLike>({
 };
 
 export const fetchUser = async () => {
-  const { userId } = await tryGetParsedToken();
-  return fetchEntity({
-    entity: "user",
-    idLike: userId,
-  });
+  return fetchGuildApiData<Schemas["User"]>("auth/me");
 };
 
 export const fetchGuildLeave = async ({ guildId }: { guildId: string }) => {
