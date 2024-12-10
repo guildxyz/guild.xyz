@@ -17,28 +17,28 @@ type ReasonParts = [TemplateStringsArray, ...Record<string, Primitive>[]];
  * Serializable `Error` object custom errors derive from.
  */
 export class CustomError extends Error {
-  /** Error reason in raw format - used for debugging and error delegation */
-  public readonly cause: ReasonParts;
   /** Error identifier, indentical to class name */
   public readonly name: string;
   /** Human friendly message for end users */
   public readonly display: string;
   /** Parsed final form of `display` and `cause` */
   public override get message() {
-    return [this.display, this.parsedErrorCause].filter(Boolean).join("\n\n");
+    return [this.display, this.cause].filter(Boolean).join("\n\n");
   }
+  private readonly causeRaw: ReasonParts;
 
-  public static expected(...args: ReasonParts) {
-    return args;
-  }
-
-  private get parsedErrorCause() {
+  public override get cause() {
     const interpolated = this.interpolateErrorCause();
     return interpolated ? `Expected ${interpolated}` : undefined;
   }
 
+  /** Tool for constructing the `cause` field */
+  public static expected(...args: ReasonParts) {
+    return args;
+  }
+
   private interpolateErrorCause(delimiter = " and ") {
-    const [templateStringArray, ...props] = this.cause;
+    const [templateStringArray, ...props] = this.causeRaw;
     return templateStringArray
       .reduce<Primitive[]>((acc, val, i) => {
         acc.push(
@@ -58,11 +58,11 @@ export class CustomError extends Error {
       cause: ReasonParts;
     }>,
   ) {
-    super(undefined, { cause: props?.cause });
+    super();
 
     this.name = this.constructor.name;
     this.display = props?.message || this.defaultDisplay;
-    this.cause = props?.cause ?? CustomError.expected``;
+    this.causeRaw = props?.cause ?? CustomError.expected``;
   }
 
   public toJSON() {
