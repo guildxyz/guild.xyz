@@ -11,11 +11,14 @@ export const env = createEnv({
   client: {
     NEXT_PUBLIC_API: z.string().url(),
     NEXT_PUBLIC_PINATA_GATEWAY_URL: z.string().url(),
+    NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID: z.string(),
   },
   runtimeEnv: {
     NEXT_PUBLIC_API: process.env.NEXT_PUBLIC_API_V3,
     PINATA_ADMIN_JWT: process.env.PINATA_ADMIN_JWT,
     NEXT_PUBLIC_PINATA_GATEWAY_URL: process.env.NEXT_PUBLIC_PINATA_GATEWAY_URL,
+    NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID:
+      process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
     LOGGING: process.env.LOGGING,
   },
 });
