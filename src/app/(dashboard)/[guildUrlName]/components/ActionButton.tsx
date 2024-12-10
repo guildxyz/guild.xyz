@@ -1,13 +1,13 @@
-import { guildOptions, userOptions } from "@/lib/options";
+import { Button } from "@/components/ui/Button";
+import { userOptions } from "@/lib/options";
 import { useQuery } from "@tanstack/react-query";
-import { useGuildUrlName } from "../hooks/useGuildUrlName";
+import { useGuild } from "../hooks/useGuild";
 import { JoinGuild } from "./JoinGuild";
 import { LeaveGuild } from "./LeaveGuild";
 
 export const ActionButton = () => {
-  const guildUrlName = useGuildUrlName();
   const user = useQuery(userOptions());
-  const guild = useQuery(guildOptions({ guildIdLike: guildUrlName }));
+  const guild = useGuild();
 
   if (!guild.data) {
     throw new Error("Failed to fetch guild");
@@ -19,3 +19,9 @@ export const ActionButton = () => {
 
   return isJoined ? <LeaveGuild /> : <JoinGuild />;
 };
+
+export const ActionButtonSkeleton = () => (
+  <Button isLoading loadingText="Loading">
+    Join guild
+  </Button>
+);

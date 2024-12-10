@@ -6,14 +6,14 @@ import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { fetchGuildApiData } from "@/lib/fetchGuildApi";
-import { guildOptions, roleBatchOptions } from "@/lib/options";
+import { roleBatchOptions } from "@/lib/options";
 import type { GuildReward, GuildRewardType } from "@/lib/schemas/guildReward";
 import type { Role } from "@/lib/schemas/role";
 import { ImageSquare, Lock } from "@phosphor-icons/react/dist/ssr";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import { Suspense } from "react";
-import { useGuildUrlName } from "../hooks/useGuildUrlName";
+import { useGuild } from "../hooks/useGuild";
 
 const GuildPage = () => {
   const { pageUrlName, guildUrlName } = useParams<{
@@ -92,10 +92,7 @@ const RoleCard = ({ role }: { role: Role }) => (
 );
 
 const RoleRewards = ({ roleRewards }: { roleRewards: Role["rewards"] }) => {
-  const guildUrlName = useGuildUrlName();
-  const { data: guild } = useSuspenseQuery(
-    guildOptions({ guildIdLike: guildUrlName }),
-  );
+  const { data: guild } = useGuild();
   const { data: rewards } = useSuspenseQuery<GuildReward[]>({
     queryKey: ["reward", "search", guild.id],
     queryFn: () =>

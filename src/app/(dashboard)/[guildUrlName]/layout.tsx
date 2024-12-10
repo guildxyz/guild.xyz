@@ -10,7 +10,7 @@ import {
 import type { DynamicRoute } from "@/lib/types";
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { type PropsWithChildren, Suspense } from "react";
-import { ActionButton } from "./components/ActionButton";
+import { ActionButton, ActionButtonSkeleton } from "./components/ActionButton";
 import { GuildTabs, GuildTabsSkeleton } from "./components/GuildTabs";
 
 const GuildLayout = async ({
@@ -75,7 +75,9 @@ const GuildLayout = async ({
               </div>
               {/* TODO: JoinButton should open a modal where the user can sign in and also connect the required platforms. So we won't need an AuthBoundary here. */}
               <AuthBoundary fallback={null}>
-                <ActionButton />
+                <Suspense fallback={<ActionButtonSkeleton />}>
+                  <ActionButton />
+                </Suspense>
               </AuthBoundary>
             </div>
             <p className="line-clamp-3 max-w-prose text-balance text-lg leading-relaxed">

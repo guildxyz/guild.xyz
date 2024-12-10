@@ -7,19 +7,14 @@ import {
   TooltipTrigger,
 } from "@/components/ui/Tooltip";
 import { fetchGuildLeave } from "@/lib/fetchers";
-import { guildOptions, userOptions } from "@/lib/options";
+import { userOptions } from "@/lib/options";
 import { SignOut } from "@phosphor-icons/react/dist/ssr";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useGuildUrlName } from "../hooks/useGuildUrlName";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useGuild } from "../hooks/useGuild";
 
 export const LeaveGuild = () => {
-  const guildUrlName = useGuildUrlName();
-  const guild = useQuery(guildOptions({ guildIdLike: guildUrlName }));
+  const guild = useGuild();
   const queryClient = useQueryClient();
-
-  if (!guild.data) {
-    throw new Error("Failed to fetch guild");
-  }
 
   const { mutate, isPending } = useMutation({
     mutationFn: () => fetchGuildLeave({ guildId: guild.data.id }),
