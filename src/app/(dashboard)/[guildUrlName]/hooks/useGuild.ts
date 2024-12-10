@@ -1,3 +1,5 @@
+"use client";
+
 import { guildOptions } from "@/lib/options";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";

@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/Button";
 import { userOptions } from "@/lib/options";
 import { useQuery } from "@tanstack/react-query";
