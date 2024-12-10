@@ -66,12 +66,12 @@ export const fetchGuildApi = async <Data = object, Error = ErrorLike>(
 ): Promise<FetchResult<Data, Error>> => {
   if (pathname.startsWith("/")) {
     throw new ValidationError({
-      cause: ValidationError.expected`${pathname} must not start with slash`,
+      cause: ValidationError.expected`${{ pathname }} must not start with slash`,
     });
   }
   if (pathname.endsWith("/")) {
     throw new ValidationError({
-      cause: ValidationError.expected`${pathname} must not end with slash`,
+      cause: ValidationError.expected`${{ pathname }} must not end with slash`,
     });
   }
   const url = new URL(`api/${pathname}`, env.NEXT_PUBLIC_API);

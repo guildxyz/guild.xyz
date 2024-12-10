@@ -11,22 +11,42 @@ import type { PartialDeep, Primitive } from "type-fest";
  */
 export type Either<Data, _ extends Error> = Data;
 
-type Cause = [TemplateStringsArray, ...Primitive[]];
+type Cause = [TemplateStringsArray, ...Record<string, Primitive>[]];
 
-class CustomError extends Error {
+export class CustomError extends Error {
   public readonly cause: ReturnType<typeof CustomError.expected>;
   public readonly name: string;
-  public readonly displayMessage: string;
+  public readonly display: string;
 
   public override get message() {
-    return [this.displayMessage, this.cause].filter(Boolean).join("\n\n");
+    return [this.display, this.parsedErrorCause].filter(Boolean).join("\n\n");
   }
 
-  public static expected(...args: [TemplateStringsArray, ...Primitive[]]) {
+  public static expected(...args: Cause) {
     return args;
   }
 
-  constructor(
+  private get parsedErrorCause() {
+    return `Expected ${this.interpolateErrorCause()}`;
+  }
+
+  private interpolateErrorCause(delimiter = " and ") {
+    const [templateStringArray, ...props] = this.cause;
+
+    return templateStringArray
+      .reduce<Primitive[]>((acc, val, i) => {
+        acc.push(
+          val,
+          ...Object.entries(props.at(i) ?? {})
+            .map(([key, value]) => `"${key}" (${String(value)})`)
+            .join(delimiter),
+        );
+        return acc;
+      }, [])
+      .join("");
+  }
+
+  public constructor(
     props?: PartialDeep<{
       message: string;
       cause: Cause;
@@ -35,11 +55,11 @@ class CustomError extends Error {
     super(props?.message, { cause: props?.cause });
 
     this.name = this.constructor.name;
-    this.displayMessage = props?.message || this.defaultDisplayMessage;
-    this.cause = props?.cause ?? CustomError.expected``; // { code: this.name, values: {}, ...props?.cause };
+    this.display = props?.message || this.defaultDisplay;
+    this.cause = props?.cause ?? CustomError.expected``;
   }
 
-  toJSON() {
+  public toJSON() {
     return {
       name: this.name,
       message: this.message,
@@ -47,13 +67,13 @@ class CustomError extends Error {
     };
   }
 
-  protected get defaultDisplayMessage() {
+  protected get defaultDisplay() {
     return "An error occurred.";
   }
 }
 
 export class NoSkeletonError extends CustomError {
-  protected override get defaultDisplayMessage() {
+  protected override get defaultDisplay() {
     return "Something went wrong while loading the page.";
   }
 }
@@ -61,7 +81,7 @@ export class NoSkeletonError extends CustomError {
 export class NotImplementedError extends CustomError {}
 
 export class ValidationError extends CustomError {
-  protected override get defaultDisplayMessage() {
+  protected override get defaultDisplay() {
     return "There are issues with the provided data.";
   }
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { type CustomError, NoSkeletonError } from "@/lib/error";
+import type { CustomError } from "@/lib/error";
 import { useErrorBoundary } from "react-error-boundary";
 import type { Jsonify } from "type-fest";
 import { ZodError } from "zod";
@@ -8,8 +8,6 @@ import { Button } from "./ui/Button";
 import { Card } from "./ui/Card";
 
 export const GenericError = ({ error }: { error: Jsonify<CustomError> }) => {
-  const e = new NoSkeletonError();
-  console.log(e.message);
   const { resetBoundary } = useErrorBoundary();
   const message =
     error instanceof ZodError ? error.issues.at(0)?.message : error.message;
