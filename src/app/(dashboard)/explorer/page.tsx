@@ -1,5 +1,4 @@
 import { AuthBoundary } from "@/components/AuthBoundary";
-import { ConnectDiscord } from "@/components/ConnectDiscord";
 import { SignInButton } from "@/components/SignInButton";
 import { Suspense } from "react";
 import {
@@ -42,20 +41,6 @@ const Explorer = async () => {
         </StickyNavbar>
 
         <AssociatedGuildsSection />
-
-        {/* TODO: delete this before merging the PR */}
-        <section>
-          <h2 className="mt-12 font-bold text-lg tracking-tight">
-            Connect Discord
-          </h2>
-          <AuthBoundary
-            fallback={
-              <p>You must sign in before connecting your Discord account</p>
-            }
-          >
-            <ConnectDiscord />
-          </AuthBoundary>
-        </section>
 
         <h2
           className="mt-12 font-bold text-lg tracking-tight"
