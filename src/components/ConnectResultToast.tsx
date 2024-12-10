@@ -1,5 +1,6 @@
 "use client";
 
+import { CheckCircle, XCircle } from "@phosphor-icons/react/dist/ssr";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect } from "react";
 import { toast } from "sonner";
@@ -27,7 +28,9 @@ export const ConnectResultToast = () => {
 
   useEffect(() => {
     if (!connectSuccessPlatform) return;
-    toast(`Successfully connected ${connectSuccessPlatform}!`);
+    toast(`Successfully connected ${connectSuccessPlatform}!`, {
+      icon: <CheckCircle weight="fill" className="text-icon-success" />,
+    });
     removeSearchParam(SUCCESS_PARAM);
   }, [connectSuccessPlatform, removeSearchParam]);
 
@@ -35,6 +38,7 @@ export const ConnectResultToast = () => {
     if (!connectErrorMessage) return;
     toast("Error", {
       description: connectErrorMessage,
+      icon: <XCircle weight="fill" className="text-icon-error" />,
     });
     removeSearchParam(ERROR_MSG_PARAM);
   }, [connectErrorMessage, removeSearchParam]);
