@@ -6,10 +6,8 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/Tooltip";
-import { GUILD_AUTH_COOKIE_NAME } from "@/config/constants";
 import { env } from "@/lib/env";
 import { fetchGuildLeave } from "@/lib/fetchers";
-import { getCookieClientSide } from "@/lib/getCookieClientSide";
 import { guildOptions, userOptions } from "@/lib/options";
 import type { Schemas } from "@guildxyz/types";
 import { CheckCircle, SignOut } from "@phosphor-icons/react/dist/ssr";
@@ -34,8 +32,6 @@ export const JoinButton = () => {
 
   const joinMutation = useMutation({
     mutationFn: async () => {
-      //TODO: Handle error here, throw error in funciton if needed
-      const token = getCookieClientSide(GUILD_AUTH_COOKIE_NAME)!;
       const url = new URL(
         `api/guild/${guild.data.id}/join`,
         env.NEXT_PUBLIC_API,
@@ -45,7 +41,6 @@ export const JoinButton = () => {
         method: "post",
         maxRetryCount: 0,
         headers: {
-          "x-auth-token": token,
           "content-type": "application/json",
         },
       });

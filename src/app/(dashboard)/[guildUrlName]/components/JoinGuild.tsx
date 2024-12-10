@@ -1,9 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/Button";
-import { GUILD_AUTH_COOKIE_NAME } from "@/config/constants";
 import { env } from "@/lib/env";
-import { getCookieClientSide } from "@/lib/getCookieClientSide";
 import { guildOptions, userOptions } from "@/lib/options";
 import type { Schemas } from "@guildxyz/types";
 import { CheckCircle } from "@phosphor-icons/react/dist/ssr";
@@ -23,8 +21,6 @@ export const JoinGuild = () => {
 
   const { mutate, isPending } = useMutation({
     mutationFn: async () => {
-      //TODO: Handle error here, throw error in funciton if needed
-      const token = getCookieClientSide(GUILD_AUTH_COOKIE_NAME)!;
       const url = new URL(
         `api/guild/${guild.data.id}/join`,
         env.NEXT_PUBLIC_API,
@@ -34,7 +30,6 @@ export const JoinGuild = () => {
         method: "post",
         maxRetryCount: 0,
         headers: {
-          "x-auth-token": token,
           "content-type": "application/json",
         },
       });

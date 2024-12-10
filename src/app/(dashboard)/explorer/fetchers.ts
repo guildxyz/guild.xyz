@@ -1,14 +1,15 @@
 import { fetchGuildApiData } from "@/lib/fetchGuildApi";
+import { userOptions } from "@/lib/options";
 import type { Leaderboard } from "@/lib/schemas/leaderboard";
-import { tryGetParsedToken } from "@/lib/token";
 import type { PaginatedResponse } from "@/lib/types";
 import type { Schemas } from "@guildxyz/types";
+import { useQuery } from "@tanstack/react-query";
 import { PAGE_SIZE } from "./constants";
 
 export const fetchAssociatedGuilds = async () => {
-  const { userId } = await tryGetParsedToken();
+  const { data: user } = useQuery(userOptions());
   return fetchGuildApiData<PaginatedResponse<Schemas["Guild"]>>(
-    `guild/search?page=1&pageSize=${Number.MAX_SAFE_INTEGER}&sortBy=name&reverse=false&customQuery=@owner:{${userId}}`,
+    `guild/search?page=1&pageSize=${Number.MAX_SAFE_INTEGER}&sortBy=name&reverse=false&customQuery=@owner:{${user?.id}}`,
   );
 };
 
