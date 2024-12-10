@@ -44,7 +44,7 @@ export class CustomError extends Error {
         acc.push(
           val,
           ...Object.entries(props.at(i) ?? {})
-            .map(([key, value]) => `"${key}" (${String(value)})`)
+            .map(([key, value]) => `${key} \`${String(value)}\``)
             .join(delimiter),
         );
         return acc;
@@ -79,8 +79,8 @@ export class CustomError extends Error {
 }
 
 /**
- * If the page segment is rendered on server, there is no need for skeleton so it can be thrown indicating it's not meant to be on client.
- * */
+ * Page segment is meant to be rendered on server, but was called on the client.
+ */
 export class NoSkeletonError extends CustomError {
   protected override get defaultDisplay() {
     return "Something went wrong while loading the page.";
@@ -89,14 +89,33 @@ export class NoSkeletonError extends CustomError {
 
 /**
  * For functionality left out intentionally, that would only be relevant later.
- * */
+ */
 export class NotImplementedError extends CustomError {}
 
 /**
  * Error for custom validations, where `zod` isn't used.
- * */
+ */
 export class ValidationError extends CustomError {
   protected override get defaultDisplay() {
     return "There are issues with the provided data.";
+  }
+}
+
+/**
+ * Successful response came in during fetching, but the response could not be
+ * handled.
+ */
+export class FetchError extends CustomError {
+  protected override get defaultDisplay() {
+    return "Failed to retrieve data.";
+  }
+}
+
+/**
+ * On parsing a response with zod that isn't supposed to fail. Note that this could also happen when requesting a similar but wrong endpoint.
+ */
+export class ResponseMismatchError extends CustomError {
+  protected override get defaultDisplay() {
+    return "Failed to retrieve data.";
   }
 }

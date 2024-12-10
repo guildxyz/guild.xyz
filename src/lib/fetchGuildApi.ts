@@ -1,7 +1,8 @@
 import { signOut } from "@/actions/auth";
 import { tryGetToken } from "@/lib/token";
+import { Status } from "@reflet/http";
 import { env } from "./env";
-import { ValidationError } from "./error";
+import { FetchError, ValidationError } from "./error";
 import type { ErrorLike } from "./types";
 
 type FetchResult<Data, Error> =
@@ -96,13 +97,15 @@ export const fetchGuildApi = async <Data = object, Error = ErrorLike>(
     headers,
   });
 
-  if (response.status === 401) {
+  if (response.status === Status.Unauthorized) {
     signOut();
   }
 
   const contentType = response.headers.get("content-type");
   if (!contentType?.includes("application/json")) {
-    throw new Error("Guild API failed to respond with json");
+    throw new FetchError({
+      cause: FetchError.expected`JSON from Guild API response, instead received ${{ contentType }}`,
+    });
   }
 
   logger.info({ response }, "\n", url.toString(), response.status);
@@ -111,7 +114,9 @@ export const fetchGuildApi = async <Data = object, Error = ErrorLike>(
   try {
     json = await response.json();
   } catch {
-    throw new Error("Failed to parse json from response");
+    throw new FetchError({
+      cause: FetchError.expected`to parse JSON from response`,
+    });
   }
 
   logger.info({ response }, json, "\n");
