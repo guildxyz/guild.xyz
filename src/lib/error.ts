@@ -11,18 +11,24 @@ import type { PartialDeep, Primitive } from "type-fest";
  */
 export type Either<Data, _ extends Error> = Data;
 
-type Cause = [TemplateStringsArray, ...Record<string, Primitive>[]];
+type ReasonParts = [TemplateStringsArray, ...Record<string, Primitive>[]];
 
+/**
+ * Serializable `Error` object custom errors derive from.
+ */
 export class CustomError extends Error {
-  public readonly cause: ReturnType<typeof CustomError.expected>;
+  /** Error reason in raw format - used for debugging and error delegation */
+  public readonly cause: ReasonParts;
+  /** Error identifier, indentical to class name */
   public readonly name: string;
+  /** Human friendly message for end users */
   public readonly display: string;
-
+  /** Parsed final form of `display` and `cause` */
   public override get message() {
     return [this.display, this.parsedErrorCause].filter(Boolean).join("\n\n");
   }
 
-  public static expected(...args: Cause) {
+  public static expected(...args: ReasonParts) {
     return args;
   }
 
@@ -33,7 +39,6 @@ export class CustomError extends Error {
 
   private interpolateErrorCause(delimiter = " and ") {
     const [templateStringArray, ...props] = this.cause;
-
     return templateStringArray
       .reduce<Primitive[]>((acc, val, i) => {
         acc.push(
@@ -50,7 +55,7 @@ export class CustomError extends Error {
   public constructor(
     props?: PartialDeep<{
       message: string;
-      cause: Cause;
+      cause: ReasonParts;
     }>,
   ) {
     super(undefined, { cause: props?.cause });
@@ -73,20 +78,25 @@ export class CustomError extends Error {
   }
 }
 
+/**
+ * If the page segment is rendered on server, there is no need for skeleton so it can be thrown indicating it's not meant to be on client.
+ * */
 export class NoSkeletonError extends CustomError {
   protected override get defaultDisplay() {
     return "Something went wrong while loading the page.";
   }
 }
 
+/**
+ * For functionality left out intentionally, that would only be relevant later.
+ * */
 export class NotImplementedError extends CustomError {}
 
+/**
+ * Error for custom validations, where `zod` isn't used.
+ * */
 export class ValidationError extends CustomError {
   protected override get defaultDisplay() {
     return "There are issues with the provided data.";
   }
-
-  //constructor(...props: ConstructorParameters<typeof CustomError>) {
-  //  super(...props);
-  //}
 }
