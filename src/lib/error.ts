@@ -1,37 +1,42 @@
-export const promptRetryMessages = [
-  "Please try refreshing or contact support if the issue persists.",
-  "Please follow the instructions provided or contact support for assistance.",
-] as const;
+import type { PartialDeep, Primitive } from "type-fest";
 
+//export const promptRetryMessages = [
+//  "Please try refreshing or contact support if the issue persists.",
+//  "Please follow the instructions provided or contact support for assistance.",
+//] as const;
+
+/**
+ * Marker type for indicating if a function could throw an Error
+ * Note: There is no type enforcement that confirms this type's claim.
+ */
 export type Either<Data, _ extends Error> = Data;
 
-type Cause = {
-  code: string;
-  values: string;
-};
+type Cause = [TemplateStringsArray, ...Primitive[]];
 
-type ConstructorProps<T = object> = [
-  message?: string,
-  options?: T & Partial<{ cause: Cause }>,
-];
-
-export class CustomError extends Error {
-  public readonly cause: Cause;
-  public readonly message: string;
+class CustomError extends Error {
+  public readonly cause: ReturnType<typeof CustomError.expected>;
   public readonly name: string;
-  public readonly isExpected: boolean;
+  public readonly displayMessage: string;
+
+  public override get message() {
+    return [this.displayMessage, this.cause].filter(Boolean).join("\n\n");
+  }
+
+  public static expected(...args: [TemplateStringsArray, ...Primitive[]]) {
+    return args;
+  }
 
   constructor(
-    ...[message, options, internalOptions]: [
-      ...ConstructorProps,
-      { isExpected: boolean },
-    ]
+    props?: PartialDeep<{
+      message: string;
+      cause: Cause;
+    }>,
   ) {
-    super(message, { cause: options?.cause });
+    super(props?.message, { cause: props?.cause });
+
     this.name = this.constructor.name;
-    this.message = message || "An error occurred.";
-    this.cause = { code: this.name, values: "", ...options?.cause };
-    this.isExpected = internalOptions.isExpected;
+    this.displayMessage = props?.message || this.defaultDisplayMessage;
+    this.cause = props?.cause ?? CustomError.expected``; // { code: this.name, values: {}, ...props?.cause };
   }
 
   toJSON() {
@@ -39,38 +44,28 @@ export class CustomError extends Error {
       name: this.name,
       message: this.message,
       cause: this.cause,
-      isExpected: this.isExpected,
     };
+  }
+
+  protected get defaultDisplayMessage() {
+    return "An error occurred.";
   }
 }
 
 export class NoSkeletonError extends CustomError {
-  constructor(...[message, options]: ConstructorProps) {
-    super(message || "Something went wrong while loading the page.", options, {
-      isExpected: false,
-    });
+  protected override get defaultDisplayMessage() {
+    return "Something went wrong while loading the page.";
   }
 }
+
+export class NotImplementedError extends CustomError {}
 
 export class ValidationError extends CustomError {
-  constructor(...[message, options]: ConstructorProps) {
-    super(message || "There are issues with the provided data.", options, {
-      isExpected: true,
-    });
+  protected override get defaultDisplayMessage() {
+    return "There are issues with the provided data.";
   }
-}
 
-export class FetchError extends CustomError {
-  public readonly status: number;
-  public readonly statusText: string;
-  public readonly headers: Headers;
-
-  constructor(
-    ...[message, options]: Required<ConstructorProps<{ response: Response }>>
-  ) {
-    super(message, options, { isExpected: true });
-    this.status = options.response.status;
-    this.statusText = options.response.statusText;
-    this.headers = options.response.headers;
-  }
+  //constructor(...props: ConstructorParameters<typeof CustomError>) {
+  //  super(...props);
+  //}
 }
