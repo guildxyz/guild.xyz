@@ -1,6 +1,6 @@
 import { signOut } from "@/actions/auth";
 import { tryGetToken } from "@/lib/token";
-import { Status } from "@reflet/http";
+import { RequestHeader, ResponseHeader, Status } from "@reflet/http";
 import { env } from "./env";
 import { FetchError, ValidationError } from "./error";
 import type { ErrorLike } from "./types";
@@ -83,13 +83,14 @@ export const fetchGuildApi = async <Data = object, Error = ErrorLike>(
   } catch (_) {}
 
   const headers = new Headers(requestInit?.headers);
+
   if (token) {
     headers.set("X-Auth-Token", token);
   }
   if (requestInit?.body instanceof FormData) {
-    headers.set("Content-Type", "multipart/form-data");
+    headers.set(RequestHeader.ContentType, "multipart/form-data");
   } else if (requestInit?.body) {
-    headers.set("Content-Type", "application/json");
+    headers.set(RequestHeader.ContentType, "application/json");
   }
 
   const response = await fetch(url, {
@@ -101,7 +102,7 @@ export const fetchGuildApi = async <Data = object, Error = ErrorLike>(
     signOut();
   }
 
-  const contentType = response.headers.get("content-type");
+  const contentType = response.headers.get(ResponseHeader.ContentType);
   if (!contentType?.includes("application/json")) {
     throw new FetchError({
       cause: FetchError.expected`JSON from Guild API response, instead received ${{ contentType }}`,
