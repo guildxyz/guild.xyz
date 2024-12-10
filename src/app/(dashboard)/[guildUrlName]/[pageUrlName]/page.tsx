@@ -13,6 +13,7 @@ import { ImageSquare, Lock } from "@phosphor-icons/react/dist/ssr";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import { Suspense } from "react";
+import { useGuildUrlName } from "../hooks/useGuildUrlName";
 
 const GuildPage = () => {
   const { pageUrlName, guildUrlName } = useParams<{
@@ -91,7 +92,7 @@ const RoleCard = ({ role }: { role: Role }) => (
 );
 
 const RoleRewards = ({ roleRewards }: { roleRewards: Role["rewards"] }) => {
-  const { guildUrlName } = useParams<{ guildUrlName: string }>();
+  const guildUrlName = useGuildUrlName();
   const { data: guild } = useSuspenseQuery(
     guildOptions({ guildIdLike: guildUrlName }),
   );

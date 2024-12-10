@@ -6,11 +6,11 @@ import { Skeleton } from "@/components/ui/Skeleton";
 import { cn } from "@/lib/cssUtils";
 import { guildOptions, pageBatchOptions } from "@/lib/options";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { useParams } from "next/navigation";
+import { useGuildUrlName } from "../hooks/useGuildUrlName";
 import { PageNavLink } from "./RoleGroupNavLink";
 
 export const GuildTabs = () => {
-  const { guildUrlName } = useParams<{ guildUrlName: string }>();
+  const guildUrlName = useGuildUrlName();
   const { data: guild } = useSuspenseQuery(
     guildOptions({ guildIdLike: guildUrlName }),
   );
