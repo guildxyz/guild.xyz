@@ -27,7 +27,8 @@ export class CustomError extends Error {
   }
 
   private get parsedErrorCause() {
-    return `Expected ${this.interpolateErrorCause()}`;
+    const interpolated = this.interpolateErrorCause();
+    return interpolated ? `Expected ${interpolated}` : undefined;
   }
 
   private interpolateErrorCause(delimiter = " and ") {
@@ -52,7 +53,7 @@ export class CustomError extends Error {
       cause: Cause;
     }>,
   ) {
-    super(props?.message, { cause: props?.cause });
+    super(undefined, { cause: props?.cause });
 
     this.name = this.constructor.name;
     this.display = props?.message || this.defaultDisplay;
