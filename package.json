@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "prepare": "husky",
-    "dev": "next dev --turbo",
+    "dev": "next dev --turbo --experimental-https",
     "build": "next build",
     "start": "next start",
     "type-check": "tsc --pretty --noEmit --incremental false",
