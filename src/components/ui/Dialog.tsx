@@ -116,9 +116,12 @@ const DialogBody = ({
   className,
   ...props
 }: HTMLAttributes<HTMLDivElement>) => (
-  <ScrollArea className="flex max-h-full flex-col">
+  <ScrollArea className="group dialog-scroll-area flex max-h-full flex-col">
     <div
-      className={cn("flex flex-col px-6 pb-10 sm:px-10", className)}
+      className={cn(
+        "flex flex-col px-6 pb-10 group-[.dialog-scroll-area:has(+div)]:pb-0 sm:px-10",
+        className,
+      )}
       {...props}
     />
   </ScrollArea>
