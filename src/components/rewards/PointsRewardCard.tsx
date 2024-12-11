@@ -12,7 +12,7 @@ export const PointsRewardCard: FunctionComponent<RewardCardProps> = ({
   const {
     id,
     data: { name },
-  } = reward.guildReward as Extract<GuildReward, { type: "POINTS" }>; // Should we use Zod here?
+  } = reward.guildReward as Extract<GuildReward, { type: "POINTS" }>;
   const roleRewardData = PointsRoleRewardDataSchema.parse(
     reward.roleReward.data,
   );
