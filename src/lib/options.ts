@@ -47,5 +47,6 @@ export const userOptions = () => {
   return queryOptions<Schemas["User"]>({
     queryKey: ["user"],
     queryFn: () => fetchUser(),
+    retry: false,
   });
 };
