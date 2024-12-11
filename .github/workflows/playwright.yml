@@ -1,6 +1,6 @@
 name: Playwright Tests
 on:
-  deployment_status:
+  # deployment_status:
   workflow_dispatch:
 
 concurrency:
