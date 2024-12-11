@@ -1,4 +1,5 @@
 import type { PartialDeep, Primitive } from "type-fest";
+import type { ZodError } from "zod";
 
 //export const promptRetryMessages = [
 //  "Please try refreshing or contact support if the issue persists.",
@@ -11,7 +12,7 @@ import type { PartialDeep, Primitive } from "type-fest";
  */
 export type Either<Data, _ extends Error> = Data;
 
-type ReasonParts = [TemplateStringsArray, ...Record<string, Primitive>[]];
+type ReasonParts = [ArrayLike<string>, ...Record<string, Primitive>[]];
 
 /**
  * Serializable `Error` object custom errors derive from.
@@ -25,7 +26,9 @@ export class CustomError extends Error {
   public override get message() {
     return [this.display, this.cause].filter(Boolean).join("\n\n");
   }
-  private readonly causeRaw: ReasonParts;
+  public causeRaw: ReasonParts;
+
+  public recoverable: boolean;
 
   public override get cause() {
     const interpolated = this.interpolateErrorCause();
@@ -37,14 +40,14 @@ export class CustomError extends Error {
     return args;
   }
 
-  private interpolateErrorCause(delimiter = " and ") {
+  private interpolateErrorCause(delimiter = ", ") {
     const [templateStringArray, ...props] = this.causeRaw;
-    return templateStringArray
+    return Array.from(templateStringArray)
       .reduce<Primitive[]>((acc, val, i) => {
         acc.push(
           val,
           ...Object.entries(props.at(i) ?? {})
-            .map(([key, value]) => `${key} \`${String(value)}\``)
+            .map(([key, value]) => `**${key}** \`${String(value)}\``)
             .join(delimiter),
         );
         return acc;
@@ -56,6 +59,7 @@ export class CustomError extends Error {
     props?: PartialDeep<{
       message: string;
       cause: ReasonParts;
+      recoverable: boolean;
     }>,
   ) {
     super();
@@ -63,6 +67,7 @@ export class CustomError extends Error {
     this.name = this.constructor.name;
     this.display = props?.message || this.defaultDisplay;
     this.causeRaw = props?.cause ?? CustomError.expected``;
+    this.recoverable = props?.recoverable || false;
   }
 
   public toJSON() {
@@ -70,6 +75,7 @@ export class CustomError extends Error {
       name: this.name,
       message: this.message,
       cause: this.cause,
+      display: this.display,
     };
   }
 
@@ -98,6 +104,27 @@ export class NotImplementedError extends CustomError {}
 export class ValidationError extends CustomError {
   protected override get defaultDisplay() {
     return "There are issues with the provided data.";
+  }
+
+  public static fromZodError(error: ZodError): ValidationError {
+    const result = new ValidationError();
+    const parsedIssues = error.issues.flatMap((issue) => {
+      const path = issue.path.join(" -> ");
+      const { message, code } = issue;
+      return Object.entries({ code, path, message }).map((entry) =>
+        Object.fromEntries([entry]),
+      );
+    });
+
+    result.causeRaw = [
+      [
+        "Zod validation to pass, but failed at:  \n",
+        ...parsedIssues.slice(2).flatMap(() => [" occured at ", " with ", "."]),
+      ],
+      ...parsedIssues,
+    ];
+
+    return result;
   }
 }
 

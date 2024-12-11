@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { ScrollArea } from "@/components/ui/ScrollArea";
 import { Skeleton } from "@/components/ui/Skeleton";
+import { CustomError, FetchError } from "@/lib/error";
 import { rewardBatchOptions, roleBatchOptions } from "@/lib/options";
 import type { Schemas } from "@guildxyz/types";
 import { Lock } from "@phosphor-icons/react/dist/ssr";
@@ -44,6 +45,14 @@ const GuildPage = () => {
 };
 
 const RoleCard = ({ role }: { role: Schemas["Role"] }) => {
+  const blacklistedRoleName = "Member";
+  if (role.name === blacklistedRoleName) {
+    throw new FetchError({
+      recoverable: true,
+      message: `Failed to show ${role.name} role`,
+      cause: FetchError.expected`${{ roleName: role.name }} to not match ${{ blacklistedRoleName }}`,
+    });
+  }
   const { data: rewards } = useSuspenseQuery(
     rewardBatchOptions({ roleId: role.id }),
   );
@@ -68,7 +77,9 @@ const RoleCard = ({ role }: { role: Schemas["Role"] }) => {
           <ScrollArea className="mt-8 h-64 rounded-lg border pr-3">
             <div className="flex flex-col gap-4">
               {rewards.map((reward) => (
-                <Reward reward={reward} key={reward.id} />
+                <ErrorBoundary FallbackComponent={GenericError} key={reward.id}>
+                  <Reward reward={reward} />
+                </ErrorBoundary>
               ))}
             </div>
           </ScrollArea>
@@ -101,6 +112,9 @@ const RoleCard = ({ role }: { role: Schemas["Role"] }) => {
 };
 
 const Reward = ({ reward }: { reward: Schemas["Reward"] }) => {
+  if (reward.name === "Admin - update") {
+    throw new CustomError();
+  }
   return (
     <div className="border-b p-4 last:border-b-0">
       <div className="mb-2 font-medium">{reward.name}</div>

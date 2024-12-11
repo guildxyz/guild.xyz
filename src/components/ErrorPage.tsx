@@ -50,7 +50,7 @@ const ErrorPage = ({
           className="font-black text-[clamp(128px,32vw,360px)] text-foreground leading-none tracking-tight opacity-20"
           aria-hidden
         >
-          {errorCode}
+          {errorCode.slice(0, 3)}
         </div>
         <div className="absolute inset-0 bg-gradient-to-t from-background" />
       </div>
