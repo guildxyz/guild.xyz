@@ -1,6 +1,5 @@
 "use server";
 
-import { associatedGuildsOption } from "@/app/(dashboard)/explorer/options";
 import { GUILD_AUTH_COOKIE_NAME } from "@/config/constants";
 import { fetchGuildApi } from "@/lib/fetchGuildApi";
 import { getQueryClient } from "@/lib/getQueryClient";
@@ -46,7 +45,6 @@ export const signOut = async (redirectTo?: string) => {
   const cookieStore = await cookies();
   cookieStore.delete(GUILD_AUTH_COOKIE_NAME);
   const queryClient = getQueryClient();
-  queryClient.removeQueries(associatedGuildsOption());
   queryClient.removeQueries(userOptions());
   redirect(redirectTo ?? "/explorer");
 };
