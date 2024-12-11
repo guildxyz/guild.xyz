@@ -140,8 +140,11 @@ const unpackFetcher = (fetcher: typeof fetchGuildApi) => {
   return async <Data = object, Error = ErrorLike>(
     ...args: Parameters<typeof fetchGuildApi>
   ) => {
-    const { data, status } = await fetcher<Data, Error>(...args);
-    return status === "error" ? Promise.reject(data) : data;
+    const { data, status, response } = await fetcher<Data, Error>(...args);
+    const partialResponse = { status: response.status };
+    return status === "error"
+      ? Promise.reject({ data, partialResponse })
+      : data;
   };
 };
 

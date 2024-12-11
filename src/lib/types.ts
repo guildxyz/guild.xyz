@@ -23,9 +23,14 @@ export type DynamicRoute<T extends Record<string, string>> = {
  */
 // TODO: align this to backend when error handling gets consistent
 export type ErrorLike = {
-  message: string;
-  status?: string;
-  error?: string;
+  data: {
+    message: string;
+    status?: string;
+    error?: string;
+  };
+  partialResponse: {
+    status: number;
+  };
 };
 
 /**

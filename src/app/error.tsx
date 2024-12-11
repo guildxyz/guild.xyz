@@ -7,7 +7,8 @@ const ErrorBoundary = ({
 }: {
   error: Error & { digest?: string; statusCode?: string };
 }) => {
-  console.log(error.cause);
+  if (error.cause) console.log(error.cause);
+
   return (
     <ErrorPage
       title="Something went wrong!"
