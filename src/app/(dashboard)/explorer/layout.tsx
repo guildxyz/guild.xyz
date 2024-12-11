@@ -5,8 +5,8 @@ import { guildSearchOptions } from "./options";
 
 const ExplorerLayout = async ({ children }: PropsWithChildren) => {
   const queryClient = getQueryClient();
-  void queryClient.prefetchInfiniteQuery(guildSearchOptions({}));
-  //void queryClient.prefetchQuery(associatedGuildsOption());
+  await queryClient.prefetchInfiniteQuery(guildSearchOptions({}));
+  // await queryClient.prefetchQuery(associatedGuildsOption());
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
