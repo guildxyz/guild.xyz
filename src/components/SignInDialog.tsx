@@ -2,10 +2,11 @@
 
 import { signInDialogOpenAtom } from "@/config/atoms";
 import { fetchGuildApi } from "@/lib/fetchGuildApi";
+import { userOptions } from "@/lib/options";
 import { authSchema } from "@/lib/schemas/user";
 import { SignIn, User, Wallet, XCircle } from "@phosphor-icons/react/dist/ssr";
 import { DialogDescription } from "@radix-ui/react-dialog";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAtom, useSetAtom } from "jotai";
 import { shortenHex } from "lib/shortenHex";
 import { toast } from "sonner";
@@ -132,6 +133,8 @@ const SignInWithEthereum = () => {
 
   const setSignInDialogOpen = useSetAtom(signInDialogOpenAtom);
 
+  const queryClient = useQueryClient();
+
   const { mutate: signInWithEthereum, isPending } = useMutation({
     mutationKey: ["SIWE"],
     mutationFn: async () => {
@@ -175,7 +178,12 @@ const SignInWithEthereum = () => {
 
       return authData;
     },
-    onSuccess: () => setSignInDialogOpen(false),
+    onSuccess: () => {
+      setSignInDialogOpen(false);
+      queryClient.invalidateQueries({
+        queryKey: userOptions().queryKey,
+      });
+    },
     onError: (error) => {
       toast("Sign in error", {
         description: error.message,

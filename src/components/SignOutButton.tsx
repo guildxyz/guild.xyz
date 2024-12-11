@@ -16,10 +16,8 @@ export const SignOutButton = () => {
         method: "POST",
       }),
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [userOptions().queryKey],
-      });
-      queryClient.invalidateQueries({
+      queryClient.resetQueries({ queryKey: userOptions().queryKey });
+      queryClient.resetQueries({
         queryKey: associatedGuildsOption().queryKey,
       });
     },
