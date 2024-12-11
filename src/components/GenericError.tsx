@@ -31,7 +31,7 @@ export const GenericError = ({ error }: { error: CustomError | ZodError }) => {
             </CollapsibleContent>
           </Collapsible>
         )}
-        {error.recoverable && (
+        {convergedError.recoverable && (
           <Button
             onClick={resetBoundary}
             variant="subtle"
