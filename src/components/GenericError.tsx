@@ -27,7 +27,9 @@ export const GenericError = ({ error }: { error: CustomError | ZodError }) => {
               Read more about what went wrong
             </CollapsibleTrigger>
             <CollapsibleContent>
-              <Markdown>{convergedError.cause}</Markdown>
+              <Markdown className="prose dark:prose-invert">
+                {convergedError.cause}
+              </Markdown>
             </CollapsibleContent>
           </Collapsible>
         )}

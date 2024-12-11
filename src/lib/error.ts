@@ -116,13 +116,17 @@ export class ValidationError extends CustomError {
       );
     });
 
-    result.causeRaw = [
-      [
-        "Zod validation to pass, but failed at:  \n",
-        ...parsedIssues.slice(2).flatMap(() => [" occured at ", " with ", "."]),
-      ],
-      ...parsedIssues,
-    ];
+    if (error.issues.length) {
+      result.causeRaw = [
+        [
+          "Zod validation to pass, but failed at:  \n",
+          ...parsedIssues
+            .slice(error.issues.length * 2)
+            .flatMap(() => [" occured at ", " with ", ".  \n"]),
+        ],
+        ...parsedIssues,
+      ];
+    }
 
     return result;
   }
