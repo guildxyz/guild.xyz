@@ -43,3 +43,6 @@ bun.lockb
 /playwright/.cache/
 /playwright/.auth/
 /playwright/results
+
+# Sentry Config File
+.env.sentry-build-plugin

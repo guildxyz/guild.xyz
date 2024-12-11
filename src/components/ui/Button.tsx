@@ -77,6 +77,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       rightIcon,
       asChild = false,
       children,
+      type = "button",
       ...props
     },
     ref,

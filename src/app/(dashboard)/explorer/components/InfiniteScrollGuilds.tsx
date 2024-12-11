@@ -51,7 +51,7 @@ export const InfiniteScrollGuilds = () => {
           ? // biome-ignore lint: it's safe to use index as key in this case
             [...Array(PAGE_SIZE)].map((_, i) => <GuildCardSkeleton key={i} />)
           : guilds.map((guild, _i) => (
-              <GuildCard key={guild.urlName} guild={guild} />
+              <GuildCard key={guild.id} guild={guild} />
             ))}
       </div>
       <div

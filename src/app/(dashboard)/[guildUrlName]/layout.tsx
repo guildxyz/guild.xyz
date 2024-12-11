@@ -9,7 +9,9 @@ import {
   userOptions,
 } from "@/lib/options";
 import type { DynamicRoute } from "@/lib/types";
+import { Status } from "@reflet/http";
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
+import { notFound } from "next/navigation";
 import { type PropsWithChildren, Suspense } from "react";
 import { GuildTabs, GuildTabsSkeleton } from "./components/GuildTabs";
 import { JoinButton } from "./components/JoinButton";
@@ -65,8 +67,11 @@ const GuildLayout = async ({
     }).queryKey,
   );
 
-  if (guild?.error || !guild?.data) {
-    throw new Error(`Failed to fetch guild ${guild?.error?.status || ""}`);
+  if (guild?.error?.partialResponse.status === Status.NotFound) {
+    notFound();
+  }
+  if (!guild?.data) {
+    throw new Error("Failed to fetch guild");
   }
 
   return (
