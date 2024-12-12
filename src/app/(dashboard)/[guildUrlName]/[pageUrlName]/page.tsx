@@ -56,7 +56,7 @@ const RoleCard = ({ role }: { role: Role }) => (
             alt="role avatar"
           />
         ) : (
-          <div className="flex size-14 items-center justify-center rounded-full bg-image">
+          <div className="flex size-14 items-center justify-center rounded-full bg-image text-white">
             <ImageSquare weight="duotone" className="size-6" />
           </div>
         )}
