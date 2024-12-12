@@ -1,5 +1,4 @@
-import { signOut } from "@/actions/auth";
-import { tryGetToken } from "@/lib/token";
+import { isServer } from "@tanstack/react-query";
 import { env } from "./env";
 import type { ErrorLike } from "./types";
 
@@ -71,29 +70,26 @@ export const fetchGuildApi = async <Data = object, Error = ErrorLike>(
   }
   const url = new URL(`api/${pathname}`, env.NEXT_PUBLIC_API);
 
-  let token: string | undefined;
-  try {
-    token = await tryGetToken();
-  } catch (_) {}
-
   const headers = new Headers(requestInit?.headers);
-  if (token) {
-    headers.set("X-Auth-Token", token);
-  }
+
   if (requestInit?.body instanceof FormData) {
     headers.set("Content-Type", "multipart/form-data");
   } else if (requestInit?.body) {
     headers.set("Content-Type", "application/json");
   }
 
+  // Next.js won't include cookies automatically, so we include them manually on the server
+  if (isServer) {
+    const { cookies } = await import("next/headers");
+    const cookiesHeader = (await cookies()).toString();
+    headers.set("cookie", cookiesHeader);
+  }
+
   const response = await fetch(url, {
     ...requestInit,
     headers,
+    credentials: "include",
   });
-
-  if (response.status === 401) {
-    signOut();
-  }
 
   const contentType = response.headers.get("content-type");
   if (!contentType?.includes("application/json")) {

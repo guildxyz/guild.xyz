@@ -1,18 +1,16 @@
-import { AuthBoundary } from "@/components/AuthBoundary";
 import { GuildImage } from "@/components/GuildImage";
 import { getQueryClient } from "@/lib/getQueryClient";
 import {
   guildOptions,
   pageBatchOptions,
-  rewardBatchOptions,
   roleBatchOptions,
   userOptions,
 } from "@/lib/options";
 import type { DynamicRoute } from "@/lib/types";
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { type PropsWithChildren, Suspense } from "react";
+import { ActionButton, ActionButtonSkeleton } from "./components/ActionButton";
 import { GuildTabs, GuildTabsSkeleton } from "./components/GuildTabs";
-import { JoinButton } from "./components/JoinButton";
 
 const GuildLayout = async ({
   params,
@@ -46,17 +44,6 @@ const GuildLayout = async ({
     await Promise.all(
       roleBatchOptionsCollection.map((c) => queryClient.prefetchQuery(c)),
     );
-    const rewardBatchOptionsCollection = [];
-    for (const options of roleBatchOptionsCollection) {
-      const roles = queryClient.getQueryData(options.queryKey);
-      if (!roles) continue;
-      for (const { id } of roles) {
-        rewardBatchOptionsCollection.push(rewardBatchOptions({ roleId: id }));
-      }
-    }
-    await Promise.all(
-      rewardBatchOptionsCollection.map((c) => queryClient.prefetchQuery(c)),
-    );
   }
 
   const guild = queryClient.getQueryState(
@@ -85,10 +72,10 @@ const GuildLayout = async ({
                   {guild.data.name}
                 </h1>
               </div>
-              {/* TODO: JoinButton should open a modal where the user can sign in and also connect the required platforms. So we won't need an AuthBoundary here. */}
-              <AuthBoundary fallback={null}>
-                <JoinButton />
-              </AuthBoundary>
+
+              <Suspense fallback={<ActionButtonSkeleton />}>
+                <ActionButton />
+              </Suspense>
             </div>
             <p className="line-clamp-3 max-w-prose text-balance text-lg leading-relaxed">
               {guild.data.description}
