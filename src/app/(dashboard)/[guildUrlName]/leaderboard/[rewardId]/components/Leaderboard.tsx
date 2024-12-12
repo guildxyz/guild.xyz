@@ -1,16 +1,22 @@
 "use client";
 
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { leaderboardOptions } from "../options";
+import {
+  useSuspenseInfiniteQuery,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
+import { leaderboardOptions, pointsRewardOptions } from "../options";
 import { LeaderboardUserCard } from "./LeaderboardUserCard";
 
 export const Leaderboard = ({ rewardId }: { rewardId: string }) => {
-  const { data: rawData } = useInfiniteQuery(leaderboardOptions({ rewardId }));
+  const { data: rawData } = useSuspenseInfiniteQuery(
+    leaderboardOptions({ rewardId }),
+  );
+
+  const { data: pointReward } = useSuspenseQuery(
+    pointsRewardOptions({ rewardId }),
+  );
 
   const data = rawData?.pages[0];
-
-  // TODO: use useSuspenseQuery & render proper skeleton loaders
-  if (!data) return <>Loading...</>;
 
   return (
     <div className="space-y-6">
@@ -20,8 +26,7 @@ export const Leaderboard = ({ rewardId }: { rewardId: string }) => {
       </section> */}
 
       <section className="space-y-4">
-        {/* TODO: display points' name */}
-        <h2 className="font-bold">Leaderboard</h2>
+        <h2 className="font-bold">{`${pointReward.data.name} leaderboard`}</h2>
         {data.leaderboard.map((user, index) => (
           <LeaderboardUserCard
             key={user.userId}
