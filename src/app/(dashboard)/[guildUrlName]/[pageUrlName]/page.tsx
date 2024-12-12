@@ -2,15 +2,17 @@
 
 import { RequirementDisplayComponent } from "@/components/requirements/RequirementDisplayComponent";
 import { rewardCards } from "@/components/rewards/rewardCards";
-import { Button } from "@/components/ui/Button";
+import { Badge } from "@/components/ui/Badge";
+import { Button, buttonVariants } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Skeleton } from "@/components/ui/Skeleton";
+import { cn } from "@/lib/cssUtils";
 import { fetchGuildApiData } from "@/lib/fetchGuildApi";
-import { roleBatchOptions } from "@/lib/options";
+import { roleBatchOptions, userOptions } from "@/lib/options";
 import type { GuildReward, GuildRewardType } from "@/lib/schemas/guildReward";
 import type { Role } from "@/lib/schemas/role";
-import { ImageSquare, Lock } from "@phosphor-icons/react/dist/ssr";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { Check, ImageSquare, LockSimple } from "@phosphor-icons/react/dist/ssr";
+import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import { Suspense } from "react";
 import { useGuild } from "../hooks/useGuild";
@@ -72,10 +74,8 @@ const RoleCard = ({ role }: { role: Role }) => (
         <span className="font-bold text-foreground-secondary text-xs">
           REQUIREMENTS
         </span>
-        <Button size="sm">
-          <Lock />
-          Join Guild to collect rewards
-        </Button>
+
+        <AccessIndicator roleId={role.id} className="hidden sm:flex" />
       </div>
 
       {/* TODO group rules by access groups */}
@@ -87,6 +87,8 @@ const RoleCard = ({ role }: { role: Role }) => (
           />
         ))}
       </div>
+
+      <AccessIndicator roleId={role.id} className="sm:hidden" />
     </div>
   </Card>
 );
@@ -133,6 +135,58 @@ const RoleRewards = ({
       })}
     </div>
   ) : null;
+};
+
+// TODO: handle state during join & error/no access states too
+const ACCESS_INDICATOR_CLASS =
+  "rounded-b-2xl rounded-t-none min-w-full justify-between sm:rounded-b-xl sm:rounded-t-xl sm:min-w-max";
+const AccessIndicator = ({
+  roleId,
+  className,
+}: { roleId: Role["id"]; className?: string }) => {
+  const { data: guild } = useGuild();
+
+  const { data: user } = useQuery(userOptions());
+  const isGuildMember = user?.guilds?.find((g) => g.guildId === guild.id);
+  const isRoleMember = !!user?.guilds
+    ?.flatMap((g) => g.roles)
+    ?.find((r) => r?.roleId === roleId);
+
+  if (!isGuildMember)
+    return (
+      <Button
+        size="sm"
+        leftIcon={<LockSimple weight="bold" />}
+        className={cn(ACCESS_INDICATOR_CLASS, className)}
+      >
+        Join guild to collect rewards
+      </Button>
+    );
+
+  if (!isRoleMember)
+    return (
+      <Button
+        size="sm"
+        leftIcon={<LockSimple weight="bold" />}
+        className={cn(ACCESS_INDICATOR_CLASS, className)}
+      >
+        Check access to collect rewards
+      </Button>
+    );
+
+  return (
+    <Badge
+      className={buttonVariants({
+        size: "sm",
+        colorScheme: "success",
+        variant: "subtle",
+        className: [ACCESS_INDICATOR_CLASS, className, "pointer-events-none"],
+      })}
+    >
+      <Check weight="bold" />
+      <span>You have access</span>
+    </Badge>
+  );
 };
 
 export default GuildPage;
