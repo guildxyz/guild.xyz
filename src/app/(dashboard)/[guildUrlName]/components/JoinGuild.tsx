@@ -25,7 +25,7 @@ import {
   useSuspenseQuery,
 } from "@tanstack/react-query";
 import { EventSourcePlus } from "event-source-plus";
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { type ReactNode, useEffect } from "react";
 import { toast } from "sonner";
@@ -168,6 +168,8 @@ const JoinGuildButton = () => {
     }),
   );
 
+  const onJoinModalOpenChange = useSetAtom(joinModalAtom);
+
   const { mutate, isPending } = useMutation({
     mutationFn: async () => {
       const url = new URL(
@@ -239,6 +241,7 @@ const JoinGuildButton = () => {
       return promise;
     },
     onSuccess: async (user) => {
+      onJoinModalOpenChange(false);
       queryClient.setQueryData(userOptions().queryKey, user);
     },
     onError: (error: Error) => {
