@@ -7,7 +7,7 @@ export const IDENTITY_STYLES = {
     bgColorClassName: "bg-indigo-500",
     borderColorClassName: "border-indigo-500",
     buttonColorsClassName:
-      "bg-indigo-500 hover:bg-indigo-600 active:bg-indigo-700 dark:hover:bg-indigo-400 dark:active:bg-indigo-300",
+      "[--button-bg:theme(colors.indigo.500)] [--button-bg-hover:theme(colors.indigo.600)] [--button-bg-active:theme(colors.indigo.700)] dark:[--button-bg-hover:theme(colors.indigo.400)] dark:[--button-bg-active:theme(colors.indigo.300)]",
     icon: DiscordLogo,
   },
 } satisfies Record<

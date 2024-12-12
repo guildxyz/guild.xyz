@@ -1,5 +1,6 @@
 import { useGuild } from "@/app/(dashboard)/[guildUrlName]/hooks/useGuild";
 import { IDENTITY_STYLES } from "@/config/constants";
+import { cn } from "@/lib/cssUtils";
 import { env } from "@/lib/env";
 import { userOptions } from "@/lib/options";
 import type { GuildReward } from "@/lib/schemas/guildReward";
@@ -9,7 +10,6 @@ import { ArrowSquareOut } from "@phosphor-icons/react/dist/ssr";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import type { FunctionComponent } from "react";
-import { buttonVariants } from "../ui/Button";
 import {
   Tooltip,
   TooltipContent,
@@ -52,18 +52,16 @@ export const DiscordRewardCard: FunctionComponent<RewardCardProps> = ({
     >
       {!user || !isGuildMember ? (
         <Tooltip>
-          <TooltipTrigger
-            className={buttonVariants({
-              // TODO: reusable reward card button className?
-              className: [
-                "!opacity-50 mt-auto @[18rem]:ml-auto cursor-not-allowed",
+          <TooltipTrigger asChild>
+            <RewardCardButton
+              rightIcon={<ArrowSquareOut weight="bold" />}
+              className={cn(
                 IDENTITY_STYLES.DISCORD.buttonColorsClassName,
-              ],
-              size: "sm",
-            })}
-          >
-            <span>Go to server</span>
-            <ArrowSquareOut weight="bold" />
+                "![--button-bg-hover:var(--button-bg)] ![--button-bg-active:var(--button-bg)] cursor-not-allowed opacity-50",
+              )}
+            >
+              Go to server
+            </RewardCardButton>
           </TooltipTrigger>
 
           <TooltipPortal>
