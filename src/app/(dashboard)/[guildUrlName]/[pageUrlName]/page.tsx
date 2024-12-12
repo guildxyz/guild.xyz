@@ -13,8 +13,10 @@ import type { GuildReward, GuildRewardType } from "@/lib/schemas/guildReward";
 import type { Role } from "@/lib/schemas/role";
 import { Check, ImageSquare, LockSimple } from "@phosphor-icons/react/dist/ssr";
 import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
+import { useSetAtom } from "jotai";
 import { useParams } from "next/navigation";
 import { Suspense } from "react";
+import { joinModalAtom } from "../atoms";
 import { useGuild } from "../hooks/useGuild";
 
 const GuildPage = () => {
@@ -152,12 +154,15 @@ const AccessIndicator = ({
     ?.flatMap((g) => g.roles)
     ?.find((r) => r?.roleId === roleId);
 
+  const onJoinModalOpenChange = useSetAtom(joinModalAtom);
+
   if (!isGuildMember)
     return (
       <Button
         size="sm"
         leftIcon={<LockSimple weight="bold" />}
         className={cn(ACCESS_INDICATOR_CLASS, className)}
+        onClick={() => onJoinModalOpenChange(true)}
       >
         Join guild to collect rewards
       </Button>
@@ -169,6 +174,7 @@ const AccessIndicator = ({
         size="sm"
         leftIcon={<LockSimple weight="bold" />}
         className={cn(ACCESS_INDICATOR_CLASS, className)}
+        onClick={() => onJoinModalOpenChange(true)}
       >
         Check access to collect rewards
       </Button>

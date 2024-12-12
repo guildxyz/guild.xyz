@@ -20,9 +20,11 @@ import type { Schemas } from "@guildxyz/types";
 import { Check, CheckCircle, XCircle } from "@phosphor-icons/react/dist/ssr";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { EventSourcePlus } from "event-source-plus";
+import { useAtom } from "jotai";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { type ReactNode, useEffect, useState } from "react";
+import { type ReactNode, useEffect } from "react";
 import { toast } from "sonner";
+import { joinModalAtom } from "../atoms";
 
 const JOIN_MODAL_SEARCH_PARAM = "join";
 
@@ -30,12 +32,12 @@ export const JoinGuild = () => {
   const searchParams = useSearchParams();
   const shouldOpen = searchParams.has(JOIN_MODAL_SEARCH_PARAM);
 
-  const [open, onOpenChange] = useState(false);
+  const [open, onOpenChange] = useAtom(joinModalAtom);
 
   useEffect(() => {
     if (!shouldOpen) return;
     onOpenChange(true);
-  }, [shouldOpen]);
+  }, [shouldOpen, onOpenChange]);
 
   const { data: user } = useQuery(userOptions());
 
