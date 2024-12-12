@@ -63,7 +63,7 @@ const RoleCard = ({ role }: { role: Role }) => (
       </p>
 
       <Suspense fallback={<p>Loading rewards...</p>}>
-        <RoleRewards roleRewards={role.rewards} />
+        <RoleRewards roleId={role.id} roleRewards={role.rewards} />
       </Suspense>
     </div>
 
@@ -91,7 +91,10 @@ const RoleCard = ({ role }: { role: Role }) => (
   </Card>
 );
 
-const RoleRewards = ({ roleRewards }: { roleRewards: Role["rewards"] }) => {
+const RoleRewards = ({
+  roleId,
+  roleRewards,
+}: { roleId: string; roleRewards: Role["rewards"] }) => {
   const { data: guild } = useGuild();
   const { data: rewards } = useSuspenseQuery<GuildReward[]>({
     queryKey: ["reward", "search", guild.id],
@@ -120,6 +123,7 @@ const RoleRewards = ({ roleRewards }: { roleRewards: Role["rewards"] }) => {
         return (
           <RewardCard
             key={roleReward.rewardId}
+            roleId={roleId}
             reward={{
               guildReward,
               roleReward,

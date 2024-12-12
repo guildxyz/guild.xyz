@@ -20,6 +20,7 @@ import { RewardCard, RewardCardButton } from "./RewardCard";
 import type { RewardCardProps } from "./types";
 
 export const DiscordRewardCard: FunctionComponent<RewardCardProps> = ({
+  roleId,
   reward,
 }) => {
   const router = useRouter();
@@ -41,8 +42,9 @@ export const DiscordRewardCard: FunctionComponent<RewardCardProps> = ({
 
   const isGuildMember = !!user?.guilds?.find((g) => g.guildId === guildId);
 
-  // TODO: hasRoleAccess instead of isGuildMember
-
+  const hasRoleAccess = !!user?.guilds
+    ?.flatMap((g) => g.roles)
+    ?.find((r) => r?.roleId === roleId);
   return (
     <RewardCard
       title="Get role"
@@ -50,7 +52,7 @@ export const DiscordRewardCard: FunctionComponent<RewardCardProps> = ({
       image={imageUrl ?? <Icon className="size-4" weight="fill" />}
       className={IDENTITY_STYLES.DISCORD.borderColorClassName}
     >
-      {!user || !isGuildMember ? (
+      {!user || !isGuildMember || !hasRoleAccess ? (
         <Tooltip>
           <TooltipTrigger asChild>
             <RewardCardButton
@@ -67,7 +69,11 @@ export const DiscordRewardCard: FunctionComponent<RewardCardProps> = ({
           <TooltipPortal>
             <TooltipContent>
               <p>
-                {!user ? "Sign in to proceed" : "Join guild to check access"}
+                {!user
+                  ? "Sign in to proceed"
+                  : !isGuildMember
+                    ? "Join guild to check access"
+                    : "Check access to get reward"}
               </p>
             </TooltipContent>
           </TooltipPortal>
