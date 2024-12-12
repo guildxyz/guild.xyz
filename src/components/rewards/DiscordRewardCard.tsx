@@ -3,6 +3,7 @@ import { IDENTITY_STYLES } from "@/config/constants";
 import { env } from "@/lib/env";
 import { userOptions } from "@/lib/options";
 import type { GuildReward } from "@/lib/schemas/guildReward";
+import { IDENTITY_NAME } from "@/lib/schemas/identity";
 import { DiscordRoleRewardDataSchema } from "@/lib/schemas/roleReward";
 import { ArrowSquareOut } from "@phosphor-icons/react/dist/ssr";
 import { useQuery } from "@tanstack/react-query";
@@ -93,7 +94,7 @@ export const DiscordRewardCard: FunctionComponent<RewardCardProps> = ({
               : undefined
           }
         >
-          Connect Discord
+          {`Connect ${IDENTITY_NAME.DISCORD}`}
         </RewardCardButton>
       )}
     </RewardCard>

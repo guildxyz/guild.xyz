@@ -15,7 +15,7 @@ import { IDENTITY_STYLES } from "@/config/constants";
 import { cn } from "@/lib/cssUtils";
 import { env } from "@/lib/env";
 import { guildOptions, userOptions } from "@/lib/options";
-import type { IdentityType } from "@/lib/schemas/user";
+import { IDENTITY_NAME, type IdentityType } from "@/lib/schemas/identity";
 import type { Schemas } from "@guildxyz/types";
 import { Check, CheckCircle, XCircle } from "@phosphor-icons/react/dist/ssr";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -118,7 +118,7 @@ const ConnectIdentityJoinStep = ({ identity }: { identity: IdentityType }) => {
   return (
     <JoinStep
       complete={connected}
-      label={`Connect ${identity}`}
+      label={`Connect ${IDENTITY_NAME[identity]}`}
       button={
         <Button
           onClick={() =>

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { IdentityTypeSchema } from "./identity";
 
 const CreateRuleSchema = z.object({
   /**
@@ -40,7 +41,7 @@ export const RuleSchema = CreateRuleSchema.extend({
   integration: z.object({
     id: z.string(),
     displayName: z.string(),
-    identityType: z.string(), // TODO: identity schema
+    identityType: IdentityTypeSchema,
   }),
   config: z
     .object({

@@ -1,4 +1,4 @@
-import type { IdentityType } from "@/lib/schemas/user";
+import type { IdentityType } from "@/lib/schemas/identity";
 import type { Icon } from "@phosphor-icons/react/dist/lib/types";
 import { DiscordLogo } from "@phosphor-icons/react/dist/ssr";
 

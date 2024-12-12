@@ -1,5 +1,6 @@
 "use client";
 
+import { IDENTITY_NAME, IdentityTypeSchema } from "@/lib/schemas/identity";
 import { CheckCircle, XCircle } from "@phosphor-icons/react/dist/ssr";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect } from "react";
@@ -13,8 +14,9 @@ export const ConnectResultToast = () => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  // TODO: types
-  const connectSuccessPlatform = searchParams.get(SUCCESS_PARAM);
+  const connectSuccessPlatform = IdentityTypeSchema.safeParse(
+    searchParams.get(SUCCESS_PARAM),
+  );
   const connectErrorMessage = searchParams.get(ERROR_MSG_PARAM);
 
   const removeSearchParam = useCallback(
@@ -28,7 +30,12 @@ export const ConnectResultToast = () => {
 
   useEffect(() => {
     if (!connectSuccessPlatform) return;
-    toast(`Successfully connected ${connectSuccessPlatform}!`, {
+
+    const platformName = connectSuccessPlatform.error
+      ? "an unknown platform"
+      : IDENTITY_NAME[connectSuccessPlatform.data];
+
+    toast(`Successfully connected ${platformName}!`, {
       icon: <CheckCircle weight="fill" className="text-icon-success" />,
     });
     removeSearchParam(SUCCESS_PARAM);
