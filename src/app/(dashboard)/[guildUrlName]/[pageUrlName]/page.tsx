@@ -48,7 +48,7 @@ const RoleCard = ({ role }: { role: Role }) => (
         {role.imageUrl ? (
           <img
             className="size-14 rounded-full border"
-            src={role.imageUrl} // TODO: fallback image
+            src={role.imageUrl}
             alt="role avatar"
           />
         ) : (
@@ -104,7 +104,6 @@ const RoleRewards = ({ roleRewards }: { roleRewards: Role["rewards"] }) => {
   return roleRewards?.length > 0 && rewards?.length > 0 ? (
     <div className="mt-auto grid @[26rem]:grid-cols-2 gap-2">
       {roleRewards.map((roleReward) => {
-        // TODO: How to find guildRewards?
         const guildReward = rewards.find((gr) => gr.id === roleReward.rewardId);
         if (!guildReward) return null;
 
