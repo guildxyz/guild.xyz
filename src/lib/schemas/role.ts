@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { DateLike, ImageUrlSchema, NameSchema } from "./common";
+import { RoleRewardSchema } from "./roleReward";
 import { RuleSchema } from "./rule";
 
 export const CreateRoleSchema = z.object({
@@ -23,11 +24,7 @@ const RoleSchema = CreateRoleSchema.extend({
       rules: z.array(RuleSchema),
     }),
   ),
-  rewards: z.array(
-    z.object({
-      rewardId: z.string().uuid(),
-    }),
-  ),
+  rewards: z.array(RoleRewardSchema),
 });
 
 export type Role = z.infer<typeof RoleSchema>;

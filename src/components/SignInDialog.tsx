@@ -1,11 +1,12 @@
 "use client";
 
-import { signIn } from "@/actions/auth";
 import { signInDialogOpenAtom } from "@/config/atoms";
 import { fetchGuildApi } from "@/lib/fetchGuildApi";
+import { userOptions } from "@/lib/options";
+import { authSchema } from "@/lib/schemas/user";
 import { SignIn, User, Wallet, XCircle } from "@phosphor-icons/react/dist/ssr";
 import { DialogDescription } from "@radix-ui/react-dialog";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAtom, useSetAtom } from "jotai";
 import { shortenHex } from "lib/shortenHex";
 import { toast } from "sonner";
@@ -21,7 +22,6 @@ import {
   ResponsiveDialogHeader,
   ResponsiveDialogTitle,
 } from "./ui/ResponsiveDialog";
-
 const CUSTOM_CONNECTOR_ICONS = {
   "com.brave.wallet": "/walletLogos/brave.svg",
   walletConnect: "/walletLogos/walletconnect.svg",
@@ -133,6 +133,8 @@ const SignInWithEthereum = () => {
 
   const setSignInDialogOpen = useSetAtom(signInDialogOpenAtom);
 
+  const queryClient = useQueryClient();
+
   const { mutate: signInWithEthereum, isPending } = useMutation({
     mutationKey: ["SIWE"],
     mutationFn: async () => {
@@ -155,9 +157,33 @@ const SignInWithEthereum = () => {
 
       const signature = await signMessageAsync({ message });
 
-      return signIn({ message, signature });
+      const requestInit = {
+        method: "POST",
+        body: JSON.stringify({
+          message,
+          signature,
+        }),
+      } satisfies RequestInit;
+
+      const signInRes = await fetchGuildApi("auth/siwe/login", requestInit);
+      let json = signInRes.data;
+      if (signInRes.response.status === 401) {
+        const registerRes = await fetchGuildApi(
+          "auth/siwe/register",
+          requestInit,
+        );
+        json = registerRes.data;
+      }
+      const authData = authSchema.parse(json);
+
+      return authData;
     },
-    onSuccess: () => setSignInDialogOpen(false),
+    onSuccess: () => {
+      setSignInDialogOpen(false);
+      queryClient.invalidateQueries({
+        queryKey: userOptions().queryKey,
+      });
+    },
     onError: (error) => {
       toast("Sign in error", {
         description: error.message,
