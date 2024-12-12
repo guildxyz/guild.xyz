@@ -6,6 +6,4 @@ export const NameSchema = z
 
 export const ImageUrlSchema = z.literal("").or(z.string().url().max(255));
 
-export const LogicSchema = z.enum(["AND", "OR", "ANY_OF"]);
-
 export const DateLike = z.date().or(z.string().datetime());

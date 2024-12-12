@@ -2,9 +2,7 @@
 
 import { useConfetti } from "@/components/ConfettiProvider";
 import { Button } from "@/components/ui/Button";
-import { GUILD_AUTH_COOKIE_NAME } from "@/config/constants";
 import { fetchGuildApiData } from "@/lib/fetchGuildApi";
-import { getCookieClientSide } from "@/lib/getCookieClientSide";
 import type { CreateGuildForm, Guild } from "@/lib/schemas/guild";
 import { CheckCircle, XCircle } from "@phosphor-icons/react/dist/ssr";
 import { useMutation } from "@tanstack/react-query";
@@ -21,10 +19,6 @@ const CreateGuildButton = () => {
 
   const { mutate: onSubmit, isPending } = useMutation({
     mutationFn: async (data: CreateGuildForm) => {
-      const token = getCookieClientSide(GUILD_AUTH_COOKIE_NAME);
-
-      if (!token) throw new Error("Unauthorized"); // TODO: custom errors?
-
       const guild = {
         ...data,
         contact: undefined,

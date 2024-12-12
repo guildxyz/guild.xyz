@@ -1,16 +1,18 @@
-import { tryGetToken } from "@/lib/token";
+"use client";
 
-export const AuthBoundary = async ({
+import { userOptions } from "@/lib/options";
+import { useQuery } from "@tanstack/react-query";
+
+export const AuthBoundary = ({
   fallback,
   children,
 }: Readonly<{
   fallback: React.ReactNode;
   children: React.ReactNode;
 }>) => {
-  try {
-    await tryGetToken();
-    return <>{children}</>;
-  } catch {
-    return <>{fallback}</>;
-  }
+  const { data: user } = useQuery(userOptions());
+
+  if (user?.id) return children;
+
+  return fallback;
 };

@@ -1,12 +1,11 @@
 import { getQueryClient } from "@/lib/getQueryClient";
+import { userOptions } from "@/lib/options";
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import type { PropsWithChildren } from "react";
-import { associatedGuildsOption, guildSearchOptions } from "./options";
 
-const ExplorerLayout = async ({ children }: PropsWithChildren) => {
+export const PrefetchUserBoundary = async ({ children }: PropsWithChildren) => {
   const queryClient = getQueryClient();
-  await queryClient.prefetchInfiniteQuery(guildSearchOptions({}));
-  await queryClient.prefetchQuery(associatedGuildsOption());
+  await queryClient.prefetchQuery(userOptions());
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
@@ -14,5 +13,3 @@ const ExplorerLayout = async ({ children }: PropsWithChildren) => {
     </HydrationBoundary>
   );
 };
-
-export default ExplorerLayout;
