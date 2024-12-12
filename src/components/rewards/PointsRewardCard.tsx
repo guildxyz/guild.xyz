@@ -1,7 +1,8 @@
+import { useGuildUrlName } from "@/app/(dashboard)/[guildUrlName]/hooks/useGuildUrlName";
 import type { GuildReward } from "@/lib/schemas/guildReward";
 import { PointsRoleRewardDataSchema } from "@/lib/schemas/roleReward";
 import { ArrowRight, Star } from "@phosphor-icons/react/dist/ssr";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import type { FunctionComponent } from "react";
 import { RewardCard, RewardCardButton } from "./RewardCard";
 import type { RewardCardProps } from "./types";
@@ -17,9 +18,8 @@ export const PointsRewardCard: FunctionComponent<RewardCardProps> = ({
     reward.roleReward.data,
   );
 
-  // We should think about this... I'm pretty sure we shouldn't use pathname here
-  const pathname = usePathname();
   const router = useRouter();
+  const guildUrlName = useGuildUrlName();
 
   return (
     <RewardCard
@@ -29,7 +29,7 @@ export const PointsRewardCard: FunctionComponent<RewardCardProps> = ({
     >
       <RewardCardButton
         rightIcon={<ArrowRight weight="bold" />}
-        onClick={() => router.push(`${pathname}/leaderboard/${id}`)}
+        onClick={() => router.push(`/${guildUrlName}/leaderboard/${id}`)}
       >
         View leaderboard
       </RewardCardButton>
