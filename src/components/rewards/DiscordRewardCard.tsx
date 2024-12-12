@@ -48,7 +48,7 @@ export const DiscordRewardCard: FunctionComponent<RewardCardProps> = ({
   return (
     <RewardCard
       title="Get role"
-      description={roleRewardData.roleId}
+      description={roleRewardData.name}
       image={imageUrl ?? <Icon className="size-4" weight="fill" />}
       className={IDENTITY_STYLES.DISCORD.borderColorClassName}
     >

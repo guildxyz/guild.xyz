@@ -10,6 +10,7 @@ const CapacityTimeSchema = z.object({
 export const DiscordRoleRewardDataSchema = z
   .object({
     roleId: z.string(),
+    name: z.string(),
   })
   .strict();
 
