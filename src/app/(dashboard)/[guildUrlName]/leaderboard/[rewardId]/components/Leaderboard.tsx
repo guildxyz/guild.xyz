@@ -1,6 +1,8 @@
 "use client";
 
+import { userOptions } from "@/lib/options";
 import {
+  useQuery,
   useSuspenseInfiniteQuery,
   useSuspenseQuery,
 } from "@tanstack/react-query";
@@ -8,8 +10,9 @@ import { leaderboardOptions, pointsRewardOptions } from "../options";
 import { LeaderboardUserCard } from "./LeaderboardUserCard";
 
 export const Leaderboard = ({ rewardId }: { rewardId: string }) => {
+  const { data: user } = useQuery(userOptions());
   const { data: rawData } = useSuspenseInfiniteQuery(
-    leaderboardOptions({ rewardId }),
+    leaderboardOptions({ rewardId, userId: user?.id }),
   );
 
   const { data: pointReward } = useSuspenseQuery(
@@ -20,10 +23,12 @@ export const Leaderboard = ({ rewardId }: { rewardId: string }) => {
 
   return (
     <div className="space-y-6">
-      {/* <section className="space-y-4">
-        <h2 className="font-bold">Your position</h2>
-        <LeaderboardUserCard user={data.user} />
-      </section> */}
+      {!!data.user && (
+        <section className="space-y-4">
+          <h2 className="font-bold">Your position</h2>
+          <LeaderboardUserCard user={data.user} />
+        </section>
+      )}
 
       <section className="space-y-4">
         <h2 className="font-bold">{`${pointReward.data.name} leaderboard`}</h2>

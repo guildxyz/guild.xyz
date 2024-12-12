@@ -3,11 +3,14 @@ import { fetchGuildApiData } from "@/lib/fetchGuildApi";
 import type { GuildReward } from "@/lib/schemas/guildReward";
 import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
 
-export const leaderboardOptions = ({ rewardId }: { rewardId: string }) => {
+export const leaderboardOptions = ({
+  rewardId,
+  userId,
+}: { rewardId: string; userId?: string }) => {
   return infiniteQueryOptions({
     queryKey: ["leaderboard", rewardId],
     queryFn: ({ pageParam }) =>
-      fetchLeaderboard({ rewardId, offset: pageParam }),
+      fetchLeaderboard({ rewardId, userId, offset: pageParam }),
     initialPageParam: 1,
     enabled: rewardId !== undefined,
     getNextPageParam: (lastPage) =>

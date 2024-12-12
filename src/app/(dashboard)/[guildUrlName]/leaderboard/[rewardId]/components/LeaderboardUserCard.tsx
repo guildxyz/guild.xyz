@@ -7,7 +7,7 @@ import { pointsRewardOptions } from "../options";
 
 export const LeaderboardUserCard = ({
   user,
-}: { user: Leaderboard["user"] }) => {
+}: { user: NonNullable<Leaderboard["user"]> }) => {
   const { rewardId } = useParams<{ rewardId: string }>();
   const { data: pointReward } = useSuspenseQuery(
     pointsRewardOptions({ rewardId }),
@@ -24,7 +24,9 @@ export const LeaderboardUserCard = ({
           <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-image sm:size-10">
             <User weight="duotone" className="size-4 sm:size-5" />
           </div>
-          <span className="line-clamp-1 shrink font-bold">{user.userId}</span>
+          <span className="line-clamp-1 shrink font-bold">
+            {user.primaryIdentity.foreignId}
+          </span>
         </div>
         <span className="shrink-0">
           <b>{`${user.amount} `}</b>

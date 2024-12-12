@@ -24,10 +24,11 @@ export const fetchGuildSearch = async ({
 
 export const fetchLeaderboard = async ({
   rewardId,
+  userId,
   offset = 0,
-}: { rewardId: string; offset?: number }) => {
-  console.log("fetching leaderboard", `reward/${rewardId}/leaderboard`);
+}: { rewardId: string; userId?: string; offset?: number }) => {
   return fetchGuildApiData<
     Leaderboard & { total: number; offset: number; limit: number }
-  >(`reward/${rewardId}/leaderboard`); // TODO: use the offset param
+  >(`reward/${rewardId}/leaderboard?userId=${userId}
+`); // TODO: use the offset param
 };
