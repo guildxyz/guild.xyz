@@ -14,11 +14,16 @@ import {
 import { IDENTITY_STYLES } from "@/config/constants";
 import { cn } from "@/lib/cssUtils";
 import { env } from "@/lib/env";
-import { guildOptions, userOptions } from "@/lib/options";
+import { guildOptions, roleBatchOptions, userOptions } from "@/lib/options";
 import { IDENTITY_NAME, type IdentityType } from "@/lib/schemas/identity";
 import type { Schemas } from "@guildxyz/types";
 import { Check, CheckCircle, XCircle } from "@phosphor-icons/react/dist/ssr";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
 import { EventSourcePlus } from "event-source-plus";
 import { useAtom } from "jotai";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
@@ -142,7 +147,10 @@ const ConnectIdentityJoinStep = ({ identity }: { identity: IdentityType }) => {
 };
 
 const JoinGuildButton = () => {
-  const { guildUrlName } = useParams<{ guildUrlName: string }>();
+  const { pageUrlName, guildUrlName } = useParams<{
+    pageUrlName: string;
+    guildUrlName: string;
+  }>();
   const guild = useQuery(guildOptions({ guildIdLike: guildUrlName }));
 
   const { data: user } = useQuery(userOptions());
@@ -152,6 +160,13 @@ const JoinGuildButton = () => {
   if (!guild.data) {
     throw new Error("Failed to fetch guild");
   }
+
+  const { data: roles } = useSuspenseQuery(
+    roleBatchOptions({
+      guildIdLike: guildUrlName,
+      pageIdLike: pageUrlName,
+    }),
+  );
 
   const { mutate, isPending } = useMutation({
     mutationFn: async () => {
@@ -174,10 +189,11 @@ const JoinGuildButton = () => {
       eventSource.listen({
         onMessage: (sseMessage) => {
           try {
-            const { status, message, data } = JSON.parse(
+            const sse = JSON.parse(
               sseMessage.data,
               // biome-ignore lint/suspicious/noExplicitAny: TODO: fill missing types
             ) as any;
+            const { status, message, data } = sse;
             if (status === "Completed") {
               if (data === undefined) {
                 throw new Error(
@@ -185,6 +201,21 @@ const JoinGuildButton = () => {
                 );
               }
               resolve(data);
+            } else if (status === "Acquired roles:") {
+              // TODO: temp, just for the demo
+              if ("roles" in sse) {
+                console.log("roles", sse);
+                const roleNames = sse.roles.map(
+                  ({ roleId }: { roleId: string }) => {
+                    const role = roles.find((r) => r.id === roleId);
+                    return role?.name;
+                  },
+                );
+                toast("Acquired roles", {
+                  description: roleNames.filter(Boolean).join(", "),
+                });
+                return;
+              }
             } else if (status === "error") {
               reject();
             }
