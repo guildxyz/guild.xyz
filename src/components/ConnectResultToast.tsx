@@ -14,9 +14,8 @@ export const ConnectResultToast = () => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const connectSuccessPlatform = IdentityTypeSchema.safeParse(
-    searchParams.get(SUCCESS_PARAM),
-  );
+  const connectSuccessPlatformSearchParam = searchParams.get(SUCCESS_PARAM);
+
   const connectErrorMessage = searchParams.get(ERROR_MSG_PARAM);
 
   const removeSearchParam = useCallback(
@@ -29,7 +28,11 @@ export const ConnectResultToast = () => {
   );
 
   useEffect(() => {
-    if (!connectSuccessPlatform) return;
+    if (!connectSuccessPlatformSearchParam) return;
+
+    const connectSuccessPlatform = IdentityTypeSchema.safeParse(
+      connectSuccessPlatformSearchParam,
+    );
 
     const platformName = connectSuccessPlatform.error
       ? "an unknown platform"
@@ -39,7 +42,7 @@ export const ConnectResultToast = () => {
       icon: <CheckCircle weight="fill" className="text-icon-success" />,
     });
     removeSearchParam(SUCCESS_PARAM);
-  }, [connectSuccessPlatform, removeSearchParam]);
+  }, [connectSuccessPlatformSearchParam, removeSearchParam]);
 
   useEffect(() => {
     if (!connectErrorMessage) return;
