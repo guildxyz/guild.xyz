@@ -82,7 +82,7 @@ const useCollectNft = () => {
     useCollectNftContext()
   const { setTxHash, setTxError, setTxSuccess } = useTransactionStatusContext() ?? {}
 
-  const { guildFee } = useGuildFee(chain)
+  const { guildFee } = useGuildFee(chain, nftAddress)
   const { fee, name, refetch: refetchNftDetails } = useNftDetails(chain, nftAddress)
 
   const { refetch: refetchBalance } = useGuildRewardNftBalanceByUserId({

@@ -34,6 +34,25 @@ const guildRewardNFTFacotryAbi = [
     inputs: [
       {
         indexed: false,
+        internalType: "address",
+        name: "tokenAddress",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "newFee",
+        type: "uint256",
+      },
+    ],
+    name: "FeeOverrideChanged",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
         internalType: "enum IGuildRewardNFTFactory.ContractType",
         name: "contractType",
         type: "uint8",
@@ -205,6 +224,13 @@ const guildRewardNFTFacotryAbi = [
     type: "function",
   },
   {
+    inputs: [{ internalType: "address", name: "tokenAddress", type: "address" }],
+    name: "getFeeWithOverrides",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [
       { internalType: "address payable", name: "treasuryAddress", type: "address" },
       { internalType: "uint256", name: "fee", type: "uint256" },
@@ -252,6 +278,16 @@ const guildRewardNFTFacotryAbi = [
   {
     inputs: [{ internalType: "uint256", name: "newFee", type: "uint256" }],
     name: "setFee",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "tokenAddress", type: "address" },
+      { internalType: "uint256", name: "newFee", type: "uint256" },
+    ],
+    name: "setFeeOverride",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
