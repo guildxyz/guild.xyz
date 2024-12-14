@@ -325,8 +325,8 @@ export const x1 = {
   },
 } as const satisfies Chain
 
-export const formTestnet = {
-  id: 132902,
+export const form = {
+  id: 478,
   name: "Form",
   nativeCurrency: {
     decimals: 18,
@@ -344,8 +344,8 @@ export const formTestnet = {
   },
   contracts: {
     multicall3: {
-      address: "0xf2429187a6e6f2f7980dde17a856bd22e211d2a2",
-      blockCreated: 1118269,
+      address: "0xca11bde05977b3631167028862be2a173976ca11",
+      blockCreated: 342734,
     },
   },
   testnet: true,
@@ -424,6 +424,32 @@ export const inkSepolia = {
     multicall3: {
       address: "0xca11bde05977b3631167028862be2a173976ca11",
       blockCreated: 1302512,
+    },
+  },
+  testnet: false,
+} as const satisfies Chain
+
+export const ink = {
+  id: 57073,
+  name: "Ink",
+  nativeCurrency: {
+    decimals: 18,
+    name: "Ether",
+    symbol: "ETH",
+  },
+  rpcUrls: {
+    default: { http: ["https://rpc-gel.inkonchain.com"] },
+  },
+  blockExplorers: {
+    default: {
+      name: "Blockscout",
+      url: "https://explorer.inkonchain.com",
+    },
+  },
+  contracts: {
+    multicall3: {
+      address: "0xca11bde05977b3631167028862be2a173976ca11",
+      blockCreated: 595972,
     },
   },
   testnet: false,

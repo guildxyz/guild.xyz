@@ -3,7 +3,8 @@ import {
   bitfinityTestnet,
   bobaAvax,
   exosama,
-  formTestnet,
+  form,
+  ink,
   inkSepolia,
   metisSepolia,
   mint,
@@ -626,8 +627,8 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/explorerLogos/opbnb.png",
     },
   },
-  FORM_TESTNET: {
-    ...generateChainConfig(formTestnet, ETH_ICON),
+  FORM: {
+    ...generateChainConfig(form, ETH_ICON),
     iconUrl: "/networkLogos/form.svg",
     blockExplorerIconUrl: {
       light: "/networkLogos/form.svg",
@@ -733,6 +734,14 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/networkLogos/inkSepolia.png",
     },
   },
+  INK: {
+    ...generateChainConfig(ink, ETH_ICON),
+    iconUrl: "/networkLogos/ink.png",
+    blockExplorerIconUrl: {
+      light: "/networkLogos/ink.png",
+      dark: "/networkLogos/ink.png",
+    },
+  },
 }
 
 enum Chains {
@@ -792,7 +801,7 @@ enum Chains {
   CORE_DAO = coreDao.id,
   LISK_SEPOLIA = liskSepolia.id,
   OP_BNB = opBNB.id,
-  FORM_TESTNET = formTestnet.id,
+  FORM = form.id,
   CYBER = cyber.id,
   TAIKO = taiko.id,
   KLAYTN = klaytn.id,
@@ -805,6 +814,7 @@ enum Chains {
   CRONOS_ZKEVM = cronoszkEVM.id,
   WORLD_CHAIN = worldchain.id,
   INK_SEPOLIA = inkSepolia.id,
+  INK = ink.id,
 }
 
 export type Chain = keyof typeof Chains

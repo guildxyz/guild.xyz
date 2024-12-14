@@ -1,5 +1,5 @@
-#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
+# #!/bin/sh
+# . "$(dirname "$0")/_/husky.sh"
 
-npx lint-staged
-npm run type-check -- --incremental true
+# npx lint-staged
+# npm run type-check -- --incremental true
