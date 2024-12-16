@@ -736,10 +736,10 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
   },
   INK: {
     ...generateChainConfig(ink, ETH_ICON),
-    iconUrl: "/networkLogos/ink.png",
+    iconUrl: "/networkLogos/ink.svg",
     blockExplorerIconUrl: {
-      light: "/networkLogos/ink.png",
-      dark: "/networkLogos/ink.png",
+      light: "/networkLogos/ink.svg",
+      dark: "/networkLogos/ink.svg",
     },
   },
 }
