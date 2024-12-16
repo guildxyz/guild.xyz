@@ -80,7 +80,7 @@ const TokenApiURLs: Record<Chain, string[]> = {
   CORE_DAO: [],
   LISK_SEPOLIA: [],
   OP_BNB: [],
-  FORM_TESTNET: [],
+  FORM: [],
   CYBER: [],
   TAIKO: [],
   KLAYTN: [],
@@ -93,6 +93,7 @@ const TokenApiURLs: Record<Chain, string[]> = {
   CRONOS_ZKEVM: [],
   WORLD_CHAIN: [],
   INK_SEPOLIA: [],
+  INK: [],
 }
 
 const fetchTokens = async ([_, chain]) =>
