@@ -44,6 +44,7 @@ export const GUILD_REWARD_NFT_FACTORY_ADDRESSES = {
   MODE: "0x097E05f7a194a30A482CC9616460498980bE79d3",
   AVALANCHE: "0x13ec6b98362e43add08f7cc4f6befd02fa52ee01",
   LISK: "0x13ec6b98362e43add08f7cc4f6befd02fa52ee01",
+  INK: "0x13ec6b98362e43add08f7cc4f6befd02fa52ee01",
   SEPOLIA: "0xa9e8e62266d449b766d305075248790bdd46facb",
 } as const satisfies Partial<Record<Chain, `0x${string}`>>
 
