@@ -20,6 +20,7 @@ import useRolePlatformsOfReward from "rewards/Token/hooks/useRolePlatformsOfRewa
 import { GuildPlatform } from "types"
 import { useTokenRewards } from "../AccessHub/hooks/useTokenRewards"
 import AvailabilityTags from "../RolePlatforms/components/PlatformCard/components/AvailabilityTags"
+import { RolePlatformProvider } from "../RolePlatforms/components/RolePlatformProvider"
 import useGuild from "../hooks/useGuild"
 import LeaderboardAirdropFallbackCard from "./LeaderboardAirdropFallbackCard"
 
@@ -137,12 +138,19 @@ const LeaderboardAirdropCard = () => {
           </Flex>
         </Stack>
 
-        <ClaimTokenButton
-          size={{ base: "sm", sm: "md" }}
-          w="auto"
-          flexShrink={0}
-          rolePlatform={rolePlatforms[0]}
-        />
+        <RolePlatformProvider
+          rolePlatform={{
+            ...rolePlatforms[0],
+            guildPlatform,
+          }}
+        >
+          <ClaimTokenButton
+            size={{ base: "sm", sm: "md" }}
+            w="auto"
+            flexShrink={0}
+            rolePlatform={rolePlatforms[0]}
+          />
+        </RolePlatformProvider>
       </HStack>
     </Card>
   )
