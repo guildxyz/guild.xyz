@@ -13,7 +13,7 @@ export const AuthBoundary = ({
 }>) => {
   const { data: user } = useQuery(userOptions());
 
-  if (user?.id) return children;
+  if (user?.id) return <>{children}</>;
 
-  return fallback;
+  return <>{fallback}</>;
 };
