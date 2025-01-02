@@ -12,6 +12,7 @@ import {
   ResponsiveDialogTrigger,
 } from "@/components/ui/ResponsiveDialog";
 import { IDENTITY_STYLES } from "@/config/constants";
+import { useUser } from "@/hooks/useUser";
 import { cn } from "@/lib/cssUtils";
 import { env } from "@/lib/env";
 import { guildOptions, roleBatchOptions, userOptions } from "@/lib/options";
@@ -44,7 +45,7 @@ export const JoinGuild = () => {
     onOpenChange(true);
   }, [shouldOpen, onOpenChange]);
 
-  const { data: user } = useQuery(userOptions());
+  const { data: user } = useUser();
 
   return (
     <ResponsiveDialog open={open} onOpenChange={onOpenChange}>
@@ -116,7 +117,7 @@ const getReturnToURLWithSearchParams = () => {
 
 const ConnectIdentityJoinStep = ({ identity }: { identity: IdentityType }) => {
   const router = useRouter();
-  const { data: user } = useQuery(userOptions());
+  const { data: user } = useUser();
 
   const connected = !!user?.identities?.find((i) => i.platform === identity);
 
@@ -153,7 +154,7 @@ const JoinGuildButton = () => {
   }>();
   const guild = useQuery(guildOptions({ guildIdLike: guildUrlName }));
 
-  const { data: user } = useQuery(userOptions());
+  const { data: user } = useUser();
 
   const queryClient = useQueryClient();
 

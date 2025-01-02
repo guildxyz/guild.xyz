@@ -6,13 +6,14 @@ import { Badge } from "@/components/ui/Badge";
 import { Button, buttonVariants } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Skeleton } from "@/components/ui/Skeleton";
+import { useUser } from "@/hooks/useUser";
 import { cn } from "@/lib/cssUtils";
 import { fetchGuildApiData } from "@/lib/fetchGuildApi";
-import { roleBatchOptions, userOptions } from "@/lib/options";
+import { roleBatchOptions } from "@/lib/options";
 import type { GuildReward, GuildRewardType } from "@/lib/schemas/guildReward";
 import type { Role } from "@/lib/schemas/role";
 import { Check, ImageSquare, LockSimple } from "@phosphor-icons/react/dist/ssr";
-import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { useSetAtom } from "jotai";
 import { useParams } from "next/navigation";
 import { Suspense } from "react";
@@ -148,7 +149,7 @@ const AccessIndicator = ({
 }: { roleId: Role["id"]; className?: string }) => {
   const { data: guild } = useGuild();
 
-  const { data: user } = useQuery(userOptions());
+  const { data: user } = useUser();
   const isGuildMember = user?.guilds?.find((g) => g.guildId === guild.id);
   const isRoleMember = !!user?.guilds
     ?.flatMap((g) => g.roles)

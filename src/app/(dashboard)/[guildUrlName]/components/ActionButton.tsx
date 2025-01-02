@@ -1,14 +1,13 @@
 "use client";
 
 import { Button } from "@/components/ui/Button";
-import { userOptions } from "@/lib/options";
-import { useQuery } from "@tanstack/react-query";
+import { useUser } from "@/hooks/useUser";
 import { useGuild } from "../hooks/useGuild";
 import { JoinGuild } from "./JoinGuild";
 import { LeaveGuild } from "./LeaveGuild";
 
 export const ActionButton = () => {
-  const user = useQuery(userOptions());
+  const user = useUser();
   const guild = useGuild();
 
   if (!guild.data) {

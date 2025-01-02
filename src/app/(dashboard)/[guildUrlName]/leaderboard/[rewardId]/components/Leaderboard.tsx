@@ -1,8 +1,6 @@
 "use client";
-
-import { userOptions } from "@/lib/options";
+import { useUser } from "@/hooks/useUser";
 import {
-  useQuery,
   useSuspenseInfiniteQuery,
   useSuspenseQuery,
 } from "@tanstack/react-query";
@@ -10,7 +8,7 @@ import { leaderboardOptions, pointsRewardOptions } from "../options";
 import { LeaderboardUserCard } from "./LeaderboardUserCard";
 
 export const Leaderboard = ({ rewardId }: { rewardId: string }) => {
-  const { data: user } = useQuery(userOptions());
+  const { data: user } = useUser();
   const { data: rawData } = useSuspenseInfiniteQuery(
     leaderboardOptions({ rewardId, userId: user?.id }),
   );

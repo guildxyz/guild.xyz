@@ -1,7 +1,6 @@
 "use client";
 
-import { userOptions } from "@/lib/options";
-import { useQuery } from "@tanstack/react-query";
+import { useUser } from "@/hooks/useUser";
 import type { ReactNode } from "react";
 
 export const AuthBoundary = ({
@@ -11,9 +10,9 @@ export const AuthBoundary = ({
   fallback: ReactNode;
   children: ReactNode;
 }>) => {
-  const { data: user } = useQuery(userOptions());
+  const { data: user } = useUser();
 
-  if (user?.id) return <>{children}</>;
+  if (user?.id) return children;
 
-  return <>{fallback}</>;
+  return fallback;
 };

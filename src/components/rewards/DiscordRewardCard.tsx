@@ -1,13 +1,12 @@
 import { useGuild } from "@/app/(dashboard)/[guildUrlName]/hooks/useGuild";
 import { IDENTITY_STYLES } from "@/config/constants";
+import { useUser } from "@/hooks/useUser";
 import { cn } from "@/lib/cssUtils";
 import { env } from "@/lib/env";
-import { userOptions } from "@/lib/options";
 import type { GuildReward } from "@/lib/schemas/guildReward";
 import { IDENTITY_NAME } from "@/lib/schemas/identity";
 import { DiscordRoleRewardDataSchema } from "@/lib/schemas/roleReward";
 import { ArrowSquareOut } from "@phosphor-icons/react/dist/ssr";
-import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import type { FunctionComponent } from "react";
 import {
@@ -33,7 +32,7 @@ export const DiscordRewardCard: FunctionComponent<RewardCardProps> = ({
 
   const Icon = IDENTITY_STYLES.DISCORD.icon;
 
-  const { data: user } = useQuery(userOptions());
+  const { data: user } = useUser();
   const connected = !!user?.identities?.find((i) => i.platform === "DISCORD");
 
   const {
