@@ -15,23 +15,19 @@ import { IDENTITY_STYLES } from "@/config/constants";
 import { useUser } from "@/hooks/useUser";
 import { cn } from "@/lib/cssUtils";
 import { env } from "@/lib/env";
-import { guildOptions, roleBatchOptions, userOptions } from "@/lib/options";
+import { userOptions } from "@/lib/options";
 import { IDENTITY_NAME, type IdentityType } from "@/lib/schemas/identity";
 import type { Schemas } from "@guildxyz/types";
 import { Check, CheckCircle, XCircle } from "@phosphor-icons/react/dist/ssr";
-import {
-  useMutation,
-  useQuery,
-  useQueryClient,
-  useSuspenseQuery,
-} from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { EventSourcePlus } from "event-source-plus";
 import { useAtom, useSetAtom } from "jotai";
 import { useRouter, useSearchParams } from "next/navigation";
 import { type ReactNode, useEffect } from "react";
 import { toast } from "sonner";
 import { joinModalAtom } from "../atoms";
-import { usePageUrlName } from "../hooks/usePageUrlName";
+import { useGuild } from "../hooks/useGuild";
+import { useSuspenseRoles } from "../hooks/useSuspenseRoles";
 
 const JOIN_MODAL_SEARCH_PARAM = "join";
 
@@ -149,8 +145,7 @@ const ConnectIdentityJoinStep = ({ identity }: { identity: IdentityType }) => {
 };
 
 const JoinGuildButton = () => {
-  const { pageUrlName, guildUrlName } = usePageUrlName();
-  const guild = useQuery(guildOptions({ guildIdLike: guildUrlName }));
+  const guild = useGuild();
 
   const { data: user } = useUser();
 
@@ -160,12 +155,7 @@ const JoinGuildButton = () => {
     throw new Error("Failed to fetch guild");
   }
 
-  const { data: roles } = useSuspenseQuery(
-    roleBatchOptions({
-      guildIdLike: guildUrlName,
-      pageIdLike: pageUrlName,
-    }),
-  );
+  const { data: roles } = useSuspenseRoles();
 
   const onJoinModalOpenChange = useSetAtom(joinModalAtom);
 

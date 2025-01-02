@@ -9,7 +9,6 @@ import { Skeleton } from "@/components/ui/Skeleton";
 import { useUser } from "@/hooks/useUser";
 import { cn } from "@/lib/cssUtils";
 import { fetchGuildApiData } from "@/lib/fetchGuildApi";
-import { roleBatchOptions } from "@/lib/options";
 import type { GuildReward, GuildRewardType } from "@/lib/schemas/guildReward";
 import type { Role } from "@/lib/schemas/role";
 import { Check, ImageSquare, LockSimple } from "@phosphor-icons/react/dist/ssr";
@@ -18,16 +17,10 @@ import { useSetAtom } from "jotai";
 import { Suspense } from "react";
 import { joinModalAtom } from "../atoms";
 import { useGuild } from "../hooks/useGuild";
-import { usePageUrlName } from "../hooks/usePageUrlName";
+import { useSuspenseRoles } from "../hooks/useSuspenseRoles";
 
 const GuildPage = () => {
-  const { pageUrlName, guildUrlName } = usePageUrlName();
-  const { data: roles } = useSuspenseQuery(
-    roleBatchOptions({
-      guildIdLike: guildUrlName,
-      pageIdLike: pageUrlName,
-    }),
-  );
+  const { data: roles } = useSuspenseRoles();
 
   return (
     <div className="my-4 space-y-4">
