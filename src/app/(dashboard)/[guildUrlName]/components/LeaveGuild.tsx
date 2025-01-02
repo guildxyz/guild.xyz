@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/Button";
+import { IconButton } from "@/components/ui/IconButton";
 import {
   Tooltip,
   TooltipContent,
@@ -34,12 +34,12 @@ export const LeaveGuild = () => {
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        {/* TODO: IconButton component */}
-        <Button
+        <IconButton
+          aria-label="Leave guild"
           className="size-11 rounded-full"
           onClick={() => mutate()}
           isLoading={isPending}
-          leftIcon={<SignOut weight="bold" />}
+          icon={<SignOut weight="bold" />}
         />
       </TooltipTrigger>
 
