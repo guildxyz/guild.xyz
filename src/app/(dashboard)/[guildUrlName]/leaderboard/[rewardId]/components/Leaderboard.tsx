@@ -1,21 +1,21 @@
 "use client";
+
 import { useUser } from "@/hooks/useUser";
-import {
-  useSuspenseInfiniteQuery,
-  useSuspenseQuery,
-} from "@tanstack/react-query";
-import { leaderboardOptions, pointsRewardOptions } from "../options";
+import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
+import { useSuspensePointReward } from "../hooks/useSuspensePointReward";
+import { leaderboardOptions } from "../options";
 import { LeaderboardUserCard } from "./LeaderboardUserCard";
 
-export const Leaderboard = ({ rewardId }: { rewardId: string }) => {
+export const Leaderboard = () => {
   const { data: user } = useUser();
+
+  const { rewardId } = useParams<{ rewardId: string }>();
   const { data: rawData } = useSuspenseInfiniteQuery(
     leaderboardOptions({ rewardId, userId: user?.id }),
   );
 
-  const { data: pointReward } = useSuspenseQuery(
-    pointsRewardOptions({ rewardId }),
-  );
+  const { data: pointReward } = useSuspensePointReward();
 
   const data = rawData?.pages[0];
 

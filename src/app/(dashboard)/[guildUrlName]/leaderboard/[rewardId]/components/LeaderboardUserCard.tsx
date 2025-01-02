@@ -1,17 +1,12 @@
 import { Card } from "@/components/ui/Card";
 import type { Leaderboard } from "@/lib/schemas/leaderboard";
 import { User } from "@phosphor-icons/react/dist/ssr";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { useParams } from "next/navigation";
-import { pointsRewardOptions } from "../options";
+import { useSuspensePointReward } from "../hooks/useSuspensePointReward";
 
 export const LeaderboardUserCard = ({
   user,
 }: { user: NonNullable<Leaderboard["user"]> }) => {
-  const { rewardId } = useParams<{ rewardId: string }>();
-  const { data: pointReward } = useSuspenseQuery(
-    pointsRewardOptions({ rewardId }),
-  );
+  const { data: pointReward } = useSuspensePointReward();
 
   return (
     <Card className="flex items-center">

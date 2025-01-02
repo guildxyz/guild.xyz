@@ -21,7 +21,7 @@ const LeaderboardPage = async ({
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <Suspense>
-        <Leaderboard rewardId={rewardId} />
+        <Leaderboard />
       </Suspense>
     </HydrationBoundary>
   );
