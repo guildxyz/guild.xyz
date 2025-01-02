@@ -4,18 +4,13 @@ import { Card } from "@/components/ui/Card";
 import { ScrollArea, ScrollBar } from "@/components/ui/ScrollArea";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { cn } from "@/lib/cssUtils";
-import { pageBatchOptions } from "@/lib/options";
-import { useSuspenseQuery } from "@tanstack/react-query";
 import { useGuild } from "../hooks/useGuild";
-import { useGuildUrlName } from "../hooks/useGuildUrlName";
+import { useSuspensePages } from "../hooks/useSuspensePages";
 import { PageNavLink } from "./RoleGroupNavLink";
 
 export const GuildTabs = () => {
-  const guildUrlName = useGuildUrlName();
   const { data: guild } = useGuild();
-  const { data: pages } = useSuspenseQuery(
-    pageBatchOptions({ guildIdLike: guildUrlName }),
-  );
+  const { data: pages } = useSuspensePages();
 
   return (
     <ScrollArea
