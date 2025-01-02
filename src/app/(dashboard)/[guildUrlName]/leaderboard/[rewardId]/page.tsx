@@ -1,4 +1,5 @@
 import { getQueryClient } from "@/lib/getQueryClient";
+import { userOptions } from "@/lib/options";
 import type { DynamicRoute } from "@/lib/types";
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { Suspense } from "react";
@@ -11,7 +12,10 @@ const LeaderboardPage = async ({
   const { rewardId } = await params;
 
   const queryClient = getQueryClient();
-  await queryClient.prefetchInfiniteQuery(leaderboardOptions({ rewardId }));
+  const user = await queryClient.fetchQuery(userOptions());
+  await queryClient.prefetchInfiniteQuery(
+    leaderboardOptions({ rewardId, userId: user?.id }),
+  );
   await queryClient.prefetchQuery(pointsRewardOptions({ rewardId }));
 
   return (
