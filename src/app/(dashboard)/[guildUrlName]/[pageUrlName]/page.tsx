@@ -15,16 +15,13 @@ import type { Role } from "@/lib/schemas/role";
 import { Check, ImageSquare, LockSimple } from "@phosphor-icons/react/dist/ssr";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useSetAtom } from "jotai";
-import { useParams } from "next/navigation";
 import { Suspense } from "react";
 import { joinModalAtom } from "../atoms";
 import { useGuild } from "../hooks/useGuild";
+import { usePageUrlName } from "../hooks/usePageUrlName";
 
 const GuildPage = () => {
-  const { pageUrlName, guildUrlName } = useParams<{
-    pageUrlName: string;
-    guildUrlName: string;
-  }>();
+  const { pageUrlName, guildUrlName } = usePageUrlName();
   const { data: roles } = useSuspenseQuery(
     roleBatchOptions({
       guildIdLike: guildUrlName,

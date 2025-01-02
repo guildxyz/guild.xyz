@@ -27,10 +27,11 @@ import {
 } from "@tanstack/react-query";
 import { EventSourcePlus } from "event-source-plus";
 import { useAtom, useSetAtom } from "jotai";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { type ReactNode, useEffect } from "react";
 import { toast } from "sonner";
 import { joinModalAtom } from "../atoms";
+import { usePageUrlName } from "../hooks/usePageUrlName";
 
 const JOIN_MODAL_SEARCH_PARAM = "join";
 
@@ -148,10 +149,7 @@ const ConnectIdentityJoinStep = ({ identity }: { identity: IdentityType }) => {
 };
 
 const JoinGuildButton = () => {
-  const { pageUrlName, guildUrlName } = useParams<{
-    pageUrlName: string;
-    guildUrlName: string;
-  }>();
+  const { pageUrlName, guildUrlName } = usePageUrlName();
   const guild = useQuery(guildOptions({ guildIdLike: guildUrlName }));
 
   const { data: user } = useUser();
