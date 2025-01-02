@@ -8,7 +8,7 @@ import { SignInDialog } from "@/components/SignInDialog";
 import { Toaster } from "@/components/ui/Toaster";
 import { dystopian } from "@/lib/fonts";
 import { cn } from "lib/cssUtils";
-import { Suspense } from "react";
+import { type ReactNode, Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Guildhall",
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 const RootLayout = ({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
 }>) => {
   return (
     <html lang="en" suppressHydrationWarning>

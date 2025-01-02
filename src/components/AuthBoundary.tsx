@@ -2,13 +2,14 @@
 
 import { userOptions } from "@/lib/options";
 import { useQuery } from "@tanstack/react-query";
+import type { ReactNode } from "react";
 
 export const AuthBoundary = ({
   fallback,
   children,
 }: Readonly<{
-  fallback: React.ReactNode;
-  children: React.ReactNode;
+  fallback: ReactNode;
+  children: ReactNode;
 }>) => {
   const { data: user } = useQuery(userOptions());
 
