@@ -8,21 +8,10 @@ import type { WithIdLike } from "@/lib/types";
 import type { Schemas } from "@guildxyz/types";
 import { queryOptions } from "@tanstack/react-query";
 
-export const entityOptions = ({
-  entity,
-  idLike,
-  ...rest
-}: Parameters<typeof fetchEntity>[0]) => {
-  return queryOptions({
-    queryKey: [entity, idLike],
-    queryFn: () => fetchEntity({ entity, idLike, ...rest }),
-  });
-};
-
 export const guildOptions = ({ guildIdLike }: WithIdLike<"guild">) => {
-  return entityOptions({
-    entity: "guild",
-    idLike: guildIdLike,
+  return queryOptions({
+    queryKey: ["guild", guildIdLike],
+    queryFn: () => fetchEntity({ entity: "guild", idLike: guildIdLike }),
   });
 };
 
