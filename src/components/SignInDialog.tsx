@@ -4,16 +4,22 @@ import { signInDialogOpenAtom } from "@/config/atoms";
 import { fetchGuildApi } from "@/lib/fetchGuildApi";
 import { userOptions } from "@/lib/options";
 import { authSchema } from "@/lib/schemas/user";
-import { SignIn, User, Wallet, XCircle } from "@phosphor-icons/react/dist/ssr";
+import {
+  SignIn,
+  SignOut,
+  User,
+  Wallet,
+  XCircle,
+} from "@phosphor-icons/react/dist/ssr";
 import { DialogDescription } from "@radix-ui/react-dialog";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAtom, useSetAtom } from "jotai";
 import { shortenHex } from "lib/shortenHex";
 import { toast } from "sonner";
 import { createSiweMessage } from "viem/siwe";
-import { useAccount, useConnect, useSignMessage } from "wagmi";
+import { useAccount, useConnect, useDisconnect, useSignMessage } from "wagmi";
 import { z } from "zod";
-import { Anchor } from "./ui/Anchor";
+import { Anchor, anchorVariants } from "./ui/Anchor";
 import { Button } from "./ui/Button";
 import {
   ResponsiveDialog,
@@ -193,6 +199,8 @@ const SignInWithEthereum = () => {
     },
   });
 
+  const { disconnect } = useDisconnect();
+
   return (
     <div className="grid gap-2">
       <Button
@@ -213,6 +221,18 @@ const SignInWithEthereum = () => {
         loadingText="Check your wallet"
       >
         Sign in with Ethereum
+      </Button>
+      <Button
+        leftIcon={<SignOut weight="bold" />}
+        size="sm"
+        variant="unstyled"
+        className={anchorVariants({
+          variant: "secondary",
+          className: "mx-auto max-w-max px-0",
+        })}
+        onClick={() => disconnect()}
+      >
+        Disconnect wallet
       </Button>
     </div>
   );
