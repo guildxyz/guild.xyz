@@ -12,7 +12,9 @@ const LeaderboardPage = async ({
   const { rewardId } = await params;
 
   const queryClient = getQueryClient();
-  const user = await queryClient.fetchQuery(userOptions());
+  const user = await queryClient
+    .fetchQuery(userOptions())
+    .catch(() => undefined);
   await queryClient.prefetchInfiniteQuery(
     leaderboardOptions({ rewardId, userId: user?.id }),
   );
