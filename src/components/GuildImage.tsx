@@ -12,7 +12,7 @@ type Props = {
 export const GuildImage = ({ name, imageUrl, className }: Props) => (
   <Avatar
     className={cn(
-      "grid size-12 place-items-center overflow-hidden rounded-full bg-image text-white",
+      "grid size-12 shrink-0 place-items-center overflow-hidden rounded-full bg-image text-white",
       className,
     )}
   >
