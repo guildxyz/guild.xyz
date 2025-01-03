@@ -37,10 +37,11 @@ Open source interface for Guild.xyz -- a tool for platformless membership manage
 ### Running the interface locally
 
 1. `bun i`
-2. `bun run dev`
-3. If you don't have the secret environment variables, copy the `.env.example` as `.env.local`.
+2. Append `127.0.0.1  local.openguild.xyz` to `/etc/hosts`
+3. If you don't have the secret environment variables, copy the `.env.example` as `.env.local`
+4. Run `bun dev`, create certificate if prompted
+5. Open `https://local.openguild.xyz:3000` and dismiss the unsecure site warning
 
-Open [http://localhost:3000](http://localhost:3000) in your browser to see the result.
 
 ### Getting secret environment variables (for core team members):
 

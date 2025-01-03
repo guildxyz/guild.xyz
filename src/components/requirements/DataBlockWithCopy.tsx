@@ -9,7 +9,7 @@ import {
 import { Check } from "@phosphor-icons/react/dist/ssr";
 import { useClipboard } from "foxact/use-clipboard";
 import { useDebouncedState } from "foxact/use-debounced-state";
-import { type PropsWithChildren, useEffect } from "react";
+import { type PropsWithChildren, type ReactElement, useEffect } from "react";
 import { DataBlock } from "./DataBlock";
 
 type Props = {
@@ -19,7 +19,7 @@ type Props = {
 export const DataBlockWithCopy = ({
   text,
   children,
-}: PropsWithChildren<Props>): JSX.Element => {
+}: PropsWithChildren<Props>): ReactElement => {
   const { copied, copy } = useClipboard({
     timeout: 1500,
   });

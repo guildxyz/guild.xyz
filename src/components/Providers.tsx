@@ -8,6 +8,7 @@ import { Provider as JotaiProvider } from "jotai";
 import { ThemeProvider } from "next-themes";
 import type { FunctionComponent, PropsWithChildren } from "react";
 import { WagmiProvider } from "wagmi";
+import { ConfettiProvider } from "./ConfettiProvider";
 import { TooltipProvider } from "./ui/Tooltip";
 
 export const Providers: FunctionComponent<PropsWithChildren> = ({
@@ -26,7 +27,7 @@ export const Providers: FunctionComponent<PropsWithChildren> = ({
         <TooltipProvider>
           <WagmiProvider config={wagmiConfig}>
             <QueryClientProvider client={queryClient}>
-              {children}
+              <ConfettiProvider>{children}</ConfettiProvider>
               <ReactQueryDevtools initialIsOpen={false} />
             </QueryClientProvider>
           </WagmiProvider>
