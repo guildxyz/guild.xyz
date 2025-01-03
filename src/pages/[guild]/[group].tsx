@@ -131,7 +131,7 @@ const GroupPageWrapper = ({ groupUrlName, fallback }: Props): JSX.Element => {
     )
   }
 
-  const [fallbackGuild] = Object.values(fallback)
+  const [fallbackGuild] = Object.values(fallback ?? {})
   const fallbackGroup = fallbackGuild?.groups.find((g) => (g.urlName = groupUrlName))
 
   return (
