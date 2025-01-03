@@ -1,11 +1,12 @@
 import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
 import { fetchAssociatedGuilds, fetchGuildSearch } from "./fetchers";
 
-export const associatedGuildsOption = () => {
+export const associatedGuildsOption = ({ userId }: { userId?: string }) => {
   return queryOptions({
     queryKey: ["associatedGuilds"],
-    queryFn: () => fetchAssociatedGuilds(),
+    queryFn: () => fetchAssociatedGuilds(userId!),
     select: (data) => data.items,
+    enabled: !!userId,
   });
 };
 

@@ -1,6 +1,4 @@
 "use client";
-
-import { associatedGuildsOption } from "@/app/(dashboard)/explorer/options";
 import { fetchGuildApi } from "@/lib/fetchGuildApi";
 import { userOptions } from "@/lib/options";
 import { SignOut } from "@phosphor-icons/react/dist/ssr";
@@ -17,9 +15,6 @@ export const SignOutButton = () => {
       }),
     onSuccess: () => {
       queryClient.resetQueries({ queryKey: userOptions().queryKey });
-      queryClient.resetQueries({
-        queryKey: associatedGuildsOption().queryKey,
-      });
     },
   });
 

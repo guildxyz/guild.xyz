@@ -1,14 +1,12 @@
-import { useUser } from "@/hooks/useUser";
 import { fetchGuildApiData } from "@/lib/fetchGuildApi";
 import type { Leaderboard } from "@/lib/schemas/leaderboard";
 import type { PaginatedResponse } from "@/lib/types";
 import type { Schemas } from "@guildxyz/types";
 import { PAGE_SIZE } from "./constants";
 
-export const fetchAssociatedGuilds = async () => {
-  const { data: user } = useUser();
+export const fetchAssociatedGuilds = async (userId: string) => {
   return fetchGuildApiData<PaginatedResponse<Schemas["Guild"]>>(
-    `guild/search?page=1&pageSize=${Number.MAX_SAFE_INTEGER}&sortBy=name&reverse=false&customQuery=@owner:{${user?.id}}`,
+    `guild/search?page=1&pageSize=${Number.MAX_SAFE_INTEGER}&sortBy=name&reverse=false&customQuery=@owner:{${userId}}`,
   );
 };
 
