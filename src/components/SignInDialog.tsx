@@ -2,7 +2,6 @@
 
 import { signInDialogOpenAtom } from "@/config/atoms";
 import { fetchGuildApi } from "@/lib/fetchGuildApi";
-import { userOptions } from "@/lib/options";
 import { authSchema } from "@/lib/schemas/user";
 import {
   SignIn,
@@ -186,9 +185,7 @@ const SignInWithEthereum = () => {
     },
     onSuccess: () => {
       setSignInDialogOpen(false);
-      queryClient.invalidateQueries({
-        queryKey: userOptions().queryKey,
-      });
+      queryClient.invalidateQueries();
     },
     onError: (error) => {
       toast("Sign in error", {

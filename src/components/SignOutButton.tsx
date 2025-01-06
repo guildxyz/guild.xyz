@@ -15,6 +15,7 @@ export const SignOutButton = () => {
       }),
     onSuccess: () => {
       queryClient.resetQueries({ queryKey: userOptions().queryKey });
+      queryClient.invalidateQueries();
     },
   });
 
