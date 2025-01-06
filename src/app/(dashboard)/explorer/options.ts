@@ -16,6 +16,7 @@ export const guildSearchOptions = ({ search = "" }: { search?: string }) => {
     queryFn: ({ pageParam }) => fetchGuildSearch({ search: search, pageParam }),
     initialPageParam: 1,
     enabled: search !== undefined,
+    staleTime: 60 * 1000,
     getNextPageParam: (lastPage) =>
       lastPage.total / lastPage.pageSize <= lastPage.page
         ? undefined

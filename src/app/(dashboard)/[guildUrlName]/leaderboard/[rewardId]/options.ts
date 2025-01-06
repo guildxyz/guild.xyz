@@ -13,6 +13,7 @@ export const leaderboardOptions = ({
       fetchLeaderboard({ rewardId, userId, offset: pageParam }),
     initialPageParam: 1,
     enabled: rewardId !== undefined,
+    staleTime: 60 * 1000,
     getNextPageParam: (lastPage) =>
       lastPage.total / lastPage.limit <= lastPage.offset
         ? undefined
