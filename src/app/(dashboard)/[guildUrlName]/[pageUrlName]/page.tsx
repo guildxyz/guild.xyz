@@ -17,7 +17,7 @@ import { useSetAtom } from "jotai";
 import { Suspense } from "react";
 import { joinModalAtom } from "../atoms";
 import { useGuild } from "../hooks/useGuild";
-import { useSuspenseRoles } from "../hooks/useSuspenseRoles";
+import { useSuspenseRoles } from "../hooks/useRoles";
 
 const GuildPage = () => {
   const { data: roles } = useSuspenseRoles();

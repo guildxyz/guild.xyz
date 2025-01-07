@@ -5,7 +5,7 @@ import { ScrollArea, ScrollBar } from "@/components/ui/ScrollArea";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { cn } from "@/lib/cssUtils";
 import { useGuild } from "../hooks/useGuild";
-import { useSuspensePages } from "../hooks/useSuspensePages";
+import { useSuspensePages } from "../hooks/usePages";
 import { PageNavLink } from "./RoleGroupNavLink";
 
 export const GuildTabs = () => {

@@ -27,7 +27,7 @@ import { type ReactNode, useEffect } from "react";
 import { toast } from "sonner";
 import { joinModalAtom } from "../atoms";
 import { useGuild } from "../hooks/useGuild";
-import { useSuspenseRoles } from "../hooks/useSuspenseRoles";
+import { useSuspenseRoles } from "../hooks/useRoles";
 
 const JOIN_MODAL_SEARCH_PARAM = "join";
 

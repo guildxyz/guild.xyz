@@ -31,7 +31,6 @@ export const pageMonoviewOptions = (props: Parameters<typeof fetchPage>[0]) => {
       // ideally we would like to acquire this data from cache (if no better
       // method emerges for resolving urlName)
       const page = await fetchPage(props);
-      console.log({ page });
       fetchGuildApiData(`/page/monoview/${page.id}`);
     },
   });
