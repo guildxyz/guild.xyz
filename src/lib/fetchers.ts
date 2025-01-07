@@ -42,7 +42,7 @@ export const fetchPageBatch = async ({ guildIdLike }: WithIdLike<"guild">) => {
   });
 };
 
-export const fetchRoleBatch = async ({
+export const fetchPage = async ({
   pageIdLike,
   guildIdLike,
 }: Partial<WithIdLike<"page">> & WithIdLike<"guild">) => {
@@ -55,11 +55,17 @@ export const fetchRoleBatch = async ({
     });
     pageIdLikeWithHome = homePageId!;
   }
-  const page = await fetchEntity({
+  return fetchEntity({
     entity: "page",
     idLike: pageIdLikeWithHome!,
   });
+};
 
+export const fetchRoleBatch = async ({
+  pageIdLike,
+  guildIdLike,
+}: Partial<WithIdLike<"page">> & WithIdLike<"guild">) => {
+  const page = await fetchPage({ guildIdLike, pageIdLike });
   return fetchGuildApiData<Role[]>("role/batch", {
     method: "POST",
     body: JSON.stringify({ ids: page.roles?.map((p) => p.roleId!) ?? [] }),
