@@ -94,6 +94,7 @@ const TokenApiURLs: Record<Chain, string[]> = {
   WORLD_CHAIN: [],
   INK_SEPOLIA: [],
   INK: [],
+  IOTA: [],
 }
 
 const fetchTokens = async ([_, chain]) =>

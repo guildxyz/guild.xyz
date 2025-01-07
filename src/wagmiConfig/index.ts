@@ -46,6 +46,7 @@ import {
   foundry,
   gnosis,
   harmonyOne,
+  iota,
   kava,
   klaytn,
   linea,
@@ -196,6 +197,7 @@ export const wagmiConfig = IS_TEST
         worldchain,
         inkSepolia,
         ink,
+        iota,
       ],
       transports: {
         [mainnet.id]: http(),
@@ -264,6 +266,7 @@ export const wagmiConfig = IS_TEST
         [worldchain.id]: http(),
         [inkSepolia.id]: http(),
         [ink.id]: http(),
+        [iota.id]: http(),
       },
       ssr: true,
       connectors: [
