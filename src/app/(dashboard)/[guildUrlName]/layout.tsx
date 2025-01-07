@@ -1,5 +1,4 @@
 import { GuildImage } from "@/components/GuildImage";
-import { fetchGuildApiData } from "@/lib/fetchGuildApi";
 import { getQueryClient } from "@/lib/getQueryClient";
 import { guildOptions } from "@/lib/options";
 import type { DynamicRoute } from "@/lib/types";
@@ -19,28 +18,6 @@ const GuildLayout = async ({
       guildIdLike: guildUrlName,
     }),
   );
-
-  const pageMonoviews = await Promise.all(
-    guild.pages?.map(({ pageId }) => {
-      return queryClient.fetchQuery({
-        queryKey: ["withPageId", "page", "monoview", pageId],
-        queryFn: () =>
-          fetchGuildApiData(
-            `page/monoview/${pageId}`,
-            // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-          ) as any,
-      });
-    }) || [],
-  );
-
-  for (const pageMonoview of pageMonoviews) {
-    queryClient.setQueryData(
-      ["page", "monoview", pageMonoview.data.urlName || "home", guild.urlName],
-      pageMonoview.data,
-    );
-  }
-
-  queryClient.removeQueries({ queryKey: ["withPageId"] });
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
