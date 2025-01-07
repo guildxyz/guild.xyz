@@ -6,6 +6,6 @@ export const useSuspenseRoles = () => {
   const { data: page, ...rest } = usePageMonoviewSuspense();
   return {
     ...rest,
-    data: useMemo(() => page.roles as Role[], [page]),
+    data: useMemo(() => page.data.roles as Role[], [page]),
   };
 };

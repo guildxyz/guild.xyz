@@ -1,14 +1,12 @@
 "use client";
 
 import { RequirementDisplayComponent } from "@/components/requirements/RequirementDisplayComponent";
-import { rewardCards } from "@/components/rewards/rewardCards";
 import { Badge } from "@/components/ui/Badge";
 import { Button, buttonVariants } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { useUser } from "@/hooks/useUser";
 import { cn } from "@/lib/cssUtils";
-import type { GuildRewardType } from "@/lib/schemas/guildReward";
 import type { Role } from "@/lib/schemas/role";
 import { Check, ImageSquare, LockSimple } from "@phosphor-icons/react/dist/ssr";
 import { useSetAtom } from "jotai";
@@ -89,8 +87,11 @@ const RoleRewards = ({
   roleId,
   roleRewards,
 }: { roleId: string; roleRewards: Role["rewards"] }) => {
-  //const { data: guild } = useGuild();
   const { data: rewards } = useSuspenseRewards();
+  //console.log(rewards, roleRewards);
+  return null;
+
+  //const { data: guild } = useGuild();
   //const { data: rewards } = useSuspenseQuery<GuildReward[]>({
   //  queryKey: ["reward", "search", guild.id],
   //  queryFn: () =>
@@ -99,35 +100,35 @@ const RoleRewards = ({
   //    ).then((data) => data.items), // TODO: we shouldn't do this, we should just get back an array on this endpoint in my opinion
   //});
 
-  return roleRewards?.length > 0 && rewards?.length > 0 ? (
-    <div className="mt-auto grid @[26rem]:grid-cols-2 gap-2">
-      {roleRewards.map((roleReward) => {
-        const guildReward = rewards.find((gr) => gr.id === roleReward.rewardId);
-        if (!guildReward) return null;
-
-        const hasRewardCard = (
-          rewardType: GuildRewardType,
-        ): rewardType is keyof typeof rewardCards => rewardType in rewardCards;
-
-        const RewardCard = hasRewardCard(guildReward.type)
-          ? rewardCards[guildReward.type]
-          : null;
-
-        if (!RewardCard) return null;
-
-        return (
-          <RewardCard
-            key={roleReward.rewardId}
-            roleId={roleId}
-            reward={{
-              guildReward,
-              roleReward,
-            }}
-          />
-        );
-      })}
-    </div>
-  ) : null;
+  //return roleRewards?.length > 0 && rewards?.length > 0 ? (
+  //  <div className="mt-auto grid @[26rem]:grid-cols-2 gap-2">
+  //    {roleRewards.map((roleReward) => {
+  //      const guildReward = rewards.find((gr) => gr.id === roleReward.id);
+  //      if (!guildReward) return null;
+  //
+  //      const hasRewardCard = (
+  //        rewardType: GuildRewardType,
+  //      ): rewardType is keyof typeof rewardCards => rewardType in rewardCards;
+  //
+  //      const RewardCard = hasRewardCard(guildReward.type)
+  //        ? rewardCards[guildReward.type]
+  //        : null;
+  //
+  //      if (!RewardCard) return null;
+  //
+  //      return (
+  //        <RewardCard
+  //          key={roleReward.rewardId}
+  //          roleId={roleId}
+  //          reward={{
+  //            guildReward,
+  //            roleReward,
+  //          }}
+  //        />
+  //      );
+  //    })}
+  //  </div>
+  //) : null;
 };
 
 // TODO: handle state during join & error/no access states too

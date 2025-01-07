@@ -5,7 +5,7 @@ import { usePageMonoviewSuspense } from "./usePageMonoview";
 export const useSuspenseRewards = () => {
   const { data: page, ...rest } = usePageMonoviewSuspense();
   const data = useMemo(() => {
-    const rewardsDuplicated = page.roles
+    const rewardsDuplicated = page.data.roles
       // @ts-ignore
       .flatMap((role) => role.rewards)
       .filter(Boolean) as GuildReward[];
