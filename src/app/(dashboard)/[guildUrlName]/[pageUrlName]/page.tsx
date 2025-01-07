@@ -8,15 +8,14 @@ import { Card } from "@/components/ui/Card";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { useUser } from "@/hooks/useUser";
 import { cn } from "@/lib/cssUtils";
-import { fetchGuildApiData } from "@/lib/fetchGuildApi";
-import type { GuildReward, GuildRewardType } from "@/lib/schemas/guildReward";
+import type { GuildRewardType } from "@/lib/schemas/guildReward";
 import type { Role } from "@/lib/schemas/role";
 import { Check, ImageSquare, LockSimple } from "@phosphor-icons/react/dist/ssr";
-import { useSuspenseQuery } from "@tanstack/react-query";
 import { useSetAtom } from "jotai";
 import { Suspense } from "react";
 import { joinModalAtom } from "../atoms";
 import { useGuild } from "../hooks/useGuild";
+import { useSuspenseRewards } from "../hooks/useRewards";
 import { useSuspenseRoles } from "../hooks/useRoles";
 
 const GuildPage = () => {
@@ -90,14 +89,15 @@ const RoleRewards = ({
   roleId,
   roleRewards,
 }: { roleId: string; roleRewards: Role["rewards"] }) => {
-  const { data: guild } = useGuild();
-  const { data: rewards } = useSuspenseQuery<GuildReward[]>({
-    queryKey: ["reward", "search", guild.id],
-    queryFn: () =>
-      fetchGuildApiData<{ items: GuildReward[] }>(
-        `reward/search?customQuery=@guildId:{${guild.id}}`,
-      ).then((data) => data.items), // TODO: we shouldn't do this, we should just get back an array on this endpoint in my opinion
-  });
+  //const { data: guild } = useGuild();
+  const { data: rewards } = useSuspenseRewards();
+  //const { data: rewards } = useSuspenseQuery<GuildReward[]>({
+  //  queryKey: ["reward", "search", guild.id],
+  //  queryFn: () =>
+  //    fetchGuildApiData<{ items: GuildReward[] }>(
+  //      `reward/search?customQuery=@guildId:{${guild.id}}`,
+  //    ).then((data) => data.items), // TODO: we shouldn't do this, we should just get back an array on this endpoint in my opinion
+  //});
 
   return roleRewards?.length > 0 && rewards?.length > 0 ? (
     <div className="mt-auto grid @[26rem]:grid-cols-2 gap-2">
