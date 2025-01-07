@@ -30,53 +30,17 @@ const GuildLayout = async ({
             // biome-ignore lint/suspicious/noExplicitAny: <explanation>
           ) as any,
       });
-    }),
+    }) || [],
   );
 
   for (const pageMonoview of pageMonoviews) {
     queryClient.setQueryData(
-      ["page", "monoview", pageMonoview.data.urlName || "home"],
+      ["page", "monoview", pageMonoview.data.urlName || "home", guild.urlName],
       pageMonoview.data,
     );
   }
 
   queryClient.removeQueries({ queryKey: ["withPageId"] });
-
-  //await Promise.all([
-  //  queryClient.prefetchQuery(userOptions()),
-  //  queryClient.prefetchQuery(pageBatchOptions({ guildIdLike: guildUrlName })),
-  //  queryClient.prefetchQuery(
-  //    guildOptions({
-  //      guildIdLike: guildUrlName,
-  //    }),
-  //  ),
-  //]);
-  //
-  //const pageBatch = queryClient.getQueryData(
-  //  pageBatchOptions({ guildIdLike: guildUrlName }).queryKey,
-  //);
-  //const roleBatchOptionsCollection = pageBatch?.map((page) => {
-  //  return roleBatchOptions({
-  //    pageIdLike: page.urlName!,
-  //    guildIdLike: guildUrlName,
-  //  });
-  //});
-  //
-  //if (roleBatchOptionsCollection) {
-  //  await Promise.all(
-  //    roleBatchOptionsCollection.map((c) => queryClient.prefetchQuery(c)),
-  //  );
-  //}
-  //
-  //const guild = queryClient.getQueryState(
-  //  guildOptions({
-  //    guildIdLike: guildUrlName,
-  //  }).queryKey,
-  //);
-  //
-  //if (guild?.error || !guild?.data) {
-  //  throw new Error(`Failed to fetch guild ${guild?.error?.status || ""}`);
-  //}
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>

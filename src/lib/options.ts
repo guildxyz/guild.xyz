@@ -26,12 +26,17 @@ export const pageBatchOptions = ({ guildIdLike }: WithIdLike<"guild">) => {
 
 export const pageMonoviewOptions = (props: Parameters<typeof fetchPage>[0]) => {
   return queryOptions({
-    queryKey: ["page", "monoview", props.pageIdLike || "home"],
+    queryKey: [
+      "page",
+      "monoview",
+      props.pageIdLike || "home",
+      props.guildIdLike,
+    ],
     queryFn: async () => {
       // ideally we would like to acquire this data from cache (if no better
       // method emerges for resolving urlName)
       const page = await fetchPage(props);
-      fetchGuildApiData(`/page/monoview/${page.id}`);
+      return fetchGuildApiData(`page/monoview/${page.id}`);
     },
   });
 };
