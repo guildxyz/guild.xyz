@@ -20,7 +20,7 @@ export const LeaderboardUserCard = ({
             <User weight="duotone" className="size-4 sm:size-5" />
           </div>
           <span className="line-clamp-1 shrink font-bold">
-            {user.primaryIdentity.foreignId}
+            {user.primaryIdentity?.foreignId ?? "Unknown user"}
           </span>
         </div>
         <span className="shrink-0">

@@ -55,6 +55,7 @@ export const fetchRoleBatch = async ({
     });
     pageIdLikeWithHome = homePageId!;
   }
+
   const page = await fetchEntity({
     entity: "page",
     idLike: pageIdLikeWithHome!,

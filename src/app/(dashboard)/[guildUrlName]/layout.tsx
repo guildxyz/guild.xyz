@@ -17,6 +17,7 @@ const GuildLayout = async ({
   children,
 }: PropsWithChildren<DynamicRoute<{ guildUrlName: string }>>) => {
   const { guildUrlName } = await params;
+
   const queryClient = getQueryClient();
 
   // TODO: handle possible request failures
@@ -34,6 +35,10 @@ const GuildLayout = async ({
     pageBatchOptions({ guildIdLike: guildUrlName }).queryKey,
   );
   const roleBatchOptionsCollection = pageBatch?.map((page) => {
+    console.log("settings", {
+      pageIdLike: page.urlName!,
+      guildIdLike: guildUrlName,
+    });
     return roleBatchOptions({
       pageIdLike: page.urlName!,
       guildIdLike: guildUrlName,
