@@ -94,7 +94,9 @@ const TokenApiURLs: Record<Chain, string[]> = {
   WORLD_CHAIN: [],
   INK_SEPOLIA: [],
   INK: [],
-  IOTA: [],
+  IOTA: [
+    "https://raw.githubusercontent.com/MagicSea-Finance/tokenlist/main/token.default.json",
+  ],
   SONIC: ["https://tokens.coingecko.com/sonic/all.json"],
 }
 
