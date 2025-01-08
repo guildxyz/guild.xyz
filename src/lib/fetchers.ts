@@ -1,8 +1,32 @@
 import { fetchGuildApiData } from "@/lib/fetchGuildApi";
 import { resolveIdLikeRequest } from "@/lib/resolveIdLikeRequest";
-import { tryGetParsedToken } from "@/lib/token";
-import type { ErrorLike, WithIdLike } from "@/lib/types";
+import type {
+  Entity,
+  EntitySchema,
+  ErrorLike,
+  WithId,
+  WithIdLike,
+} from "@/lib/types";
 import type { Schemas } from "@guildxyz/types";
+import { z } from "zod";
+import type { Role } from "./schemas/role";
+
+export const fetchEntity = async <T extends Entity, Error = ErrorLike>({
+  idLike,
+  entity,
+  responseInit,
+}: {
+  entity: T;
+  idLike: string;
+  responseInit?: Parameters<typeof fetch>[1];
+}) => {
+  const pathname = `${entity}/${resolveIdLikeRequest(idLike)}`;
+  return fetchGuildApiData<EntitySchema<T>, Error>(pathname, responseInit);
+};
+
+export const fetchUser = async () => {
+  return fetchGuildApiData<Schemas["User"]>("auth/me");
+};
 
 export const fetchGuildLeave = async ({ guildId }: { guildId: string }) => {
   return fetchGuildApiData(`guild/${guildId}/leave`, {
@@ -10,37 +34,46 @@ export const fetchGuildLeave = async ({ guildId }: { guildId: string }) => {
   });
 };
 
-export const fetchGuild = async ({ idLike }: WithIdLike) => {
-  return fetchGuildApiData<Schemas["Guild"]>(
-    `guild/${resolveIdLikeRequest(idLike)}`,
-  );
-};
-
-export const fetchEntity = async <Data = object, Error = ErrorLike>({
-  idLike,
-  entity,
-  responseInit,
-}: {
-  entity: string;
-  idLike: string;
-  responseInit?: Parameters<typeof fetch>[1];
-}) => {
-  const pathname = `${entity}/${resolveIdLikeRequest(idLike)}`;
-  return fetchGuildApiData<Data, Error>(pathname, responseInit);
-};
-
-export const fetchUser = async () => {
-  const { userId } = await tryGetParsedToken();
-  return fetchEntity<Schemas["User"]>({
-    entity: "user",
-    idLike: userId,
-  });
-};
-
-export const fetchPages = async ({ guildId }: { guildId: string }) => {
-  const guild = await fetchGuild({ idLike: guildId });
+export const fetchPageBatch = async ({ guildIdLike }: WithIdLike<"guild">) => {
+  const guild = await fetchEntity({ entity: "guild", idLike: guildIdLike });
   return fetchGuildApiData<Schemas["Page"][]>("page/batch", {
     method: "POST",
     body: JSON.stringify({ ids: guild.pages?.map((p) => p.pageId!) ?? [] }),
+  });
+};
+
+export const fetchRoleBatch = async ({
+  pageIdLike,
+  guildIdLike,
+}: Partial<WithIdLike<"page">> & WithIdLike<"guild">) => {
+  const isHomePageUrl = !pageIdLike;
+  let pageIdLikeWithHome = pageIdLike;
+  if (isHomePageUrl) {
+    const { homePageId } = await fetchEntity({
+      entity: "guild",
+      idLike: guildIdLike,
+    });
+    pageIdLikeWithHome = homePageId!;
+  }
+
+  const page = await fetchEntity({
+    entity: "page",
+    idLike: pageIdLikeWithHome!,
+  });
+
+  return fetchGuildApiData<Role[]>("role/batch", {
+    method: "POST",
+    body: JSON.stringify({ ids: page.roles?.map((p) => p.roleId!) ?? [] }),
+  });
+};
+
+export const fetchRewardBatch = async ({ roleId }: WithId<"role">) => {
+  z.string().uuid().parse(roleId);
+  const role = await fetchEntity({ entity: "role", idLike: roleId });
+  return fetchGuildApiData<Schemas["Reward"][]>("reward/batch", {
+    method: "POST",
+    body: JSON.stringify({
+      ids: role.rewards?.map((r) => r.rewardId!) ?? [],
+    }),
   });
 };
