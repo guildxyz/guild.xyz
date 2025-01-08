@@ -72,6 +72,7 @@ import {
   sei,
   sepolia,
   shimmer,
+  sonic,
   taiko,
   worldchain,
   x1Testnet,
@@ -198,6 +199,7 @@ export const wagmiConfig = IS_TEST
         inkSepolia,
         ink,
         iota,
+        sonic,
       ],
       transports: {
         [mainnet.id]: http(),
@@ -267,6 +269,7 @@ export const wagmiConfig = IS_TEST
         [inkSepolia.id]: http(),
         [ink.id]: http(),
         [iota.id]: http(),
+        [sonic.id]: http(),
       },
       ssr: true,
       connectors: [

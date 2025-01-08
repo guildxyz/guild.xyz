@@ -66,6 +66,7 @@ import {
   sei,
   sepolia,
   shimmer,
+  sonic,
   taiko,
   worldchain,
   x1Testnet,
@@ -751,6 +752,14 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/networkLogos/iota.svg",
     },
   },
+  SONIC: {
+    ...generateChainConfig(sonic, "/networkLogos/sonic.svg"),
+    iconUrl: "/networkLogos/sonic.svg",
+    blockExplorerIconUrl: {
+      light: "/networkLogos/sonic.svg",
+      dark: "/networkLogos/sonic.svg",
+    },
+  },
 }
 
 enum Chains {
@@ -825,6 +834,7 @@ enum Chains {
   INK_SEPOLIA = inkSepolia.id,
   INK = ink.id,
   IOTA = iota.id,
+  SONIC = sonic.id,
 }
 
 export type Chain = keyof typeof Chains

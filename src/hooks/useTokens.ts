@@ -95,6 +95,7 @@ const TokenApiURLs: Record<Chain, string[]> = {
   INK_SEPOLIA: [],
   INK: [],
   IOTA: [],
+  SONIC: ["https://tokens.coingecko.com/sonic/all.json"],
 }
 
 const fetchTokens = async ([_, chain]) =>
