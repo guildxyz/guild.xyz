@@ -26,23 +26,26 @@ export const useInfiniteQueryWithIntersection = <
 
   const { isFetchingNextPage, hasNextPage, fetchNextPage } = infiniteQuery;
 
-  const [setIntersection, isIntersected, resetIsIntersected] = useIntersection(
+  const [setIntersection, isIntersected, resetIsIntersecting] = useIntersection(
     config.intersectionOptions ?? {},
   );
 
   useEffect(() => {
-    if (!isFetchingNextPage) {
-      resetIsIntersected();
+    if (isFetchingNextPage) {
+      resetIsIntersecting();
+      return;
     }
-  }, [resetIsIntersected, isFetchingNextPage]);
-
-  useEffect(() => {
-    if (isFetchingNextPage) return;
 
     if (isIntersected && hasNextPage) {
       fetchNextPage();
     }
-  }, [isIntersected, hasNextPage, isFetchingNextPage, fetchNextPage]);
+  }, [
+    isFetchingNextPage,
+    isIntersected,
+    hasNextPage,
+    fetchNextPage,
+    resetIsIntersecting,
+  ]);
 
   return {
     setIntersection,

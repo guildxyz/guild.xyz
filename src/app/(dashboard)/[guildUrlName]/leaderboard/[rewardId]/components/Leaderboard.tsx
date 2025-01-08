@@ -6,7 +6,10 @@ import { useParams } from "next/navigation";
 import { useCallback } from "react";
 import { useSuspensePointReward } from "../hooks/useSuspensePointReward";
 import { leaderboardOptions } from "../options";
-import { LeaderboardUserCard } from "./LeaderboardUserCard";
+import {
+  LeaderboardUserCard,
+  LeaderboardUserCardSkeleton,
+} from "./LeaderboardUserCard";
 
 export const Leaderboard = () => {
   const { data: user } = useUser();
@@ -15,7 +18,7 @@ export const Leaderboard = () => {
 
   const {
     setIntersection,
-    infiniteQuery: { data: infiniteData },
+    infiniteQuery: { data: infiniteData, isFetchingNextPage },
   } = useInfiniteQueryWithIntersection({
     infiniteQueryOptions: leaderboardOptions({ rewardId, userId: user?.id }),
   });
@@ -38,6 +41,7 @@ export const Leaderboard = () => {
 
       <section className="space-y-4">
         <h2 className="font-bold">{`${pointReward.data.name} leaderboard`}</h2>
+
         {data.leaderboard?.map((user, index) => (
           <LeaderboardUserCard
             key={user.userId}
@@ -47,6 +51,9 @@ export const Leaderboard = () => {
             }}
           />
         ))}
+
+        {isFetchingNextPage &&
+          [...Array(3)].map((_, i) => <LeaderboardUserCardSkeleton key={i} />)}
       </section>
 
       <div
@@ -57,11 +64,6 @@ export const Leaderboard = () => {
           [setIntersection],
         )}
         aria-hidden
-        style={{
-          width: "100%",
-          height: "50px",
-          background: "red",
-        }}
       />
     </div>
   );
