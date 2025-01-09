@@ -12,6 +12,7 @@ const GuildLayout = async ({
   children,
 }: PropsWithChildren<DynamicRoute<{ guildUrlName: string }>>) => {
   const { guildUrlName } = await params;
+
   const queryClient = getQueryClient();
   const guild = await queryClient.fetchQuery(
     guildOptions({

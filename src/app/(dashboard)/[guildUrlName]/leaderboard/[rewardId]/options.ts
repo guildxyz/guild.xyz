@@ -1,4 +1,7 @@
-import { fetchLeaderboard } from "@/app/(dashboard)/explorer/fetchers";
+import {
+  LEADERBOARD_LIMIT,
+  fetchLeaderboard,
+} from "@/app/(dashboard)/explorer/fetchers";
 import { fetchGuildApiData } from "@/lib/fetchGuildApi";
 import type { GuildReward } from "@/lib/schemas/guildReward";
 import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
@@ -11,13 +14,14 @@ export const leaderboardOptions = ({
     queryKey: ["leaderboard", rewardId],
     queryFn: ({ pageParam }) =>
       fetchLeaderboard({ rewardId, userId, offset: pageParam }),
-    initialPageParam: 1,
+    initialPageParam: 0,
     enabled: rewardId !== undefined,
     staleTime: 60 * 1000,
-    getNextPageParam: (lastPage) =>
-      lastPage.total / lastPage.limit <= lastPage.offset
-        ? undefined
-        : lastPage.offset + 1,
+    getNextPageParam: (lastPage) => {
+      return lastPage.offset + lastPage.limit < lastPage.total
+        ? lastPage.offset + LEADERBOARD_LIMIT
+        : undefined;
+    },
   });
 };
 

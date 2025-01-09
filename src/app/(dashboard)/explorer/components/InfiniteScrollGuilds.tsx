@@ -1,9 +1,8 @@
 "use client";
 
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { useIntersection } from "foxact/use-intersection";
+import { useInfiniteQueryWithIntersection } from "@/hooks/useInfiniteQueryWithIntersection";
 import { useAtomValue } from "jotai";
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import { searchAtom } from "../atoms";
 import { PAGE_SIZE } from "../constants";
 import { guildSearchOptions } from "../options";
@@ -11,25 +10,16 @@ import { GuildCard, GuildCardSkeleton } from "./GuildCard";
 
 export const InfiniteScrollGuilds = () => {
   const search = useAtomValue(searchAtom);
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
-    useInfiniteQuery(guildSearchOptions({ search }));
 
-  const [setIntersection, isIntersected, resetIsIntersected] = useIntersection({
-    rootMargin: "700px",
+  const {
+    setIntersection,
+    infiniteQuery: { data, hasNextPage, isFetchingNextPage, isLoading },
+  } = useInfiniteQueryWithIntersection({
+    infiniteQueryOptions: guildSearchOptions({ search }),
+    intersectionOptions: {
+      rootMargin: "700px",
+    },
   });
-
-  useEffect(() => {
-    if (!isFetchingNextPage) {
-      resetIsIntersected();
-    }
-  }, [resetIsIntersected, isFetchingNextPage]);
-
-  useEffect(() => {
-    if (isFetchingNextPage) return;
-    if (isIntersected && hasNextPage) {
-      fetchNextPage();
-    }
-  }, [isIntersected, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const guilds = data?.pages.flatMap((page) => page.items) || [];
 

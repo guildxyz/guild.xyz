@@ -19,6 +19,7 @@ export const fetchGuildSearch = async ({
   );
 };
 
+export const LEADERBOARD_LIMIT = 5;
 export const fetchLeaderboard = async ({
   rewardId,
   userId,
@@ -26,6 +27,6 @@ export const fetchLeaderboard = async ({
 }: { rewardId: string; userId?: string; offset?: number }) => {
   return fetchGuildApiData<
     Leaderboard & { total: number; offset: number; limit: number }
-  >(`reward/${rewardId}/leaderboard?userId=${userId}
-`); // TODO: use the offset param
+  >(`reward/${rewardId}/leaderboard?userId=${userId}&limit=${LEADERBOARD_LIMIT}&offset=${offset}
+`);
 };
