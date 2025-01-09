@@ -2,7 +2,6 @@ import {
   fetchEntity,
   fetchPage,
   fetchPageBatch,
-  fetchRoleBatch,
   fetchUser,
 } from "@/lib/fetchers";
 import type { WithIdLike } from "@/lib/types";
@@ -41,16 +40,6 @@ export const pageMonoviewOptions = (props: Parameters<typeof fetchPage>[0]) => {
         (data) => data as unknown as any,
       );
     },
-  });
-};
-
-export const roleBatchOptions = ({
-  pageIdLike,
-  guildIdLike,
-}: Partial<WithIdLike<"page">> & WithIdLike<"guild">) => {
-  return queryOptions({
-    queryKey: ["role", "batch", pageIdLike || "home", guildIdLike],
-    queryFn: () => fetchRoleBatch({ pageIdLike, guildIdLike }),
   });
 };
 
