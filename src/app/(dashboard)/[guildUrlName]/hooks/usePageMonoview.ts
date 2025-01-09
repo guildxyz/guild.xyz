@@ -8,8 +8,7 @@ export const usePageMonoview = () => {
     guildUrlName: string;
   }>();
 
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-  return useQuery<any>(
+  return useQuery(
     pageMonoviewOptions({
       guildIdLike: guildUrlName,
       pageIdLike: pageUrlNameParam,
@@ -23,8 +22,7 @@ export const usePageMonoviewSuspense = () => {
     guildUrlName: string;
   }>();
 
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-  return useSuspenseQuery<any>(
+  return useSuspenseQuery(
     pageMonoviewOptions({
       guildIdLike: guildUrlName,
       pageIdLike: pageUrlNameParam,

@@ -36,7 +36,10 @@ export const pageMonoviewOptions = (props: Parameters<typeof fetchPage>[0]) => {
       // ideally we would like to acquire this data from cache (if no better
       // method emerges for resolving urlName)
       const page = await fetchPage(props);
-      return fetchGuildApiData(`page/monoview/${page.id}`);
+      return fetchGuildApiData(`page/monoview/${page.id}`).then(
+        // biome-ignore lint/suspicious/noExplicitAny: TODO: types
+        (data) => data as unknown as any,
+      );
     },
   });
 };
