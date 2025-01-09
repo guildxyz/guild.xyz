@@ -7,6 +7,7 @@ import { consts } from "@guildxyz/types"
 import { useMembershipUpdate } from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { env } from "env"
+import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import { useToastWithShareButtons } from "hooks/useToastWithShareButtons"
@@ -199,6 +200,22 @@ const useMintGuildPin = () => {
       title: "Successfully minted Guild Pin!",
       shareText: `Just minted my Guild Pin for joining ${name}!\nguild.xyz/${urlName}`,
     })
+
+    createPurchase(hash)
+  }
+
+  const fetcherWithSign = useFetcherWithSign()
+
+  const createPurchase = (txHash: string) => {
+    fetcherWithSign([
+      `/v2/users/${address}/orders/verify`,
+      {
+        body: {
+          txHash: txHash,
+          chainId,
+        },
+      },
+    ])
   }
 
   return {
