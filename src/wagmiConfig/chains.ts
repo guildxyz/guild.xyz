@@ -40,6 +40,7 @@ import {
   gnosis,
   goerli,
   harmonyOne,
+  iota,
   kava,
   klaytn,
   linea,
@@ -65,6 +66,7 @@ import {
   sei,
   sepolia,
   shimmer,
+  sonic,
   taiko,
   worldchain,
   x1Testnet,
@@ -97,7 +99,7 @@ const generateChainConfig = (
     ...chain.nativeCurrency,
     iconUrl: nativeCurrencyIconUrl,
   },
-  blockExplorerUrl: chain.blockExplorers.default.url,
+  blockExplorerUrl: chain.blockExplorers?.default.url ?? "",
 })
 
 const ETH_ICON =
@@ -742,6 +744,22 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/networkLogos/ink.svg",
     },
   },
+  IOTA: {
+    ...generateChainConfig(iota, "/networkLogos/iota.svg"),
+    iconUrl: "/networkLogos/iota.svg",
+    blockExplorerIconUrl: {
+      light: "/networkLogos/iota.svg",
+      dark: "/networkLogos/iota.svg",
+    },
+  },
+  SONIC: {
+    ...generateChainConfig(sonic, "/networkLogos/sonic.svg"),
+    iconUrl: "/networkLogos/sonic.svg",
+    blockExplorerIconUrl: {
+      light: "/networkLogos/sonic.svg",
+      dark: "/networkLogos/sonic.svg",
+    },
+  },
 }
 
 enum Chains {
@@ -815,6 +833,8 @@ enum Chains {
   WORLD_CHAIN = worldchain.id,
   INK_SEPOLIA = inkSepolia.id,
   INK = ink.id,
+  IOTA = iota.id,
+  SONIC = sonic.id,
 }
 
 export type Chain = keyof typeof Chains
