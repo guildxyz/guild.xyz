@@ -32,7 +32,7 @@ const GuildLayout = async ({
                   imageUrl={guild.imageUrl}
                   className="size-20 rounded-full border"
                 />
-                <h1 className="line-clamp-2 text-pretty font-bold font-display text-3xl tracking-tight sm:text-4xl md:line-clamp-1 lg:text-5xl">
+                <h1 className="!leading-tight line-clamp-2 text-pretty font-bold font-display text-3xl tracking-tight sm:text-4xl md:line-clamp-1 lg:text-5xl">
                   {guild.name}
                 </h1>
               </div>
