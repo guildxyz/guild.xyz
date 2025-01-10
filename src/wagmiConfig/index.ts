@@ -205,7 +205,7 @@ export const wagmiConfig = IS_TEST
         [mainnet.id]: http(),
         [polygon.id]: http("https://polygon-bor-rpc.publicnode.com"),
         [polygonZkEvm.id]: http(),
-        [base.id]: http("https://base-pokt.nodies.app"),
+        [base.id]: http(),
         [baseSepolia.id]: http(),
         [optimism.id]: http(),
         [arbitrum.id]: http(),
