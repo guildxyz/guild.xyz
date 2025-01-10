@@ -1,11 +1,6 @@
 import { GuildImage } from "@/components/GuildImage";
 import { getQueryClient } from "@/lib/getQueryClient";
-import {
-  guildOptions,
-  pageBatchOptions,
-  roleBatchOptions,
-  userOptions,
-} from "@/lib/options";
+import { guildOptions } from "@/lib/options";
 import type { DynamicRoute } from "@/lib/types";
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { type PropsWithChildren, Suspense } from "react";
@@ -19,47 +14,11 @@ const GuildLayout = async ({
   const { guildUrlName } = await params;
 
   const queryClient = getQueryClient();
-
-  // TODO: handle possible request failures
-  await Promise.all([
-    queryClient.prefetchQuery(userOptions()),
-    queryClient.prefetchQuery(pageBatchOptions({ guildIdLike: guildUrlName })),
-    queryClient.prefetchQuery(
-      guildOptions({
-        guildIdLike: guildUrlName,
-      }),
-    ),
-  ]);
-
-  const pageBatch = queryClient.getQueryData(
-    pageBatchOptions({ guildIdLike: guildUrlName }).queryKey,
-  );
-  const roleBatchOptionsCollection = pageBatch?.map((page) => {
-    console.log("settings", {
-      pageIdLike: page.urlName!,
-      guildIdLike: guildUrlName,
-    });
-    return roleBatchOptions({
-      pageIdLike: page.urlName!,
-      guildIdLike: guildUrlName,
-    });
-  });
-
-  if (roleBatchOptionsCollection) {
-    await Promise.all(
-      roleBatchOptionsCollection.map((c) => queryClient.prefetchQuery(c)),
-    );
-  }
-
-  const guild = queryClient.getQueryState(
+  const guild = await queryClient.fetchQuery(
     guildOptions({
       guildIdLike: guildUrlName,
-    }).queryKey,
+    }),
   );
-
-  if (guild?.error || !guild?.data) {
-    throw new Error(`Failed to fetch guild ${guild?.error?.status || ""}`);
-  }
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
@@ -69,12 +28,12 @@ const GuildLayout = async ({
             <div className="flex w-full flex-col items-stretch justify-between gap-8 md:flex-row md:items-center">
               <div className="flex max-w-prose items-center gap-4">
                 <GuildImage
-                  name={guild.data.name}
-                  imageUrl={guild.data.imageUrl}
+                  name={guild.name}
+                  imageUrl={guild.imageUrl}
                   className="size-20 rounded-full border"
                 />
-                <h1 className="line-clamp-2 text-pretty font-bold font-display text-3xl tracking-tight sm:text-4xl md:line-clamp-1 lg:text-5xl">
-                  {guild.data.name}
+                <h1 className="!leading-tight line-clamp-2 text-pretty font-bold font-display text-3xl tracking-tight sm:text-4xl md:line-clamp-1 lg:text-5xl">
+                  {guild.name}
                 </h1>
               </div>
 
@@ -83,7 +42,7 @@ const GuildLayout = async ({
               </Suspense>
             </div>
             <p className="line-clamp-3 max-w-prose text-balance text-lg leading-relaxed">
-              {guild.data.description}
+              {guild.description}
             </p>
           </div>
         </div>

@@ -1,12 +1,13 @@
 import {
   fetchEntity,
+  fetchPage,
   fetchPageBatch,
-  fetchRoleBatch,
   fetchUser,
 } from "@/lib/fetchers";
 import type { WithIdLike } from "@/lib/types";
 import type { Schemas } from "@guildxyz/types";
 import { queryOptions } from "@tanstack/react-query";
+import { fetchGuildApiData } from "./fetchGuildApi";
 
 export const guildOptions = ({ guildIdLike }: WithIdLike<"guild">) => {
   return queryOptions({
@@ -22,13 +23,23 @@ export const pageBatchOptions = ({ guildIdLike }: WithIdLike<"guild">) => {
   });
 };
 
-export const roleBatchOptions = ({
-  pageIdLike,
-  guildIdLike,
-}: Partial<WithIdLike<"page">> & WithIdLike<"guild">) => {
+export const pageMonoviewOptions = (props: Parameters<typeof fetchPage>[0]) => {
   return queryOptions({
-    queryKey: ["role", "batch", pageIdLike || "home", guildIdLike],
-    queryFn: () => fetchRoleBatch({ pageIdLike, guildIdLike }),
+    queryKey: [
+      "page",
+      "monoview",
+      props.pageIdLike || "home",
+      props.guildIdLike,
+    ],
+    queryFn: async () => {
+      // ideally we would like to acquire this data from cache (if no better
+      // method emerges for resolving urlName)
+      const page = await fetchPage(props);
+      return fetchGuildApiData(`page/monoview/${page.id}`).then(
+        // biome-ignore lint/suspicious/noExplicitAny: TODO: types
+        (data) => data as unknown as any,
+      );
+    },
   });
 };
 

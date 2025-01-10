@@ -12,7 +12,7 @@ export type PaginatedResponse<Item = unknown> = {
 };
 
 export type DynamicRoute<T extends Record<string, string>> = {
-  params: T;
+  params: Promise<T>;
 };
 
 /**
