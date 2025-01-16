@@ -12,6 +12,7 @@ import {
 import { Anchor } from "@/components/ui/Anchor"
 import { Button, buttonVariants } from "@/components/ui/Button"
 import { useErrorToast } from "@/components/ui/hooks/useErrorToast"
+import { cn } from "@/lib/utils"
 import { ArrowSquareOut, Link } from "@phosphor-icons/react/dist/ssr"
 import { useMembershipUpdate } from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import {
@@ -77,24 +78,23 @@ const VisitLinkRequirement = ({ ...props }: RequirementProps) => {
     })
   }
 
-  const Original = () => {
-    const wordBreak = data.id?.startsWith("http") ? "break-all" : "break-word"
-
-    return (
-      <>
-        {"Visit link: "}
-        <Anchor
-          href={data.id}
-          variant="highlighted"
-          showExternal
-          target="_blank"
-          onClick={onVisit}
-        >
-          {data.id}
-        </Anchor>
-      </>
-    )
-  }
+  const Original = () => (
+    <>
+      <span>{"Visit link: "}</span>
+      <Anchor
+        href={data.id}
+        variant="highlighted"
+        showExternal
+        target="_blank"
+        onClick={onVisit}
+        className={cn("break-words", {
+          "break-all": data.id?.startsWith("http"),
+        })}
+      >
+        {data.id}
+      </Anchor>
+    </>
+  )
 
   return (
     <Requirement

@@ -15,7 +15,7 @@ const GroupPageImageAndName = () => {
         <Avatar className={cn("row-span-2 size-20 md:size-24", avatarBg)}>
           <AvatarImage
             src={group.imageUrl}
-            alt={`${name} logo`}
+            alt={`${group.name} logo`}
             width={96}
             height={96}
           />

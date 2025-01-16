@@ -59,9 +59,10 @@ const fetcher = async (
 
   return fetch(endpoint, options).then(async (response: Response) => {
     const contentType = response.headers.get("content-type")
-    const res = contentType.includes("json")
-      ? await response.json?.()
-      : await response.text()
+    const res =
+      contentType?.includes("json") || resource.endsWith(".json")
+        ? await response.json?.()
+        : await response.text()
 
     if (!response.ok) {
       if (

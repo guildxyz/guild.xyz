@@ -65,7 +65,7 @@ const useSubmitTransaction = (
   )
 
   const setTxError = useCallback(
-    (newState: boolean) => {
+    (newState: Error | null) => {
       if (options?.setContext === false || typeof setTxErrorInContext !== "function")
         return
       setTxErrorInContext(newState)
@@ -162,8 +162,7 @@ const useSubmitTransaction = (
     }
 
     if (error) {
-      setTxError(true)
-
+      setTxError(rawError)
       onError?.(error, rawError)
       reset()
     }
@@ -174,7 +173,7 @@ const useSubmitTransaction = (
   return {
     onSubmitTransaction: () => {
       setTxHash("")
-      setTxError(false)
+      setTxError(null)
       setTxSuccess(false)
 
       if (!writeContract && error) {

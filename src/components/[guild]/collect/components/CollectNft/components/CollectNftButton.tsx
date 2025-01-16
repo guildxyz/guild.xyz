@@ -50,7 +50,7 @@ const CollectNftButton = ({
     })
 
   const amount = useWatch<CollectNftForm>({ name: "amount" })
-  const { guildFee } = useGuildFee(chain)
+  const { guildFee } = useGuildFee(chain, nftAddress)
   const { fee, isLoading: isNftDetailsLoading } = useNftDetails(chain, nftAddress)
 
   const { isLoading: isNftBalanceLoading } = useGuildRewardNftBalanceByUserId({

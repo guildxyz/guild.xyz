@@ -82,7 +82,7 @@ const useCollectNft = () => {
     useCollectNftContext()
   const { setTxHash, setTxError, setTxSuccess } = useTransactionStatusContext() ?? {}
 
-  const { guildFee } = useGuildFee(chain)
+  const { guildFee } = useGuildFee(chain, nftAddress)
   const { fee, name, refetch: refetchNftDetails } = useNftDetails(chain, nftAddress)
 
   const { refetch: refetchBalance } = useGuildRewardNftBalanceByUserId({
@@ -103,8 +103,11 @@ const useCollectNft = () => {
   const claimAmount = claimAmountFromForm ?? 1
 
   const mint = async () => {
-    setTxError(false)
+    setTxError(null)
     setTxSuccess(false)
+
+    if (!publicClient) return Promise.reject("Couldn't find publicClient")
+    if (!walletClient) return Promise.reject("Couldn't find walletClient")
 
     if (shouldSwitchChain)
       return Promise.reject("Please switch network before minting")
@@ -189,7 +192,7 @@ const useCollectNft = () => {
 
         mutateTopCollectors(
           (prevValue) => {
-            const lowerCaseUserAddress = userAddress.toLowerCase()
+            const lowerCaseUserAddress = userAddress?.toLowerCase()
             const alreadyCollected = !!prevValue?.topCollectors?.find(
               (collector) => collector.address.toLowerCase() === lowerCaseUserAddress
             )
@@ -241,13 +244,15 @@ const useCollectNft = () => {
       },
       onError: (error) => {
         setLoadingText("")
-        setTxError(true)
+        setTxError(error)
 
         const prettyError = error.correlationId
           ? error
           : processViemContractError(error, (errorName) => {
               if (errorName === "AlreadyClaimed")
                 return "You've already collected this NFT"
+
+              return errorName
             })
 
         if (isUserRejectedError(prettyError)) {

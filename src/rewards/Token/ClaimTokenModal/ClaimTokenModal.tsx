@@ -32,7 +32,7 @@ import {
 } from "utils/rolePlatformHelpers"
 import { formatUnits } from "viem"
 import { useAccount } from "wagmi"
-import { Chains } from "wagmiConfig/chains"
+import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
 import TokenClaimFeeTable from "../TokenClaimFeeTable"
 import { useTokenRewardContext } from "../TokenRewardContext"
 import useCollectToken from "../hooks/useCollectToken"
@@ -102,9 +102,9 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
   )
 
   const formattedFee =
-    fee.isLoading || token.isLoading || !fee?.amount || !token?.data?.decimals
+    fee.isLoading || !fee?.amount
       ? null
-      : formatUnits(fee.amount, token.data.decimals)
+      : formatUnits(fee.amount, CHAIN_CONFIG[chain!].nativeCurrency.decimals)
 
   const { isBalanceSufficient } = useIsBalanceSufficient({
     address: NULL_ADDRESS,

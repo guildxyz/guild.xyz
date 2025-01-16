@@ -30,7 +30,7 @@
     "@emotion/styled": "^11.11.0",
     "@fuels/connectors": "^0.36.0",
     "@fuels/react": "^0.36.0",
-    "@guildxyz/types": "^1.10.28",
+    "@guildxyz/types": "^1.10.35",
     "@hcaptcha/react-hcaptcha": "^1.4.4",
     "@hookform/resolvers": "^3.3.4",
     "@lexical/code": "^0.12.0",
@@ -74,7 +74,6 @@
     "@tanstack/react-table": "^8.13.2",
     "@tanstack/react-virtual": "^3.5.0",
     "@types/three": "^0.166.0",
-    "@vercel/speed-insights": "^1.0.12",
     "@visx/event": "^3.3.0",
     "@visx/group": "^3.3.0",
     "@visx/responsive": "^3.10.2",
@@ -124,8 +123,8 @@
     "three": "^0.166.1",
     "usehooks-ts": "^3.1.0",
     "uuidv7": "^0.6.3",
-    "viem": "^2.21.37",
-    "wagmi": "^2.12.25",
+    "viem": "^2.22.4",
+    "wagmi": "^2.14.6",
     "zod": "^3.22.4"
   },
   "devDependencies": {

@@ -3,7 +3,8 @@ import {
   bitfinityTestnet,
   bobaAvax,
   exosama,
-  formTestnet,
+  form,
+  ink,
   inkSepolia,
   metisSepolia,
   mint,
@@ -39,6 +40,7 @@ import {
   gnosis,
   goerli,
   harmonyOne,
+  iota,
   kava,
   klaytn,
   linea,
@@ -64,6 +66,7 @@ import {
   sei,
   sepolia,
   shimmer,
+  sonic,
   taiko,
   worldchain,
   x1Testnet,
@@ -96,7 +99,7 @@ const generateChainConfig = (
     ...chain.nativeCurrency,
     iconUrl: nativeCurrencyIconUrl,
   },
-  blockExplorerUrl: chain.blockExplorers.default.url,
+  blockExplorerUrl: chain.blockExplorers?.default.url ?? "",
 })
 
 const ETH_ICON =
@@ -626,8 +629,8 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/explorerLogos/opbnb.png",
     },
   },
-  FORM_TESTNET: {
-    ...generateChainConfig(formTestnet, ETH_ICON),
+  FORM: {
+    ...generateChainConfig(form, ETH_ICON),
     iconUrl: "/networkLogos/form.svg",
     blockExplorerIconUrl: {
       light: "/networkLogos/form.svg",
@@ -733,6 +736,30 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/networkLogos/inkSepolia.png",
     },
   },
+  INK: {
+    ...generateChainConfig(ink, ETH_ICON),
+    iconUrl: "/networkLogos/ink.svg",
+    blockExplorerIconUrl: {
+      light: "/networkLogos/ink.svg",
+      dark: "/networkLogos/ink.svg",
+    },
+  },
+  IOTA: {
+    ...generateChainConfig(iota, "/networkLogos/iota.svg"),
+    iconUrl: "/networkLogos/iota.svg",
+    blockExplorerIconUrl: {
+      light: "/networkLogos/iota.svg",
+      dark: "/networkLogos/iota.svg",
+    },
+  },
+  SONIC: {
+    ...generateChainConfig(sonic, "/networkLogos/sonic.svg"),
+    iconUrl: "/networkLogos/sonic.svg",
+    blockExplorerIconUrl: {
+      light: "/networkLogos/sonic.svg",
+      dark: "/networkLogos/sonic.svg",
+    },
+  },
 }
 
 enum Chains {
@@ -792,7 +819,7 @@ enum Chains {
   CORE_DAO = coreDao.id,
   LISK_SEPOLIA = liskSepolia.id,
   OP_BNB = opBNB.id,
-  FORM_TESTNET = formTestnet.id,
+  FORM = form.id,
   CYBER = cyber.id,
   TAIKO = taiko.id,
   KLAYTN = klaytn.id,
@@ -805,6 +832,9 @@ enum Chains {
   CRONOS_ZKEVM = cronoszkEVM.id,
   WORLD_CHAIN = worldchain.id,
   INK_SEPOLIA = inkSepolia.id,
+  INK = ink.id,
+  IOTA = iota.id,
+  SONIC = sonic.id,
 }
 
 export type Chain = keyof typeof Chains

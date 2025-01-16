@@ -18,7 +18,7 @@ const NftFeesTable = ({ ...rest }: StackProps) => {
   })
   const claimAmount = claimAmountFromForm ?? 1
 
-  const { guildFee } = useGuildFee(chain)
+  const { guildFee } = useGuildFee(chain, nftAddress)
   const formattedGuildFee = guildFee
     ? Number(formatUnits(guildFee, CHAIN_CONFIG[chain].nativeCurrency.decimals)) *
       claimAmount

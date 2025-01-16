@@ -1,7 +1,6 @@
 import { FuelProvider } from "@fuels/react"
 import { IconContext } from "@phosphor-icons/react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
-import { SpeedInsights } from "@vercel/speed-insights/next"
 import { bugsnagStart } from "bugsnag"
 import Chakra from "components/_app/Chakra"
 import ClientOnly from "components/common/ClientOnly"
@@ -19,6 +18,7 @@ import { WagmiProvider } from "wagmi"
 import { wagmiConfig } from "wagmiConfig"
 import "../app/globals.css"
 import { AccountModal } from "@/components/Account/components/AccountModal"
+import { AnnouncementDialog } from "@/components/AnnouncementDialog"
 import AppErrorBoundary from "@/components/AppErrorBoundary"
 import { IntercomProvider } from "@/components/Providers/IntercomProvider"
 import { TermsOfUseUpdateDialog } from "@/components/TermsOfUseUpdateDialog"
@@ -89,6 +89,7 @@ const App = ({
 
                       <LegacyWeb3ConnectionManager />
                       <TermsOfUseUpdateDialog />
+                      <AnnouncementDialog />
                     </LegacyPostHogProvider>
                   </FuelProvider>
                 </QueryClientProvider>
@@ -99,8 +100,6 @@ const App = ({
           </IconContext.Provider>
         </TooltipProvider>
       </Chakra>
-
-      <SpeedInsights />
     </>
   )
 }

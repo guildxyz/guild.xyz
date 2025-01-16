@@ -3,8 +3,18 @@ import guildRewardNFTFactoryAbi from "static/abis/guildRewardNFTFactory"
 import { useReadContract } from "wagmi"
 import { Chain, Chains } from "wagmiConfig/chains"
 
+// TODO: remove this once we deploy the contracts on all chains
+const chainsWithOverrides = [
+  "BASE_MAINNET",
+  "BSC",
+  "ARBITRUM",
+  "OPTIMISM",
+  "POLYGON",
+]
+
 const useGuildFee = (
-  chain: Chain
+  chain: Chain,
+  contractAddress?: `0x${string}`
 ): { guildFee: bigint; isLoading: boolean; error: any } => {
   const {
     data: guildFee,
@@ -14,7 +24,14 @@ const useGuildFee = (
     abi: guildRewardNFTFactoryAbi,
     chainId: Chains[chain],
     address: GUILD_REWARD_NFT_FACTORY_ADDRESSES[chain],
-    functionName: "fee",
+    functionName:
+      contractAddress && chainsWithOverrides.includes(chain)
+        ? "getFeeWithOverrides"
+        : "fee",
+    args:
+      contractAddress && chainsWithOverrides.includes(chain)
+        ? [contractAddress]
+        : [],
   })
 
   return {

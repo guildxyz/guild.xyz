@@ -1,33 +1,42 @@
-import { Center, Flex, Icon, ModalBody, ModalFooter } from "@chakra-ui/react"
-import { XCircle } from "@phosphor-icons/react"
+import { DialogBody, DialogFooter } from "@/components/ui/Dialog"
+import { Timer, XCircle } from "@phosphor-icons/react/dist/ssr"
 import { PropsWithChildren } from "react"
-import TransactionModalCloseButton from "./TransactionModalCloseButton"
+import { WaitForTransactionReceiptTimeoutError } from "viem"
+import { useTransactionStatusContext } from "../../TransactionStatusContext"
+import { TransactionModalCloseButton } from "./TransactionModalCloseButton"
 
-const TxError = ({ children }: PropsWithChildren<unknown>): JSX.Element => (
-  <>
-    <ModalBody pb={0}>
-      <Flex direction="column">
-        <Center mb={10}>
-          <Icon
-            as={XCircle}
-            boxSize={36}
-            color="red.500"
-            sx={{
-              "> *": {
-                strokeWidth: "8px",
-              },
-            }}
-          />
-        </Center>
-      </Flex>
+const TxError = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
+  const { txError } = useTransactionStatusContext()
 
-      {children}
-    </ModalBody>
+  const isTimeout = txError instanceof WaitForTransactionReceiptTimeoutError
 
-    <ModalFooter>
-      <TransactionModalCloseButton />
-    </ModalFooter>
-  </>
-)
+  return (
+    <>
+      <DialogBody>
+        <div className="mb-10 flex items-center justify-center">
+          {isTimeout ? (
+            <Timer className="size-36 text-muted-foreground [&>*]:stroke-[6px]" />
+          ) : (
+            <XCircle className="size-36 text-destructive [&>*]:stroke-[6px]" />
+          )}
+        </div>
 
-export default TxError
+        {isTimeout ? (
+          <p>
+            Your transaction is processing. Due to high network traffic, it may take
+            longer than usual. Check your wallet later for status updates. For
+            persistent issues, please contact our support.
+          </p>
+        ) : (
+          children
+        )}
+      </DialogBody>
+
+      <DialogFooter>
+        <TransactionModalCloseButton />
+      </DialogFooter>
+    </>
+  )
+}
+
+export { TxError }

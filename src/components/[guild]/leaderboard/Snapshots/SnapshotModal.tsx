@@ -41,7 +41,7 @@ const SnapshotModal = ({
     (gp) => gp.id === snapshotRequirement.data.guildPlatformId
   ) as Extract<GuildRewardWithId, { platformName: "POINTS" }> | undefined
 
-  if (!pointsReward) return null
+  if (snapshotRequirement.data.guildPlatformId && !pointsReward) return null
 
   const pointData = pointsReward
     ? {

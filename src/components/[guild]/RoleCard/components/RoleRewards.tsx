@@ -6,6 +6,7 @@ import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import dynamic from "next/dynamic"
 import { PropsWithChildren } from "react"
 import rewards from "rewards"
+import { TokenRewardCard } from "rewards/Token/TokenRewardCard"
 import { PlatformName, PlatformType, Role } from "types"
 import HiddenRewards from "./HiddenRewards"
 
@@ -54,7 +55,12 @@ const RoleRewards = ({ role, isOpen }: Props) => {
                   guildPlatform,
                 }}
               >
-                <AccessedGuildPlatformCard />
+                {/* Temporary solution, until we refactor this section */}
+                {guildPlatform?.platformId === PlatformType.ERC20 ? (
+                  <TokenRewardCard platform={guildPlatform} />
+                ) : (
+                  <AccessedGuildPlatformCard />
+                )}
               </RolePlatformProvider>
             </SlideFade>
           )

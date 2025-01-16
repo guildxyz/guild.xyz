@@ -152,12 +152,12 @@ const EditTokenModal = ({
 
   const { triggerMembershipUpdate } = useMembershipUpdate()
 
-  const onEditSubmit = async (data) => {
+  const onEditSubmit = async (data: AddTokenFormType) => {
     const modifiedRolePlatform: any = { ...rolePlatforms?.[0] }
 
     // Create new snapshot if currently does not exist
     if (!snapshotRequirement) {
-      const createdReq = await onRequirementSubmit(data.requirements[0])
+      const createdReq = await onRequirementSubmit(data.snapshotRequirement)
       if (createdReq)
         modifiedRolePlatform.dynamicAmount.operation.input[0].requirementId =
           createdReq.id
@@ -167,16 +167,13 @@ const EditTokenModal = ({
     modifiedRolePlatform.dynamicAmount.operation.params.multiplier = data.multiplier
     await submitEditRolePlatform(modifiedRolePlatform)
 
-    if (!changeSnapshot || !data?.requirements?.[0]?.data || !snapshotRequirement) {
-      mutateGuild()
-      onClose()
-      return
+    if (!!snapshotRequirement && changeSnapshot) {
+      await submitEditRequirement({
+        ...snapshotRequirement,
+        ...data.snapshotRequirement,
+        id: snapshotRequirement?.id!, // just to make TS happy...
+      })
     }
-
-    await submitEditRequirement({
-      ...snapshotRequirement,
-      data: data.requirements[0].data,
-    })
 
     onClose()
     mutateGuild()

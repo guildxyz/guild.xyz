@@ -1,14 +1,15 @@
 import {
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
-} from "@chakra-ui/react"
-import { Modal } from "components/common/Modal"
+  Dialog,
+  DialogCloseButton,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/Dialog"
+import { WaitForTransactionReceiptTimeoutError } from "viem"
 import { useTransactionStatusContext } from "../TransactionStatusContext"
-import TxError from "./components/TxError"
-import TxInProgress from "./components/TxInProgress"
-import TxSuccess from "./components/TxSuccess"
+import { TxError } from "./components/TxError"
+import { TxInProgress } from "./components/TxInProgress"
+import { TxSuccess } from "./components/TxSuccess"
 
 type Props = {
   title: string
@@ -29,23 +30,43 @@ const TransactionStatusModal = ({
   successText,
   errorComponent,
 }: Props): JSX.Element => {
-  const { isTxModalOpen, onTxModalClose, txSuccess, txError, txHash } =
-    useTransactionStatusContext()
+  const {
+    isTxModalOpen,
+    onTxModalClose,
+    onTxModalOpen,
+    txSuccess,
+    txError,
+    txHash,
+  } = useTransactionStatusContext()
 
   return (
-    <Modal isOpen={isTxModalOpen} onClose={txSuccess ? onTxModalClose : undefined}>
-      <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>
-          {txError
-            ? "Transaction failed"
-            : txSuccess
-              ? (successTitle ?? "Successful payment")
-              : txHash
-                ? "Transaction is processing..."
-                : title}
-        </ModalHeader>
-        {txSuccess && <ModalCloseButton />}
+    <Dialog
+      open={isTxModalOpen}
+      onOpenChange={(open) => {
+        if (open) {
+          onTxModalOpen()
+          return
+        }
+
+        if (!txSuccess) return
+
+        onTxModalClose()
+      }}
+    >
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>
+            {txError instanceof WaitForTransactionReceiptTimeoutError
+              ? "Timeout"
+              : txError
+                ? "Transaction failed"
+                : txSuccess
+                  ? (successTitle ?? "Successful payment")
+                  : txHash
+                    ? "Transaction is processing..."
+                    : title}
+          </DialogTitle>
+        </DialogHeader>
 
         {txError ? (
           <TxError>{errorComponent}</TxError>
@@ -59,9 +80,11 @@ const TransactionStatusModal = ({
         ) : (
           <TxInProgress>{progressComponent}</TxInProgress>
         )}
-      </ModalContent>
-    </Modal>
+
+        {txSuccess && <DialogCloseButton />}
+      </DialogContent>
+    </Dialog>
   )
 }
 
-export default TransactionStatusModal
+export { TransactionStatusModal }

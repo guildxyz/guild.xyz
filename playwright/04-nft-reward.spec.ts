@@ -227,7 +227,7 @@ test("user is eligible - can mint nft", async ({ pageWithKeyPair: { page } }) =>
   await expect(successModal).toBeVisible({
     timeout: 30_000,
   })
-  const modalCloseButton = await successModal.getByText("Close")
+  const modalCloseButton = await successModal.getByTestId("tx-modal-close-button")
   await modalCloseButton.click()
 })
 

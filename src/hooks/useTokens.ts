@@ -80,7 +80,7 @@ const TokenApiURLs: Record<Chain, string[]> = {
   CORE_DAO: [],
   LISK_SEPOLIA: [],
   OP_BNB: [],
-  FORM_TESTNET: [],
+  FORM: [],
   CYBER: [],
   TAIKO: [],
   KLAYTN: [],
@@ -93,6 +93,11 @@ const TokenApiURLs: Record<Chain, string[]> = {
   CRONOS_ZKEVM: [],
   WORLD_CHAIN: [],
   INK_SEPOLIA: [],
+  INK: [],
+  IOTA: [
+    "https://raw.githubusercontent.com/MagicSea-Finance/tokenlist/main/token.default.json",
+  ],
+  SONIC: ["https://tokens.coingecko.com/sonic/all.json"],
 }
 
 const fetchTokens = async ([_, chain]) =>
