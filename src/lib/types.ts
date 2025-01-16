@@ -1,3 +1,5 @@
+import type { Schemas } from "@guildxyz/types";
+
 export type PaginatedResponse<Item = unknown> = {
   page: number;
   pageSize: number;
@@ -10,7 +12,7 @@ export type PaginatedResponse<Item = unknown> = {
 };
 
 export type DynamicRoute<T extends Record<string, string>> = {
-  params: T;
+  params: Promise<T>;
 };
 
 /**
@@ -31,4 +33,15 @@ export type ErrorLike = {
  * - `urlName`: uri safe identifier alias
  * - `id`: uuid v4 identifier
  */
-export type WithIdLike<T = unknown> = T & { idLike: string };
+export type WithIdLike<E extends Entity> = {
+  [key in `${E}IdLike`]: string;
+};
+
+export type WithId<E extends Entity> = {
+  [key in `${E}Id`]: string;
+};
+
+// TODO: move to @guildxyz/types
+export type Entity = "guild" | "role" | "page" | "user" | "reward";
+
+export type EntitySchema<T extends Entity> = Schemas[Capitalize<T>];

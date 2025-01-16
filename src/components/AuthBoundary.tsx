@@ -1,16 +1,18 @@
-import { tryGetToken } from "@/lib/token";
+"use client";
 
-export const AuthBoundary = async ({
+import { useUser } from "@/hooks/useUser";
+import type { ReactNode } from "react";
+
+export const AuthBoundary = ({
   fallback,
   children,
 }: Readonly<{
-  fallback: React.ReactNode;
-  children: React.ReactNode;
+  fallback: ReactNode;
+  children: ReactNode;
 }>) => {
-  try {
-    await tryGetToken();
-    return <>{children}</>;
-  } catch {
-    return <>{fallback}</>;
-  }
+  const { data: user } = useUser();
+
+  if (user?.id) return children;
+
+  return fallback;
 };

@@ -1,12 +1,16 @@
 "use client";
 
+import { useUser } from "@/hooks/useUser";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { associatedGuildsOption } from "../options";
 import { CreateGuildLink } from "./CreateGuildLink";
 import { GuildCard, GuildCardSkeleton } from "./GuildCard";
 
 export const AssociatedGuilds = () => {
-  const { data: associatedGuilds } = useSuspenseQuery(associatedGuildsOption());
+  const { data: user } = useUser();
+  const { data: associatedGuilds } = useSuspenseQuery(
+    associatedGuildsOption({ userId: user?.id }),
+  );
 
   return associatedGuilds.length > 0 ? (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

@@ -1,5 +1,4 @@
 import { AuthBoundary } from "@/components/AuthBoundary";
-import { ConfettiProvider } from "@/components/ConfettiProvider";
 import { SignInButton } from "@/components/SignInButton";
 import { Card } from "@/components/ui/Card";
 import svgToTinyDataUri from "mini-svg-data-uri";
@@ -23,23 +22,21 @@ const CreateGuild = () => (
     />
 
     <CreateGuildFormProvider>
-      <ConfettiProvider>
-        <Card className="flex flex-col px-5 py-6 shadow-lg md:px-6">
-          <h2 className="mb-7 text-center font-display font-extrabold text-2xl">
-            Begin your guild
-          </h2>
+      <Card className="flex flex-col px-5 py-6 shadow-lg md:px-6">
+        <h2 className="mb-7 text-center font-display font-extrabold text-2xl">
+          Begin your guild
+        </h2>
 
-          <div className="mb-8 flex flex-col gap-4">
-            <CreateGuildForm />
-          </div>
+        <div className="mb-8 flex flex-col gap-4">
+          <CreateGuildForm />
+        </div>
 
-          <AuthBoundary
-            fallback={<SignInButton size="xl" colorScheme="primary" />}
-          >
-            <CreateGuildButton />
-          </AuthBoundary>
-        </Card>
-      </ConfettiProvider>
+        <AuthBoundary
+          fallback={<SignInButton size="xl" colorScheme="primary" />}
+        >
+          <CreateGuildButton />
+        </AuthBoundary>
+      </Card>
     </CreateGuildFormProvider>
   </main>
 );
