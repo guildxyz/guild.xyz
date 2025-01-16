@@ -69,13 +69,16 @@ const RoleCard = ({ role }: { role: Role }) => (
       </Suspense>
     </div>
 
-    <div className="flex flex-col bg-card-secondary">
+    <div className="relative mb-8 flex flex-col bg-card-secondary sm:mb-0">
       <div className="flex items-center justify-between p-5">
         <span className="font-bold text-foreground-secondary text-xs uppercase md:hidden lg:inline">
           Requirements
         </span>
 
-        <AccessIndicator roleId={role.id} className="hidden sm:flex" />
+        <AccessIndicator
+          roleId={role.id}
+          className="-bottom-8 absolute left-0 sm:relative sm:bottom-0"
+        />
       </div>
 
       {/* TODO group rules by access groups */}
@@ -97,8 +100,6 @@ const RoleCard = ({ role }: { role: Role }) => (
           ))}
         </div>
       </ScrollArea>
-
-      <AccessIndicator roleId={role.id} className="sm:hidden" />
     </div>
   </Card>
 );
