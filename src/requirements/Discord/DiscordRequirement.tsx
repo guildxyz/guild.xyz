@@ -52,18 +52,18 @@ const DiscordRequirement = (props: RequirementProps) => {
           case "DISCORD_JOIN":
             return requirement.type === "DISCORD_MEMBER_SINCE" ? (
               <>
-                <span>{`Be member of the `}</span>
+                <span>{`Be a member of the `}</span>
                 <DataBlock>{displayedServerName}</DataBlock>
                 {!!requirement.data?.memberSince && (
                   <>
-                    <span>{` server since at least `}</span>
+                    <span>{` server since before `}</span>
                     <DataBlockWithDate timestamp={requirement.data.memberSince} />
                   </>
                 )}
               </>
             ) : (
               <>
-                <span>{`Be a Discord user since at least `}</span>
+                <span>{`Be a Discord user since before `}</span>
                 <DataBlockWithDate timestamp={requirement.data.memberSince} />
               </>
             )
