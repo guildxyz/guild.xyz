@@ -74,4 +74,4 @@ const useOrders = (shouldFetch: boolean) => {
   }
 }
 
-export default useOrders
+export { useOrders }

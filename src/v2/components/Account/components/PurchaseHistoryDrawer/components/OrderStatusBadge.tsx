@@ -29,4 +29,4 @@ const OrderStatusBadge = ({
   return <Badge colorScheme="gray">Unknown</Badge>
 }
 
-export default OrderStatusBadge
+export { OrderStatusBadge }

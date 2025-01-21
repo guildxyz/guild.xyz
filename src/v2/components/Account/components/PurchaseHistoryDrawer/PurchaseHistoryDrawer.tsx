@@ -23,7 +23,6 @@ import {
   TableRow,
 } from "@/components/ui/Table"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip"
-import { Collapse } from "@chakra-ui/react"
 import {
   ClockClockwise,
   DotsThreeVertical,
@@ -33,8 +32,8 @@ import { useAtom } from "jotai"
 import { useEffect, useRef } from "react"
 import * as customChains from "static/customChains"
 import * as viemChains from "viem/chains"
-import OrderStatusBadge from "./components/OrderStatusBadge"
-import useOrders from "./hooks/useOrders"
+import { OrderStatusBadge } from "./components/OrderStatusBadge"
+import { useOrders } from "./hooks/useOrders"
 
 const prettyDate = (order: any) => {
   return (
@@ -196,7 +195,7 @@ export const PurchaseHistoryDrawer = () => {
             </TableBody>
           </Table>
         </div>
-        <Collapse in={!isReachingEnd} className="mx-auto min-h-fit">
+        {!isReachingEnd && (
           <Button
             className="w-fit"
             onClick={loadMore}
@@ -205,7 +204,7 @@ export const PurchaseHistoryDrawer = () => {
           >
             Show more
           </Button>
-        </Collapse>
+        )}
       </DrawerContent>
     </Drawer>
   )
