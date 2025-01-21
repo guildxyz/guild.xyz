@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react"
 import Link from "next/link"
+import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import shortenHex from "utils/shortenHex"
 import {
   Table,
@@ -28,7 +29,7 @@ const TableExample = () => (
       <TableRow>
         <TableCell className="font-medium">INV001</TableCell>
         <TableCell>Guild Pin</TableCell>
-        <TableCell>{shortenHex()}</TableCell>
+        <TableCell>{shortenHex(NULL_ADDRESS)}</TableCell>
         <TableCell>{new Date().toLocaleDateString()}</TableCell>
         <TableCell className="text-right">$250.00</TableCell>
         <TableCell>

@@ -4,10 +4,16 @@ import { Button } from "@/components/ui/Button"
 import {
   Drawer,
   DrawerContent,
-  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/Drawer"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/DropdownMenu"
+import { IconButton } from "@/components/ui/IconButton"
 import {
   Table,
   TableBody,
@@ -16,122 +22,190 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/Table"
-import { useBilling } from "@/hooks/useBilling"
-import { DownloadSimple } from "@phosphor-icons/react"
-import { useFetcherWithSign } from "hooks/useFetcherWithSign"
-import useShowErrorToast from "hooks/useShowErrorToast"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip"
+import { Collapse } from "@chakra-ui/react"
+import {
+  ClockClockwise,
+  DotsThreeVertical,
+  DownloadSimple,
+} from "@phosphor-icons/react/dist/ssr"
 import { useAtom } from "jotai"
-import { useEffect } from "react"
-import { useAccount } from "wagmi"
+import { useEffect, useRef } from "react"
+import * as customChains from "static/customChains"
+import * as viemChains from "viem/chains"
+import OrderStatusBadge from "./components/OrderStatusBadge"
+import useOrders from "./hooks/useOrders"
 
-export const PurchaseHistoryDrawer = () => {
-  const [isOpen, setIsOpen] = useAtom(purchaseHistoryDrawerAtom)
-  const { address } = useAccount()
+const prettyDate = (order: any) => {
+  return (
+    order?.createdAt &&
+    new Intl.DateTimeFormat("en-US", {
+      dateStyle: "short",
+      timeStyle: "short",
+    }).format(new Date(order.createdAt))
+  )
+}
 
-  const {
-    receipts,
-    pagination,
-    mutate: refetch,
-    loadMore,
-    isLoading,
-    isValidating,
-  } = useBilling()
-
-  useEffect(() => {
-    if (isOpen) refetch()
-  }, [isOpen, refetch])
-
-  const showLoadMore =
-    !!pagination && pagination.currentPage !== pagination.totalPages
-
-  const fetcherWithSign = useFetcherWithSign()
-  const showErrorToast = useShowErrorToast()
-
-  const download = async (receiptId: string) => {
-    try {
-      const blob = await fetcherWithSign([
-        `/v2/users/${address}/purchase-history/download/${receiptId}`,
-        {
-          method: "GET",
-          headers: {
-            Accept: "application/pdf",
-            "Content-Type": "application/pdf",
-          },
-        },
-      ])
-
-      const url = window.URL.createObjectURL(blob)
-      window.open(url)
-      window.URL.revokeObjectURL(url)
-    } catch (error) {
-      console.error("Error in submit function:", error)
-      showErrorToast(
-        "Failed to load receipt, please try again later or contact support"
-      )
+const getChainInfo = (chainId: number): { symbol: string; name: string } => {
+  for (const chain of Object.values(customChains)) {
+    if (chain.id === chainId) {
+      return {
+        symbol: chain.nativeCurrency.symbol,
+        name: chain.name,
+      }
     }
   }
 
+  for (const chain of Object.values(viemChains)) {
+    if (chain.id === chainId) {
+      return {
+        symbol: chain.nativeCurrency.symbol,
+        name: chain.name,
+      }
+    }
+  }
+
+  throw new Error(`Chain with id ${chainId} not found`)
+}
+
+const getTotal = (order: any) => {
+  return order.items.reduce(
+    (acc: number, item: any) => acc + item.pricePerUnit * item.quantity,
+    0
+  )
+}
+
+export const PurchaseHistoryDrawer = () => {
+  const isInitialMount = useRef(true)
+  const [isOpen, setIsOpen] = useAtom(purchaseHistoryDrawerAtom)
+  const {
+    orders,
+    isLoading: isLoadingMore,
+    isReachingEnd,
+    error,
+    loadMore,
+    mutate,
+  } = useOrders(isOpen)
+
+  useEffect(() => {
+    if (isOpen) {
+      if (!isInitialMount.current) {
+        mutate()
+      }
+      isInitialMount.current = false
+    }
+  }, [isOpen, mutate])
+
   return (
-    <Drawer open={isOpen} onOpenChange={setIsOpen}>
-      <DrawerContent className="max-h-[80vh] select-text">
+    <Drawer open={isOpen} onClose={() => setIsOpen(false)}>
+      <DrawerContent className="max-h-[90vh] pb-10">
         <DrawerHeader>
-          <DrawerTitle className="text-center">Purchase History</DrawerTitle>
+          <DrawerTitle className="text-center">
+            Purchase History{" "}
+            <IconButton
+              icon={<ClockClockwise weight="bold" />}
+              isLoading={isLoadingMore}
+              aria-label="Refresh"
+              className="ml-2 rounded-full"
+              onClick={() => mutate()}
+            />
+          </DrawerTitle>
         </DrawerHeader>
-        <div className="flex-1 overflow-auto p-4">
-          <div className="h-full overflow-auto rounded-md border">
-            <Table className="select-text">
-              <TableHeader>
-                <TableRow className="hover:bg-accent/50">
-                  <TableHead className="w-[100px]">Receipt</TableHead>
-                  <TableHead>Name</TableHead>
-                  <TableHead className="text-right">Amount</TableHead>
-                  <TableHead>Date</TableHead>
-                  <TableHead>Payment Address</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {receipts.map((receipt) => (
-                  <TableRow key={receipt.externalId} className="hover:bg-accent/50">
-                    <TableCell className="font-medium">
-                      <button
-                        onClick={() => download(receipt.externalId)}
-                        className="flex cursor-pointer flex-row items-center justify-center border-none bg-transparent p-0 font-normal text-blue-500 hover:text-blue-700"
-                      >
-                        {receipt.externalId}
-                        <DownloadSimple
-                          weight="bold"
-                          className="ml-1 inline-block"
+        <div className="overflow-y-auto">
+          <Table className="mb-4">
+            <TableHeader className="sticky top-0 bg-card shadow-sm">
+              <TableRow className="[&>*]:whitespace-nowrap">
+                <TableHead className="w-[100px] pl-6">Date</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Items</TableHead>
+                <TableHead className="text-right">Total</TableHead>
+                <TableHead>Chain</TableHead>
+                <TableHead>Payment Address</TableHead>
+                <TableHead className="">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {orders?.map((order: any) => (
+                <TableRow className="[&>*]:whitespace-nowrap" key={order._id}>
+                  <TableCell className="pl-6">{prettyDate(order)}</TableCell>
+                  <TableCell className="capitalize">
+                    <OrderStatusBadge
+                      status={order.status}
+                      createdAt={order.createdAt}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <span>{order.items[0].name}</span>
+                      {order.items[0].quantity > 1 && (
+                        <span className="text-gray-500 text-xs">
+                          ×{order.items[0].quantity}
+                        </span>
+                      )}
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-right">
+                    {getTotal(order)}{" "}
+                    {getChainInfo(order.cryptoDetails.chainId).symbol}
+                  </TableCell>
+                  <TableCell>
+                    {getChainInfo(order.cryptoDetails.chainId).name}
+                  </TableCell>
+                  <TableCell>
+                    <CopyableAddress address={order.cryptoDetails.walletAddress} />
+                  </TableCell>
+                  <TableCell className="w-[32px]">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <IconButton
+                          aria-label="Open menu"
+                          variant="outline"
+                          size="sm"
+                          icon={<DotsThreeVertical weight="bold" />}
                         />
-                      </button>
-                    </TableCell>
-                    <TableCell>{receipt.itemName}</TableCell>
-                    <TableCell className="text-right">
-                      {receipt.totalPrice} USD
-                    </TableCell>
-                    <TableCell>
-                      {new Date(receipt.createdAt).toLocaleDateString()}
-                    </TableCell>
-                    <TableCell>
-                      <CopyableAddress address={receipt.paymentAddress} />
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent side="left">
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <DropdownMenuItem
+                              className="flex items-center gap-2 px-4 font-semibold"
+                              disabled={
+                                order.receipt?.status !== "available" ||
+                                !order.receipt?.externalId
+                              }
+                            >
+                              <DownloadSimple weight="bold" /> Download Receipt
+                            </DropdownMenuItem>
+                          </TooltipTrigger>
+                          {order.receipt?.status !== "available" && (
+                            <TooltipContent>Receipt not available</TooltipContent>
+                          )}
+                        </Tooltip>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                </TableRow>
+              ))}
+              {orders.length === 0 && !isLoadingMore && (
+                <TableRow>
+                  <TableCell colSpan={7} className="text-center text-primary-subtle">
+                    No orders found
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
         </div>
-        <DrawerFooter>
-          {showLoadMore && (
-            <Button
-              variant="outline"
-              onClick={loadMore}
-              isLoading={isLoading || isValidating}
-              loadingText="Loading..."
-            >
-              Load More
-            </Button>
-          )}
-        </DrawerFooter>
+        <Collapse in={!isReachingEnd} className="mx-auto min-h-fit">
+          <Button
+            className="w-fit"
+            onClick={loadMore}
+            isLoading={isLoadingMore}
+            loadingText="Loading..."
+          >
+            Show more
+          </Button>
+        </Collapse>
       </DrawerContent>
     </Drawer>
   )
