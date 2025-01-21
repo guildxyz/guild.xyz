@@ -348,7 +348,7 @@ export const form = {
       blockCreated: 342734,
     },
   },
-  testnet: true,
+  testnet: false,
 } as const satisfies Chain
 
 export const metisSepolia = {
