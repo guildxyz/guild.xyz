@@ -23,7 +23,9 @@ import {
   TableRow,
 } from "@/components/ui/Table"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip"
+import { useErrorToast } from "@/components/ui/hooks/useErrorToast"
 import {
+  CircleNotch,
   ClockClockwise,
   DotsThreeVertical,
   DownloadSimple,
@@ -34,6 +36,7 @@ import * as customChains from "static/customChains"
 import * as viemChains from "viem/chains"
 import { OrderStatusBadge } from "./components/OrderStatusBadge"
 import { useOrders } from "./hooks/useOrders"
+import { useReceiptDownload } from "./hooks/useReceiptDownload"
 
 const prettyDate = (order: any) => {
   return (
@@ -85,6 +88,20 @@ export const PurchaseHistoryDrawer = () => {
     loadMore,
     mutate,
   } = useOrders(isOpen)
+
+  const {
+    downloadReceipt,
+    isLoading,
+    error: receiptDownloadError,
+  } = useReceiptDownload()
+
+  const errorToast = useErrorToast()
+
+  useEffect(() => {
+    if (receiptDownloadError) errorToast(receiptDownloadError)
+    if (error)
+      errorToast({ error: error.message, correlationId: error?.correlationId })
+  }, [receiptDownloadError, error, errorToast])
 
   useEffect(() => {
     if (isOpen) {
@@ -170,10 +187,30 @@ export const PurchaseHistoryDrawer = () => {
                               className="flex items-center gap-2 px-4 font-semibold"
                               disabled={
                                 order.receipt?.status !== "available" ||
-                                !order.receipt?.externalId
+                                !order.receipt?.externalId ||
+                                isLoading
                               }
+                              onSelect={(e) => {
+                                e.preventDefault()
+                              }}
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                downloadReceipt(order.receipt.externalId)
+                              }}
                             >
-                              <DownloadSimple weight="bold" /> Download Receipt
+                              {isLoading ? (
+                                <>
+                                  <CircleNotch
+                                    weight="bold"
+                                    className="animate-spin"
+                                  />{" "}
+                                  Loading...
+                                </>
+                              ) : (
+                                <>
+                                  <DownloadSimple weight="bold" /> Download Receipt{" "}
+                                </>
+                              )}
                             </DropdownMenuItem>
                           </TooltipTrigger>
                           {order.receipt?.status !== "available" && (
@@ -187,7 +224,10 @@ export const PurchaseHistoryDrawer = () => {
               ))}
               {orders.length === 0 && !isLoadingMore && (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center text-primary-subtle">
+                  <TableCell
+                    colSpan={7}
+                    className="text-center text-secondary-subtle"
+                  >
                     No orders found
                   </TableCell>
                 </TableRow>
@@ -195,9 +235,9 @@ export const PurchaseHistoryDrawer = () => {
             </TableBody>
           </Table>
         </div>
-        {!isReachingEnd && (
+        {!isReachingEnd && orders.length > 0 && (
           <Button
-            className="w-fit"
+            className="mx-auto w-fit"
             onClick={loadMore}
             isLoading={isLoadingMore}
             loadingText="Loading..."
