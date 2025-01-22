@@ -38,7 +38,7 @@ const useOrders = (shouldFetch: boolean) => {
     [id, getKeyForSWRWithOptionalAuth, shouldFetch]
   )
 
-  const { data, size, setSize, isLoading, error, mutate, isValidating } =
+  const { data, size, setSize, error, mutate, isValidating } =
     useSWRInfinite<OrdersResponse>(getKey, fetcherWithSign, {
       revalidateFirstPage: false,
       revalidateOnFocus: false,
@@ -46,11 +46,11 @@ const useOrders = (shouldFetch: boolean) => {
       revalidateIfStale: false,
       keepPreviousData: true,
       shouldRetryOnError: false,
+      revalidateOnMount: false,
     })
 
   const orders = data?.map((page) => page.orders).flat() ?? []
-  const isLoadingMore =
-    isLoading || (size > 0 && data && typeof data[size - 1] === "undefined")
+
   const isEmpty = data?.[0]?.orders?.length === 0
   const isReachingEnd =
     isEmpty ||
@@ -60,7 +60,7 @@ const useOrders = (shouldFetch: boolean) => {
 
   return {
     orders,
-    isLoading: isLoadingMore || isLoading || isValidating,
+    isValidating,
     isReachingEnd,
     error,
     loadMore: () => setSize(size + 1),
