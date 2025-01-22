@@ -46,7 +46,7 @@ const useOrders = (shouldFetch: boolean) => {
       revalidateIfStale: false,
       keepPreviousData: true,
       shouldRetryOnError: false,
-      revalidateOnMount: false,
+      revalidateOnMount: shouldFetch,
     })
 
   const orders = data?.map((page) => page.orders).flat() ?? []
