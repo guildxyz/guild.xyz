@@ -3,18 +3,12 @@ import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import { useGetKeyForSWRWithOptionalAuth } from "hooks/useGetKeyForSWRWithOptionalAuth"
 import { useCallback } from "react"
 import useSWRInfinite from "swr/infinite"
+import { operations as billingOperations, components } from "types/billingTypes"
 
-const LIMIT = 8
-
-type OrdersResponse = {
-  orders: any[]
-  pagination: {
-    total: number
-    page: number
-    limit: number
-    pages: number
-  }
-}
+const LIMIT = 10
+type OrdersResponse =
+  billingOperations["getOrders"]["responses"]["200"]["content"]["application/json"]
+export type Order = components["schemas"]["Order"]
 
 const useOrders = (shouldFetch: boolean) => {
   const { id } = useUser()

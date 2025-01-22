@@ -35,10 +35,10 @@ import { useEffect, useRef } from "react"
 import * as customChains from "static/customChains"
 import * as viemChains from "viem/chains"
 import { OrderStatusBadge } from "./components/OrderStatusBadge"
-import { useOrders } from "./hooks/useOrders"
+import { Order, useOrders } from "./hooks/useOrders"
 import { useReceiptDownload } from "./hooks/useReceiptDownload"
 
-const prettyDate = (order: any) => {
+const prettyDate = (order: Order) => {
   return (
     order?.createdAt &&
     new Intl.DateTimeFormat("en-US", {
@@ -49,30 +49,22 @@ const prettyDate = (order: any) => {
 }
 
 const getChainInfo = (chainId: number): { symbol: string; name: string } => {
-  for (const chain of Object.values(customChains)) {
-    if (chain.id === chainId) {
-      return {
-        symbol: chain.nativeCurrency.symbol,
-        name: chain.name,
-      }
-    }
-  }
+  const allChains = [...Object.values(customChains), ...Object.values(viemChains)]
 
-  for (const chain of Object.values(viemChains)) {
-    if (chain.id === chainId) {
-      return {
-        symbol: chain.nativeCurrency.symbol,
-        name: chain.name,
-      }
+  const chain = allChains.find((chain) => chain.id === chainId)
+  if (chain) {
+    return {
+      symbol: chain.nativeCurrency.symbol,
+      name: chain.name,
     }
   }
 
   throw new Error(`Chain with id ${chainId} not found`)
 }
 
-const getTotal = (order: any) => {
-  return order.items.reduce(
-    (acc: number, item: any) => acc + item.pricePerUnit * item.quantity,
+const getTotal = (order: Order) => {
+  return order.items?.reduce(
+    (acc, item) => acc + item.pricePerUnit * item.quantity,
     0
   )
 }
@@ -141,87 +133,91 @@ export const PurchaseHistoryDrawer = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {orders?.map((order: any) => (
-                <TableRow className="[&>*]:whitespace-nowrap" key={order._id}>
-                  <TableCell className="pl-6">{prettyDate(order)}</TableCell>
-                  <TableCell className="capitalize">
-                    <OrderStatusBadge
-                      status={order.status}
-                      createdAt={order.createdAt}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <span>{order.items[0].name}</span>
-                      {order.items[0].quantity > 1 && (
-                        <span className="text-gray-500 text-xs">
-                          ×{order.items[0].quantity}
-                        </span>
-                      )}
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    {getTotal(order)}{" "}
-                    {getChainInfo(order.cryptoDetails.chainId).symbol}
-                  </TableCell>
-                  <TableCell>
-                    {getChainInfo(order.cryptoDetails.chainId).name}
-                  </TableCell>
-                  <TableCell>
-                    <CopyableAddress address={order.cryptoDetails.walletAddress} />
-                  </TableCell>
-                  <TableCell className="w-[32px]">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <IconButton
-                          aria-label="Open menu"
-                          variant="outline"
-                          size="sm"
-                          icon={<DotsThreeVertical weight="bold" />}
-                        />
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent side="left">
-                        <Tooltip>
-                          <TooltipTrigger>
-                            <DropdownMenuItem
-                              className="flex items-center gap-2 px-4 font-semibold"
-                              disabled={
-                                order.receipt?.status !== "available" ||
-                                !order.receipt?.externalId ||
-                                isLoading
-                              }
-                              onSelect={(e) => {
-                                e.preventDefault()
-                              }}
-                              onClick={(e) => {
-                                e.stopPropagation()
-                                downloadReceipt(order.receipt.externalId)
-                              }}
-                            >
-                              {isLoading ? (
-                                <>
-                                  <CircleNotch
-                                    weight="bold"
-                                    className="animate-spin"
-                                  />{" "}
-                                  Loading...
-                                </>
-                              ) : (
-                                <>
-                                  <DownloadSimple weight="bold" /> Download Receipt{" "}
-                                </>
-                              )}
-                            </DropdownMenuItem>
-                          </TooltipTrigger>
-                          {order.receipt?.status !== "available" && (
-                            <TooltipContent>Receipt not available</TooltipContent>
-                          )}
-                        </Tooltip>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {orders?.map((order) => {
+                if (!order.cryptoDetails) return <></>
+                return (
+                  <TableRow className="[&>*]:whitespace-nowrap" key={order._id}>
+                    <TableCell className="pl-6">{prettyDate(order)}</TableCell>
+                    <TableCell className="capitalize">
+                      <OrderStatusBadge
+                        status={order.status}
+                        createdAt={order.createdAt}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <span>{order.items[0].name}</span>
+                        {order.items[0].quantity > 1 && (
+                          <span className="text-gray-500 text-xs">
+                            ×{order.items[0].quantity}
+                          </span>
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      {getTotal(order)}{" "}
+                      {getChainInfo(order.cryptoDetails.chainId).symbol}
+                    </TableCell>
+                    <TableCell>
+                      {getChainInfo(order.cryptoDetails.chainId).name}
+                    </TableCell>
+                    <TableCell>
+                      <CopyableAddress address={order.cryptoDetails.walletAddress} />
+                    </TableCell>
+                    <TableCell className="w-[32px]">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <IconButton
+                            aria-label="Open menu"
+                            variant="outline"
+                            size="sm"
+                            icon={<DotsThreeVertical weight="bold" />}
+                          />
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent side="left">
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <DropdownMenuItem
+                                className="flex items-center gap-2 px-4 font-semibold"
+                                disabled={
+                                  order.receipt?.status !== "available" ||
+                                  !order.receipt?.externalId ||
+                                  isLoading
+                                }
+                                onSelect={(e) => {
+                                  e.preventDefault()
+                                }}
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  if (order.receipt?.externalId)
+                                    downloadReceipt(order.receipt.externalId)
+                                }}
+                              >
+                                {isLoading ? (
+                                  <>
+                                    <CircleNotch
+                                      weight="bold"
+                                      className="animate-spin"
+                                    />{" "}
+                                    Loading...
+                                  </>
+                                ) : (
+                                  <>
+                                    <DownloadSimple weight="bold" /> Download Receipt{" "}
+                                  </>
+                                )}
+                              </DropdownMenuItem>
+                            </TooltipTrigger>
+                            {order.receipt?.status !== "available" && (
+                              <TooltipContent>Receipt not available</TooltipContent>
+                            )}
+                          </Tooltip>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                )
+              })}
               {orders.length === 0 && !isLoadingMore && (
                 <TableRow>
                   <TableCell
