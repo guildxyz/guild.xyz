@@ -1,3 +1,4 @@
+import { prettyDate } from "@/lib/prettyDate"
 import { cn } from "@/lib/utils"
 import { Icon } from "@phosphor-icons/react/dist/lib/types"
 import {
@@ -11,7 +12,6 @@ import {
 import { HTMLAttributes, PropsWithChildren } from "react"
 import { useFarcasterCast } from "../hooks/useFarcasterCast"
 import { FarcasterCastSmall } from "./FarcasterCastSmall"
-import { prettyDate } from "@/lib/prettyDate"
 
 export const FarcasterCast = ({
   cast,

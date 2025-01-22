@@ -1,6 +1,7 @@
 import { CopyableAddress } from "@/components/CopyableAddress"
 import { purchaseHistoryDrawerAtom } from "@/components/Providers/atoms"
 import { Button } from "@/components/ui/Button"
+import { Collapsible, CollapsibleContent } from "@/components/ui/Collapsible"
 import {
   Drawer,
   DrawerContent,
@@ -24,6 +25,7 @@ import {
 } from "@/components/ui/Table"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip"
 import { useErrorToast } from "@/components/ui/hooks/useErrorToast"
+import { prettyDate } from "@/lib/prettyDate"
 import {
   CircleNotch,
   ClockClockwise,
@@ -37,8 +39,6 @@ import * as viemChains from "viem/chains"
 import { OrderStatusBadge } from "./components/OrderStatusBadge"
 import { Order, useOrders } from "./hooks/useOrders"
 import { useReceiptDownload } from "./hooks/useReceiptDownload"
-import { prettyDate } from "@/lib/prettyDate"
-import { Collapsible, CollapsibleContent } from "@/components/ui/Collapsible"
 
 const getChainInfo = (chainId: number): { symbol: string; name: string } => {
   const allChains = [...Object.values(customChains), ...Object.values(viemChains)]
