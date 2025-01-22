@@ -10,7 +10,7 @@ import { Icon } from "@phosphor-icons/react/dist/lib/types"
 import { PropsWithChildren, useState } from "react"
 
 type Props = {
-  colorScheme: NonNullable<Exclude<BadgeProps["colorScheme"], "gold">>
+  colorScheme: NonNullable<Exclude<BadgeProps["colorScheme"], "gold" | "red">>
   icon: Icon
   isAlwaysOpen?: boolean
 }
@@ -20,7 +20,6 @@ const CIRCLE_BG_CLASS = {
   blue: "bg-info dark:bg-info-subtle-foreground",
   green: "bg-success dark:bg-success-subtle-foreground",
   orange: "bg-warning dark:bg-warning-subtle-foreground",
-  red: "bg-error dark:bg-error-subtle-foreground",
 } satisfies Record<Props["colorScheme"], string>
 
 const RequirementAccessIndicatorUI = ({
