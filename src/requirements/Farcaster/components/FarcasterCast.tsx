@@ -11,6 +11,7 @@ import {
 import { HTMLAttributes, PropsWithChildren } from "react"
 import { useFarcasterCast } from "../hooks/useFarcasterCast"
 import { FarcasterCastSmall } from "./FarcasterCastSmall"
+import { prettyDate } from "@/lib/prettyDate"
 
 export const FarcasterCast = ({
   cast,
@@ -24,12 +25,6 @@ export const FarcasterCast = ({
   size?: string
 }) => {
   const url = `https://warpcast.com/${cast?.author.username}/${cast?.hash}`
-  const prettyDate =
-    cast?.timestamp &&
-    new Intl.DateTimeFormat("en-US", {
-      dateStyle: "short",
-      timeStyle: "short",
-    }).format(new Date(cast.timestamp))
 
   if (size === "sm") {
     return <FarcasterCastSmall cast={cast} error={error} loading={loading} />
@@ -76,7 +71,11 @@ export const FarcasterCast = ({
             <span className="text-ellipsis font-bold text-sm">
               {cast.author.display_name ?? cast.author.username}
             </span>
-            <span className="text-muted-foreground text-xs">{prettyDate}</span>
+            {cast?.timestamp && (
+              <span className="text-muted-foreground text-xs">
+                {prettyDate(cast.timestamp)}
+              </span>
+            )}
           </div>
         </div>
 

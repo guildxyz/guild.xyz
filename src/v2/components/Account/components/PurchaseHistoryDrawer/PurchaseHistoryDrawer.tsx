@@ -37,16 +37,7 @@ import * as viemChains from "viem/chains"
 import { OrderStatusBadge } from "./components/OrderStatusBadge"
 import { Order, useOrders } from "./hooks/useOrders"
 import { useReceiptDownload } from "./hooks/useReceiptDownload"
-
-const prettyDate = (order: Order) => {
-  return (
-    order?.createdAt &&
-    new Intl.DateTimeFormat("en-US", {
-      dateStyle: "short",
-      timeStyle: "short",
-    }).format(new Date(order.createdAt))
-  )
-}
+import { prettyDate } from "@/lib/prettyDate"
 
 const getChainInfo = (chainId: number): { symbol: string; name: string } => {
   const allChains = [...Object.values(customChains), ...Object.values(viemChains)]
@@ -137,7 +128,9 @@ export const PurchaseHistoryDrawer = () => {
                 if (!order.cryptoDetails) return <></>
                 return (
                   <TableRow className="[&>*]:whitespace-nowrap" key={order._id}>
-                    <TableCell className="pl-6">{prettyDate(order)}</TableCell>
+                    <TableCell className="pl-6">
+                      {prettyDate(order.createdAt)}
+                    </TableCell>
                     <TableCell className="capitalize">
                       <OrderStatusBadge
                         status={order.status}
