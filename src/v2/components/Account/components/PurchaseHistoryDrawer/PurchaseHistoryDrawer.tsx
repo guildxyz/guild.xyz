@@ -31,13 +31,14 @@ import {
   DownloadSimple,
 } from "@phosphor-icons/react/dist/ssr"
 import { useAtom } from "jotai"
-import { useEffect, useRef } from "react"
+import { useEffect } from "react"
 import * as customChains from "static/customChains"
 import * as viemChains from "viem/chains"
 import { OrderStatusBadge } from "./components/OrderStatusBadge"
 import { Order, useOrders } from "./hooks/useOrders"
 import { useReceiptDownload } from "./hooks/useReceiptDownload"
 import { prettyDate } from "@/lib/prettyDate"
+import { Collapsible, CollapsibleContent } from "@/components/ui/Collapsible"
 
 const getChainInfo = (chainId: number): { symbol: string; name: string } => {
   const allChains = [...Object.values(customChains), ...Object.values(viemChains)]
@@ -50,7 +51,10 @@ const getChainInfo = (chainId: number): { symbol: string; name: string } => {
     }
   }
 
-  throw new Error(`Chain with id ${chainId} not found`)
+  return {
+    symbol: "UNKNOWN",
+    name: "Unknown token",
+  }
 }
 
 const getTotal = (order: Order) => {
@@ -61,16 +65,9 @@ const getTotal = (order: Order) => {
 }
 
 export const PurchaseHistoryDrawer = () => {
-  const isInitialMount = useRef(true)
   const [isOpen, setIsOpen] = useAtom(purchaseHistoryDrawerAtom)
-  const {
-    orders,
-    isLoading: isLoadingMore,
-    isReachingEnd,
-    error,
-    loadMore,
-    mutate,
-  } = useOrders(isOpen)
+  const { orders, isValidating, isReachingEnd, error, loadMore, mutate } =
+    useOrders(isOpen)
 
   const {
     downloadReceipt,
@@ -86,15 +83,6 @@ export const PurchaseHistoryDrawer = () => {
       errorToast({ error: error.message, correlationId: error?.correlationId })
   }, [receiptDownloadError, error, errorToast])
 
-  useEffect(() => {
-    if (isOpen) {
-      if (!isInitialMount.current) {
-        mutate()
-      }
-      isInitialMount.current = false
-    }
-  }, [isOpen, mutate])
-
   return (
     <Drawer open={isOpen} onClose={() => setIsOpen(false)}>
       <DrawerContent className="max-h-[90vh] pb-10">
@@ -103,7 +91,7 @@ export const PurchaseHistoryDrawer = () => {
             Purchase History{" "}
             <IconButton
               icon={<ClockClockwise weight="bold" />}
-              isLoading={isLoadingMore}
+              isLoading={isValidating}
               aria-label="Refresh"
               className="ml-2 rounded-full"
               onClick={() => mutate()}
@@ -125,7 +113,9 @@ export const PurchaseHistoryDrawer = () => {
             </TableHeader>
             <TableBody>
               {orders?.map((order) => {
+                // This won't happen for now...
                 if (!order.cryptoDetails) return <></>
+
                 return (
                   <TableRow className="[&>*]:whitespace-nowrap" key={order._id}>
                     <TableCell className="pl-6">
@@ -211,7 +201,7 @@ export const PurchaseHistoryDrawer = () => {
                   </TableRow>
                 )
               })}
-              {orders.length === 0 && !isLoadingMore && (
+              {orders.length === 0 && !isValidating && (
                 <TableRow>
                   <TableCell
                     colSpan={7}
@@ -224,16 +214,19 @@ export const PurchaseHistoryDrawer = () => {
             </TableBody>
           </Table>
         </div>
-        {!isReachingEnd && orders.length > 0 && (
-          <Button
-            className="mx-auto w-fit"
-            onClick={loadMore}
-            isLoading={isLoadingMore}
-            loadingText="Loading..."
-          >
-            Show more
-          </Button>
-        )}
+
+        <Collapsible open={!isReachingEnd && orders.length > 0}>
+          <CollapsibleContent>
+            <Button
+              className="mx-auto w-fit"
+              onClick={loadMore}
+              isLoading={isValidating}
+              loadingText="Loading..."
+            >
+              Show more
+            </Button>
+          </CollapsibleContent>
+        </Collapsible>
       </DrawerContent>
     </Drawer>
   )
