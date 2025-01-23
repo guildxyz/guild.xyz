@@ -98,6 +98,8 @@ const TokenApiURLs: Record<Chain, string[]> = {
     "https://raw.githubusercontent.com/MagicSea-Finance/tokenlist/main/token.default.json",
   ],
   SONIC: ["https://tokens.coingecko.com/sonic/all.json"],
+  SOPHON: [],
+  ZERO: [],
 }
 
 const fetchTokens = async ([_, chain]) =>

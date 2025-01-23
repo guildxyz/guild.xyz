@@ -454,3 +454,29 @@ export const ink = {
   },
   testnet: false,
 } as const satisfies Chain
+
+export const zero = {
+  id: 543210,
+  name: "Zero",
+  nativeCurrency: {
+    decimals: 18,
+    name: "Ether",
+    symbol: "ETH",
+  },
+  rpcUrls: {
+    default: { http: ["https://rpc.zerion.io/v1/zero"] },
+  },
+  blockExplorers: {
+    default: {
+      name: "Blockscout",
+      url: "https://explorer.zero.network",
+    },
+  },
+  contracts: {
+    multicall3: {
+      address: "0x0307F341a18f1FC1f63a7Ceeac970245A08C5a80",
+      blockCreated: 11517,
+    },
+  },
+  testnet: false,
+} as const satisfies Chain

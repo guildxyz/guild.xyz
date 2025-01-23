@@ -51,6 +51,8 @@ const COVALENT_CHAINS = new Set<Chain>([
   "INK",
   "IOTA",
   "SONIC",
+  "SOPHON",
+  "ZERO",
 ])
 
 const walletActivityRequirementTypes: SelectOption[] = [
@@ -140,6 +142,8 @@ const WalletActivityForm = ({
     "INK",
     "IOTA",
     "SONIC",
+    "SOPHON",
+    "ZERO",
   ]
 
   for (const covalentChain of COVALENT_CHAINS.values()) {
