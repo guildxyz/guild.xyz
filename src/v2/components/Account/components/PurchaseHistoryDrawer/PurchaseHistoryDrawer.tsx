@@ -34,6 +34,10 @@ import {
 } from "@phosphor-icons/react/dist/ssr"
 import { useAtom } from "jotai"
 import { useEffect } from "react"
+import {
+  SupportedCountryCode,
+  SupportedCountryCodes,
+} from "static/billingSupportedCountries"
 import * as customChains from "static/customChains"
 import * as viemChains from "viem/chains"
 import { OrderStatusBadge } from "./components/OrderStatusBadge"
@@ -83,6 +87,19 @@ export const PurchaseHistoryDrawer = () => {
       errorToast({ error: error.message, correlationId: error?.correlationId })
   }, [receiptDownloadError, error, errorToast])
 
+  const isReceiptUnavailable = (order: Order) => {
+    if (!SupportedCountryCodes.includes(order.countryCode as SupportedCountryCode))
+      return "Receipt not available in your country"
+    if (order.receipt?.status === "failed") return "Failed to generate receipt"
+    if (
+      !order.receipt ||
+      !order.receipt.externalId ||
+      order.receipt.status !== "available"
+    )
+      return "Receipt not available"
+    return false
+  }
+
   return (
     <Drawer open={isOpen} onClose={() => setIsOpen(false)}>
       <DrawerContent className="max-h-[90vh] pb-10">
@@ -98,7 +115,7 @@ export const PurchaseHistoryDrawer = () => {
             />
           </DrawerTitle>
         </DrawerHeader>
-        <div className="overflow-y-auto">
+        <div className="flex flex-col overflow-y-auto">
           <Table className="mb-4">
             <TableHeader className="sticky top-0 bg-card shadow-sm">
               <TableRow className="[&>*]:whitespace-nowrap">
@@ -162,11 +179,7 @@ export const PurchaseHistoryDrawer = () => {
                             <TooltipTrigger>
                               <DropdownMenuItem
                                 className="flex items-center gap-2 px-4 font-semibold"
-                                disabled={
-                                  order.receipt?.status !== "available" ||
-                                  !order.receipt?.externalId ||
-                                  isLoading
-                                }
+                                disabled={!!isReceiptUnavailable(order) || isLoading}
                                 onSelect={(e) => {
                                   e.preventDefault()
                                 }}
@@ -191,8 +204,10 @@ export const PurchaseHistoryDrawer = () => {
                                 )}
                               </DropdownMenuItem>
                             </TooltipTrigger>
-                            {order.receipt?.status !== "available" && (
-                              <TooltipContent>Receipt not available</TooltipContent>
+                            {!!isReceiptUnavailable(order) && (
+                              <TooltipContent>
+                                {isReceiptUnavailable(order)}
+                              </TooltipContent>
                             )}
                           </Tooltip>
                         </DropdownMenuContent>
@@ -213,20 +228,23 @@ export const PurchaseHistoryDrawer = () => {
               )}
             </TableBody>
           </Table>
+          <Collapsible
+            open={!isReachingEnd && orders.length > 0}
+            className="mx-auto"
+          >
+            <CollapsibleContent>
+              <Button
+                size="sm"
+                className="mx-auto w-fit"
+                onClick={loadMore}
+                isLoading={isValidating}
+                loadingText="Loading..."
+              >
+                Show more
+              </Button>
+            </CollapsibleContent>
+          </Collapsible>
         </div>
-
-        <Collapsible open={!isReachingEnd && orders.length > 0}>
-          <CollapsibleContent>
-            <Button
-              className="mx-auto w-fit"
-              onClick={loadMore}
-              isLoading={isValidating}
-              loadingText="Loading..."
-            >
-              Show more
-            </Button>
-          </CollapsibleContent>
-        </Collapsible>
       </DrawerContent>
     </Drawer>
   )
