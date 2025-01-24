@@ -1,7 +1,7 @@
 import useUser from "components/[guild]/hooks/useUser"
 import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import { useGetKeyForSWRWithOptionalAuth } from "hooks/useGetKeyForSWRWithOptionalAuth"
-import { useCallback } from "react"
+import { useCallback, useEffect } from "react"
 import useSWRInfinite from "swr/infinite"
 import { operations as billingOperations, components } from "types/billingTypes"
 
@@ -38,6 +38,11 @@ const useOrders = (shouldFetch: boolean) => {
     [id, getKeyForSWRWithOptionalAuth, shouldFetch]
   )
 
+  useEffect(() => {
+    if (!shouldFetch) return
+    mutate()
+  }, [shouldFetch])
+
   const { data, size, setSize, error, mutate, isValidating } =
     useSWRInfinite<OrdersResponse>(getKey, fetcherWithSign, {
       revalidateFirstPage: false,
@@ -46,7 +51,7 @@ const useOrders = (shouldFetch: boolean) => {
       revalidateIfStale: false,
       keepPreviousData: true,
       shouldRetryOnError: false,
-      revalidateOnMount: shouldFetch,
+      revalidateOnMount: false,
     })
 
   const orders = data?.map((page) => page.orders).flat() ?? []
