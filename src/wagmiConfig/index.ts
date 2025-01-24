@@ -14,6 +14,7 @@ import {
   palm,
   taikoKatlaTestnet,
   x1,
+  zero,
 } from "static/customChains"
 import {
   http,
@@ -73,6 +74,7 @@ import {
   sepolia,
   shimmer,
   sonic,
+  sophon,
   taiko,
   worldchain,
   x1Testnet,
@@ -200,6 +202,8 @@ export const wagmiConfig = IS_TEST
         ink,
         iota,
         sonic,
+        sophon,
+        zero,
       ],
       transports: {
         [mainnet.id]: http(),
@@ -270,6 +274,8 @@ export const wagmiConfig = IS_TEST
         [ink.id]: http(),
         [iota.id]: http(),
         [sonic.id]: http(),
+        [sophon.id]: http(),
+        [zero.id]: http(),
       },
       ssr: true,
       connectors: [
