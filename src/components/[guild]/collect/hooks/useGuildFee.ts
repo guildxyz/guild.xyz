@@ -1,4 +1,4 @@
-import { GUILD_REWARD_NFT_FACTORY_ADDRESSES } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
+import { consts } from "@guildxyz/types"
 import guildRewardNFTFactoryAbi from "static/abis/guildRewardNFTFactory"
 import { useReadContract } from "wagmi"
 import { Chain, Chains } from "wagmiConfig/chains"
@@ -23,7 +23,7 @@ const useGuildFee = (
   } = useReadContract({
     abi: guildRewardNFTFactoryAbi,
     chainId: Chains[chain],
-    address: GUILD_REWARD_NFT_FACTORY_ADDRESSES[chain],
+    address: consts.NFTRewardFactoryAddresses[chain],
     functionName:
       contractAddress && chainsWithOverrides.includes(chain)
         ? "getFeeWithOverrides"
