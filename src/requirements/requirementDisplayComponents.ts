@@ -28,13 +28,6 @@ export const REQUIREMENT_DISPLAY_COMPONENTS = {
   CONTRACT: dynamic<RequirementProps>(
     () => import("requirements/ContractState/ContractStateRequirement")
   ),
-  // TODO: TX_VALUE requirements are deprecated
-  COVALENT_TX_VALUE: dynamic<RequirementProps>(
-    () => import("requirements/WalletActivity/WalletActivityRequirement")
-  ),
-  COVALENT_TX_VALUE_RELATIVE: dynamic<RequirementProps>(
-    () => import("requirements/WalletActivity/WalletActivityRequirement")
-  ),
   COVALENT_FIRST_TX: dynamic<RequirementProps>(
     () => import("requirements/WalletActivity/WalletActivityRequirement")
   ),
@@ -119,10 +112,6 @@ export const REQUIREMENT_DISPLAY_COMPONENTS = {
   FORM_SUBMISSION: dynamic<RequirementProps>(
     () => import("requirements/Form/FormRequirement")
   ),
-  // TODO: this is a deprecated requirement
-  FORM_APPROVAL: dynamic<RequirementProps>(
-    () => import("requirements/Form/FormRequirement")
-  ),
   WORLD_ID_VERIFICATION: dynamic<RequirementProps>(
     () => import("requirements/WorldID/WorldIDRequirement")
   ),
@@ -178,10 +167,6 @@ export const REQUIREMENT_DISPLAY_COMPONENTS = {
     () => import("requirements/Twitter/TwitterRequirement")
   ),
   TWITTER_TWEET_COUNT: dynamic<RequirementProps>(
-    () => import("requirements/Twitter/TwitterRequirement")
-  ),
-  // TODO: this is a deprecated requirement
-  TWITTER_LIST_FOLLOW: dynamic<RequirementProps>(
     () => import("requirements/Twitter/TwitterRequirement")
   ),
   GITHUB_STARRING: dynamic<RequirementProps>(
@@ -351,5 +336,14 @@ export const REQUIREMENT_DISPLAY_COMPONENTS = {
   YUP: dynamic<RequirementProps>(() => import("requirements/Yup/YupRequirement")),
   LINEA_POH: dynamic<RequirementProps>(
     () => import("requirements/LineaPOH/LineaPOHRequirement")
+  ),
+  JUMPER_LEVEL: dynamic<RequirementProps>(
+    () => import("requirements/Jumper/JumperRequirement")
+  ),
+  JUMPER_TYPE: dynamic<RequirementProps>(
+    () => import("requirements/Jumper/JumperRequirement")
+  ),
+  JUMPER_TRAITS: dynamic<RequirementProps>(
+    () => import("requirements/Jumper/JumperRequirement")
   ),
 } as const satisfies Record<RequirementType, ComponentType<RequirementProps>>

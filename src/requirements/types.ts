@@ -3,7 +3,13 @@ import { Icon } from "@phosphor-icons/react"
 import { UseControllerProps } from "react-hook-form"
 import { Requirement } from "types"
 
-export type RequirementType = Schemas["Requirement"]["type"]
+export type RequirementType = Exclude<
+  Schemas["Requirement"]["type"],
+  | "COVALENT_TX_VALUE"
+  | "COVALENT_TX_VALUE_RELATIVE"
+  | "FORM_APPROVAL"
+  | "TWITTER_LIST_FOLLOW"
+>
 
 export type RequirementFormProps = {
   baseFieldPath: string
