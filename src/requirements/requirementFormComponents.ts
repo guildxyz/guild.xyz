@@ -18,13 +18,6 @@ export const REQUIREMENT_FORM_COMPONENTS = {
   CONTRACT: dynamic<RequirementFormProps>(
     () => import("requirements/ContractState/ContractStateForm")
   ),
-  // TODO: TX_VALUE requirements are deprecated
-  COVALENT_TX_VALUE: dynamic<RequirementFormProps>(
-    () => import("requirements/WalletActivity/WalletActivityForm")
-  ),
-  COVALENT_TX_VALUE_RELATIVE: dynamic<RequirementFormProps>(
-    () => import("requirements/WalletActivity/WalletActivityForm")
-  ),
   COVALENT_FIRST_TX: dynamic<RequirementFormProps>(
     () => import("requirements/WalletActivity/WalletActivityForm")
   ),
@@ -109,10 +102,6 @@ export const REQUIREMENT_FORM_COMPONENTS = {
   FORM_SUBMISSION: dynamic<RequirementFormProps>(
     () => import("requirements/Form/FormForm")
   ),
-  // TODO: this is a deprecated requirement
-  FORM_APPROVAL: dynamic<RequirementFormProps>(
-    () => import("requirements/Form/FormForm")
-  ),
   WORLD_ID_VERIFICATION: dynamic<RequirementFormProps>(
     () => import("requirements/WorldID/WorldIDForm")
   ),
@@ -168,10 +157,6 @@ export const REQUIREMENT_FORM_COMPONENTS = {
     () => import("requirements/Twitter/TwitterForm")
   ),
   TWITTER_TWEET_COUNT: dynamic<RequirementFormProps>(
-    () => import("requirements/Twitter/TwitterForm")
-  ),
-  // TODO: this is a deprecated requirement
-  TWITTER_LIST_FOLLOW: dynamic<RequirementFormProps>(
     () => import("requirements/Twitter/TwitterForm")
   ),
   GITHUB_STARRING: dynamic<RequirementFormProps>(
@@ -341,6 +326,15 @@ export const REQUIREMENT_FORM_COMPONENTS = {
   YUP: dynamic<RequirementFormProps>(() => import("requirements/Yup/YupForm")),
   LINEA_POH: dynamic<RequirementFormProps>(
     () => import("requirements/LineaPOH/LineaPOHForm")
+  ),
+  JUMPER_LEVEL: dynamic<RequirementFormProps>(
+    () => import("requirements/Jumper/JumperForm")
+  ),
+  JUMPER_TYPE: dynamic<RequirementFormProps>(
+    () => import("requirements/Jumper/JumperForm")
+  ),
+  JUMPER_TRAITS: dynamic<RequirementFormProps>(
+    () => import("requirements/Jumper/JumperForm")
   ),
 } as const satisfies Record<
   RequirementType,

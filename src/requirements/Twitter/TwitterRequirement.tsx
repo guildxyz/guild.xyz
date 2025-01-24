@@ -37,7 +37,7 @@ const requirementIntentAction: Partial<
 export const TWITTER_HANDLE_REGEX = /^[a-z0-9_]+$/i
 
 const TwitterRequirement = (props: RequirementProps) => {
-  const requirement = useRequirementContext<TwitterRequirementType>()
+  const requirement = useRequirementContext()
   const { id: userId, platformUsers } = useUser()
   const isTwitterConnected = platformUsers?.find(
     (pu) => pu.platformId === PlatformType.TWITTER_V1
@@ -53,7 +53,9 @@ const TwitterRequirement = (props: RequirementProps) => {
           ) : (
             <TwitterIntent
               action={
-                requirementIntentAction[requirement.type] as TwitterIntentAction
+                requirementIntentAction[
+                  requirement.type as TwitterRequirementType
+                ] as TwitterIntentAction
               }
             />
           )
@@ -68,7 +70,7 @@ const TwitterRequirement = (props: RequirementProps) => {
           "minAmount" in requirement.data ? requirement.data.minAmount : 0
         )
 
-        switch (requirement.type) {
+        switch (requirement.type as TwitterRequirementType) {
           case "TWITTER_NAME":
             return (
               <>
