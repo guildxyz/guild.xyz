@@ -201,12 +201,12 @@ const useMintGuildPin = () => {
       shareText: `Just minted my Guild Pin for joining ${name}!\nguild.xyz/${urlName}`,
     })
 
-    createPurchase(hash)
+    verifyPurchase(hash)
   }
 
   const fetcherWithSign = useFetcherWithSign()
 
-  const createPurchase = (txHash: string) => {
+  const verifyPurchase = (txHash: string) => {
     fetcherWithSign([
       `/v2/users/${address}/orders/verify`,
       {

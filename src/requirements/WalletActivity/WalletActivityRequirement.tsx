@@ -44,7 +44,7 @@ type CovalentRequirementType =
   | "COVALENT_TX_VALUE_RELATIVE"
 
 const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
-  const requirement = useRequirementContext<CovalentRequirementType>()
+  const requirement = useRequirementContext()
   const reqData = requirement.data as any // Important note: we needed a hotfix for the requirement icon, but we should find a proper solution for this.
 
   const maxAmount = reqData?.timestamps?.maxAmount

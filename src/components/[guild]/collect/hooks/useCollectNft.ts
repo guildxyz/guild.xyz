@@ -102,6 +102,18 @@ const useCollectNft = () => {
   })
   const claimAmount = claimAmountFromForm ?? 1
 
+  const verifyPurchase = (txHash: string) => {
+    fetcherWithSign([
+      `/v2/users/${userAddress}/orders/verify`,
+      {
+        body: {
+          txHash: txHash,
+          chainId,
+        },
+      },
+    ])
+  }
+
   const mint = async () => {
     setTxError(null)
     setTxSuccess(false)
@@ -175,6 +187,7 @@ const useCollectNft = () => {
 
     setTxSuccess(true)
 
+    verifyPurchase(hash)
     return receipt
   }
 

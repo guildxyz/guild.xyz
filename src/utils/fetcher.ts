@@ -59,6 +59,19 @@ const fetcher = async (
 
   return fetch(endpoint, options).then(async (response: Response) => {
     const contentType = response.headers.get("content-type")
+
+    // Return raw response for binary content types
+    if (
+      contentType?.includes("application/pdf") ||
+      contentType?.includes("application/octet-stream")
+    ) {
+      if (!response.ok) {
+        return Promise.reject(response)
+      }
+      return response.blob()
+    }
+
+    // Handle JSON and text responses as before
     const res =
       contentType?.includes("json") || resource.endsWith(".json")
         ? await response.json?.()

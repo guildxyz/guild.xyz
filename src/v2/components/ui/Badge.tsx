@@ -18,6 +18,7 @@ export const badgeVariants = cva(
           "[--badge-bg:var(--success-subtle)] [--badge-color:var(--success-subtle-foreground)]",
         orange:
           "[--badge-bg:var(--warning-subtle)] [--badge-color:var(--warning-subtle-foreground)]",
+        red: "[--badge-bg:var(--destructive-subtle)] [--badge-color:var(--destructive-subtle-foreground)]",
         gold: "[--badge-bg:var(--gold)] [--badge-color:var(--gold)]",
       },
       size: {
