@@ -26,6 +26,7 @@ import {
   Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react"
+import { consts } from "@guildxyz/types"
 import {
   ArrowSquareOut,
   Clock,
@@ -51,10 +52,7 @@ import { ADDRESS_REGEX } from "utils/guildCheckout/constants"
 import { formatUnits } from "viem"
 import { useAccount } from "wagmi"
 import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
-import {
-  CONTRACT_CALL_SUPPORTED_CHAINS,
-  ContractCallSupportedChain,
-} from "../hooks/useCreateNft"
+import { ContractCallSupportedChain } from "../hooks/useCreateNft"
 import ImagePicker from "./ImagePicker"
 import MintPerAddressInput from "./MintPerAddressInput"
 import NftTypeInput from "./NftTypeInput"
@@ -309,7 +307,7 @@ const NftDataForm = ({ isEditMode, submitButton }: Props) => {
 
             <ChainPicker
               controlName="chain"
-              supportedChains={CONTRACT_CALL_SUPPORTED_CHAINS}
+              supportedChains={consts.NFTRewardSupportedChains}
               showDivider={false}
               isDisabled={isEditMode}
             />

@@ -1,4 +1,5 @@
 import { usePostHogContext } from "@/components/Providers/PostHogProvider"
+import { consts } from "@guildxyz/types"
 import { datetimeLocalToIsoString } from "components/[guild]/RolePlatforms/components/EditRewardAvailabilityModal/components/StartEndTimeForm"
 import { guildNftRewardMetadataSchema } from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -16,47 +17,11 @@ import getEventsFromViemTxReceipt from "utils/getEventsFromViemTxReceipt"
 import processViemContractError from "utils/processViemContractError"
 import { TransactionReceipt, WriteContractParameters, parseUnits } from "viem"
 import { useAccount, usePublicClient, useWalletClient } from "wagmi"
-import { CHAIN_CONFIG, Chain, Chains } from "wagmiConfig/chains"
+import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
 import { CreateNftFormType } from "../components/NftDataForm"
 
-export const GUILD_REWARD_NFT_FACTORY_ADDRESSES = {
-  ETHEREUM: "0x6ee2dd02fbfb71f518827042b6adca242f1ba0b2",
-  BASE_MAINNET: "0x4205e56a69a0130a9e0828d45d0c84e45340a196",
-  OPTIMISM: "0xe6e6b676f94a6207882ac92b6014a391766fa96e",
-  BSC: "0xa445e7d3af54867d14467b44d5487352403d1e59",
-  CRONOS: "0x6c2c223b84724c4b8fd41ae0142c2369dfa7e319",
-  POLYGON: "0xc1c23618110277ffe6d529816eb23de42b24cc33",
-  MANTLE: "0x326f14942f8899406e3224bd63E9f250D275a52e",
-  ZKSYNC_ERA: "0x2a1eaf11a9753a871b15e2865d8a47cf17dd9450",
-  LINEA: "0x326f14942f8899406e3224bd63E9f250D275a52e",
-  CYBER: "0x097E05f7a194a30A482CC9616460498980bE79d3",
-  ARBITRUM: "0x13ec6B98362E43Add08f7CC4f6befd02fa52eE01",
-  SCROLL: "0x13ec6B98362E43Add08f7CC4f6befd02fa52eE01",
-  TAIKO: "0x13ec6B98362E43Add08f7CC4f6befd02fa52eE01",
-  BLAST_MAINNET: "0x13ec6B98362E43Add08f7CC4f6befd02fa52eE01",
-  X1: "0x13ec6B98362E43Add08f7CC4f6befd02fa52eE01",
-  CORE_DAO: "0x13ec6B98362E43Add08f7CC4f6befd02fa52eE01",
-  METIS: "0x13ec6B98362E43Add08f7CC4f6befd02fa52eE01",
-  NEON_EVM: "0x13ec6B98362E43Add08f7CC4f6befd02fa52eE01",
-  POLYGON_ZKEVM: "0x13ec6B98362E43Add08f7CC4f6befd02fa52eE01",
-  ZETACHAIN: "0x13ec6B98362E43Add08f7CC4f6befd02fa52eE01",
-  MINT: "0x097E05f7a194a30A482CC9616460498980bE79d3",
-  MODE: "0x097E05f7a194a30A482CC9616460498980bE79d3",
-  AVALANCHE: "0x13ec6b98362e43add08f7cc4f6befd02fa52ee01",
-  LISK: "0x13ec6b98362e43add08f7cc4f6befd02fa52ee01",
-  INK: "0x13ec6b98362e43add08f7cc4f6befd02fa52ee01",
-  SEPOLIA: "0xa9e8e62266d449b766d305075248790bdd46facb",
-  IOTA: "0x097E05f7a194a30A482CC9616460498980bE79d3",
-  SONIC: "0x070cD1FD4de1ed0259871B7d0b85C0e237702691",
-  SOPHON: "0xTODO",
-  ZERO: "0x334f5BBDdCD9eAF0ad6B151e8D222f4fA54Fbc95",
-} as const satisfies Partial<Record<Chain, `0x${string}`>>
-
-export const CONTRACT_CALL_SUPPORTED_CHAINS = Object.keys(
-  GUILD_REWARD_NFT_FACTORY_ADDRESSES
-) as (keyof typeof GUILD_REWARD_NFT_FACTORY_ADDRESSES)[]
 export type ContractCallSupportedChain =
-  (typeof CONTRACT_CALL_SUPPORTED_CHAINS)[number]
+  (typeof consts.NFTRewardSupportedChains)[number]
 
 export enum ContractCallFunction {
   // Kept the old one too, we can use it to determine if we need to show the old or the new UI for the availability-related features
@@ -152,7 +117,7 @@ const useCreateNft = (
 
     const { request } = await publicClient.simulateContract({
       abi: guildRewardNFTFacotryAbi,
-      address: GUILD_REWARD_NFT_FACTORY_ADDRESSES[Chains[chainId]],
+      address: consts.NFTRewardFactoryAddresses[Chains[chainId]],
       functionName: "deployConfigurableNFT",
       args: contractCallParams,
     })
