@@ -766,7 +766,7 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
     ...generateChainConfig(sophon, "/networkLogos/sophon.svg"),
     iconUrl: "/networkLogos/sophon.svg",
     blockExplorerIconUrl: {
-      light: "/networkLogos/sophon-dark.svg",
+      light: "/networkLogos/sophon.svg",
       dark: "/networkLogos/sophon.svg",
     },
   },
