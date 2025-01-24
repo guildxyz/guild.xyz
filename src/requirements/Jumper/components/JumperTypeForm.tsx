@@ -21,7 +21,7 @@ export const JumperTypeForm = ({ baseFieldPath }: RequirementFormProps) => {
       }}
       render={({ field }) => (
         <FormItem className="w-full">
-          <FormLabel>Reward type</FormLabel>
+          <FormLabel>Achievement type</FormLabel>
           <Input {...field} />
           <FormErrorMessage />
         </FormItem>

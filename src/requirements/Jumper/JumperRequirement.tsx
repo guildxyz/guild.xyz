@@ -16,7 +16,7 @@ const JumperLevelDisplay = () => {
 const JumperTypeDisplay = () => {
   const { data } = useRequirementContext<"JUMPER_TYPE">()
 
-  return `Get a reward with type ${data.rewardType}`
+  return `Get an achievement with type ${data.rewardType}`
 }
 
 const JumperTraitsDisplay = () => {

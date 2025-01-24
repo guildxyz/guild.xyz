@@ -22,7 +22,7 @@ const jumperRequirementTypes = [
     JumperRequirement: JumperLevelForm,
   },
   {
-    label: "Have a reward of a certain type",
+    label: "Have an achievement of a certain type",
     value: "JUMPER_TYPE",
     JumperRequirement: JumperTypeForm,
   },
