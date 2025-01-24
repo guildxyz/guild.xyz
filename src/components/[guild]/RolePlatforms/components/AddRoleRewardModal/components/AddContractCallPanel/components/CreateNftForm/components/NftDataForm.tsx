@@ -307,7 +307,11 @@ const NftDataForm = ({ isEditMode, submitButton }: Props) => {
 
             <ChainPicker
               controlName="chain"
-              supportedChains={consts.NFTRewardSupportedChains}
+              supportedChains={
+                Object.keys(
+                  consts.NFTRewardFactoryAddresses
+                ) as (keyof typeof consts.NFTRewardFactoryAddresses)[]
+              }
               showDivider={false}
               isDisabled={isEditMode}
             />
