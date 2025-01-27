@@ -10,6 +10,11 @@ const chainsWithOverrides = [
   "ARBITRUM",
   "OPTIMISM",
   "POLYGON",
+  "INK",
+  "IOTA",
+  "SONIC",
+  "ZERO",
+  "MANTLE",
 ]
 
 const useGuildFee = (
