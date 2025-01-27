@@ -12,7 +12,9 @@ export default function useOAuthResultToast() {
   const showPlatformMergeAlert = useSetAtom(platformMergeAlertAtom)
 
   useEffect(() => {
+    console.log("useEffect: query, showPlatformMergeAlert, pathname")
     if (query["oauth-status"]) {
+      console.log("oauth-status:")
       const {
         "oauth-platform": oauthPlatform,
         "oauth-status": oauthStatus,
@@ -50,7 +52,7 @@ export default function useOAuthResultToast() {
         })
       }
 
-      replace({ pathname, query: newQuery })
+      // replace({ pathname, query: newQuery })
     }
     // replace is intentionally left out
     // toast is intentionally left out, as it causes the toast to fire twice
