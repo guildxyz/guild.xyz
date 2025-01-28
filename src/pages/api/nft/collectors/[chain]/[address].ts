@@ -34,11 +34,11 @@ export const alchemyApiUrl: Record<
   OPTIMISM: `https://opt-mainnet.g.alchemy.com/nft/v3/${env.OPTIMISM_ALCHEMY_KEY}/getOwnersForContract`,
   ARBITRUM: `https://arb-mainnet.g.alchemy.com/nft/v3/${env.ARBITRUM_ALCHEMY_KEY}/getOwnersForContract`,
   SEPOLIA: `https://eth-sepolia.g.alchemy.com/nft/v3/${env.SEPOLIA_ALCHEMY_KEY}/getOwnersForContract`,
-  ZKSYNC_ERA: `https://zksync-mainnet.g.alchemy.com/v2/${env.FRONTEND_ALCHEMY_KEY}/getOwnersForContract`,
-  LINEA: `https://linea-mainnet.g.alchemy.com/v2/${env.FRONTEND_ALCHEMY_KEY}/getOwnersForContract`,
-  SCROLL: `https://scroll-mainnet.g.alchemy.com/v2/${env.FRONTEND_ALCHEMY_KEY}/getOwnersForContract`,
-  BLAST_MAINNET: `https://blast-mainnet.g.alchemy.com/v2/${env.FRONTEND_ALCHEMY_KEY}/getOwnersForContract`,
-  AVALANCHE: `https://avax-mainnet.g.alchemy.com/v2/${env.FRONTEND_ALCHEMY_KEY}/getOwnersForContract`,
+  ZKSYNC_ERA: `https://zksync-mainnet.g.alchemy.com/nft/v3/${env.FRONTEND_ALCHEMY_KEY}/getOwnersForContract`,
+  LINEA: `https://linea-mainnet.g.alchemy.com/nft/v3/${env.FRONTEND_ALCHEMY_KEY}/getOwnersForContract`,
+  SCROLL: `https://scroll-mainnet.g.alchemy.com/nft/v3/${env.FRONTEND_ALCHEMY_KEY}/getOwnersForContract`,
+  BLAST_MAINNET: `https://blast-mainnet.g.alchemy.com/nft/v3/${env.FRONTEND_ALCHEMY_KEY}/getOwnersForContract`,
+  AVALANCHE: `https://avax-mainnet.g.alchemy.com/nft/v3/${env.FRONTEND_ALCHEMY_KEY}/getOwnersForContract`,
 }
 
 // TODO: just use Zod.
