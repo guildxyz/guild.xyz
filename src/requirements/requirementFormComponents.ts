@@ -327,6 +327,15 @@ export const REQUIREMENT_FORM_COMPONENTS = {
   LINEA_POH: dynamic<RequirementFormProps>(
     () => import("requirements/LineaPOH/LineaPOHForm")
   ),
+  JUMPER_LEVEL: dynamic<RequirementFormProps>(
+    () => import("requirements/Jumper/JumperForm")
+  ),
+  JUMPER_TYPE: dynamic<RequirementFormProps>(
+    () => import("requirements/Jumper/JumperForm")
+  ),
+  JUMPER_TRAITS: dynamic<RequirementFormProps>(
+    () => import("requirements/Jumper/JumperForm")
+  ),
 } as const satisfies Record<
   RequirementType,
   ReturnType<typeof dynamic<RequirementFormProps>> | null
