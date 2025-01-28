@@ -1,24 +1,29 @@
+"use client"
+
 import { platformMergeAlertAtom } from "@/components/Providers/atoms"
+import { useToast } from "@/components/ui/hooks/useToast"
 import { useSetAtom } from "jotai"
-import { useRouter } from "next/router"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useEffect } from "react"
 import rewards from "rewards"
 import { PlatformName } from "types"
-import useToast from "./useToast"
 
-export default function useOAuthResultToast() {
-  const toast = useToast()
-  const { query, replace, pathname } = useRouter()
+export function OAuthResultToast() {
+  const { toast } = useToast()
+
+  const { replace } = useRouter()
+  const pathname = usePathname()
+  const readonlyQuery = useSearchParams()
+
   const showPlatformMergeAlert = useSetAtom(platformMergeAlertAtom)
 
   useEffect(() => {
-    if (query["oauth-status"]) {
-      const {
-        "oauth-platform": oauthPlatform,
-        "oauth-status": oauthStatus,
-        "oauth-message": oauthMessage,
-        ...newQuery
-      } = query
+    if (readonlyQuery?.get("oauth-status")) {
+      const newQuery = new URLSearchParams(readonlyQuery.toString())
+
+      const oauthPlatform = readonlyQuery.get("oauth-platform")
+      const oauthStatus = readonlyQuery.get("oauth-status")
+      const oauthMessage = readonlyQuery.get("oauth-message")
 
       const platformNameHumanReadable =
         rewards[(oauthPlatform as PlatformName) ?? ""]?.name ?? "Social"
@@ -33,7 +38,7 @@ export default function useOAuthResultToast() {
         oauthMessage?.toString()?.startsWith("Before connecting your")
       ) {
         const [, addressOrDomain] = oauthMessage
-          ?.toString()
+          .toString()
           .match(
             /^Before connecting your (?:.*?) account, please disconnect it from this address: (.*?)$/
           )
@@ -44,16 +49,18 @@ export default function useOAuthResultToast() {
         })
       } else {
         toast({
-          status: oauthStatus as "success" | "error",
+          variant: oauthStatus as "success" | "error",
           title,
           description: oauthMessage,
         })
       }
 
-      replace({ pathname, query: newQuery })
+      replace(`${pathname}?${newQuery.toString()}`)
     }
     // replace is intentionally left out
     // toast is intentionally left out, as it causes the toast to fire twice
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query, showPlatformMergeAlert, pathname])
+  }, [readonlyQuery, showPlatformMergeAlert, pathname])
+
+  return null
 }
