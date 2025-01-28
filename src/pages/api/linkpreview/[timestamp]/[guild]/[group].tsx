@@ -23,7 +23,7 @@ const handler = async (req, _) => {
       ?.split("/")
       ?.filter((param) => !!param) ?? []
 
-  if (!urlName || !groupUrlName) return new ImageResponse(<></>, { status: 404 })
+  if (!urlName || !groupUrlName) return new Response(undefined, { status: 404 })
 
   const [guild, groups, guildRoles]: [Guild, Guild["groups"], Guild["roles"]] =
     await Promise.all([
@@ -260,6 +260,9 @@ const handler = async (req, _) => {
         </div>
       </div>,
       {
+        headers: {
+          "Cache-Control": "s-maxage=3600", // 1 hour
+        },
         width: 800,
         height: 450,
         fonts: [

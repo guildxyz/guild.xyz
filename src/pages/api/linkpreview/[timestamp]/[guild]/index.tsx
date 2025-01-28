@@ -23,7 +23,7 @@ const handler = async (req, _) => {
       ?.split("/")
       ?.filter((param) => !!param) ?? []
 
-  if (!urlName) return new ImageResponse(<></>, { status: 404 })
+  if (!urlName) return new Response(undefined, { status: 404 })
 
   const [guild, guildRoles]: [Guild, Guild["roles"]] = await Promise.all([
     fetch(`${env.NEXT_PUBLIC_API.replace("v1", "v2")}/guilds/${urlName}`).then(
@@ -246,6 +246,9 @@ const handler = async (req, _) => {
         </div>
       </div>,
       {
+        headers: {
+          "Cache-Control": "s-maxage=3600", // 1 hour
+        },
         width: 800,
         height: 450,
         fonts: [
