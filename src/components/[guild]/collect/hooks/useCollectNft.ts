@@ -132,7 +132,7 @@ const useCollectNft = () => {
         ? (guildFee + fee) * BigInt(claimAmount)
         : BigInt(0)
 
-    let request
+    let hash: `0x${string}` | undefined = undefined
 
     if (isLegacyClaimArgs(claimData.args)) {
       const [address, userId, , signature] = claimData.args
@@ -142,8 +142,9 @@ const useCollectNft = () => {
         functionName: "claim",
         args: [address, BigInt(userId), signature],
         value: claimFee,
-      })
-      request = legacyClaimRequest
+        account: walletClient.account,
+      } as const)
+      hash = await walletClient.writeContract(legacyClaimRequest)
     }
 
     if (isClaimArgs(claimData.args)) {
@@ -154,14 +155,12 @@ const useCollectNft = () => {
         functionName: "claim",
         args: [BigInt(amount), address, BigInt(userId), BigInt(signedAt), signature],
         value: claimFee,
-      })
-      request = newClaimRequest
+        account: walletClient.account,
+      } as const)
+      hash = await walletClient.writeContract(newClaimRequest)
     }
 
-    const hash = await walletClient.writeContract({
-      ...request,
-      account: walletClient.account,
-    })
+    if (!hash) return Promise.reject("TX hash not found")
 
     setTxHash(hash)
 
