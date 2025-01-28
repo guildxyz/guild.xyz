@@ -1,10 +1,12 @@
 import { SimpleGrid, Skeleton, Text } from "@chakra-ui/react"
 import { useCollectNftContext } from "components/[guild]/collect/components/CollectNftContext"
 import Section from "components/common/Section"
-import { CHAIN_CONFIG } from "wagmiConfig/chains"
+import { CHAIN_CONFIG, Chain } from "wagmiConfig/chains"
 import useNftDetails from "../../hooks/useNftDetails"
 import BlockExplorerLink from "./components/BlockExplorerLink"
 import InfoBlock from "./components/InfoBlock"
+
+const ADDRESS_PATHS = ["IOTA"] as Chain[]
 
 const Details = () => {
   const { chain, nftAddress } = useCollectNftContext()
@@ -16,7 +18,11 @@ const Details = () => {
         <InfoBlock label="Network">{CHAIN_CONFIG[chain].name}</InfoBlock>
 
         <InfoBlock label="Contract">
-          <BlockExplorerLink chain={chain} address={nftAddress} path="token" />
+          <BlockExplorerLink
+            chain={chain}
+            address={nftAddress}
+            path={ADDRESS_PATHS.includes(chain) ? "address" : "token"}
+          />
         </InfoBlock>
 
         <InfoBlock label="Transferable">{soulbound ? "No" : "Yes"}</InfoBlock>
