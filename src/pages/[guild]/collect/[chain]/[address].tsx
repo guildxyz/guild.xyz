@@ -73,17 +73,11 @@ export const topCollectorsSupportedChains = [
   "OPTIMISM",
   "ARBITRUM",
   "SEPOLIA",
-  "MANTLE",
   "ZKSYNC_ERA",
   "LINEA",
   "SCROLL",
   "BLAST_MAINNET",
-  "METIS",
-  "POLYGON_ZKEVM",
-  "ZETACHAIN",
   "AVALANCHE",
-  "INK",
-  "SONIC",
 ] as const satisfies ContractCallSupportedChain[]
 
 const CollectNftPageContent = ({

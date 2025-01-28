@@ -23,6 +23,7 @@ export type TopCollectorsResponse = OneOf<
   { error: string }
 >
 
+// https://docs.alchemy.com/reference/getownersforcontract-v3
 export const alchemyApiUrl: Record<
   (typeof topCollectorsSupportedChains)[number],
   string
@@ -33,17 +34,11 @@ export const alchemyApiUrl: Record<
   OPTIMISM: `https://opt-mainnet.g.alchemy.com/nft/v3/${env.OPTIMISM_ALCHEMY_KEY}/getOwnersForContract`,
   ARBITRUM: `https://arb-mainnet.g.alchemy.com/nft/v3/${env.ARBITRUM_ALCHEMY_KEY}/getOwnersForContract`,
   SEPOLIA: `https://eth-sepolia.g.alchemy.com/nft/v3/${env.SEPOLIA_ALCHEMY_KEY}/getOwnersForContract`,
-  MANTLE: `https://mantle-mainnet.g.alchemy.com/v2/${env.FRONTEND_ALCHEMY_KEY}`,
-  ZKSYNC_ERA: `https://zksync-mainnet.g.alchemy.com/v2/${env.FRONTEND_ALCHEMY_KEY}`,
-  LINEA: `https://linea-mainnet.g.alchemy.com/v2/${env.FRONTEND_ALCHEMY_KEY}`,
-  SCROLL: `https://scroll-mainnet.g.alchemy.com/v2/${env.FRONTEND_ALCHEMY_KEY}`,
-  BLAST_MAINNET: `https://blast-mainnet.g.alchemy.com/v2/${env.FRONTEND_ALCHEMY_KEY}`,
-  METIS: `https://metis-mainnet.g.alchemy.com/v2/${env.FRONTEND_ALCHEMY_KEY}`,
-  POLYGON_ZKEVM: `https://polygonzkevm-mainnet.g.alchemy.com/v2/${env.FRONTEND_ALCHEMY_KEY}`,
-  ZETACHAIN: `https://zetachain-mainnet.g.alchemy.com/v2/${env.FRONTEND_ALCHEMY_KEY}`,
-  AVALANCHE: `https://avax-mainnet.g.alchemy.com/v2/${env.FRONTEND_ALCHEMY_KEY}`,
-  INK: `https://ink-mainnet.g.alchemy.com/v2/${env.FRONTEND_ALCHEMY_KEY}`,
-  SONIC: `https://sonic-mainnet.g.alchemy.com/v2/${env.FRONTEND_ALCHEMY_KEY}`,
+  ZKSYNC_ERA: `https://zksync-mainnet.g.alchemy.com/v2/${env.FRONTEND_ALCHEMY_KEY}/getOwnersForContract`,
+  LINEA: `https://linea-mainnet.g.alchemy.com/v2/${env.FRONTEND_ALCHEMY_KEY}/getOwnersForContract`,
+  SCROLL: `https://scroll-mainnet.g.alchemy.com/v2/${env.FRONTEND_ALCHEMY_KEY}/getOwnersForContract`,
+  BLAST_MAINNET: `https://blast-mainnet.g.alchemy.com/v2/${env.FRONTEND_ALCHEMY_KEY}/getOwnersForContract`,
+  AVALANCHE: `https://avax-mainnet.g.alchemy.com/v2/${env.FRONTEND_ALCHEMY_KEY}/getOwnersForContract`,
 }
 
 // TODO: just use Zod.
