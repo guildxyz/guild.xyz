@@ -3,10 +3,6 @@ import loadGoogleFont from "fonts/loadGoogleFont"
 import { ImageResponse } from "next/og"
 import { Guild } from "types"
 
-export const config = {
-  runtime: "edge",
-}
-
 const interFont = loadGoogleFont("Inter", "400")
 const interBoldFont = loadGoogleFont("Inter", "700")
 const dystopianFont = fetch(
@@ -260,6 +256,9 @@ const handler = async (req, _) => {
         </div>
       </div>,
       {
+        headers: {
+          "Cache-Control": "s-maxage=3600", // 1 hour
+        },
         width: 800,
         height: 450,
         fonts: [
