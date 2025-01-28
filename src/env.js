@@ -14,6 +14,7 @@ export const env = createEnv({
     OPTIMISM_ALCHEMY_KEY: z.string(),
     BASE_ALCHEMY_KEY: z.string(),
     ARBITRUM_ALCHEMY_KEY: z.string(),
+    FRONTEND_ALCHEMY_KEY: z.string(),
 
     // IPFS
     PINATA_ADMIN_JWT: z.string(),
