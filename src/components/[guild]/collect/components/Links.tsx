@@ -9,12 +9,17 @@ import capitalize from "utils/capitalize"
 import { openseaBaseUrl } from "utils/guildCheckout/constants"
 import { CHAIN_CONFIG } from "wagmiConfig/chains"
 import useNftDetails from "../hooks/useNftDetails"
+import { NFT_BLOCK_EXPLORER_ADDRESS_PATHS } from "./Details/Details"
 
 const Links = () => {
   const { colorMode } = useColorMode()
   const { chain, nftAddress } = useCollectNftContext()
   const { totalSupply } = useNftDetails(chain, nftAddress)
   const { socialLinks } = useGuild()
+
+  const blockExplorerPath = NFT_BLOCK_EXPLORER_ADDRESS_PATHS.includes(chain)
+    ? "address"
+    : "token"
 
   return (
     <Section title="Links" spacing={3}>
@@ -46,7 +51,7 @@ const Links = () => {
         )}
 
         <Link
-          href={`${CHAIN_CONFIG[chain].blockExplorerUrl}/token/${nftAddress}`}
+          href={`${CHAIN_CONFIG[chain].blockExplorerUrl}/${blockExplorerPath}/${nftAddress}`}
           isExternal
           colorScheme="gray"
           fontWeight="medium"

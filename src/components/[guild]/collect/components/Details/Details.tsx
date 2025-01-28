@@ -6,7 +6,7 @@ import useNftDetails from "../../hooks/useNftDetails"
 import BlockExplorerLink from "./components/BlockExplorerLink"
 import InfoBlock from "./components/InfoBlock"
 
-const ADDRESS_PATHS = ["IOTA"] as Chain[]
+export const NFT_BLOCK_EXPLORER_ADDRESS_PATHS = ["IOTA"] as Chain[]
 
 const Details = () => {
   const { chain, nftAddress } = useCollectNftContext()
@@ -21,7 +21,9 @@ const Details = () => {
           <BlockExplorerLink
             chain={chain}
             address={nftAddress}
-            path={ADDRESS_PATHS.includes(chain) ? "address" : "token"}
+            path={
+              NFT_BLOCK_EXPLORER_ADDRESS_PATHS.includes(chain) ? "address" : "token"
+            }
           />
         </InfoBlock>
 
