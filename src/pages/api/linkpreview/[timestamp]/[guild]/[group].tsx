@@ -3,6 +3,10 @@ import loadGoogleFont from "fonts/loadGoogleFont"
 import { ImageResponse } from "next/og"
 import { Guild } from "types"
 
+export const config = {
+  runtime: "edge",
+}
+
 const interFont = loadGoogleFont("Inter", "400")
 const interBoldFont = loadGoogleFont("Inter", "700")
 const dystopianFont = fetch(
@@ -19,7 +23,7 @@ const handler = async (req, _) => {
       ?.split("/")
       ?.filter((param) => !!param) ?? []
 
-  if (!urlName || !groupUrlName) return new ImageResponse(<></>, { status: 404 })
+  if (!urlName || !groupUrlName) return new Response(undefined, { status: 404 })
 
   const [guild, groups, guildRoles]: [Guild, Guild["groups"], Guild["roles"]] =
     await Promise.all([
