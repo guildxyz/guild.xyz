@@ -4,8 +4,16 @@ type Props = {
   path: string
 }
 
+const getTimestamp = () => {
+  const rounded = new Date()
+  rounded.setMinutes(0)
+  rounded.setSeconds(0)
+  rounded.setMilliseconds(0)
+  return rounded.getTime()
+}
+
 const LinkPreviewHead = ({ path }: Props) => {
-  const url = `https://guild.xyz/api/linkpreview/${Date.now()?.toString()}/${path}`
+  const url = `https://guild.xyz/api/linkpreview/${getTimestamp()}/${path}`
 
   return (
     <Head>
