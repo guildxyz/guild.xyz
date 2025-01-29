@@ -10,35 +10,49 @@ export const config = {
 const interFont = loadGoogleFont("Inter", "400")
 const interBoldFont = loadGoogleFont("Inter", "700")
 const dystopianFont = fetch(
-  new URL("../../../../../../public/fonts/Dystopian-Black.woff", import.meta.url)
+  new URL("../../../../../public/fonts/Dystopian-Black.woff", import.meta.url)
 ).then((res) => res.arrayBuffer())
 
 const handler = async (req, _) => {
   const { protocol, host } = req.nextUrl
   const baseUrl = `${protocol}//${host}`
 
-  const [, urlName] =
+  const [, guildUrlName, pageUrlName] =
     req.nextUrl?.pathname
       ?.replace("/api/linkpreview", "")
       ?.split("/")
       ?.filter((param) => !!param) ?? []
 
-  if (!urlName) return new Response(undefined, { status: 404 })
+  if (!guildUrlName) return new Response(undefined, { status: 404 })
 
-  const [guild, guildRoles]: [Guild, Guild["roles"]] = await Promise.all([
-    fetch(`${env.NEXT_PUBLIC_API.replace("v1", "v2")}/guilds/${urlName}`).then(
-      (res) => res.json()
-    ),
-    fetch(`${env.NEXT_PUBLIC_API.replace("v1", "v2")}/guilds/${urlName}/roles`).then(
-      (res) => res.json()
-    ),
-  ]).catch(() => [null, null])
+  const [guild, guildRoles, pages]: [Guild, Guild["roles"], Guild["groups"]] =
+    await Promise.all([
+      fetch(
+        `${env.NEXT_PUBLIC_API.replace("v1", "v2")}/guilds/${guildUrlName}`
+      ).then((res) => res.json()),
+      fetch(
+        `${env.NEXT_PUBLIC_API.replace("v1", "v2")}/guilds/${guildUrlName}/roles`
+      ).then((res) => res.json()),
+      !!pageUrlName
+        ? fetch(
+            `${env.NEXT_PUBLIC_API.replace("v1", "v2")}/guilds/${guildUrlName}/groups`
+          ).then((res) => res.json())
+        : undefined,
+    ]).catch(() => [null, null, null])
 
   if (!guild?.id)
     return new Response(undefined, {
       status: 404,
       statusText: "Guild not found",
     })
+
+  const page = pages?.find((p) => p.urlName === pageUrlName)
+
+  const name = page?.name ?? guild.name
+  const image = page?.imageUrl || guild.imageUrl
+  const roles = !!page
+    ? guildRoles.filter((role) => role.groupId === page.id)
+    : guildRoles
 
   try {
     const [interFontData, interBoldFontData, dystopianFontData] = await Promise.all([
@@ -47,9 +61,9 @@ const handler = async (req, _) => {
       dystopianFont,
     ])
 
-    const roles = guildRoles?.map((role) => role.name)
-
-    const safeGuildDescription = guild.description?.replaceAll("\n", "")
+    const safeDescription = (
+      !!page ? page.description : guild.description
+    )?.replaceAll("\n", "")
 
     return new ImageResponse(
       <div
@@ -127,16 +141,16 @@ const handler = async (req, _) => {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 style={{
-                  width: guild.imageUrl?.match("guildLogos") ? "20px" : "48px",
-                  height: guild.imageUrl?.match("guildLogos") ? "20px" : "48px",
-                  borderRadius: guild.imageUrl?.match("guildLogos") ? 0 : "50%",
+                  width: image.match("guildLogos") ? "20px" : "48px",
+                  height: image?.match("guildLogos") ? "20px" : "48px",
+                  borderRadius: image?.match("guildLogos") ? 0 : "50%",
                 }}
                 src={
-                  guild.imageUrl?.startsWith("http")
-                    ? `${baseUrl}/_next/image?url=${guild.imageUrl}&w=48&q=75`
-                    : `${baseUrl}${guild.imageUrl}`
+                  image?.startsWith("http")
+                    ? `${baseUrl}/_next/image?url=${image}&w=48&q=75`
+                    : `${baseUrl}${image}`
                 }
-                alt={guild.name}
+                alt={name}
               />
             </div>
             <h1
@@ -150,7 +164,7 @@ const handler = async (req, _) => {
                 textOverflow: "ellipsis",
               }}
             >
-              {guild.name}
+              {name}
             </h1>
           </div>
 
@@ -200,9 +214,9 @@ const handler = async (req, _) => {
               color: "white",
             }}
           >
-            {guild.description ? (
-              `${safeGuildDescription?.slice(0, 80)}${
-                safeGuildDescription?.length > 80 ? "..." : ""
+            {safeDescription ? (
+              `${safeDescription?.slice(0, 80)}${
+                safeDescription?.length > 80 ? "..." : ""
               }`
             ) : (
               <div style={{ display: "flex", flexDirection: "column" }}>
