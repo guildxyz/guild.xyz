@@ -337,4 +337,13 @@ export const REQUIREMENT_DISPLAY_COMPONENTS = {
   LINEA_POH: dynamic<RequirementProps>(
     () => import("requirements/LineaPOH/LineaPOHRequirement")
   ),
+  JUMPER_LEVEL: dynamic<RequirementProps>(
+    () => import("requirements/Jumper/JumperRequirement")
+  ),
+  JUMPER_TYPE: dynamic<RequirementProps>(
+    () => import("requirements/Jumper/JumperRequirement")
+  ),
+  JUMPER_TRAITS: dynamic<RequirementProps>(
+    () => import("requirements/Jumper/JumperRequirement")
+  ),
 } as const satisfies Record<RequirementType, ComponentType<RequirementProps>>

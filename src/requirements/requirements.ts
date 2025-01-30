@@ -244,6 +244,12 @@ export const REQUIREMENTS_DATA = [
     isNegatable: true,
   },
   {
+    icon: "/requirementLogos/jumper.svg",
+    name: "Jumper",
+    types: ["JUMPER_LEVEL", "JUMPER_TYPE", "JUMPER_TRAITS"],
+    isNegatable: true,
+  },
+  {
     icon: "/requirementLogos/web3inbox.png",
     name: "Web3Inbox",
     types: ["WEB3INBOX_SUBSCRIBERS"],

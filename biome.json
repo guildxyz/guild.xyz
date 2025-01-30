@@ -59,7 +59,7 @@
         "noArguments": "error",
         "noVar": "error",
         "useConst": "error",
-        "noDefaultExport": "info"
+        "noDefaultExport": "off"
       },
       "suspicious": {
         "noExplicitAny": "info",
