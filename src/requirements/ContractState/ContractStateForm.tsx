@@ -291,7 +291,7 @@ const ContractStateForm = ({ baseFieldPath }: RequirementFormProps) => {
       >
         <FormLabel>Expected output:</FormLabel>
 
-        <FormHelperText>
+        <FormHelperText mb="2">
           Output param indexes start from 0, i.e. the first output param index is 0
         </FormHelperText>
 
