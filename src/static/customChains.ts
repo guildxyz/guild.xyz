@@ -438,7 +438,7 @@ export const ink = {
     symbol: "ETH",
   },
   rpcUrls: {
-    default: { http: ["https://rpc-gel.inkonchain.com"] },
+    default: { http: ["https://ink.drpc.org"] },
   },
   blockExplorers: {
     default: {
