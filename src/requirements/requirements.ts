@@ -244,6 +244,12 @@ export const REQUIREMENTS_DATA = [
     isNegatable: true,
   },
   {
+    icon: "/requirementLogos/verax.png",
+    name: "Verax",
+    types: ["VERAX_ATTEST", "VERAX_ATTESTED_BY"],
+    isNegatable: true,
+  },
+  {
     icon: "/requirementLogos/web3inbox.png",
     name: "Web3Inbox",
     types: ["WEB3INBOX_SUBSCRIBERS"],

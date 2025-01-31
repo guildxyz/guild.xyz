@@ -327,6 +327,12 @@ export const REQUIREMENT_FORM_COMPONENTS = {
   LINEA_POH: dynamic<RequirementFormProps>(
     () => import("requirements/LineaPOH/LineaPOHForm")
   ),
+  VERAX_ATTEST: dynamic<RequirementFormProps>(
+    () => import("requirements/Verax/VeraxForm")
+  ),
+  VERAX_ATTESTED_BY: dynamic<RequirementFormProps>(
+    () => import("requirements/Verax/VeraxForm")
+  ),
 } as const satisfies Record<
   RequirementType,
   ReturnType<typeof dynamic<RequirementFormProps>> | null

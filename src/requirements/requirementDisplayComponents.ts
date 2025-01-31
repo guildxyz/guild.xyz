@@ -337,4 +337,10 @@ export const REQUIREMENT_DISPLAY_COMPONENTS = {
   LINEA_POH: dynamic<RequirementProps>(
     () => import("requirements/LineaPOH/LineaPOHRequirement")
   ),
+  VERAX_ATTEST: dynamic<RequirementProps>(
+    () => import("requirements/Verax/VeraxRequirement")
+  ),
+  VERAX_ATTESTED_BY: dynamic<RequirementProps>(
+    () => import("requirements/Verax/VeraxRequirement")
+  ),
 } as const satisfies Record<RequirementType, ComponentType<RequirementProps>>
