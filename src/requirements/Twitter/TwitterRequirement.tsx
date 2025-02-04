@@ -18,6 +18,7 @@ import TwitterListLink from "./components/TwitterListLink"
 import TwitterTweetLink from "./components/TwitterTweetLink"
 import TwitterUserLink from "./components/TwitterUserLink"
 
+type TW = Extract<RequirementType, `TWITTER_${string}`> | "LINK_VISIT"
 type TwitterRequirementType =
   | Extract<RequirementType, `TWITTER_${string}`>
   /**

@@ -253,7 +253,7 @@ export const wagmiConfig = IS_TEST
         [blast.id]: http(),
         [blastSepolia.id]: http(),
         [oasisSapphire.id]: http(),
-        [sepolia.id]: http("https://ethereum-sepolia-rpc.publicnode.com"),
+        [sepolia.id]: http(),
         [astarZkEVM.id]: http(),
         [coreDao.id]: http(),
         [liskSepolia.id]: http(),
