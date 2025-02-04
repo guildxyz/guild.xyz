@@ -1,4 +1,4 @@
-import { CONTRACT_CALL_SUPPORTED_CHAINS } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
+import { consts } from "@guildxyz/types"
 import { env } from "env"
 import { NextApiHandler } from "next"
 import { topCollectorsSupportedChains } from "pages/[guild]/collect/[chain]/[address]"
@@ -23,6 +23,7 @@ export type TopCollectorsResponse = OneOf<
   { error: string }
 >
 
+// https://docs.alchemy.com/reference/getownersforcontract-v3
 export const alchemyApiUrl: Record<
   (typeof topCollectorsSupportedChains)[number],
   string
@@ -33,12 +34,17 @@ export const alchemyApiUrl: Record<
   OPTIMISM: `https://opt-mainnet.g.alchemy.com/nft/v3/${env.OPTIMISM_ALCHEMY_KEY}/getOwnersForContract`,
   ARBITRUM: `https://arb-mainnet.g.alchemy.com/nft/v3/${env.ARBITRUM_ALCHEMY_KEY}/getOwnersForContract`,
   SEPOLIA: `https://eth-sepolia.g.alchemy.com/nft/v3/${env.SEPOLIA_ALCHEMY_KEY}/getOwnersForContract`,
+  ZKSYNC_ERA: `https://zksync-mainnet.g.alchemy.com/nft/v3/${env.FRONTEND_ALCHEMY_KEY}/getOwnersForContract`,
+  LINEA: `https://linea-mainnet.g.alchemy.com/nft/v3/${env.FRONTEND_ALCHEMY_KEY}/getOwnersForContract`,
+  SCROLL: `https://scroll-mainnet.g.alchemy.com/nft/v3/${env.FRONTEND_ALCHEMY_KEY}/getOwnersForContract`,
+  BLAST_MAINNET: `https://blast-mainnet.g.alchemy.com/nft/v3/${env.FRONTEND_ALCHEMY_KEY}/getOwnersForContract`,
+  AVALANCHE: `https://avax-mainnet.g.alchemy.com/nft/v3/${env.FRONTEND_ALCHEMY_KEY}/getOwnersForContract`,
 }
 
 // TODO: just use Zod.
 export const validateNftChain = (value: string | string[]): Chain => {
   const valueAsString = value?.toString()?.toUpperCase()
-  if (!value || !CONTRACT_CALL_SUPPORTED_CHAINS.includes(valueAsString as any))
+  if (!value || !consts.NFTRewardSupportedChains.includes(valueAsString as any))
     return null
   return valueAsString as Chain
 }

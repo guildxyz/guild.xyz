@@ -1,3 +1,4 @@
+import { consts } from "@guildxyz/types"
 import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hooks/useAddRewardDiscardAlert"
 import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import Button from "components/common/Button"
@@ -7,7 +8,6 @@ import { useAccount } from "wagmi"
 import { Chains } from "wagmiConfig/chains"
 import NftDataForm, { CreateNftFormType } from "./components/NftDataForm"
 import useCreateNft, {
-  CONTRACT_CALL_SUPPORTED_CHAINS,
   ContractCallSupportedChain,
   CreateNFTResponse,
 } from "./hooks/useCreateNft"
@@ -17,11 +17,11 @@ type Props = {
 }
 
 const getDefaultChain = (chainId: number) =>
-  (CONTRACT_CALL_SUPPORTED_CHAINS.includes(
+  (consts.NFTRewardSupportedChains.includes(
     Chains[chainId] as ContractCallSupportedChain
   )
     ? Chains[chainId]
-    : CONTRACT_CALL_SUPPORTED_CHAINS[0]) as ContractCallSupportedChain
+    : consts.NFTRewardSupportedChains[0]) as ContractCallSupportedChain
 
 const CreateNftForm = ({ onSuccess }: Props) => {
   const { isConnected: isEvmConnected, address, chainId } = useAccount()

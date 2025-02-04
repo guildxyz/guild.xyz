@@ -438,7 +438,7 @@ export const ink = {
     symbol: "ETH",
   },
   rpcUrls: {
-    default: { http: ["https://rpc-gel.inkonchain.com"] },
+    default: { http: ["https://ink.drpc.org"] },
   },
   blockExplorers: {
     default: {
@@ -450,6 +450,32 @@ export const ink = {
     multicall3: {
       address: "0xca11bde05977b3631167028862be2a173976ca11",
       blockCreated: 595972,
+    },
+  },
+  testnet: false,
+} as const satisfies Chain
+
+export const zero = {
+  id: 543210,
+  name: "Zero",
+  nativeCurrency: {
+    decimals: 18,
+    name: "Ether",
+    symbol: "ETH",
+  },
+  rpcUrls: {
+    default: { http: ["https://rpc.zerion.io/v1/zero"] },
+  },
+  blockExplorers: {
+    default: {
+      name: "Blockscout",
+      url: "https://explorer.zero.network",
+    },
+  },
+  contracts: {
+    multicall3: {
+      address: "0x0307F341a18f1FC1f63a7Ceeac970245A08C5a80",
+      blockCreated: 11517,
     },
   },
   testnet: false,

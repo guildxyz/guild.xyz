@@ -144,36 +144,48 @@ const useCollectNft = () => {
         ? (guildFee + fee) * BigInt(claimAmount)
         : BigInt(0)
 
-    let request
+    let hash: `0x${string}` | undefined = undefined
 
     if (isLegacyClaimArgs(claimData.args)) {
       const [address, userId, , signature] = claimData.args
-      const { request: legacyClaimRequest } = await publicClient.simulateContract({
+      const args = {
         abi: legacyGuildRewardNftAbi,
         address: nftAddress,
         functionName: "claim",
         args: [address, BigInt(userId), signature],
         value: claimFee,
+        account: walletClient.account,
+      } as const
+      const estimatedGas = await publicClient.estimateContractGas(args)
+
+      const { request: legacyClaimRequest } = await publicClient.simulateContract({
+        ...args,
+        gas: estimatedGas * BigInt(2),
       })
-      request = legacyClaimRequest
+      hash = await walletClient.writeContract(legacyClaimRequest)
     }
 
     if (isClaimArgs(claimData.args)) {
       const [amount, address, userId, signedAt, signature] = claimData.args
-      const { request: newClaimRequest } = await publicClient.simulateContract({
+      const args = {
         abi: guildRewardNftAbi,
         address: nftAddress,
         functionName: "claim",
         args: [BigInt(amount), address, BigInt(userId), BigInt(signedAt), signature],
         value: claimFee,
+        account: walletClient.account,
+      } as const
+
+      const estimatedGas = await publicClient.estimateContractGas(args)
+      const { request: newClaimRequest } = await publicClient.simulateContract({
+        ...args,
+        gas: estimatedGas * BigInt(2),
       })
-      request = newClaimRequest
+
+      hash = await walletClient.writeContract(newClaimRequest)
     }
 
-    const hash = await walletClient.writeContract({
-      ...request,
-      account: walletClient.account,
-    })
+    if (!hash) return Promise.reject("TX hash not found")
 
     setTxHash(hash)
 

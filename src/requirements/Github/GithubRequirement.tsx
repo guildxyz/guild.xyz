@@ -81,14 +81,14 @@ const GithubRequirement = (props: RequirementProps) => {
                   </>
                 ) : requirement.data.minAmount ? (
                   <>
-                    <span>{"older than "}</span>
+                    <span>{" older than "}</span>
                     <DataBlockWithRelativeDate
                       timestamp={requirement.data.minAmount}
                     />
                   </>
                 ) : requirement.data.maxAmount ? (
                   <>
-                    <span>{"no older than "}</span>
+                    <span>{" no older than "}</span>
                     <DataBlockWithRelativeDate
                       timestamp={requirement.data.maxAmount}
                     />

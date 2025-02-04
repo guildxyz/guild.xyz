@@ -29,7 +29,8 @@ const BlockExplorerUrl = ({
 
   // Some explorers don't support the /token path
   const path =
-    pathProp ?? (["BERA_TESTNET"].includes(chainProp ?? chain) ? "address" : "token")
+    pathProp ??
+    (["BERA_TESTNET", "IOTA"].includes(chainProp ?? chain) ? "address" : "token")
 
   const url =
     (type === "ERC1155" || type === "ERC721") && data?.id

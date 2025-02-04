@@ -15,6 +15,7 @@ import {
   scrollAlpha,
   taikoKatlaTestnet,
   x1,
+  zero,
 } from "static/customChains"
 import {
   type Chain as ViemChain,
@@ -67,6 +68,7 @@ import {
   sepolia,
   shimmer,
   sonic,
+  sophon,
   taiko,
   worldchain,
   x1Testnet,
@@ -760,6 +762,22 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/networkLogos/sonic.svg",
     },
   },
+  SOPHON: {
+    ...generateChainConfig(sophon, "/networkLogos/sophon.svg"),
+    iconUrl: "/networkLogos/sophon.svg",
+    blockExplorerIconUrl: {
+      light: "/networkLogos/sophon.svg",
+      dark: "/networkLogos/sophon.svg",
+    },
+  },
+  ZERO: {
+    ...generateChainConfig(zero, ETH_ICON),
+    iconUrl: "/networkLogos/zero.svg",
+    blockExplorerIconUrl: {
+      light: "/networkLogos/zero.svg",
+      dark: "/networkLogos/zero.svg",
+    },
+  },
 }
 
 enum Chains {
@@ -835,6 +853,8 @@ enum Chains {
   INK = ink.id,
   IOTA = iota.id,
   SONIC = sonic.id,
+  SOPHON = sophon.id,
+  ZERO = zero.id,
 }
 
 export type Chain = keyof typeof Chains

@@ -1,7 +1,6 @@
 // @ts-check
 
 const { BugsnagSourceMapUploaderPlugin } = require("webpack-bugsnag-plugins")
-const CircularDependencyPlugin = require("circular-dependency-plugin")
 
 /** @type {import("next").NextConfig} */
 const nextConfig = {
@@ -33,15 +32,6 @@ const nextConfig = {
           apiKey: process.env.NEXT_PUBLIC_BUGSNAG_KEY ?? "",
           overwrite: true,
           publicPath: `https://${process.env.VERCEL_URL ?? "guild.xyz"}/_next/`,
-        })
-      )
-      config.plugins.push(
-        new CircularDependencyPlugin({
-          exclude: /.next|node_modules/,
-          include: /src/,
-          // TODO: if all circular dependencies are resolved, set this argument to true
-          failOnError: false,
-          allowAsyncCycles: false,
         })
       )
     }
