@@ -19,7 +19,6 @@ import { wagmiConfig } from "wagmiConfig"
 import "../app/globals.css"
 import { AccountModal } from "@/components/Account/components/AccountModal"
 import { PurchaseHistoryDrawer } from "@/components/Account/components/PurchaseHistoryDrawer/PurchaseHistoryDrawer"
-import { AnnouncementDialog } from "@/components/AnnouncementDialog"
 import AppErrorBoundary from "@/components/AppErrorBoundary"
 import { IntercomProvider } from "@/components/Providers/IntercomProvider"
 import { TermsOfUseUpdateDialog } from "@/components/TermsOfUseUpdateDialog"
@@ -91,7 +90,6 @@ const App = ({
 
                       <LegacyWeb3ConnectionManager />
                       <TermsOfUseUpdateDialog />
-                      <AnnouncementDialog />
                     </LegacyPostHogProvider>
                   </FuelProvider>
                 </QueryClientProvider>

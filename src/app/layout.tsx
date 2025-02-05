@@ -3,7 +3,6 @@ import { PostHogPageViews } from "@/components/Providers/PostHogPageViews"
 import { dystopian, inter } from "fonts"
 import { type ReactNode, Suspense } from "react"
 import "./globals.css"
-import { AnnouncementDialog } from "@/components/AnnouncementDialog"
 import { OAuthResultToast } from "@/components/Providers/OAuthResultToast"
 import { TermsOfUseUpdateDialog } from "@/components/TermsOfUseUpdateDialog"
 import { cn } from "@/lib/utils"
@@ -52,7 +51,6 @@ export default function RootLayout({ children }: RootLayoutProps) {
           {children}
 
           <TermsOfUseUpdateDialog />
-          <AnnouncementDialog />
           <Suspense>
             <PostHogPageViews />
             <OAuthResultToast />
