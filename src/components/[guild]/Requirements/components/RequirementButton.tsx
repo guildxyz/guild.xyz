@@ -33,7 +33,7 @@ const RequirementButton = forwardRef(
 
 interface LinkProps extends Omit<AnchorProps, "variant"> {
   label: string
-  imageUrl: string
+  imageUrl?: string
   variant?: Omit<ButtonProps["variant"], "unstyled"> | "link"
 }
 
@@ -65,7 +65,7 @@ const RequirementLink = ({
     )}
     {...anchorProps}
   >
-    <img src={imageUrl} alt="Link image" className="size-3" />
+    {imageUrl && <img src={imageUrl} alt="Link image" className="size-3" />}
     <span>{label}</span>
     <ArrowSquareOut weight="bold" />
   </Anchor>
