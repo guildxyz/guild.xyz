@@ -100,6 +100,9 @@ const TokenApiURLs: Record<Chain, string[]> = {
   SONIC: ["https://tokens.coingecko.com/sonic/all.json"],
   SOPHON: [],
   ZERO: [],
+  XDC: [
+    "https://raw.githubusercontent.com/XSwapProtocol/xdc-token-list/refs/heads/master/mainnet.tokenlist.json",
+  ],
 }
 
 const fetchTokens = async ([_, chain]) =>

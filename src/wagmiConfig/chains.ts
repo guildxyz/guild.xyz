@@ -72,6 +72,7 @@ import {
   taiko,
   worldchain,
   x1Testnet,
+  xdc,
   zetachain,
   zetachainAthensTestnet,
   zkSync,
@@ -778,6 +779,14 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/networkLogos/zero.svg",
     },
   },
+  XDC: {
+    ...generateChainConfig(xdc, "/networkLogos/xdc.svg"),
+    iconUrl: "/networkLogos/xdc.svg",
+    blockExplorerIconUrl: {
+      light: "/networkLogos/xdc.svg",
+      dark: "/networkLogos/xdc.svg",
+    },
+  },
 }
 
 enum Chains {
@@ -855,6 +864,7 @@ enum Chains {
   SONIC = sonic.id,
   SOPHON = sophon.id,
   ZERO = zero.id,
+  XDC = xdc.id,
 }
 
 export type Chain = keyof typeof Chains

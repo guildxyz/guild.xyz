@@ -78,6 +78,7 @@ import {
   taiko,
   worldchain,
   x1Testnet,
+  xdc,
   zetachain,
   zetachainAthensTestnet,
   zkSync,
@@ -204,6 +205,7 @@ export const wagmiConfig = IS_TEST
         sonic,
         sophon,
         zero,
+        xdc,
       ],
       transports: {
         [mainnet.id]: http(),
@@ -276,6 +278,7 @@ export const wagmiConfig = IS_TEST
         [sonic.id]: http(),
         [sophon.id]: http(),
         [zero.id]: http(),
+        [xdc.id]: http(),
       },
       ssr: true,
       connectors: [
