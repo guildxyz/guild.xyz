@@ -15,6 +15,7 @@ const chainsWithOverrides = [
   "SONIC",
   "ZERO",
   "MANTLE",
+  "XDC",
 ]
 
 const useGuildFee = (
