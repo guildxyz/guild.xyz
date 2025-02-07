@@ -5,6 +5,8 @@ import { Requirement } from "types"
 
 export type RequirementType = Exclude<
   Schemas["Requirement"]["type"],
+  | "VERAX_ATTEST"
+  | "VERAX_ATTESTED_BY"
   | "JUMPER_LEVEL"
   | "JUMPER_TYPE"
   | "JUMPER_TRAITS"
