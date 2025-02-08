@@ -256,7 +256,7 @@ const useCollectNft = () => {
           }
         )
 
-        captureEvent("Minted NFT (GuildCheckout)", postHogOptions)
+        captureEvent("Minted NFT (GuildCheckout)", { ...postHogOptions, amount })
 
         toastWithShareButtons({
           title: `Successfully collected ${amount > 1 ? `${amount} ` : ""}NFT${
