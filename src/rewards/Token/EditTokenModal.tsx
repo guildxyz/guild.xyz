@@ -94,7 +94,7 @@ const EditTokenModal = ({
 
   const multiplier = useMemo(() => {
     const rp: any = rolePlatforms?.[0]
-    return rp ? rp.dynamicAmount.operation.params.multiplier : 1.0
+    return rp ? (rp.dynamicAmount?.operation.params.multiplier ?? 1.0) : 1.0
   }, [rolePlatforms])
 
   const toast = useToast()
