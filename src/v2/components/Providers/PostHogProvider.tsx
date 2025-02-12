@@ -21,7 +21,7 @@ export const isUserRejectedError = (errorMessage: any) =>
 
 if (typeof window !== "undefined") {
   posthog.init(env.NEXT_PUBLIC_POSTHOG_KEY, {
-    api_host: "/api/posthog",
+    api_host: "https://posthog-test.johnny-07d.workers.dev",
     // Capture custom events only
     autocapture: false,
 
@@ -35,13 +35,13 @@ if (typeof window !== "undefined") {
     persistence: "memory",
 
     // Disable in development
-    loaded: (ph) => {
-      if (
-        process.env.NODE_ENV !== "production" ||
-        window.location.host !== "guild.xyz"
-      )
-        ph.opt_out_capturing()
-    },
+    // loaded: (ph) => {
+    // if (
+    //   process.env.NODE_ENV !== "production" ||
+    //   window.location.host !== "guild.xyz"
+    // )
+    //  ph.opt_out_capturing()
+    // },
   })
 }
 
