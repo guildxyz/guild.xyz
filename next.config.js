@@ -188,10 +188,6 @@ const nextConfig = {
           destination: "/api/sitemap.xml",
         },
         {
-          source: "/api/posthog/:path*",
-          destination: "https://app.posthog.com/:path*",
-        },
-        {
           source: "/api/bugsnag/notify",
           destination: "https://notify.bugsnag.com",
         },

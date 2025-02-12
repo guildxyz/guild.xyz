@@ -21,7 +21,7 @@ export const isUserRejectedError = (errorMessage: any) =>
 
 if (typeof window !== "undefined") {
   posthog.init(env.NEXT_PUBLIC_POSTHOG_KEY, {
-    api_host: "/api/posthog",
+    api_host: "https://posthog.guild.xyz",
     // Capture custom events only
     autocapture: false,
 
