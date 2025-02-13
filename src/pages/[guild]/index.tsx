@@ -13,6 +13,7 @@ import { Center, Heading, Spinner } from "@chakra-ui/react"
 import { AccessHub } from "components/[guild]/AccessHub"
 import { GuildPageBanner } from "components/[guild]/GuildPageBanner"
 import { GuildPageImageAndName } from "components/[guild]/GuildPageImageAndName"
+import { JoinButton } from "components/[guild]/JoinButton"
 import { JoinModalProvider } from "components/[guild]/JoinModal/JoinModalProvider"
 import { MintGuildPinProvider } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import Roles from "components/[guild]/Roles"
@@ -109,14 +110,14 @@ const GuildPage = (): JSX.Element => {
           <LayoutHeadline className="max-w-screen-xl pt-12">
             <GuildPageImageAndName />
 
-            {/* <div className="ml-auto flex gap-2">
+            <div className="ml-auto flex gap-2">
               {!isMember && <JoinButton />}
               {isAdmin && isDetailed ? (
                 <DynamicAddSolutionsAndEditGuildButton />
               ) : (
                 isMember && <DynamicRecheckAccessesAndLeaveButton />
               )}
-            </div> */}
+            </div>
           </LayoutHeadline>
 
           {(description || Object.keys(socialLinks ?? {}).length > 0) && (
