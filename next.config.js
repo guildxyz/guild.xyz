@@ -176,10 +176,6 @@ const nextConfig = {
       ],
       afterFiles: [
         {
-          source: "/js/script.js",
-          destination: "https://stat.zgen.hu/js/plausible.exclusions.js",
-        },
-        {
           source: "/api/event",
           destination: "https://stat.zgen.hu/api/event",
         },
