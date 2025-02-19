@@ -325,6 +325,9 @@ const Page = (): JSX.Element => (
                 <b>Intercom R&D Unlimited Company</b> for customer communications,
                 and,
               </li>
+              <li>
+                <b>Plausible</b>, for data analytics.
+              </li>
             </ul>
             <p>
               If you purchase through our website, depending on the payment method
