@@ -271,7 +271,7 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
                       <PopoverPortal>
                         <PopoverContent side="bottom" className="p-0">
                           <div className="border-border border-b p-1.5 font-bold text-xs uppercase">
-                            Query
+                            Inputs
                           </div>
 
                           <table className="w-full table-fixed rounded-b-xl bg-card dark:bg-blackAlpha">
