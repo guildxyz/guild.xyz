@@ -276,7 +276,7 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
 
                           <table className="w-full table-fixed rounded-b-xl bg-card dark:bg-blackAlpha">
                             <thead className="text-xs">
-                              <tr>
+                              <tr className="border-border border-b [&>th]:p-1.5 [&>th]:text-left">
                                 <th>Input param</th>
                                 <th>Operation</th>
                                 <th>Value</th>
