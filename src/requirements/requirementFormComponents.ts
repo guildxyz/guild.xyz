@@ -36,6 +36,12 @@ export const REQUIREMENT_FORM_COMPONENTS = {
   COVALENT_TX_COUNT_RELATIVE: dynamic<RequirementFormProps>(
     () => import("requirements/WalletActivity/WalletActivityForm")
   ),
+  COVALENT_CONTRACT_CALL_COUNT: dynamic<RequirementFormProps>(
+    () => import("requirements/WalletActivity/WalletActivityForm")
+  ),
+  COVALENT_CONTRACT_CALL_COUNT_RELATIVE: dynamic<RequirementFormProps>(
+    () => import("requirements/WalletActivity/WalletActivityForm")
+  ),
   ALCHEMY_TX_VALUE: dynamic<RequirementFormProps>(
     () => import("requirements/WalletActivity/WalletActivityForm")
   ),

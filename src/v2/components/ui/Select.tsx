@@ -21,7 +21,7 @@ const SelectTrigger = forwardRef<
     className={cn(
       inputVariants({
         className: [
-          "flex w-full items-center justify-between [&>span]:line-clamp-1",
+          "flex w-full items-center justify-between [&>span]:truncate",
           className,
         ],
       })
@@ -30,7 +30,7 @@ const SelectTrigger = forwardRef<
   >
     {children}
     <SelectPrimitive.Icon asChild>
-      <CaretDown className="h-4 w-4 opacity-50" />
+      <CaretDown className="size-4 shrink-0 opacity-50" />
     </SelectPrimitive.Icon>
   </SelectPrimitive.Trigger>
 ))
