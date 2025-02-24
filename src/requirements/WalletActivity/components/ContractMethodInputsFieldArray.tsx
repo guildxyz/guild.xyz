@@ -145,7 +145,6 @@ export const ContractMethodInputsFieldArray = ({
                         </FormControl>
                         <SelectContent>
                           {paramOptions.map((param) => (
-                            // TODO: value as number?...
                             <SelectItem
                               key={param.value}
                               value={String(param.value)}

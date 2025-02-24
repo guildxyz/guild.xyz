@@ -27,11 +27,10 @@ const fetchContractMethods = async (
     abi: Abi
   } = await fetcher(`${baseUrl}/smart-contracts/${address}`)
 
-  if (!!contract.proxy_type) {
-    // TODO: do we need to fetch each implementation? I should ask Tomi about this
-    contract = await fetcher(
-      `${baseUrl}/smart-contracts/${contract.implementations[0].address}`
-    )
+  const implementationAddress = contract.implementations.at(-1)?.address
+
+  if (!!contract.proxy_type && implementationAddress) {
+    contract = await fetcher(`${baseUrl}/smart-contracts/${implementationAddress}`)
   }
 
   if (!contract.abi)
