@@ -8,6 +8,8 @@ import { RequirementFormProps, RequirementType } from "requirements/types"
 import { SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
 import { Chain } from "wagmiConfig/chains"
+import CovalentContractCallCount from "./components/CovalentContractCallCount"
+import CovalentContractCallCountRelative from "./components/CovalentContractCallCountRelative"
 import CovalentContractDeploy from "./components/CovalentContractDeploy"
 import CovalentContractDeployRelative from "./components/CovalentContractDeployRelative"
 import CovalentFirstTx from "./components/CovalentFirstTx"
@@ -87,6 +89,16 @@ const walletActivityRequirementTypes: SelectOption[] = [
     value: "COVALENT_TX_COUNT_RELATIVE",
     WalletActivityRequirement: CovalentTxCountRelative,
   },
+  {
+    label: "Called a contract method",
+    value: "COVALENT_CONTRACT_CALL_COUNT",
+    WalletActivityRequirement: CovalentContractCallCount,
+  },
+  {
+    label: "Called a contract method (relative)",
+    value: "COVALENT_CONTRACT_CALL_COUNT_RELATIVE",
+    WalletActivityRequirement: CovalentContractCallCountRelative,
+  },
 ]
 
 const WalletActivityForm = ({
@@ -100,7 +112,6 @@ const WalletActivityForm = ({
   } = useFormContext()
 
   const type = useWatch({ name: `${baseFieldPath}.type` })
-  const chain = useWatch({ name: `${baseFieldPath}.chain` })
   const isEditMode = !!field?.id
 
   const supportedRequirementTypes = walletActivityRequirementTypes
@@ -156,10 +167,20 @@ const WalletActivityForm = ({
 
   const resetFields = () => {
     resetField(`${baseFieldPath}.address`, { defaultValue: "" })
-    resetField(`${baseFieldPath}.data.timestamps.minAmount`, { defaultValue: "" })
-    resetField(`${baseFieldPath}.data.timestamps.maxAmount`, { defaultValue: "" })
-    resetField(`${baseFieldPath}.data.txCount`, { defaultValue: "" })
     resetField(`${baseFieldPath}.data.txValue`, { defaultValue: "" })
+
+    resetField(`${baseFieldPath}.data.method`, {
+      defaultValue: "",
+    })
+    resetField(`${baseFieldPath}.data.inputs`, {
+      defaultValue: [],
+    })
+    resetField(`${baseFieldPath}.data.txCount`, {
+      defaultValue: 1,
+    })
+    resetField(`${baseFieldPath}.data.timestamps`, {
+      defaultValue: {},
+    })
   }
 
   const options = walletActivityRequirementTypes.filter((el) =>
@@ -168,30 +189,35 @@ const WalletActivityForm = ({
 
   return (
     <Stack spacing={4} alignItems="start">
-      <ChainPicker
-        controlName={`${baseFieldPath}.chain`}
-        supportedChains={walletActivitySupportedChains}
-      />
+      <FormControl
+        isInvalid={!!parseFromObject(errors, baseFieldPath)?.type?.message}
+      >
+        <FormLabel>Type</FormLabel>
 
-      {chain && (
+        <ControlledSelect
+          name={`${baseFieldPath}.type`}
+          rules={{ required: "It's required to select a type" }}
+          options={options}
+          beforeOnChange={resetFields}
+          isDisabled={isEditMode}
+        />
+
+        <FormErrorMessage>
+          {parseFromObject(errors, baseFieldPath)?.type?.message}
+        </FormErrorMessage>
+      </FormControl>
+
+      {selected && (
         <>
-          <FormControl
-            isInvalid={!!parseFromObject(errors, baseFieldPath)?.type?.message}
-          >
-            <FormLabel>Type</FormLabel>
-
-            <ControlledSelect
-              name={`${baseFieldPath}.type`}
-              rules={{ required: "It's required to select a type" }}
-              options={options}
-              beforeOnChange={resetFields}
-              isDisabled={isEditMode}
-            />
-
-            <FormErrorMessage>
-              {parseFromObject(errors, baseFieldPath)?.type?.message}
-            </FormErrorMessage>
-          </FormControl>
+          <ChainPicker
+            controlName={`${baseFieldPath}.chain`}
+            supportedChains={
+              // We only support INK with these two requirement types
+              selected.value.startsWith("COVALENT_CONTRACT_CALL_COUNT")
+                ? ["INK", "INK_SEPOLIA"]
+                : walletActivitySupportedChains
+            }
+          />
 
           {selected?.WalletActivityRequirement && (
             <selected.WalletActivityRequirement baseFieldPath={baseFieldPath} />

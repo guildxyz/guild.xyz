@@ -1,8 +1,18 @@
+import { anchorVariants } from "@/components/ui/Anchor"
+import { Button } from "@/components/ui/Button"
+import {
+  Popover,
+  PopoverContent,
+  PopoverPortal,
+  PopoverTrigger,
+} from "@/components/ui/Popover"
 import { IconProps } from "@phosphor-icons/react/dist/lib/types"
 import {
+  ArrowSquareOut,
   ArrowsLeftRight,
   Coins,
   FileText,
+  Function,
   Wallet,
 } from "@phosphor-icons/react/dist/ssr"
 import { BeforeAfterDates } from "components/[guild]/Requirements/components/DataBlockWithDate"
@@ -15,6 +25,7 @@ import { useRequirementContext } from "components/[guild]/Requirements/component
 import { DataBlock } from "components/common/DataBlock"
 import { DataBlockWithCopy } from "components/common/DataBlockWithCopy"
 import { ForwardRefExoticComponent, RefAttributes } from "react"
+import { Requirement as RequirementType } from "types"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 import pluralize from "utils/pluralize"
 import shortenHex from "utils/shortenHex"
@@ -31,6 +42,8 @@ const requirementIcons: Record<
   COVALENT_TX_COUNT_RELATIVE: ArrowsLeftRight,
   COVALENT_TX_VALUE: Coins,
   COVALENT_TX_VALUE_RELATIVE: Coins,
+  COVALENT_CONTRACT_CALL_COUNT: Function,
+  COVALENT_CONTRACT_CALL_COUNT_RELATIVE: Function,
 }
 
 type CovalentRequirementType =
@@ -42,6 +55,8 @@ type CovalentRequirementType =
   | "COVALENT_TX_COUNT_RELATIVE"
   | "COVALENT_TX_VALUE"
   | "COVALENT_TX_VALUE_RELATIVE"
+  | "COVALENT_CONTRACT_CALL_COUNT"
+  | "COVALENT_CONTRACT_CALL_COUNT_RELATIVE"
 
 const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext()
@@ -204,6 +219,107 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
                     <DataBlock>{formattedMinAmount}</DataBlock>
                   </>
                 ) : null}
+              </>
+            )
+          }
+          case "COVALENT_CONTRACT_CALL_COUNT":
+          case "COVALENT_CONTRACT_CALL_COUNT_RELATIVE": {
+            const formattedMinAmount = formatRelativeTimeFromNow(
+              reqData.timestamps.minAmount
+            )
+
+            const formattedMaxAmount = formatRelativeTimeFromNow(
+              reqData.timestamps.maxAmount
+            )
+
+            const req = requirement as Extract<
+              RequirementType,
+              {
+                type:
+                  | "COVALENT_CONTRACT_CALL_COUNT"
+                  | "COVALENT_CONTRACT_CALL_COUNT_RELATIVE"
+              }
+            >
+            return (
+              <>
+                <span>{`Call the `}</span>
+                <DataBlockWithCopy text={req.address}>
+                  {shortenHex(req.address, 3)}
+                </DataBlockWithCopy>
+                <span>{" contract's "}</span>
+                <DataBlock>{req.data.method}</DataBlock>
+                <span>{" method"}</span>
+
+                {req.data.txCount > 1 && <span>{` ${req.data.txCount} times`}</span>}
+
+                {req.data.inputs.length > 0 && (
+                  <>
+                    <span>{" with "}</span>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="unstyled"
+                          className={anchorVariants({
+                            className: "h-auto p-0",
+                          })}
+                          rightIcon={<ArrowSquareOut weight="bold" />}
+                        >
+                          specific inputs
+                        </Button>
+                      </PopoverTrigger>
+
+                      <PopoverPortal>
+                        <PopoverContent side="bottom" className="p-0">
+                          <div className="border-border border-b p-1.5 font-bold text-xs uppercase">
+                            Inputs
+                          </div>
+
+                          <table className="w-full table-fixed rounded-b-xl bg-card dark:bg-blackAlpha">
+                            <thead className="text-xs">
+                              <tr className="border-border border-b [&>th]:p-1.5 [&>th]:text-left">
+                                <th>Input param</th>
+                                <th>Operation</th>
+                                <th>Value</th>
+                              </tr>
+                            </thead>
+                            <tbody className="text-xs">
+                              {req.data.inputs?.map((input) => (
+                                <tr
+                                  key={input.index}
+                                  className="border-border border-b last:border-b-0 [&>td]:p-1.5"
+                                >
+                                  <td>{`${input.index + 1}. param`}</td>
+                                  <td>{input.operator}</td>
+                                  <td>{input.value}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </PopoverContent>
+                      </PopoverPortal>
+                    </Popover>
+                  </>
+                )}
+
+                {req.type === "COVALENT_CONTRACT_CALL_COUNT" ? (
+                  <BeforeAfterDates minTs={minAmount} maxTs={maxAmount} />
+                ) : (
+                  <>
+                    {formattedMaxAmount && formattedMinAmount ? (
+                      <>
+                        <span>{" between the last "}</span>
+                        <DataBlock>{formattedMinAmount}</DataBlock>
+                        <span>{" - "}</span>
+                        <DataBlock>{formattedMaxAmount}</DataBlock>
+                      </>
+                    ) : formattedMinAmount ? (
+                      <>
+                        <span>{" in the last "}</span>
+                        <DataBlock>{formattedMinAmount}</DataBlock>
+                      </>
+                    ) : null}
+                  </>
+                )}
               </>
             )
           }

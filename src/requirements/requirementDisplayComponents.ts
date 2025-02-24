@@ -46,6 +46,12 @@ export const REQUIREMENT_DISPLAY_COMPONENTS = {
   COVALENT_TX_COUNT_RELATIVE: dynamic<RequirementProps>(
     () => import("requirements/WalletActivity/WalletActivityRequirement")
   ),
+  COVALENT_CONTRACT_CALL_COUNT: dynamic<RequirementProps>(
+    () => import("requirements/WalletActivity/WalletActivityRequirement")
+  ),
+  COVALENT_CONTRACT_CALL_COUNT_RELATIVE: dynamic<RequirementProps>(
+    () => import("requirements/WalletActivity/WalletActivityRequirement")
+  ),
   ALCHEMY_TX_VALUE: dynamic<RequirementProps>(
     () => import("requirements/WalletActivity/WalletActivityRequirement")
   ),
