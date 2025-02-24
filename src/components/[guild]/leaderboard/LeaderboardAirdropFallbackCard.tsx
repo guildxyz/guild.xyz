@@ -21,7 +21,7 @@ const LeaderboardAirdropFallbackCard = ({ guildPlatform }) => {
   const toast = useToast()
   const { triggerMembershipUpdate, isLoading } = useMembershipUpdate({
     onSuccess: () => {
-      toast({ status: "success", title: "Successfully checked eligiblity" })
+      toast({ status: "success", title: "Successfully checked eligibility" })
       setIsFinished(true)
     },
   })
