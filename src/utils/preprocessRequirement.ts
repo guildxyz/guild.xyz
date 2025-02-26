@@ -31,13 +31,16 @@ const preprocessRequirement = (
       processedRequirement.data.timestamps.maxAmount,
     ].sort((a, b) => a - b)
 
-    const [upperEnd, lowerEnd] = [
-      processedRequirement.data.minAmount,
-      processedRequirement.data.maxAmount,
-    ].sort((a, b) => a - b)
+    // Hotfix, so we don't reorder these fields for this requirement
+    if (processedRequirement.type !== "COVALENT_CONTRACT_CALL_COUNT_RELATIVE") {
+      const [upperEnd, lowerEnd] = [
+        processedRequirement.data.minAmount,
+        processedRequirement.data.maxAmount,
+      ].sort((a, b) => a - b)
 
-    processedRequirement.data.minAmount = lowerEnd
-    processedRequirement.data.maxAmount = upperEnd
+      processedRequirement.data.minAmount = lowerEnd
+      processedRequirement.data.maxAmount = upperEnd
+    }
 
     processedRequirement.data.timestamps.minAmount = tsLowerEnd
     processedRequirement.data.timestamps.maxAmount = tsUpperEnd
