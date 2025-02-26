@@ -173,7 +173,7 @@ const LeaveGuildToExternalLinkAlert = ({
           </p>
 
           <div className="rounded-xl border border-border bg-blackAlpha-soft p-4">
-            <p className="font-medium">
+            <p className="font-medium break-all">
               <span className="text-muted-foreground">{urlArray[0]}</span>
               <span>{urlObj.hostname}</span>
               <span className="text-muted-foreground">{urlArray[1]}</span>
