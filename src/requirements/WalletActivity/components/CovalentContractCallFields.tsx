@@ -15,8 +15,10 @@ import {
 } from "@/components/ui/Select"
 import { Skeleton } from "@/components/ui/Skeleton"
 import { useFormContext, useWatch } from "react-hook-form"
+import MinMaxAmount from "requirements/common/MinMaxAmount"
 import { RequirementFormProps } from "requirements/types"
 import { ADDRESS_REGEX } from "utils/guildCheckout/constants"
+import { CHAIN_CONFIG } from "wagmiConfig/chains"
 import { useCovalentContractAbiMethods } from "../hooks/useCovalentContractAbiMethods"
 import { CovalentContractCallCountChain } from "../types"
 import { abiItemToFunctionSignature } from "../utils"
@@ -24,6 +26,7 @@ import { ContractMethodInputsFieldArray } from "./ContractMethodInputsFieldArray
 import TxCountFormControl from "./TxCountFormControl"
 
 export const CovalentContractCallFields = ({
+  field,
   baseFieldPath,
 }: RequirementFormProps) => {
   const { control, resetField, getValues } = useFormContext()
@@ -138,6 +141,15 @@ export const CovalentContractCallFields = ({
       <TxCountFormControl
         baseFieldPath={baseFieldPath}
         formLabel="Number of contract calls"
+      />
+
+      <MinMaxAmount
+        label={
+          chain ? `${CHAIN_CONFIG[chain].nativeCurrency.symbol} amount` : "TX value"
+        }
+        field={field}
+        baseFieldPath={baseFieldPath}
+        format="FLOAT"
       />
     </>
   )

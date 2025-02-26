@@ -29,6 +29,7 @@ import { Requirement as RequirementType } from "types"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 import pluralize from "utils/pluralize"
 import shortenHex from "utils/shortenHex"
+import { CHAIN_CONFIG } from "wagmiConfig/chains"
 
 const requirementIcons: Record<
   string,
@@ -298,6 +299,19 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
                         </PopoverContent>
                       </PopoverPortal>
                     </Popover>
+                  </>
+                )}
+
+                {(req.data.minAmount || req.data.maxAmount) && (
+                  <>
+                    <span>
+                      {req.data.minAmount && req.data.maxAmount
+                        ? ` with ${req.data.minAmount} - ${req.data.maxAmount}`
+                        : req.data.minAmount
+                          ? ` with at least ${req.data.minAmount}`
+                          : ` with at most ${req.data.maxAmount}`}
+                    </span>
+                    <span>{` ${CHAIN_CONFIG[req.chain].nativeCurrency.symbol}`}</span>
                   </>
                 )}
 
