@@ -24,28 +24,22 @@ export default function useCustomPosthogEvents() {
       })
     },
 
-    rewardGranted(platformId: number) {
-      captureEvent("reward granted", {
-        platformName: PlatformType[platformId],
-        guild: urlName,
-        userId: id,
-      })
-    },
-
     rewardClaimed(platformId: number) {
-      captureEvent("reward claimed", {
-        platformName: PlatformType[platformId],
-        guild: urlName,
-        userId: id,
-        ...(platformId === PlatformType.CONTRACT_CALL
-          ? {
-              $set: {
-                mintedReward: true,
-                mintedNFT: true,
-              },
-            }
-          : {}),
-      })
+      if (platformId === PlatformType.CONTRACT_CALL) {
+        captureEvent("reward claimed", {
+          platformName: PlatformType[platformId],
+          guild: urlName,
+          userId: id,
+          ...(platformId === PlatformType.CONTRACT_CALL
+            ? {
+                $set: {
+                  mintedReward: true,
+                  mintedNFT: true,
+                },
+              }
+            : {}),
+        })
+      }
     },
   } as const
 }

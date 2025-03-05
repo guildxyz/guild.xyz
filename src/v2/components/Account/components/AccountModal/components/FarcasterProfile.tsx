@@ -1,4 +1,3 @@
-import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import {
   Accordion,
   AccordionContent,
@@ -70,7 +69,6 @@ const ConnectFarcasterButton = ({
   children,
   ...props
 }: ButtonProps & { onSuccess?: () => void; isReconnection?: boolean }) => {
-  const { captureEvent } = usePostHogContext()
   const { farcasterProfiles, id: userId, mutate } = useUser()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { toast } = useToast()
@@ -80,7 +78,6 @@ const ConnectFarcasterButton = ({
   const getKeyForSWRWithOptionalAuth = useGetKeyForSWRWithOptionalAuth()
 
   const onApprove = () => {
-    captureEvent("[farcaster] request approved")
     onClose()
     toast({
       variant: "success",
@@ -163,13 +160,10 @@ const ConnectFarcasterButton = ({
 
   useEffect(() => {
     if (seconds > 0) return
-
-    captureEvent("[farcaster] deadline hit")
     onRegenerate()
-  }, [seconds, resetCountdown, captureEvent, onRegenerate])
+  }, [seconds, resetCountdown, onRegenerate])
 
   const handleOnClose = () => {
-    captureEvent("[farcaster] connect modal closed")
     stop()
     signedKeyRequest.reset()
     if (pollInterval) {
@@ -186,10 +180,7 @@ const ConnectFarcasterButton = ({
   return (
     <>
       <Button
-        onClick={() => {
-          captureEvent("[farcaster] connect button clicked")
-          signedKeyRequest.onSubmit()
-        }}
+        onClick={() => signedKeyRequest.onSubmit()}
         size="sm"
         disabled={farcasterProfiles?.length > 0}
         isLoading={signedKeyRequest.isLoading}
@@ -258,10 +249,7 @@ const ConnectFarcasterButton = ({
                       disabled={!shouldEnableRegenerateButton}
                       isLoading={signedKeyRequest.isLoading}
                       aria-label="Regenerate Farcaster QR code"
-                      onClick={() => {
-                        captureEvent("[farcaster] manual qr regeneration")
-                        onRegenerate()
-                      }}
+                      onClick={() => onRegenerate()}
                       icon={<ArrowCounterClockwise weight="bold" />}
                     />
                   </TooltipTrigger>
@@ -321,7 +309,6 @@ const ConnectFarcasterButton = ({
 }
 
 const DisconnectFarcasterButton = () => {
-  const { captureEvent } = usePostHogContext()
   const disclosure = useDisclosure()
   const { farcasterProfiles, id, mutate } = useUser()
   const fetcherWithSign = useFetcherWithSign()
@@ -352,10 +339,7 @@ const DisconnectFarcasterButton = () => {
       },
     }
   )
-  const onConfirm = () => {
-    captureEvent("[farcaster] disconnect button clicked")
-    onSubmit(farcasterProfiles?.[0]?.fid)
-  }
+  const onConfirm = () => onSubmit(farcasterProfiles?.[0]?.fid)
 
   return (
     <DisconnectAccountButton

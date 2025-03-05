@@ -1,16 +1,12 @@
-import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import type { JoinJob } from "@guildxyz/types"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
-import useMembership from "components/explorer/hooks/useMembership"
-import useCustomPosthogEvents from "hooks/useCustomPosthogEvents"
 import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import { useGetKeyForSWRWithOptionalAuth } from "hooks/useGetKeyForSWRWithOptionalAuth"
 import useSubmit from "hooks/useSubmit"
 import { UseSubmitOptions } from "hooks/useSubmit/types"
 import { atom, useAtom } from "jotai"
 import useUsersPoints from "rewards/Points/useUsersPoints"
-import { getGuildPlatformsOfRoles } from "../utils/getGuildPlatformsOfRoles"
 import { mapAccessJobState } from "../utils/mapAccessJobState"
 import { useActiveMembershipUpdate } from "./useActiveMembershipUpdate"
 
@@ -50,16 +46,6 @@ const useMembershipUpdate = ({
   const [currentlyCheckedRoleIds, setCurrentlyCheckedRoleIds] = useAtom(
     currentlyCheckedRoleIdsAtom
   )
-  const { captureEvent } = usePostHogContext()
-  const { rewardGranted } = useCustomPosthogEvents()
-  const posthogOptions = {
-    guild: guild.urlName,
-  }
-
-  const { roleIds: accessedRoleIds } = useMembership()
-  const accessedGuildPlatformIds = new Set(
-    getGuildPlatformsOfRoles(accessedRoleIds, guild).map(({ id }) => id)
-  )
 
   const getKeyForSWRWithOptionalAuth = useGetKeyForSWRWithOptionalAuth()
 
@@ -95,23 +81,6 @@ const useMembershipUpdate = ({
           correlationId: res.correlationId,
         })
 
-      if (res?.updateMembershipResult?.newMembershipRoleIds?.length > 0) {
-        const grantedGuildPlatforms = getGuildPlatformsOfRoles(
-          res.updateMembershipResult.newMembershipRoleIds,
-          guild
-        )
-
-        const newGuildPlatforms = grantedGuildPlatforms.filter(
-          ({ id }) => !accessedGuildPlatformIds.has(id)
-        )
-
-        if (newGuildPlatforms.length > 0) {
-          newGuildPlatforms.forEach((newGuildPlatform) => {
-            rewardGranted(newGuildPlatform.platformId)
-          })
-        }
-      }
-
       if (res?.roleAccesses?.some((role) => !!role.access)) {
         // mutate guild in case the user sees more entities due to visibilities
         if (!isAdmin) guild.mutateGuild()
@@ -136,7 +105,6 @@ const useMembershipUpdate = ({
     },
     onError: (error) => {
       setIsGettingJob(false)
-      captureEvent(`Guild join error`, { ...posthogOptions, error })
       onError?.(error)
     },
   })

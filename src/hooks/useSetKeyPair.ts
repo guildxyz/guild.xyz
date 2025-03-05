@@ -180,14 +180,6 @@ const useSetKeyPair = (submitOptions?: UseSubmitOptions) => {
       ...submitOptions,
       onError: (error) => {
         console.error("setKeyPair error", error)
-        if (
-          error?.code !== RPC_INTERNAL_ERROR_CODE &&
-          error?.code !== "ACTION_REJECTED"
-        ) {
-          const trace = error?.stack || new Error().stack
-          captureEvent(`Failed to set keypair`, { error, trace })
-        }
-
         submitOptions?.onError?.(error)
       },
       onSuccess: () => {

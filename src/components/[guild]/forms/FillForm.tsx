@@ -6,14 +6,12 @@ import Button from "components/common/Button"
 import Card from "components/common/Card"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
-import useCustomPosthogEvents from "hooks/useCustomPosthogEvents"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useState } from "react"
 import { Controller, FormProvider, UseFormProps, useForm } from "react-hook-form"
 import { useUserFormSubmission } from "rewards/Forms/hooks/useFormSubmissions"
-import { PlatformType } from "types"
 import fetcher from "utils/fetcher"
 import { useMembershipUpdate } from "../JoinModal/hooks/useMembershipUpdate"
 import useGuild from "../hooks/useGuild"
@@ -49,8 +47,6 @@ const FillForm = ({ form, method = "POST", ...config }: Props) => {
   const { mutate: mutateSubmission } = useUserFormSubmission(form)
   const { triggerMembershipUpdate } = useMembershipUpdate()
 
-  const { rewardClaimed } = useCustomPosthogEvents()
-
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
   const { onSubmit, isLoading } = useSubmitWithSign(
@@ -64,7 +60,6 @@ const FillForm = ({ form, method = "POST", ...config }: Props) => {
       ),
     {
       onSuccess: (res) => {
-        rewardClaimed(PlatformType.FORM)
         toast({
           status: "success",
           title: "Successfully submitted form",

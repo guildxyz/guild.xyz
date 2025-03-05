@@ -1,13 +1,11 @@
 import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useCustomPosthogEvents from "hooks/useCustomPosthogEvents"
 import { useFetcherWithSign } from "hooks/useFetcherWithSign"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import { useToastWithShareButtons } from "hooks/useToastWithShareButtons"
 import { useState } from "react"
 import tokenRewardPoolAbi from "static/abis/tokenRewardPool"
-import { PlatformType } from "types"
 import { ERC20_CONTRACTS } from "utils/guildCheckout/constants"
 import processViemContractError from "utils/processViemContractError"
 import { TransactionReceipt, WriteContractParameters } from "viem"
@@ -41,7 +39,6 @@ const useCollectToken = (
   const fetcherWithSign = useFetcherWithSign()
   const publicClient = usePublicClient()
   const { data: walletClient } = useWalletClient()
-  const { rewardClaimed } = useCustomPosthogEvents()
 
   const collect = async () => {
     setLoadingText("Getting signature...")
@@ -67,9 +64,6 @@ const useCollectToken = (
         return
       })
       .then((res) => {
-        if (res) {
-          rewardClaimed(PlatformType.ERC20)
-        }
         const data: ClaimResponse = res.data
         // eslint-disable-next-line @typescript-eslint/naming-convention
         const [_poolId, _rolePlatformId, _amount, _signedAt, _userId, _signature] =
