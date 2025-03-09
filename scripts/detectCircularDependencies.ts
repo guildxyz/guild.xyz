@@ -35,7 +35,7 @@ async function main() {
 export async function determineCirculars(): Promise<string[][]> {
   return new Promise((resolve) => {
     void parseDependencyTree("./**/*.ts*", {
-      // by transforming all files to javascript we avoid detecting circular type dependencies, whhich dont hurt at runtime
+      // by transforming all files to javascript we avoid detecting circular type dependencies, which don’t hurt at runtime
       transform: true,
       exclude: /node_modules\/*/,
     }).then((tree) => {
