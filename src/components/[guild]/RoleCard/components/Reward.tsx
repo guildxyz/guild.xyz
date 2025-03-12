@@ -130,11 +130,11 @@ const RewardIcon = ({
   const [doIconFallback, setDoIconFallback] = useState(false)
 
   const rewardConfig =
-    rewards[PlatformType[guildPlatform.platformId] as PlatformName]
+    rewards[PlatformType[guildPlatform?.platformId] as PlatformName]
 
   const props = {
-    src: guildPlatform.platformGuildData?.imageUrl ?? rewardConfig?.imageUrl,
-    alt: guildPlatform.platformGuildName,
+    src: guildPlatform?.platformGuildData?.imageUrl ?? rewardConfig?.imageUrl,
+    alt: guildPlatform?.platformGuildName,
     boxSize: 6,
     rounded: "full",
     onError: () => {
@@ -160,7 +160,7 @@ const RewardIcon = ({
 
   return (
     <Circle as="picture">
-      <source srcSet={rewards[PlatformType[guildPlatform.platformId]].imageUrl} />
+      <source srcSet={rewards[PlatformType[guildPlatform?.platformId]].imageUrl} />
       <Img {...props} />
     </Circle>
   )
