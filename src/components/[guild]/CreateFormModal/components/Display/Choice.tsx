@@ -40,7 +40,12 @@ const SingleChoice = forwardRef<Props & Omit<RadioGroupProps, "children">, "div"
       >
         <Stack spacing={2}>
           {options.map((option) => (
-            <Radio key={option} value={option.toString()} w="max-content">
+            <Radio
+              key={option}
+              value={option.toString()}
+              w="max-content"
+              maxW="full"
+            >
               {option}
             </Radio>
           ))}
@@ -107,7 +112,12 @@ const MultipleChoice = forwardRef<Props & CheckboxGroupProps, "div">(
       >
         <Stack spacing={2}>
           {options.map((option) => (
-            <Checkbox key={option} value={option.toString()} w="max-content">
+            <Checkbox
+              key={option}
+              value={option.toString()}
+              w="max-content"
+              maxW="full"
+            >
               {option}
             </Checkbox>
           ))}
