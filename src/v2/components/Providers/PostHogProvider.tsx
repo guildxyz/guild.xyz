@@ -69,8 +69,9 @@ export function CustomPostHogProvider({ children }: { children: ReactNode }) {
 
   const identifyUser = useCallback(
     (userData: User) => {
-      const userIdAsString = userData.id.toString()
       const anonymousId = posthog.get_distinct_id()
+
+      const userIdAsString = userData.id.toString()
 
       posthog.identify(userIdAsString, {
         primaryAddress: userData.addresses.find((a) => a.isPrimary)?.address,
