@@ -70,19 +70,16 @@ export function CustomPostHogProvider({ children }: { children: ReactNode }) {
   const identifyUser = useCallback(
     (userData: User) => {
       const userIdAsString = userData.id.toString()
-      console.log({ firstdis: posthog.get_distinct_id() })
+      const anonymousId = posthog.get_distinct_id()
+
       posthog.identify(userIdAsString, {
         primaryAddress: userData.addresses.find((a) => a.isPrimary)?.address,
         currentAddress: address,
         walletType,
         wallet: connectorName,
       })
-      const anonymousId = posthog.get_distinct_id()
-      console.log({ seconddis: anonymousId, userIdAsString })
 
-      if (anonymousId !== userIdAsString) {
-        posthog.alias(userIdAsString, anonymousId)
-      }
+      posthog.alias(anonymousId, userIdAsString)
     },
     [address, connectorName, walletType]
   )
