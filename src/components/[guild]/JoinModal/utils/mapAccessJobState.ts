@@ -75,7 +75,10 @@ const mapAccessJobState = (progress: JoinJob, isLoading: boolean) => {
     progress.roleIds && progress.updateMembershipResult
       ? {
           all: progress.roleIds?.length,
-          granted: progress.updateMembershipResult?.membershipRoleIds?.length,
+          granted: progress.updateMembershipResult?.membershipRoleIds
+            ? // TODO: for some reason sometimes there are duplicate role IDs in this array, this is a hotfix, we should find the root of the issue.
+              new Set(progress.updateMembershipResult.membershipRoleIds).size
+            : 0,
         }
       : null
 
