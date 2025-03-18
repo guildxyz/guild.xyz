@@ -137,6 +137,7 @@ const GuildPage = (): JSX.Element => {
                         <Anchor
                           href={link?.startsWith("http") ? link : `https://${link}`}
                           className="font-semibold text-banner-foreground text-sm"
+                          target="_blank"
                         >
                           {prettyLink}
                         </Anchor>

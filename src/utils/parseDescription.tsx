@@ -24,6 +24,7 @@ const parseDescription = (description?: string) => {
             // TODO: generate custom (non-Chakra) variables in the theme context
             className="break-all text-[var(--chakra-colors-primary-500)]"
             onClick={(e) => e.stopPropagation()}
+            target="_blank"
           >
             {linkMatches[i][0]}
           </Anchor>
