@@ -80,9 +80,7 @@ export function CustomPostHogProvider({ children }: { children: ReactNode }) {
         wallet: connectorName,
       })
 
-      if (anonymousId !== userIdAsString) {
-        posthog.alias(userIdAsString, anonymousId)
-      }
+      posthog.alias(anonymousId, userIdAsString)
     },
     [address, connectorName, walletType]
   )
