@@ -221,7 +221,7 @@ const useMintGuildPin = () => {
         captureEvent("Failed to send purchase verification", {
           ...postHogOptions,
           ...verificationPosthogData,
-          error,
+          error: JSON.stringify(error, Object.getOwnPropertyNames(error)),
         })
       })
   }
