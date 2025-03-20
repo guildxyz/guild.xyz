@@ -209,13 +209,11 @@ const useMintGuildPin = () => {
     }
 
     verifyPurchase(hash)
-      .then((res) => {
-        if (res.status === "success") {
-          captureEvent("Purchase verified", {
-            ...postHogOptions,
-            ...verificationPosthogData,
-          })
-        }
+      .then(() => {
+        captureEvent("Purchase verified", {
+          ...postHogOptions,
+          ...verificationPosthogData,
+        })
       })
       .catch((error) => {
         captureEvent("Failed to send purchase verification", {
