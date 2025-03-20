@@ -82,7 +82,7 @@ const FarcasterChannelPicker = () => {
               </SelectItem>
             ))
           ) : (
-            <p>Couldn't find any usable channels</p>
+            <p className="p-4">Couldn't find any usable channels</p>
           )}
         </SelectContent>
       </Select>
