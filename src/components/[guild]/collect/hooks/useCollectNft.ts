@@ -103,7 +103,7 @@ const useCollectNft = () => {
   const claimAmount = claimAmountFromForm ?? 1
 
   const verifyPurchase = (txHash: string) => {
-    fetcherWithSign([
+    return fetcherWithSign([
       `/v2/users/${userAddress}/orders/verify`,
       {
         body: {
@@ -199,7 +199,29 @@ const useCollectNft = () => {
 
     setTxSuccess(true)
 
+    const verificationPosthogData = {
+      from: userAddress,
+      txHash: hash,
+      chainId,
+      claimFee,
+    }
+
     verifyPurchase(hash)
+      .then((res) => {
+        if (res.status === "success") {
+          captureEvent("Purchase verified", {
+            ...postHogOptions,
+            ...verificationPosthogData,
+          })
+        }
+      })
+      .catch((error) => {
+        captureEvent("Failed to send purchase verification", {
+          ...postHogOptions,
+          ...verificationPosthogData,
+          error,
+        })
+      })
     return receipt
   }
 

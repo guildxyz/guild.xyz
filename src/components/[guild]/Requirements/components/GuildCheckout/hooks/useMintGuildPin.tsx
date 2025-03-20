@@ -201,13 +201,35 @@ const useMintGuildPin = () => {
       shareText: `Just minted my Guild Pin for joining ${name}!\nguild.xyz/${urlName}`,
     })
 
+    const verificationPosthogData = {
+      from: userAddress,
+      txHash: hash,
+      chainId,
+      claimFee: guildPinFee,
+    }
+
     verifyPurchase(hash)
+      .then((res) => {
+        if (res.status === "success") {
+          captureEvent("Purchase verified", {
+            ...postHogOptions,
+            ...verificationPosthogData,
+          })
+        }
+      })
+      .catch((error) => {
+        captureEvent("Failed to send purchase verification", {
+          ...postHogOptions,
+          ...verificationPosthogData,
+          error,
+        })
+      })
   }
 
   const fetcherWithSign = useFetcherWithSign()
 
   const verifyPurchase = (txHash: string) => {
-    fetcherWithSign([
+    return fetcherWithSign([
       `/v2/users/${address}/orders/verify`,
       {
         body: {
