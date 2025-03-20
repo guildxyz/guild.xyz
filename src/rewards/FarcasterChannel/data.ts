@@ -7,5 +7,5 @@ export const farcasterChannelData = {
   gatedEntity: "",
   autoRewardSetup: false,
   isPlatform: false,
-  asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE, // TODO: do we need to support multiple roles?
+  asRewardRestriction: PlatformAsRewardRestrictions.MULTIPLE_ROLES,
 } satisfies RewardData

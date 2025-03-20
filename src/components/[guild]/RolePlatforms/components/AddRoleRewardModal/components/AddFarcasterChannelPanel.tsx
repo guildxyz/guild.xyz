@@ -1,5 +1,6 @@
 import { Flex } from "@chakra-ui/react"
 import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hooks/useAddRewardDiscardAlert"
+import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
@@ -7,8 +8,6 @@ import { AddRewardPanelProps } from "rewards"
 import FarcasterChannelForm from "rewards/FarcasterChannel/FarcasterChannelForm"
 import { PlatformGuildData, PlatformType } from "types"
 import { DefaultAddRewardPanelWrapper } from "../DefaultAddRewardPanelWrapper"
-
-// TODO: show an auth button if the user haven't connected their farcaster account yet
 
 export type AddFarcasterChannelFormType = {
   channel: {
@@ -31,6 +30,8 @@ const AddGatherPanel = ({ onAdd }: AddRewardPanelProps) => {
 
   const { id: moderatorUserId } = useUser()
 
+  const { targetRoleId } = useAddRewardContext()
+
   return (
     <FormProvider {...methods}>
       <DefaultAddRewardPanelWrapper>
@@ -52,6 +53,8 @@ const AddGatherPanel = ({ onAdd }: AddRewardPanelProps) => {
                     moderatorUserId,
                   } as PlatformGuildData["FARCASTER_CHANNEL"],
                 },
+
+                platformRoleId: `FARCASTER_CHANNEL-${targetRoleId}`,
                 isNew: true,
               })
             )}
