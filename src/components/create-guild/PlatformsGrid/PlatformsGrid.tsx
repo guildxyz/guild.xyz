@@ -73,6 +73,10 @@ const PlatformsGrid = ({ onSelection, disabledRewards, ...rest }: Props) => {
       description: "Gather responses",
       isGeneral: true,
     },
+    {
+      platform: "FARCASTER_CHANNEL",
+      description: "Gate a Farcaster channel",
+    },
   ]
 
   return (

@@ -51,4 +51,11 @@ export const RewardPreviews = {
     ssr: false,
     loading: LoadingRewardPreview,
   }),
+  FARCASTER_CHANNEL: dynamic(
+    () => import("rewards/components/FarcasterChannelPreview"),
+    {
+      ssr: false,
+      loading: LoadingRewardPreview,
+    }
+  ),
 } as const satisfies RewardComponentMap<RewardPreview>

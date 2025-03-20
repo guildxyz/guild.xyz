@@ -1,5 +1,6 @@
 import useContractCallCardProps from "./ContractCall/useContractCallCardProps"
 import useDiscordCardProps from "./Discord/useDiscordCardProps"
+import useFarcasterChannelCardProps from "./FarcasterChannel/useFarcasterChannelCardProps"
 import useFormCardProps from "./Forms/useFormCardProps"
 import useGatherCardProps from "./Gather/useGatherCardProps"
 import useGithubCardProps from "./Github/useGithubCardProps"
@@ -25,4 +26,5 @@ export const cardPropsHooks = {
   CONTRACT_CALL: useContractCallCardProps,
   FORM: useFormCardProps,
   GITHUB: useGithubCardProps,
+  FARCASTER_CHANNEL: useFarcasterChannelCardProps,
 } as const satisfies RewardComponentMap<CardPropsHook>
