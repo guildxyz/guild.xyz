@@ -1,4 +1,5 @@
 import { ToastAction } from "@/components/ui/Toast"
+import { ArrowSquareOut } from "@phosphor-icons/react/dist/ssr"
 import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
@@ -68,6 +69,7 @@ const FarcasterChannelCardButton = () => {
         as: "a",
         target: "_blank",
         href: channelLink,
+        rightIcon: <ArrowSquareOut weight="bold" />,
       } as const)
     : ({
         onClick: () => onGetInviteSubmit(),
