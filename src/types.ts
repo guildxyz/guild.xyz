@@ -78,6 +78,7 @@ type PlatformName =
   | "ERC20"
   | "FARCASTER"
   | "WORLD_ID"
+  | "FARCASTER_CHANNEL"
 
 type PlatformUserData = {
   acessToken?: string
@@ -179,6 +180,7 @@ type PlatformGuildData = {
     multiplier?: never
     tokenDecimals?: never
     tokenAddress?: never
+    moderatorUserId?: never
   }
   GOOGLE: {
     role?: "reader" | "commenter" | "writer"
@@ -208,6 +210,7 @@ type PlatformGuildData = {
     poolId?: never
     multiplier?: never
     tokenAddress?: never
+    moderatorUserId?: never
   }
   CONTRACT_CALL: {
     chain: Chain
@@ -236,6 +239,7 @@ type PlatformGuildData = {
     poolId?: never
     multiplier?: never
     tokenAddress?: never
+    moderatorUserId?: never
   }
   UNIQUE_TEXT: {
     texts: string[]
@@ -264,6 +268,7 @@ type PlatformGuildData = {
     poolId?: never
     multiplier?: never
     tokenAddress?: never
+    moderatorUserId?: never
   }
   TEXT: {
     text: string
@@ -292,6 +297,7 @@ type PlatformGuildData = {
     poolId?: never
     multiplier?: never
     tokenAddress?: never
+    moderatorUserId?: never
   }
   POAP: {
     text?: never
@@ -320,6 +326,7 @@ type PlatformGuildData = {
     poolId?: never
     multiplier?: never
     tokenAddress?: never
+    moderatorUserId?: never
   }
   FORM: {
     text?: never
@@ -348,6 +355,7 @@ type PlatformGuildData = {
     poolId?: never
     multiplier?: never
     tokenAddress?: never
+    moderatorUserId?: never
   }
   GATHER: {
     name: string
@@ -376,6 +384,7 @@ type PlatformGuildData = {
     poolId?: never
     multiplier?: never
     tokenAddress?: never
+    moderatorUserId?: never
   }
   POINTS: {
     text?: never
@@ -404,6 +413,7 @@ type PlatformGuildData = {
     poolId?: never
     multiplier?: never
     tokenAddress?: never
+    moderatorUserId?: never
   }
   ERC20: {
     poolId: number
@@ -432,6 +442,36 @@ type PlatformGuildData = {
     fancyId?: never
     eventId?: never
     formId?: never
+    moderatorUserId?: never
+  }
+  FARCASTER_CHANNEL: {
+    poolId: never
+    chain: never
+    contractAddress: never
+    tokenAddress: never
+    name: string
+    description: never
+    imageUrl?: string
+    gatherSpaceId?: never
+    gatherApiKey?: never
+    gatherAffiliation?: never
+    gatherRole?: never
+    role?: never
+    text?: never
+    texts?: never
+    function?: never
+    argsToSign?: never
+    symbol?: never
+    inviteChannel?: never
+    invite?: never
+    joinButton?: never
+    needCaptcha?: never
+    mimeType?: never
+    iconLink?: never
+    fancyId?: never
+    eventId?: never
+    formId?: never
+    moderatorUserId: number
   }
 }
 
@@ -622,6 +662,7 @@ export enum PlatformType {
   GATHER_TOWN = 16,
   ERC20 = 17,
   WORLD_ID = 18,
+  FARCASTER_CHANNEL = 19,
 }
 
 enum ValidationMethod {

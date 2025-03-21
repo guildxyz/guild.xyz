@@ -1,5 +1,6 @@
 import contractCallComponents from "rewards/ContractCall/components"
 import discordComponents from "rewards/Discord/components"
+import farcasterChannelComponents from "rewards/FarcasterChannel/components"
 import formComponents from "rewards/Forms/components"
 import gatherTownComponents from "rewards/Gather/components"
 import githubComponents from "rewards/Github/components"
@@ -25,4 +26,5 @@ export default {
   DISCORD: discordComponents,
   GITHUB: githubComponents,
   POAP: poapComponents,
+  FARCASTER_CHANNEL: farcasterChannelComponents,
 } as Partial<RewardComponents>

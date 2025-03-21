@@ -107,6 +107,9 @@ const SelectExistingPlatform = ({ onClose, onSelect }: Props) => {
             platform.platformGuildData?.mimeType ===
             "application/vnd.google-apps.form"
 
+          const isFarcasterChannelReward =
+            platform.platformId === PlatformType.FARCASTER_CHANNEL
+
           const rolePlatformData = {
             guildPlatformId: platform.id,
             guildPlatform: platform,
@@ -114,6 +117,9 @@ const SelectExistingPlatform = ({ onClose, onSelect }: Props) => {
             roleId: targetRoleId,
             ...(isGoogleReward && {
               platformRoleId: isForm ? "writer" : "reader",
+            }),
+            ...(isFarcasterChannelReward && {
+              platformRoleId: `FARCASTER_CHANNEL-${targetRoleId}`,
             }),
             visibility: roleVisibility,
           }

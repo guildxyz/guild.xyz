@@ -10,7 +10,6 @@ import {
 } from "@chakra-ui/react"
 import ColorCard from "components/common/ColorCard"
 import ColorCardLabel from "components/common/ColorCard/ColorCardLabel"
-import Image from "next/image"
 import { PropsWithChildren } from "react"
 import { Rest } from "types"
 
@@ -74,7 +73,7 @@ const RewardCard = ({
                 flexShrink={0}
                 position="relative"
               >
-                <Image src={image} alt={title} fill sizes="2.5rem" />
+                <img src={image} alt={title} className="size-full object-cover" />
               </Box>
             ) : (
               <SkeletonCircle size="10" />

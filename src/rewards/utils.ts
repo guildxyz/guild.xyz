@@ -9,6 +9,7 @@ export const modalSizeForPlatform = (platform: PlatformName) => {
     case "TEXT":
       return "2xl"
     case "POAP":
+    case "FARCASTER_CHANNEL":
       return "lg"
     case "TELEGRAM":
       return "md"
