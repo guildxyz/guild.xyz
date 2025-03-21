@@ -2,6 +2,7 @@ import { env } from "env"
 import { FuelSignProps, SignProps } from "hooks/useSubmit/types"
 import { fuelSign } from "hooks/useSubmit/utils"
 import { sign } from "hooks/useSubmit/utils"
+import posthog from "posthog-js"
 import { pushToIntercomSetting } from "./intercom"
 
 const SIG_HEADER_NAME = "x-guild-sig"
@@ -57,58 +58,72 @@ const fetcher = async (
 
   const endpoint = `${api}${resource}`.replace("/v1/v2/", "/v2/")
 
-  return fetch(endpoint, options).then(async (response: Response) => {
-    const contentType = response.headers.get("content-type")
+  return fetch(endpoint, options)
+    .then(async (response: Response) => {
+      const contentType = response.headers.get("content-type")
 
-    // Return raw response for binary content types
-    if (
-      contentType?.includes("application/pdf") ||
-      contentType?.includes("application/octet-stream")
-    ) {
-      if (!response.ok) {
-        return Promise.reject(response)
-      }
-      return response.blob()
-    }
-
-    // Handle JSON and text responses as before
-    const res =
-      contentType?.includes("json") || resource.endsWith(".json")
-        ? await response.json?.()
-        : await response.text()
-
-    if (!response.ok) {
+      // Return raw response for binary content types
       if (
-        res?.errors?.[0]?.msg === "Invalid or expired timestamp!" ||
-        res?.errors?.[0]?.msg ===
-          "Invalid timestamp! The creation of timestamp too far in future!"
+        contentType?.includes("application/pdf") ||
+        contentType?.includes("application/octet-stream")
       ) {
-        window.localStorage.setItem("shouldFetchTimestamp", "true")
-        location?.reload()
+        if (!response.ok) {
+          return Promise.reject(response)
+        }
+        return response.blob()
       }
 
-      if (isGuildApiCall || resource.includes(env.NEXT_PUBLIC_API)) {
-        const error = res.errors?.[0]
+      // Handle JSON and text responses as before
+      const res =
+        contentType?.includes("json") || resource.endsWith(".json")
+          ? await response.json?.()
+          : await response.text()
 
-        const errorMsg = error
-          ? `${error.msg}${error.param ? `: ${error.param}` : ""}`
-          : res
+      if (!response.ok) {
+        if (
+          res?.errors?.[0]?.msg === "Invalid or expired timestamp!" ||
+          res?.errors?.[0]?.msg ===
+            "Invalid timestamp! The creation of timestamp too far in future!"
+        ) {
+          window.localStorage.setItem("shouldFetchTimestamp", "true")
+          location?.reload()
+        }
 
-        const correlationId = response.headers.get("X-Correlation-ID")
-        if (correlationId) pushToIntercomSetting("correlationId", correlationId)
+        if (isGuildApiCall || resource.includes(env.NEXT_PUBLIC_API)) {
+          const error = res.errors?.[0]
 
-        // Some validators may return res.message, so we can't use res.errors.[0].msg in every case
-        return Promise.reject({
-          error: typeof errorMsg !== "string" ? errorMsg?.message : errorMsg,
-          correlationId,
-        })
+          const errorMsg = error
+            ? `${error.msg}${error.param ? `: ${error.param}` : ""}`
+            : res
+
+          const correlationId = response.headers.get("X-Correlation-ID")
+          if (correlationId) pushToIntercomSetting("correlationId", correlationId)
+
+          // Some validators may return res.message, so we can't use res.errors.[0].msg in every case
+          return Promise.reject({
+            error: typeof errorMsg !== "string" ? errorMsg?.message : errorMsg,
+            correlationId,
+          })
+        }
+
+        return Promise.reject(res)
       }
 
-      return Promise.reject(res)
-    }
-
-    return res
-  })
+      return res
+    })
+    .catch((err) => {
+      const params =
+        err instanceof Error
+          ? {
+              rawError: err,
+              error: err.message,
+              errorCause: err.cause,
+              errorName: err.name,
+            }
+          : { rawError: err }
+      posthog.capture("FETCH ERROR (CATCH)", params)
+      throw err
+    })
 }
 
 /**
