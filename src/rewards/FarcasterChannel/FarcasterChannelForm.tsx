@@ -74,7 +74,6 @@ const FarcasterChannelPicker = () => {
           <SelectValue placeholder="Pick a channel" />
         </SelectTrigger>
         <SelectContent>
-          {/* TODO: filter channels which are already in use? */}
           {filteredData?.length ? (
             filteredData.map((channel) => (
               <SelectItem key={channel.id} value={channel.id}>
