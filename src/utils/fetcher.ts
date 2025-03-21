@@ -112,16 +112,18 @@ const fetcher = async (
       return res
     })
     .catch((err) => {
-      const params =
-        err instanceof Error
-          ? {
-              rawError: err,
-              error: err.message,
-              errorCause: err.cause,
-              errorName: err.name,
-            }
-          : { rawError: err }
-      posthog.capture("FETCH ERROR (CATCH)", params)
+      if (resource.includes("/orders/verify")) {
+        const params =
+          err instanceof Error
+            ? {
+                rawError: err,
+                error: err.message,
+                errorCause: err.cause,
+                errorName: err.name,
+              }
+            : { rawError: err }
+        posthog.capture("FETCH ERROR (CATCH)", params)
+      }
       throw err
     })
 }
