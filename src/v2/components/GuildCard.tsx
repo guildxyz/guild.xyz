@@ -2,7 +2,6 @@ import { Users } from "@phosphor-icons/react"
 import { GuildBase } from "types"
 import pluralize from "utils/pluralize"
 import { CheckMark } from "./CheckMark"
-import { Anchor } from "./ui/Anchor"
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/Avatar"
 import { Badge } from "./ui/Badge"
 import { Card } from "./ui/Card"
@@ -59,9 +58,9 @@ export const GuildCard: React.FC<Props> = ({ guildData }) => (
 )
 
 export const GuildCardWithLink: typeof GuildCard = ({ guildData }) => (
-  <Anchor href={guildData.urlName} className="rounded-2xl" variant="unstyled">
+  <a href={guildData.urlName} className="rounded-2xl no-underline">
     <GuildCard guildData={guildData} />
-  </Anchor>
+  </a>
 )
 
 export const GuildCardSkeleton = () => (
