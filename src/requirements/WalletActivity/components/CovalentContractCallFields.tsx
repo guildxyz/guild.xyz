@@ -29,7 +29,7 @@ export const CovalentContractCallFields = ({
   field,
   baseFieldPath,
 }: RequirementFormProps) => {
-  const { control, resetField, getValues } = useFormContext()
+  const { control, resetField } = useFormContext()
 
   const chain: CovalentContractCallCountChain | undefined = useWatch({
     control,

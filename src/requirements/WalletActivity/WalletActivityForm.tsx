@@ -214,7 +214,7 @@ const WalletActivityForm = ({
             supportedChains={
               // We only support INK with these two requirement types
               selected.value.startsWith("COVALENT_CONTRACT_CALL_COUNT")
-                ? ["INK", "INK_SEPOLIA"]
+                ? ["INK", "INK_SEPOLIA", "SONIC"]
                 : walletActivitySupportedChains
             }
           />

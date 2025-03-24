@@ -14,10 +14,7 @@ const isContractWriteFunction = (f: Abi[number]): f is AbiWriteFunction => {
   )
 }
 
-const fetchContractMethods = async (
-  baseUrl: string,
-  address: string
-): Promise<AbiWriteFunction[]> => {
+const fetchInkContractMethods = async (baseUrl: string, address: string) => {
   let contract: {
     proxy_type: string | null
     implementations: {
@@ -41,14 +38,26 @@ const fetchContractMethods = async (
   return contract.abi.filter((item) => isContractWriteFunction(item))
 }
 
+const fetchEtherscanContractMethods = async (
+  chain: CovalentContractCallCountChain,
+  address: string
+) => {
+  const abi: Abi = await fetcher(`/api/contract-abi/${chain}/${address}`)
+  return abi.filter((item) => isContractWriteFunction(item))
+}
+
 const CONTRACT_METHOD_FETCHERS = {
   INK: (address: string) =>
-    fetchContractMethods("https://explorer.inkonchain.com/api/v2", address),
+    fetchInkContractMethods("https://explorer.inkonchain.com/api/v2", address),
   INK_SEPOLIA: (address: string) =>
-    fetchContractMethods("https://explorer-sepolia.inkonchain.com/api/v2", address),
+    fetchInkContractMethods(
+      "https://explorer-sepolia.inkonchain.com/api/v2",
+      address
+    ),
+  SONIC: (address: string) => fetchEtherscanContractMethods("SONIC", address),
 } satisfies Record<
   CovalentContractCallCountChain,
-  (address: string) => ReturnType<typeof fetchContractMethods>
+  (address: string) => Promise<AbiWriteFunction[]>
 >
 
 export const useCovalentContractAbiMethods = (
