@@ -10,8 +10,7 @@ import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import useIsIOS from "hooks/useIsIOS"
 import usePopupWindow from "hooks/usePopupWindow"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
-import { PropsWithChildren, useState } from "react"
-import useSWR from "swr"
+import { PropsWithChildren } from "react"
 import { PlatformType } from "types"
 import fetcher from "utils/fetcher"
 
@@ -86,34 +85,17 @@ const TwitterIntent = ({
   const { onSubmit } = useSubmitWithSign(completeAction, {
     onSuccess: () => {
       triggerMembershipUpdate({ roleIds: [roleId] })
-      setHasClicked(false)
     },
   })
 
-  const [hasClicked, setHasClicked] = useState(false)
-  // Calling the callback endpoint only on refocus
-  useSWR(
-    hasClicked ? ["twitterRequirement", requirementId, userId] : null,
-    () => {
-      if (hasAccess || !isTwitterConnected) return
-      onSubmit({
-        requirementId,
-        id,
-        userId,
-      })
-    },
-    {
-      revalidateOnMount: false,
-      revalidateIfStale: false,
-      revalidateOnReconnect: false,
-      revalidateOnFocus: true,
-      refreshInterval: 0,
-    }
-  )
-
   const onClick = () => {
-    setHasClicked(true)
     if (type === "button") onOpen(url)
+    if (hasAccess || !isTwitterConnected) return
+    onSubmit({
+      requirementId,
+      id,
+      userId,
+    })
   }
 
   if (type === "link")
