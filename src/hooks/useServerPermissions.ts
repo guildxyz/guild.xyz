@@ -1,4 +1,4 @@
-import { REQUIRED_PERMISSIONS } from "components/[guild]/DiscordBotPermissionsChecker"
+import { REQUIRED_PERMISSIONS } from "components/[guild]/constants"
 import { SWRConfiguration } from "swr"
 import useSWRImmutable from "swr/immutable"
 import fetcher from "utils/fetcher"
