@@ -26,6 +26,8 @@ import { Toaster } from "@/components/ui/Toaster"
 import { TooltipProvider } from "@/components/ui/Tooltip"
 import { LegacyPostHogProvider } from "components/_app/LegacyPostHogProvider"
 import { LegacyWeb3ConnectionManager } from "components/_app/LegacyWeb3ConnectionManager"
+import Head from "next/head"
+import Script from "next/script"
 import NextTopLoader from "nextjs-toploader"
 
 const DynamicReCAPTCHA = dynamic(() => import("v2/components/ReCAPTCHA"))
@@ -44,6 +46,29 @@ const App = ({
 
   return (
     <>
+      <Head>
+        {process.env.NODE_ENV === "production" && (
+          <>
+            <Script
+              async
+              defer
+              src="/js/script.js"
+              data-api="/api/event"
+              data-domain="guild.xyz"
+              integrity="sha512-HVRUd9pld7dyE4GD9bua0YojsAokMtFExYGvwJhJ5zq37EEX7yEOeYEsh0yh/CypC832F1VkewDepCdoDlPwEw=="
+              data-exclude="/oauth**"
+            />
+            <Script
+              async
+              defer
+              src="https://js.jam.dev/support/d00eb75d-44cf-48af-a274-ae7c828bb08e.js"
+            />
+          </>
+        )}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@guildxyz" />
+      </Head>
+
       <style jsx global>
         {`
           :root {
@@ -99,6 +124,29 @@ const App = ({
             <Toaster />
           </IconContext.Provider>
         </TooltipProvider>
+
+        <div
+          id="chakra-react-select-portal"
+          style={{
+            position: "absolute",
+            inset: 0,
+            zIndex: 9999,
+            width: 0,
+            height: 0,
+          }}
+        />
+        <canvas
+          id="js-confetti-canvas"
+          style={{
+            position: "fixed",
+            width: "100%",
+            height: "100%",
+            top: 0,
+            left: 0,
+            zIndex: 10001,
+            pointerEvents: "none",
+          }}
+        />
       </Chakra>
     </>
   )
