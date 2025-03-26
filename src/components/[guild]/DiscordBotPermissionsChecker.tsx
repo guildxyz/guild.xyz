@@ -21,27 +21,15 @@ import { useMemo, useRef, useState } from "react"
 import useSWRImmutable from "swr/immutable"
 import { PlatformType } from "types"
 import fetcher from "utils/fetcher"
+import {
+  CREATE_INVITE_PERMISSION_NAME,
+  GUILD_BOT_ROLE_NAME,
+  MANAGE_ROLES_PERMISSION_NAME,
+  MANAGE_SERVER_PERMISSION_NAME,
+  REQUIRED_PERMISSIONS,
+} from "./constants"
 import useGuild from "./hooks/useGuild"
 import useGuildPermission from "./hooks/useGuildPermission"
-
-const MANAGE_ROLES_PERMISSION_NAME = "Manage Roles"
-const MANAGE_SERVER_PERMISSION_NAME = "Manage Server"
-const CREATE_INVITE_PERMISSION_NAME = "Create Invite"
-const GUILD_BOT_ROLE_NAME = "Guild.xyz bot"
-/**
- * If this list changes, make sure to replace the public/discord_permissions.png
- * image
- */
-export const REQUIRED_PERMISSIONS = [
-  MANAGE_ROLES_PERMISSION_NAME,
-  "View Channels",
-  MANAGE_SERVER_PERMISSION_NAME,
-  CREATE_INVITE_PERMISSION_NAME,
-  "Send Messages",
-  "Embed Links",
-  "Add Reactions",
-  "Use External Emoji",
-] as const
 
 type DiscordPermissions = {
   permissions: Record<
