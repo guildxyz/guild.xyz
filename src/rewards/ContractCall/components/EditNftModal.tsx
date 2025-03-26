@@ -14,7 +14,7 @@ import { ContractCallSupportedChain } from "components/[guild]/RolePlatforms/com
 import {
   datetimeLocalToIsoString,
   getShortDate,
-} from "components/[guild]/RolePlatforms/components/EditRewardAvailabilityModal/components/StartEndTimeForm"
+} from "components/[guild]/RolePlatforms/components/EditRewardAvailabilityModal/utils"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"

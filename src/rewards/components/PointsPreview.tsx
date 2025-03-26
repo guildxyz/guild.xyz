@@ -1,4 +1,4 @@
-import { CREATE_NEW_OPTION } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddPointsPanel/components/ExistingPointsTypeSelect"
+import { CREATE_NEW_OPTION } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddPointsPanel/constants"
 import useGuildPlatform from "components/[guild]/hooks/useGuildPlatform"
 import { useWatch } from "react-hook-form"
 import RewardPreview from "./RewardPreview"

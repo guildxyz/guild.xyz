@@ -9,6 +9,8 @@ import {
 import { Control, Path, useFormContext, useWatch } from "react-hook-form"
 import { PlatformName } from "types"
 import { DAY_IN_MS } from "utils/formatRelativeTimeFromNow"
+import { AUTO_TIMEFRAME_PLATFORMS } from "../constants"
+import { getShortDate } from "../utils"
 
 type Props<TFieldValues, TContext> = {
   // Passing control, so we can infer the proper field names for the other 2 props
@@ -17,23 +19,6 @@ type Props<TFieldValues, TContext> = {
   endTimeField: Path<TFieldValues>
   platformType: PlatformName
 } & StackProps
-
-export const AUTO_TIMEFRAME_PLATFORMS: PlatformName[] = ["POAP"]
-
-export const getShortDate = (isoDate: string): string | undefined => {
-  if (!isoDate) return undefined
-  return isoDate.split("T")[0]
-}
-
-export const datetimeLocalToIsoString = (datetimeLocal: string): string | null => {
-  if (!datetimeLocal) return null
-
-  try {
-    return new Date(datetimeLocal).toISOString()
-  } catch {
-    return null
-  }
-}
 
 const StartEndTimeForm = <TFieldValues, TContext>({
   control,

@@ -20,11 +20,9 @@ import { Modal } from "components/common/Modal"
 import { FormProvider, useController, useForm } from "react-hook-form"
 import rewards from "rewards"
 import { PlatformName } from "types"
-import StartEndTimeForm, {
-  AUTO_TIMEFRAME_PLATFORMS,
-  datetimeLocalToIsoString,
-  getShortDate,
-} from "./components/StartEndTimeForm"
+import StartEndTimeForm from "./components/StartEndTimeForm"
+import { AUTO_TIMEFRAME_PLATFORMS } from "./constants"
+import { datetimeLocalToIsoString, getShortDate } from "./utils"
 
 export type RolePlatformAvailabilityForm = {
   capacity?: number

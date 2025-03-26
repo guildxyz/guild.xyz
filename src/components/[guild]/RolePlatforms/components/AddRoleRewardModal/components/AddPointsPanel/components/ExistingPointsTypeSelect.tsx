@@ -15,6 +15,7 @@ import Star from "static/icons/star.svg"
 import { GuildPlatform } from "types"
 import parseFromObject from "utils/parseFromObject"
 import { AddPointsFormType } from "../AddPointsPanel"
+import { CREATE_NEW_OPTION } from "../constants"
 
 type Props = {
   fieldName?: string
@@ -23,8 +24,6 @@ type Props = {
   isLoading?: boolean
   showCreateNew?: boolean
 } & FormControlProps
-
-export const CREATE_NEW_OPTION = -1
 
 const ExistingPointsTypeSelect = ({
   fieldName = "data.guildPlatformId",

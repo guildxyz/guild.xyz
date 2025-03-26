@@ -1,5 +1,5 @@
 import { HStack, TabsProps, Tag, Text, Tooltip } from "@chakra-ui/react"
-import Tabs from "../Tabs"
+import Tabs from "../Tabs/Tabs"
 import TabButton from "../Tabs/components/TabButton"
 
 type Props = {

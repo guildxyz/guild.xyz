@@ -35,7 +35,7 @@ const requirementIntentAction: Partial<
 }
 
 // https://help.twitter.com/en/managing-your-account/twitter-username-rules
-export const TWITTER_HANDLE_REGEX = /^[a-z0-9_]+$/i
+const TWITTER_HANDLE_REGEX = /^[a-z0-9_]+$/i
 
 const TwitterRequirement = (props: RequirementProps) => {
   const requirement = useRequirementContext()

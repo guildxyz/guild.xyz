@@ -2,7 +2,7 @@ import { Flex, Table, useColorModeValue } from "@chakra-ui/react"
 import Card, { useCardBg } from "components/common/Card"
 import useScrollEffect from "hooks/useScrollEffect"
 import { PropsWithChildren, RefObject, memo, useEffect, useState } from "react"
-import { TABS_HEIGHT_SM, TABS_SM_BUTTONS_STYLES } from "../../Tabs/Tabs"
+import { TABS_HEIGHT_SM, TABS_SM_BUTTONS_STYLES } from "../../Tabs"
 import { IDENTITIES_COLLAPSED_STYLE } from "../IdentitiesExpansionToggle"
 
 type Props = {

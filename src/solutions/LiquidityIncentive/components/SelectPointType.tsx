@@ -8,9 +8,8 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
-import ExistingPointsTypeSelect, {
-  CREATE_NEW_OPTION,
-} from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddPointsPanel/components/ExistingPointsTypeSelect"
+import ExistingPointsTypeSelect from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddPointsPanel/components/ExistingPointsTypeSelect"
+import { CREATE_NEW_OPTION } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddPointsPanel/constants"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useFormContext, useWatch } from "react-hook-form"
 import RewardImagePicker from "rewards/SecretText/SecretTextDataForm/components/RewardImagePicker"

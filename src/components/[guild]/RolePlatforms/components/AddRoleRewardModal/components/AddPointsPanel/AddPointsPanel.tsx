@@ -8,10 +8,9 @@ import { AddRewardPanelProps } from "rewards"
 import { PlatformGuildData, PlatformType } from "types"
 import { DefaultAddRewardPanelWrapper } from "../../DefaultAddRewardPanelWrapper"
 import AddNewPointsType from "./components/AddNewPointsType"
-import ExistingPointsTypeSelect, {
-  CREATE_NEW_OPTION,
-} from "./components/ExistingPointsTypeSelect"
+import ExistingPointsTypeSelect from "./components/ExistingPointsTypeSelect"
 import SetPointsAmount from "./components/SetPointsAmount"
+import { CREATE_NEW_OPTION } from "./constants"
 
 export type AddPointsFormType = {
   data: { guildPlatformId: number }

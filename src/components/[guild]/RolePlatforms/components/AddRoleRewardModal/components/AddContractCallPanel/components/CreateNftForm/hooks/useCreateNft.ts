@@ -1,6 +1,6 @@
 import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import { consts } from "@guildxyz/types"
-import { datetimeLocalToIsoString } from "components/[guild]/RolePlatforms/components/EditRewardAvailabilityModal/components/StartEndTimeForm"
+import { datetimeLocalToIsoString } from "components/[guild]/RolePlatforms/components/EditRewardAvailabilityModal/utils"
 import { guildNftRewardMetadataSchema } from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { env } from "env"

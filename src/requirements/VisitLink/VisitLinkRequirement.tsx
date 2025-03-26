@@ -35,8 +35,7 @@ import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import { ReactNode } from "react"
 import { useFormContext } from "react-hook-form"
 import fetcher from "utils/fetcher"
-
-export const VISIT_LINK_REGEX = new RegExp(/^(.*)(\[)(.+?)(\])(.*)$/)
+import { VISIT_LINK_REGEX } from "./constants"
 
 const visitLink = (signedValidation: SignedValidation) =>
   fetcher("/v2/util/gate-callbacks?requirementType=LINK_VISIT", {
@@ -173,7 +172,7 @@ const LeaveGuildToExternalLinkAlert = ({
           </p>
 
           <div className="rounded-xl border border-border bg-blackAlpha-soft p-4">
-            <p className="font-medium break-all">
+            <p className="break-all font-medium">
               <span className="text-muted-foreground">{urlArray[0]}</span>
               <span>{urlObj.hostname}</span>
               <span className="text-muted-foreground">{urlArray[1]}</span>
