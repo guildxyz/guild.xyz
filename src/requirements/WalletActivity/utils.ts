@@ -1,11 +1,11 @@
 import { AbiFunction, AbiParameter } from "viem"
 
-const getType = (param: AbiParameter) => {
+const getType = (param: AbiParameter): string => {
   if (
     (param.type === "tuple" || param.type === "tuple[]") &&
     "components" in param
   ) {
-    return `(${param.components.map((component) => component.type).join(", ")})`
+    return `(${param.components.map((component) => getType(component)).join(", ")})${param.type === "tuple[]" ? "[]" : ""}`
   }
 
   return param.type
