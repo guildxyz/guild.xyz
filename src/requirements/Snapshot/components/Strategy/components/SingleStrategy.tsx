@@ -216,7 +216,7 @@ const SingleStrategy = ({ baseFieldPath, index }: Props): JSX.Element => {
                   // case "object":
                   //   return null
                   // Unsupported field
-                  // e.g.: https://github.com/snapshot-labs/snapshot-strategies/blob/master/src/strategies/ctsi-staking/schema.json
+                  // e.g.: https://github.com/snapshot-labs/snapshot-strategies/blob/master/src/strategies/ctsi-staking-pool/schema.json
                 }
               })()}
 
