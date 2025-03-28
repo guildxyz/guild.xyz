@@ -24,7 +24,7 @@ import useNftDetails from "../../hooks/useNftDetails"
 import CollectNftButton from "./components/CollectNftButton"
 import NftFeesTable from "./components/NftFeesTable"
 
-const availibiltyTagStyleProps = {
+const availabilityTagStyleProps = {
   bgColor: "transparent",
   fontSize: "sm",
   fontWeight: "medium",
@@ -109,7 +109,7 @@ const CollectNft = () => {
                   <CapacityTag
                     capacity={rolePlatform.capacity}
                     claimedCount={rolePlatform.claimedCount}
-                    {...availibiltyTagStyleProps}
+                    {...availabilityTagStyleProps}
                   />
                   <CircleDivider />
                 </>
@@ -120,7 +120,7 @@ const CollectNft = () => {
                 <CapacityTag
                   capacity={Number(maxSupply)}
                   claimedCount={Number(totalSupply)}
-                  {...availibiltyTagStyleProps}
+                  {...availabilityTagStyleProps}
                 />
                 <CircleDivider />
               </>
@@ -130,7 +130,7 @@ const CollectNft = () => {
               <>
                 <StartTimeTag
                   startTime={rolePlatform?.startTime}
-                  {...availibiltyTagStyleProps}
+                  {...availabilityTagStyleProps}
                 />
                 <CircleDivider />
               </>
@@ -140,7 +140,7 @@ const CollectNft = () => {
               <>
                 <EndTimeTag
                   endTime={rolePlatform?.endTime}
-                  {...availibiltyTagStyleProps}
+                  {...availabilityTagStyleProps}
                 />
                 <CircleDivider />
               </>
@@ -148,7 +148,7 @@ const CollectNft = () => {
 
             {typeof rolePlatform?.capacity !== "number" && (
               <>
-                <Tag {...availibiltyTagStyleProps} colorScheme="gray">
+                <Tag {...availabilityTagStyleProps} colorScheme="gray">
                   {`${new Intl.NumberFormat("en", {
                     notation: "standard",
                   }).format(totalSupply ?? 0)} collected`}
@@ -158,7 +158,7 @@ const CollectNft = () => {
             )}
 
             {typeof totalCollectorsToday === "bigint" && (
-              <Tag {...availibiltyTagStyleProps} colorScheme="gray">
+              <Tag {...availabilityTagStyleProps} colorScheme="gray">
                 {`${new Intl.NumberFormat("en", {
                   notation: "standard",
                 }).format(totalCollectorsToday)} collected today`}

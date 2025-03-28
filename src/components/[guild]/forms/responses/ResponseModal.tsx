@@ -87,7 +87,7 @@ const ResponseModal = ({ row, isOpen, onClose, onPrev, onNext }: Props) => {
               return (
                 <Box
                   key={field.id}
-                  // we render the DisplayComponents as disabled, but retrive / change some of their styles with css so they're displayed nicely
+                  // we render the DisplayComponents as disabled, but retrieve / change some of their styles with css so they're displayed nicely
                   sx={{
                     "input:not(.disabledOtherInput), textarea, [data-checked]": {
                       opacity: "1 !important",
