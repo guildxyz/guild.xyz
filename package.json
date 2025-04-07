@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "prepare": "npm run snyk-protect && husky install",
+    "prepare": "husky",
     "dev": "next dev",
     "dev:turbo": "next dev --turbo",
     "build": "NODE_OPTIONS='--max-old-space-size=4096' TS_CONFIG_PATH='./tsconfig.build.json' next build",
@@ -155,7 +155,7 @@
     "dotenv": "^16.4.5",
     "dpdm": "^3.14.0",
     "event-stream": "^4.0.1",
-    "husky": "^8.0.3",
+    "husky": "^9.1.7",
     "lint-staged": "^13.0.0",
     "postcss": "^8.4.38",
     "storybook": "^8.1.11",
