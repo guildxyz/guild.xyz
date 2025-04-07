@@ -73,6 +73,7 @@ import {
   sei,
   sepolia,
   shimmer,
+  soneium,
   sonic,
   sophon,
   taiko,
@@ -206,6 +207,7 @@ export const wagmiConfig = IS_TEST
         sophon,
         zero,
         xdc,
+        soneium,
       ],
       transports: {
         [mainnet.id]: http(),
@@ -279,6 +281,7 @@ export const wagmiConfig = IS_TEST
         [sophon.id]: http(),
         [zero.id]: http(),
         [xdc.id]: http(),
+        [soneium.id]: http(),
       },
       ssr: true,
       connectors: [

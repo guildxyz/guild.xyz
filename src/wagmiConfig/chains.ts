@@ -67,6 +67,7 @@ import {
   sei,
   sepolia,
   shimmer,
+  soneium,
   sonic,
   sophon,
   taiko,
@@ -787,6 +788,14 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/networkLogos/xdc.svg",
     },
   },
+  SONEIUM: {
+    ...generateChainConfig(soneium, ETH_ICON),
+    iconUrl: "/networkLogos/soneium.webp",
+    blockExplorerIconUrl: {
+      light: "/networkLogos/soneium.webp",
+      dark: "/networkLogos/soneium.webp",
+    },
+  },
 }
 
 enum Chains {
@@ -865,6 +874,7 @@ enum Chains {
   SOPHON = sophon.id,
   ZERO = zero.id,
   XDC = xdc.id,
+  SONEIUM = soneium.id,
 }
 
 export type Chain = keyof typeof Chains
