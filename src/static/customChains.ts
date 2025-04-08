@@ -325,58 +325,6 @@ export const x1 = {
   },
 } as const satisfies Chain
 
-export const form = {
-  id: 478,
-  name: "Form",
-  nativeCurrency: {
-    decimals: 18,
-    name: "Ether",
-    symbol: "ETH",
-  },
-  rpcUrls: {
-    default: { http: ["https://rpc.form.network/http"] },
-  },
-  blockExplorers: {
-    default: {
-      name: "Blockscout",
-      url: "https://explorer.form.network",
-    },
-  },
-  contracts: {
-    multicall3: {
-      address: "0xca11bde05977b3631167028862be2a173976ca11",
-      blockCreated: 342734,
-    },
-  },
-  testnet: false,
-} as const satisfies Chain
-
-export const metisSepolia = {
-  id: 59902,
-  name: "Metis Sepolia",
-  nativeCurrency: {
-    decimals: 18,
-    name: "Metis",
-    symbol: "sMETIS",
-  },
-  rpcUrls: {
-    default: { http: ["https://sepolia.metisdevops.link"] },
-  },
-  blockExplorers: {
-    default: {
-      name: "Blockscout",
-      url: "https://sepolia-explorer.metisdevops.link",
-    },
-  },
-  contracts: {
-    multicall3: {
-      address: "0xca11bde05977b3631167028862be2a173976ca11",
-      blockCreated: 224185,
-    },
-  },
-  testnet: true,
-} as const satisfies Chain
-
 export const mint = {
   id: 185,
   name: "Mint",
@@ -398,58 +346,6 @@ export const mint = {
     multicall3: {
       address: "0xca11bde05977b3631167028862be2a173976ca11",
       blockCreated: 2239893,
-    },
-  },
-  testnet: false,
-} as const satisfies Chain
-
-export const inkSepolia = {
-  id: 763373,
-  name: "Ink Sepolia",
-  nativeCurrency: {
-    decimals: 18,
-    name: "Ether",
-    symbol: "ETH",
-  },
-  rpcUrls: {
-    default: { http: ["https://rpc-gel-sepolia.inkonchain.com"] },
-  },
-  blockExplorers: {
-    default: {
-      name: "Blockscout",
-      url: "https://explorer-sepolia.inkonchain.com",
-    },
-  },
-  contracts: {
-    multicall3: {
-      address: "0xca11bde05977b3631167028862be2a173976ca11",
-      blockCreated: 1302512,
-    },
-  },
-  testnet: false,
-} as const satisfies Chain
-
-export const ink = {
-  id: 57073,
-  name: "Ink",
-  nativeCurrency: {
-    decimals: 18,
-    name: "Ether",
-    symbol: "ETH",
-  },
-  rpcUrls: {
-    default: { http: ["https://ink.drpc.org"] },
-  },
-  blockExplorers: {
-    default: {
-      name: "Blockscout",
-      url: "https://explorer.inkonchain.com",
-    },
-  },
-  contracts: {
-    multicall3: {
-      address: "0xca11bde05977b3631167028862be2a173976ca11",
-      blockCreated: 595972,
     },
   },
   testnet: false,
