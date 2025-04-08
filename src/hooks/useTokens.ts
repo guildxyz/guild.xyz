@@ -103,6 +103,7 @@ const TokenApiURLs: Record<Chain, string[]> = {
   XDC: [
     "https://raw.githubusercontent.com/XSwapProtocol/xdc-token-list/refs/heads/master/mainnet.tokenlist.json",
   ],
+  SONEIUM: [],
 }
 
 const fetchTokens = async ([_, chain]) =>
