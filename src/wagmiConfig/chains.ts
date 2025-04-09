@@ -4,13 +4,10 @@ import {
   bobaAvax,
   exosama,
   mint,
-  neonEVM,
   oasisSapphire,
   ontology,
-  palm,
   scrollAlpha,
   taikoKatlaTestnet,
-  x1,
   zero,
 } from "static/customChains"
 import {
@@ -55,8 +52,10 @@ import {
   mode,
   moonbeam,
   moonriver,
+  neonMainnet,
   opBNB,
   optimism,
+  palm,
   pgn,
   polygon,
   polygonZkEvm,
@@ -72,11 +71,12 @@ import {
   sophon,
   taiko,
   worldchain,
-  x1Testnet,
+  xLayer,
+  xLayerTestnet,
   xdc,
   zetachain,
   zetachainAthensTestnet,
-  zkSync,
+  zksync,
   zora,
 } from "wagmi/chains"
 type GuildChain = {
@@ -440,7 +440,7 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
     },
   },
   ZKSYNC_ERA: {
-    ...generateChainConfig(zkSync as ViemChain, ETH_ICON),
+    ...generateChainConfig(zksync as ViemChain, ETH_ICON),
     iconUrl: "/networkLogos/zksync-era.svg",
     blockExplorerIconUrl: {
       light: "/networkLogos/zksync-era.svg",
@@ -464,7 +464,7 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
     },
   },
   NEON_EVM: {
-    ...generateChainConfig(neonEVM, ETH_ICON),
+    ...generateChainConfig(neonMainnet, ETH_ICON),
     iconUrl: "/networkLogos/neon.svg",
     blockExplorerIconUrl: {
       light: "/explorerLogos/neonscan.svg",
@@ -528,7 +528,7 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
     },
   },
   X1: {
-    ...generateChainConfig(x1, "/walletLogos/okx.png"),
+    ...generateChainConfig(xLayer, "/walletLogos/okx.png"),
     name: "X Layer mainnet",
     iconUrl: "/walletLogos/okx.png",
     blockExplorerIconUrl: {
@@ -537,7 +537,7 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
     },
   },
   X1_TESTNET: {
-    ...generateChainConfig(x1Testnet, "/walletLogos/okx.png"),
+    ...generateChainConfig(xLayerTestnet, "/walletLogos/okx.png"),
     name: "X Layer testnet",
     iconUrl: "/walletLogos/okx.png",
     blockExplorerIconUrl: {
@@ -827,14 +827,14 @@ enum Chains {
   SCROLL_ALPHA = scrollAlpha.id,
   SCROLL_SEPOLIA = scrollSepolia.id,
   SCROLL = scroll.id,
-  ZKSYNC_ERA = zkSync.id,
+  ZKSYNC_ERA = zksync.id,
   SEPOLIA = sepolia.id,
   GOERLI = goerli.id,
   BASE_MAINNET = base.id,
   ZORA = zora.id,
   POLYGON_ZKEVM = polygonZkEvm.id,
   PGN = pgn.id,
-  NEON_EVM = neonEVM.id,
+  NEON_EVM = neonMainnet.id,
   LINEA = linea.id,
   LUKSO = lukso.id,
   MANTLE = mantle.id,
@@ -842,8 +842,8 @@ enum Chains {
   SHIMMER = shimmer.id,
   KAVA = kava.id,
   BITFINITY_TESTNET = bitfinityTestnet.id,
-  X1 = x1.id,
-  X1_TESTNET = x1Testnet.id,
+  X1 = xLayer.id,
+  X1_TESTNET = xLayerTestnet.id,
   ONTOLOGY = ontology.id,
   BERA_TESTNET = beraTestnet.id,
   MANTA = manta.id,

@@ -26,36 +26,6 @@ export const bobaAvax = {
   },
 } as const satisfies Chain
 
-export const palm = {
-  id: 11297108109,
-  name: "Palm",
-  nativeCurrency: {
-    decimals: 18,
-    name: "Palm",
-    symbol: "PALM",
-  },
-  rpcUrls: {
-    default: {
-      http: ["https://palm-mainnet.infura.io/v3/3a961d6501e54add9a41aa53f15de99b"],
-    },
-    public: {
-      http: ["https://palm-mainnet.infura.io/v3/3a961d6501e54add9a41aa53f15de99b"],
-    },
-  },
-  blockExplorers: {
-    default: {
-      name: "BlockScout",
-      url: "https://explorer.palm.io",
-    },
-  },
-  contracts: {
-    multicall3: {
-      address: "0x0216a640c4d53f2a6603042d4e14a2b890efcd45",
-      blockCreated: 13483902,
-    },
-  },
-} as const satisfies Chain
-
 export const exosama = {
   id: 2109,
   name: "Exosama",
@@ -106,36 +76,6 @@ export const scrollAlpha = {
     multicall3: {
       address: "0xd152cd6f9cf76921759d3f51f743651e549f6925",
       blockCreated: 47009,
-    },
-  },
-} as const satisfies Chain
-
-export const neonEVM = {
-  id: 245022934,
-  name: "Neon EVM",
-  nativeCurrency: {
-    decimals: 18,
-    name: "Neon",
-    symbol: "NEON",
-  },
-  rpcUrls: {
-    default: {
-      http: ["https://neon-mainnet.everstake.one"],
-    },
-    public: {
-      http: ["https://neon-mainnet.everstake.one"],
-    },
-  },
-  blockExplorers: {
-    default: {
-      name: "Neonscan",
-      url: "https://neonscan.org",
-    },
-  },
-  contracts: {
-    multicall3: {
-      address: "0xca11bde05977b3631167028862be2a173976ca11",
-      blockCreated: 206545524,
     },
   },
 } as const satisfies Chain
@@ -296,31 +236,6 @@ export const oasisSapphire = {
     multicall3: {
       address: "0xca11bde05977b3631167028862be2a173976ca11",
       blockCreated: 734531,
-    },
-  },
-} as const satisfies Chain
-
-export const x1 = {
-  id: 196,
-  name: "X Layer mainnet",
-  nativeCurrency: {
-    decimals: 18,
-    name: "OKB",
-    symbol: "OKB",
-  },
-  rpcUrls: {
-    default: { http: ["https://xlayerrpc.okx.com"] },
-  },
-  blockExplorers: {
-    default: {
-      name: "OKLink",
-      url: "https://www.oklink.com/xlayer",
-    },
-  },
-  contracts: {
-    multicall3: {
-      address: "0xca11bde05977b3631167028862be2a173976ca11",
-      blockCreated: 47416,
     },
   },
 } as const satisfies Chain
