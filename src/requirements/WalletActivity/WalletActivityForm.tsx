@@ -1,4 +1,5 @@
 import { FormControl, FormLabel, Stack } from "@chakra-ui/react"
+import { consts } from "@guildxyz/types"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { useFormContext, useWatch } from "react-hook-form"
@@ -7,7 +8,6 @@ import { PROVIDER_TYPES } from "requirements/requirementProvidedValues"
 import { RequirementFormProps, RequirementType } from "requirements/types"
 import { SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
-import { Chain } from "wagmiConfig/chains"
 import CovalentContractCallCount from "./components/CovalentContractCallCount"
 import CovalentContractCallCountRelative from "./components/CovalentContractCallCountRelative"
 import CovalentContractDeploy from "./components/CovalentContractDeploy"
@@ -16,47 +16,6 @@ import CovalentFirstTx from "./components/CovalentFirstTx"
 import CovalentFirstTxRelative from "./components/CovalentFirstTxRelative"
 import CovalentTxCount from "./components/CovalentTxCount"
 import CovalentTxCountRelative from "./components/CovalentTxCountRelative"
-
-// These can be extended for additional Covalent support
-const COVALENT_CHAINS = new Set<Chain>([
-  "ETHEREUM",
-  "POLYGON",
-  "POLYGON_ZKEVM",
-  "BASE_MAINNET",
-  "BASE_GOERLI",
-  "BASE_SEPOLIA",
-  "BSC",
-  "SCROLL",
-  "SCROLL_SEPOLIA",
-  "ZORA",
-  "AVALANCHE",
-  "ZKSYNC_ERA",
-  "CRONOS",
-  "PGN",
-  "NEON_EVM",
-  "OPTIMISM",
-  "LINEA",
-  "MANTLE",
-  "RONIN",
-  "ARBITRUM",
-  "METIS",
-  "TAIKO_KATLA",
-  "OASIS_SAPPHIRE",
-  "BLAST_MAINNET",
-  "ZETACHAIN",
-  "TAIKO",
-  "FANTOM",
-  "SEI",
-  "ROOTSTOCK",
-  "MODE",
-  "LISK",
-  "INK",
-  "IOTA",
-  "SONIC",
-  "SOPHON",
-  "ZERO",
-  "FORM",
-])
 
 const walletActivityRequirementTypes: SelectOption[] = [
   {
@@ -120,51 +79,6 @@ const WalletActivityForm = ({
     (reqType) => reqType.value === type
   )
 
-  const walletActivitySupportedChains: Chain[] = [
-    "ETHEREUM",
-    "POLYGON",
-    "POLYGON_ZKEVM",
-    "ARBITRUM",
-    "OPTIMISM",
-    "SCROLL",
-    "SCROLL_SEPOLIA",
-    "BASE_MAINNET",
-    "BASE_GOERLI",
-    "BASE_SEPOLIA",
-    "BSC",
-    "ZORA",
-    "ZKSYNC_ERA",
-    "CRONOS",
-    "PGN",
-    "NEON_EVM",
-    "LINEA",
-    "MANTLE",
-    "RONIN",
-    "METIS",
-    "TAIKO_KATLA",
-    "OASIS_SAPPHIRE",
-    "BLAST_MAINNET",
-    "ZETACHAIN",
-    "TAIKO",
-    "FANTOM",
-    "SEI",
-    "ROOTSTOCK",
-    "MODE",
-    "LISK",
-    "INK",
-    "IOTA",
-    "SONIC",
-    "SOPHON",
-    "ZERO",
-    "FORM",
-  ]
-
-  for (const covalentChain of COVALENT_CHAINS.values()) {
-    if (!walletActivitySupportedChains.includes(covalentChain)) {
-      walletActivitySupportedChains.push(covalentChain)
-    }
-  }
-
   const resetFields = () => {
     resetField(`${baseFieldPath}.address`, { defaultValue: "" })
     resetField(`${baseFieldPath}.data.txValue`, { defaultValue: "" })
@@ -212,10 +126,10 @@ const WalletActivityForm = ({
           <ChainPicker
             controlName={`${baseFieldPath}.chain`}
             supportedChains={
-              // We only support INK with these two requirement types
+              // We only support some chains with these two requirement types
               selected.value.startsWith("COVALENT_CONTRACT_CALL_COUNT")
                 ? ["INK", "INK_SEPOLIA", "SONIC"]
-                : walletActivitySupportedChains
+                : consts.WALLET_ACTIVITY_CHAINS
             }
           />
 
