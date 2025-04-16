@@ -18,3 +18,6 @@ jobs:
       uses: bitovi/github-actions-storybook-to-github-pages@v1.0.3
       with:
         path: storybook-static
+- name: First interaction
+  uses: actions/first-interaction@v1.3.0
+  
