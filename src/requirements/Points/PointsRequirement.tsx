@@ -1,6 +1,8 @@
 import { Anchor } from "@/components/ui/Anchor"
 import { Skeleton } from "@/components/ui/Skeleton"
+import { Icon } from "@chakra-ui/react"
 import { GuildReward } from "@guildxyz/types"
+import { Detective } from "@phosphor-icons/react"
 import {
   Requirement,
   RequirementProps,
@@ -9,8 +11,9 @@ import {
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import useGuild, { useSimpleGuild } from "components/[guild]/hooks/useGuild"
 import useGuildPlatform from "components/[guild]/hooks/useGuildPlatform"
+import { DataBlock } from "components/common/DataBlock"
+import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import Star from "static/icons/star.svg"
-import useSWRImmutable from "swr/immutable"
 
 type PointsRequirementTypes = "POINTS_AMOUNT" | "POINTS_TOTAL_AMOUNT" | "POINTS_RANK"
 
@@ -34,13 +37,14 @@ const PointsRank = (props: RequirementProps): JSX.Element => {
   const { name, urlName } = useSimpleGuild(guildId)
   const { id: currentGuildId } = useGuild()
 
-  const pointsReward = usePointsRewardForCurrentRequirement()
+  const { pointsReward, isPointsRewardLoading } =
+    usePointsRewardForCurrentRequirement()
 
-  if (!pointsReward) return <RequirementSkeleton />
+  if (isPointsRewardLoading) return <RequirementSkeleton />
 
   return (
     <Requirement
-      image={pointsReward.platformGuildData?.imageUrl ?? <Star />}
+      image={pointsReward?.platformGuildData?.imageUrl ?? <Star />}
       {...props}
     >
       <span>
@@ -48,12 +52,17 @@ const PointsRank = (props: RequirementProps): JSX.Element => {
           ? `Have a rank between ${minAmount} - ${maxAmount} on the `
           : `Be in the top ${maxAmount ?? ""} members on the `}
       </span>
-      <Anchor
-        href={`/${urlName}/leaderboard/${pointsReward.id}`}
-        variant="highlighted"
-        showExternal
-        target="_blank"
-      >{`${pointsReward.platformGuildData?.name ?? "Unknown"} leaderboard`}</Anchor>
+      {pointsReward ? (
+        <Anchor
+          href={`/${urlName}/leaderboard/${pointsReward.id}`}
+          variant="highlighted"
+          showExternal
+          target="_blank"
+        >{`${pointsReward.platformGuildData?.name ?? "Unknown"} leaderboard`}</Anchor>
+      ) : (
+        <SecretPoints />
+      )}
+
       {guildId !== currentGuildId && <ExternalGuildLink {...{ name, urlName }} />}
     </Requirement>
   )
@@ -83,26 +92,35 @@ const PointsAmount = (props: RequirementProps): JSX.Element => {
   const { name, urlName } = useSimpleGuild(guildId)
   const { id: currentGuildId } = useGuild()
 
-  const pointsReward = usePointsRewardForCurrentRequirement()
+  const { pointsReward, isPointsRewardLoading } =
+    usePointsRewardForCurrentRequirement()
 
-  if (!pointsReward) return <RequirementSkeleton />
+  if (isPointsRewardLoading) return <RequirementSkeleton />
 
-  const pointsName = pointsReward.platformGuildData?.name || "points"
+  const pointsName = pointsReward?.platformGuildData?.name || "points"
 
   return (
     <Requirement
-      image={pointsReward.platformGuildData?.imageUrl ?? <Star />}
+      image={pointsReward?.platformGuildData?.imageUrl ?? <Star />}
       {...props}
     >
       <span>
         {maxAmount
-          ? `Have between ${minAmount} - ${maxAmount} ${pointsName}`
-          : `Have at least ${minAmount} ${pointsName}`}
+          ? `Have between ${minAmount} - ${maxAmount} `
+          : `Have at least ${minAmount} `}
       </span>
+      {pointsReward ? <span>{pointsName}</span> : <SecretPoints />}
       {guildId !== currentGuildId && <ExternalGuildLink {...{ name, urlName }} />}
     </Requirement>
   )
 }
+
+const SecretPoints = () => (
+  <DataBlock>
+    <Icon as={Detective} display="inline-block" mr={1.5} />
+    <span>Secret points</span>
+  </DataBlock>
+)
 
 const usePointsRewardForCurrentRequirement = () => {
   const {
@@ -110,10 +128,15 @@ const usePointsRewardForCurrentRequirement = () => {
   } = useRequirementContext<Exclude<PointsRequirementTypes, "POINTS_TOTAL_AMOUNT">>()
 
   const { id: currentGuildId } = useGuild()
-  const { guildPlatform: pointsRewardInCurrentGuild } =
-    useGuildPlatform(guildPlatformId)
+  const {
+    guildPlatform: pointsRewardInCurrentGuild,
+    isLoading: isPointsRewardInCurrentGuildLoading,
+  } = useGuildPlatform(guildPlatformId)
 
-  const { data: externalGuildPlatforms } = useSWRImmutable<GuildReward[]>(
+  const {
+    data: externalGuildPlatforms,
+    isLoading: isExternalGuildPlatformsLoading,
+  } = useSWRWithOptionalAuth<GuildReward[]>(
     guildId !== currentGuildId ? `/v2/guilds/${guildId}/guild-platforms` : null
   )
 
@@ -121,7 +144,11 @@ const usePointsRewardForCurrentRequirement = () => {
     pointsRewardInCurrentGuild ??
     externalGuildPlatforms?.find((gp) => gp.id === guildPlatformId)
 
-  return pointsReward
+  return {
+    pointsReward,
+    isPointsRewardLoading:
+      isPointsRewardInCurrentGuildLoading || isExternalGuildPlatformsLoading,
+  }
 }
 
 const types = {
