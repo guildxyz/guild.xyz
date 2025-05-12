@@ -1,5 +1,7 @@
+import { usePostHogContext } from "@/components/Providers/PostHogProvider"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { NFTDetails } from "pages/api/nft/[chain]/[address]"
+import { useEffect } from "react"
 import guildRewardNftAbi from "static/abis/guildRewardNft"
 import useSWRImmutable from "swr/immutable"
 import { PlatformGuildData, PlatformType } from "types"
@@ -156,6 +158,21 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
     tokenURI ? ipfsToGuildGateway(tokenURI) : null,
     fetchNftMetadata
   )
+
+  const { captureEvent } = usePostHogContext()
+  useEffect(() => {
+    if (!nftDetailsError && !multicallError && !error) return
+    captureEvent("useNftDetails error", {
+      nftDetailsError,
+      multicallError,
+      error,
+    })
+    console.log({
+      nftDetailsError,
+      multicallError,
+      error,
+    })
+  }, [nftDetailsError, multicallError, error])
 
   return {
     ...nftDetails,

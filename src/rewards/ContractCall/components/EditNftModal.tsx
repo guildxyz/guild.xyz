@@ -52,6 +52,7 @@ const EditNftModal = ({ isOpen, onClose, guildPlatform }: Props) => {
     attributes,
     treasury,
     isLoading,
+    error,
   } = useNftDetails(chain, contractAddress)
 
   return (
@@ -67,7 +68,9 @@ const EditNftModal = ({ isOpen, onClose, guildPlatform }: Props) => {
         <ModalCloseButton />
         <ModalHeader>Edit NFT</ModalHeader>
         <ModalBody pt={0}>
-          {isLoading ? (
+          {error ? (
+            <p>Couldn't load NFT details, please check the console for more info.</p>
+          ) : isLoading ? (
             <Center>
               <Spinner size="lg" />
             </Center>
