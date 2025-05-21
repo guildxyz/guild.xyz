@@ -106,7 +106,7 @@ const fetchLensProtocolName = async (address: string): Promise<string> => {
 }
 
 const fetchSpaceIdName = async (address: string): Promise<string> => {
-  const chainIds = [42161, 34443, 7000, 4200, 100, 185, 902, 903, 904]
+  const chainIds = [1, 56, 42161, 34443, 7000]
 
   const spaceIds = await Promise.all(
     chainIds.map((chainId) =>
