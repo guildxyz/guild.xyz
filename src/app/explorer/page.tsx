@@ -14,7 +14,8 @@ import { SearchParams } from "types"
 import { Explorer } from "./_components/Explorer"
 import { ExplorerSWRProvider } from "./_components/ExplorerSWRProvider"
 import { HeaderBackground } from "./_components/HeaderBackground"
-import { ActiveSection } from "./types"
+import { ALPHA_GUILDS_API_URL, ALPHA_GUILDS_SWR_KEY } from "./consts"
+import { ActiveSection, AlphaGuild } from "./types"
 
 export const metadata = {
   icons: {
@@ -26,7 +27,7 @@ export const metadata = {
 const Page = async ({ searchParams }: { searchParams: SearchParams }) => {
   const featuredPath = `/v2/guilds?order=FEATURED&offset=0&limit=24`
   const newestPath = `/v2/guilds?order=NEWEST&offset=0&limit=24`
-  const [ssrFeaturedGuilds, ssrNewestGuilds] = await Promise.all([
+  const [ssrFeaturedGuilds, ssrNewestGuilds, ssrAlphaGuilds] = await Promise.all([
     fetch(`${env.NEXT_PUBLIC_API.replace("/v1", "")}${featuredPath}`, {
       next: {
         revalidate: 600,
@@ -41,6 +42,10 @@ const Page = async ({ searchParams }: { searchParams: SearchParams }) => {
     })
       .then((res) => res.json())
       .catch((_) => []),
+    fetch(ALPHA_GUILDS_API_URL)
+      .then((res) => res.json())
+      .then((data: AlphaGuild[]) => data.filter((g) => g.isVerified))
+      .catch((_) => []),
   ])
 
   return (
@@ -49,6 +54,7 @@ const Page = async ({ searchParams }: { searchParams: SearchParams }) => {
         fallback: {
           [infinite_unstable_serialize(() => featuredPath)]: ssrFeaturedGuilds,
           [infinite_unstable_serialize(() => newestPath)]: ssrNewestGuilds,
+          [ALPHA_GUILDS_SWR_KEY]: ssrAlphaGuilds,
         },
       }}
     >

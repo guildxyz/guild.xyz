@@ -55,6 +55,9 @@ const nextConfig = {
         hostname: "guild-xyz.mypinata.cloud",
       },
       {
+        hostname: "ipfs.guild.xyz",
+      },
+      {
         hostname: "assets.poap.xyz",
       },
       {

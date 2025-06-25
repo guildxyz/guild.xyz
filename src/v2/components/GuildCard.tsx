@@ -11,9 +11,10 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/Tooltip"
 
 type Props = {
   guildData: GuildBase
+  isAlpha?: boolean
 }
 
-export const GuildCard: React.FC<Props> = ({ guildData }) => (
+export const GuildCard: React.FC<Props> = ({ guildData, isAlpha }) => (
   <Card className="relative grid grid-cols-[auto,1fr] grid-rows-2 items-center gap-x-4 gap-y-1 px-6 py-7 before:absolute before:inset-0 before:bg-secondary before:opacity-0 before:transition-opacity before:duration-200 before:content-[''] hover:before:opacity-55 active:before:opacity-85">
     <Avatar className="row-span-2 size-12">
       <AvatarImage
@@ -53,14 +54,20 @@ export const GuildCard: React.FC<Props> = ({ guildData }) => (
           )}
         </span>
       </Badge>
-      <Badge>{pluralize(guildData.rolesCount, "role")}</Badge>
+      {!isAlpha && <Badge>{pluralize(guildData.rolesCount, "role")}</Badge>}
     </div>
   </Card>
 )
 
-export const GuildCardWithLink: typeof GuildCard = ({ guildData }) => (
-  <Anchor href={guildData.urlName} className="rounded-2xl" variant="unstyled">
-    <GuildCard guildData={guildData} />
+export const GuildCardWithLink: typeof GuildCard = ({ guildData, isAlpha }) => (
+  <Anchor
+    href={
+      isAlpha ? `https://alpha.guild.xyz/${guildData.urlName}` : guildData.urlName
+    }
+    className="rounded-2xl"
+    variant="unstyled"
+  >
+    <GuildCard guildData={guildData} isAlpha={isAlpha} />
   </Anchor>
 )
 
