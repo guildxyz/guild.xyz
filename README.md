@@ -1,6 +1,7 @@
 # Guild.xyz interface
 
 [![Code check](https://github.com/guildxyz/guild.xyz/actions/workflows/code-check.yml/badge.svg)](https://github.com/guildxyz/guild.xyz/actions/workflows/code-check.yml)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/license/MIT)
 
 Open source interface for Guild.xyz -- a tool for platformless membership management.
 
