@@ -42,7 +42,11 @@ const Page = async ({ searchParams }: { searchParams: SearchParams }) => {
     })
       .then((res) => res.json())
       .catch((_) => []),
-    fetch(ALPHA_GUILDS_API_URL)
+    fetch(ALPHA_GUILDS_API_URL, {
+      next: {
+        revalidate: 600,
+      },
+    })
       .then((res) => res.json())
       .then((data: AlphaGuild[]) => data.filter((g) => g.isVerified))
       .catch((_) => []),
