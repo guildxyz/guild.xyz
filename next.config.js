@@ -214,6 +214,11 @@ const nextConfig = {
         permanent: false,
       },
       {
+        source: "/create-guild",
+        destination: "https://era.guild.xyz/create",
+        permanent: false,
+      },
+      {
         source: "/community",
         destination:
           "https://help.guild.xyz/en/collections/3826818-our-guild-the-community",
