@@ -1,6 +1,6 @@
 import { useUserPublic } from "@/hooks/useUserPublic"
 import { env } from "env"
-import { posthog } from "posthog-js"
+import posthog from "posthog-js"
 import {
   PostHogProvider as DefaultPostHogProvider,
   usePostHog,
@@ -139,7 +139,7 @@ export function CustomPostHogProvider({ children }: { children: ReactNode }) {
 
 export function PostHogProvider({ children }: { children: ReactNode }) {
   return (
-    <DefaultPostHogProvider>
+    <DefaultPostHogProvider client={posthog}>
       <CustomPostHogProvider>{children}</CustomPostHogProvider>
     </DefaultPostHogProvider>
   )

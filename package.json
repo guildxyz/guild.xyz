@@ -103,7 +103,7 @@
     "next-themes": "^0.3.0",
     "nextjs-toploader": "^1.6.12",
     "papaparse": "^5.4.1",
-    "posthog-js": "1.139.3",
+    "posthog-js": "^1.261.6",
     "qrcode.react": "^3.1.0",
     "randombytes": "^2.1.0",
     "react": "^18.2.0",

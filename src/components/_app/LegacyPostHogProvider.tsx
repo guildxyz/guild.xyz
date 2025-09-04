@@ -1,5 +1,6 @@
 import { CustomPostHogProvider } from "@/components/Providers/PostHogProvider"
 import { useRouter } from "next/router"
+import posthog from "posthog-js"
 import {
   PostHogProvider as DefaultPostHogProvider,
   usePostHog,
@@ -37,7 +38,7 @@ export function LegacyPostHogProvider({
   children: ReactNode
 }): JSX.Element {
   return (
-    <DefaultPostHogProvider>
+    <DefaultPostHogProvider client={posthog}>
       <CustomPostHogProvider>
         {children}
         <LegacyPostHogPageViews />
