@@ -17,21 +17,27 @@ export const config = {
 
 export async function middleware(request: NextRequest) {
   const guildUrlName = request.nextUrl.pathname.split("/")[1]
-  const redirects = await get("redirects")
+  const _redirects = await get("redirects")
 
-  const redirectUrl =
-    redirects &&
-    typeof redirects === "object" &&
-    !Array.isArray(redirects) &&
-    guildUrlName in redirects
-      ? redirects[guildUrlName]
-      : undefined
+  const redirects = z
+    .object({
+      sameURL: z.array(z.string()),
+      mapURL: z.array(z.tuple([z.string(), z.string()])),
+    })
+    .parse(_redirects)
 
-  if (redirectUrl) {
-    const parsedUrl = z.string().url().safeParse(redirectUrl)
-    if (parsedUrl.success) {
-      return NextResponse.redirect(parsedUrl.data)
-    }
+  const sameRedirect = redirects.sameURL.find((urlName) => urlName === guildUrlName)
+
+  if (sameRedirect) {
+    return NextResponse.redirect(`https://era.guild.xyz/${sameRedirect}`)
+  }
+
+  const mappedRedirect = redirects.mapURL.find(
+    ([oldUrlName]) => oldUrlName === guildUrlName
+  )
+
+  if (mappedRedirect) {
+    return NextResponse.redirect(`https://era.guild.xyz/${mappedRedirect[1]}`)
   }
 
   return NextResponse.next()
