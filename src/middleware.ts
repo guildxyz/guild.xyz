@@ -29,7 +29,7 @@ export async function middleware(request: NextRequest) {
   const sameRedirect = redirects.sameURL.find((urlName) => urlName === guildUrlName)
 
   if (sameRedirect) {
-    return NextResponse.redirect(`https://era.guild.xyz/${sameRedirect}`)
+    return NextResponse.redirect(`https://era.guild.xyz/${request.nextUrl.pathname}`)
   }
 
   const mappedRedirect = redirects.mapURL.find(
