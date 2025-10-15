@@ -17,6 +17,11 @@ export const config = {
 
 export async function middleware(request: NextRequest) {
   const guildUrlName = request.nextUrl.pathname.split("/")[1]
+
+  if (guildUrlName === "base") {
+    return NextResponse.redirect("/base-migration")
+  }
+
   const _redirects = await get("redirects")
 
   const redirects = z
