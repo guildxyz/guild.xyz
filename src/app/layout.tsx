@@ -4,6 +4,7 @@ import { dystopian, inter } from "fonts"
 import { type ReactNode, Suspense } from "react"
 import "./globals.css"
 import { OAuthResultToast } from "@/components/Providers/OAuthResultToast"
+import { ReadOnlyBanner } from "@/components/ReadOnlyBanner"
 import { TermsOfUseUpdateDialog } from "@/components/TermsOfUseUpdateDialog"
 import { cn } from "@/lib/utils"
 import type { Metadata, Viewport } from "next"
@@ -58,15 +59,19 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <body className={cn(dystopian.variable, inter.variable)}>
         <NextTopLoader showSpinner={false} color="#eff6ff" height={3} />
 
-        <Providers>
-          {children}
+        <ReadOnlyBanner />
 
-          <TermsOfUseUpdateDialog />
-          <Suspense>
-            <PostHogPageViews />
-            <OAuthResultToast />
-          </Suspense>
-        </Providers>
+        <div className="relative top-12">
+          <Providers>
+            {children}
+
+            <TermsOfUseUpdateDialog />
+            <Suspense>
+              <PostHogPageViews />
+              <OAuthResultToast />
+            </Suspense>
+          </Providers>
+        </div>
 
         <canvas
           id="js-confetti-canvas"

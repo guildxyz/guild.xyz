@@ -21,6 +21,7 @@ import { AccountModal } from "@/components/Account/components/AccountModal"
 import { PurchaseHistoryDrawer } from "@/components/Account/components/PurchaseHistoryDrawer/PurchaseHistoryDrawer"
 import AppErrorBoundary from "@/components/AppErrorBoundary"
 import { IntercomProvider } from "@/components/Providers/IntercomProvider"
+import { ReadOnlyBanner } from "@/components/ReadOnlyBanner"
 import { TermsOfUseUpdateDialog } from "@/components/TermsOfUseUpdateDialog"
 import { Toaster } from "@/components/ui/Toaster"
 import { TooltipProvider } from "@/components/ui/Tooltip"
@@ -79,7 +80,10 @@ const App = ({
                     <LegacyPostHogProvider>
                       <IntercomProvider>
                         <AppErrorBoundary>
-                          <Component {...pageProps} />
+                          <ReadOnlyBanner />
+                          <div className="relative top-12">
+                            <Component {...pageProps} />
+                          </div>
                         </AppErrorBoundary>
 
                         <ClientOnly>

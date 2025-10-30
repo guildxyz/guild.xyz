@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils"
 import { Plus } from "@phosphor-icons/react"
 import useIsStuck from "hooks/useIsStuck"
 import useScrollspy from "hooks/useScrollSpy"
-import { useAtom, useAtomValue, useSetAtom } from "jotai"
+import { useAtom, useAtomValue } from "jotai"
 import Link from "next/link"
 import { useEffect } from "react"
 import { activeSectionAtom, isNavStuckAtom, isSearchStuckAtom } from "../atoms"
@@ -38,7 +38,8 @@ const Nav = () => {
     <ToggleGroup
       type="single"
       className="gap-2"
-      size={isSearchStuck ? "sm" : "lg"}
+      // size={isSearchStuck ? "sm" : "lg"}
+      size="lg"
       variant={isNavStuck ? "secondary" : "mono"}
       onValueChange={(value) => value && setActiveSection(value as ActiveSection)}
       value={activeSection}
@@ -46,7 +47,7 @@ const Nav = () => {
       <ToggleGroupItem
         value={ActiveSection.YourGuilds}
         className={cn("rounded-xl transition-all", {
-          "rounded-lg": isSearchStuck,
+          // "rounded-lg": isSearchStuck,
         })}
         onClick={() => smoothScrollTo(ActiveSection.YourGuilds)}
       >
@@ -55,7 +56,7 @@ const Nav = () => {
       <ToggleGroupItem
         value={ActiveSection.ExploreGuilds}
         className={cn("rounded-xl transition-all", {
-          "rounded-lg": isSearchStuck,
+          // "rounded-lg": isSearchStuck,
         })}
         onClick={() => smoothScrollTo(ActiveSection.ExploreGuilds)}
       >
@@ -92,7 +93,7 @@ const CreateGuildLink = () => {
 
 export const StickyBar = () => {
   const { isWeb3Connected } = useWeb3ConnectionManager()
-  const setIsNavStuck = useSetAtom(isNavStuckAtom)
+  const [isNavStuck, setIsNavStuck] = useAtom(isNavStuckAtom)
   const isSearchStuck = useAtomValue(isSearchStuckAtom)
   const { ref: navToggleRef } = useIsStuck(setIsNavStuck)
 
@@ -101,7 +102,8 @@ export const StickyBar = () => {
       className={cn(
         "sticky top-0 z-10 flex h-16 w-full items-center transition-all",
         {
-          "h-12": isSearchStuck,
+          // "h-12": isSearchStuck,
+          "pt-20": isNavStuck,
         }
       )}
       ref={navToggleRef}

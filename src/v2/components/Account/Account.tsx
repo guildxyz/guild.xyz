@@ -17,8 +17,28 @@ import { Avatar } from "../ui/Avatar"
 import { Button } from "../ui/Button"
 import { Card } from "../ui/Card"
 import { Skeleton } from "../ui/Skeleton"
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/Tooltip"
 
-export const Account = () => {
+export const Account = () => (
+  <Tooltip>
+    <TooltipTrigger>
+      <Card className="overflow-visible">
+        <Button
+          disabled
+          variant="ghost"
+          className="rounded-2xl"
+          leftIcon={<SignIn weight="bold" />}
+        >
+          Sign in
+        </Button>
+      </Card>
+    </TooltipTrigger>
+
+    <TooltipContent>Please use Guild v2</TooltipContent>
+  </Tooltip>
+)
+
+export const _Account = () => {
   const { address, isWeb3Connected } = useWeb3ConnectionManager()
   const setIsAccountModalOpen = useSetAtom(accountModalAtom)
   const setIsWalletSelectorModalOpen = useSetAtom(walletSelectorModalAtom)

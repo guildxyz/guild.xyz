@@ -19,7 +19,7 @@ const StickyAction = ({ children }: PropsWithChildren) => {
         ref={ref}
         className={cn(
           "max-sm:fixed max-sm:right-0 max-sm:bottom-0 max-sm:left-0 max-sm:z-10 max-sm:border-t max-sm:bg-card max-sm:shadow-2xl",
-          "sm:sticky sm:top-3"
+          "sm:sticky sm:top-[calc(theme(space.12)+theme(space.3))]"
         )}
       >
         {children}
@@ -34,7 +34,7 @@ const DesktopHeaderBar = ({
 }: PropsWithChildren<{ isOpen: boolean }>) => (
   <div
     className={cn(
-      "fixed inset-x-0 top-0 z-10 h-0 bg-card shadow-md transition-all duration-200 max-sm:hidden dark:bg-background",
+      "fixed inset-x-0 top-12 z-10 h-0 bg-card shadow-md transition-all duration-200 max-sm:hidden dark:bg-background",
       {
         "sm:h-16": isOpen,
       }
