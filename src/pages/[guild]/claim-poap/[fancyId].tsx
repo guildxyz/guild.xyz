@@ -63,7 +63,7 @@ const Page = ({ fancyId }: Omit<Props, "fallback">) => {
   return (
     <ErrorBoundary
       onError={(error, info) => {
-        captureEvent("ErrorBoundary catched error", {
+        captureEvent("ErrorBoundary caught error", {
           page: "[guild]/claim-poap/[fancyId]",
           guild: urlName,
           poap: fancyId,

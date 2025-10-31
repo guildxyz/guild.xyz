@@ -82,7 +82,7 @@ const useActiveMembershipUpdate = ({
           }
         )
 
-        // delaying success a bit so the user has time percieving the last state
+        // delaying success a bit so the user has time perceiving the last state
         setTimeout(() => {
           mutateMembership(
             (prev) => ({
@@ -102,7 +102,7 @@ const useActiveMembershipUpdate = ({
 
           /**
            * Instead of calling onSuccess here, we call it in
-           * triggerMembershipUpdate, when this event is catched. This is for making
+           * triggerMembershipUpdate, when this event is caught. This is for making
            * sure, the correct onSuccess runs (the same one where we call
            * triggerMembershipUpdate)
            */
