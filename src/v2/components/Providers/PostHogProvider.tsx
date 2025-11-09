@@ -34,13 +34,9 @@ if (typeof window !== "undefined") {
 
     persistence: "memory",
 
-    // Disable in development
+    // Disable PostHog on Guild Classic
     loaded: (ph) => {
-      if (
-        process.env.NODE_ENV !== "production" ||
-        window.location.host !== "guild.xyz"
-      )
-        ph.opt_out_capturing()
+      ph.opt_out_capturing()
     },
   })
 }
