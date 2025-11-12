@@ -38,6 +38,7 @@ import {
   ink,
   inkSepolia,
   iota,
+  iotex,
   kava,
   klaytn,
   linea,
@@ -756,6 +757,14 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/networkLogos/iota.svg",
     },
   },
+  IOTEX: {
+    ...generateChainConfig(iotex, "/networkLogos/iotex.svg"),
+    iconUrl: "/networkLogos/iotex.svg",
+    blockExplorerIconUrl: {
+      light: "/networkLogos/iotex.svg",
+      dark: "/networkLogos/iotex.svg",
+    },
+  },
   SONIC: {
     ...generateChainConfig(sonic, "/networkLogos/sonic.svg"),
     iconUrl: "/networkLogos/sonic.svg",
@@ -870,6 +879,7 @@ enum Chains {
   INK_SEPOLIA = inkSepolia.id,
   INK = ink.id,
   IOTA = iota.id,
+  IOTEX = iotex.id,
   SONIC = sonic.id,
   SOPHON = sophon.id,
   ZERO = zero.id,
