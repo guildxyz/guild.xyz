@@ -48,7 +48,9 @@ const processViemContractError = (
   return undefined
 }
 
-const getPrettyViemError = (errorName) => {
+const getPrettyViemError = (
+  errorName: string | undefined
+): string | undefined => {
   switch (errorName) {
     case "IncorrectSignature":
     case "ECDSAInvalidSignature":
@@ -77,11 +79,13 @@ const getPrettyViemError = (errorName) => {
     case "PoolDoesNotExist":
       return "The reward pool that your action tried to use does not exist."
     case "TransferFailed":
-      return "We couldn’t complete your transfer. Please check your connection and ensure all details are correct, and try again."
+      return "We couldn't complete your transfer. Please check your connection and ensure all details are correct, and try again."
     case "UUPSUnauthorizedCallContext":
       return "Your request cannot be processed because it was made in an unauthorized context. Please contact our support team for further assistance."
     case "UUPSUnsupportedProxiableUUID":
       return "We encountered an issue with the upgrade identifier. Please contact our support team for further assistance."
+    default:
+      return undefined
   }
 }
 
