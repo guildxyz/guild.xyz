@@ -4,6 +4,16 @@ import {
   InsufficientFundsError,
 } from "viem"
 
+/**
+ * Processes viem contract errors into user-friendly error messages.
+ * Walks the error chain to find `ContractFunctionRevertedError` and
+ * `InsufficientFundsError` instances, then maps known error names
+ * to descriptive messages via `getPrettyViemError`.
+ *
+ * @param error - The error thrown by a viem contract call
+ * @param errorNameMapper - Optional custom mapper for contract-specific error names
+ * @returns A user-friendly error message, or undefined if the error is not a BaseError
+ */
 const processViemContractError = (
   error: Error,
   errorNameMapper?: (errorName: string) => string
