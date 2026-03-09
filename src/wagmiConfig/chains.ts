@@ -103,7 +103,7 @@ const generateChainConfig = (
     ...chain.nativeCurrency,
     iconUrl: nativeCurrencyIconUrl,
   },
-  blockExplorerUrl: chain.blockExplorers?.default.url ?? "",
+  blockExplorerUrl: chain.blockExplorers?.default?.url ?? "",
 })
 
 const ETH_ICON =
