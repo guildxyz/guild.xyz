@@ -1,13 +1,26 @@
-# Guild.xyz interface
+# Guild.xyz
 
 [![Code check](https://github.com/guildxyz/guild.xyz/actions/workflows/code-check.yml/badge.svg)](https://github.com/guildxyz/guild.xyz/actions/workflows/code-check.yml)
 
-Open source interface for Guild.xyz -- a tool for platformless membership management.
+Guild.xyz is where a community decides who gets what. You set the rules once, and Guild checks every member's wallets and social accounts against them and keeps their access up to date: Discord roles, Telegram groups, points, gated pages and more.
+
+- Token-gate a Discord server: [guide](https://guild.xyz/docs/guides/token-gate-discord)
+- Token-gate a Telegram group: [guide](https://guild.xyz/docs/guides/token-gate-telegram)
+- Points and leaderboards: [guide](https://guild.xyz/docs/guides/points-and-leaderboards)
+- Quests and campaigns: [guide](https://guild.xyz/docs/guides/quests-and-campaigns)
+- Manage a guild from an AI agent such as Claude, through the MCP server at `https://mcp.guild.xyz/mcp`: [docs](https://guild.xyz/docs/agents)
+
+Discord and Telegram gating are on the Free plan. Token and NFT requirements work on 50 EVM mainnets.
 
 - Website: [guild.xyz](https://guild.xyz)
-- Docs: [docs.guild.xyz](https://docs.guild.xyz/)
-- X (formerly Twitter): [@Guildxyz](https://x.com/guildxyz)
+- Docs: [guild.xyz/docs](https://guild.xyz/docs)
+- Pricing: [guild.xyz/pricing](https://guild.xyz/pricing)
+- X: [@guildxyz](https://x.com/guildxyz)
 - Discord: [Guild.xyz](https://discord.gg/KUkghUdk2G)
+
+## About this repository
+
+This repository holds an earlier version of the Guild.xyz web interface (React and Next.js). The current app is developed elsewhere; the notes below describe this codebase.
 
 ## Key dependencies overview
 
